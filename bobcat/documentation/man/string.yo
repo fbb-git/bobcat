@@ -1,0 +1,144 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::String)(3bobcat)(_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
+                    (Error handler)
+
+manpagename(FBB::String)(Several extensions to bf(std::string))
+
+manpagesynopsis()
+    bf(#include <bobcat/string>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    This class offers the same functionality as bf(std::string), adding
+facilities for often used transformations, currently missing in
+bf(std::string).  
+
+manpagesection(NAMESPACE)
+    bf(FBB)nl()
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace bf(FBB).
+
+manpagesection(INHERITS FROM)
+    bf(std::string)
+
+manpagesection(ENUMERATION)
+    itemization(
+    itb(Type)
+       This enumeration has the following values, which are used in the second
+        variant of the bf(split) member (see below): 
+
+            bf(DQUOTE), a series of characters surrounded by double quotes
+in the original string; 
+
+            bf(DQUOTE_UNTERMINATED), a series of characters beginning with
+a double quote in the original string, but lacking the matching terminating
+double quote;
+
+            bf(ESCAPED_END), a series of characters representing an
+otherwise normal string, but terminating in a plain backslash;
+
+            bf(NORMAL), a normal string; 
+
+            bf(SEPARATOR), a separator;
+
+            bf(SQUOTE), a series of characters surrounded by single quotes
+in the original string; 
+
+            bf(SQUOTE_UNTERMINATED), a series of characters beginning with
+a single quote in the original string, but lacking the matching terminating
+single quote.
+    )
+
+manpagesection(TYPEDEF)
+
+    The bf(typedef SplitPair) represents bf(std::pair<std::string,
+String::Type>) and is used in the second variant of the bf(split) member (see
+below).
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(String())
+        The default constructor, creating an empty bf(FBB::String) object.
+    itb(String(std::string const &str))
+        Initializes a bf(FBB::String) with the contents of an existing
+bf(std::string).
+    itb(String(char const *cp)):nl()
+        Initializes a bf(FBB::String) with the contents of an existing
+bf(C)-string: bf(cp) should not be a 0-pointer
+    itb(String(String const &other)) 
+    The standard copy constructor is available.
+    )
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::ostringstream) and bf(  std::exception) are
+available, as bf(FBB::String) inherits from these classes.
+    itemization(
+    itb(int casecmp(std::string const &other) const)
+        Performs a case-insensitive comparison between the current object's
+contents and the contenst of tt(other). A negative value is returned if the
+current object should be ordered before tt(other); 0 is returned if the two
+strings have identical contents; a positive value is returned if the
+current object should be ordered beyond tt(other).
+    itb(String lc() const)
+        Returns a copy of the current string in which all letters were
+transformed to lower case letters.
+    itb(String trim() const)
+        Returns a copy of the current string from which the leading and
+trailing blanks have been removed.
+    itb(unsigned  split(std::vector<std::string> *words,
+                    char const *separators = " \t", bool addEmpty = false))
+        Fills tt(words) with all elements of the current string, separated by
+any of the characters in tt(separators). If the parameter tt(addEmpty) is set
+to tt(true), the individual separators are stored as empty strings in
+tt(words). If a word starts with tt(") or tt(') all characters until a
+matching terminating tt(") or tt(') at the end of a word are considered as one
+word.  The surrounding quotes are not stored. The function returns the number
+of elements in the vector pointed to by tt(words). This vector is initially
+cleared.
+    itb(unsigned  split(std::vector<SplitPair> *words,
+                    char const *separators = " \t", bool addEmpty = false))
+        Same functionality as the former member, but the tt(words) vector is
+filled with pairs, of which the first elements are the recognized strings, and
+the second elements values of the tt(String::Type) enumeration. If
+bf(addEmpty) is requested, then the bf(string) elements contain the actual
+contents of the separator, while the bf(Type) elements are set to
+bf(SEPARATOR).
+    itb(String unescape() const)
+        Returns a tt(String) object in which the escaped (i.e., prefixed by a
+backslash) characters have been interpreted. All standard escape characters
+(tt(\a), tt(\b), tt(\f), tt(\n), tt(\r), tt(\t), tt(\v)) are recognized. If an
+escape character is followed by tt(x) or tt(X) the next two characters are
+interpreted as a hexadecimal number. If an escape character is followed by an
+octal digit, then the next three characters following the backslash are
+interpreted as an octal number. In all other cases, the backslash is removed
+and the character following the backslash is kept.
+    itb(String uc() const)
+        Returns a copy of the current string in which all letters were
+capitalized. 
+    )
+
+manpagesection(STATIC MEMBER FUNCTION)
+    itemization(
+    itb(char const **argv(std::vector<std::string> const &words))
+        Returns a pointer to an allocated series of pointers to the bf(C)
+strings stored in the vector tt(words). The caller is responsible for
+returning the array of pointers to the common pool, but should em(not) delete
+the bf(C)-strings to which the pointers point. The last element of the
+returned array is guaranteed to be a 0-pointer. 
+    )
+
+manpagesection(EXAMPLE)
+    To do
+
+manpagefiles()
+    em(bobcat/string) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

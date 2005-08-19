@@ -1,0 +1,51 @@
+#ifndef _INCLUDED_BOBCAT_PIPE_
+#define _INCLUDED_BOBCAT_PIPE_
+
+#include <bobcat/errno>
+
+namespace FBB
+{
+    class Pipe
+    {
+        protected:
+            enum  RW 
+            {
+                READ, 
+                WRITE 
+            };
+            int d_fd[2];
+    
+        public:
+            Pipe() throw(Errno);
+
+            Pipe(int const *fd)
+            {
+                d_fd[READ] = fd[READ];
+                d_fd[WRITE] = fd[WRITE];
+            }
+
+            int getReadFd() const
+            {
+                return d_fd[READ];
+            }
+            int getWriteFd() const
+            {
+                return d_fd[WRITE];
+            }
+
+            void readFrom(int filedescriptor);   
+
+            // experimental:
+            void readFrom(int const *filedescriptor, unsigned n);
+
+            int readOnly();
+
+            void writtenBy(int filedescriptor);
+
+            void writtenBy(int const *filedescriptor, unsigned n = 2);
+
+            int writeOnly();
+    };
+}
+
+#endif

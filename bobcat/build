@@ -1,0 +1,555 @@
+#!/usr/bin/icmake -qt/tmp/bobcat
+
+/*
+Configurable defines:
+
+    CLASSES:        string of directory-names under which sources of classes
+                    are found. E.g., CLASSES  = "class1 class2"
+
+    All class-names must be stored in one string.
+    If classes are removed from the CLASSES definition or if the names in the
+    CLASSES definition are reordered, the compilation should start again from
+    scratch.  
+
+*/
+
+string
+    TEMPLATES,
+    CLASSES;
+
+void setClasses()
+{
+//  ADD ADDITIONAL DIRECTORIES CONTAINING SOURCES OF CLASSES HERE
+//  Use the construction `CLASSES += "classname1 classname2";' etc.
+
+    CLASSES += 
+                "errno "
+                "msg "
+                "a2x "
+                "string "
+                "arg "
+                "x2a "
+                "pattern "
+                "redirector "
+                "pipe "
+                "ofdstreambuf "
+                "fork "
+                "selector "
+                "ifdstreambuf "
+                "configfile "
+                ;
+
+// header files only, no .cc sources:
+
+    TEMPLATES = "wrap1 wrap1c wrap2 wrap2c hash";
+}
+
+#define COMPILER           "g++"
+#define COPT               "-Wall -O3 -I../inc";
+
+#define ECHO_REQUEST       1
+
+// #define LIBS               "X11"     // for xpointer
+#define LIBS               ""
+
+// local namespace is: FBB
+// using-declarations generated for: std:FBB
+
+//                      NO CONFIGURABLE PARTS BELOW THIS LINE
+
+/*
+                            V A R S . I M
+*/
+
+string                  // contain options for
+    cwd,                // current WD
+    libs,               // extra libs, e.g., "-lrss -licce"
+    libpath,            // extra lib-paths, eg, "-L../rss"
+    copt,               // Compiler options
+    lopt,               // Linker options
+    libxxx,             // full library-path
+    ofiles,             // wildcards for o-files
+    sources,            // sources to be used
+    version,            // library version
+    current;            // contains name of current dir.
+
+int
+    nClasses,           // number of classes/subdirectories
+    program;            // 1: program is built
+list
+    envir,              // list of environment variables
+    classes;            // list of classes/directories
+
+string getenv(string target)
+{
+    int idx;
+    string env;
+
+    for (idx = 0; idx < sizeof(envir); ++idx)
+    {
+        env = element(idx, envir);
+        if (env == target)
+            return element(idx + 1, envir);
+    }
+    return "";
+}
+
+/*
+                                I N I T I A L . I M
+*/
+
+void initialize()
+{
+    echo(ECHO_REQUEST);
+    sources = "*.cc";
+    ofiles = "o/*.o";                       // std set of o-files
+
+    copt = COPT;
+
+    #ifdef GDB
+        copt += " " + GDB;
+    #endif
+
+    program = 0;
+
+    cwd = chdir(".");
+
+    setClasses();                           // remaining classes
+
+    classes = strtok(CLASSES, " ");         // list of classes
+
+    nClasses = sizeof(classes);
+}
+
+
+/*
+                                O B J F I L E S . I M
+*/
+
+list objfiles(list files)
+{
+    string
+        file,
+        objfile;
+    int
+        i;
+
+    for (i = 0; i < sizeof(files); i++)
+    {
+        file = element(i, files);           // determine element of the list
+        objfile = "./o/" + change_ext(file, "o");    // make obj-filename
+        if (objfile younger file)           // objfile is younger
+        {
+            files -= (list)file;            // remove the file from the list
+            i--;                            // reduce i to test the next
+        }
+    }
+    return (files);
+}
+/*
+                                A L T E R E D . I M
+*/
+
+list altered(list files, string target)
+{
+    int
+        i;
+    string
+        file;
+
+    for (i = 0; i < sizeof(files); i++)     // try all elements of the list
+    {
+        file = element(i, files);           // use element i of the list
+            
+        if (file older target)              // a file is older than the target
+        {
+            files -= (list)file;            // remove the file from the list
+            i--;                            // reduce i to inspect the next
+        }                                   // file of the list
+    }
+    return (files);                         // return the new list
+}
+/*
+                            F I L E L I S T . I M
+*/
+
+list file_list(string type, string library)
+{
+    list
+        files;
+
+    files = makelist(type);                 // make all files of certain type
+    files = altered(files, library);    // keep all files newer than lib.
+    files = objfiles(files);                // remove if younger .obj exist
+
+    return (files);
+}
+
+/*
+                          P R E F I X C L . I M
+*/
+void prefix_class(string class_id)
+{
+    list
+        o_files;
+    string
+        o_file;
+    int
+        i;
+
+    chdir("o");
+    o_files = makelist("*.o");
+    for (i = 0; o_file = element(i, o_files); i++)
+        exec("mv", o_file, class_id + o_file);
+    chdir("..");
+}
+/*
+                          R M C L A S S P . I M
+*/
+
+    string rm_class_id(string class_id, string ofile)
+    {
+        string
+            ret;
+        int
+            index,
+            n;
+    
+        n = strlen(ofile);
+        for (index = strlen(class_id); index < n; index++)
+            ret += element(index, ofile);
+    
+        return ret;
+    }
+
+void rm_class_prefix(string class_id)
+{
+        list
+            o_files;
+        string
+            o_file;
+        int
+            i;
+    
+        chdir("o");
+        o_files = makelist("*.o");
+        for (i = 0; o_file = element(i, o_files); i++)
+            exec("mv", o_file, rm_class_id(class_id, o_file));
+        chdir("..");
+}
+/*
+                            C C O M P I L E . I M
+*/
+
+void c_compile(list cfiles)
+{
+        string
+                nextfile;
+        int
+                i;
+                
+    if (!exists("o"))
+        system("mkdir o");
+                                                      
+    if (sizeof(cfiles))                 // files to compile ?
+    {
+        printf("\ncompiling: ", current, "\n\n");
+
+                                        // compile all files separately
+        for (i = 0; nextfile = element(i, cfiles); i++)
+            exec(COMPILER,
+                "-c -o o/" + change_ext(nextfile, "o"),
+                copt, nextfile);
+
+        printf("\n");
+    }
+    printf("ok: ", current, "\n");
+}
+/*
+                            U P D A T E L I . I M
+*/
+
+void updatelib(string library)
+{
+        list
+            arlist,
+            objlist;
+        string
+            to,
+            from;
+    
+        objlist = makelist("o/*.o");
+    
+        if (!sizeof(objlist))
+            return;
+    
+        printf("\n");
+    
+        exec("ar", "rvs", library, "o/*.o");
+        exec("rm", "o/*.o");
+    
+        printf("\n");
+}
+/*
+                                S T D C P P . I M
+*/
+
+void std_cpp(string library)
+{
+    list
+        cfiles;
+
+    cfiles = file_list(sources, library);     // make list of all cpp-files
+
+    c_compile(cfiles);                      // compile cpp-files
+}
+/*
+                                C P P M A K E . C
+
+    CPP files are processed by stdmake.
+
+    Arguments of CPPMAKE:
+
+    cpp_make(
+        string mainfile,    : name of the main .cpp file, or "" for library
+                              maintenance
+        string library,     : name of the local library to use/create
+                                (without lib prefix or .a/.so suffix
+                                (E.g., use `main' for `libmain.a')
+        )
+
+    Both mainfile and library MUST be in the current directory
+*/
+
+void installHeaders()
+{
+    list templates;
+    int idx, nTemplates;
+    string class;
+
+    for (idx = 0; idx < nClasses; idx++)
+    {
+        class = element(idx, classes);    // next class to process
+        exec("/bin/cp", class + "/" + class, "inc/bobcat/" + class);
+    }
+
+    templates = strtok(TEMPLATES, " ");         // list of template classes
+    nTemplates = sizeof(templates);
+
+    for (idx = 0; idx < nTemplates; idx++)
+    {
+        class = element(idx, templates);    // next class to process
+        exec("/bin/cp", class + "/" + class, "inc/bobcat/" + class);
+    }
+}
+
+void cpp_make(string mainfile, string library)
+{
+    int
+        index;
+    string class;
+        
+    if (nClasses)
+        ofiles += " */o/*.o";               // set ofiles for no LIBRARY use
+
+                                            // make library name
+    libxxx = chdir(".") + "lib/lib" + library + ".a";
+
+                                            // process all classes
+    for (index = 0; index < nClasses; index++)
+    {
+        class = element(index, classes);  // next class to process
+        chdir(class);                     // change to directory
+
+        current = "subdir " + class;
+        std_cpp(libxxx);                    // compile all files
+        chdir(cwd);                         // go back to parent dir
+    }
+
+                                        // prefix class-number for .o files
+    for (index = 0; index < nClasses; index++)
+    {
+        current = element(index, classes);  // determine class name
+        chdir( current);              // chdir to a class directory.
+        prefix_class((string)index);  
+        updatelib(libxxx);
+        chdir(cwd);                // go back to parent dir
+    }
+
+}
+
+void release()
+{
+    if ("VERSION" younger "release.yo")
+        system("sh VERSION.sh");
+}
+
+void man()
+{
+    release();
+    chdir("documentation/man");
+    exec("./build");
+    chdir("../..");
+}
+
+void getVersion()
+{
+    list info;
+    list parts;
+
+    info = (list)"" + (list)"0";
+
+    while (sizeof(info = fgets("VERSION", (int)element(1, info))))
+    {
+        parts = strtok(element(0, info), "=");
+        if (element(0, parts) == "VERSION")
+        {
+            version = element(1, parts);
+            return;
+        }
+    }
+    printf("Can't find VERSION=x.y.z in file VERSION\n");
+    exit(1);
+}
+
+void lib()
+{
+    getVersion();
+    system("mkdir -p lib inc/bobcat");
+    initialize();
+
+    installHeaders();
+
+    cpp_make
+    (
+        "",
+        "bobcat"  // static- or so-library
+    );
+    chdir("lib");
+    exec("solib", "bobcat", version, LIBS);
+    chdir("..");
+}
+
+void install(string where)
+{
+    string bobcat;
+    string bobcatdev;
+    string docbase;
+    string docbasedev;
+
+    if (where == "")
+    {
+        printf("missing location to install as argument 2\n");
+        exit(1);
+    }
+
+    bobcat = where + "/bobcat";
+    bobcatdev = where + "/bobcat-dev";
+    docbase = where + "/bobcat/usr/share/doc/bobcat/";
+    docbasedev = where + "/bobcat-dev/usr/share/doc/bobcat-dev/";
+
+    printf("\ninstall libraries\n");
+    system("mkdir -p " + bobcat + "/usr/lib");
+    system("cp -pd lib/*bobcat* " + bobcat + "/usr/lib");
+
+    printf("\ninstall headers\n");
+    system("mkdir -p " + bobcatdev + "/usr/include/bobcat");
+    system("cp -p inc/bobcat/* " + bobcatdev + "/usr/include/bobcat");
+
+    printf("\ninstall man-page info\n");
+    system("mkdir -p " + docbasedev + "man/");
+    system("mkdir -p " + bobcatdev + "/usr/share/man/man{3,7}");
+
+    system("cp documentation/man/*.3.html " +
+                        docbasedev + "man/");
+    system("cp documentation/man/*.3bobcat " +
+                        bobcatdev + "/usr/share/man/man3");
+
+    system("cp documentation/man/*.html " +
+                        docbasedev + "man/");
+    system("cp documentation/man/bobcat.jpg " +
+                        docbasedev + "man/");
+    system("ln -s bobcat.html " + docbasedev + "man/index.html");
+    system("cp documentation/man/*.7 " +
+                        bobcatdev + "/usr/share/man/man7");
+
+    printf("\ninstall remaining documentation\n");
+    system("mkdir -p " + docbase);
+    system("cp COPYING README  " + docbase);
+    system("cp COPYING README README.class-setup Changelog TODO " 
+            + docbasedev);
+}
+
+void debian()
+{
+    lib();
+    man();
+}
+
+void cleanup()
+{
+    system("rm -rf debian/bobcat debian/bobcat-dev "
+                    "build-stamp configure-stamp");
+
+    if (getenv("BOBCAT") == "minimal")
+    {
+        printf("\n"
+                "WARNING: PERFORMED MINIMAL CLEANUP\n"
+                "\n");
+        return;
+    }
+
+    system("rm -rf lib inc release.yo o */o ");
+    chdir("documentation/man");
+    system("rm -f *html *{3,7}*");
+}
+
+void main(int argc, list argv, list envp)
+{
+    string arg1;
+
+    envir = envp;
+
+    if (argc == 1)
+    {
+        printf
+        (
+            "\n"
+            "Build what? Options are:\n"
+            "   clean:  clean up. Define the BOBCAT=minimal environment\n"
+            "           variable to perform mimimal cleaning. Use with care!\n"
+            "   debian: build the bobcat elements for the debian package "
+                                                    "(after `clean')\n"
+            "           performs: build lib, build man\n"
+            "   install WHERE: install the products under WHERE "
+                                                "(following `build debian')\n"
+            "                  The Debian installation process will install "
+                                                        "under ./debian/\n"
+            "   man:    build the bobcat man-page (.1, .html versions)\n"
+            "   lib:    build the bobcat libraries\n"
+            "\n"
+        );
+        exit(1);
+    }
+
+    arg1 = element(1, argv);
+
+    if (arg1 == "clean")
+        cleanup();
+    else if (arg1 == "debian")
+        debian();
+    else if (arg1 == "lib")
+        lib();
+    else if (arg1 == "install")
+        install(element(2, argv));
+    else if (arg1 == "man")
+        man();
+    else if (arg1 == "release")
+        release();
+    else
+    {
+        printf("request `", arg1, "' not yet available\n");
+        exit(1);
+    }
+    exit(0);
+}

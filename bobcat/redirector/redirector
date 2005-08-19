@@ -1,0 +1,29 @@
+#ifndef _INCLUDED_BOBCAT_REDIRECTOR_
+#define _INCLUDED_BOBCAT_REDIRECTOR_
+
+#include <bobcat/errno>
+
+namespace FBB
+{
+    class Redirector
+    {
+        int d_fd;
+
+        public:
+            enum StandardFilenos
+            {
+                STDIN = 0,
+                STDOUT,
+                STDERR
+            };
+
+            Redirector(int fd)
+            :
+                d_fd(fd)
+            {}
+
+            void accessVia(int alternateFd) const throw (Errno);
+    };            
+}
+
+#endif

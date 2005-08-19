@@ -1,0 +1,208 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Arg)(3bobcat)(_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
+                    (Command Line Arguments)
+
+manpagename(FBB::Arg)(An singleton class interfacing command line arguments)
+
+manpagesynopsis()
+    bf(#include <bobcat/arg>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    Singleton class (see Gamma em(et al.), 1995) built around bf(getopt())(3)
+and bf(getopt_long())(3). The class handles short- and long command-line
+options,
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(ENUMERATION)
+
+    The bf(FBB::Arg::Type) enumeration is defined by the bf(FBB::Arg)
+class. It has the following values intended for public use: bf(None, Required,
+Optional). These values are used when constructing objects of the nested class
+bf(FBB::Arg::LongOption), see below.
+
+manpagesection(CONSTRUCTORS)
+    Since the class is a em(Singleton), no public constructors are
+available. Instead, static members are offered to initialize and access the
+single bf(FBB::Arg) object. See below.
+
+manpagesection(STATIC MEMBERS)
+    itemization(
+    itb(FBB::Arg &initialize(char const *optstring, int argc, char **argv)
+        throw (Errno))
+        Initializes the bf(FBB::Arg) singleton. Must be called only once.
+Throws an bf(FBB::Errno) exception if called repeatedly or if called with
+tt(argv) not containing a defined option (which is shown by the
+bf(FBB::Errno)'s tt(what()) member). Returns a reference to the singleton
+object, allowing code initializing bf(Arg) to use the initialized object
+immediately.
+    itb(FBB::Arg &initialize(char const *optstring,
+                                LongOption const * const begin,
+                                LongOption const * const end,
+                                int argc, char **argv))
+        Initializes the bf(FBB::Arg) singleton. Accepts two iterators of an
+array of bf(Arg::LongOption) objects, holding long-options. Must be called
+only once. Throws an bf(FBB::Errno) exception if called repeatedly or if
+called with tt(argv) not containing a defined option (which is shown by the
+bf(FBB::Errno)'s tt(what()) member).  See the description of
+bf(Arg::LongOption) below.  Returns a reference to the singleton object,
+allowing code initializing bf(Arg) to use the initialized object immediately.
+
+        tt(optstring) should consist of letters, possibly postfixed by:
+        itemization(
+        it() a colon (tt(:)), indicating that the option has a required
+            argument;
+        it() a double colon (tt(::)), indicating that the option itself 
+            has an optional argument (in that case, the option's value 
+            will be empty, unless specified).
+        )
+
+    itb(FBB::Arg &getInstance()) 
+        Returns the instance of the bf(Arg) object, available after calling
+one of the bf(Arg::initialize()) members.  If called before initialization, an
+tt(FBB::Errno) exception is thrown.
+    )
+
+manpagesection(OVERLOADED OPERATOR)
+
+    itemization(
+    itb(char const *operator[](unsigned idx) const)
+        Returns tt(argument[idx]), after having removed all specified options.
+0 is returned if no tt(arg[x]) is available.  The program name (tt(argv[0]))
+is NOT counted here: index 0 refers to the first ARGUMENT, e.g., the program's
+tt(argv[1]).
+    )
+
+manpagesection(NON-STATIC MEMBER FUNCTIONS)
+    itemization(
+    itb(std::string const &basename() const)
+        Returns the program's basename.
+    itb(unsigned nArgs() const)
+        Returns the number of arguments left after option-removal.  The
+program name bf(argv[0]) is NOT counted here.
+    itb(unsigned nOptions() const)
+        Returns the number of single character options
+    itb(unsigned nLongOptions() const)
+        Returns the number of long options
+    itb(bool option(int option) const)
+        If `option' was present bf(true) is returned, bf(false) otherwise.
+    itb(bool option(std::string const &options) const)
+        If at least one of the options specified in the argument `option' were
+present, bf(true) is returned. bf(false) otherwise
+    itb(bool option(string *value, int option) const)
+        Returns true if the provided argument was present. Its value is then
+stored in tt(*value), which is left untouched if `option' was not present. 0
+may be specified for bf(value) if the option does not have a value. If 0 is
+specified for an option which em(has) a value, an bf(FBB::Errno) exception is
+thrown.
+    itb(bool option(string *value, char const *longOption) const throw (Errno))
+        Returns true if the provided long option was present. Its value is
+then stored in tt(*value), which is left untouched if `option' was not
+present. 0 may be specified for bf(value) if the option does not have a
+value. If 0 is specified for an option which em(has) a value, an
+bf(FBB::Errno) exception is thrown.
+    itb(void versionHelp(void (*usage)(std::string const &progname), 
+        char const *version, unsigned minArgs, int helpFlag = 'h', 
+        int versionFlag = 'v') const throw (int) throw (int))
+    If tt(versionFlag) was specified, and the tt(helpFlag) was not specified
+the program's name (using bf(basename())) and tt(version) is displayed to
+tt(std::cout). Otherwise, if the tt(helpFlag) was provided or if there are
+fewer arguments than tt(minArgs) tt(usage()) is called with argument
+bf(basename()). If either version- or help information is shown, the bf(int)
+value 1 is thrown as an exception.
+
+    The address of the tt(usage()) function, the current version and the
+minimum number of arguments must be specified. Default argument values are
+provided for the option flags.
+    itb(char const **argPointers())
+        Returns tt(argv)-like set of pointers to all remaining arguments. The
+last element is guaranteed to be a 0-pointer. The first tt(nArg()) elements
+point to the respective bf(C)-string values of the arguments.
+    )
+
+manpagesection(THE NESTED CLASS FBB::Arg::LongOption)
+    Long options are defined using objects of the nested class
+bf(FBB::Arg::LongOption). This class offers the following constructors:
+    itemization(
+    itb(FBB::Arg::LongOption(char const *name, FBB::Arg::Type type = None))
+        This constructor is used to define a long option for which no
+corresponding short option is defined. The parameter tt(name) is the name of
+the long option (without prefixing the tt(--) characters, which em(are)
+required when specifying the long option). 
+    itb(FBB::Arg::LongOption(char const *name, int optionChar))
+        This constructor is used to define a long option for which a
+corresponding short option is defined. The parameter tt(name) is the name of
+the long option (without prefixing the tt(--) characters, which em(are)
+required when specifying the long option). 
+    )
+    In a program, long options may be specified as follows:
+    itemization(
+    it() First, construct an array 
+        verb(
+    FBB::Arg::LongOption longOptions[] = { c1, c2, ... cn }
+        )
+    Where tt(c1, c2, ..., cn) are bf(n) constructor invocations of 
+            bf(FBB::Arg::LongOption()) constructors
+    it() Next, pass bf(longOptions, LongOptions + n)
+                as 2nd and 3rd arguments to bf(initialize())
+    )
+
+manpagesection(EXAMPLE)
+    The following example illustrates defining long options and shows an
+initialization. It is not a full-fletched example in the sense of a small 
+runnable program.
+        verb(
+    #include <bobcat/arg>
+
+    using namespace FBB;
+
+    namespace   // the anonymous namespace can be used here
+    {
+        Arg::LongOption longOptions[] = 
+        {
+            Arg::LongOption("debug"),
+            Arg::LongOption("filenames", 'f'),
+            Arg::LongOption("help", 'h'),
+            Arg::LongOption("version", 'v'),
+        };
+    
+        Arg::LongOption const *const longEnd = 
+                        longOptions + 
+                        sizeof(longOptions) / sizeof(Arg::LongOption); 
+    }
+    
+    int main(int argc, char **argv)
+    try
+    {
+        Arg &arg = Arg::initialize("df:hv", 
+                        longOptions, longEnd, argc, argv);
+
+        // code using arg, etc.
+    }
+    catch(Errno const &err)     // handle exceptions
+    {
+        cerr << err.what() << endl;
+        return err.which();
+    }
+    catch(int x)
+    {
+        return x;
+    }
+        )
+
+manpagefiles()
+    em(bobcat/arg) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

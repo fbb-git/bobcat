@@ -1,0 +1,77 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::IFdStreambuf)(3bobcat)(_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
+                    (File Descriptor Input Stream Buffer)
+
+manpagename(FBB::IFdStreambuf)
+            (Input stream buffer initialized by a file descriptor)
+
+manpagesynopsis()
+    bf(#include <bobcat/ifdstreambuf>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB::IFdStreambuf) objects may be used as a bf(std::streambuf) of
+tt(std::istream) objects to allow extractions from a file descriptor.
+
+File descriptors are not defined within the context of bf(C++),
+but they can be used on operating systems that support the concept. Realize
+that using file descriptors introduces operating system dependencies.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(std::streambuf)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Ifdstreambuf())
+        This constructor initializes the streambuf, without associating it to
+a file descriptor, and without using buffering. The member bf(open()) can be
+used to associate the object later on with a file descriptor and optionally a
+buffer size.
+
+    itb(IFdStreambuf(int fd, unsigned n = 1))
+        This constructor initializes the streambuf, associating it to file
+descriptor tt(fd), and an optional unget buffer size (by default having size
+1).
+    )
+    There is no copy constructor.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::streambuf) are
+available, as bf(FBB::IFdStreambuf) inherits from this class. Some of the
+bf(std::streambuf)'s member are overridden by bf(FBB::IFdStreambuf), see
+below. 
+    itemization(
+    itb(void open(int xfd, unsigned n = 1))
+        This member (re)initializes the streambuf, associating it to file
+descriptor tt(fd), and an optional unget buffer size (by default having size
+1).
+    itb(int underflow())
+    This member em(overrides) the bf(std::streambuf) member. It is called by
+tt(std::istream) objects using bf(IFdStreambuf). It produces the next
+available character. It returns tt(EOF) if no (more) characters are available.
+    itb(std::streamsize xsgetn(char *dest, std::streamsize n))
+        This member em(overrides) the bf(std::streambuf) member. It returns
+the tt(n) next available characters, storing them into tt(dest). It returns
+the number of characters that were actually read.
+    )
+    Note that there is no overloaded assignment operator available for this
+class. 
+
+manpagesection(EXAMPLE)
+    To do
+
+manpagefiles()
+    em(bobcat/ifdstreambuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(ifdstream)(3bobcat)), bf(ofdstreambuf)(3bobcat), 
+    bf(std::streambuf)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

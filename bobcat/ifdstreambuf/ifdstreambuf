@@ -1,0 +1,40 @@
+#ifndef _INCLUDED_BOBCAT_IFDSTREAMBUF_
+#define _INCLUDED_BOBCAT_IFDSTREAMBUF_
+
+#include <streambuf>
+
+namespace FBB
+{    
+    class IFdStreambuf: public std::streambuf
+    {
+        private:
+            int         d_fd;
+            unsigned    d_n;
+            char*       d_buffer;
+
+        public:
+            IFdStreambuf()
+            :
+                d_n(0),
+                d_buffer(0)
+            {}
+
+            IFdStreambuf(int fd, unsigned n = 1)
+            {
+                open(fd, n);
+            }
+
+            ~IFdStreambuf();
+
+            void open(int xfd, unsigned n = 1);
+
+            virtual int underflow();
+            virtual std::streamsize xsgetn(char *dest, std::streamsize n);
+
+        private:
+            IFdStreambuf(IFdStreambuf const &other);              // NI
+            IFdStreambuf &operator=(IFdStreambuf const &other);   // NI
+    };
+}
+
+#endif

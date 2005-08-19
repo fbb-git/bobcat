@@ -1,0 +1,39 @@
+#ifndef _INCLUDED_BOBCAT_OFDSTREAMBUF_
+#define _INCLUDED_BOBCAT_OFDSTREAMBUF_
+
+#include <streambuf>
+
+namespace FBB
+{    
+    class OFdStreambuf: public std::streambuf
+    {
+        private:
+            unsigned    d_n;
+            int         d_fd;
+            char       *d_buffer;
+
+        public:
+            OFdStreambuf()
+            :
+                d_n(0),
+                d_buffer(0)
+            {}
+    
+            OFdStreambuf(int fd, unsigned n = 1)
+            {
+                open(fd, n);
+            }
+    
+            ~OFdStreambuf();
+    
+            void open(int fd, unsigned n = 1);
+            int sync();
+            int overflow(int c);
+
+        private:
+            OFdStreambuf(OFdStreambuf const &other);              // NI
+            OFdStreambuf &operator=(OFdStreambuf const &other);   // NI
+    };
+}
+
+#endif

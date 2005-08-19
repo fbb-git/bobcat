@@ -1,0 +1,28 @@
+The following diagram shows the class dependencies. Plain classes have no
+other dependencies. Dependencies should be read downwards, e.g., String
+depends on Wrap1 and A2x.
+
+Dependencies refer to the construction of the class members. So, when
+compiling the class Msg Errno must be available. The dependencies are not
+necessarily related to inheritance.
+
+
+        Wrap1            A2x    Wrap2       Wrap1c      Wrap2c      X2a
+          |               |     
+          +-------+-------+     
+                  |             
+                String          
+
+    
+        OFdStreambuf    IFdStreambuf    Hash
+
+
+
+                                Errno                       
+                                  |
+        +-----------+--------+----+--+---------+------+
+        |           |        |       |         |      | 
+    Selector    Pattern     Msg  Redirector   Pipe   Fork
+                    |
+                ConfigFile
+
