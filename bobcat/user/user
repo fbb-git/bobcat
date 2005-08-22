@@ -1,0 +1,59 @@
+#ifndef _INCLUDED_PROGOWNER_H_
+#define _INCLUDED_PROGOWNER_H_
+
+#include <string>
+#include <bobcat/errno>
+
+namespace FBB
+{
+    class User
+    {
+        std::string d_name;
+        std::string d_password;
+        std::string d_realname;
+        std::string d_homedir;
+        std::string d_shell;
+        unsigned d_uid;
+        unsigned d_gid;
+    
+        public:
+            User() throw (Errno);
+    
+            unsigned groupid() const
+            {
+                return d_gid;
+            }
+    
+            std::string const &homedir() const
+            {
+                return d_homedir;
+            }
+    
+            std::string const &name() const
+            {
+                return d_name;
+            }
+    
+            std::string const &password() const
+            {
+                return d_password;
+            }
+    
+            std::string const &realname() const
+            {
+                return d_realname;
+            }
+    
+            std::string const &shell() const
+            {
+                return d_shell;
+            }
+    
+            unsigned userid() const
+            {
+                return d_uid;
+            }
+    };
+}
+
+#endif
