@@ -1,0 +1,115 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Glob)(3bobcat)(_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
+                    (Files matching a pattern)
+
+manpagename(FBB::Glob)
+        (Wrapper around bf(glob)(3) to find files matching a pattern)
+
+manpagesynopsis()
+    bf(#include <bobcat/glob>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    The bf(FBB::Glob) class is a wrapper around the bf(C) function
+bf(glob)(3). It returns a list of files matching a certain pattern provided to
+bf(FBB::Glob)'s constructors or members.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(ENUMERATIONS)
+
+    bf(Flags):
+    itemization(
+    itt(ERR): Return on read errors;
+    itt(MARK): Append a slash to each name.
+    itt(NOSORT): Don't sort the names.
+    itt(NOESCAPE): Backslashes don't quote metacharacters.
+    itt(PERIOD): Leading tt(.)-characters can be matched by metachars.
+    )
+
+    bf(Dots):
+    itemization(
+    itt(FIRST): Filenames starting with a dot will be listed first. Within
+    this set and in the leftover-set the relative ordering is maintained.
+    itt(DEFAULT): Return filenames as they appear in the globbing process.
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Glob(std::string const &pattern = "*", Flags flags = PERIOD,
+             Dots dots = FIRST)) 
+        This constructor (which can also be used as the default constructor)
+    determines all elements in the current directory. The tt(.) and tt(..)
+    relative filenames are not part of the listings. Used as default
+    constructor, other directory elements starting with a period will be the
+    first elements in the series of detected directory elements.
+    itb(Glob(Glob const &other)) 
+        The copy constructor is available.
+    )
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(Glob &operator=(Glob const &other))
+        The assignment operator is available.
+    itb(char const *operator[](unsigned idx) const)
+        The element at index position tt(idx) is returns as a bf(C) string. It
+    returns an empty string if tt(idx) is or exceeds bf(size()).
+    )
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(unsigned size() const)
+        Returns the number of elements that were detected.
+    itb(char const *const *begin() const)
+        Returns a pointer to the first element that was detected. This pointer
+    can be used in generic algorithms as an output-iterator supporting pointer
+    arithmetic. 
+    itb(char const *const *end() const)
+       Returns a pointer beyond the last element that was detected. This
+    pointer can be used in generic algorithms as an output-iterator supporting
+    pointer arithmetic. 
+    )
+
+manpagesection(EXAMPLES)
+        verb(
+    int main(int argc, char **argv)
+    {
+        if (argc == 1)
+        {
+            cout << "Provide glob-expression as 1st arg\n";
+            return 1;
+        }
+    
+        cout << "General:\n";
+    
+        Glob general;
+    
+        for (unsigned idx = 0; idx < general.size(); idx++)
+            cout << idx << ": " << general[idx] << endl;
+    
+        cout << "Pattern: " << argv[1] << "\n";
+    
+        Glob pattern(argv[1], Glob::PERIOD, Glob::DEFAULT);
+    
+        for (unsigned idx = 0; idx < pattern.size(); idx++)
+            cout << idx << ": " << pattern[idx] << endl;
+    
+        return 0;
+    }
+        )
+
+manpagefiles()
+    em(bobcat/glob) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(stat)(3bobcat), bf(glob)(3)
+
+manpagebugs()
+    No Reported Bugs.
+
+includefile(trailer.inc)
