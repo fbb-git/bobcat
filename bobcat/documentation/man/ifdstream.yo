@@ -1,0 +1,51 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::IFdStream)(3bobcat)(_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
+                    (File Descriptor Input Stream)
+
+manpagename(FBB::Ifdstream)(Input Stream initialized by a File Descriptor)
+
+manpagesynopsis()
+    bf(#include <bobcat/ifdstream>)nl()
+
+manpagedescription()
+    bf(FBB::IFdStream) objects may be used to extract information from a
+device whose file descriptor is available.
+
+File descriptors are not defined within the context of bf(C++),
+but they can be used on operating systems that support the concept. Realize
+that using file descriptors introduces operating system dependencies.
+
+    Note that em(sockets) can be used as file descriptors.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(std::istream)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(IFdStream(int fd, unsigned n = 1))
+        The constructor initializes the object to read from descriptor tt(fd),
+using a buffer of size tt(n), by default having size 1. 
+    )
+    The copy constructor is not available.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::istream) are available, as bf(FBB::IFdStream)
+inherits from this class. There are no additional members.
+
+manpagesection(EXAMPLE)
+    To do
+
+manpagefiles()
+    em(bobcat/ifdstream) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(ifdstreambuf)(3bobcat), bf(ofdstream)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

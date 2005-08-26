@@ -1,0 +1,116 @@
+#ifndef _INCLUDED_BOBCAT_PROCESS_
+#define _INCLUDED_BOBCAT_PROCESS_
+
+#include <sstream>
+#include <vector>
+#include <string>
+
+#include <bobcat/fork>
+#include <bobcat/pipe>
+#include <bobcat/string>
+
+namespace FBB
+{
+
+class Process: public std::ostringstream, private Fork
+{
+    static unsigned const s_bufSize = 500;  // in collect.cc
+    enum ProcessType
+    {
+        SYSTEM,
+        EXECV,
+        EXECVP,
+    };
+
+    ProcessType d_processType;
+
+    Pipe *d_out;
+    Pipe *d_err;
+
+    std::vector<std::string> d_cout;    // collects std output
+    std::vector<std::string> d_cerr;    // collects std error
+
+    int d_ret;                          // return value of last executed
+                                        // process 
+    public:
+        enum PathType
+        {
+            NO_PATH,
+            USE_PATH,
+        };
+        enum Program
+        {
+            FIRST_ARG,
+            USE_SHELL,
+        };
+
+        Process(std::string const &command = "");
+        ~Process();
+
+        void clear();
+
+        int execute(PathType p = NO_PATH, Program p = FIRST_ARG);
+
+        std::string const &errLine(unsigned idx) const
+        {
+            return d_cerr[idx];
+        }
+
+        unsigned errSize() const
+        {
+            return d_cerr.size();
+        }
+
+        Process &operator+=(std::string const &text);
+        int operator=(std::string const &cmd);
+
+        std::string const &operator[](unsigned idx) const
+        {
+            return d_cout[idx];
+        }
+
+        std::vector<std::string> const &cout()
+        {
+            return d_cout;
+        }
+
+        std::vector<std::string> const &cerr()
+        {
+            return d_cerr;
+        }
+
+        unsigned size() const
+        {
+            return d_cout.size();
+        }
+
+        int status() const
+        {
+            return d_ret;
+        }
+
+        int system();
+
+    private:
+        struct ExecContext
+        {
+            bool ok;                // true: status is ok
+            unsigned argc;          // must eventually be at least 1
+            char const *message;    // only set if !ok
+            char const **args;      // 0-terminated array of pointers to the 
+                                    // arguments
+        };
+
+        static void execContext(String::SplitPair const &splitPair,
+                                ExecContext &ec);
+
+        virtual void childRedirections();
+        virtual void childProcess();
+        void collect(std::vector<std::string> *collector, int fd);
+        virtual void parentProcess();
+};
+
+} 
+// namespace FBB        
+
+#endif

@@ -1,0 +1,176 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Process)(3bobcat)(_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
+                    (Running Child Processes)
+
+manpagename(FBB::Process)(Calls external processes from within a program)
+
+manpagesynopsis()
+    bf(#include <bobcat/process>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    The bf(FBB::Process) class offers a simple interface to call external programs from a
+bf(C++) program, collecting the external program's standard output and error
+information in various formats.
+
+    Objects of the bf(FBB::Process) class use the standard process-executing functions, like
+bf(system)(1) and members of the bf(execl)(1) family to execute the
+external program, and allow em(shell-scripts) to be executed as
+well. Before executing an external program, its standard output and error
+streams are redirected, so that they can be collected by the bf(FBB::Process) object. When
+the external process itself redirects its standard output or standard error
+streams, then bf(FBB::Process) objects will not be able to receive the external process'
+output (of course). 
+
+    bf(FBB::Process) objects may be used repeatedly for various external programs. However,
+before defining the external program to be called, bf(FBB::Process)'s bf(clear()) member
+must be called. An external program call may be executed repeatedly, in which
+case bf(FBB::Process)'s accessors will contain the information received from the most
+recent program execution.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(std::ostringstream) 
+
+manpagesection(ENUMERATIONS)
+
+    bf(enum PathType):nl()
+       This enumeration has two values: 
+        itemization(
+        itb(USE_PATH)
+            This value indicates that the bf(PATH) environment variable should
+        be used to locate the program to be executed by the bf(execute())
+        member (see below)
+        itb(NO_PATH)
+            This value indicates that the program should be called as
+        specified.
+        )
+    bf(enum Program):nl()
+       This enumeration also has two values: 
+        itemization(
+        itb(FIRST_ARG)
+            This value indicates that the first white-space delimited element
+        of the defined command should be used as the name of the program to be
+        executed 
+        itb(USE_SHELL)
+            This value indicates that the program should be called as command
+        to bf(/bin/sh). See bf(execute()), below.
+        )
+
+    itemization(
+    itb(Process(std::string const &cmd = ""))
+       The default constructor simply defines an empty bf(FBB::Process) object. It is
+        defined as this constructor, using a default empty string argument.
+        Otherwise, this constructor expects a string defining the external
+        process to be called. If the command itself uses redirection, the
+        external program should be called using bf(FBB::Process)'s bf(system()) member (see
+        below). If the command starts and ends with a em(back-tick) (`) then
+        the back-ticks are removed, and the resulting contents are interpreted
+        as a command that should directly be executed by the bf(execute)
+        member, using that member's default arguments (see below).
+    )
+    The bf(FBB::Process) class does not offer a copy constructor.
+
+manpagesection(OVERLOADED OPERATORS)
+
+    itemization(
+    itb(std::string const &operator[](unsigned idx) const)
+       Having executed an external program, bf(operator[]) may be used to
+        obtain the indexed line of the program's standard output. It is the
+        programmer's responsibility to ensure that the requested line is
+        actually available (using, e.g., the bf(size()) member, see below).
+    itb(std::ostream &operator<<(...))
+       All bf(std::ostringstream::operator<<()) members can be used to define
+        the command to be executed. Any information inserted into a bf(FBB::Process) object
+        is appended to any information already inserted (by, e.g., the
+        constructor or by bf(operator+=())). All information inserted into or
+        added to a bf(FBB::Process) object defines the command to be executed. The returned
+        bf(std::istream) object is actually a bf(FBB::Process) object, and could be
+        downcast as such.
+    itb(Process &operator+=(std::string const &))
+       The bf(operator+=()) member adds the provided tt(std::string) object to
+        the information already inserted into a bf(FBB::Process) object.  Any information
+        inserted into a bf(FBB::Process) object is appended to any information already
+        inserted (by, e.g., the constructor or by bf(operator<<())). Note that
+        this member does not add, e.g., a separating blank space between its
+        argument and information that may already have been inserted.
+    itb(int operator=(std::string const &))
+       The bf(operator=()) member defines em(and) executes the provided
+        argument using the bf(execute()) member (see below). Optionally, the
+        provided argument may start em(and) end with a em(back-tick) (`),
+        which are removed before calling the bf(execute) member. The
+        bf(execute) member is called using its default arguments. The
+        operator's return value is equal to bf(execute)'s return value. Using
+        this operator implies the use of the bf(clear) member (see below).
+       )
+    The bf(FBB::Process) class does not offer an implementation for the default overloaded
+        assignment operator.
+
+manpagesection(MEMBERS)
+
+    itemization(
+    itb(void clear())
+       This member clears the current contents of a bf(FBB::Process) object's command
+        buffer. Following bf(clear()) a new command may be constructed.
+    itb(std::vector<std::string> const &cerr())
+       A reference to the vector containing all the lines collected from the
+        external process' standard error stream.
+    itb(std::vector<std::string> const &cout())
+       A reference to the vector containing all the lines collected from the
+        external process' standard output stream.
+    itb(unsigned errSize() const)
+       The number of lines in the executed program's redirected standard
+        error, as received by the bf(FBB::Process) object.
+    itb(std::string const &errLine(unsigned idx) const)
+       Having executed an external program, bf(errLine) may be used to
+        obtain the indexed line of the program's standard error. It is the
+        programmer's responsibility to ensure that the requested line is
+        actually available.
+    itb(int execute(PathType p = NO_PATH, Program p = FIRST_ARG))
+        defined command is executed using a member of the bf(execl)(3)
+        family. By default, as an additional security measure, the tt(PATH)
+        environment variable is em(not) used to search the program to be
+        executed. If it is considered safe to use the tt(PATH) environment
+        variable, specify the tt(USE_PATH)
+        enumeration value. By default the first white-space delimited element
+        of the defined command is used as the name of the program to be
+        executed. If the program should be called as a command to bf(sh)(1),
+        specify tt(USE_SH) as second argument. If tt(USE_SH) is specified, the
+        defined command is passed as argument to the bf(system) member (see
+        below) and tt(PathType USE_PATH) is forced. The function's return
+        value is the return value of the used bf(exec) function. See also the
+        member bf(system), below. Arguments surrounded by double quotes will
+        have their double quotes removed, interpreting any escape-sequences
+        that may have been used within. Arguments surrounded by single quotes
+        will have their single quotes removed, accepting their contents
+        unmodified.
+    itb(int status() const)
+       The return value of the last executed process. When no process has as
+        yet been executed, -1 is returned.
+    itb(unsigned size() const)
+       The number of lines in the executed program's redirected standard
+        output, as received by the bf(FBB::Process) object.
+    itb(int system())
+       A defined command is executed using the bf(system)(3) system call (and
+        thus as a shell command). The return value is bf(system)(3)'s return
+        value. When using bf(system) redirections can be included in the
+        command itself.
+    )
+
+manpagesection(EXAMPLE)
+    To do
+
+manpagefiles()
+    em(bobcat/process) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(system)(3), bf(execle)(3)
+
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

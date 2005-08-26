@@ -45,11 +45,12 @@ void setClasses()
                 "tablesupport "
                 "equalwidth "
                 "columnwidth "
+                "process "
                 ;
 
 // header files only, no .cc sources:
 
-    TEMPLATES = "wrap1 wrap1c wrap2 wrap2c hash table";
+    TEMPLATES = "wrap1 wrap1c wrap2 wrap2c hash table ifdstream ofdstream";
 }
 
 #define COMPILER           "g++"
@@ -434,7 +435,7 @@ void lib()
         "bobcat"  // static- or so-library
     );
     chdir("lib");
-    exec("solib", "bobcat", version, LIBS);
+    exec("../contrib/solib", "bobcat", version, LIBS);
     chdir("..");
 }
 

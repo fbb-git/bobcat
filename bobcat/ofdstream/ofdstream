@@ -1,0 +1,20 @@
+#ifndef _INCLUDED_BOBCAT_OFDSTREAM_
+#define _INCLUDED_BOBCAT_OFDSTREAM_
+
+#include <ostream>
+#include <bobcat/ofdstreambuf>
+
+namespace FBB
+{    
+    class OFdStream: private OFdStreambuf, public std::ostream
+    {
+        public:
+            OFdStream(int fd, unsigned n = 1)
+            :
+                OFdStreambuf(fd, n),
+                std::ostream(this)
+            {}
+    };
+}
+
+#endif
