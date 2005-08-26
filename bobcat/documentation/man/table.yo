@@ -1,0 +1,134 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Table)(3bobcat)(_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
+                    (Table-formatter)
+
+manpagename(FBB::Table)(Generates row- or column-wise filled tables)
+
+manpagesynopsis()
+    bf(#include <bobcat/table>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+
+    bf(FBB::Table) objects may be used to create tables. The tables are filled
+either column-wise or row-wise. The class only has a minimal number of member
+functions and overloaded operators. Most of the table's characteristics may be
+find-tuned by a separate bf(FBB::TableSupport) object, described in a separate
+man-page (bf(TableSupport)(3bobcat)). When no bf(FBB::TableSupport) object is
+used, a plain row-wise or column-wise table will be inserted into a
+bf(std::ostream). 
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::TableSpec) - The class bf(FBB::TableSpec) is a mere support class
+for bf(FBB::Table). Because of this, its features are repeated below.
+
+manpagesection(ENUMERATIONS)
+    The following enumerations are definedin th class bf(FBB::TableSpec),
+allowing the programmer to specifiy values like bf(FBB::TableSpec::Vertical)
+rather than bf(FBB::Table<std::istream_const_iterator>::Vertical).
+
+    bf(enum FillDirection)nl()
+    This enumeration holds two values:
+    itemization(
+    itb(Horizontal)
+        When this value is specified at construction time, subequent elements
+will be stored row-wise in the table. I.e., the second element will normally
+be in the second column of the first row.
+    itb(Vertical)
+        When this value is specified at construction time, subequent elements
+will be stored column-wise in the table. I.e., the second element will normally
+be in the second row of the first column.
+    )
+
+    bf(enum WidthType)nl()
+    This enumeration holds two values:
+    itemization(
+    itb(EqualWidth)
+        This value may be specified when all the table's columns should have
+equal width (i.e., equal to the width of the widest table element), 
+    itb(ColumnWidth)
+        This value may be specified when the columns should be allowed
+variable widths. In this case each column will be as wide as its widest
+element. 
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Table(Iterator const &begin, Iterator const &end, 
+                unsigned nColumns, TableSpec::FillDirection direction))
+        This constructor expects two `Input Iterators' defining the range of
+elements to be displayed by the table. The elements to which the iterators
+point must be insertable as text into tt(ostream) objects. The parameter
+tt(nColumns) may be initialized with the number of columns the table should
+have. The number of rows are implied by the combination of this parameter and
+the number of elements in the iterator-range. 
+    itb(Table(Iterator const &begin, Iterator const &end, 
+                TableSupport &tableSupport,
+                unsigned nColumns, TableSpec::FillDirection direction))
+        This constructor operates identically to the previous constructor, but
+expects an additional reference to a bf(FBB::TableSupport) object. A
+bf(FBB::TableSupport) object offers additional formatting features used by the
+table to define elements like horizontal lines  between rows, additional
+separators between elements etc.
+    )
+    The copy constructor is not available.
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(std::ostream &operator<<(std::ostream &, 
+            FBB::Table<Iterator> const &table))
+        This overloaded operator is actually an overloaded operator in the
+class bf(FBB::TableSpec), but since bf(FBB::TableSpec) is the baseclass of
+bf(FBB::Table), an bf(FBB::Table<Iterator>) object may be inserted into a
+bf(std::ostream). Tables may be inserted repeatedly (e.g., using a sequence of
+insertions). 
+
+    Note that this operator is not defined in the namespace bf(FBB).
+    )
+    The overloaded assignment operator is not available.
+
+manpagesection(MEMBER FUNCTION)
+    itemization(
+    itb(void setWidth(FBB::TableSpec::WidthType type))
+        This member may be used to specify the width of indvidual or all
+columns of the table. Specify bf(TableSpec::EqualWidth) when all columns
+should have equal widths, specify bf(TableSpec::ColumnWidth) when each column
+should be as wide as its widest element. This function 
+    )
+
+
+manpagesection(MANPULATORS)
+    itemization(
+    itb(FBB::equalWidth(FBB::Table<Iterator> &table))
+        This manipulator may be used to insert a table into a tt(std::ostream)
+object, enforcing equal column widths. To use this manipulator, the header
+file  tt(<bobcat/equalwidth>) must be inserted.
+    itb(FBB::columnWidth(FBB::Table<Iterator> &table))
+        This manipulator may be used to insert a table into a tt(std::ostream)
+object, enforcing column widths which are as
+wide as their widest elements. To use this manipulator, the header
+file  tt(<bobcat/columnwidth>) must be inserted.
+    )
+
+manpagesection(EXAMPLE)
+    To do
+
+manpagefiles()
+    em(bobcat/table) - defines the class interface;nl()
+    em(bobcat/tablespec) - defines bf(table)'s baseclass interface;nl()
+    em(bobcat/equalwidth) - defines the bf(equalWidth) manipulator;nl()
+    em(bobcat/columnwidth) - defines the bf(columnWidth) manipulator;nl()
+    em(bobcat/tablesupport) - defines the bf(tableSupport) class interface.
+
+manpageseealso()
+    bf(bobcat)(7), bf(columnwidth)(3bobcat), bf(equalwidth)(3bobcat),
+    bf(table)(3bobcat), bf(tablespec)(3bobcat), bf(tablesupport)(3bobcat)
+    
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

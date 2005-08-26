@@ -1,0 +1,118 @@
+#ifndef _INCLUDED_BOBCAT_TABLESPEC_
+#define _INCLUDED_BOBCAT_TABLESPEC_
+
+#include <string>
+#include <vector>
+
+#include <bobcat/tablesupport>
+
+namespace FBB
+{
+    class TableSpec;
+}
+
+std::ostream &operator<<(std::ostream &str, FBB::TableSpec const &tableType);
+
+namespace FBB
+{
+
+class TableSpec
+{
+    friend std::ostream &::operator<<(std::ostream &str, 
+                                    FBB::TableSpec const &tableType); 
+    public:
+        enum WidthType
+        {
+            EqualWidth,
+            ColumnWidth,
+        };
+        enum FillDirection
+        {
+            Horizontal,
+            Vertical
+        };
+
+    private:
+        TableSupport           *d_tableSupportPtr;
+        TableSupport           &d_tableSupport;
+        unsigned                d_maxWidth;
+        unsigned                d_nRows;
+        unsigned                d_nColumns;
+        WidthType               d_widthType;
+        std::vector<unsigned>   d_colWidth;
+        unsigned               (TableSpec::*d_widthFun)
+                                        (unsigned col) const;
+        std::string const     &(TableSpec::*d_indexFun)
+                                        (unsigned row, unsigned col) const;
+
+    protected:
+        std::vector<std::string> d_string;
+
+    public:
+        void setWidth(WidthType type);
+        
+    protected:
+        TableSpec(TableSupport &tableSupport, unsigned nColumns,
+                    FillDirection direction);
+
+        TableSpec(unsigned nColumns, FillDirection direction);
+
+        ~TableSpec()
+        {
+            delete d_tableSupportPtr;
+        }
+        void init();
+
+    private:
+        std::ostream &insert(std::ostream &ostr) const;
+        unsigned width(unsigned col) const  // returns correct column width,
+        {                                   // given d_widthType
+            return (this->*d_widthFun)(col);
+        }
+
+        unsigned maxWidth(unsigned) const
+        {
+            return d_maxWidth;
+        }
+        unsigned columnWidth(unsigned col) const
+        {
+            return d_colWidth[col];
+        }
+                                    // returns string at particular location
+        std::string const &stringAt(unsigned row, unsigned col) const
+        {
+            return (this->*d_indexFun)(row, col);
+        }
+
+        std::string const &hIndex(unsigned row, unsigned col) const
+        {
+            return d_string[row * d_nColumns + col];
+        }
+        std::string const &vIndex(unsigned row, unsigned col) const
+        {
+            return d_string[col * d_nRows + row];
+        }
+
+
+};
+
+} // FBB
+
+#endif
+/*
+    unsigned (TableSpec::*d_tableWidthFun)() const;
+
+        void updateColumn(unsigned col, unsigned width);
+
+        unsigned maxWidth() const
+        {
+            return d_maxWidth * d_nColumns;
+        }
+        unsigned columnSum() const;
+
+        unsigned tableWidth() const
+        {
+            return (this->*d_tableWidthFun)();
+        }
+
+*/
