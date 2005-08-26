@@ -1,0 +1,119 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::TableSupport)(3bobcat)(_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
+                    (Protocol defining Base class)
+
+manpagename(FBB::TableSupport)(Defines protocol for Table-support classes)
+
+manpagesynopsis()
+    bf(#include <bobcat/tableSupport>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    This class is designed as a (non-pure) base class for support-objects for
+bf(FBB::Table) objects. By overriding its virtual functions users have control
+over the way the actual layout of tables is defined. By default the virtual
+members of this class implement plain, blank-space delimited table elements.
+
+    When this is not appropriate, a class should be derived from
+bf(FBB::TableSupport) overriding those members that violate the programmer's
+current intentions. Then, an object of this derived class may be presented 
+to one of the bf(FBB::Table) constructors, resulting in modifications of the
+default procedures used to disaplay separators between table elements.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(TableSupport())
+        The default constructor
+    itb(TableSupport(TableSupport const &other) throw()) 
+    The standard copy constructor is available.
+    )
+
+manpagesection(NON_VIRTUAL MEMBER FUNCTIONS)
+    itemization(
+    itb(void setParam(std::ostream &ostr, unsigned rows, 
+                        std::vector<unsigned> const &colWidth,
+                        unsigned maxWidth))
+        This member function defines the bf(FBB::TableSupport)'s essential
+parameters: nl()
+        bf(ostr) is a reference to the bf(std::ostream) into which the table
+will be inserted; nl()
+        bf(rows) defines the number of rows used by the table;nl()
+        bf(colWidth) is a vector defining the widths of the individual columns
+of the table. Its values are ignored when the next parameter is unequal to 0,
+but in that case its em(size) (its number of elements) em(are) used;nl()
+        bf(maxWidth) is the width of each column. If set to 0 bf(colWidth)'s
+elements are used to determine the width of the individual columns.
+
+    Note that this member is normally not used by the programmer, but it is
+called with appropriate values by bf(FBB::Table).
+    itb(void setParam(unsigned maxWidth))
+        This member function defines the bf(FBB::TableSupport)'s bf(maxWidth)
+parameter, holding the width of each column.
+
+    Note that this member is normally not used by the programmer, but it is
+called with appropriate values by bf(FBB::Table).
+    )
+
+manpagesection(ACCESSORS)
+
+    itemization(
+    itb(unsigned tableWidth() const)
+        Returns the width of the table.
+    itb(unsigned nColumns() const)
+        Returns the table's number of columns.
+    itb(std::ostream &out() const)
+        Returns the bf(std::ostream) into which the table is inserted.
+    )
+
+manpagesection(VIRTUAL MEMBER FUNCTIONS)
+
+    The following member functions may be overridden in derived classes. There
+default implementations are given together with their prototypes, below:
+
+    itemization(
+    
+    itb(virtual void hline(unsigned row) const)
+        This member is called just before the indicated row (offset, not
+number) is inserted into the bf(std::ostream). Its line number is presented
+as a line-reference. Its intended task is to write a (partial) horizontal
+line either before the first row (row == 0) or between two rows of the table. 
+        By default it performs no actions.
+    itb(virtual void hline() const)
+        This member is called when the table's last line has been inserted 
+into the bf(std::ostream). Its intended task is to write a (partial) horizontal
+line at the end of the table.
+        By default it performs no actions.
+    itb(virtual void vline(unsigned col) const)
+        This member is called just before the indicated column element
+(offset, not number) is inserted into the bf(std::ostream). Its column number
+is presented as a reference. Its intended task is to write a separator either
+before the first element of a row (col == 0) or between two subsequent
+elements in the table's rows. By default it inserts one blank space.
+    itb(virtual void vline() const)
+        This member is called once the last element in a row 
+has been inserted 
+into the bf(std::ostream). Its intended task is to write a line separator,
+terminating a line of the table.
+        By default it inserts a new-line (tt(\n)) character.
+    )
+
+manpagesection(EXAMPLE)
+    To do
+
+manpagefiles()
+    em(bobcat/tableSupport) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(table)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

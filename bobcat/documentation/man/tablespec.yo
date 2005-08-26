@@ -1,0 +1,103 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::TableSpec)(3bobcat)(_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
+                    (Table-baseclass)
+
+manpagename(FBB::TableSpec)(Base class for the class bf(FBB::Table))
+
+manpagesynopsis()
+    bf(#include <bobcat/tablespec>)nl()
+    Linking option: tt(-lbobcat) 
+
+    Note: bf(#include <bobcat/tablespec>) is implied by 
+            bf(#include <bobcat/table>) 
+
+manpagedescription()
+
+    bf(FBB::TableSpec) is bf(FBB::Table)'s base class. See bf(table)(3bobcat)
+for usage information. In this manual page only the specific characteristics
+of bf(FBB::TableSpec) are listed.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(ENUMERATIONS)
+    The following enumerations are definedin th class bf(FBB::TableSpec):
+
+    bf(enum FillDirection)nl()
+    This enumeration holds two values:
+    itemization(
+    itb(Horizontal)
+        Used to request row-wise storage of table elements in an 
+        bf(FBB::Table).
+    itb(Vertical)
+        Used to request column-wise storage of table elements in an
+        bf(FBB::Table). 
+    )
+
+    bf(enum WidthType)nl()
+    This enumeration holds two values:
+    itemization(
+    itb(EqualWidth)
+        Used to request equal width for all columns of an bf(FBB::Table).
+    itb(ColumnWidth)
+        Used to request width-per-column for the columns of an bf(FBB::Table).
+    )
+
+manpagesection(CONSTRUCTORS)
+    
+    There are no public constructors in this class. bf(FBB::TableSpec) objects
+are constructed when bf(FBB::Table) objects are constructed.
+
+manpagesection(OVERLOADED OPERATORS)
+
+    itemization(
+    itb(std::ostream &operator<<(std::ostream &, 
+        FBB::TableSpec const &tableSpec))
+    This overloaded operator is normally used to insert an bf(FBB::Table) into
+    a bf(std::ostream). See bf(table)(3bobcat) for details.
+
+    Note that this operator is not defined in the namespace bf(FBB).
+    )
+    The overloaded assignment operator is not available.
+
+manpagesection(MEMBER FUNCTION)
+    itemization(
+    itb(void setWidth(FBB::TableSpec::WidthType type))
+        This member may be used to specify the width of indvidual or all
+columns of the tableSpec. Specify bf(TableSpec::EqualWidth) when all columns
+should have equal widths, specify bf(TableSpec::ColumnWidth) when each column
+should be as wide as its widest element. 
+    )
+
+
+manpagesection(MANPULATORS)
+    itemization(
+    itb(FBB::equalWidth(FBB::TableSpec &tableSpec))
+        This manipulator is normally used to insert an bf(FBB::Table) object
+into a bf(std::ostream), enforcing equal column widths. To use this
+manipulator, the header file tt(<bobcat/equalwidth>) must be inserted.
+    itb(FBB::columnWidth(FBB::TableSpec &tableSpec))
+        This manipulator is normally used to insert an bf(FBB::Table) object
+into a bf(std::ostream), enforcing column widths which are as wide as their
+widest elements. To use this manipulator, the header file
+tt(<bobcat/columnwidth>) must be inserted.
+    )
+
+manpagesection(EXAMPLE)
+    See bf(table)(3bobcat)
+
+manpagefiles()
+    em(bobcat/tableSpec) - defines bf(Table)'s baseclass interface;nl()
+
+manpageseealso()
+    bf(bobcat)(7), bf(columnwidth)(3bobcat), bf(equalwidth)(3bobcat),
+    bf(table)(3bobcat)
+    
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

@@ -1,0 +1,61 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::columnWidth)(3bobcat)(_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
+                    (Object Manipulator)
+
+manpagename(FBB::columnWidth)
+            (Manipulator class enforcing column specific Table column widths)
+
+manpagesynopsis()
+    bf(#include <bobcat/columnwidth>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    An object of this class may be immediately inserted into an
+bf(std::ostream) to insert a bf(FBB::Table) whose columns are as wide as
+necessary to fit their widest elements.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(columnWidth(FBB::Table &table))
+        The normal use of this constructor is within a insertion
+expression. 
+    itb(columnWidth(columnWidth const &other) throw()) 
+    The standard copy constructor is available, but is normally not used.
+    )
+
+manpagesection(MEMBER FUNCTIONS)
+    There are no publicly available memberfunctions.
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(std::ostream &::operator<<(std::ostream &str, 
+            FBB::columnWidth const &ew))
+        Tables may be inserted into tt(std::ostream) objects using this
+overloaded operator, which sets the column width to
+bf(FBB::TableSpec::ColumnWidth) prior to inserting the table into the stream.
+
+    Note that this operator is not defined in the namespace bf(FBB).
+    )
+    The overloaded assignment operator is available, but is normally not
+used. 
+
+manpagesection(EXAMPLE)
+    See bf(table)(3bobcat)
+
+manpagefiles()
+    em(bobcat/columnwidth) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(equalwidth)(3bobcat), bf(table)(3bobcat), 
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)
