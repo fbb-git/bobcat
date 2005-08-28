@@ -1,0 +1,166 @@
+#ifndef _INCLUDED_BOBCAT_SYSLOGBUF_
+#define _INCLUDED_BOBCAT_SYSLOGBUF_
+
+/*
+    options (default: none):
+
+       LOG_CONS
+              write directly to system console  if  there  is  an
+              error while sending to system logger
+
+       LOG_NDELAY
+              open the connection immediately (normally, the con-
+              nection is opened when the first message is logged)
+
+       LOG_PERROR
+              print to stderr as well
+
+       LOG_PID
+              include PID with each message
+
+
+    facility
+        type of program doing the logging. LOG_USER is used as default:
+
+       LOG_AUTHPRIV
+              security/authorization messages (private)
+
+       LOG_CRON
+              clock daemon (cron and at)
+
+       LOG_DAEMON
+              other system daemons
+
+       LOG_KERN
+              kernel messages
+
+       LOG_LOCAL0 through LOG_LOCAL7
+              reserved for local use
+
+       LOG_LPR
+              line printer subsystem
+
+       LOG_MAIL
+              mail subsystem
+
+       LOG_NEWS
+              USENET news subsystem
+
+       LOG_SYSLOGBUF
+              messages generated internally by syslogbufd
+
+       LOG_USER(default)
+              generic user-level messages
+
+       LOG_UUCP
+              UUCP subsystem
+
+   level (priority):
+
+        LOG_NOTICE is used by default.
+        This determines the importance of the message.  The levels
+        are, in order of decreasing importance:
+
+       LOG_EMERG
+              system is unusable
+
+       LOG_ALERT
+              action must be taken immediately
+
+       LOG_CRIT
+              critical conditions
+
+       LOG_ERR
+              error conditions
+
+       LOG_WARNING
+              warning conditions
+
+       LOG_NOTICE   (Used as DEFAULT)
+              normal, but significant, condition
+
+       LOG_INFO
+              informational message
+
+       LOG_DEBUG
+              debug-level message
+
+*/
+
+#include <syslog.h>
+#include <streambuf>
+#include <string>
+                        
+namespace FBB
+{
+    enum Priority
+    {
+        NOTICE  = LOG_NOTICE,
+        EMERG   = LOG_EMERG,
+        ALERT   = LOG_ALERT,
+        CRIT    = LOG_CRIT,
+        ERR     = LOG_ERR,
+        WARNING = LOG_WARNING,
+        INFO    = LOG_INFO,
+        DEBUG   = LOG_DEBUG,
+    };
+
+    enum Facility
+    {
+       AUTHPRIV     = LOG_AUTHPRIV,
+       CRON         = LOG_CRON,
+       DAEMON       = LOG_DAEMON,
+       KERN         = LOG_KERN,
+       LOCAL0       = LOG_LOCAL0,
+       LOCAL1       = LOG_LOCAL1,
+       LOCAL2       = LOG_LOCAL2,
+       LOCAL3       = LOG_LOCAL3,
+       LOCAL4       = LOG_LOCAL4,
+       LOCAL5       = LOG_LOCAL5,
+       LOCAL6       = LOG_LOCAL6,
+       LOCAL7       = LOG_LOCAL7,
+       LPR          = LOG_LPR,
+       MAIL         = LOG_MAIL,
+       NEWS         = LOG_NEWS,
+       USER         = LOG_USER,
+       UUCP         = LOG_UUCP,
+    };
+
+    class Syslogbuf: public std::streambuf
+    {
+        Priority    d_priority;
+        Priority    d_orgPriority;
+        std::string d_buffer;
+
+        public:
+            Syslogbuf(char const *ident,
+                Priority priority = NOTICE, Facility facility = USER,
+                int option = 0);
+
+            ~Syslogbuf();
+
+            Priority defaultPriority()   const
+            {
+                return d_orgPriority;
+            }
+
+            Priority priority()   const
+            {
+                return d_priority;
+            }
+
+            Priority setDefaultPriority(Priority priority);
+            Priority setPriority(Priority priority);
+
+        protected:
+            virtual int sync();
+            virtual int overflow(int c);
+    };
+}
+
+#endif
+
+
+
+
+
