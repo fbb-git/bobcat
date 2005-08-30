@@ -14,14 +14,15 @@ necessarily related to inheritance.
                 String          
 
     
-                                Errno                       
-                                  |
-        +-----------+--------+----+--+---------+------+------+
-        |           |        |       |         |      |      |
-    Selector    Pattern     Msg  Redirector   Pipe   Fork   User
-                    |
-                ConfigFile
-
+                              Errno                                   LogBuffer
+                                |                                        |
+      +-----------+--------+----+--+---------+------+------+--------+    |
+      |           |        |       |         |      |      |        |    |
+  Selector    Pattern     Msg  Redirector   Pipe   Fork   User      +--+-+
+                  |                                                    |
+              ConfigFile                                              Log
+                                                                       |
+                                                                     level
 
      DateTime
         |
@@ -40,6 +41,6 @@ necessarily related to inheritance.
     columnWidth     equalWidth    Table   
 
 
-            SyslogBuf
-                |
-          SyslogStream
+            SyslogBuf                
+                |                    
+          SyslogStream               
