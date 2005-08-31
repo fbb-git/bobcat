@@ -1,0 +1,12 @@
+#include "socketbase.ih"
+
+bool SocketBase::boolOption(int optname) const throw (Errno)
+{
+    int         value;
+    socklen_t   valueSize = sizeof(int);
+
+    if (getsockopt(d_sock, SOL_SOCKET, optname, &value, &valueSize) < 0)
+        throw Errno("SocketBase::getOption()");
+
+    return value != 0;
+}
