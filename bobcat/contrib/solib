@@ -1,0 +1,156 @@
+#!/usr/bin/icmake -qt/tmp/fbbso
+
+/*
+
+    COMPILER:       The compiler to use. 
+*/
+
+#define COMPILER        "g++"
+#define EXTRACTDIR      "/tmp"
+#define ECHO_REQUEST    1
+
+//                      NO CONFIGURABLE PARTS BELOW THIS LINE
+
+/*
+                            V A R S . I M
+*/
+
+string
+    libBase,
+    versionArg,
+    libxxx,             // full library-path
+    copt,
+    libso,              // symbolic link to so.major library path
+    libsomajor;         // lib.so.major path
+list
+    liblist;
+
+/*
+                                I N I T I A L . I M
+*/
+void initialize()
+{
+    echo(ECHO_REQUEST);
+    copt += " -fPIC";
+}
+
+/*
+                        L I N K S O . I M
+*/
+
+void link_solib()
+{
+    string  
+        currentdir,
+        extract,
+        libraries;
+    list
+        sofiles,
+        version;
+    int idx;
+
+    for (idx = 0; idx < sizeof(liblist); idx++)
+        libraries += " -l" + element(idx, liblist);
+    
+    extract = EXTRACTDIR + "/" + (string)getpid();
+
+    version = strtok(versionArg, ".");
+    libso = "lib" + libBase + ".so";
+    libxxx = libso + ".";
+    libsomajor = libxxx + element(0, version);
+    libxxx += versionArg;
+
+    printf("\n");
+    if (exists(extract))
+    {
+        printf(extract, " exists. Remove it first.\n");
+        exit(1);
+    }
+
+    currentdir = chdir(".");
+    exec("mkdir", extract);
+    chdir(extract);
+
+    exec("ar", "x", currentdir + "/lib" + libBase + ".a");
+
+//
+// This will run:
+//  g++ -shared -Wl,-soname,libfbb.so.1 -o libfbb.so.1.0.0 -l<libs>
+//                                                      *.o  -L.    
+//  ln -sf libfbbso.so.1.0.0 libfbbso.so.1 
+//  ln -sf libfbbso.so.1 libfbbso.so
+//  
+//  Whereafter the shared library may be moved to /usr/local/lib, and ldconfig
+//  must be run if the library is new, to recognize the new shared library
+//
+//  But ar xv will extract all files, and ar t will show all files
+//  so ar xv, grep and ar t may be combined to extract information
+//  E.g., 
+//  ar  xv libxxx.a `ar t libxxx.a | grep '^2[^[:digit:]]'`
+//
+
+    exec(COMPILER,
+        "-shared",
+        "-Wl,-soname," + libsomajor,
+        "-o", libxxx,
+        libraries, 
+        "*.o"
+    );
+    exec("ln", "-sf", libxxx, libsomajor);
+    exec("ln", "-sf", libsomajor, libso);
+
+    exec("mv", "lib*", currentdir);
+    chdir(currentdir);
+    exec("rm", "-rf", extract);
+
+    printf("\n");
+    exec("ls", "-l", libso + "*");
+    printf("\n",
+           "done.\n");
+}
+
+void main(int argc, list argv)
+{
+    string prog;
+
+    prog = "solib";
+
+    if (argc == 1)
+    {
+        printf(
+            prog, " V 1.0.1 by Frank B. Brokken (f.b.brokken@rc.rug.nl)\n",
+            "\n",
+            "Usage: ", prog, " name version [libs]\n",
+            "Where:\n",
+            "      name: base name of an existing lib<name>.a library in\n",
+            "            the current directory (e.g., fbb for libfbb.a).\n",
+            "   version: full version of the .so lib to create (e.g., ",
+                                                                "1.0.0).\n",
+            "      libs: optional comma-sparated list of libraries\n",
+            "             required by modules in lib<name>.a\n"
+            "Creates:\n",
+            "       lib<name>.so.<version> and symbolic links\n",
+            "       (I.e., lib<name>.so.1.0.0, lib<name>.so.1, ",
+                                                            "lib<name>.so)\n",
+            "\n",
+            "Cp/mv these files to, e.g., /usr/local/lib\n",
+            "\n"
+            "Optionally, run `ldconfig' or make sure the library\n",
+            "is mentioned in the environment variable LD_LIBRARY_PATH\n",
+            "\n");
+            exit(1);
+    }
+
+    libBase = element(1, argv);
+    versionArg = element(2, argv);
+    liblist = strtok(element(3, argv), ",");
+    
+    initialize();
+    link_solib();           // separate processing for so-lib
+
+    printf("\n*** INSTALL THE LIBRARY AND DO `ldconfig' ***\n\n");
+}
+
+
+
+

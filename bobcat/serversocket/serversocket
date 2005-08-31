@@ -1,0 +1,19 @@
+#ifndef _INCLUDED_BOBCAT_SERVERSOCKET_
+#define _INCLUDED_BOBCAT_SERVERSOCKET_
+
+#include <bobcat/socketbase>
+
+namespace FBB
+{
+    class ServerSocket: public SocketBase
+    {
+        public:
+            ServerSocket(unsigned port) throw (Errno);       // 1
+            void listen(unsigned backlog = 5, bool blocking = true)  
+                                                                throw (Errno);
+            SocketBase accept() throw (Errno);
+    };
+
+}
+
+#endif
