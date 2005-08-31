@@ -19,6 +19,33 @@ process. The class is a virtual base class. Derived classes em(must) implement
 the members bf(childProcess()) and bf(parentProcess()) as part of the
 `Template Method Design Pattern' (see Gamma em(et al.), 1995).
 
+Terminating child processes send bf(SIGCHLD) signals to their parents. The
+bf(C) library offers the following em(macros) to analyze the em(status) values
+received by the parent process using a bf(wait)(2) or bf(waitpid)(2) system
+call: 
+    itemization(
+    itb(int WIFEXITED(int status))
+        This macro returns a nonzero value if the child process terminated
+     normally with `exit' or `_exit'.
+    itb(int WEXITSTATUS(int status))
+        If `WIFEXITED' is true of `tt(status)', this macro returns the
+        low-order 8 bits of the exit status value from the child process.  
+    itb(int WIFSIGNALED(int status))
+        This macro returns a nonzero value if the child process terminated
+     because it received a signal that was not handled.  
+    itb(int WTERMSIG(int status))
+        If `WIFSIGNALED' is true of `tt(status)', this macro returns the
+        signal number of the signal that terminated the child process.
+    itb(int WCOREDUMP(int status))
+        This macro returns a nonzero value if the child process terminated
+        and produced a core dump.
+    itb(int WIFSTOPPED(int status))
+        This macro returns a nonzero value if the child process is stopped.
+    itb(int WSTOPSIG(int status))
+        If `WIFSTOPPED' is true of `tt(status)', this macro returns the signal 
+        number of the signal that caused the child process to stop.
+    )
+
 includefile(namespace.inc)
 
 manpagesection(INHERITS FROM)
@@ -95,7 +122,7 @@ manpagefiles()
 
 manpageseealso()
     bf(bobcat)(7), bf(ipipe)(3bobcat), bf(fork)(2), bf(opipe)(3bobcat),
-    bf(pipe)(3bobcat), bf(redirector)(3bobcat)
+    bf(pipe)(3bobcat), bf(redirector)(3bobcat), bf(wait)(2), bf(waitpid)(2)
 
 manpagebugs()
     None Reported.

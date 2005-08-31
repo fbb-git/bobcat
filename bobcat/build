@@ -470,35 +470,37 @@ void install(string where)
     docbasedev = where + "/bobcat-dev/usr/share/doc/bobcat-dev/";
 
     printf("\ninstall libraries\n");
-    system("mkdir -p " + bobcat + "/usr/lib");
-    system("cp -pd lib/*bobcat* " + bobcat + "/usr/lib");
+        system("mkdir -p " + bobcat + "/usr/lib");
+        system("cp -pd lib/*bobcat* " + bobcat + "/usr/lib");
 
     printf("\ninstall headers\n");
-    system("mkdir -p " + bobcatdev + "/usr/include/bobcat");
-    system("cp -p inc/bobcat/* " + bobcatdev + "/usr/include/bobcat");
+        system("mkdir -p " + bobcatdev + "/usr/include/bobcat");
+        system("cp -p inc/bobcat/* " + bobcatdev + "/usr/include/bobcat");
 
     printf("\ninstall man-page info\n");
-    system("mkdir -p " + docbasedev + "man/");
-    system("mkdir -p " + bobcatdev + "/usr/share/man/man{3,7}");
+        system("mkdir -p " + docbasedev + "man/");
+        system("mkdir -p " + bobcatdev + "/usr/share/man/man{3,7}");
 
-    system("cp documentation/man/*.3.html " +
+        system("cp documentation/man/*.3.html " +
                         docbasedev + "man/");
-    system("cp documentation/man/*.3bobcat " +
+        system("cp documentation/man/*.3bobcat " +
                         bobcatdev + "/usr/share/man/man3");
 
-    system("cp documentation/man/*.html " +
+        system("cp documentation/man/*.html " +
                         docbasedev + "man/");
-    system("cp documentation/man/bobcat.jpg " +
+        system("cp documentation/man/bobcat.jpg " +
                         docbasedev + "man/");
-    system("ln -s bobcat.html " + docbasedev + "man/index.html");
-    system("cp documentation/man/*.7 " +
+        system("ln -s bobcat.html " + docbasedev + "man/index.html");
+        system("cp documentation/man/*.7 " +
                         bobcatdev + "/usr/share/man/man7");
 
     printf("\ninstall remaining documentation\n");
-    system("mkdir -p " + docbase);
-    system("cp COPYING README  " + docbase);
-    system("cp COPYING README README.class-setup Changelog TODO " 
-            + docbasedev);
+        system("mkdir -p " + docbase);
+        system("cp COPYING README  " + docbase);
+        system("cp COPYING README README.class-setup Changelog TODO " 
+                + docbasedev);
+        system("cp -r documentation/examples " 
+                + docbasedev);
 }
 
 void debian()
