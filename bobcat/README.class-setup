@@ -7,6 +7,10 @@ compiling the class Msg Errno must be available. The dependencies are not
 necessarily related to inheritance.
 
 
+     OFdStreambuf    IFdStreambuf    Hash   Hostent
+
+
+
         Wrap1            A2x    Wrap2       Wrap1c      Wrap2c      X2a
           |               |     
           +-------+-------+     
@@ -20,16 +24,24 @@ necessarily related to inheritance.
       |           |        |       |         |      |      |        |    |
   Selector    Pattern     Msg  Redirector   Pipe   Fork   User      +--+-+
                   |                                                    |
-              ConfigFile                                              Log
-                                                                       |
-                                                                     level
+           +------+-------+                                           Log
+           |              |                                            |
+      GetHostent      ConfigFile                                     level
+           |
+      InetAddress
+           |
+       SocketBase 
+           |
+    +------+---------+       
+    |                |
+ ClientSocket   ServerSocket
+
+
 
      DateTime
         |
        Stat
 
-
-     OFdStreambuf    IFdStreambuf    Hash
 
 
            TableSupport
@@ -39,6 +51,7 @@ necessarily related to inheritance.
         +-------+-------+-----------+        
         |               |           | 
     columnWidth     equalWidth    Table   
+
 
 
             SyslogBuf                
