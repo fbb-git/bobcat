@@ -20,19 +20,19 @@ necessarily related to inheritance.
     
                               Errno                                   LogBuffer
                                 |                                        |
-      +-----------+--------+----+--+---------+------+------+--------+    |
-      |           |        |       |         |      |      |        |    |
-  Selector    Pattern     Msg  Redirector   Pipe   Fork   User      +--+-+
-                  |                                                    |
-           +------+-------+                                           Log
-           |              |                                            |
-      GetHostent      ConfigFile                                     level
-           |
-      InetAddress
-           |
-       SocketBase 
-           |
-    +------+---------+       
+      +-----------+--------+----+--+---------+------+------+---+----+    |
+      |           |        |       |         |      |      |   |    |    |
+  Selector    Pattern     Msg  Redirector   Pipe   Fork   User |    +--+-+
+                  |                                            |       |
+           +------+-------+                                    |      Log
+           |              |                                    |       |
+      GetHostent      ConfigFile                               |     level
+           |                                                   | 
+      InetAddress                                   Hostent    |
+           |                                           |       |
+       SocketBase                                      +---+---+
+           |                                               |
+    +------+---------+                                  Hostname
     |                |
  ClientSocket   ServerSocket
 
