@@ -1,8 +1,27 @@
 To Install the bobcat library by hand instead of using the binary distribution
-or using icmake's build script perform the following steps:
+perform the following steps:
 
     1. Inspect the values of the variables in the file INSTALL.cf
        Modify these when necessary.
 
-    2. Run `./bootstrap' to compile and install the bobcat library and header
-       files. 
+    2. Run `./make/library' to compile the bobcat library
+
+        Note: it's not `make library'
+    
+    3. Run (probably as root) ./make/install to install
+
+        Note: it's not `make install'
+
+    Following the installation nothing in this directory tree is required
+    for the proper functioning of the bobcat library, so consider removing it.
+
+
+Make sure that the library is found by the loader. By default it is installed
+in /usr/lib, which is in the loader's standard search path
+
+By default the headers are stored under /usr/include. Since this is part of
+the compiler's the standard include path the header files are included as,
+e.g., #include <bobcat/errno>. No `bobcat' headers have extenstions.
+
+By default the manual pages are stored under /usr/share/man/man3 and
+/usr/share/man/man7, which are normally in the `man' program's set of visited directories.

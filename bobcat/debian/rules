@@ -42,7 +42,7 @@ build-stamp: configure-stamp
 	dh_testdir
 
 	# Add here commands to compile the package.
-	./build debian
+	./make/library
 
 	touch build-stamp
 
@@ -52,7 +52,7 @@ clean:
 	rm -f build-stamp configure-stamp
 
 	# Add here commands to clean up after the build process.
-	./build clean
+	./make/clean
 
 	dh_clean 
 
@@ -63,7 +63,7 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/tmp
-	./build install debian
+	./make/install debian/bobcat debian/bobcat-dev
 
 
 # Build architecture-independent files here.

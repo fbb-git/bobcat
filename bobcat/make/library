@@ -1,0 +1,45 @@
+#!/bin/sh
+
+. make/parameters
+. VERSION
+
+req()
+{
+    echo "$*"
+    $* || exit 1
+}
+
+req mkdir -p tmp/lib tmp/inc
+
+LIB_A=tmp/lib/lib${LIBRARY}.a
+
+NR=0
+for x in `cat CLASSES`
+do
+    [ ! -e tmp/inc/$x -o $x/$x -nt tmp/inc/$x ] && req cp $x/$x tmp/inc
+    req cd $x
+    SRC=`find ./ -regex '.*\.cc' -maxdepth 1 -printf "%f\n"`
+    [ "$SRC" == "" ] && (cd ..; continue)
+    mkdir -p o
+    for src in $SRC
+    do
+        BASE=${src%\.[^\.]*}
+        OBJ=o/${NR}${BASE}.o
+        [ -e $OBJ -a $src -nt $OBJ  -o \
+          ! -e $OBJ -a \
+            \( ! -e ../$LIB_A -o $src -nt ../$LIB_A \) ] &&
+                             req g++ $COPTS -o  $OBJ -c ${src}
+    done
+    cd ..
+    let NR=${NR}+1
+done
+
+OBJ=`find ./ -regex '.*\.o' -print`
+if [ "$OBJ" != "" ] 
+then
+    echo ar rs $LIB_A '*/o/*.o'
+    ar rs $LIB_A $OBJ || exit 1
+    req rm $OBJ
+fi
+
+./make/solib

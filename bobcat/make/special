@@ -1,0 +1,13 @@
+#!/bin/sh
+
+. INSTALL.cf
+
+req()
+{
+    echo "$*"
+    $* || exit 1
+}
+
+[ ! -e release.yo -o VERSION -nt release.yo ] && req ./VERSION.sh
+
+

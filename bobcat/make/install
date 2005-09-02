@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# Argument 1: optional prefix path to installation paths for non-dev
+# e.g., debian/bobcat argument 2: optional prefix path to intstallation
+# path for -dev, e.g. debian/bobcat-dev
+
+. INSTALL.cf
+. make/parameters
+
+req()
+{
+    echo "$*"
+    $* || exit 1
+}
+
+reqeval()
+{
+    echo "$*"
+    eval "$*" || exit 1
+}
+
+    # install the libraries
+req mkdir -p $1$LIB
+req cp -d tmp/lib/* $1$LIB
+
+    # install the headers
+req mkdir -p $1$INC
+req cp tmp/inc/* $1$INC
+
+    # install the manual pages
+req mkdir -p $2$MAN/man3
+for man in tmp/man/man3/*
+do
+    reqeval "gzip < $man > $2$MAN/man3/`basename $man`.gz"
+done
+
+req mkdir -p $2$MAN/man7
+reqeval "gzip < tmp/man/man7/bobcat.7 > $2$MAN/man7/bobcat.7.gz"
+
+    # install the html versions of the man-pages
+req mkdir -p $2/$DOCDEV/man
+req cp tmp/manhtml/* $2$DOCDEV/man
+req ln -sf bobcat.7.html $2$DOCDEV/man/index.html
+req cp documentation/man/bobcat.jpg $2$DOCDEV/man/
+
+    # remaining documentation
+req cp COPYING README README.class-setup Changelog TODO $2$DOCDEV
+req cp -r documentation/examples $2$DOCDEV
+
+[ "$DOC" == "" ] && exit 0
+
+req mkdir -p $1$DOC
+req cp COPYING README $1$DOC
+
+

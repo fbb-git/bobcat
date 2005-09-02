@@ -1,4 +1,16 @@
 #!/bin/sh
 PROJECT=bobcat
 
-dpkg-buildpackage -mf.b.brokken@rug.nl -rfakeroot 2>&1 | tee /tmp/$PROJECT 
+cvsremove
+
+cd bobcat
+
+make/clean
+make/man
+
+export BOBCAT=minimal 
+dpkg-buildpackage -mf.b.brokken@rug.nl  -rfakeroot 2>&1 | tee /tmp/$PROJECT 
+
+cd ..
+
+cvsrestore
