@@ -1,24 +1,27 @@
-The following diagram shows the class dependencies. Plain classes have no
-other dependencies. Dependencies should be read downwards, e.g., String
-depends on Wrap1 and A2x.
+The following diagram shows the class dependencies. Classes listed on the same
+line have no mutual dependencies. Classes listed on lines starting with the
+digit 0 are not depenent on other bobcat classes. Then, diagrams showing
+dependencies of other classes. Dependencies should be read downwards, e.g.,
+String depends on Wrap1 and A2x, Hostname depends on Hostent and Errno.
 
-Dependencies refer to the construction of the class members. So, when
-compiling the class Msg Errno must be available. The dependencies are not
-necessarily related to inheritance.
+Dependencies refer to the construction of the class members as well as the use
+of the class headers. So, when compiling the class Msg the class Errno must be
+available (if not compile-time then most likely run-time). The dependencies
+are not necessarily related to inheritance.
 
 
-     OFdStreambuf    IFdStreambuf    Hash   Hostent
+0    OFdStreambuf    IFdStreambuf    Hash   Hostent
 
 
 
-        Wrap1            A2x    Wrap2       Wrap1c      Wrap2c      X2a
+0       Wrap1            A2x    Wrap2       Wrap1c      Wrap2c      X2a
           |               |     
           +-------+-------+     
                   |             
                 String          
 
     
-                              Errno                                   LogBuffer
+0                             Errno                                   LogBuffer
                                 |                                        |
       +-----------+--------+----+--+---------+------+------+---+----+    |
       |           |        |       |         |      |      |   |    |    |
@@ -38,22 +41,16 @@ necessarily related to inheritance.
 
 
 
-     DateTime
-        |
-       Stat
+0    DateTime       SyslogBuf
+        |               |
+       Stat        SyslogStream
 
 
 
-           TableSupport
+0          TableSupport
                 |
             TableSpec
                 |
         +-------+-------+-----------+        
         |               |           | 
     columnWidth     equalWidth    Table   
-
-
-
-            SyslogBuf                
-                |                    
-          SyslogStream               
