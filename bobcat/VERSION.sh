@@ -1,3 +1,4 @@
+#!/bin/sh
 . VERSION
 
 echo "SUBST(_CurVers_)($VERSION)
