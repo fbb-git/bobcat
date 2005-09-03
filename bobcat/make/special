@@ -1,5 +1,6 @@
 #!/bin/sh
 
+. VERSION
 . INSTALL.cf
 
 req()
@@ -8,6 +9,11 @@ req()
     $* || exit 1
 }
 
-[ ! -e release.yo -o VERSION -nt release.yo ] && req ./VERSION.sh
-
+if [ ! -e release.yo -o VERSION -nt release.yo ] 
+then
+    echo "
+SUBST(_CurVers_)($VERSION)
+SUBST(_CurYrs_)($YEARS)
+" > release.yo
+fi
 
