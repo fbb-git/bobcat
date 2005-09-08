@@ -15,7 +15,7 @@ void Hostent::copy(hostent const *other, unsigned n_aliases,
     for (unsigned idx = 0; idx < n_aliases; idx++)
         h_aliases[idx] = xstrdup(other->h_aliases[idx]);
 
-    reinterpret_cast<void *>(h_addr_list) = 
+    h_addr_list = reinterpret_cast<char **>(
                 memcpy(new char [n_addresses * h_length], 
-                       other->h_addr_list, n_addresses * h_length);
+                       other->h_addr_list, n_addresses * h_length));
 }

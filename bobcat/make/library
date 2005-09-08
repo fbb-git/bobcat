@@ -9,14 +9,15 @@ req()
     $* || exit 1
 }
 
-req mkdir -p tmp/lib tmp/inc
+req mkdir -p tmp/lib tmp/bobcat
 
 LIB_A=tmp/lib/lib${LIBRARY}.a
 
 NR=0
 for x in `cat CLASSES`
 do
-    [ ! -e tmp/inc/$x -o $x/$x -nt tmp/inc/$x ] && req cp $x/$x tmp/inc
+    [ ! -e tmp/bobcat/$x -o $x/$x -nt tmp/bobcat/$x ] && 
+                                                    req cp $x/$x tmp/bobcat
     req cd $x
     SRC=`find ./ -regex '.*\.cc' -maxdepth 1 -printf "%f\n"`
     [ "$SRC" == "" ] && (cd ..; continue)
