@@ -1,0 +1,30 @@
+#ifndef _INCLUDED_BOBCAT_LOCALCLIENTSOCKET_
+#define _INCLUDED_BOBCAT_LOCALCLIENTSOCKET_
+
+#include <bobcat/localsocketbase>
+
+#include <string>
+#include <sys/socket.h>
+#include <sys/un.h>
+
+
+namespace FBB
+{
+    class LocalClientSocket: public LocalSocketBase
+    {
+        struct sockaddr_un d_address;
+
+        public:
+            LocalClientSocket(std::string const &name) throw (Errno)    // 1
+            :
+                LocalSocketBase(name)
+            {}
+
+
+            int connect() throw (Errno);    // returns fd (socket) to talk to
+                                            // the server
+    };
+
+}
+
+#endif

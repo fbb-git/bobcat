@@ -13,15 +13,16 @@ manpagesynopsis()
 
 manpagedescription()
     An bf(FBB::ServerSocket) may be constructed to listen for connection
-requests from the Internet. Connection requests may be accepted in either
-em(blocking) or em(non-blocking) modes. When a connection is accepted a socket
-is returned which may be used to read information from or write information to
-the client that requested the connection. The socket that is made available is
-a em(file descriptor) which may be used to initialize a bf(std::istream)
-and/or bf(std::ostream). The bf(std::istream) is used to read information from
-the client process; the bf(std::ostream) is used to send information to the
-client process.  Since a socket may be considered a em(file descriptor) the
-avaiable bf(FBB::IFdStream), bf(FBB::IFdStreamBuf), bf(FBB::OFdStream), and
+requests from the Internet or from the local host using Unix domain
+sockets. Connection requests may be accepted in either em(blocking) or
+em(non-blocking) modes. When a connection is accepted a socket is returned
+which may be used to read information from or write information to the client
+that requested the connection. The socket that is made available is a em(file
+descriptor) which may be used to initialize a bf(std::istream) and/or
+bf(std::ostream). The bf(std::istream) is used to read information from the
+client process; the bf(std::ostream) is used to send information to the client
+process.  Since a socket may be considered a em(file descriptor) the avaiable
+bf(FBB::IFdStream), bf(FBB::IFdStreamBuf), bf(FBB::OFdStream), and
 bf(FBB::OFdStreamBuf) classes may be used profitably here. Note that having
 available a socket does not mean that this defines the communication
 protocol. It is (still) the responsibility of the programmer to comply with an
@@ -37,6 +38,12 @@ manpagesection(INHERITS FROM)
 manpagesection(CONSTRUCTOR)
     itemization(
     itb(ServerSocket(unsigned  port) throw (Errno))
+        This constructor initializes an bf(FBB::ServerSocket) object, which
+will listen for connections at the specified port.  An bf(FBB::Errno) is
+thrown if the socket could not be constructed. The construction of the socket
+does not mean that the bf(FBB::ServerSocket) object is actually listening for
+connections. To start listening, the member bf(listen()) should be used. 
+    itb(ServerSocket(std::string const &name) throw (Errno))
         This constructor initializes an bf(FBB::ServerSocket) object, which
 will listen for connections at the specified port.  An bf(FBB::Errno) is
 thrown if the socket could not be constructed. The construction of the socket
