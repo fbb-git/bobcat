@@ -9,14 +9,26 @@ namespace FBB
 {
     class LocalServerSocket: public LocalSocketBase
     {
+        bool        d_unlink;
+        std::string d_name;
+
         public:
-            LocalServerSocket(std::string const &name) throw (Errno);   // 1
+            enum Socket
+            {
+                KEEP,
+                UNLINK,
+            };
+
+            LocalServerSocket(std::string const &name, Socket action = KEEP) 
+                                                        throw (Errno);   // 1
+            ~LocalServerSocket();
 
             void listen(unsigned backlog = 5, bool blocking = true)  
                                                                 throw (Errno);
             unsigned accept() throw (Errno);
 
         private:
+            LocalServerSocket(LocalServerSocket const &other);  // NI
     };
 
 }

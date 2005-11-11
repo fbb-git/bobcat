@@ -23,27 +23,34 @@ are not necessarily related to inheritance.
     
 0                             Errno                                   LogBuffer
                                 |                                        |
-      +-----------+--------+----+--+---------+------+------+---+----+    |
-      |           |        |       |         |      |      |   |    |    |
-  Selector    Pattern     Msg  Redirector   Pipe   Fork   User |    +--+-+
-                  |                                            |       |
-           +------+-------+                                    |      Log
-           |              |                                    |       |
-      GetHostent      ConfigFile                               |     level
-           |                                                   | 
-      InetAddress                                   Hostent    |
-           |                                           |       |
-       SocketBase                                      +---+---+
-           |                                               |
-    +------+---------+                                  Hostname
-    |                |
- ClientSocket   ServerSocket
+      +-----------+--------+----+--+------+--+------+------+---+----+    |
+      |           |        |       |      |  |      |      |   |    |    |
+  Selector    Pattern     Msg  Redirector | Pipe   Fork   User |    +--+-+
+                  |                       |                    |       |
+           +------+-------+               |                    |      Log
+           |              |               |                    |       |
+      GetHostent      ConfigFile          |                    |     level
+           |                              |                    | 
+      InetAddress                         |         Hostent    |
+           |                              |            |       |
+       SocketBase                  LocalSocketBase     +---+---+
+           |                              |                |
+    +------+---------+          +---------+---------+   Hostname
+    |                |          |                   |
+ ClientSocket   ServerSocket    |                   |
+                                |                   |
+                        LocalClientSocket  LocalServerSocket
 
 
+0                                   Errno (cont)
+                                      |
+                                      +
+                                      |
+                                 MailHeaders
 
-0    DateTime       SyslogBuf
-        |               |
-       Stat        SyslogStream
+0    DateTime       SyslogBuf            RandBuf
+        |               |                   |
+       Stat        SyslogStream        IRandStream
 
 
 

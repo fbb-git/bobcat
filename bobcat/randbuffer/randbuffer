@@ -1,0 +1,21 @@
+#ifndef _INCLUDED_BOBCAT_RANDBUFFER_
+#define _INCLUDED_BOBCAT_RANDBUFFER_
+
+#include <streambuf>
+#include <memory>
+
+namespace FBB
+{
+    class Randbuffer: public std::streambuf
+    {
+        int d_min;
+        double d_max;
+        std::auto_ptr<char> d_buffer;
+
+        public:
+            Randbuffer(int min, int max, unsigned seed);
+            virtual int underflow();
+    };
+}
+
+#endif

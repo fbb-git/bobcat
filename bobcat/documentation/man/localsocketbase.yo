@@ -1,0 +1,57 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::LocalSocketBase)(3bobcat)(_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
+                    (Base class for Unix Domain Name sockets)
+
+manpagename(FBB::LocalSocketBase)
+    (Base class for Unix Domain Name socket-constructing classes)
+
+manpagesynopsis()
+    bf(#include <bobcat/localsocketbase>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    This class is a base class for the bf(FBB::LocalServerSocket) and
+bf(FBB::LocalClientSocket) classes. Since it is designed as a base class, 
+its constructor is protected. All its remaining members are protected as well.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(PROTECTED CONSTRUCTOR)
+    itemization(
+    itb(LocalSocketBase(string const &name) throw (FBB::Errno)) 
+        This constructor creates a bf(LocalSocketBase) unsing the file
+specified in tt(name) as the Unix domain name socket interface.  If the socket
+could not be constructed, an bf(FBB::Errno) exception is thrown.
+    )
+    The copy constructor is not available.
+
+manpagesection(PROTECTED MEMBER FUNCTIONS)
+    itemization(
+    itb(unsigned size() const)
+        Accessor returning the size of the object's bf(sockaddr_un) (address)
+    itb(int socket() const)
+        This accessor returns the bf(FBB::LocalSocketBase)'s socket value.
+    itb(sockaddr const *sockaddrPtr() const)
+        Accessor returning the pointer to the object's bf(sockaddr). 
+    )
+
+manpagesection(EXAMPLE)
+    See the examples presented with the bf(localclientsocket)(3bobcat) and 
+    bf(localserversocket)(3bobcat) classes.
+
+manpagefiles()
+    em(bobcat/localsocketbase) - defines the class interface
+
+manpageseealso() 
+    bf(bobcat)(7), bf(localclientsocket)(3bobcat),
+    bf(localserversocket)(3bobcat), bf(socketbase)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)
