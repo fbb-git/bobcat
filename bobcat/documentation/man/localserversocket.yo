@@ -3,18 +3,18 @@ includefile(header.inc)
 COMMENT(manpage, section, releasedate, archive, short name)
 manpage(FBB::LocalServerSocket)(3bobcat)
         (_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
-        (Unix Domain Name Server Socket)
+        (Unix Domain Server Socket)
 
 manpagename(FBB::LocalServerSocket)
-            (Unix Domain Name Server socket accepting connection requests)
+            (Unix Domain Server socket accepting connection requests)
 
 manpagesynopsis()
     bf(#include <bobcat/localserversocket>)nl()
     Linking option: tt(-lbobcat) 
 
 manpagedescription()
-    An bf(FBB::LocalServerSocket) defines a Unix Domain Name server socket,
-listening for connection requests from the local host using a Unix Domain Name
+    An bf(FBB::LocalServerSocket) defines a Unix Domain server socket,
+listening for connection requests from the local host using a Unix Domain
 socket. Connection requests may be accepted in either em(blocking) or
 em(non-blocking) modes. When a connection is accepted a socket is returned
 which may be used to read information from or write information to the client
@@ -45,12 +45,12 @@ bf(FBB::LocalServerSocket):
     itemization(
     itb(KEEP)
         When this value is specified at construction time, the file
-representing the Unix Domain Name Socket will not be removed when the
+representing the Unix Domain Socket will not be removed when the
 bf(LocalServerSocket) is destroyed. This is the default value used with the
 bf(LocalServerSocket) constructor.
     itb(UNLINK)
         When this value is specified at construction time, the file
-representing the Unix Domain Name Socket will be removed when the
+representing the Unix Domain Socket will be removed when the
 bf(LocalServerSocket) is destroyed.
     )
 
@@ -59,7 +59,7 @@ manpagesection(CONSTRUCTOR)
     itb(LocalServerSocket(string const &name, Socket action = KEEP) 
         throw (Errno))
         This constructor initializes an bf(FBB::LocalServerSocket) object,
-which will listen for connection requests using the named Unix Domain Name
+which will listen for connection requests using the named Unix Domain
 socket.  An bf(FBB::Errno) is thrown if the socket could not be
 constructed. If the constructor is given a second argument
 tt(FBB::LocalServerSocket::UNLINK), the constructed socket will be unlinked
