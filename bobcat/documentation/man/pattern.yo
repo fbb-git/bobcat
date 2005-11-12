@@ -60,7 +60,9 @@ manpagesection(CONSTRUCTORS)
 placeholder for, e.g., containers requiring default constructors. A
 bf(FBB::Pattern) object thus constructed cannot be used to match patterns, but
 can be the em(lvalue) in assignments where another bf(FBB::Pattern) object is
-the em(rvalue).
+the em(rvalue). However, it can receive a pattern using the member
+bf(setPattern()) (see below). An bf(FBB::Errno) object is thrown if the object
+could not be constructed.
     itb(Pattern(std::string const &pattern, 
                             bool caseSensitive = true, 
                             unsigned nSub = 10,
@@ -99,7 +101,11 @@ The em(options) flags may be:
                     Match-end-of-line operator ($)  matches  the  empty
                     string  immediately before a newline, regardless of
                     whether eflags contains REG_NOTEOL.
-    itb(Pattern(Pattern const &other)) 
+
+        An bf(FBB::Errno) object is thrown if the regular expression could not
+        be compiled.
+
+     itb(Pattern(Pattern const &other)) 
         The standard copy constructor is available.
     )
 
@@ -142,6 +148,15 @@ Options may be:
 tt(matched())). Other index values return the corresponding
 subexpressions. bf(std::string::npos, std::string::npos) is returned if index
 is at least bf(end()) (which may happen at index value 0).
+    itb(void setPattern(std::string const &pattern, 
+                            bool caseSensitive = true, 
+                            unsigned nSub = 10,
+                        int options = REG_EXTENDED | REG_NEWLINE))
+        This member function installs a new  compiled tt(pattern) in its
+bf(FBB::Pattern) object. This member's parameters are identical to the second
+constructor's parameters. Refer to that constructor for details about the
+parameters. Like the constructor, an bf(FBB::Errno) exception is thrown if the
+new pattern could not be compiled.
     )
 
 manpagesection(OVERLOADED OPERATORS)

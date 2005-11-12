@@ -103,7 +103,8 @@ namespace FBB
             Pattern(std::string const &pattern, 
                             bool caseSensitive = true, 
                             unsigned nSub = 10,
-                            int options = REG_EXTENDED | REG_NEWLINE);
+                            int options = REG_EXTENDED | REG_NEWLINE)
+                                                    throw (Errno)
 
             /* copy constructor */
             Pattern::Pattern(Pattern const &other)
@@ -123,7 +124,8 @@ namespace FBB
             void setPattern(std::string const &pattern, 
                             bool caseSensitive = true, 
                             unsigned nSub = 10,
-                            int options = REG_EXTENDED | REG_NEWLINE);
+                            int options = REG_EXTENDED | REG_NEWLINE) 
+                                                            throw (Errno);
 
             /*
                 match a string with a pattern. true: string matched
