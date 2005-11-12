@@ -57,11 +57,21 @@ manpagesection(CONSTRUCTORS)
     itemization(
     itb(Pattern())
         The default constructor defines no pattern, but is available as a
-placeholder for, e.g., containers requiring default constructors. A bf(FBB::Pattern)
-object thus constructed cannot be used to match patterns, but can be the
-em(lvalue) in assignments where another bf(FBB::Pattern) object is the em(rvalue).
-    em(caseSensitive) determines whether the pattern is compiled to match
-characters case insensitively, the em(options) flags may be:
+placeholder for, e.g., containers requiring default constructors. A
+bf(FBB::Pattern) object thus constructed cannot be used to match patterns, but
+can be the em(lvalue) in assignments where another bf(FBB::Pattern) object is
+the em(rvalue).
+    itb(Pattern(std::string const &pattern, 
+                            bool caseSensitive = true, 
+                            unsigned nSub = 10,
+                        int options = REG_EXTENDED | REG_NEWLINE))
+        This constructor compiles tt(pattern), preparing the bf(FBB::Pattern)
+object for pattern matches. The second parameter determines whether case
+sensitive matching will be used (the default) or not. Subexpressions are
+defined by parentheses pairs. Each matching pair defines a subexpression,
+where the order-number of their opening parentheses determines the
+subexpression's index. By default at most 10 subexpressions are recognized.
+The em(options) flags may be:
 
                REG_EXTENDED: nl()
                     Use POSIX Extended Regular Expression  syntax  when
