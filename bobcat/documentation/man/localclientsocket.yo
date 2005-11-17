@@ -35,14 +35,16 @@ manpagesection(INHERITS FROM)
 
 manpagesection(CONSTRUCTOR)
     itemization(
+    itb(LocalClientSocket())
+        This constructor merely creates a bf(FBB::LocalClientSocket)
+object. Before it can be used, its tt(open()) member must be called.
     itb(LocalClientSocket(std::string const &name) throw (Errno))
         This constructor initializes an bf(FBB::LocalClientSocket) object,
-using the named Unix Domain socket to connect to the server using the
-named Unix Domain socket. An
-bf(FBB::Errno) is thrown if the socket could not be constructed. The
-construction of the socket does not mean that a connection has actually been
-established. In order to connect to the server, the member bf(connect()) (see
-below) should be used.
+using the named Unix Domain socket to connect to the server using the named
+Unix Domain socket. An bf(FBB::Errno) is thrown if the socket could not be
+constructed. The construction of the socket does not mean that a connection
+has actually been established. In order to connect to the server, the member
+bf(connect()) (see below) should be used.
     )
     The copy constructor is not available.
 
@@ -52,6 +54,14 @@ manpagesection(MEMBER FUNCTION)
         This member returns a socket that can be used to communicate with the
 server process. An bf(FBB::Errno) exception is thrown if the connection could
 not be established.
+    itb(open(std::string const &name) throw (Errno))
+        This member function prepares the bf(FBB::LocalClientSocket) object,
+constructed earlier using the default constructor, for use.  The named Unix
+Domain socket is used to connect to the server using the named Unix Domain
+socket. An bf(FBB::Errno) is thrown if the socket could not be
+constructed. The construction of the socket does not mean that a connection
+has actually been established. In order to connect to the server, the member
+bf(connect()) should be used.
     )
 
 manpagesection(EXAMPLE)

@@ -4,8 +4,6 @@ void LocalServerSocket::listen(unsigned backlog, bool blocking) throw (Errno)
 {
     static char name[] = "LocalServerSocket::listen()";
 
-    cerr << "`listen()' using socket " << socket() << endl;
-
     if (::listen(socket(), backlog) < 0)
         throw Errno(name);
 

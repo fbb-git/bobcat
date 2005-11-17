@@ -23,8 +23,12 @@ manpagesection(INHERITS FROM)
 
 manpagesection(PROTECTED CONSTRUCTOR)
     itemization(
+    itb(LocalSocketBase()) 
+        The default constructor merely constructs a tt(FBB::LocalSocketBase)
+object. Before the object can be used, its tt(open()) member must be called
+first. 
     itb(LocalSocketBase(string const &name) throw (FBB::Errno)) 
-        This constructor creates a bf(LocalSocketBase) unsing the file
+        This constructor creates a bf(LocalSocketBase) using the file
 specified in tt(name) as the Unix domain socket interface.  If the socket
 could not be constructed, an bf(FBB::Errno) exception is thrown.
     )
@@ -32,6 +36,11 @@ could not be constructed, an bf(FBB::Errno) exception is thrown.
 
 manpagesection(PROTECTED MEMBER FUNCTIONS)
     itemization(
+    itb(open(string const &name) throw (FBB::Errno)) 
+        This member initiaizes a bf(LocalSocketBase) object following its
+construction using the default constructor. The file specified in tt(name) is
+used as the Unix domain socket interface.  If the socket could not be
+constructed, an bf(FBB::Errno) exception is thrown.
     itb(unsigned size() const)
         Accessor returning the size of the object's bf(sockaddr_un) (address)
     itb(int socket() const)

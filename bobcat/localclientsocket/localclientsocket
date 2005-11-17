@@ -12,14 +12,21 @@ namespace FBB
 {
     class LocalClientSocket: public LocalSocketBase
     {
-        struct sockaddr_un d_address;
+//        struct sockaddr_un d_address;
 
         public:
-            LocalClientSocket(std::string const &name) throw (Errno)    // 1
+            LocalClientSocket()
+            {}
+
+            LocalClientSocket(std::string const &name) throw (Errno)
             :
                 LocalSocketBase(name)
             {}
 
+            void open(std::string const &name) throw (Errno)
+            {
+                LocalSocketBase::open(name);
+            }
 
             int connect() throw (Errno);    // returns fd (socket) to talk to
                                             // the server

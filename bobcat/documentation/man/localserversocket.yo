@@ -56,6 +56,10 @@ bf(LocalServerSocket) is destroyed.
 
 manpagesection(CONSTRUCTOR)
     itemization(
+    itb(LocalServerSocket()) 
+        This constructor creates an empty (non-functioning)
+tt(FBB::LocalServerSocket) object. Before it can be used, the tt(open()) member
+must be called (see below).
     itb(LocalServerSocket(string const &name, Socket action = KEEP) 
         throw (Errno))
         This constructor initializes an bf(FBB::LocalServerSocket) object,
@@ -72,6 +76,13 @@ bf(listen()) should be called.
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
+    itb(unsigned accept() throw (Errno))
+        The bf(accept()) member returns an tt(unsigned) which is a file
+descriptor (socket) that may be used to communicate with the client requesting
+the connection. In more complex programs the returned file descriptor (socket)
+could be passed to a class derived from bf(FBB::Fork), handling the
+communication with the child as a separate (child) process.
+
     itb(void listen(unsigned backlog = 5, bool blocking = true) throw (Errno))
         The bf(listen()) member defines the way the bf(FBB::LocalServerSocket)
 will listen for clients requesting a connection.  It can be used only once
@@ -90,12 +101,17 @@ infrquently and for relatively short time intervals. Otherwise, in more
 complex programs, an bf(FBB::Selector) object can be used to sense input on
 the server socket and/or on various client sockets.
 
-    itb(unsigned accept() throw (Errno))
-        The bf(accept()) member returns an tt(unsigned) which is a file
-descriptor (socket) that may be used to communicate with the client requesting
-the connection. In more complex programs the returned file descriptor (socket)
-could be passed to a class derived from bf(FBB::Fork), handling the
-communication with the child as a separate (child) process.
+    itb(void open(string const &name, Socket action = KEEP) throw (Errno))
+        This member prepares a bf(FBB::LocalServerSocket) object for use. It
+should only be used in combination with the default constructor. Following
+tt(open()) the tt(FBB:::LocalServerSocket) object will be able to listen for
+connection requests using the named Unix Domain socket.  An bf(FBB::Errno) is
+thrown if the socket could not be constructed. If the a second argument
+tt(FBB::LocalServerSocket::UNLINK), is provided the constructed socket will be
+unlinked when the bf(FBB::LocalServerSocket) object is destroyed.  The
+construction of the socket does not mean that the bf(FBB::LocalServerSocket)
+object is actually listening for connections. To start listening, the member
+bf(listen()) should be called next.
     )
 
 
