@@ -17,9 +17,9 @@ req cd tmp/lib
 
 req ar x lib${LIBRARY}.a
 
-echo "g++ -shared -Wl,-soname,${libsomajor} -o ${libso}.${VERSION} \
+echo "$GCC -shared -Wl,-soname,${libsomajor} -o ${libso}.${VERSION} \
 ${LIBRARIES}" '*.o'
-g++ -shared -Wl,-soname,${libsomajor} -o ${libso}.${VERSION} ${LIBRARIES} *.o
+$GCC -shared -Wl,-soname,${libsomajor} -o ${libso}.${VERSION} ${LIBRARIES} *.o
 [ $? == 0 ] || exit 1
 
 req ln -sf ${libso}.${VERSION} $libsomajor
