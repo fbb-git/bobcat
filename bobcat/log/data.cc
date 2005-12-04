@@ -1,3 +1,3 @@
 #include "log.ih"
 
-Log *Log::s_stream = 0;
+auto_ptr<Log> Log::s_stream;

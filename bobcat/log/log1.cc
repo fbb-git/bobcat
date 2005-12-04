@@ -1,9 +1,9 @@
 #include "log.ih"
 
-Log::Log(StaticType type, char const *delim)
+Log::Log(char const *delim)
 :
-    LogBuffer(cout, TIMESTAMPS, true, delim),
+    LogBuffer(TIMESTAMPS, false, delim),
     ostream(this)
 {
-    init(type);
+    init();
 }

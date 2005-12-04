@@ -5,16 +5,12 @@
 #include <ostream>
 #include <fstream>
 #include <climits>
+#include <memory>
+
 #include <bobcat/logbuffer>
 
 namespace FBB
 {
-    enum StaticType
-    {
-        NONSTATIC,
-        STATIC
-    };
-
     enum LogManipulator
     {
         FATAL,
@@ -24,7 +20,7 @@ namespace FBB
     class Log: private LogBuffer, public std::ostream
     {
         private:
-            static Log *s_stream;
+            static std::auto_ptr<Log> s_stream;
 
             std::ofstream d_stream;
             unsigned d_level;
@@ -32,15 +28,19 @@ namespace FBB
 
         public:
             static Log &getInstance();
-
-            Log(StaticType type = NONSTATIC, char const *delim = " ");
-            Log(std::ostream &out,  StaticType type = NONSTATIC, 
-                char const *delim = " ");
-            Log::Log(std::string const &filename, 
-                    StaticType type = NONSTATIC,
+            static Log &initialize(std::string const &filename, 
                     std::ios::openmode = std::ios::out | std::ios::app, 
                     char const *delim = " ");
-            ~Log();
+
+            Log(char const *delim = " ");
+            Log(std::ostream &out,  char const *delim = " ");
+            Log::Log(std::string const &filename, 
+                    std::ios::openmode = std::ios::out | std::ios::app, 
+                    char const *delim = " ");
+
+            void open(std::string const &filename, 
+                    std::ios::openmode = std::ios::out | std::ios::app, 
+                    char const *delim = " ");
 
             std::ostream &level(unsigned useLevel);
             void  setLevel(unsigned newLevel);
@@ -51,7 +51,7 @@ namespace FBB
             }
 
         private:
-            void init(StaticType type);
+            void init();
     };
 
 }

@@ -29,17 +29,6 @@ bf(FBB::Log) members as well. It has the following values:
         Log-messages will have timestamps prepended to them.
     )
 
-    The enumeration bf(StaticType) is used to select the static or non-static
-variant of an bf(FBB::Log) object. It is defined in the namespace bf(FBB) and
-has the following two values:
-    itemization(
-    itb(NONSTATIC)
-        The bf(FBB::Log) object is a non-static object;
-    itb(STATIC)
-        The bf(FBB::Log) object is a static object. It can be reached through
-the bf(getInstance()) member (see below).
-    )
-
     The enumeration bf(LogManipulator) is used to handle special or
 exceptional situations through manipulators. It is defined in the namespace
 bf(FBB) and has the following two values:
@@ -57,31 +46,33 @@ log message to occupy multiple textual lines.
 
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(Log(StaticType type = NONSTATIC, char const *delim))
-        This constructor creates an bf(FBB::Log) object logging its messages
-to tt(std::cout).  All messages will be logged, unless prevented by an
-explicit tt(setLevel()) (see below) call.  If tt(type) is set to
-bf(FBB::STATIC) then this bf(FBB::Log) object is referred to by
-bf(FBB::Log::getInstance()). There can be only one static bf(FBB::Log) object.
-By default, all messages will have a time stamp prepended to them (see the
-description of the member bf(setTimestamp()) below). The parameter bf(delim) is
-inserted immediately beyond the time stamp. If a delimiter is inappropriate,
-an empty string or a 0-pointer may be specified. 
-    bf(Log(std::ostream &out, StaticType type = NONSTATIC, char const *delim))
+    itb(Log(char const *delim = " "))
+        The default constructor creates a bf(FBB::Log) object which isn't yet
+associated with a stream to log messages on. The member bf(open()) (see below)
+may be used to define such a stream.  By default, all messages will have a
+time stamp prepended to them (see the description of the member
+bf(setTimestamp()) below). The parameter bf(delim) is inserted immediately
+beyond the time stamp. If a delimiter is inappropriate, an empty string or a
+0-pointer may be specified.
+    itb(Log(std::ostream &out, char const *delim = " "))
         This constructor creates a nbf(FBB::Log) object logging its messages
-to the provided tt(std::ostream) object. The parameter bf(delim) is
-inserted immediately beyond the time stamp. If a delimiter is inappropriate,
-an empty string or a 0-pointer may be specified. 
-    bf(FBB::Log(std::string const &filename, StaticType type = NONSTATIC,
-            std::ios::openmode = std::ios::out | std::ios::app, 
-            char const *delim ))
-        This constructor creates an bf(FBB::Log) object logging its messages
-to the tt(std::ofstream) object whose name is given in tt(filename). By
-default the file is created if not existing, and all messages are appended to
-the stream.  If tt(filename) is an empty string, bf(std::cout) is used
-(causing this constructor to act like the first constructor). The parameter
-bf(delim) is inserted immediately beyond the time stamp. If a delimiter is
-inappropriate, an empty string or a 0-pointer may be specified.
+to the provided tt(std::ostream) object. By default, all messages will have a
+time stamp prepended to them (see the description of the member
+bf(setTimestamp()) below).  The parameter bf(delim) is inserted immediately
+beyond the time stamp. If a delimiter is inappropriate, an empty string or a
+0-pointer may be specified.
+    itb(FBB::Log(std::string const &filename,
+            std::ios::openmode mode = std::ios::out | std::ios::app, 
+            char const *delim = " "))
+        This constructor creates a bf(FBB::Log) object logging its messages to
+the named file. If tt(filename == "&1") the logmessages will be written to the
+standard output stream. If tt(filename == "&2") the logmessages will be
+written to the standard error stream.  By default the file is created if not
+existing, and all messages are appended to the stream.  By default, all
+messages will have a time stamp prepended to them (see the description of the
+member bf(setTimestamp()) below).  The parameter bf(delim) is inserted
+immediately beyond the time stamp. If a delimiter is inappropriate, an empty
+string or a 0-pointer may be specified.
     )
     The copy constructor is not available.
 
@@ -100,6 +91,18 @@ may be inserted into an (empty) bf(FBB::Log) object (see bf(level)(3bobcat)).
     itb(void off())
         Prevents any log messages from being generated. It may be cancelled by
 bf(setLevel()) (see below).
+    itb(void open(std::string const &filename,
+            std::ios::openmode mode = std::ios::out | std::ios::app, 
+            char const *delim = " "))
+        This member (re)associates an bf(FBB::Log) object with the named
+file. If tt(filename == "&1") the logmessages will be written to the standard
+output stream. If tt(filename == "&2") the logmessages will be written to the
+standard error stream.  By default the file is created if not existing, and
+all messages are appended to the stream.  By default, all messages will have a
+time stamp prepended to them (see the description of the member
+bf(setTimestamp()) below).  The parameter bf(delim) is inserted immediately
+beyond the time stamp. If a delimiter is inappropriate, an empty string or a
+0-pointer may be specified.
     itb(void setLevel(unsigned newLevel))
         Redefines the internal message level. Messages having at least
 level tt(newLevel) will be written. If the member is used without explicit
@@ -117,12 +120,24 @@ FBB::NOTIMESTAMPS delim) is ignored.
 
 manpagesection(STATIC MEMBER)
     itemization(
+    itb(FBB::Log &initialize(std::string const &filename,
+            std::ios::openmode mode = std::ios::out | std::ios::app, 
+            char const *delim = " "))
+        
+        Returns a reference to a static bf(FBB::Log) object. It may only be
+called once, or an tt(FBB::Errno) exception is thrown. It associates a static
+bf(FBB::Log) object with the named file. If tt(filename == "&1") the
+logmessages will be written to the standard output stream. If tt(filename ==
+"&2") the logmessages will be written to the standard error stream.  By
+default the file is created if not existing, and all messages are appended to
+the stream.  By default, all messages will have a time stamp prepended to them
+(see the description of the member bf(setTimestamp()) below).  The parameter
+bf(delim) is inserted immediately beyond the time stamp. If a delimiter is
+inappropriate, an empty string or a 0-pointer may be specified.
     itb(FBB::Log &getInstance())
-        Returns the current static bf(FBB::Log) object, available after
-calling a constructor with the bf(FBB::STATIC) argument). If called otherwise,
-an tt(FBB::Errno) exception is thrown. The static bf(FBB::Log) object will
-remain available until the associated bf(FBB::Log) object goes out of scope
-(or until it will point to another bf(FBB::Log) object).
+        Returns a reference to a static bf(FBB::Log) object, available after
+calling bf(Log::initialize()). If called before tt(Log::initialize())
+an tt(FBB::Errno) exception is thrown. 
     )
 
 manpagesection(OVERLOADED OPERATOR)
@@ -148,6 +163,8 @@ manpageseealso()
     bf(logbuffer)(3bobcat)
 
 manpagebugs()
-    None Reported.
+    None reported
 
 includefile(trailer.inc)
+
+

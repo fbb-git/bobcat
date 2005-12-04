@@ -2,9 +2,9 @@
 
 Log &Log::getInstance()
 {
-    if (!s_stream)
+    if (!s_stream.get())
         throw Errno("Log::getInstance()") << insertable <<
-            ": no FBB::Log object available" << throwable;
+            ": FBB::Log not initialized" << throwable;
 
-    return *s_stream;
+    return *s_stream.get();
 }
