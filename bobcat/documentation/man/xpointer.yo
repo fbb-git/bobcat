@@ -1,0 +1,61 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Xpointer)(3bobcat)(_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
+                    (Sets the X-pointer)
+
+manpagename(FBB::Xpointer)(Sets the location of the X-windows pointer)
+
+manpagesynopsis()
+    bf(#include <bobcat/xpointer>)nl()
+
+    Linking option: tt(-lX11 -lbobcat) 
+
+manpagedescription()
+    This class allows programs running within the X-graphical environment to
+set and retrieve the X-windows pointer location.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Xpointer())
+        The default constructor. Connects to the Display. throws an bf(Errno)
+exception if the display cannot be opened. With multiple bf(Xpointer) objects,
+the connection to the display is opened only once.
+    itb(Xpointer(Xpointer const &other) throw()) 
+    The standard copy constructor is available.
+    )
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(bool get(int *x, int *y) const)
+        Returns in its arguments the currnet pointer coordinates relative to
+the root-window. On success tt(true) is returned; tt(false) is returned if the
+pointer could not be moved.
+    itb(bool set(int x, int y) const)
+        Sets the pointer to a location whose pixel coordinates are given with
+respect to the root-window.  A negative x-coordinate is measured from the
+right screen-margin of the root window (going left), a negative y-coordinate
+is measured from the bottom screen-margin of the root window (going up). On
+success tt(true) is returned; tt(false) is returned if the pointer could not
+be moved.
+    )
+
+manpagesection(EXAMPLE)
+    To do
+
+manpagefiles()
+    em(bobcat/xpointer) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    Note that tt(-lX11) must be specified before tt(-lbobcat).
+
+
+includefile(trailer.inc)

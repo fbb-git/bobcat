@@ -35,6 +35,23 @@ do
     let NR=${NR}+1
 done
 
+
+req cd cfunctions
+SRC=`find ./ -regex '.*\.c' -maxdepth 1 -printf "%f\n"`
+[ "$SRC" == "" ] && (cd ..; continue)
+mkdir -p o
+for src in $SRC
+do
+    BASE=${src%\.[^\.]*}
+    OBJ=o/c.${BASE}.o
+    [ -e $OBJ -a $src -nt $OBJ  -o \
+      ! -e $OBJ -a \
+        \( ! -e ../$LIB_A -o $src -nt ../$LIB_A \) ] &&
+                         req gcc -Wall -o  $OBJ -c ${src}
+done
+cd ..
+
+
 OBJ=`find ./ -regex '.*\.o' -print`
 if [ "$OBJ" != "" ] 
 then
