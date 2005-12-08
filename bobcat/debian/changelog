@@ -1,3 +1,32 @@
+bobcat (1.5.0) unstable; urgency=low
+
+  * The general bobcat manpage did not have links to wrap1c and wrap2c. Now 
+    Repaired. 
+
+    The Log-class interface is modified. See the man -e bobcat log manpage for
+    details. The main difference is that a static initialize() member is now
+    used to define the static Log-object. Also, logs may be written to stdout
+    using a simpler specification than before. The Log class also supports an
+    open() member, allowing you to open a local Log object after its
+    construction. 
+
+    Added the class Milter, offering a C++ interface to the (sendmail)
+    libmilter API. This class uses the `virtual constructor' Design Pattern to
+    prevent the need for saving and accessing private connection based data
+    using the libmilter api smfi_setpriv() and smfi_getpriv(). See `man -e
+    bobcat milter' for details.
+
+    Added the class Xpointer, setting and retrieving the X-windows pointer
+    coordinates. 
+
+    With the shared object library, functions from both libmilter and libX11
+    must be available before a program can be fully linked. To prevent
+    unnessary linking to these libraries, required dummy C functions were
+    added to the bobcat library. When using libmilter and/or libX11, that
+    these libraries should be mentioned to the linker before libbobcat.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Thu,  8 Dec 2005 20:52:44 +0100
+
 bobcat (1.4.0) unstable; urgency=low
 
   * 1.4.0 and beyond: compiled with g++-4.0 compiler series.
