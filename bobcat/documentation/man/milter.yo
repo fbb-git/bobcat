@@ -155,20 +155,33 @@ bf(C) API. These values may be used to return  tt(sfsistat) values:
     itemization(
     itb(ACCEPT)
         This value is equal to tt(SMFIS_ACCEPT), indicating that Sendmail
-should accept the message.
+should accept the message. For a connection-oriented callback (see below at
+bf(PROTECTED VIRTUAL MEMBER FUNCTIONS)), accept this connection without
+further filter processing, call bf(close()) (see below).  For other callbacks:
+accept this message without further filtering.
     itb(CONTINUE)
         This value is equal to tt(SMFIS_CONTINUE), indicating that Sendmail
-should continue processing.
+should continue processing. This is the default for all callback functions
+which are not overridden by the class derived from bf(Milter).
     itb(DISCARD)
         This value is equal to tt(SMFIS_DISCARD), indicating that Sendmail
-should discard the mail message.
+should discard the mail message. It should not be returned by a
+connection-oriented callback. For other callbacks: the message is accepted,
+but silently discarded.
     itb(REJECT)
         This value is equal to tt(SMFIS_REJECT), indicating that Sendmail
-should reject the mail message.
+should reject the mail message. For a connection-oriented callback, reject
+this connection; call bf(close()).  For a message-oriented callback (except
+for bf(eom()) or bf(abort(), see below)), reject this message.  For a
+recipient-oriented callback, reject the current recipient (but continue
+processing the current message).
     itb(TEMPFAIL)
         This value is equal to tt(SMFIS_TEMPFAIL), indicating that Sendmail
 should return a `temporary unavailable' message to the sender of the mail
-message. 
+message. For a message-oriented callback (except bf(sender()), see below),
+fail for this message.  For a connection-oriented callback, fail for this
+connection and call bf(close()).  For a recipient-oriented callback, only fail
+for the current recipient and continue message processing.
     )
 
     bf(Return)nl()
@@ -191,7 +204,7 @@ perform no actions.
 
 manpagesection(PUBLIC STATIC MEMBER FUNCTIONS)
 
-    These functions are the heart of the bf(Milter) base-class. They can be
+    These functions form the heart of the bf(Milter) base-class. They can be
 called to initialize, start and stop the Milter.
     itemization(
     itb(void initialize(std::string const &name, 
@@ -222,92 +235,115 @@ manpagesection(PROTECTED VIRTUAL MEMBER FUNCTIONS)
 
     The remaining functionality of the class tt(Milter) is useful only for
 Milter-implementations in classes derived from bf(Milter). The following
-members can be overridden by derived classes. Note that bf(clone() em(must) be
-overridden): 
+members can be overridden by derived classes. Note that bf(clone()) em(must)
+be overridden. Except for bf(clone()), all the members in this sections are
+em(callback) functions. I.e., the MTA will call them to process parts of the
+mail message. Recipient-, message-, and connection-oriented callbacks are
+distinguished.  
+
+    The recipient-oriented callback (bf(recipient()), see below) may affect
+the processing of a single message to a single recipient. Connection-oriented
+callbacks (bf(connect(), helo()) and bf(close()) affect the processing of the
+entire connection (during which multiple messages may be delivered to multiple
+sets of recipients). The remaining callbacks are message-oriented, affecting 
+the processing of a single message to all its recipients.
+
     itemization(
     itb(virtual sfsistat abort())
-        This member may be called at any time during message processing
-(i.e. between some message-oriented routine and bf(eom())). bf(abort())
-reclaim any resources allocated on a per-message basis (which are em(not) the
-connection specific data, which should be handled by the derived class'
-destructor), and must be tolerant of being called between any two
-message-oriented callbacks. bf(abort()) is only called if the message is
-aborted outside the filter's control and the filter has not completed its
+        This message-oriented member may be called at any time during message
+processing (i.e. between some message-oriented routine and
+bf(eom())). bf(abort()) reclaim any resources allocated on a per-message basis
+(which are em(not) the connection specific data, which should be handled by
+the derived class' destructor), and must be tolerant of being called between
+any two message-oriented callbacks. bf(abort()) is only called if the message
+is aborted outside the filter's control and the filter has not completed its
 message-oriented processing. For example, if a filter has already returned
 tt(ACCEPT, REJECT), or tt(DISCARD) from a message-oriented routine,
 bf(abort()) will not be called even if the message is later aborted outside
 its control.
     itb(virtual sfsistat body(unsigned char *text, size_t length))
-        This member is called zero or more times between bf(eoh()) and
-bf(eom()).  tt(text) points to a sequence of bytes. It is not necessarily a
-0-terminated. Moreover, the sequence may contain 0-characters.  Since message
-bodies can be very large, defining bf(body()) can significantly impact filter
-performance.  End-of-lines are represented as received from SMTP (normally
-CR/LF).  Later filters will see body changes made by earlier ones, and message
-bodies may be sent in multiple chunks, with one call to bf(body()) per chunk.
+        This message-oriented member is called zero or more times between
+bf(eoh()) and bf(eom()).  tt(text) points to a sequence of bytes. It is not
+necessarily a 0-terminated. Moreover, the sequence may contain 0-characters.
+Since message bodies can be very large, defining bf(body()) can significantly
+impact filter performance.  End-of-lines are represented as received from SMTP
+(normally CR/LF).  Later filters will see body changes made by earlier ones,
+and message bodies may be sent in multiple chunks, with one call to bf(body())
+per chunk.
+
     itb(virtual Milter *clone() const = 0)
         This pure virtual function must be implemented by derived classes to
 return a newly allocated copy of the derived object passed to the
 bf(initialize()) static member. It is used by the standard `virtual
 constructor' design pattern. The destruction of the allocated object is the
 responsibility of bf(clone())'s caller.
+
     itb(virtual sfsistat close())
-        This member is always called once at the end of each connection.  It
-may be called "out-of-order", i.e. before even the bf(connect()) is
-called. After a connection is established by the MTA to the filter, if the MTA
-decides this connection's traffic will be discarded (e.g. via an access_db
-result), no data will be passed to the filter from the MTA until the client
-closes down. At that time, bf(close()) is called. It can therefore be the only
-callback ever used for a given connection, and developers should anticipate
-this possibility when crafting their bf(close()) code. The member bf(close())
-is called on close even if the previous mail transaction was aborted.
+        This connection-oriented member is always called once at the end of
+each connection.  It may be called "out-of-order", i.e. before even the
+bf(connect()) is called. After a connection is established by the MTA to the
+filter, if the MTA decides this connection's traffic will be discarded
+(e.g. via an access_db result), no data will be passed to the filter from the
+MTA until the client closes down. At that time, bf(close()) is called. It can
+therefore be the only callback ever used for a given connection, and
+developers should anticipate this possibility when crafting their bf(close())
+code. The member bf(close()) is called on close even if the previous mail
+transaction was aborted.
+
     itb(virtual sfsistat connect(char *hostname, _SOCK_ADDR *hostaddr))
-        This member may be called once, at the start of each SMTP
-connection. The parameter tt(hostname) is he host name of the message sender,
-as determined by a reverse lookup on the host address. If the reverse lookup
-fails, hostname will contain the message sender's IP address enclosed in
-square brackets (e.g. tt([a.b.c.d])). The parameter tt(hostaddr) is the host
-address, as determined by a bf(getpeername)(2) call on the SMTP socket. It is
-0 if the type is not supported in the current version or if the SMTP
-connection is made via stdin.
+        This connection-oriented member may be called once, at the start of
+each SMTP connection. The parameter tt(hostname) is he host name of the
+message sender, as determined by a reverse lookup on the host address. If the
+reverse lookup fails, hostname will contain the message sender's IP address
+enclosed in square brackets (e.g. tt([a.b.c.d])). The parameter tt(hostaddr)
+is the host address, as determined by a bf(getpeername)(2) call on the SMTP
+socket. It is 0 if the type is not supported in the current version or if the
+SMTP connection is made via stdin.
+
     itb(virtual sfsistat data()) 
         Not yet supported. Will be available with libmilter versions beyond 3.
+
     itb(virtual sfsistat eoh())
-        This member is called once after all headers have been processed.
+        This message-oriented member is called once after all headers have
+been processed.
+
     itb(virtual sfsistat eom())
-        This member is called once after all calls to bf(body()) for a given
-message have been completed. bf(Note) that only in this function modifications
-to the message headers, body, and envelope can be made (see the bf(add-,
-change-) and bf(delete-) members listed below).
+        This message-oriented member is called once after all calls to
+bf(body()) for a given message have been completed. bf(Note) that only in this
+function modifications to the message headers, body, and envelope can be made
+(see the bf(add-, change-) and bf(delete-) members listed below).
     itb(virtual sfsistat header(char *headerf, char *headerv))
-        This member is called zero or more times between bf(recipient()) and
-bf(eoh()), once per message header. Details about header information is given
-in RFC 882.
+        This message-oriented member is called zero or more times between
+bf(recipient()) and bf(eoh()), once per message header. Details about header
+information is given in RFC 882.
+
     itb(virtual sfsistat helo(char *helohost))
-        This member is called whenever the client sends a HELO/EHLO
-command. It may therefore be called between zero and three times. The
-tt(helohost) parameter should be the domain name of the sending host (but is,
-in practice, anything the sending host wants to send).
+        This connection-oriented member is called whenever the client sends a
+HELO/EHLO command. It may therefore be called between zero and three
+times. The tt(helohost) parameter should be the domain name of the sending
+host (but is, in practice, anything the sending host wants to send).
+
     itb(virtual sfsistat recipient(char **argv))
-        This member is called once per recipient, hence one or more times per
-message, immediately after bf(sender). The parameter tt(argv) is a
-0-terminated array of pointers to SMTP command arguments; argv[0] is
-guaranteed to be the recipient address. Later arguments are the ESMTP
-arguments. TEMPFAIL may be returned indicate that sendmail should
-return a temporary failure for this particular recipient; further recipients
-may still be sent, bf(abort()) is not called.  REJECT will reject this
-particular recipient; further recipients may still be sent, bf(abort()) is not
-called.  DISCARD will accept (but discard) the message, bf(abort()) will be
-called.  ACCEPT will accept recipient, bf(abort()) will not be called. More
-details on ESTMP responses, are described in RFC 1869.
+        This recipient-oriented member is called once per recipient, hence one
+or more times per message, immediately after bf(sender). The parameter
+tt(argv) is a 0-terminated array of pointers to SMTP command arguments;
+argv[0] is guaranteed to be the recipient address. Later arguments are the
+ESMTP arguments. TEMPFAIL may be returned indicate that sendmail should return
+a temporary failure for this particular recipient; further recipients may
+still be sent, bf(abort()) is not called.  REJECT will reject this particular
+recipient; further recipients may still be sent, bf(abort()) is not called.
+DISCARD will accept (but discard) the message, bf(abort()) will be called.
+ACCEPT will accept recipient, bf(abort()) will not be called. More details on
+ESTMP responses, are described in RFC 1869.
+
     itb(virtual sfsistat sender(char **argv))
-        This member is called once at the beginning of each message, before
-bf(recipient()).  TEMPFAIL may be returned indicate that sendmail should
-return a temporary failure for this particular message, bf(abort()) is not
-called.  REJECT will reject this message, bf(abort()) is not called.  DISCARD
-will accept (but discard) the message, bf(abort()) will be called.  ACCEPT
-will accept recipient, bf(abort()) will not be called. More details on ESTMP
-responses, are described in RFC 1869.
+        This message-oriented member is called once at the beginning of each
+message, before bf(recipient()).  TEMPFAIL may be returned indicate that
+sendmail should return a temporary failure for this particular message,
+bf(abort()) is not called.  REJECT will reject this message, bf(abort()) is
+not called.  DISCARD will accept (but discard) the message, bf(abort()) will
+be called.  ACCEPT will accept recipient, bf(abort()) will not be called. More
+details on ESTMP responses, are described in RFC 1869.
     itb(virtual sfsistat unknown(char *ptr))
         Not yet supported. Will be available with libmilter versions beyond 2.
     )
