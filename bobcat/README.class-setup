@@ -10,22 +10,25 @@ available (if not compile-time then most likely run-time). The dependencies
 are not necessarily related to inheritance.
 
 
-0    OFdStreambuf    IFdStreambuf    Hash   Hostent 
+0          TableSupport         Wrap2    Wrap2c      X2a     Hash   Hostent 
+                |
+            TableSpec
+                |
+        +-------+-------+-----------+        
+        |               |           | 
+    columnWidth     equalWidth    Table   
 
 
+0    DateTime       SyslogBuf            RandBuf
+        |               |                   |
+       Stat        SyslogStream        IRandStream
 
-0       Wrap1            A2x    Wrap2       Wrap1c      Wrap2c      X2a
-          |               |                   |
-          +-------+-------+              MultiStreambuf   
-                  |
-                String          
 
-    
 0                             Errno                                   LogBuffer
                                 |                                        |
-      +-----------+--------+----+--+------+--+------+------+---+----+    |
-      |           |        |       |      |  |      |      |   |    |    |
-  Selector    Pattern     Msg  Redirector | Pipe   Fork   User |    +--+-+
+                  +--------+----+--+------+----------------+---+----+    |
+                  |        |       |      |                |   |    |    |
+              Pattern     Msg  Redirector |               User |    +--+-+
                   |                       |                    |       |
            +------+-------+               |                    |      Log
            |              |               |                    |       |
@@ -42,23 +45,20 @@ are not necessarily related to inheritance.
                         LocalClientSocket  LocalServerSocket
 
 
-0                               Errno (cont)
-                                    |
-                          +---------+-----+------+
-                          |         |            | 
-                      Xpointer MailHeaders     Milter   
-
-
-0    DateTime       SyslogBuf            RandBuf
-        |               |                   |
-       Stat        SyslogStream        IRandStream
-
-
-
-0          TableSupport
-                |
-            TableSpec
-                |
-        +-------+-------+-----------+        
-        |               |           | 
-    columnWidth     equalWidth    Table   
+0    Errno (cont)
+        |
+        +---------+--------+-------+-----+------+         IOStreambuf
+        |         |        |       |     |      |              |
+    Xpointer MailHeaders Milter   Pipe  Fork  Selector      IOStream
+                                   |     |      |              |
+                                   +-----+------+---+----------+
+                                                    |
+0   OFdStreambuf    IFdStreambuf    Wrap1    A2x    |   Wrap1c
+        |                 |           |      |      |     |  
+        |                 |           +--+---+      |  +--+------+
+        |                 |              |          |  |         |
+        |                 |           String        +--+    MultiStreambuf    
+        |                 |              |          |
+        +-----------------+------+-------+----------+
+                                 |
+                              Process

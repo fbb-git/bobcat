@@ -4,170 +4,290 @@ COMMENT(manpage, section, releasedate, archive, short name)
 manpage(FBB::Process)(3bobcat)(_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
                     (Running Child Processes)
 
-manpagename(FBB::Process)(Calls external processes from within a program)
+manpagename(FBB::Process)(Runs external programs)
 
 manpagesynopsis()
     bf(#include <bobcat/process>)nl()
     Linking option: tt(-lbobcat) 
 
 manpagedescription()
-    The bf(FBB::Process) class offers a simple interface to call external programs from a
-bf(C++) program, collecting the external program's standard output and error
-information in various formats.
+    The bf(FBB::Process) class offers a simple interface to call external
+programs and/or scripts from a bf(C++) program (so-called
+em(child-processes). The class offers a standard, stream-based interface to
+the child process' standard input, standard output and standard error streams.
 
-    Objects of the bf(FBB::Process) class use the standard process-executing functions, like
-bf(system)(1) and members of the bf(execl)(1) family to execute the
-external program, and allow em(shell-scripts) to be executed as
-well. Before executing an external program, its standard output and error
-streams are redirected, so that they can be collected by the bf(FBB::Process) object. When
-the external process itself redirects its standard output or standard error
-streams, then bf(FBB::Process) objects will not be able to receive the external process'
-output (of course). 
+    Objects of the bf(FBB::Process) class use the standard process-executing
+functions, like bf(system)(1) and members of the bf(execl)(1) family to
+execute the child process, and allow em(shell-scripts) to be executed as
+well. 
 
-    bf(FBB::Process) objects may be used repeatedly for various external programs. However,
-before defining the external program to be called, bf(FBB::Process)'s bf(clear()) member
-must be called. An external program call may be executed repeatedly, in which
-case bf(FBB::Process)'s accessors will contain the information received from the most
-recent program execution.
+    The standard input, output and error streams of executed child processes
+may be accessed using the bf(FBB::Process) object. When child processes
+themselves redirect their standard streams, then bf(FBB::Process) objects will
+not be able to access them anymore (of course).
+
+    The same bf(FBB::Process) object may be used repeatedly to execute child
+processes repeatedly. Before doing so, bf(FBB::Process)'s bf(stop()) member
+must be called.
+
+    Programs may be called directly from the constructor, or whenever
+appropriate using the bf(start()) member. Since some child processes will
+continue until their standard input stream is exhausted, the bf(stop()) member
+is provided to close these streams and to terminate child processes. The
+bf(stop()) member will first close the child process' standard input
+stream, followed by the sending of termination signals (tt(SIGTERM) and
+tt(SIGKILL)), to ensure that child processes terminate properly. 
+
+The class bf(FBB::Process) offers no facilities to construct em(daemon)
+processes, which may be constructed easily using the bf(FBB::Fork) class.
 
 includefile(namespace.inc)
 
 manpagesection(INHERITS FROM)
-    bf(std::ostringstream) 
+    bf(FBB::Fork)(3bobcat) (private) , nl()
+    bf(FBB:IOStream)(3bobcat)
 
 manpagesection(ENUMERATIONS)
 
-    bf(enum PathType):nl()
-       This enumeration has two values: 
-        itemization(
-        itb(USE_PATH)
-            This value indicates that the bf(PATH) environment variable should
-        be used to locate the program to be executed by the bf(execute())
-        member (see below)
-        itb(NO_PATH)
-            This value indicates that the program should be called as
-        specified.
-        )
     bf(enum Program):nl()
-       This enumeration also has two values: 
+       This enumeration has the following values:
         itemization(
-        itb(FIRST_ARG)
-            This value indicates that the first white-space delimited element
-        of the defined command should be used as the name of the program to be
-        executed 
+        itb(NO_PATH)
+            This value indicates that the external program should be called as
+        specified, without searching the elements in the tt(PATH) environment
+        variable. 
+        itb(USE_PATH)
+            This value indicates that the tt(PATH) environment variable should
+        be used to locate the external program to be executed.
+        )
         itb(USE_SHELL)
-            This value indicates that the program should be called as command
-        to bf(/bin/sh). See bf(execute()), below.
+            This value indicates that the external program should be called as
+        command to bf(/bin/sh), using the bf(system)(3) system call.
         )
 
+
+    bf(enum IOMode):nl()
+       This enumeration has the following values:
+        itemization(
+        itb(CIN)
+            This value is used to indicate that information written (inserted)
+to the bf(FBB::Process) object should be sent to its child process.
+        itb(COUT)
+            This value is used to indicate that information read (extracted)
+from the bf(FBB::Process) object should be the information written by the
+child process to its standard output stream.
+        itb(CERR)
+            This value is used to indicate that information written by the
+child process to its standard error stream should be accessible through the
+bf(FBB::Process::cerr()) member.
+        itb(MERGE_COUT_CERR)
+            This value is used to indicate that information read (extracted)
+from the bf(FBB::Process) object should be the information written by the
+child process to its standard output and standard error streams. This
+bf(IOMode) will overrule an explicitly specified bf(CERR) mode., 
+        itb(IGNORE_COUT)
+            This value is used to indicate that information written by the
+child process to its standard output stream should besent to tt(/dev/null). It
+is ignored when either bf(COUT) or bf(MERGE_COUT_CERR) is specified.
+        itb(IGNORE_CERR)
+            This value is used to indicate that information written by the
+child process to its standard error stream should be sent to tt(/dev/null). It
+is ignored when either bf(CERR) or bf(MERGE_COUT_CERR) is specified.
+            )
+
+manpagesection(TYPE)
     itemization(
-    itb(Process(std::string const &cmd = ""))
-       The default constructor simply defines an empty bf(FBB::Process) object. It is
-        defined as this constructor, using a default empty string argument.
-        Otherwise, this constructor expects a string defining the external
-        process to be called. If the command itself uses redirection, the
-        external program should be called using bf(FBB::Process)'s bf(system()) member (see
-        below). If the command starts and ends with a em(back-tick) (`) then
-        the back-ticks are removed, and the resulting contents are interpreted
-        as a command that should directly be executed by the bf(execute)
-        member, using that member's default arguments (see below).
+    itb(iomode)
+        Sets of values  of the bf(enum IOMode) (using the tt(bit_or) operator)
+may be used as value of a variable of this type. In functions expecting an
+bf(iomode) argument the empty set should not normally be specified.
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Process(std::string const &cmd = "", iomode mode = CIN | COUT | CERR))
+       This constructor may also be used as default constructor. By default it
+defines a bf(FBB::Process) object without setting a command. By default the
+command's standard streams are accessible via the bf(FBB::Process) object.
+The string that is provided as its first argument may be (the initial part of)
+the external program to run. If the command starts and ends with a
+em(back-tick) (tt(`)) then the back-ticks are removed, and the resulting
+contents are interpreted as a command that should directly be executed by the
+bf(start(Program)) member, using that member's default argument (see below).
     )
     The bf(FBB::Process) class does not offer a copy constructor.
 
 manpagesection(OVERLOADED OPERATORS)
 
     itemization(
-    itb(std::string const &operator[](unsigned idx) const)
-       Having executed an external program, bf(operator[]) may be used to
-        obtain the indexed line of the program's standard output. It is the
-        programmer's responsibility to ensure that the requested line is
-        actually available (using, e.g., the bf(size()) member, see below).
-    itb(std::ostream &operator<<(...))
-       All bf(std::ostringstream::operator<<()) members can be used to define
-        the command to be executed. Any information inserted into a bf(FBB::Process) object
-        is appended to any information already inserted (by, e.g., the
-        constructor or by bf(operator+=())). All information inserted into or
-        added to a bf(FBB::Process) object defines the command to be executed. The returned
-        bf(std::istream) object is actually a bf(FBB::Process) object, and could be
-        downcast as such.
+    itb(std::ostream &operator<<(FBB::Process &, ...))
+        This operator may be used to insert information into the child
+process' standard input stream if tt(IOMode CIN) was specified. If tt(IOMODE
+CIN) was not specified the insertion is silently ignored. Note that
+information em(inserted) into bf(FBB::Process) objects is em(extracted) by
+their child processes. 
+
+    Note: this operator can only be used between bf(start()) and
+bf(stop()) calls (see below). It may produce unexpected results if used
+otherwise. Note that the bf(FBB::Process) constructor may imply a bf(start())
+call. 
+    itb(std::istream &operator>>(FBB::Process &, ...))
+        This operator may be used to extract information from the child
+process' standard output stream or from both the standard output and standard
+error streams. Information from both streams is extracted if tt(IOMode
+MERGE_CIN_COUT) was specified. If tt(IOMODE COUT) was specified the
+information written by the child process to its standard output stream is
+extracted. Note that information em(extracted) from bf(FBB::Process) objects
+is em(inserted) by their child processes. If neither modes are specified, the
+default processing of the child's standard streams takes place.
+
+    Note: this operator can only be used between bf(start()) and
+bf(stop()) calls (see below). It may produce unexpected results if used
+otherwise. Note that the bf(FBB::Process) constructor may imply a bf(start())
+call. 
     itb(Process &operator+=(std::string const &))
-       The bf(operator+=()) member adds the provided tt(std::string) object to
-        the information already inserted into a bf(FBB::Process) object.  Any information
-        inserted into a bf(FBB::Process) object is appended to any information already
-        inserted (by, e.g., the constructor or by bf(operator<<())). Note that
-        this member does not add, e.g., a separating blank space between its
-        argument and information that may already have been inserted.
+       This operator adds the provided tt(std::string) object to the command
+already stored in a bf(FBB::Process) object.  Note that this member does not
+add, e.g., a separating blank space between its argument and information that
+may already have been inserted. 
+
+    Note: this operator will not have an effect if used between bf(start())
+and bf(stop()) calls (see below). 
     itb(int operator=(std::string const &))
-       The bf(operator=()) member defines em(and) executes the provided
-        argument using the bf(execute()) member (see below). Optionally, the
-        provided argument may start em(and) end with a em(back-tick) (`),
-        which are removed before calling the bf(execute) member. The
-        bf(execute) member is called using its default arguments. The
-        operator's return value is equal to bf(execute)'s return value. Using
-        this operator implies the use of the bf(clear) member (see below).
+       The bf(operator=()) member (re)defines the command currently stored in
+an bf(FBB::Process) object.  If the command starts and ends with a
+em(back-tick) (tt(`)) then the back-ticks are removed, and the resulting
+contents are interpreted as a command that should directly be executed by the
+bf(start(Program)) member, using that member's default argument (see below).
+This operator also calls bf(stop()) (see below). The return value is undefined
+if there was no child process that was stopped, otherwise it is the child
+process' exit value.
        )
-    The bf(FBB::Process) class does not offer an implementation for the default overloaded
-        assignment operator.
+    The default overloaded assignment operator is not available.
 
 manpagesection(MEMBERS)
 
+The function's return value is the return value of the used bf(exec)
+function. See also the member bf(system), below. Arguments surrounded by
+double quotes will have their double quotes removed, interpreting any
+escape-sequences that may have been used within. Arguments surrounded by
+single quotes will have their single quotes removed, accepting their contents
+unmodified.
     itemization(
-    itb(void clear())
-       This member clears the current contents of a bf(FBB::Process) object's command
-        buffer. Following bf(clear()) a new command may be constructed.
-    itb(std::vector<std::string> const &cerr())
-       A reference to the vector containing all the lines collected from the
-        external process' standard error stream.
-    itb(std::vector<std::string> const &cout())
-       A reference to the vector containing all the lines collected from the
-        external process' standard output stream.
-    itb(unsigned errSize() const)
-       The number of lines in the executed program's redirected standard
-        error, as received by the bf(FBB::Process) object.
-    itb(std::string const &errLine(unsigned idx) const)
-       Having executed an external program, bf(errLine) may be used to
-        obtain the indexed line of the program's standard error. It is the
-        programmer's responsibility to ensure that the requested line is
-        actually available.
-    itb(int execute(PathType p = NO_PATH, Program p = FIRST_ARG))
-        defined command is executed using a member of the bf(execl)(3)
-        family. By default, as an additional security measure, the tt(PATH)
-        environment variable is em(not) used to search the program to be
-        executed. If it is considered safe to use the tt(PATH) environment
-        variable, specify the tt(USE_PATH)
-        enumeration value. By default the first white-space delimited element
-        of the defined command is used as the name of the program to be
-        executed. If the program should be called as a command to bf(sh)(1),
-        specify tt(USE_SH) as second argument. If tt(USE_SH) is specified, the
-        defined command is passed as argument to the bf(system) member (see
-        below) and tt(PathType USE_PATH) is forced. The function's return
-        value is the return value of the used bf(exec) function. See also the
-        member bf(system), below. Arguments surrounded by double quotes will
-        have their double quotes removed, interpreting any escape-sequences
-        that may have been used within. Arguments surrounded by single quotes
-        will have their single quotes removed, accepting their contents
-        unmodified.
-    itb(int status() const)
-       The return value of the last executed process. When no process has as
-        yet been executed, -1 is returned.
-    itb(unsigned size() const)
-       The number of lines in the executed program's redirected standard
-        output, as received by the bf(FBB::Process) object.
-    itb(int system())
-       A defined command is executed using the bf(system)(3) system call (and
-        thus as a shell command). The return value is bf(system)(3)'s return
-        value. When using bf(system) redirections can be included in the
-        command itself.
+    itb(int available())
+        This member returns immediately. Its return value indicates whether
+any information can be obtained from the child process. 0 is returned if no
+information is ready for extraction. 1 is returned if information from the
+child process' standard output stream is available; 2 is returned if
+information from the child process' standard error stream is available (unless
+tt(MERGE_CIN_COUT) was specified, in which case both the standard output and
+the standard error streams are merged to the standard output stream); 3 is
+returned if information from both the standard output stream and the standard
+error stream is available.
+    itb(std::istream &cerr())
+        This member may be used to extract the information written by the
+child process to its standard error stream. It can only be used for this when
+bf(IOMode) tt(CERR) was specified.
+    itb(int start(Program program = NO_PATH))
+        The current contents of the command buffer are executed using
+bf(system)(3) or a member of the bf(execl)(3) family. Before starting the
+child process, all redirections are set according to the current bf(IOMode)
+specification. This mode may be set or modified by the constructor, by
+bf(start())'s overloaded version (see below) or by the bf(system()) member
+(see below).  By default (as a security measure), the tt(PATH) environment
+variable is em(not) used to search the program to execute. If it is considered
+safe to use the tt(PATH) environment variable, tt(USE_PATH) may be
+specified. By default the first white-space delimited element of the defined
+command is used as the name of the program to execute. If the program
+should be called as a command to bf(sh)(1), specify tt(USE_SHELL). If
+tt(USE_SHELL) is specified, the defined command is passed as argument to the
+bf(system)(3) member (see below). The function has no effect if the command
+buffer is empty.
+    itb(int start(iomode mode, Program program = NO_PATH))
+        Before transferring control to the above bf(start()) member, the
+bf(IOMode) is set to tt(mode). Having set bf(IOMode), the child process is
+started according to the procedure described with the former bf(start())
+member.
+    itb(int stop())
+       This member terminates the currently running child process and erases
+the contents of a bf(FBB::Process) object's command buffer. Following
+bf(stop()) a new command may be constructed. This member's return value is the
+child process' exit value. This member is also called when the
+bf(FBB::Process) object goes out of scope.
+    itb(void system())
+        This member executes the stored command using the bf(system)(3) system
+call (therefore executing the command as a shell command).  When using
+bf(system) redirections can be included in the command itself (although this
+might undo the previously set bf(IOMode)).
+    itb(void system(iomode mode))
+        This member sets a new bf(IOMode) set, and then executes the stored
+command using the bf(system)(3) system call (therefore executing the command
+as a shell command).  When using bf(system) redirections can be included in
+the command itself (although this might undo the just set bf(IOMode)).
+    itb(int wait())
+        This member waits for information written by the child process to its
+standard output or error streams.  1 is returned if information from the child
+process' standard output stream is available; 2 is returned if information
+from the child process' standard error stream is available (unless
+tt(MERGE_CIN_COUT) was specified, in which case both the standard output and
+the standard error streams are merged to the standard output stream); 3 is
+returned if information from both the standard output stream and the standard
+error stream is available.
+    itb(int wait(unsigned sec, unsigned msec = 0))
+        This member waits at most tt(sec) seconds plus tt(msec) milliseconds
+for information written by the child process to its standard output or error
+streams. 0 is returned if, following the delay, no information is ready for
+extraction.  1 is returned if information from the child process' standard
+output stream is available; 2 is returned if information from the child
+process' standard error stream is available (unless tt(MERGE_CIN_COUT) was
+specified, in which case both the standard output and the standard error
+streams are merged to the standard output stream); 3 is returned if
+information from both the standard output stream and the standard error stream
+is available.
     )
 
 manpagesection(EXAMPLE)
-    To do
+        verb(
+#include <iostream>
+#include <string>
+#include <bobcat/process>
+
+using namespace std;
+using namespace FBB;
+
+int main()
+{
+    string line;
+                                        // setup a command
+    Process process("/bin/cat", Process::CIN | 
+                                Process::COUT | 
+                                Process::IGNORE_CERR);
+
+    process.start();                    // start it
+
+    process << "hello world" << endl;   // insert this text
+    getline(process, line);             // read its `cat' output
+    cout << line << endl;               // show it
+
+    process = "`/bin/ls`";              // run another command 
+                                        // (assignment implies 
+                                        // `stop()')
+
+    while (getline(process, line))      // read all its output
+        cout << line << endl;
+
+    cout << process.stop() << endl;     // show the process' exit
+                                        // value
+    return 0;
+}
+        )
 
 manpagefiles()
     em(bobcat/process) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(system)(3), bf(execle)(3)
+    bf(bobcat)(7), bf(execle)(3), bf(fork)(3bobcat), bf(iostream)(3fork),
+    bf(system)(3)
 
 
 manpagebugs()

@@ -43,16 +43,20 @@ class MultiStreambuf: public std::streambuf
                 {
                     return d_mode;
                 }
-                operator std::ostream &()
+                std::ostream &ostream()
                 {
                     return *d_os;
                 }
+            private:
                 static void setOnce(stream &os)
                 {
                     if (os.d_mode == RESET)
                         os.d_mode = ONCE;
                 }
         };
+
+        typedef std::vector<stream>::iterator iterator;
+        typedef std::vector<stream>::const_iterator const_iterator;
 
     private:
         std::string d_buffer;
@@ -78,20 +82,19 @@ class MultiStreambuf: public std::streambuf
         {
             d_os.insert(d_os.end(), os.begin(), os.end());
         }
-        std::vector<stream>::iterator begin()
+        iterator begin()
         {
             return d_os.begin();
         }
-        std::vector<stream>::iterator end()
+        iterator end()
         {
             return d_os.end();
         }
-
-        std::vector<stream>::const_iterator begin() const
+        const_iterator begin() const
         {
             return d_os.begin();
         }
-        std::vector<stream>::const_iterator end() const
+        const_iterator end() const
         {
             return d_os.end();
         }

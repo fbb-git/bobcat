@@ -1,0 +1,58 @@
+#ifndef _INCLUDED_BOBCAT_IOSTREAMBUF_
+#define _INCLUDED_BOBCAT_IOSTREAMBUF_
+
+#include <fstream>
+#include <streambuf>
+
+namespace FBB
+{
+
+class IOStreambuf: public std::streambuf
+{
+    char d_buf;
+    std::istream *d_in;
+    std::ostream *d_out;
+
+    public:
+        IOStreambuf(std::istream &in, std::ostream &out)
+        {        
+            open(in, out);
+        }
+
+        IOStreambuf()
+        :
+            d_in(0),
+            d_out(0)
+        {}        
+
+        virtual ~IOStreambuf();
+
+        void open(std::istream &in, std::ostream &out);
+
+    protected:
+        virtual int underflow();
+
+        virtual pos_type seekoff(off_type offset, std::ios::seekdir way,
+                                 std::ios::openmode mode = 
+                                                std::ios::in | std::ios::out);
+
+        virtual pos_type seekpos(pos_type offset, 
+                                 std::ios::openmode mode = 
+                                                std::ios::in | std::ios::out)
+        {
+            return seekoff(offset, std::ios::beg, mode);
+        }
+
+        virtual int sync();
+        
+        virtual int overflow(int c);
+
+        std::streamsize xsputn(char const *buffer, std::streamsize n)
+        {
+            return d_out->write(buffer, n) ? n : 0;
+        }
+};
+
+} // namespace FBB
+
+#endif
