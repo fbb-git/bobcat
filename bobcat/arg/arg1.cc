@@ -27,7 +27,7 @@ Arg::Arg(char const *optstring, int argc, char **argv) throw (Errno)
             break;
 
             default:
-                d_optv.push_back(pair<int, string>(c, optarg ? optarg : ""));
+                addCharOption(c);
             break;    
         }
     }

@@ -9,6 +9,7 @@
 #include <string>
 #include <getopt.h>
 #include <vector>
+#include <map>
 #include <unistd.h>
 #include <bobcat/errno>
 
@@ -17,21 +18,39 @@ namespace FBB
     class OptStructArray;
     class Arg
     {
-        typedef std::pair<int, std::string>         IntStringPair;
-        typedef std::pair<std::string, std::string> StringStringPair;
         typedef struct option                       OptStruct;
 
-        static Arg                      *s_arg;
+        typedef std::vector<std::string>            StringVector;
+
+        typedef std::map<int, StringVector>         IntStringVectorMap;
+        typedef std::map<int, StringVector>::const_iterator ISVMapIterator;
+
+        typedef std::map<std::string, StringVector> StringStringVectorMap;
+        typedef std::map<std::string, StringVector>::const_iterator 
+                                                    SSVMapIterator;
+
+        static Arg                      *s_arg;     // points to Singleton Arg
+
         static std::string              s_dirsep;
-
-        std::vector<std::string>        d_argv;
-
-        std::vector<IntStringPair >     d_optv;
-        std::vector<StringStringPair>   d_longOption;
         std::string                     d_base;
-
         char const                      **d_argPointer;
         
+        std::vector<std::string>        d_argv;     // remaining arguments
+                                                    // after removing the 
+                                                    // options
+
+        IntStringVectorMap d_optv;                  // short (and associated
+                                                    // long options). 
+                                                    // 1st value: option char;
+                                                    // 2nd value: optionvalue
+                                                    //      or empty string.
+        unsigned           d_nOptv;                 // count of ALL of the
+                                                    // previous options
+
+        StringStringVectorMap   d_longOptv;         // specified long options
+        unsigned                d_nLongOptions;     // count of ALL of the
+                                                    // following options
+
         public:
             enum Type
             {
@@ -65,8 +84,12 @@ namespace FBB
                                     LongOption const * const begin,
                                     LongOption const * const end,
                                     int argc, char **argv) throw (Errno);
-            static Arg &getInstance() throw (Errno);        
 
+            static Arg &instance() throw (Errno);        
+            static Arg &getInstance() throw (Errno) // DEPRECATED: USE 
+            {                                       // instance()
+                return instance();
+            }
             std::string const &basename() const
             {
                 return d_base;
@@ -75,23 +98,37 @@ namespace FBB
             {
                 return d_argv.size();
             }
+
+                // total number of specified short (and combined long) options
             inline unsigned nOptions() const
             {
-                return d_optv.size();
+                return d_nOptv;
             }
+
+                // total numer of long-only options specified
             inline unsigned nLongOptions() const
             {
-                return d_longOption.size();
+                return d_nLongOptions;
             }
-            bool option(int option) const
+
+            unsigned option(int option) const;              // 1
+            unsigned option(std::string const &optchars) const;     // 2
+            unsigned option(unsigned idx, 
+                            std::string *value, int option) const;  // 3
+            unsigned option(std::string *value, int optChar) const
             {
-                return findopt(option) != nOptions();
+                return option(static_cast<unsigned>(0), value, optChar);
             }
-            bool option(std::string const &optchars) const;     // 3
-            bool option(std::string *value, int option) const;  // 4
-                                                                // 5
-            bool option(std::string *value, char const *longOption) 
-                                                        const throw (Errno);
+            unsigned option(unsigned *idx, 
+                            std::string *value, int option) const;  // 4
+            unsigned option(unsigned idx, std::string *value, 
+                            char const *longOption) const;         // 5
+            unsigned option(std::string *value, char const *longOption) const
+            {
+                return option(static_cast<unsigned>(0), value, longOption);
+            }
+            unsigned option(unsigned *idx, std::string *value, 
+                    char const *longOption) const;                  // 6
     
             char const *operator[](unsigned idx) const;
 
@@ -112,22 +149,25 @@ namespace FBB
                 LongOption const * const end,
                 int argc, char **argv) throw (Errno);
 
+            void addCharOption(int option);
+            void addLongOption(std::string const &longName);    // 1
+            void addLongOption(OptStruct *optStructs,           // 2
+                            std::string const &optString,
+                            LongOption const &longOption);
 
-            unsigned findopt(int optchar) const;     
-            unsigned findopt(char const *longOption) const;     
+            unsigned firstNonEmpty(unsigned *idx, std::string *value, 
+                            StringVector const &sv) const;
+
             void setBasename(std::string const &argv0);
             void fillLongOptions(
                             OptStruct *optStructs,
                             std::string const &optString,
                             LongOption const * const begin,
                             LongOption const * const end);
-            void addLongOption(OptStruct *optStructs,
-                            std::string const &optString,
+            bool plainLongOption(int *c, 
                             LongOption const &longOption);
             int setOptionType(std::string const &optString,
                             LongOption const &longOption) throw (Errno);
-            bool plainLongOption(int *c, 
-                            LongOption const &longOption);
     };
 
 }

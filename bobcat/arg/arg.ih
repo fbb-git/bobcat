@@ -1,7 +1,8 @@
 #include "arg"
 #include <iostream>
+#include <functional>
 
-#include"../string/string"
+#include <bobcat/string>
 
 namespace FBB
 {
@@ -27,21 +28,6 @@ namespace FBB
             OptStruct *get()
             {
                 return d_opt;
-            }
-    };
-
-    template <typename Type>
-    class FirstCompare
-    {
-        Type d_value;
-        public:
-            FirstCompare(Type const &value)
-            :
-                d_value(value)
-            {}
-            bool operator()(std::pair<Type, std::string> const &el) const
-            {
-                return el.first == d_value;
             }
     };
 }

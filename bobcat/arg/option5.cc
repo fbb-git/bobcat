@@ -1,21 +1,16 @@
 #include "arg.ih"
 
-bool Arg::option(string *value, char const *longOption) const throw (Errno)
+unsigned Arg::option(unsigned idx, 
+                 string *value, char const *longOption) const
 {
-    unsigned idx = findopt(longOption);
+    SSVMapIterator it = d_longOptv.find(longOption);
+    if (it == d_longOptv.end())
+        return 0;
 
-    if (idx == nLongOptions())
-        return false;
+    unsigned ret = it->second.size();   // size of the value-vector
 
-    string const &optval = d_longOption[idx].second;
-
-    if (!value)
-    {
-        if (optval.length())
-            throw Errno(EINVAL, 
-                        "Arg::Option(): no storage for argument value");
-        return true;
-    }
-    *value = optval;
-    return true;
+    if (idx < ret && value)             // if the idx is within range and
+        *value = it->second[idx];       // value requested, return it.
+    
+    return ret;                         // return this option count.
 }

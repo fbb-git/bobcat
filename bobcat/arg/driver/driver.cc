@@ -1,61 +1,59 @@
 /*
                               driver.cc
-
-   $Id$
-
-   $Log$
-   Revision 1.1  2005/08/19 15:12:52  frank
-   Initial revision
-
-   Revision 1.1.1.1  2003/05/28 13:50:17  frank
-   Initial import of FBB::Arg
-
 */
 
 #include "driver.h"
 
-#ifndef _SYSINC_ALGORITHM_
 #include <algorithm>
-#define _SYSINC_ALGORITHM_
-#endif
+#include <bobcat/errno>
 
-#ifndef _INCLUDED_ARG_H_
-#include "../arg.h"
-#endif
-
-#ifndef _INCLUDED_ERRRNO_H_
-#include "../../errno/errno.h"
-#endif
-
+#include "../arg"
 
 using namespace std;
 using namespace FBB;
 
 void optcheck(char c)
 {
-    Arg &arg = Arg::getInstance();
+    Arg &arg = Arg::instance();
 
-    if (arg.option(c))
-        cout << "Saw option " << c << endl;
+    if (unsigned count = arg.option(c))
+        cout << "Saw option " << c << " " << count << " times" << endl;
 
-    if (find("def", "def" + 3, c) != "def" + 3)
+    if (string("def").find(c) != string::npos)
     {
         string value;
-        if (arg.option(&value, c))
-            cout << "option value of " << c << " is " << value << endl;
+        unsigned idx;
+
+        arg.option(&value, c);
+        cout << "First option value of " << c << " is " << value << endl;
+
+        unsigned count = arg.option(&idx, &value, c);
+        cout << count << " times option " << c << endl;
+        if (idx == count)
+            cout << "No non-empty option values" << endl;
+        else
+        {
+            cout << "First non-empty option at " << idx << endl;
+            for (unsigned ix = 0; ix < count; ++ix)
+            {
+                arg.option(ix, &value, c);
+                cout << ix << ": " << value << endl;
+            }
+        }
+
     }
 }
 
 void longopt(char const *longOpt)
 {
     string value;
-    Arg &arg = Arg::getInstance();
+    Arg &arg = Arg::instance();
 
-    bool opt =  arg.option(&value, longOpt);
+    unsigned opt =  arg.option(&value, longOpt);
     if (!opt)
         return;
-   
-    cout << longOpt << ":\t" <<
+
+    cout << longOpt << " " << opt << " times:\t" <<
                 (value.length() ? value : "-- no arg--") << endl;
 }
 

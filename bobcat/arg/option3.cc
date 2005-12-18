@@ -1,11 +1,15 @@
 #include "arg.ih"
 
-bool Arg::option(std::string const &optchars) const
+unsigned Arg::option(unsigned idx, string *value, int optChar) const
 {
-    for (char const *cp = optchars.c_str(); *cp; cp++)
-    {
-        if (option(*cp))
-            return true;
-    }
-    return false;
+    ISVMapIterator it = d_optv.find(optChar);
+    if (it == d_optv.end())
+        return 0;
+
+    unsigned ret = it->second.size();   // size of the value-vector
+
+    if (idx < ret && value)             // if the idx is within range and
+        *value = it->second[idx];       // value requested, return it.
+    
+    return ret;                         // return this option count.
 }

@@ -63,7 +63,7 @@ allowing code initializing bf(Arg) to use the initialized object immediately.
             will be empty, unless specified).
         )
 
-    itb(FBB::Arg &getInstance()) 
+    itb(FBB::Arg &instance()) 
         Returns the instance of the bf(Arg) object, available after calling
 one of the bf(Arg::initialize()) members.  If called before initialization, an
 tt(FBB::Errno) exception is thrown.
@@ -87,26 +87,66 @@ manpagesection(NON-STATIC MEMBER FUNCTIONS)
         Returns the number of arguments left after option-removal.  The
 program name bf(argv[0]) is NOT counted here.
     itb(unsigned nOptions() const)
-        Returns the number of single character options
+        Returns the number of specified single character options. If short
+options have long option synonyms, then these long option synonyms are counted
+as if they were specified as single character options. If single character
+options (or their long option synonyms) are multiply specified, then each
+specification is counted.
     itb(unsigned nLongOptions() const)
-        Returns the number of long options
-    itb(bool option(int option) const)
-        If `option' was present bf(true) is returned, bf(false) otherwise.
-    itb(bool option(std::string const &options) const)
-        If at least one of the options specified in the argument `option' were
-present, bf(true) is returned. bf(false) otherwise
-    itb(bool option(string *value, int option) const)
-        Returns true if the provided argument was present. Its value is then
-stored in tt(*value), which is left untouched if `option' was not present. 0
-may be specified for bf(value) if the option does not have a value. If 0 is
-specified for an option which em(has) a value, an bf(FBB::Errno) exception is
-thrown.
-    itb(bool option(string *value, char const *longOption) const throw (Errno))
-        Returns true if the provided long option was present. Its value is
-then stored in tt(*value), which is left untouched if `option' was not
-present. 0 may be specified for bf(value) if the option does not have a
-value. If 0 is specified for an option which em(has) a value, an
-bf(FBB::Errno) exception is thrown.
+        Returns the number of long options for which no short option synonym
+exist. If long options are multiply specified, then each specification is
+counted. 
+    itb(unsigned option(int option) const)
+        The number of times  `option' (or its long option synonym, if defined)
+were specified is returned.
+    itb(unsigned option(std::string const &options) const)
+        The number of times one of the options specified in the `option'
+argument (or their long option synonyms) were present is returned.
+    itb(unsigned option(string *value, int option) const)
+        Returns the number of times the provided option (or its long option
+synonym) was present. If the return value is non-zero then the value of the
+first occurrence of this option is stored in tt(*value), which is left
+untouched if `option' was not present. 0 may be specified for bf(value) if the
+option does not have a value or if the value should not be stored.
+    itb(unsigned option(unsigned idx, string *value, int option) const)
+        Returns the number of times the provided option (or its long option
+synonym) was present. If the return value is non-zero then the value of the
+tt(idx)th occurrence (0-based offset) of this option is stored in tt(*value),
+which is left untouched if `option' was not present or if tt(idx) is or
+exceeds the number of specifications of the provided option. 0 may be
+specified for bf(value) if the option does not have a value or if the value
+should not be stored. 
+    itb(unsigned option(unsigned *idx, string *value, int option) const)
+        Returns the number of times the provided option (or its long option
+synonym) was present. If the return value is non-zero then the offset (within
+the series of tt(option) specifications) of the first option having a
+non-empty option value is returned in tt(*idx), while its option value is
+stored in tt(*value). Both tt(*value) and tt(*idx) are left untouched if
+`option' was not present. 0 may be specified for bf(value) if the option does
+not have a value or if the value should not be stored.
+    itb(unsigned option(string *value, char const *longOption) const)
+        Returns the number of times the specified long option (not having a
+single-character synonym) was present. Its value is then stored in tt(*value),
+which is left untouched if the long option was not present. 0 may be specified
+for bf(value) if the option does not have a value or if the value should not
+be stored.
+    itb(unsigned option(unsigned idx, string *value, 
+                                        char const * longOption) const)
+        Returns the number of times the provided long option (not having a
+single-character synonym) was present. If the return value is non-zero then
+the value of the tt(idx)th occurrence (0-based offset) of this long option is
+stored in tt(*value), which is left untouched if the long option was not
+present or if tt(idx) is or exceeds the number of specifications of the
+provided long option. 0 may be specified for bf(value) if the long option does
+not have a value or if the value should not be stored.
+    itb(unsigned option(unsigned *idx, string *value, int longOption) const)
+        Returns the number of times the provided long option (not having a
+single-character synonym) was present. If the return value is non-zero then
+the offset (within the series of this long option specifications) of the first
+long option having a non-empty option value is returned in tt(*idx), while its
+option value is stored in tt(*value). Both tt(*value) and tt(*idx) are left
+untouched if long option was not present. 0 may be specified for bf(value) if
+the long option does not have a value or if the value should not be stored.
     itb(void versionHelp(void (*usage)(std::string const &progname), 
         char const *version, unsigned minArgs, int helpFlag = 'h', 
         int versionFlag = 'v') const throw (int) throw (int))

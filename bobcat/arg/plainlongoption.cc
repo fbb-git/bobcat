@@ -2,10 +2,7 @@
 
 bool Arg::plainLongOption(int *c, Arg::LongOption const &longOption)
 {
-    d_longOption.push_back                  // long option was used: 
-    (                                       // store it.    
-        StringStringPair(longOption.d_name, optarg ? optarg : "")
-    );
+    addLongOption(longOption.d_name);
 
     if (!longOption.d_optionChar)           // it's a plain long option.
         return true;

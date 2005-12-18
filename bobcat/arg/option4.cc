@@ -1,12 +1,10 @@
 #include "arg.ih"
 
-bool Arg::option(string *value, int optchar) const
+unsigned Arg::option(unsigned *idx, string *value, int optChar) const
 {
-    unsigned idx = findopt(optchar);
+    ISVMapIterator it = d_optv.find(optChar);
+    if (it == d_optv.end())
+        return 0;
 
-    if (idx == nOptions())
-        return false;
-
-    *value = d_optv[idx].second;
-    return true;
+    return firstNonEmpty(idx, value, it->second);
 }

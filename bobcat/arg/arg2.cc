@@ -45,7 +45,7 @@ Arg::Arg(char const *optstring,
                 // in which case c is set to the corresponding short
                 // char option
             default:
-                d_optv.push_back(IntStringPair(c, optarg ? optarg : ""));
+                addCharOption(c);
             break;    
         }
     }
