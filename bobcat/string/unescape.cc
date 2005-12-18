@@ -2,7 +2,7 @@
 
 namespace
 {
-    char const escape[] = "abfnrtv";
+    char const escapeChars[] = "abfnrtv";
     char const escapeValue[] = {'\a', '\b', '\f', '\n', '\r', '\t', '\v'};
 
     unsigned handleOctal(String *dest, String const &src, unsigned pos)
@@ -71,9 +71,9 @@ String String::unescape() const
 
         int next = (*this)[pos];            // determine next char
 
-        if (char *cp = strchr(escape, next))// escape sequence ?
+        if (char *cp = strchr(escapeChars, next))// escape sequence ?
         {
-            ret += escapeValue[cp - escape];// then assign escape char
+            ret += escapeValue[cp - escapeChars];// then assign escape char
             ++pos;                          // next character to handle
         }
         else if (strchr("01234567", next))  // handle octal values
