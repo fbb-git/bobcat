@@ -2,6 +2,8 @@
 
 Process::ExecContext Process::analyzeCommand()
 {
+//    std::cerr << "Command: `" << d_command << "'" << endl;
+
     String args(d_command);                 // First, analyze the arguments
      
     vector<String::SplitPair> elements;     // destination for the command's
@@ -14,7 +16,7 @@ Process::ExecContext Process::analyzeCommand()
     
     for_each(elements.begin(), elements.end(), 
                 Wrap1c<String::SplitPair, ExecContext>
-                    (&Process::execContext, ec));
+                    (&execContext, ec));
     
     if (!ec.ok)
     {

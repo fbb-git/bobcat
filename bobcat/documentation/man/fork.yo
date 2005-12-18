@@ -87,11 +87,6 @@ redirections that are necessary to communicate with the parent process. See
 also the classes bf(redirector)(3bobcat), bf(pipe)(3bobcat),
 bf(ipipe)(3bobcat) and bf(opipe)(3bobcat). By default, bf(childRedirections())
 does nothing.
-    itb(int getPid() const)
-        Returns the child's process id in the parent's code (i.e., in the
-bf(parent-)members below), and 0 in the child's code (i.e., in the
-bf(child-)members below). Note that the value of bf(getPid()) is bf(undefined)
-when called em(before) the member bf(fork()) has been called.
     itb(virtual void parentProcess() = 0)
         This member em(must) be implemented by derived classes. It defines the
 actions that are performed by the parent process, following the bf(fork)(2)
@@ -103,6 +98,11 @@ redirections that are necessary to communicate with, e.g., the parent. See,
 e.g., the classes bf(redirector)(3bobcat), bf(pipe)(3bobcat),
 bf(ipipe)(3bobcat) and bf(opipe)(3bobcat). By default,
 bf(parentRedirections()) does nothing.
+    itb(int pid() const)
+        Returns the child's process id in the parent's code (i.e., in the
+bf(parent-)members below), and 0 in the child's code (i.e., in the
+bf(child-)members below). Note that the value of bf(pid()) is bf(undefined)
+when called em(before) the member bf(fork()) has been called.
     itb(int waitForChild()) 
         This memebr may be called by bf(parentProcess()) to wait for the
 completion of the child-process. The return value (exit-code) of the child

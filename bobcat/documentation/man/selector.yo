@@ -42,27 +42,22 @@ monitored for reading.
     itb(void addWriteFd(int fd))
         Adds a filedescriptor to the set of file descriptors that are
 monitored for writing.
-    itb(int getExceptFd())
+    itb(int exceptFd())
         Returns -1 of no more file descriptors are
 available in the em(exception) category. Otherwise the next available file
 descriptor in the em(exception) category is returned. Returning from
 bf(wait()), this function can be called repeatedly until -1 is returned,
 servicing each available filedescriptor in turn.
-    itb(int getReadFd())
-        Returns -1 of no more file descriptors are available for
-reading. Otherwise the next available file descriptor for reading is
-returned. Returning from bf(wait()), this function can be called repeatedly
-until -1 is returned, servicing each available filedescriptor in turn.
-    itb(int getWriteFd())
-        Returns -1 of no more file descriptors are available for
-writing. Otherwise the next available file descriptor for writing is
-returned. Returning from bf(wait()), this function can be called repeatedly
-until -1 is returned, servicing each available filedescriptor in turn.
     itb(void noAlarm()) 
         This member prevents any timeout-alarm from occurring.
     itb(int nReady())
         Returns the number of available file descriptors.  0 is returned at a
 timeout, -1: is returned when tt(select)(2) itself failed.
+    itb(int readFd())
+        Returns -1 of no more file descriptors are available for
+reading. Otherwise the next available file descriptor for reading is
+returned. Returning from bf(wait()), this function can be called repeatedly
+until -1 is returned, servicing each available filedescriptor in turn.
     itb(void rmExceptFd(int fd)) 
         Removes a filedescriptor from the set of file descriptors that are
 monitored for exceptions (note these are not bf(C++) exceptions. See bf(man 2
@@ -83,6 +78,11 @@ file descriptors or timeout-period. The members tt(nReady()) and tt(get...())
 show their defined behaviors only after bf(wait()) has returned.  It throws an
 bf(FBB::Errno) exception when tt(select()) fails, which may very well indicate
 the end of any available input.
+    itb(int writeFd())
+        Returns -1 of no more file descriptors are available for
+writing. Otherwise the next available file descriptor for writing is
+returned. Returning from bf(wait()), this function can be called repeatedly
+until -1 is returned, servicing each available filedescriptor in turn.
     )
 
 manpagesection(EXAMPLE)

@@ -9,7 +9,7 @@ unsigned Process::whichStream()
         return 0;
 
         case 1:
-        return d_selector.getReadFd() == d_child_outp->getReadFd() ?
+        return d_selector.getReadFd() == d_child_outp->readFd() ?
                     1
                 :
                     2;

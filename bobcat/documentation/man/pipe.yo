@@ -34,13 +34,15 @@ pipe.
     itb(Pipe(Pipe const &other) throw()) 
         The standard copy constructor is available.
     )
+    Note that when the pipe goes out of scope, no bf(close)(2) operation is
+performed on the pipe's ends. If the pipe should be closed by the desctructor,
+derive a class from bf(Pipe)(3bobcat), whose destructor performs the required
+closing-operation.
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
-    itb(int getReadFd() const)
+    itb(int readFd() const)
         Returns the pipe's file descriptor that is used for reading
-    itb(int getWriteFd() const)
-        Returns the pipe's file descriptor that is used for writing
     itb(void readFrom(int filedescriptor))
         Sets up redirection from the internal em(read) filedescriptor to the
 given filedescriptor: information can be read from the bf(FBB::Pipe) object by
@@ -52,6 +54,8 @@ reading from each of the bf(n) provided filedescriptors (experimental).
     itb(int readOnly())
         Closes the writing end of the pipe, returns the reading end's file
 descriptor. 
+    itb(int writeFd() const)
+        Returns the pipe's file descriptor that is used for writing
     itb(void writtenBy(int filedescriptor))
         Sets up redirection from the internal em(write) filedescriptor to the
 given filedescriptor: information can be written to the bf(FBB::Pipe) object by
@@ -138,9 +142,13 @@ manpagefiles()
     em(bobcat/pipe) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(pipe)(2), bf(ipipe)(3bobcat), bf(opipe)(3bobcat))
+    bf(bobcat)(7), bf(pipe)(2)
 
 manpagebugs()
-    None Reported.
+    Note that when the pipe goes out of scope, no bf(close)(2) operation is
+performed on the pipe's ends. If the pipe should be closed by the desctructor,
+derive a class from bf(Pipe)(3bobcat), whose destructor performs the required
+closing-operation.
+
 
 includefile(trailer.inc)
