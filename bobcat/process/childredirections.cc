@@ -31,11 +31,13 @@ void Process::childRedirections()
             if (fd == -1)
                 exit(2);                    // 2: can't create /dev/null
 
+            Redirector redirector(fd);
+        
             if (d_mode & IGNORE_COUT)
-                dup2(fd, STDOUT_FILENO);
+                redirector.accessVia(Redirector::STDOUT);
 
             if (d_mode & IGNORE_CERR)
-                dup2(fd, STDERR_FILENO);
+                redirector.accessVia(Redirector::STDERR);
         }
     }    
 }

@@ -26,9 +26,9 @@ are not necessarily related to inheritance.
 
 0                             Errno                                   LogBuffer
                                 |                                        |
-                  +--------+----+--+------+----------------+---+----+    |
-                  |        |       |      |                |   |    |    |
-              Pattern     Msg  Redirector |               User |    +--+-+
+                  +--------+----+---------+----------------+---+----+    |
+                  |        |              |                |   |    |    |
+              Pattern     Msg             |               User |    +--+-+
                   |                       |                    |       |
            +------+-------+               |                    |      Log
            |              |               |                    |       |
@@ -47,11 +47,11 @@ are not necessarily related to inheritance.
 
 0    Errno (cont)
         |
-        +---------+--------+-------+-----+------+         IOStreambuf
-        |         |        |       |     |      |              |
-    Xpointer MailHeaders Milter   Pipe  Fork  Selector      IOStream
-                                   |     |      |              |
-                                   +-----+------+---+----------+
+        +---------+--------+-------+-----+------+----------+       IOStreambuf
+        |         |        |       |     |      |          |           |
+    Xpointer MailHeaders Milter   Pipe  Fork  Selector Redirector    IOStream
+                                   |     |      |          |           |
+                                   +-----+------+---+------+-----------+
                                                     |
 0   OFdStreambuf    IFdStreambuf    Wrap1    A2x    |   Wrap1c
         |                 |           |      |      |     |  

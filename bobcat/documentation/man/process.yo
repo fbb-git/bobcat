@@ -113,7 +113,24 @@ The string that is provided as its first argument may be (the initial part of)
 the external program to run. If the command starts and ends with a
 em(back-tick) (tt(`)) then the back-ticks are removed, and the resulting
 contents are interpreted as a command that should directly be executed by the
-bf(start(Program)) member, using that member's default argument (see below).
+bf(start(Program)) member, using that member's default argument (see
+below). When the tt(FBB::Process) object goes out of scope or when its
+bf(stop()) member is called, the child is given one second to terminate. If
+the child didn't terminate within one second, it is twice sent a tt(SIG_TERM)
+signal, followed by a tt(SIG_KILL) signal.
+    itb(Process(unsigned waitSeconds, std::string const &cmd = "", 
+            iomode mode = CIN | COUT | CERR))
+       By default this constructor defines a bf(FBB::Process) object without
+setting a command, while the command's standard streams are accessible via the
+bf(FBB::Process) object.  The string that is provided as its first argument
+may be (the initial part of) the external program to run. If the command
+starts and ends with a em(back-tick) (tt(`)) then the back-ticks are removed,
+and the resulting contents are interpreted as a command that should directly
+be executed by the bf(start(Program)) member, using that member's default
+argument (see below). When the tt(FBB::Process) object goes out of scope or
+when its bf(stop()) member is called, the child is given tt(waitSeconds)
+seconds to terminate. If the child didn't terminate within one second, it is
+twice sent a tt(SIG_TERM) signal, followed by a tt(SIG_KILL) signal.
     )
     The bf(FBB::Process) class does not offer a copy constructor.
 
@@ -198,22 +215,39 @@ bf(start())'s overloaded version (see below) or by the bf(system()) member
 variable is em(not) used to search the program to execute. If it is considered
 safe to use the tt(PATH) environment variable, tt(USE_PATH) may be
 specified. By default the first white-space delimited element of the defined
-command is used as the name of the program to execute. If the program
-should be called as a command to bf(sh)(1), specify tt(USE_SHELL). If
-tt(USE_SHELL) is specified, the defined command is passed as argument to the
-bf(system)(3) member (see below). The function has no effect if the command
-buffer is empty.
+command is used as the name of the program to execute. If the program should
+be called as a command to bf(sh)(1), specify tt(USE_SHELL). If tt(USE_SHELL)
+is specified, the defined command is passed as argument to the bf(system)(3)
+member (see below). When the tt(FBB::Process) object goes out of scope or when
+its bf(Process::stop()) member is called, the child is given one second to
+terminate. If the child didn't terminate within one second, it is twice sent a
+tt(SIG_TERM) signal, followed by a tt(SIG_KILL) signal. The function has no
+effect if the command buffer is empty.
     itb(int start(iomode mode, Program program = NO_PATH))
         Before transferring control to the above bf(start()) member, the
 bf(IOMode) is set to tt(mode). Having set bf(IOMode), the child process is
 started according to the procedure described with the former bf(start())
 member.
+    itb(int start(unsigned waitSeconds, iomode mode, 
+                  Program program = NO_PATH))
+        Before transferring control to the first bf(start()) member, the
+bf(IOMode) is set to tt(mode). Having set bf(IOMode), the child process is
+started according to the procedure described with the former bf(start())
+member. However, when the tt(FBB::Process) object goes out of scope or when
+its bf(stop()) member is called, the child is given tt(waitSeconds) seconds to
+terminate. If the child didn't terminate within one second, it is twice sent a
+tt(SIG_TERM) signal, followed by a tt(SIG_KILL) signal.
     itb(int stop())
-       This member terminates the currently running child process and erases
-the contents of a bf(FBB::Process) object's command buffer. Following
-bf(stop()) a new command may be constructed. This member's return value is the
-child process' exit value. This member is also called when the
-bf(FBB::Process) object goes out of scope.
+       This member closes the connections to the child's input, output and
+error streams (if any) and erases the contents of a bf(FBB::Process) object's
+command buffer. Next it will wait for at most one second or for the number of
+seconds specified at the bf(FBB::Process) object's construction (or as
+specified when its bf(start()) member was called) allowing the child to
+complete. If the child didn't terminate within one second, it is twice sent a
+tt(SIG_TERM) signal, followed by a tt(SIG_KILL) signal.  Following bf(stop())
+a new command may be constructed. This member's return value is the child
+process' exit value. This member is also called when the bf(FBB::Process)
+object goes out of scope.
     itb(void system())
         This member executes the stored command using the bf(system)(3) system
 call (therefore executing the command as a shell command).  When using

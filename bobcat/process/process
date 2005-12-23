@@ -39,7 +39,8 @@ class Process: private Fork, public IOStream
                                         // process 
     unsigned        d_mode;
     unsigned        d_processType;
-
+    unsigned        d_waitSeconds;      // seconds to wait for 
+                                        // child-termination
     public:
         enum Program
         {
@@ -63,14 +64,23 @@ class Process: private Fork, public IOStream
 
         Process(std::string const &command = "", 
                 iomode mode = CIN | COUT | CERR);
+                                                
+        Process(unsigned waitSeconds, std::string const &command = "", 
+                iomode mode = CIN | COUT | CERR);
 
                                                 
         void start(Program program = NO_PATH)
         {   
-            start(d_mode, program);
+            start(1, d_mode, program);
         }
 
-        void start(iomode mode, Program program = NO_PATH);
+        void start(iomode mode, Program program = NO_PATH)
+        {
+            start(1, mode, program);
+        }
+
+        void start(unsigned waitSeconds, 
+            iomode mode, Program program = NO_PATH);
 
         virtual ~Process()
         {
@@ -125,6 +135,8 @@ class Process: private Fork, public IOStream
 
         void setPipes(iomode mode);
         unsigned whichStream();
+
+        void init(std::string const &command, iomode mode);
 
         Process(Process const &other);              // NI
         Process &operator=(Process const &other);   // NI
