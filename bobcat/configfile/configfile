@@ -9,25 +9,70 @@
     if the rmComment flag is set to true
     Then, lines containing only blanks and tabs are not stored
 
-    The get(param) member returns the line containing `param' as the
-    first word that is not immediately followed by alphanumeric chars.
-    (in 'param hello' `par' is not found, but `param' is).
-
 */
 
 #include <fstream>
 #include <vector>
 #include <string>
+#include <iterator>
 #include <bobcat/errno>
+#include <bobcat/pattern>
 
 namespace FBB
 {
+    class RE_iterator: 
+          public std::iterator<std::input_iterator_tag, std::string>
+    {
+        friend class ConfigFile;
+
+        typedef std::vector<std::string>::iterator iterator;
+        iterator d_current;
+        iterator d_end;
+        Pattern  d_pattern;
+
+        public:
+            RE_iterator &operator++();
+
+            bool operator==(RE_iterator const &other) const
+            {
+                return d_current == other.d_current;
+            }
+            bool operator!=(RE_iterator const &other) const
+            {
+                return d_current != other.d_current;
+            }
+            std::string const &operator*() const
+            {
+                return *d_current;
+            }
+            std::string const *operator->() const
+            {                     
+                return &*d_current;
+            }
+        private:
+            RE_iterator(iterator const &begin, iterator const &end, 
+                        std::string const &re, bool caseSensitive);
+    
+            RE_iterator(iterator const &end)
+            :
+                d_current(end),
+                d_end(end)
+            {}
+    
+            RE_iterator::iterator find();
+
+            static bool reMatch(std::string &str, RE_iterator &re_iter);
+    };
+
+
     class ConfigFile: public std::vector<std::string>
     {
         bool d_rmComment;
         bool d_caseSensitive;
         
         public:
+            typedef RE_iterator const_RE_iterator;
+
             enum Comment
             {
                 KeepComment,
@@ -57,13 +102,33 @@ namespace FBB
             }
 
             void open(std::string const &fname) throw (Errno);
-            
-            std::vector<std::string>::const_iterator 
-                                    find(std::string const &target) const;
-            std::vector<std::string>::const_iterator 
-                                    findRE(std::string const &re) const;
+
+            const_RE_iterator beginRE(std::string const &re) const
+            {
+                return RE_iterator(
+                    const_cast<ConfigFile *>(this)->begin(), 
+                    const_cast<ConfigFile *>(this)->end(), 
+                    re, d_caseSensitive);
+            }
+            const_RE_iterator endRE() const
+            {
+                return RE_iterator(const_cast<ConfigFile *>(this)->end());
+            }
+
+            const_iterator find(std::string const &target) const;
+            const_iterator findRE(std::string const &re) const;
 
         private:
+            static bool contains(std::string const &str, 
+                                 std::string &target)
+            {
+                return str.find(target) != std::string::npos;
+            }
+
+            static bool match(std::string const &str, Pattern &pat)
+            {
+                return pat << str;
+            }
             void append_next(std::istream &istr, std::string &line);
             bool hasContent(std::string const &line);
             bool nextLine(std::istream &istr, std::string &line);
@@ -74,3 +139,4 @@ namespace FBB
 }
 
 #endif
+

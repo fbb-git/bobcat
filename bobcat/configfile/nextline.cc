@@ -4,6 +4,10 @@ bool ConfigFile::nextLine(istream &istr, string &line)
 {
     while (getline(istr, line))
     {
+        string::size_type pos = line.find_first_not_of(" \t");
+        if (pos != string::npos)                    // remove initial ws.
+            line.erase(0, pos);
+
         if (d_rmComment)
             removeComment(line);
 

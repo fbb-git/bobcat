@@ -13,8 +13,9 @@ manpagesynopsis()
 
 manpagedescription()
     bf(FBB::ConfigFile) objects read standard tt(unix)-style configuration
-files.  Lines are stored with initial WS removed.  If a line ends in \, then
-the next line (initial WS removed) is appended to the current line.
+files.  Lines are stored with initial white-space (blanks and tabs) removed.
+If a line ends in \, then the next line (initial white-space removed) is
+appended to the current line.
 
     Information at and beyond the first tt(#) on individual lines is removed
 if the tt(rmComment) flag is set to bf(true).  In that case, lines containing
@@ -61,7 +62,7 @@ constructor's first argument.
 
 manpagesection(MEMBER FUNCTIONS)
      All members of bf(std::vector<std::string>)  are
-available, as bf(FBB::ConfigFileile) inherits from this class.
+available, as bf(FBB::ConfigFile) inherits from this class.
     itemization(
     itb(void setCommentHandling(Comment type))
         This member can be used to change the comment-handling type originally
@@ -81,27 +82,94 @@ It will redefine the current contents of the bf(FBB::ConfigFile) object,
 destroying any information previously stored in it. The configuation file is
 read according to the latest setting of the comment-flag. It will throw an
 tt(FBB::Errno) exception if the file could not be opened.
-    itb(std::vector<std::string>::const_iterator find(std::string const
-            &target) const)
+    itb(ConfigFile::const_RE_iterator beginRE(std::string const &target) const)
+        This member returns a tt(const) iterator to the first element (i.e.,
+line) of the bf(FBB::ConfigFile) object in which the regular expression
+tt(target) is found. bf(FBB::Pattern) is used to perform the pattern
+matching. If the tt(RemoveComment) flag was specified, then comment-text is
+not searched.  The returned iterator can be incremented until bf(endRe()) is
+reached; all iterators will point to lines matching the specified regular
+expression.  This member also interprets the tt(SearchCasing) flag.
+    itb(ConfigFile::const_RE_iterator endRE() const)
+        This member returns a tt(const) iterator marking the end of the series
+of lines started at the the first line matching the regular expression
+specified by bf(beginRE())
+    itb(ConfigFile::const_iterator find(std::string const &target) const)
         This member will return an iterator to the first element (i.e., line)
 of the bf(FBB::ConfigFile) object in which tt(target) is found. Note that
 tt(target) may appear anywhere within a line. If the tt(RemoveComment) flag
 was specified, then comment-text is not searched. Use the
-tt(FBB::ConfigFile::end()) member to determine the matching end-iterator.
-This member also interprets the tt(Se\ archCasing) flag.
-    itb(std::vector<std::string>::const_iterator findRE(std::string const
-            &target) const)
+bf(FBB::ConfigFile::end()) member to determine the end-iterator. It is not
+guaranteed that all lines between the returned iterator and bf(end()) will
+also contain tt(target).  This member also interprets the tt(SearchCasing)
+flag.
+    itb(ConfigFile::const_iterator findRE(std::string const &target) const)
         This member returns an iterator to the first element (i.e., line) of
 the bf(FBB::ConfigFile) object in which the regular expression tt(target) is
-found. bf(FBB::Pattern) is used to perform the pattern matching. Note that
-bf(findRE()) tries to match tt(target) anywhere within a line. If the
-tt(RemoveComment) flag was specified, then comment-text is not searched. Use
-the tt(FBB::ConfigFile::end()) member to determine the matching end-iterator.
-This member also interprets the tt(SearchCasing) flag.
+found. bf(FBB::Pattern) is used to perform the pattern matching. If the
+tt(RemoveComment) flag was specified, then comment-text is not searched.  The
+inherited bf(FBB::ConfigFile::end()) member can be used to determine the
+end-iterator. It is not guaranteed that all lines between the returned
+iterator and bf(end()) will also contain tt(target). If that is required, the
+members bf(beginRE()) and bf(endRE()) can be used.  This member also
+interprets the tt(SearchCasing) flag.
     )
 
 manpagesection(EXAMPLE)
-    To do
+    Assume the configuration file is called tt(config.rc) and contains the
+following lines: 
+
+    COMMENT(Keep the blank following the backslashes below:)
+    verb(
+
+# this is ignored
+
+noline: this one too
+
+line: this is found
+
+this is not a line containing line: at the beginning \
+                                    of the line
+
+line: this one is
+
+    line: what about this one? \ 
+        it's extending over multiple lines
+
+and there may, of course, be more lines in this file
+    )
+
+    The following program may be compiled and run as tt(a.out config.rc):
+    verb(
+#include <iostream>
+#include <iterator>
+#include <algorithm>
+#include <string>
+#include <bobcat/configfile>
+
+using namespace std;
+using namespace FBB;
+    
+int main(int argc, char **argv)
+{
+    ConfigFile cf(argv[1]);     
+
+    cout << *cf.find("this one") << endl; // find text within a line
+
+                                         // find all lines matching 
+                                         // `^line:'
+    copy(cf.beginRE("^line:"), cf.endRE(), 
+                    ostream_iterator<string>(cout, "\n"));
+}
+    )
+
+    Producing the output:
+    verb(
+noline: this one too
+line: this is found
+line: this one is
+line: what about this one? it's extending over multiple lines
+    )
 
 manpagefiles()
     em(bobcat/configfile) - defines the class interface
