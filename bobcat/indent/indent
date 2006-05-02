@@ -1,0 +1,51 @@
+#ifndef _INCLUDED_BOBCAT_INDENT_
+#define _INCLUDED_BOBCAT_INDENT_
+
+#include <ostream>
+
+namespace FBB
+{
+
+class Indent
+{
+    friend std::ostream &indent(std::ostream &out);
+
+    static unsigned s_width;
+    static unsigned s_inc;
+
+    public:
+        static void setWidth(unsigned width)
+        {
+            s_width = width;
+        }
+        static void setInc(unsigned inc)
+        {
+            s_inc = inc;
+        }
+        static void clear()
+        {
+            s_width = 0;
+        }
+        static void inc()
+        {
+            s_width += s_inc;
+        }
+        static void dec();
+};
+
+std::ostream &indent(std::ostream &out);
+
+inline std::ostream &nlindent(std::ostream &out)
+{
+    return out << "\n" << indent;
+}
+
+std::ostream &incindent(std::ostream &out);
+std::ostream &indentinc(std::ostream &out);
+
+std::ostream &decindent(std::ostream &out);
+std::ostream &indentdec(std::ostream &out);
+
+} // namespace FBB
+
+#endif
