@@ -13,13 +13,51 @@ req mkdir -p tmp/lib tmp/bobcat
 
 LIB_A=tmp/lib/lib${LIBRARY}.a
 
+if [ "$1" != "all" ]
+then
+    echo "
+    The class FBB::Milter can only be compiled if you have installed 
+    the file libmilter/mfapi.h. To use the class Milter, programs using 
+    Milter objects must also be linked against the milter library: 
+    -lmilter -lbobcat 
+
+    The class FBB::Milter can safely be left out of the bobcat library if
+    you're not planning to construct mail filters using FBB::Milter.
+
+    Press Enter y if you WANT to compile the files of the class FBB::Milter. 
+    Press Enter or any other line if you DON'T WANT to include the class
+                                  FBB::Milter in the bobcat library. 
+"
+    read REQ
+    [ "$REQ" == "y" ] && MILTER=milter
+
+    echo "
+    The class FBB::Xpointer can only be compiled if you have installed 
+    the file X11/Xlib.h. To use the class Xpointer, programs using Xpointer
+    objects must also be linked against the X11 library: -lX11 -lbobcat
+
+    The class FBB::Xpointer can safely be left out of the bobcat library if
+    you're not planning to construct programs using Xpointer.
+
+    Press Enter y if you WANT to compile the files of the class FBB::Xpointer. 
+    Press Enter or any other line if you DON'T WANT to include the class
+                                  FBB::Xpointer in the bobcat library. 
+"
+    read REQ
+    [ "$REQ" == "y" ] && XPOINTER=xpointer
+
+else
+    MILTER=milter
+    XPOINTER=xpointer
+fi
+
 NR=0
-for x in `cat CLASSES`
+for x in `cat CLASSES` $MILTER $XPOINTER
 do
     [ ! -e tmp/bobcat/$x -o $x/$x -nt tmp/bobcat/$x ] && 
                                                     req cp $x/$x tmp/bobcat
     req cd $x
-    SRC=`find ./ -regex '.*\.cc' -maxdepth 1 -printf "%f\n"`
+    SRC=`find ./  -maxdepth 1 -regex '.*\.cc' -printf "%f\n"`
     [ "$SRC" == "" ] && (cd ..; continue)
     mkdir -p o
     for src in $SRC
@@ -37,7 +75,7 @@ done
 
 
 req cd cfunctions
-SRC=`find ./ -regex '.*\.c' -maxdepth 1 -printf "%f\n"`
+SRC=`find ./  -maxdepth 1 -regex '.*\.c' -printf "%f\n"`
 [ "$SRC" == "" ] && (cd ..; continue)
 mkdir -p o
 for src in $SRC

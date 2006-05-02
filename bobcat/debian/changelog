@@ -1,3 +1,33 @@
+bobcat (1.7.0) unstable; urgency=low
+
+  * milter and xpointer are included optionally. `make/library all' includes
+    them automatically
+
+    New class Indent and associated manipulators implementing indentation
+    defined.
+    
+    ofdstreambuf and ifdstreambuf constructors have additional parameters to
+    either close or keep open the file descriptor that is passed to the
+    constructor. The default situation is for ofdstreambuf to close the file
+    descriptor and for ifdstreambuf to keep de file descriptor open. Thus the
+    new implementation is backward compatible with earlier bobcat versions.
+    
+    Msg has a new free function msgstream() returning the not-cleared msg()
+    stream. This allows certain STL algorithms to be used, see `man -e bobcat
+    msg' 
+    
+    wrap1c and wrap2c now also accept const contexts; see, e.g., `man -e
+    bobcat wrap1c'. Errors in wrap2c's template definition repaired.
+    
+    ConfigFile now has additional members beginRE() and endRE(), allowing
+    iterators to produce all lines matching a RE.
+    Repaired ConfigFile in accordance with the man-page: 
+        initial ws are now removed from the stored lines, 
+        find(target): `target' may be found anywhere within a configuration
+                      line. 
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Tue,  2 May 2006 19:31:02 +0200
+
 bobcat (1.6.0) unstable; urgency=low
 
   * minor repair in Pattern- and Selector manpages

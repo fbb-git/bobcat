@@ -1,7 +1,9 @@
 #include "ofdstreambuf.ih"
 
-void OFdStreambuf::open(int fd, unsigned n)
+void OFdStreambuf::open(int fd, Mode mode, unsigned n)
 {
+    cleanup(mode);
+
     d_fd = fd;
     d_n = (n == 0) ? 1 : n;
 

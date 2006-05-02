@@ -24,18 +24,46 @@ includefile(namespace.inc)
 manpagesection(INHERITS FROM)
     bf(std::streambuf)
 
+manpagesection(ENUMERATION)
+    The public enumeration bf(Mode) defined in the class bf(FBB::IFdStreamBuf)
+has the following values:
+    itemization(
+    it() bf(CLOSE_FD), indicating that the file descriptor used by the object
+must be closed;
+    it() bf(KEEP_FD) (the default) indicating that the file descriptor used by
+the object must not be closed.
+    )
+
 manpagesection(CONSTRUCTORS)
     itemization(
     itb(Ifdstreambuf())
         This constructor initializes the streambuf, without associating it to
 a file descriptor, and without using buffering. The member bf(open()) can be
-used to associate the object later on with a file descriptor and optionally a
-buffer size.
+used subsequently to associate the object with a file descriptor and
+optionally a buffer size. When the object is destroyed or if the mode-less
+overloaded version of the bf(open) member is called, the file descriptor will
+not be closed.
+
+    itb(Ifdstreambuf(Mode mode))
+        This constructor initializes the streambuf, without associating it to
+a file descriptor, and without using buffering. The member bf(open()) can be
+used subsequently to associate the object with a file descriptor and
+optionally a buffer size. When the object is destroyed or if the mode-less
+overloaded version of the bf(open) member is called, the bf(Mode) argument
+determines whether the file descriptor will be closed or will remain open.
 
     itb(IFdStreambuf(int fd, unsigned n = 1))
         This constructor initializes the streambuf, associating it to file
 descriptor tt(fd), and an optional unget buffer size (by default having size
-1).
+1).  When the object is destroyed or if the mode-less overloaded version of
+the bf(open) member is called, the file descriptor will not be closed.
+
+    itb(IFdStreambuf(int fd, Mode mode, unsigned n = 1))
+        This constructor initializes the streambuf, associating it to file
+descriptor tt(fd), and an optional unget buffer size (by default having size
+1).   When the object is destroyed or if the mode-less
+overloaded version of the bf(open) member is called, the bf(Mode) argument
+determines whether the file descriptor will be closed or will remain open.
     )
     There is no copy constructor.
 
@@ -46,9 +74,16 @@ bf(std::streambuf)'s member are overridden by bf(FBB::IFdStreambuf), see
 below. 
     itemization(
     itb(void open(int xfd, unsigned n = 1))
-        This member (re)initializes the streambuf, associating it to file
+        This member (re)initializes the streambuf, using file
 descriptor tt(fd), and an optional unget buffer size (by default having size
-1).
+1). When called repeatedly, the bf(Mode) specification used whem the object
+was constructed determines whether the file descriptor will be closed or will
+remain open.
+    itb(void open(int xfd, Mode mode, unsigned n = 1))
+        This member (re)initializes the streambuf, using file descriptor
+tt(fd), a file descriptor closing parameter and an optional unget buffer size
+(by default having size 1). Depending on the bf(Mode) argument the object's
+currently used file descriptor will be closed or will remain open.
     itb(int underflow())
     This member em(overrides) the bf(std::streambuf) member. It is called by
 tt(std::istream) objects using bf(IFdStreambuf). It produces the next
@@ -72,6 +107,9 @@ manpageseealso()
     bf(std::streambuf)
 
 manpagebugs()
-    None Reported.
+    Note that by default the provided file descriptors will remain open. The
+complementary class bf(ofdstreambuf)(3bobcat) em(closes) the file descriptor
+by default. This inconsistency was deliberately accepted to keep the classes
+interfaces backward compatible.
 
 includefile(trailer.inc)

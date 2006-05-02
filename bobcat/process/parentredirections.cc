@@ -1,5 +1,7 @@
 #include "process.ih"
 
+#include <iostream>
+
 void Process::parentRedirections()
 {
     d_selector = Selector();

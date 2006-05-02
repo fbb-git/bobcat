@@ -1,8 +1,10 @@
 #include "ifdstreambuf.ih"
 
-void IFdStreambuf::open(int fd, unsigned n)
+void IFdStreambuf::open(int xfd, Mode mode, unsigned n)
 {
-    d_fd = fd;
+    cleanup(mode);
+
+    d_fd = xfd;
     d_n = (n == 0) ? 1 : n;
 
     d_buffer = new char[d_n];

@@ -6,13 +6,24 @@ namespace FBB
     template <typename Type, typename Context, typename ReturnType = void>
     class Wrap1c
     {
-        Context &d_context;
+        union
+        {
+            Context *d_context;
+            Context const *d_contextconst;
+        };
         union
         {
             ReturnType (*d_ref)(Type &, Context &);
+            ReturnType (*d_refconst)(Type &, Context const &);
+
             ReturnType (*d_constref)(Type const &, Context &);
+            ReturnType (*d_constrefconst)(Type const &, Context const &);
+
             ReturnType (*d_ptr)(Type *, Context &);
+            ReturnType (*d_ptrconst)(Type *, Context const &);
+
             ReturnType (*d_constptr)(Type const *, Context &);
+            ReturnType (*d_constptrconst)(Type const *, Context const &);
         };
 
         public:
@@ -22,47 +33,76 @@ namespace FBB
                                                 // reference
             Wrap1c(ReturnType (*fun)(Type &, Context &), Context &context)
             :
-                d_context(context),
+                d_context(&context),
                 d_ref(fun)
+            {}
+                                                // reference const
+            Wrap1c(ReturnType (*fun)(Type &, Context const &), 
+                   Context const &context)
+            :
+                d_contextconst(&context),
+                d_refconst(fun)
             {}
             ReturnType operator()(Type &param) const
             {
-                return (*d_ref)(param, d_context);
+                return (*d_ref)(param, *d_context);
             }
 
                                                 // const reference
             Wrap1c(ReturnType (*fun)(Type const &, Context &), 
-                                                        Context &context)
+                   Context &context)
             :
-                d_context(context),
+                d_context(&context),
                 d_constref(fun)
+            {}
+                                                // const reference const
+            Wrap1c(ReturnType (*fun)(Type const &, Context const &), 
+                   Context const &context)
+            :
+                d_contextconst(&context),
+                d_constrefconst(fun)
             {}
             ReturnType operator()(Type const &param) const
             {
-                return (*d_constref)(param, d_context);
+                return (*d_constref)(param, *d_context);
             }
 
                                                 // pointer
-            Wrap1c(ReturnType (*fun)(Type *, Context &), Context &context)
+            Wrap1c(ReturnType (*fun)(Type *, Context &), 
+                   Context &context)
             :
-                d_context(context),
+                d_context(&context),
                 d_ptr(fun)
+            {}
+                                                // pointer const
+            Wrap1c(ReturnType (*fun)(Type *, Context const &), 
+                   Context const &context)
+            :
+                d_context(&context),
+                d_ptrconst(fun)
             {}
             ReturnType operator()(Type *param) const
             {
-                return (*d_ptr)(param, d_context);
+                return (*d_ptr)(param, *d_context);
             }
 
                                                 // const pointer
             Wrap1c(ReturnType (*fun)(Type const *, Context &), 
-                                                        Context &context)
+                   Context &context)
             :
-                d_context(context),
+                d_context(&context),
                 d_constptr(fun)
+            {}
+                                                // const pointer const
+            Wrap1c(ReturnType (*fun)(Type const *, Context const &), 
+                   Context const &context)
+            :
+                d_context(&context),
+                d_constptrconst(fun)
             {}
             ReturnType operator()(Type const *param) const
             {
-                return (*d_constptr)(param, d_context);
+                return (*d_constptr)(param, *d_context);
             }
 
 

@@ -83,14 +83,29 @@ manpagesection(FREE FUNCTIONS)
     Note that the following two functions are not members of the class
 bf(Msg), but em(are) defined in the namespace bf(FBB).
     itemization(
+    itb(std::ostringstream &linMsg())
+        Information inserted into this function is used to compose a
+message. Messages must be completed, using an appropriate manipulator, before
+another message can be constructed. The final message is prefixed by
+the text `tt(Line <nr>: )', where tt(<nr>) is the value last set by the member
+function bf(setLine()). Note the blank trailing the colon.
     itb(std::ostringstream &msg())
         Information inserted into this function is used to compose a
 message. Messages must be completed, using an appropriate manipulator, before
 another message can be constructed. 
-    itb(std::ostringstream &linMsg())
-        Same functionality as bf(msg()), but the final message is prefixed by
-the text `tt(Line <nr>: )', where tt(<nr>) is the value last set by the member
-function bf(setLine()). Note the blank trailing the colon.
+    itb(std::ostringstream &msgstream())
+        Contrary to the function bf(msg), which will first clear the current
+contents of the message buffer, bf(msgstream) returns the current stream `as
+is'. This allows the use of certain Template Library algorithms, like
+tt(copy). E.g., assuming that tt(std::vector<std::string> d_words) has been
+defined, and using directives were specificied for the tt(std) and tt(FBB)
+namespaces, then
+        verb(
+    copy(d_words.begin(), d_words.end(), ostream_iterator<string>(msg, " "));
+    msgstream() << info;
+        )
+    can be used to insert the contents of tt(d_words), separated by a blank
+space, into the tt(Msg) stream.
     )
 
 manpagesection(MANIPULATORS)
@@ -163,7 +178,7 @@ manpagefiles()
     em(bobcat/msg) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(errno)(3bobcat)
+    bf(bobcat)(7), bf(errno)(3bobcat), bf(indent)(3bobcat)
 
 manpagebugs()
     None Reported.
