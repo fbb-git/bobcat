@@ -1,18 +1,14 @@
 
 manpagesection(DISTRIBUTION FILES)
     itemization(
-    itt(bobcat_CurVers_-x.dsc): detached signature;
-    itt(bobcat_CurVers_-x.tar.gz): source archive;
-    itt(bobcat_CurVers_-x_i386.changes): change log;
-    itt(bobcat_CurVers_-x_i386.deb): debian package holding the
+    itt(bobcat__CurVers_-x.dsc): detached signature;
+    itt(bobcat__CurVers_-x.tar.gz): source archive;
+    itt(bobcat__CurVers_-x_i386.changes): change log;
+    itt(libbobcat1__CurVers_-x_i386.deb): debian package holding the
             libraries;
-    itt(bobcat-dev__CurVers_-x_i386.deb): debian package holding the
+    itt(libbobcat1-dev__CurVers_-x_i386.deb): debian package holding the
             libraries, headers and manual pages;
     itt(http://sourceforge.net/projects/bobcat): public archive location;
-COMMENT(
-    itt(ftp://ftp.rug.nl/contrib/frank/software/linux/bobcat/): public archive
-location.
-    )
     )
 
 manpagesection(BOBCAT)

@@ -51,51 +51,106 @@ else
     XPOINTER=xpointer
 fi
 
-NR=0
-for x in `cat CLASSES` $MILTER $XPOINTER
-do
-    [ ! -e tmp/bobcat/$x -o $x/$x -nt tmp/bobcat/$x ] && 
+## libso=lib${LIBRARY}.so
+## ${libso}.${VERSION}
+## \( ! -e ../$LIB_A -o $src -nt ../$LIB_A \) ] &&
+    # Argument 1: library name
+    # Argument 2: -fPIC when creating the shared library
+
+compile()
+{
+    LIB=$1
+    PIC=$2
+
+    COMPILED=0
+
+    NR=0
+    for x in `cat CLASSES` $MILTER $XPOINTER
+    do
+        [ ! -e tmp/bobcat/$x -o $x/$x -nt tmp/bobcat/$x ] && 
                                                     req cp $x/$x tmp/bobcat
-    req cd $x
-    SRC=`find ./  -maxdepth 1 -regex '.*\.cc' -printf "%f\n"`
+        req cd $x
+        SRC=`find ./  -maxdepth 1 -regex '.*\.cc' -printf "%f\n"`
+
+        [ "$SRC" == "" ] && (cd ..; continue)
+        mkdir -p o
+        for src in $SRC
+        do
+            BASE=${src%\.[^\.]*}
+            OBJECT=o/${NR}${BASE}.o
+
+            if [ -e $OBJECT -a $src -nt $OBJECT  -o \
+                ! -e $OBJECT -a \( ! -e ../$LIB -o $src -nt ../$LIB \) ] 
+            then
+                COMPILED=1
+                req $GCC $COPTS $PIC -o  $OBJECT -c ${src}
+            fi
+        done
+        cd ..
+        let NR=${NR}+1
+    done
+    
+    
+    req cd cfunctions
+    SRC=`find ./  -maxdepth 1 -regex '.*\.c' -printf "%f\n"`
     [ "$SRC" == "" ] && (cd ..; continue)
     mkdir -p o
     for src in $SRC
     do
         BASE=${src%\.[^\.]*}
-        OBJ=o/${NR}${BASE}.o
-        [ -e $OBJ -a $src -nt $OBJ  -o \
-          ! -e $OBJ -a \
-            \( ! -e ../$LIB_A -o $src -nt ../$LIB_A \) ] &&
-                             req $GCC $COPTS -o  $OBJ -c ${src}
+        OBJECT=o/c.${BASE}.o
+
+        if [ -e $OBJECT -a $src -nt $OBJECT  -o \
+            ! -e $OBJECT -a \( ! -e ../$LIB -o $src -nt ../$LIB \) ] 
+        then
+            COMPILED=1
+            req gcc $COPTS $PIC -o  $OBJECT -c ${src}
+        fi
     done
     cd ..
-    let NR=${NR}+1
-done
+
+    return $COMPILED
+}
 
 
-req cd cfunctions
-SRC=`find ./  -maxdepth 1 -regex '.*\.c' -printf "%f\n"`
-[ "$SRC" == "" ] && (cd ..; continue)
-mkdir -p o
-for src in $SRC
-do
-    BASE=${src%\.[^\.]*}
-    OBJ=o/c.${BASE}.o
-    [ -e $OBJ -a $src -nt $OBJ  -o \
-      ! -e $OBJ -a \
-        \( ! -e ../$LIB_A -o $src -nt ../$LIB_A \) ] &&
-                         req gcc -Wall -o  $OBJ -c ${src}
-done
-cd ..
+compile $LIB_A
+RMO=$?
 
+OBJ=`find ./ -regex '.*\.o' -print`     # can be reused for the shared lib
 
-OBJ=`find ./ -regex '.*\.o' -print`
-if [ "$OBJ" != "" ] 
+if [ "$RMO" == "1" ] 
 then
-    echo ar rs $LIB_A '*/o/*.o'
-    ar rs $LIB_A $OBJ || exit 1
-    req rm $OBJ
+    req ar cru $LIB_A $OBJ
+    req ranlib $LIB_A
+    find ./ -regex '.*\.o' -exec rm '{}' \;
 fi
 
-./make/solib
+# following the static compilation the shared library is built
+
+version=`echo $VERSION | sed 's/\..*//'`
+libso=lib${LIBRARY}.so
+libsomajor=${libso}.${version}
+libsoshared=${libso}.${VERSION}
+
+compile tmp/lib/$libsoshared -fPIC                  # compile the shared lib
+RMO=$?
+
+if [ "$RMO" == "1" ]
+then
+    echo "$GCC -shared \
+    -Wl,-z,def,-soname,${libsomajor} \
+    -o tmp/lib/${libsoshared} ${LIBRARIES} "'*.o'
+
+    $GCC -shared \
+        -Wl,-z,def,-soname,${libsomajor} \
+        -o tmp/lib/${libsoshared} ${LIBRARIES} $OBJ
+    [ $? == 0 ] || exit 1
+
+    req strip --strip-unneeded tmp/lib/${libsoshared} 
+    req chmod -x tmp/lib/${libsoshared} 
+    
+    req ln -sf $libsoshared tmp/lib/$libsomajor
+    req ln -sf $libsomajor tmp/lib/${libso}
+
+    find ./ -regex '.*\.o' -exec rm '{}' \;
+fi

@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # Argument 1: optional prefix path to installation paths for non-dev
-# e.g., debian/bobcat argument 2: optional prefix path to intstallation
-# path for -dev, e.g. debian/bobcat-dev
+# e.g., debian/libbobcat1 argument 2: optional prefix path to intstallation
+# path for -dev, e.g. debian/libbobcat1-dev
 
 . INSTALL.cf
 . make/parameters
@@ -19,37 +19,52 @@ reqeval()
     eval "$*" || exit 1
 }
 
-    # install the libraries
-req mkdir -p $1$LIB
-req cp -d tmp/lib/* $1$LIB
+reqzip()
+{
+    DEST=$1
+    shift
 
-    # install the headers
+    for x in $*
+    do
+        reqeval "gzip -9 < $x > $DEST/`basename $x`.gz"
+    done
+}
+
+
+echo "  install the libraries"
+req mkdir -p $1$LIB
+req cp -d tmp/lib/*so.* $1$LIB
+
+req mkdir -p $2$LIB
+req cp -d tmp/lib/*.{a,so} $2$LIB
+
+echo "  install lintian overrides for the -dev package"
+req mkdir -p $2$LINTIAN
+req cp lintian/* $2$LINTIAN
+
+echo "  install the headers"
 req mkdir -p $2$INC
 req cp tmp/bobcat/* $2$INC
 
-    # install the manual pages
+echo "  install the manual pages"
 req mkdir -p $2$MAN/man3
-for man in tmp/man/man3/*
-do
-    reqeval "gzip < $man > $2$MAN/man3/`basename $man`.gz"
-done
+reqzip $2$MAN/man3 tmp/man/man3/*
 
 req mkdir -p $2$MAN/man7
-reqeval "gzip < tmp/man/man7/bobcat.7 > $2$MAN/man7/bobcat.7.gz"
+reqeval "gzip -9 < tmp/man/man7/bobcat.7 > $2$MAN/man7/bobcat.7.gz"
 
-    # install the html versions of the man-pages
+echo "  install the html versions of the man-pages"
 req mkdir -p $2/$DOCDEV/man
-req cp tmp/manhtml/* $2$DOCDEV/man
+reqzip $2$DOCDEV/man tmp/manhtml/* 
 req ln -sf bobcat.7.html $2$DOCDEV/man/index.html
 req cp documentation/man/bobcat.jpg $2$DOCDEV/man/
 
-    # remaining documentation
-req cp COPYING README README.class-setup Changelog TODO $2$DOCDEV
+echo "  remaining documentation"
+reqzip $2$DOCDEV README README.class-setup TODO 
 req cp -r documentation/examples $2$DOCDEV
 
 [ "$DOC" == "" ] && exit 0
 
 req mkdir -p $1$DOC
-req cp COPYING README $1$DOC
-
+reqzip $1$DOC README 
 

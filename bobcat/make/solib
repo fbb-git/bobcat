@@ -17,12 +17,17 @@ req cd tmp/lib
 
 req ar x lib${LIBRARY}.a
 
+req ranlib lib${LIBRARY}.a
+
 echo "$GCC -shared -Wl,-soname,${libsomajor} -o ${libso}.${VERSION} \
 ${LIBRARIES}" '*.o'
-$GCC -shared -Wl,-soname,${libsomajor} -o ${libso}.${VERSION} ${LIBRARIES} *.o
+#  $GCC -shared -Wl,-soname,${libsomajor} -o ${libso}.${VERSION} ${LIBRARIES} *.o
+$GCC -shared -Wl,-soname,${libsomajor},-rpath,/usr/lib -o ${libso}.${VERSION} ${LIBRARIES} *.o
+
 [ $? == 0 ] || exit 1
 
 req ln -sf ${libso}.${VERSION} $libsomajor
 req ln -sf $libsomajor $libso
 
 rm -rf *.o
+

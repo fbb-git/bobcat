@@ -1,7 +1,7 @@
 includefile(header.inc)
 
 COMMENT(manpage, section, releasedate, archive, short name)
-manpage(FBB::Pattern)(3bobcat)(_CurYrs_)(bobcat-dev__CurVers_-x.tar.gz)
+manpage(FBB::Pattern)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
                     (Pattern matcher)
 
 manpagename(FBB::Pattern)(Performs RE pattern matching)
@@ -75,10 +75,10 @@ where the order-number of their opening parentheses determines the
 subexpression's index. By default at most 10 subexpressions are recognized.
 The em(options) flags may be:
 
-               REG_EXTENDED: nl()
-                    Use POSIX Extended Regular Expression  syntax  when
-                    interpreting  regex.  If not set, POSIX Basic Regu­
-                    lar Expression syntax is used.
+               REG_EXTENDED: nl() 
+                   Use POSIX Extended Regular Expression syntax when
+                    interpreting regex.  If not set, POSIX Basic Regular
+                    Expression syntax is used.
 
                 REG_NOSUB: nl()
                     Support for substring addressing of matches is  not
@@ -87,16 +87,15 @@ The em(options) flags may be:
                     was compiled with this flag set.
 
                 REG_NEWLINE: nl()
-                    Match-any-character  operators  don't  match a new­
-                    line.
+                    Match-any-character  operators  don't  match a newline.
 
-                    A non-matching list ([^...])  not containing a new­
-                    line does not match a newline.
+                    A non-matching list ([^...])  not containing a newline
+                    does not match a newline.
 
-                    Match-beginning-of-line  operator  (^)  matches the
-                    empty string immediately after a  newline,  regard­
-                    less  of  whether  eflags,  the  execution flags of
-                    regexec, contains REG_NOTBOL.
+                    Match-beginning-of-line operator (^) matches the empty
+                    string immediately after a newline, regardless of whether
+                    eflags, the execution flags of regexec, contains
+                    REG_NOTBOL.
 
                     Match-end-of-line operator ($)  matches  the  empty
                     string  immediately before a newline, regardless of
@@ -131,12 +130,11 @@ bf(Errno) exception is thrown , using bf(Pattern::match()) as its prefix-text.
 Options may be:
 
     REG_NOTBOL: nl()
-                    The  match-beginning-of-line  operator always fails
-                    to match (but see the compilation flag  REG_NEWLINE
-                    above)  This  flag  may be used when different por­
-                    tions of a string are passed  to  regexec  and  the
-                    beginning  of  the string should not be interpreted
-                    as the beginning of the line.
+                   The match-beginning-of-line operator always fails to match
+                    (but see the compilation flag REG_NEWLINE above) This flag
+                    may be used when different portions of a string are passed
+                    to regexec and the beginning of the string should not be
+                    interpreted as the beginning of the line.
         
     REG_NOTEOL: nl()
                     The  match-end-of-line  operator  always  fails  to
