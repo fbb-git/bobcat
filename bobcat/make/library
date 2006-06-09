@@ -64,11 +64,15 @@ compile()
 
     COMPILED=0
 
-    NR=0
     for x in `cat CLASSES` $MILTER $XPOINTER
     do
         [ ! -e tmp/bobcat/$x -o $x/$x -nt tmp/bobcat/$x ] && 
                                                     req cp $x/$x tmp/bobcat
+    done
+
+    NR=0
+    for x in `cat CLASSES` $MILTER $XPOINTER
+    do
         req cd $x
         SRC=`find ./  -maxdepth 1 -regex '.*\.cc' -printf "%f\n"`
 
