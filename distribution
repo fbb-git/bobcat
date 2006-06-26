@@ -5,6 +5,8 @@ cvsremove
 
 cd bobcat
 
+# When recreating to repair lintian/linda messages, uncomment the following
+# two commands and rerun `distribution'
 make/clean
 make/man
 
@@ -14,3 +16,8 @@ dpkg-buildpackage -mf.b.brokken@rug.nl  -rfakeroot 2>&1 | tee /tmp/$PROJECT
 cd ..
 
 cvsrestore
+
+echo LINTIAN ...
+lintian -i *.changes 
+echo LINDA ...
+linda   -i *.changes

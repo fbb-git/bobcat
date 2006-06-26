@@ -1,0 +1,62 @@
+#ifndef _INCLUDED_BOBCAT_REFCOUNT_
+#define _INCLUDED_BOBCAT_REFCOUNT_
+
+#include <iostream>
+
+namespace FBB
+{
+    class RefCount
+    {
+        mutable unsigned d_refcount;
+    
+        protected:
+            RefCount() 
+            :
+                d_refcount(1)
+            {}
+    
+            RefCount(RefCount const &other)           // used by clone()
+            :
+                d_refcount(1)
+            {}
+    
+            virtual RefCount *clone() const = 0;
+    
+            virtual ~RefCount() 
+            {}
+    
+        public:
+            unsigned refcount() const
+            {
+                return d_refcount;
+            }
+
+            void release();
+    
+            template <typename X>
+            static X *share(X const *x)
+            {
+                x->d_refcount++;
+                return const_cast<X *>(x);
+            }
+    
+            template <typename X>
+            static X &modifying(X **x) throw (std::bad_cast)
+            {
+                if ((*x)->d_refcount != 1)
+                {
+                    (*x)->d_refcount--;
+                    *x = dynamic_cast<X *>
+                         (
+                            reinterpret_cast<RefCount *>(*x)->clone()
+                         );
+    
+                    if (!*x)
+                        throw std::bad_cast();
+                }
+                return **x;
+            }
+    };
+}
+        
+#endif

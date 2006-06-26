@@ -9,6 +9,13 @@ of the class headers. So, when compiling the class Msg the class Errno must be
 available (if not compile-time then most likely run-time). The dependencies
 are not necessarily related to inheritance.
 
+The file CLASSES lists all classes, indenting them according to their
+dependency level. E.g., TableSupport is not indented, TableSpec is indented
+once, columnWidth is indented twice, etc. The classes `Milter' and `Xpointer'
+are optionally compiled, and are therefore not listed in the CLASSES file.
+
+Entries below, tagged with `(cont)' were mentioned earlier in the next
+hierarchy: 
 
 0          TableSupport         Wrap2    Wrap2c      X2a     Hash   Hostent 
                 |
@@ -19,22 +26,22 @@ are not necessarily related to inheritance.
     columnWidth     equalWidth    Table   
 
 
-0    DateTime       SyslogBuf            RandBuf        Indent
+0    DateTime       SyslogBuf          RandBuffer        Indent      RefCount
         |               |                   |
        Stat        SyslogStream        IRandStream
 
 
 0                             Errno                                   LogBuffer
                                 |                                        |
-                  +--------+----+---------+----------------+---+----+    |
-                  |        |              |                |   |    |    |
-              Pattern     Msg             |               User |    +--+-+
+                  +--------+----+---------+------+---------+---+----+    |
+                  |        |              |      |         |   |    |    |
+              Pattern     Msg             |   OneKey      User |    +--+-+
                   |                       |                    |       |
            +------+-------+               |                    |      Log
            |              |               |                    |       |
       GetHostent      ConfigFile          |                    |     level
-           |                              |                    | 
-      InetAddress                         |         Hostent    |
+           |                              |         Hostent    | 
+      InetAddress                         |         (cont)     |
            |                              |            |       |
        SocketBase                  LocalSocketBase     +---+---+
            |                              |                |
@@ -47,18 +54,40 @@ are not necessarily related to inheritance.
 
 0    Errno (cont)
         |
-        +---------+--------+-------+-----+------+----------+       IOStreambuf
-        |         |        |       |     |      |          |           |
-    Xpointer MailHeaders Milter   Pipe  Fork  Selector Redirector    IOStream
-                                   |     |      |          |           |
-                                   +-----+------+---+------+-----------+
-                                                    |
-0   OFdStreambuf    IFdStreambuf    Wrap1    A2x    |   Wrap1c
-        |                 |           |      |      |     |  
-        |                 |           +--+---+      |  +--+------+
-        |                 |              |          |  |         |
-        |                 |           String        +--+    MultiStreambuf    
-        |                 |              |          |
-        +-----------------+------+-------+----------+
-                                 |
-                              Process
+        +---------+--------+----+----+-----+------+----------+    IOStreambuf
+        |         |        |    |    |     |      |          |         |
+    Xpointer MailHeaders Milter |   Pipe  Fork  Selector Redirector  IOStream
+                                |    |     |      |          |         |
+                                |    +-----+------+----------+---------+
+                                |    |
+0          Wrap1    A2x         |    |   Wrap1c
+             |      |           |    |     |  
+             +--+---+           |    |  +--+------+-----------+
+                |               |    |  |         |           | 
+             String             |    +--+    MultiStreambuf  Glob
+                |               |    |
+           +----+----+          |    |
+           |         |          |    |
+           |         +----------+    |
+           |         |          |    |
+           |         |         Arg   |
+           |         |               |
+           |         +---------------+
+     CmdFinderBase                   |
+           |                         |
+        CmdFinder                    |
+                                     |
+0                   OFdStreambuf     |     IFdStreambuf
+                         |           |          |
+             +-----------+           |          +--------+
+             |           |           |          |        |
+          OFdStream      +-----------+----------+     IFdStream
+                                     |
+                                  Process
+
+
+
+
+
+
+
