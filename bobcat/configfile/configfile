@@ -69,7 +69,11 @@ namespace FBB
     {
         bool d_rmComment;
         bool d_caseSensitive;
-        
+        bool d_indices;
+        unsigned d_rawIndex;        
+        unsigned d_nextIndex;        
+        std::vector<unsigned> d_index;
+
         public:
             typedef RE_iterator const_RE_iterator;
 
@@ -84,12 +88,20 @@ namespace FBB
                 SearchCaseInsensitive
             };
 
+            enum Indices
+            {
+                IgnoreIndices,
+                StoreIndices
+            };
+
             ConfigFile(Comment cType = KeepComment, 
-                       SearchCasing sType = SearchCaseSensitive);
+                       SearchCasing sType = SearchCaseSensitive,
+                       Indices iType = IgnoreIndices);
 
             ConfigFile(std::string const &fname,// Name of the config file
                         Comment cType = KeepComment, 
-                        SearchCasing sType = SearchCaseSensitive);
+                        SearchCasing sType = SearchCaseSensitive,
+                        Indices iType = IgnoreIndices);
 
             void setCommentHandling(Comment type)
             {
@@ -118,6 +130,16 @@ namespace FBB
             const_iterator find(std::string const &target) const;
             const_iterator findRE(std::string const &re) const;
 
+            unsigned index(unsigned lineNr)
+            {
+                return d_index[lineNr];
+            }
+
+            unsigned index(const_iterator const &iterator)
+            {
+                return d_index[iterator - begin()];
+            }
+
         private:
             static bool contains(std::string const &str, 
                                  std::string &target)
@@ -129,7 +151,7 @@ namespace FBB
             {
                 return pat << str;
             }
-            void append_next(std::istream &istr, std::string &line);
+            unsigned append_next(std::istream &istr, std::string &line);
             bool hasContent(std::string const &line);
             bool nextLine(std::istream &istr, std::string &line);
             void removeComment(std::string &line);

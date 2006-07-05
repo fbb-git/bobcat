@@ -9,6 +9,9 @@ void ConfigFile::open(string const &fname) throw (Errno)
                     ": can't open " << fname << throwable;
 
     clear();                        // clear the vector
+    d_index.clear();                // clear the line indices
+    d_rawIndex = 0;                 // initialize the line-index of the
+                                    // original file
 
     string line;
 
