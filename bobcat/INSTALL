@@ -1,8 +1,12 @@
 To Install the bobcat library by hand instead of using the binary distribution
 perform the following steps:
 
-    1. Inspect the values of the variables in the file INSTALL.cf
-       Modify these when necessary.
+    1. Inspect the values of the variables in the file INSTALL.cf.  Modify
+       these when necessary.  In particular note the definition of the
+       COMPILER shell variable, which is set to Gnu's g++ compiler as used in
+       Debian's `unstable' distribution. Removing the definition using the
+       explicit version results in the definition of COMPILER as `g++', which
+       should be your default g++ compiler.
 
     2. Run `./make/library' to compile the bobcat library
 
@@ -18,9 +22,11 @@ perform the following steps:
        the libx11-dev package.
 
        If you don't intend to write programs using these classes, it's ok not
-       to include these classes into the library. If you're sure that you want
-       to compile these classes (so, the headers are available), then `./make
-       library all' will compile the bobcat library with no questions asked.
+       to include these classes into the library, since no other classes
+       depend on these two (see README.class-setup). If you're sure that you
+       want to compile these classes (so, the headers are available), then
+       `./make library all' will compile the bobcat library with no questions
+       asked.
     
     3. Run (probably as root) ./make/install to install
 
