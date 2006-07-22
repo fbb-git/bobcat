@@ -1,0 +1,38 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 01_fix_yodl_macro.dpatch by  <danchev@spnet.net>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Fix yodl build
+
+@DPATCH@
+diff -urNad bobcat-1.10.0~/documentation/man/header.inc bobcat-1.10.0/documentation/man/header.inc
+--- bobcat-1.10.0~/documentation/man/header.inc	2006-07-23 02:13:00.000000000 +0300
++++ bobcat-1.10.0/documentation/man/header.inc	2006-07-23 02:14:10.000000000 +0300
+@@ -28,5 +28,4 @@
+ 
+ 
+ DELETEMACRO(tt)
+-DEFINEMACRO(tt)(1)(em(ARG1))
+ 
+diff -urNad bobcat-1.10.0~/make/man bobcat-1.10.0/make/man
+--- bobcat-1.10.0~/make/man	2005-09-02 23:54:39.000000000 +0300
++++ bobcat-1.10.0/make/man	2006-07-23 02:13:58.000000000 +0300
+@@ -20,14 +20,14 @@
+ do
+     [ -e man-stamp -a man-stamp -nt $yo ] && continue
+     BASE=${yo%\.[^\.]*}
+-    req yodl2man  --no-warnings -o ../../tmp/man/man3/$BASE.3bobcat $yo
+-    req yodl2html  --no-warnings -o ../../tmp/manhtml/$BASE.3.html $yo
++    req yodl2man  -o ../../tmp/man/man3/$BASE.3bobcat $yo
++    req yodl2html -o ../../tmp/manhtml/$BASE.3.html $yo
+ done
+ 
+ [ -e man-stamp -a man-stamp -nt bobcat.yo ] && exit 0
+ 
+-req yodl2man  --no-warnings -o ../../tmp/man/man7/bobcat.7 bobcat.yo
+-req yodl2html  --no-warnings -o ../../tmp/manhtml/bobcat.html bobcat.yo
++req yodl2man  -o ../../tmp/man/man7/bobcat.7 bobcat.yo
++req yodl2html -o ../../tmp/manhtml/bobcat.html bobcat.yo
+ 
+ touch man-stamp
+ 
