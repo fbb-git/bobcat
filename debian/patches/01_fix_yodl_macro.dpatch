@@ -2,12 +2,12 @@
 ## 01_fix_yodl_macro.dpatch by  <danchev@spnet.net>
 ##
 ## All lines beginning with `## DP:' are a description of the patch.
-## DP: Fix yodl build
+## DP: Fix yodl build and some bashisms
 
 @DPATCH@
 diff -urNad bobcat-1.10.0~/documentation/man/header.inc bobcat-1.10.0/documentation/man/header.inc
---- bobcat-1.10.0~/documentation/man/header.inc	2006-07-23 02:13:00.000000000 +0300
-+++ bobcat-1.10.0/documentation/man/header.inc	2006-07-23 02:14:10.000000000 +0300
+--- bobcat-1.10.0~/documentation/man/header.inc	2006-07-26 19:21:09.000000000 +0300
++++ bobcat-1.10.0/documentation/man/header.inc	2006-07-26 19:21:10.000000000 +0300
 @@ -28,5 +28,4 @@
  
  
@@ -15,8 +15,16 @@ diff -urNad bobcat-1.10.0~/documentation/man/header.inc bobcat-1.10.0/documentat
 -DEFINEMACRO(tt)(1)(em(ARG1))
  
 diff -urNad bobcat-1.10.0~/make/man bobcat-1.10.0/make/man
---- bobcat-1.10.0~/make/man	2005-09-02 23:54:39.000000000 +0300
-+++ bobcat-1.10.0/make/man	2006-07-23 02:13:58.000000000 +0300
+--- bobcat-1.10.0~/make/man	2006-07-26 19:21:09.000000000 +0300
++++ bobcat-1.10.0/make/man	2006-07-26 19:21:19.000000000 +0300
+@@ -1,6 +1,6 @@
+ #!/bin/sh
+ 
+-. INSTALL.cf
++. `pwd`/INSTALL.cf
+ 
+ make/special
+ 
 @@ -20,14 +20,14 @@
  do
      [ -e man-stamp -a man-stamp -nt $yo ] && continue

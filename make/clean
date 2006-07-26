@@ -6,11 +6,11 @@ req()
     $* || exit 1
 }
 
-req rm -rf debian/bobcat debian/bobcat-dev build-stamp configure-stamp \
-           debian/substvars
+req rm -rf "debian/bobcat" "debian/bobcat-dev" "build-stamp" "configure-stamp" \
+           "debian/substvars"
 
 
-if [ "$BOBCAT" == "minimal" ] 
+if [ "$BOBCAT" = "minimal" ] 
 then
     echo "
     WARNING: PERFORMED MINIMAL CLEANUP
@@ -18,7 +18,7 @@ then
     exit 0
 fi
 
-req rm -rf tmp release.yo o */o
+req rm -rf "tmp" "release.yo" "o" "*/o"
 req cd documentation
-req rm -rf man/*html man/*{3,7}* bobcat man/man-stamp
+req rm -rf "man/*html" "man/*{3,7}*" "bobcat" "man/man-stamp"
 

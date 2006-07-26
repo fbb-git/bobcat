@@ -28,5 +28,4 @@ DEFINEMACRO(Ix)(0)(bf(Imgx))
 
 
 DELETEMACRO(tt)
-DEFINEMACRO(tt)(1)(em(ARG1))
 

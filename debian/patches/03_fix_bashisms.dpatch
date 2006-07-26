@@ -1,0 +1,194 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 03_fix_bashisms.dpatch by  <danchev@spnet.net>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: fixes several bashisms, being caught when /bin/sh -> /bin/dash (POSIXLY strict shell)
+
+@DPATCH@
+diff -urNad bobcat-1.10.0~/make/clean bobcat-1.10.0/make/clean
+--- bobcat-1.10.0~/make/clean	2006-07-26 23:21:40.000000000 +0300
++++ bobcat-1.10.0/make/clean	2006-07-26 23:21:41.000000000 +0300
+@@ -6,11 +6,11 @@
+     $* || exit 1
+ }
+ 
+-req rm -rf debian/bobcat debian/bobcat-dev build-stamp configure-stamp \
+-           debian/substvars
++req rm -rf "debian/bobcat" "debian/bobcat-dev" "build-stamp" "configure-stamp" \
++           "debian/substvars"
+ 
+ 
+-if [ "$BOBCAT" == "minimal" ] 
++if [ "$BOBCAT" = "minimal" ] 
+ then
+     echo "
+     WARNING: PERFORMED MINIMAL CLEANUP
+@@ -18,7 +18,7 @@
+     exit 0
+ fi
+ 
+-req rm -rf tmp release.yo o */o
++req rm -rf "tmp" "release.yo" "o" "*/o"
+ req cd documentation
+-req rm -rf man/*html man/*{3,7}* bobcat man/man-stamp
++req rm -rf "man/*html" "man/*{3,7}*" "bobcat" "man/man-stamp"
+ 
+diff -urNad bobcat-1.10.0~/make/install bobcat-1.10.0/make/install
+--- bobcat-1.10.0~/make/install	2006-07-26 23:21:40.000000000 +0300
++++ bobcat-1.10.0/make/install	2006-07-26 23:22:36.000000000 +0300
+@@ -35,7 +35,9 @@
+ req cp -d tmp/lib/*so.* $1$LIB
+ 
+ req mkdir -p $2$LIB
+-req cp -d tmp/lib/*.{a,so} $2$LIB
++req cp -d tmp/lib/*.a   $2$LIB
++# .so is not to go in -dev package
++#req cp -d tmp/lib/*.so* $2$LIB
+ 
+ echo "  install lintian overrides for the -dev package"
+ req mkdir -p $2$LINTIAN
+@@ -62,7 +64,7 @@
+ reqzip $2$DOCDEV README README.class-setup TODO 
+ req cp -r documentation/examples $2$DOCDEV
+ 
+-[ "$DOC" == "" ] && exit 0
++[ "$DOC" = "" ] && exit 0
+ 
+ req mkdir -p $1$DOC
+ reqzip $1$DOC README 
+diff -urNad bobcat-1.10.0~/make/library bobcat-1.10.0/make/library
+--- bobcat-1.10.0~/make/library	2006-07-26 23:21:40.000000000 +0300
++++ bobcat-1.10.0/make/library	2006-07-26 23:21:41.000000000 +0300
+@@ -1,7 +1,7 @@
+ #!/bin/sh
+ 
+-. make/parameters
+-. VERSION
++. `pwd`/make/parameters
++. `pwd`/VERSION
+ 
+ req()
+ {
+@@ -9,9 +9,9 @@
+     $* || exit 1
+ }
+ 
+-req mkdir -p tmp/lib tmp/bobcat
++req mkdir -p "tmp/lib" "tmp/bobcat"
+ 
+-LIB_A=tmp/lib/lib${LIBRARY}.a
++LIB_A="tmp/lib/lib${LIBRARY}.a"
+ 
+ if [ "$1" != "all" ]
+ then
+@@ -29,7 +29,7 @@
+                                   FBB::Milter in the bobcat library. 
+ "
+     read REQ
+-    [ "$REQ" == "y" ] && MILTER=milter
++    [ "$REQ" = "y" ] && MILTER=milter
+ 
+     echo "
+     The class FBB::Xpointer can only be compiled if you have installed 
+@@ -44,7 +44,7 @@
+                                   FBB::Xpointer in the bobcat library. 
+ "
+     read REQ
+-    [ "$REQ" == "y" ] && XPOINTER=xpointer
++    [ "$REQ" = "y" ] && XPOINTER=xpointer
+ 
+ else
+     MILTER=milter
+@@ -76,7 +76,7 @@
+         req cd $x
+         SRC=`find ./  -maxdepth 1 -regex '.*\.cc' -printf "%f\n"`
+ 
+-        [ "$SRC" == "" ] && (cd ..; continue)
++        [ "$SRC" = "" ] && (cd ..; continue)
+         mkdir -p o
+         for src in $SRC
+         do
+@@ -97,7 +97,7 @@
+     
+     req cd cfunctions
+     SRC=`find ./  -maxdepth 1 -regex '.*\.c' -printf "%f\n"`
+-    [ "$SRC" == "" ] && (cd ..; continue)
++    [ "$SRC" = "" ] && (cd ..; continue)
+     mkdir -p o
+     for src in $SRC
+     do
+@@ -122,7 +122,7 @@
+ 
+ OBJ=`find ./ -regex '.*\.o' -print`     # can be reused for the shared lib
+ 
+-if [ "$RMO" == "1" ] 
++if [ "$RMO" = "1" ] 
+ then
+     req ar cru $LIB_A $OBJ
+     req ranlib $LIB_A
+@@ -139,7 +139,7 @@
+ compile tmp/lib/$libsoshared -fPIC                  # compile the shared lib
+ RMO=$?
+ 
+-if [ "$RMO" == "1" ]
++if [ "$RMO" = "1" ]
+ then
+     echo "$GCC -shared \
+     -Wl,-z,def,-soname,${libsomajor} \
+@@ -148,7 +148,7 @@
+     $GCC -shared \
+         -Wl,-z,def,-soname,${libsomajor} \
+         -o tmp/lib/${libsoshared} ${LIBRARIES} $OBJ
+-    [ $? == 0 ] || exit 1
++    [ $? = 0 ] || exit 1
+ 
+     req strip --strip-unneeded tmp/lib/${libsoshared} 
+     req chmod -x tmp/lib/${libsoshared} 
+diff -urNad bobcat-1.10.0~/make/parameters bobcat-1.10.0/make/parameters
+--- bobcat-1.10.0~/make/parameters	2006-07-26 23:21:40.000000000 +0300
++++ bobcat-1.10.0/make/parameters	2006-07-26 23:21:41.000000000 +0300
+@@ -1,4 +1,4 @@
+-. INSTALL.cf
++. `pwd`/INSTALL.cf
+ 
+ COPTS="-I../tmp -Wall -O3"
+     # compiler options
+diff -urNad bobcat-1.10.0~/make/solib bobcat-1.10.0/make/solib
+--- bobcat-1.10.0~/make/solib	2006-07-26 23:21:40.000000000 +0300
++++ bobcat-1.10.0/make/solib	2006-07-26 23:21:41.000000000 +0300
+@@ -1,7 +1,7 @@
+ #!/bin/sh
+ 
+-. make/parameters
+-. VERSION
++. `pwd`/make/parameters
++. `pwd`/VERSION
+ 
+ req()
+ {
+@@ -24,10 +24,10 @@
+ #  $GCC -shared -Wl,-soname,${libsomajor} -o ${libso}.${VERSION} ${LIBRARIES} *.o
+ $GCC -shared -Wl,-soname,${libsomajor},-rpath,/usr/lib -o ${libso}.${VERSION} ${LIBRARIES} *.o
+ 
+-[ $? == 0 ] || exit 1
++[ $? = 0 ] || exit 1
+ 
+ req ln -sf ${libso}.${VERSION} $libsomajor
+ req ln -sf $libsomajor $libso
+ 
+-rm -rf *.o
++rm -rf "*.o"
+ 
+diff -urNad bobcat-1.10.0~/make/special bobcat-1.10.0/make/special
+--- bobcat-1.10.0~/make/special	2006-07-26 23:21:40.000000000 +0300
++++ bobcat-1.10.0/make/special	2006-07-26 23:21:41.000000000 +0300
+@@ -1,7 +1,7 @@
+ #!/bin/sh
+ 
+-. VERSION
+-. INSTALL.cf
++. `pwd`/VERSION
++. `pwd`/INSTALL.cf
+ 
+ req()
+ {

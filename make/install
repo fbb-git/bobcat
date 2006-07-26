@@ -35,7 +35,9 @@ req mkdir -p $1$LIB
 req cp -d tmp/lib/*so.* $1$LIB
 
 req mkdir -p $2$LIB
-req cp -d tmp/lib/*.{a,so} $2$LIB
+req cp -d tmp/lib/*.a   $2$LIB
+# .so is not to go in -dev package
+#req cp -d tmp/lib/*.so* $2$LIB
 
 echo "  install lintian overrides for the -dev package"
 req mkdir -p $2$LINTIAN
@@ -62,7 +64,7 @@ echo "  remaining documentation"
 reqzip $2$DOCDEV README README.class-setup TODO 
 req cp -r documentation/examples $2$DOCDEV
 
-[ "$DOC" == "" ] && exit 0
+[ "$DOC" = "" ] && exit 0
 
 req mkdir -p $1$DOC
 reqzip $1$DOC README 
