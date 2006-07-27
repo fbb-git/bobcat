@@ -7,7 +7,7 @@ namespace
 
     unsigned handleOctal(String *dest, String const &src, unsigned pos)
     {
-        size_t const nOct = 3;                // need exactly 3 octals
+        unsigned const nOct = 3;                // need exactly 3 octals
 
         unsigned pos2 = min(pos + nOct, 
                             src.find_first_not_of("01234567", pos));
@@ -28,7 +28,7 @@ namespace
 
     unsigned handleHex(String *dest, String const &src, unsigned pos)
     {
-        size_t const nHex = 2;                // need exactly 2 hex digits
+        unsigned const nHex = 2;                // need exactly 2 hex digits
 
         ++pos;                                  // skip the 'x'
         unsigned pos2 = min(pos + nHex, 

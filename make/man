@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. `pwd`/INSTALL.cf
+. INSTALL.cf
 
 make/special
 
@@ -20,14 +20,14 @@ for yo in `find ./ -name '*.yo' -and -not -name 'bobcat.yo' -printf "%f\n"`
 do
     [ -e man-stamp -a man-stamp -nt $yo ] && continue
     BASE=${yo%\.[^\.]*}
-    req yodl2man  -o ../../tmp/man/man3/$BASE.3bobcat $yo
-    req yodl2html -o ../../tmp/manhtml/$BASE.3.html $yo
+    req yodl2man  --no-warnings -o ../../tmp/man/man3/$BASE.3bobcat $yo
+    req yodl2html  --no-warnings -o ../../tmp/manhtml/$BASE.3.html $yo
 done
 
 [ -e man-stamp -a man-stamp -nt bobcat.yo ] && exit 0
 
-req yodl2man  -o ../../tmp/man/man7/bobcat.7 bobcat.yo
-req yodl2html -o ../../tmp/manhtml/bobcat.html bobcat.yo
+req yodl2man  --no-warnings -o ../../tmp/man/man7/bobcat.7 bobcat.yo
+req yodl2html  --no-warnings -o ../../tmp/manhtml/bobcat.html bobcat.yo
 
 touch man-stamp
 
