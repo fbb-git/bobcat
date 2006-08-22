@@ -1,0 +1,86 @@
+string askMilter()
+{
+    printf(
+    "    The class FBB::Milter can only be compiled if you have installed\n"
+    "    the file libmilter/mfapi.h. To use the class Milter, programs using\n"
+    "    Milter objects must also be linked against the milter library:\n"
+    "    -lmilter -lbobcat\n"
+    "\n"
+    "    The class FBB::Milter can safely be left out of the bobcat "
+                                                            "library if\n"
+    "    you're not planning to construct mail filters using FBB::Milter.\n"
+    "\n"
+    "    Press Enter y if you WANT to compile the files of the class "
+                                                            "FBB::Milter.\n"
+    "    Press Enter or any other line if you DON'T WANT to include the "
+                                                            "class\n"
+    "                                  FBB::Milter in the bobcat library.\n"
+    );
+
+    if (gets() == "y")
+        return "milter";
+    else 
+        return "";
+}
+
+string askXpointer()
+{
+    printf(
+    "    The class FBB::Xpointer can only be compiled if you have installed\n"
+    "    the file X11/Xlib.h. To use the class Xpointer, programs using "
+                                                            "Xpointer\n"
+    "    objects must also be linked against the X11 library: -lX11 -lbobcat\n"
+    "\n"
+    "    The class FBB::Xpointer can safely be left out of the bobcat "
+                                                            "library if\n"
+    "    you're not planning to construct programs using Xpointer.\n"
+    "\n"
+    "    Press Enter y if you WANT to compile the files of the class "
+                                                            "FBB::Xpointer.\n"
+    "    Press Enter or any other line if you DON'T WANT to include the "
+                                                            "class\n"
+    "                                  FBB::Xpointer in the bobcat library.\n"
+    );
+
+    if (gets() == "y")
+        return "xpointer";
+    else 
+        return "";
+}
+
+void special(int expand, int all)
+{
+    list cut;
+    list line;
+    int refresh;
+
+    if (expand)
+    {
+        if (!all)                                   // ask for optional classes
+            g_classes += strtok(askMilter() + " " + askXpointer(), " ");
+        else
+            g_classes += strtok("milter xpointer", " ");
+        g_nClasses = sizeof(g_classes);
+    }
+
+    refresh = "VERSION" newer "release.yo";
+
+    if (refresh)
+        run("rm -f release.yo");
+
+    while (sizeof(line = fgets("VERSION", (int)element(1, line))))
+    {
+        cut = strtok(element(0, line), "= \t\n");
+
+        if (element(0, cut) == "VERSION")
+        {
+            g_version = element(1, cut);
+
+            if (refresh)
+                fprintf("release.yo", "SUBST(_CurVers_)(", g_version, ")\n");
+        }
+        else if (refresh && element(0, cut) == "YEARS")
+            fprintf("release.yo", "SUBST(_CurYrs_)(", element(1, cut), ")\n");
+    }
+}
+

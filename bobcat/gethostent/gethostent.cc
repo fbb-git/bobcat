@@ -5,7 +5,7 @@ hostent const *GetHostent::gethostent(char const *prefix, string const &host)
 {
     static Pattern address("(\\d+\\.){3}\\d+"); // 4 series of . separated
                                                 // digits.
-    hostent *hp;
+    struct hostent *hp;
 
     try
     {

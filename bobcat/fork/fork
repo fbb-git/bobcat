@@ -1,13 +1,14 @@
 #ifndef _INCLUDED_BOBCAT_FORK_
 #define _INCLUDED_BOBCAT_FORK_
 
+#include <sys/types.h>
 #include <bobcat/errno>
 
 namespace FBB
 {    
     class Fork
     {
-        int
+        pid_t
             d_pid;
 
         public:
@@ -17,12 +18,12 @@ namespace FBB
             void fork() throw (Errno);
 
         protected:
-            int pid() const
+            pid_t pid() const
             {
                 return d_pid;
             }
 
-            int getPid() const                  // DEPRECATED. USE `pid()'
+            pid_t getPid() const                  // DEPRECATED. USE `pid()'
             {
                 return d_pid;
             }

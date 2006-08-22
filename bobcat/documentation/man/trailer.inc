@@ -16,7 +16,7 @@ manpagesection(BOBCAT)
 
 manpagesection(COPYRIGHT)
     This is free software, distributed under the terms of the 
-    Academic Free Licence.
+    GNU General Public License (GPL).
 
 manpageauthor()
     Frank B. Brokken (bf(f.b.brokken@rug.nl)).

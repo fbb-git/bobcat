@@ -1,0 +1,68 @@
+string BASE;
+
+    // BASE=is the directory below which ALL bisonc++ files will be stored.
+
+    // For an operational non-Debian installation, you probably must be
+    // `root', and BASE "/usr" or BASE "/usr/local" is suggested (see
+    // below). `BASE' itself is not used outside of this file, so feel free to
+    // define BIN, SKEL, MAN and DOC (below) in any which way you like.
+
+string GPP;
+    // GPP specifies the compiler to use. The bobcat library is coined as
+    // belonging to the Debian `unstable' distribution, which may use a
+    // different version of the compiler you currently have in your
+    // system. E.g., in july 2006 the Debian `testing' version of the compiler
+    // was 4.0.4, but the `unstable' version's compiler was 4.1.2. By defining
+    // GPP as GPP=g++-4.1 (i.e., keeping the next definition of
+    // `GPP') the 4.1.x version of the compiler is used (of course,
+    // it must have been installed in your system as well). If you want to use
+    // your `standard' C++ compiler, simply redefine GPP's assignment
+    // below
+
+string DOC;
+    // DOC is the directory in which all standard documentation will be stored
+    // in this directory the non-development related information is stored. It
+    // is not used if not defined (or defined empty)
+
+string DOCDEV;
+    // DOCDEV is the directory in which all other documentation will be stored
+    // In this directory the development related information is stored
+
+string INC;
+    // the directory in which the header files will be stored
+
+string GCC;
+    // The compiler to use for bobcat's C-sources. See GPP above for
+    // considerations
+
+string LIB;
+    // the directory in which the bobcat libraries will be stored
+
+string LINTIAN;
+    // LINTIAN is the directory in which the lintian overrides are stored
+    
+string MAN;
+    // MAN is the directory in which the manual pages will be stored
+    // They are stored below man3 and man7
+
+
+void setLocations()
+{
+    BASE  = "/usr";
+
+    DOC  = BASE + "/share/doc/bobcat";
+    DOCDEV  = BASE + "/share/doc/bobcat-dev";
+    INC  = BASE + "/include/bobcat";
+    LIB  = BASE + "/lib";
+    LINTIAN = BASE + "/share/doc/bobcat";
+    MAN  = BASE + "/share/man";    
+
+    // GPP = "g++";
+    GPP = "g++-4.1";
+
+    // GCC = "gcc";
+    GCC = "gcc-4.1";
+}
+
+
+
