@@ -36,7 +36,7 @@ void install(string rss, string dev)
     run("cp -d tmp/lib/*so.* " + rss + LIB);
 
     md(dev + LIB);
-    run("cp -d tmp/lib/*.{a,so} " + dev + LIB);
+    run("cp -d tmp/lib/*.a tmp/lib/*.so " + dev + LIB);
 
     if (exists("debian/control"))
     {
@@ -50,7 +50,7 @@ void install(string rss, string dev)
     run("cp tmp/bobcat/* " + dev + INC);
 
     printf("\n  installing the manual pages\n");
-    md(dev + MAN + "/man{3,7}");
+    md(dev + MAN + "/man3 " + dev + MAN + "/man7");
     rungzip9("tmp/man/man3/", dev + MAN + "/man3/");
     
     run("gzip -9 < tmp/man/man7/bobcat.7 > " +
