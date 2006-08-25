@@ -33,11 +33,11 @@ class Msg
     friend std::ostringstream &msgstream();
     friend std::ostringstream &lineMsg();
 
-    static unsigned s_line;    
+    static size_t s_line;    
     static char const *s_warning;
-    static unsigned s_warnCount;
-    static unsigned s_count;
-    static unsigned s_maxCount;
+    static size_t s_warnCount;
+    static size_t s_count;
+    static size_t s_maxCount;
     static std::ostringstream s_msg;
     static std::ostream s_out;
     static std::ostream s_info;
@@ -57,7 +57,7 @@ class Msg
 
         static void setOstream(std::string const &name);
 
-        static void setLine(unsigned linenr)
+        static void setLine(size_t linenr)
         {
             s_line = linenr;
         }            
@@ -66,11 +66,11 @@ class Msg
             s_warning = pre;
         }
 
-        static void setMaxCount(unsigned maxCount)
+        static void setMaxCount(size_t maxCount)
         {
             s_maxCount = maxCount;
         }
-        static unsigned count()
+        static size_t count()
         {
             return s_count;
         }
@@ -78,7 +78,7 @@ class Msg
         {
             return s_count;
         }
-        static unsigned warnings()
+        static size_t warnings()
         {
             return s_warnCount;
         }

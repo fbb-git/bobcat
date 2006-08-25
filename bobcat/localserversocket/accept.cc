@@ -1,6 +1,6 @@
 #include "localserversocket.ih"
 
-unsigned LocalServerSocket::accept() throw (Errno)
+size_t LocalServerSocket::accept() throw (Errno)
 {
     sockaddr_un address;
 

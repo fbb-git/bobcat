@@ -38,9 +38,12 @@ void install(string rss, string dev)
     md(dev + LIB);
     run("cp -d tmp/lib/*.{a,so} " + dev + LIB);
 
-    printf("\n  installing lintian overrides for the -dev package\n");
-    md(dev + LINTIAN);
-    run("cp lintian/* " + dev + LINTIAN);
+    if (exists("debian/control"))
+    {
+        printf("\n  installing lintian overrides for the -dev package\n");
+        md(dev + "/usr/share/doc/bobcat");
+        run("cp lintian/* " + dev + "/usr/share/doc/bobcat");
+    }
 
     printf("\n  installing the headers\n");
     md(dev + INC);

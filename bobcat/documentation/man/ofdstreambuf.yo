@@ -51,19 +51,19 @@ buffer size.  When the object is destroyed or if the mode-less
 overloaded version of the bf(open) member is called, the bf(Mode) argument
 determines whether the file descriptor will be closed or will remain open.
 
-    itb(OFdStreambuf(int fd, unsigned n = 1))
+    itb(OFdStreambuf(int fd, size_t n = 1))
         This constructor initializes the streambuf, associating it to file
 descriptor tt(fd), and an optional unget buffer size (by default having size
 1).  When  bf(open) is called subsequently, or if the object is destroyed
 the provided file descriptor will be closed.
 
-    itb(OFdStreambuf(int fd, unsigned n = 1))
+    itb(OFdStreambuf(int fd, size_t n = 1))
         This constructor initializes the streambuf, associating it to file
 descriptor tt(fd), and an optional unget buffer size (by default having size
 1).  When the object is destroyed or if the mode-less overloaded version of
 the bf(open) member is called, the file descriptor will be closed.
 
-    itb(OFdStreambuf(int fd, Mode mode, unsigned n = 1))
+    itb(OFdStreambuf(int fd, Mode mode, size_t n = 1))
         This constructor initializes the streambuf, associating it to file
 descriptor tt(fd), and an optional unget buffer size (by default having size
 1).  When the object is destroyed or if the mode-less overloaded version of
@@ -78,13 +78,13 @@ available, as bf(FBB::OFdStreambuf) inherits from this class. Some of the
 bf(std::streambuf)'s member are overridden by bf(FBB::OFdStreambuf), see
 below. 
     itemization(
-    itb(void open(int xfd, unsigned n = 1))
+    itb(void open(int xfd, size_t n = 1))
         This member (re)initializes the streambuf, using file
 descriptor tt(fd), and an optional unget buffer size (by default having size
 1). When called repeatedly, the bf(Mode) specification used whem the object
 was constructed determines whether the file descriptor will be closed or will
 remain open.
-    itb(void open(int xfd, Mode mode, unsigned n = 1))
+    itb(void open(int xfd, Mode mode, size_t n = 1))
         This member (re)initializes the streambuf, using file
 descriptor tt(fd), a file descriptor closing parameter and an optional unget
 buffer size (by default having size 1). Depending on the bf(Mode) argument the

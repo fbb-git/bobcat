@@ -24,7 +24,7 @@ namespace FBB
         private:
             Mode        d_mode;
             int         d_fd;
-            unsigned    d_n;
+            size_t    d_n;
             char*       d_buffer;
 
         public:
@@ -40,14 +40,14 @@ namespace FBB
                 d_n(0),
                 d_buffer(0)
             {}
-            IFdStreambuf(int fd, unsigned n = 1)
+            IFdStreambuf(int fd, size_t n = 1)
             :
                 d_mode(KEEP_FD),        // comply with old default
                 d_buffer(0)
             {
                 open(fd, KEEP_FD, n);
             }
-            IFdStreambuf(int fd, Mode mode, unsigned n = 1)
+            IFdStreambuf(int fd, Mode mode, size_t n = 1)
             :
                 d_mode(mode),
                 d_buffer(0)
@@ -58,8 +58,8 @@ namespace FBB
             {
                 cleanup(d_mode);
             }
-            void open(int xfd, Mode mode, unsigned n = 1);
-            void open(int xfd, unsigned n = 1)
+            void open(int xfd, Mode mode, size_t n = 1);
+            void open(int xfd, size_t n = 1)
             {
                 open(xfd, d_mode, n);
             }

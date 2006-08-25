@@ -48,25 +48,25 @@ manpagesection(ACCESSOR MEMBER FUNCTIONS)
      All members are accessors. No members are provided that will modify an
 bf(FBB::Hostent) object's data.
     itemization(
-    itb(unsigned addressLength() const)
+    itb(size_t addressLength() const)
         This member returns the length of the binary addresses in bytes.
-    itb(unsigned addressType() const)
+    itb(size_t addressType() const)
         This member returns the type of the address. Currently this is always
 bf(AF_INET).
-    itb(char const *alias(unsigned index) const)
+    itb(char const *alias(size_t index) const)
         This member returns alias `tt(index)' of the host. The first alias has
 tt(index 0). If alias `tt(index)' does not exist, 0 is returned.
     itb(char const * const *beginAlias() const)
         This member returns an iterator to the first alias. The hostname
 itself is not included in the list of aliases.
-    itb(char const *binaryAddress(unsigned index) const)
+    itb(char const *binaryAddress(size_t index) const)
         This member returns the binary address `tt(index)' of the host.  The
 first address has tt(index 0). If address `tt(index)' does not exist, 0 is
 returned. The pointer to the binary address points to a series of
 bf(addressLength()) bytes. Note that the returned address is in em(network
 byte order). It can be converted to host byte order by the functions described
 in bf(byteorder)(3).
-    itb(std::string dottedDecimalAddress(unsigned index) const)
+    itb(std::string dottedDecimalAddress(size_t index) const)
         This member returns address `tt(index)' as a dotted decimal address in
 a string. The first address has tt(index 0). If address `tt(index)' does not
 exist, an empty string is returned.
@@ -74,11 +74,11 @@ exist, an empty string is returned.
         This member returns an iterator pointing beyond the last alias.
     itb(char const *hostname() const)
         This member returns the standard (first) name of the host.
-    itb(unsigned nAddresses() const)
+    itb(size_t nAddresses() const)
         This member returns the number of addresses that are available. When
 requesting a particular address, the requested index should be less than
 the value returned by this member.
-    itb(unsigned nAliases() const)
+    itb(size_t nAliases() const)
         This member returns the number of aliases that are available. When
 requesting a particular alias, the requested index should be less than the
 value returned by this member.
@@ -105,7 +105,7 @@ manpagesection(EXAMPLE)
                     ostream_iterator<char const *>(cout, "\n"));
 
         cout << "Addresses:\n";
-        for (unsigned idx = 0; idx < he.nAddresses(); idx++)
+        for (size_t idx = 0; idx < he.nAddresses(); idx++)
             cout << he.dottedDecimalAddress(idx) << endl;
 
         return 0;

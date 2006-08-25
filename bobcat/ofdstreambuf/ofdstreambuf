@@ -23,7 +23,7 @@ namespace FBB
 
         private:
             Mode        d_mode;
-            unsigned    d_n;
+            size_t    d_n;
             int         d_fd;
             char       *d_buffer;
 
@@ -40,14 +40,14 @@ namespace FBB
                 d_n(0),
                 d_buffer(0)
             {}
-            OFdStreambuf(int fd, unsigned n = 1)
+            OFdStreambuf(int fd, size_t n = 1)
             :
                 d_mode(CLOSE_FD),
                 d_buffer(0)
             {
                 open(fd, CLOSE_FD, n);
             }
-            OFdStreambuf(int fd, Mode mode, unsigned n = 1)
+            OFdStreambuf(int fd, Mode mode, size_t n = 1)
             :
                 d_mode(mode),
                 d_buffer(0)
@@ -60,9 +60,9 @@ namespace FBB
                 cleanup(d_mode);
             }
     
-            void open(int fd, Mode mode, unsigned n = 1);
+            void open(int fd, Mode mode, size_t n = 1);
 
-            void open(int fd, unsigned n = 1)
+            void open(int fd, size_t n = 1)
             {
                 open(fd, d_mode, n);
             }

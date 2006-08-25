@@ -56,14 +56,14 @@ manpagesection(OVERLOADED OPERATORS)
     itemization(
     itb(Glob &operator=(Glob const &other))
         The assignment operator is available.
-    itb(char const *operator[](unsigned idx) const)
+    itb(char const *operator[](size_t idx) const)
         The element at index position tt(idx) is returns as a bf(C) string. It
     returns an empty string if tt(idx) is or exceeds bf(size()).
     )
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
-    itb(unsigned size() const)
+    itb(size_t size() const)
         Returns the number of elements that were detected.
     itb(char const *const *begin() const)
         Returns a pointer to the first element that was detected. This pointer
@@ -89,14 +89,14 @@ manpagesection(EXAMPLES)
     
         Glob general;
     
-        for (unsigned idx = 0; idx < general.size(); idx++)
+        for (size_t idx = 0; idx < general.size(); idx++)
             cout << idx << ": " << general[idx] << endl;
     
         cout << "Pattern: " << argv[1] << "\n";
     
         Glob pattern(argv[1], Glob::PERIOD, Glob::DEFAULT);
     
-        for (unsigned idx = 0; idx < pattern.size(); idx++)
+        for (size_t idx = 0; idx < pattern.size(); idx++)
             cout << idx << ": " << pattern[idx] << endl;
     
         return 0;

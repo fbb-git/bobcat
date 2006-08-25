@@ -70,9 +70,9 @@ namespace FBB
         bool d_rmComment;
         bool d_caseSensitive;
         bool d_indices;
-        unsigned d_rawIndex;        
-        unsigned d_nextIndex;        
-        std::vector<unsigned> d_index;
+        size_t d_rawIndex;        
+        size_t d_nextIndex;        
+        std::vector<size_t> d_index;
 
         public:
             typedef RE_iterator const_RE_iterator;
@@ -130,12 +130,12 @@ namespace FBB
             const_iterator find(std::string const &target) const;
             const_iterator findRE(std::string const &re) const;
 
-            unsigned index(unsigned lineNr)
+            size_t index(size_t lineNr)
             {
                 return d_index[lineNr];
             }
 
-            unsigned index(const_iterator const &iterator)
+            size_t index(const_iterator const &iterator)
             {
                 return d_index[iterator - begin()];
             }
@@ -151,7 +151,7 @@ namespace FBB
             {
                 return pat << str;
             }
-            unsigned append_next(std::istream &istr, std::string &line);
+            size_t append_next(std::istream &istr, std::string &line);
             bool hasContent(std::string const &line);
             bool nextLine(std::istream &istr, std::string &line);
             void removeComment(std::string &line);

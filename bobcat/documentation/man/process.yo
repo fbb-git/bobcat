@@ -118,7 +118,7 @@ below). When the tt(FBB::Process) object goes out of scope or when its
 bf(stop()) member is called, the child is given one second to terminate. If
 the child didn't terminate within one second, it is twice sent a tt(SIG_TERM)
 signal, followed by a tt(SIG_KILL) signal.
-    itb(Process(unsigned waitSeconds, std::string const &cmd = "", 
+    itb(Process(size_t waitSeconds, std::string const &cmd = "", 
             iomode mode = CIN | COUT | CERR))
        By default this constructor defines a bf(FBB::Process) object without
 setting a command, while the command's standard streams are accessible via the
@@ -228,7 +228,7 @@ effect if the command buffer is empty.
 bf(IOMode) is set to tt(mode). Having set bf(IOMode), the child process is
 started according to the procedure described with the former bf(start())
 member.
-    itb(int start(unsigned waitSeconds, iomode mode, 
+    itb(int start(size_t waitSeconds, iomode mode, 
                   Program program = NO_PATH))
         Before transferring control to the first bf(start()) member, the
 bf(IOMode) is set to tt(mode). Having set bf(IOMode), the child process is
@@ -267,7 +267,7 @@ tt(MERGE_CIN_COUT) was specified, in which case both the standard output and
 the standard error streams are merged to the standard output stream); 3 is
 returned if information from both the standard output stream and the standard
 error stream is available.
-    itb(int wait(unsigned sec, unsigned msec = 0))
+    itb(int wait(size_t sec, size_t msec = 0))
         This member waits at most tt(sec) seconds plus tt(msec) milliseconds
 for information written by the child process to its standard output or error
 streams. 0 is returned if, following the delay, no information is ready for

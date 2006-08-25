@@ -33,7 +33,7 @@ situations are recognized:
        
 */
 
-unsigned String::split(vector<SplitPair> *words, char const *sep,
+size_t String::split(vector<SplitPair> *words, char const *sep,
                        bool addEmpty) const
 {
     words->clear();

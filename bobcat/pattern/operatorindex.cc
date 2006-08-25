@@ -1,6 +1,6 @@
 #include "pattern.ih"
 
-string  Pattern::operator[](unsigned index) const
+string  Pattern::operator[](size_t index) const
 {
     regoff_t
         begin;

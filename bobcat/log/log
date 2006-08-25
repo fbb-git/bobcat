@@ -23,8 +23,8 @@ namespace FBB
             static std::auto_ptr<Log> s_stream;
 
             std::ofstream d_stream;
-            unsigned d_level;
-            unsigned d_activeLevel;
+            size_t d_level;
+            size_t d_activeLevel;
 
         public:
             static Log &getInstance();
@@ -42,8 +42,8 @@ namespace FBB
                     std::ios::openmode = std::ios::out | std::ios::app, 
                     char const *delim = " ");
 
-            std::ostream &level(unsigned useLevel);
-            void  setLevel(unsigned newLevel);
+            std::ostream &level(size_t useLevel);
+            void  setLevel(size_t newLevel);
             void  setTimestamp(TimeStamps timeStamp, char const *delim = " ");
             void  off()
             {

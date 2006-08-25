@@ -76,14 +76,14 @@ bf(listen()) should be called.
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
-    itb(unsigned accept() throw (Errno))
-        The bf(accept()) member returns an tt(unsigned) which is a file
+    itb(size_t accept() throw (Errno))
+        The bf(accept()) member returns an tt(size_t) which is a file
 descriptor (socket) that may be used to communicate with the client requesting
 the connection. In more complex programs the returned file descriptor (socket)
 could be passed to a class derived from bf(FBB::Fork), handling the
 communication with the child as a separate (child) process.
 
-    itb(void listen(unsigned backlog = 5, bool blocking = true) throw (Errno))
+    itb(void listen(size_t backlog = 5, bool blocking = true) throw (Errno))
         The bf(listen()) member defines the way the bf(FBB::LocalServerSocket)
 will listen for clients requesting a connection.  It can be used only once
 with a bf(FBB::LocalServerSocket). An bf(FBB::Errno) object is thrown if

@@ -2,7 +2,7 @@
 
 string Pattern::beyond() const
 {
-    unsigned
+    size_t
         begin = d_subExpression[0].rm_eo;
 
     return

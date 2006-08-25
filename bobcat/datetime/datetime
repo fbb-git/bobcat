@@ -65,7 +65,7 @@ class DateTime
         time_t      d_time; // 
         struct tm   d_tm;   // 
         bool        d_ok;
-        unsigned    d_errno;
+        size_t    d_errno;
 
     public:
         DateTime(TimeType type = LOCALTIME);
@@ -79,17 +79,17 @@ class DateTime
 
         bool breakDown(TimeType type);
 
-        unsigned error() const
+        size_t error() const
         {
             return d_errno;
         }
 
-        unsigned hours() const
+        size_t hours() const
         {
             return d_tm.tm_hour;
         }
 
-        unsigned minutes() const
+        size_t minutes() const
         {
             return d_tm.tm_min;
         }
@@ -99,7 +99,7 @@ class DateTime
             return static_cast<Month>(d_tm.tm_mon);
         }
 
-        unsigned monthDayNr() const
+        size_t monthDayNr() const
         {
             return d_tm.tm_mday;
         }
@@ -112,7 +112,7 @@ class DateTime
         DateTime &operator-=(time_t seconds);           // d_type
         DateTime &operator-=(tm const &tm);             // d_type
 
-        unsigned seconds() const
+        size_t seconds() const
         {
             return d_tm.tm_sec;
         }
@@ -127,17 +127,17 @@ class DateTime
             return static_cast<WeekDay>(d_tm.tm_wday);
         }
 
-        unsigned year() const
+        size_t year() const
         {
             return d_tm.tm_year + 1900;
         }
 
-        unsigned yearDay() const
+        size_t yearDay() const
         {
             return d_tm.tm_yday;
         }
 
-        unsigned yearDayNr() const
+        size_t yearDayNr() const
         {
             return d_tm.tm_yday + 1;
         }

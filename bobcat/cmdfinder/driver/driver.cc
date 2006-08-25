@@ -62,13 +62,13 @@ Command::Command()                       // Define the default constructor
                                     sizeof(s_action) / sizeof(Entry))
 {}
 
-void run(Command &cmd, char const *descr, unsigned mode = 0)
+void run(Command &cmd, char const *descr, size_t mode = 0)
 {
     if (mode)
         cmd.setMode(mode);
 
     cout << "Enter 5 x a command using " << descr << ".\n";
-    for (unsigned idx = 0; idx++ < 5; )
+    for (size_t idx = 0; idx++ < 5; )
     {
         cout << "Enter command " << idx << ": ";
         string text;

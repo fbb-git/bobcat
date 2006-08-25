@@ -32,12 +32,12 @@ Instead, the class-less members bf(msg()) and bf(lineMsg()) (see below) and
 the manipulators (see below) are used to create messages.
 
     itemization(
-    itb(static unsigned count())
+    itb(static size_t count())
         Returns the number of error messages generated so far.
     itb(static bool display())
         Returns tt(true) if the currently accumulated message will be
 inserted into the message stream. This is the default case.
-    itb(static unsigned errors())
+    itb(static size_t errors())
         Returns the number of error messages generated so far. Synonym of
 bf(count()). 
     itb(static std::streambuf *infoToWarning())
@@ -62,20 +62,20 @@ message stream.
 inserted. The passed bf(streambuf) must remain in existence after the call. If
 bf(newBuffer) is 0, the currently used bf(streambuf) is not altered.
 The function returns the bf(streambuf) used so far.
-    itb(static void setLine(unsigned linenr))
+    itb(static void setLine(size_t linenr))
         Set the value of the line-counter used with the bf(lineMsg)
 manipulator (see below).
-    itb(static void setMaxCount(unsigned maxCount))
+    itb(static void setMaxCount(size_t maxCount))
         Define the maximum number of error messages (using the bf(err)
 manipulator, see below), before a fatal em(maximum number of error messsages
-reached) message is generated. The default value is the maximum unsigned
+reached) message is generated. The default value is the maximum size_t
 value; not reached in any practical situation.
     itb(static void setOstream(std::string const &name))
         Define the name of the stream to which messages will be written.
     itb(static void setWarning(char const *pre = "[Warning] "))
         Define the text printed ahead of warning messages. The default value
 is equal to this member function's default argument value.
-    itb(static unsigned warnings())
+    itb(static size_t warnings())
         Returns the number of warning messages generated so far.
     )
 

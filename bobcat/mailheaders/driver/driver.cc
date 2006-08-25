@@ -68,7 +68,7 @@ int main(int argc, char **argv, char **envp)
     {
         for 
         (
-            vector<unsigned>::const_iterator nr = it->begin(); 
+            vector<size_t>::const_iterator nr = it->begin(); 
                 nr != it->end();
                     nr++
         )

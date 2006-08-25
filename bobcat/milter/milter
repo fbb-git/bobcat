@@ -23,7 +23,7 @@ class Milter
     SMFICTX *d_ctx;                 // for local use only
 
     public:
-        typedef unsigned callback_set;
+        typedef size_t callback_set;
         enum CallBack
         {
             CONNECT     = 1 << 0,
@@ -175,7 +175,7 @@ class Milter
             return d_ctx;
         }
 
-        bool insertHeader(unsigned hdrIdx, std::string const &hdrName, 
+        bool insertHeader(size_t hdrIdx, std::string const &hdrName, 
                           std::string const &hdrValue)
         {
             return smfi_insheader(d_ctx, hdrIdx,
@@ -208,7 +208,7 @@ class Milter
         {
             return CONTINUE;
         }
-        static bool setBacklog(unsigned backlog = 5)
+        static bool setBacklog(size_t backlog = 5)
         {
             return smfi_setbacklog(backlog) == SUCCESS;
         }
@@ -265,7 +265,7 @@ class Milter
         }
         // can't do smfi_setmlreply(ctx, ...) 
         // since there is no smfi_Vsetmlreply(ctx, ...)
-        static void setTimeout(unsigned seconds = 7210)
+        static void setTimeout(size_t seconds = 7210)
         {
             smfi_settimeout(seconds);
         }

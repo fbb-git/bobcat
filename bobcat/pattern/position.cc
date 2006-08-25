@@ -1,6 +1,6 @@
 #include "pattern.ih"
 
-Pattern::Position Pattern::position(unsigned index) const
+Pattern::Position Pattern::position(size_t index) const
 {
     regoff_t
         begin;

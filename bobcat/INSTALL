@@ -1,19 +1,23 @@
 To Install the bobcat library by hand instead of using the binary distribution
 perform the following steps:
 
-    1. Inspect the values of the variables in the file INSTALL.cf.  Modify
-       these when necessary.  In particular note the definition of the
-       COMPILER shell variable, which is set to Gnu's g++ compiler as used in
-       Debian's `unstable' distribution. Removing the definition using the
-       explicit version results in the definition of COMPILER as `g++', which
-       should be your default g++ compiler.
+    0. The previously used scripts below make/ are obsolete and were removed
+        from this and future distributions. Icmake should be used instead, for
+        which a top-level script (build) and support scripts in the ./icmake/
+        directory are available. Icmake is available on a great many
+        architectures. See the file INSTALL (and INSTALL.im, replacing the
+        previously used INSTALL.cf) for further details.
 
-    2. Run `./make/library' to compile the bobcat library
+    1. Inspect the values of the variables in the file INSTALL.im Modify these
+       when necessary.
 
-        Note: it's NOT `make library'
-
-       ./make/library asks whether you want to compile the Milter and Xpointer
-       classes. 
+    2. Run 
+            build libraries
+        to compile the bobcat libraries. If you know you want to add the
+        Milter and Xpointer classes, issue
+            build libraries all
+        If `all' is omitted, you will be asked interactively which of the two
+        classes (if any) should be added to the libraries.
 
        To compile the Milter class you need the header libmilter/mfapi.h,
        which is (in Debian) part of the libmilter-dev package. 
@@ -23,14 +27,15 @@ perform the following steps:
 
        If you don't intend to write programs using these classes, it's ok not
        to include these classes into the library, since no other classes
-       depend on these two (see README.class-setup). If you're sure that you
-       want to compile these classes (so, the headers are available), then
-       `./make library all' will compile the bobcat library with no questions
-       asked.
+       depend on these two (see README.class-setup).
     
-    3. Run (probably as root) ./make/install to install
+    3. Run (probably as root) 
+            ./build install
+       to install. Optionally add two additional argument as a base
+        directories below which respectively the run time (shared) library
+        documentation and the development files plus static library 
+        documentation will be installed.
 
-        Note: it's NOT `make install'
 
     Following the installation nothing in this directory tree is required
     for the proper functioning of the bobcat library, so consider removing it.

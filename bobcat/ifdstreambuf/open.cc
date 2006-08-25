@@ -1,6 +1,6 @@
 #include "ifdstreambuf.ih"
 
-void IFdStreambuf::open(int xfd, Mode mode, unsigned n)
+void IFdStreambuf::open(int xfd, Mode mode, size_t n)
 {
     cleanup(mode);
 

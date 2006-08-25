@@ -17,7 +17,7 @@ try
         return 1;
     }
 
-    unsigned portnr = A2x(argv[1]);
+    size_t portnr = A2x(argv[1]);
 
     ServerSocket server(portnr);
 

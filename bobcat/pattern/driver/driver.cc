@@ -116,7 +116,7 @@ int main(int argc, char **argv)
                     cerr << "beyond:  " << pattern.beyond() << endl;
                     cerr << "end() = " << pattern.end() << endl;
         
-                    for (unsigned idx = 0; idx < pattern.end(); ++idx)
+                    for (size_t idx = 0; idx < pattern.end(); ++idx)
                     {
                         string
                             str = pattern[idx];

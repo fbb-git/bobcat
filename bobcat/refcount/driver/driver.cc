@@ -16,7 +16,7 @@ using namespace FBB;
 
 class Data: public RefCount
 {
-    static unsigned s_n;        // count the number of objects in use
+    static size_t s_n;        // count the number of objects in use
 
     public:
         Data()                  // all other constructors are built like this:
@@ -158,7 +158,7 @@ class Client
 };
 
 
-unsigned Data::s_n = 0;
+size_t Data::s_n = 0;
 
 Client const operator+(Client const &lvalue, Client const &rvalue)
 {

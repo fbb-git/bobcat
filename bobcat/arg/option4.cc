@@ -1,6 +1,6 @@
 #include "arg.ih"
 
-unsigned Arg::option(unsigned *idx, string *value, int optChar) const
+size_t Arg::option(size_t *idx, string *value, int optChar) const
 {
     ISVMapIterator it = d_optv.find(optChar);
     if (it == d_optv.end())

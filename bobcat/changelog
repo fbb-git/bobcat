@@ -3,6 +3,36 @@ bobcat (1.10.1)
   *  Some leftover Academic Free License references were replaced by GPL
      references. 
 
+    The previously used scripts below make/ are obsolete and were removed from
+    this and future distributions. Icmake should be used instead, for which a
+    top-level script (build) and support scripts in the ./icmake/ directory
+    are available. Icmake is available on a great many architectures. See the
+    file INSTALL (and INSTALL.im, replacing the previously used INSTALL.cf)
+    for further details.
+
+    Various source adaptations were realized (SF: superfluous):
+        All plain `unsigned' variables were changed to `size_t'
+        datetime: changed include time.h into include ctime
+              removed SF include iostream from 
+                    datetime/operatorminusis2.cc
+                    datetime/operatorminusis3.cc
+                    datetime/operatorminusis.cc
+                    datetime/operatorplusis2.cc
+                    datetime/operatorplusis3.cc
+        fork: changed int d_pid into pid_t pid, various files, manpage adapted
+        gethostent: changed `hostent *' into `struct hostent *' in
+                    gethostent.cc 
+        iostream: removed SF #include iostream from clear1.cc
+        localclientsocket/localclientsocket: datamember SF
+        localclientsocket/localclientsocket.ih: added includes for connect(2)
+        localserversocket/localserversocket.ih: updated required includes
+        mailheaders/read.cc: removed SF include iostream
+        multistreambuf/multistreambuf: removed SF include iostream
+        pattern/convert.cc: removed SF includes iostream and iomanip
+        process/parentredirections.cc,stop.cc: removed SF include iostream
+        selector/selector: including sys/select.h according to POSIX rather
+                            than includes using earlier standards.
+
  -- Frank B. Brokken <f.b.brokken@rug.nl>  Tue, 26 Jul 2006 18:16:42 -0800
 
 bobcat (1.10.0-1) unstable; urgency=low

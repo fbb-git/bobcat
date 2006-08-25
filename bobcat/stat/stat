@@ -74,19 +74,19 @@ class Stat
         {
             return d_errno == 0;
         }
-        unsigned blockSize() const
+        size_t blockSize() const
         {
             return d_stat.st_blksize;
         }        
-        unsigned device() const
+        size_t device() const
         {
             return d_stat.st_dev;
         }        
-        unsigned deviceType() const
+        size_t deviceType() const
         {
             return d_stat.st_rdev;
         }        
-        unsigned error() const
+        size_t error() const
         {
             return d_errno;
         }        
@@ -94,11 +94,11 @@ class Stat
         {
             return type() == probe;
         }
-        unsigned gid() const
+        size_t gid() const
         {
             return d_stat.st_gid;
         }        
-        unsigned inode() const
+        size_t inode() const
         {
             return d_stat.st_ino;
         }        
@@ -114,7 +114,7 @@ class Stat
         {
             return DateTime(d_stat.st_mtime);
         }
-        unsigned mode() const
+        size_t mode() const
         {
             return d_stat.st_mode & RWX;
         }
@@ -124,11 +124,11 @@ class Stat
         {
             return d_name;
         }
-        unsigned nBlocks() const
+        size_t nBlocks() const
         {
             return d_stat.st_blocks;
         }        
-        unsigned nLinks() const
+        size_t nLinks() const
         {
             return d_stat.st_nlink;
         }        
@@ -150,7 +150,7 @@ class Stat
             return static_cast<Type>(d_stat.st_mode & S_IFMT);
         }
         std::string typeStr() const;
-        unsigned uid() const
+        size_t uid() const
         {
             return d_stat.st_uid;
         }        

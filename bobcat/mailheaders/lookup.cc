@@ -5,7 +5,7 @@ namespace
     class MatchObj
     {
         char const * d_hdr;
-        unsigned d_idx;
+        size_t d_idx;
         void (MatchObj::*matchfun)(MailHeaders::HdrPair const &hdrIndex);
 
         public:

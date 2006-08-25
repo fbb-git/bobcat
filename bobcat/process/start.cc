@@ -1,7 +1,7 @@
 #include "process.ih"
 
 
-void Process::start(unsigned waitSeconds, iomode mode, Program program)
+void Process::start(size_t waitSeconds, iomode mode, Program program)
 {
     if (d_command.empty())
         return;

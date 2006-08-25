@@ -41,12 +41,12 @@ int main(int argc, char **argv, char **envp)
                 cout << h.hostname() << endl;
 
             cout << "Aliases:\n";
-            for (unsigned idx = 0; idx < h.nAliases(); idx++)
+            for (size_t idx = 0; idx < h.nAliases(); idx++)
                 cout << h.alias(idx) << " ";
             cout << endl;
 
             cout << "Adresses:\n";
-            for (unsigned idx = 0; idx < h.nAddresses(); idx++)
+            for (size_t idx = 0; idx < h.nAddresses(); idx++)
                 cout << h.dottedDecimalAddress(idx) << " ";
             cout << endl;
         }
@@ -65,12 +65,12 @@ int main(int argc, char **argv, char **envp)
         cout << "Name: " << h.name() << endl;
 
         cout << "Aliases:\n";
-        for (unsigned idx = 0; idx < h.nNames(); idx++)
+        for (size_t idx = 0; idx < h.nNames(); idx++)
             cout << h.name(idx) << " ";
         cout << endl;
 
         cout << "Adresses:\n";
-        for (unsigned idx = 0; idx < h.nAddresses(); idx++)
+        for (size_t idx = 0; idx < h.nAddresses(); idx++)
             cout << h.address(idx) << " ";
         cout << endl;
     }

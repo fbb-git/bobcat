@@ -5,9 +5,9 @@
 
 class Handler: public FBB::Fork
 {
-    unsigned d_descriptor;
+    size_t d_descriptor;
     public:
-        Handler(unsigned descriptor)
+        Handler(size_t descriptor)
         :
             d_descriptor(descriptor)
         {}

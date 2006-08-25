@@ -37,9 +37,9 @@ manpagesection(CONSTRUCTORS)
 
 manpagesection(NON_VIRTUAL MEMBER FUNCTIONS)
     itemization(
-    itb(void setParam(std::ostream &ostr, unsigned rows, 
-                        std::vector<unsigned> const &colWidth,
-                        unsigned maxWidth))
+    itb(void setParam(std::ostream &ostr, size_t rows, 
+                        std::vector<size_t> const &colWidth,
+                        size_t maxWidth))
         This member function defines the bf(FBB::TableSupport)'s essential
 parameters: nl()
         bf(ostr) is a reference to the bf(std::ostream) into which the table
@@ -53,7 +53,7 @@ elements are used to determine the width of the individual columns.
 
     Note that this member is normally not used by the programmer, but it is
 called with appropriate values by bf(FBB::Table).
-    itb(void setParam(unsigned maxWidth))
+    itb(void setParam(size_t maxWidth))
         This member function defines the bf(FBB::TableSupport)'s bf(maxWidth)
 parameter, holding the width of each column.
 
@@ -64,9 +64,9 @@ called with appropriate values by bf(FBB::Table).
 manpagesection(ACCESSORS)
 
     itemization(
-    itb(unsigned tableWidth() const)
+    itb(size_t tableWidth() const)
         Returns the width of the table.
-    itb(unsigned nColumns() const)
+    itb(size_t nColumns() const)
         Returns the table's number of columns.
     itb(std::ostream &out() const)
         Returns the bf(std::ostream) into which the table is inserted.
@@ -79,7 +79,7 @@ default implementations are given together with their prototypes, below:
 
     itemization(
     
-    itb(virtual void hline(unsigned row) const)
+    itb(virtual void hline(size_t row) const)
         This member is called just before the indicated row (offset, not
 number) is inserted into the bf(std::ostream). Its line number is presented
 as a line-reference. Its intended task is to write a (partial) horizontal
@@ -90,7 +90,7 @@ line either before the first row (row == 0) or between two rows of the table.
 into the bf(std::ostream). Its intended task is to write a (partial) horizontal
 line at the end of the table.
         By default it performs no actions.
-    itb(virtual void vline(unsigned col) const)
+    itb(virtual void vline(size_t col) const)
         This member is called just before the indicated column element
 (offset, not number) is inserted into the bf(std::ostream). Its column number
 is presented as a reference. Its intended task is to write a separator either

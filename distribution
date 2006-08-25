@@ -28,6 +28,7 @@ mv ${PROJECT} ${DISTRIBUTION}           # distribution's dir name
 
 if [ "$REPAIR" == "" ] 
 then
+    rm -f ${PROJECT}_${VERSION}-*       # remove old files if existing
                                         # create the .orig source tar
     tar czvf ${PROJECT}_${VERSION}.orig.tar.gz --exclude=debian ${DISTRIBUTION}
 fi

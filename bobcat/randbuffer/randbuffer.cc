@@ -1,6 +1,6 @@
 #include "randbuffer.ih"
 
-Randbuffer::Randbuffer(int min, int max, unsigned seed)
+Randbuffer::Randbuffer(int min, int max, size_t seed)
 {
     if (min <= max)
     {

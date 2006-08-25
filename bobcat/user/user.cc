@@ -2,7 +2,7 @@
 
 User::User() throw (Errno)
 {
-    register unsigned uid = getuid();
+    register size_t uid = getuid();
     struct passwd *pwd;
     
     while ((pwd = getpwent()))
