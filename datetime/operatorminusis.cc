@@ -1,5 +1,4 @@
 #include "datetime.ih"
-#include <iostream>
 
 DateTime &DateTime::operator-=(DateTime const &other)
 {

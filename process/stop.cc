@@ -1,7 +1,5 @@
 #include "process.ih"
 
-#include <iostream>
-
 int Process::stop()
 {
     if (!pid())                     // pid = 0 occurs when a Process 

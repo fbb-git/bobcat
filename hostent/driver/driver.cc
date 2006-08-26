@@ -35,7 +35,7 @@ int main(int argc, char **argv, char **envp)
 
 
         cout << "Addresses:\n";
-        for (unsigned idx = 0; idx < he2.nAddresses(); idx++)
+        for (size_t idx = 0; idx < he2.nAddresses(); idx++)
             cout << he2.dottedDecimalAddress(idx) << endl;
 
         cout << "he2 destroyed\n";

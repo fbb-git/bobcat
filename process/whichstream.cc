@@ -1,9 +1,9 @@
 #include "process.ih"
 
-unsigned Process::whichStream()
+size_t Process::whichStream()
 {
     d_selector.wait();
-    switch (unsigned count = d_selector.nReady())
+    switch (size_t count = d_selector.nReady())
     {
         case 0:
         return 0;

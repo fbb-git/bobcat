@@ -1,6 +1,6 @@
 #include "serversocket.ih"
 
-ServerSocket::ServerSocket(unsigned port) throw (Errno)
+ServerSocket::ServerSocket(size_t port) throw (Errno)
 :
     SocketBase(port)        // uses INADDR_ANY -> current host.
 {

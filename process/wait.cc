@@ -1,6 +1,6 @@
 #include "process.ih"
 
-unsigned Process::wait()
+size_t Process::wait()
 {
     d_selector.noAlarm();
     return whichStream();

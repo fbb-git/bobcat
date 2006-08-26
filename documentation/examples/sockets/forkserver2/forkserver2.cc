@@ -50,7 +50,7 @@ try
 
     signal(SIGCHLD, sigchld_handler);       // handle terminating children
 
-    unsigned portnr = A2x(argv[1]);
+    size_t portnr = A2x(argv[1]);
     ServerSocket server(portnr);
 
     server.listen();                        // plain blocking listen-mode

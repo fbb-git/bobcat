@@ -20,7 +20,7 @@ try
         return 1;
     }
 
-    unsigned     port = A2x(argv[2]);
+    size_t     port = A2x(argv[2]);
     ClientSocket client(argv[1], port);
     int fd = client.connect();
     string line;

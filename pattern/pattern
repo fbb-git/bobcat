@@ -39,11 +39,11 @@ namespace FBB
         typedef std::pair<char const *, char const *> conversion;
     
         static conversion       s_patmod[];
-        static unsigned         s_sizeofPatmod;
+        static size_t         s_sizeofPatmod;
 
         struct Regex
         {
-            unsigned            d_referenceCount;
+            size_t            d_referenceCount;
             regex_t             d_regex;
 
             Regex(std::string pattern, int options) throw (Errno);
@@ -58,8 +58,8 @@ namespace FBB
 
         Regex                  *d_regex;
         regmatch_t             *d_subExpression;
-        unsigned                d_nSub;
-        unsigned                d_beyondLast;
+        size_t                d_nSub;
+        size_t                d_beyondLast;
         std::string             d_text;
         int                     d_matchOptions;
 
@@ -102,7 +102,7 @@ namespace FBB
 
             Pattern(std::string const &pattern, 
                             bool caseSensitive = true, 
-                            unsigned nSub = 10,
+                            size_t nSub = 10,
                             int options = REG_EXTENDED | REG_NEWLINE)
                                                     throw (Errno);
 
@@ -123,7 +123,7 @@ namespace FBB
 
             void setPattern(std::string const &pattern, 
                             bool caseSensitive = true, 
-                            unsigned nSub = 10,
+                            size_t nSub = 10,
                             int options = REG_EXTENDED | REG_NEWLINE) 
                                                             throw (Errno);
 
@@ -160,12 +160,12 @@ namespace FBB
                 // (which may be 0)
 
                 // position of subexpression
-            Position position(unsigned index) const; 
+            Position position(size_t index) const; 
 
                 // subexpression itself
-            std::string operator[](unsigned index) const; 
+            std::string operator[](size_t index) const; 
     
-            unsigned end() const            // index beyond the last available
+            size_t end() const            // index beyond the last available
             {
                 return d_beyondLast;
             }

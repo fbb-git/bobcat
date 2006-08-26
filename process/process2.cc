@@ -1,6 +1,6 @@
 #include "process.ih"
 
-Process::Process(unsigned waitSeconds, std::string const &command, iomode mode)
+Process::Process(size_t waitSeconds, std::string const &command, iomode mode)
 :
     d_childCin(&d_childCinbuf),     // Prepare cin/cout/cerr overtake: 
     d_childCout(&d_childCoutbuf),   // set up buffers/streams

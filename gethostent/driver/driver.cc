@@ -45,7 +45,7 @@ int main(int argc, char **argv, char **envp)
                 *>(cout, "\n"));
 
         cout << "Addresses:\n";
-        for (unsigned idx = 0; idx < he.nAddresses(); idx++)
+        for (size_t idx = 0; idx < he.nAddresses(); idx++)
             cout << he.dottedDecimalAddress(idx) << endl;
     }
     catch (Errno const &err)

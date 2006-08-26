@@ -9,15 +9,15 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-include /usr/share/dpatch/dpatch.make
+
 
 
 CFLAGS = -Wall -g
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-		CFLAGS += -O0
+	CFLAGS += -O0
 else
-		CFLAGS += -O2
+	CFLAGS += -O2
 endif
 
 # shared library versions, option 1
@@ -31,44 +31,40 @@ major=2
 
 configure: configure-stamp
 configure-stamp:
-		dh_testdir
-		# Add here commands to configure the package.
+	dh_testdir
+	# Add here commands to configure the package.
 
-		touch configure-stamp
+	touch configure-stamp
 
 
-build: patch build-stamp
+build: build-stamp
 build-stamp: configure-stamp
-		dh_testdir
+	dh_testdir
 
-		# Add here commands to compile the package.
-		./make/library all
-		./make/man
+	# Add here commands to compile the package.
+	./build libraries all
+	./build man
 
-		touch build-stamp
+	touch build-stamp
 
-# FIXME: rename realclean to clean, when make/clean gets fixed	upstream,
-# but for now we need it as early fixed as possible in the build process
-realclean:
-		dh_testdir
-		dh_testroot
-		rm -f build-stamp configure-stamp
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
 
-		# Add here commands to clean up after the build process.
-		./make/clean
+	# Add here commands to clean up after the build process.
+	./build clean
 
-		dh_clean
-
-clean: patch realclean unpatch
+	dh_clean
 
 install: build
-		dh_testdir
-		dh_testroot
-		dh_clean -k
-		dh_installdirs
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
 
-		# Add here commands to install the package into debian/tmp
-		./make/install debian/libbobcat1 debian/libbobcat1-dev
+	# Add here commands to install the package into debian/tmp
+	./build install debian/libbobcat1 debian/libbobcat1-dev
 
 
 # Build architecture-independent files here.
@@ -77,28 +73,31 @@ binary-indep: build install
 
 # Build architecture-dependent files here.
 binary-arch: build install
-		dh_testdir
-		dh_testroot
-		dh_installchangelogs
-		dh_installdocs
-		dh_installexamples
-		dh_installman
-		dh_link
-		dh_strip
-		dh_compress
-		dh_fixperms
-		dh_makeshlibs
-		dh_installdeb
-		dh_shlibdeps
-		dh_gencontrol
-		dh_md5sums
-		dh_builddeb
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	dh_installexamples
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+
+
 
 # The following is for internal development usage only
 # Update that sum when new releases occur, this
 # catches silent file content forges at the server side
 
-MD5TRUSTED := 9c22c5eac1dbb7a5bab3f007c51e8367
+MD5TRUSTED := 4a6166e197c39ec62e876d7edbf6893f
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
@@ -131,8 +130,6 @@ get-orig-source:
 print-version:
 	@@echo "Debian version:          $(DEBVERSION)"
 	@@echo "Upstream version:        $(UPVERSION)"
-
-
 
 
 binary: binary-indep binary-arch

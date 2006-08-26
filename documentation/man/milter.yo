@@ -367,7 +367,7 @@ the filter writer's responsibility to ensure that no standards are violated.
         This member may only be called from bf(eom()), and the flag
 bf(ADD_RECIPIENTS) must have been specified or it will fail.
     itb(bool changeHeader(std::string const &hdrName, 
-                        unsigned headerNr, std::string const &hdrValue))
+                        size_t headerNr, std::string const &hdrValue))
         This member may only be called from bf(eom()), and the flag
 bf(CHANGE_HEADERS) must have been specified or it will fail. See
 bf(addHeader()) for the header-requirements. The tt(headerNr) parameter is a
@@ -384,7 +384,7 @@ envelope.
         This member may be called by the Milter object to obtain a pointer
 identifying its sendmail-connection. Normally it should not be necessary to
 call this member.
-    itb(bool insertHeader(unsigned hdrIdx, std::string const &hdrName, 
+    itb(bool insertHeader(size_t hdrIdx, std::string const &hdrName, 
                           std::string const &hdrValue))
         This member may only be called from bf(eom()), and the flag
 bf(ADD_HEADERS) must have been specified or it will fail. See
@@ -409,7 +409,7 @@ quarantines the message using the given reason.
 bf(CHANGE_BODY) must have been specified or it will fail. It may be called
 multiple times in which case the various body contents are concatenated in the
 final message. Newlines should be coded as CRLF.
-    itb(bool setBacklog(unsigned backlog = 5))
+    itb(bool setBacklog(size_t backlog = 5))
         This member should be called before bf(start()) is called.
         Sets the incoming socket backlog used by bf(listen)(2).  If
 bf(setBacklog()) is not called, the operating system default is used. The
@@ -444,7 +444,7 @@ or 5XX reply code. The parameter tt(xcode), when specified, must be a extended
 (RFC 1893/2034) reply code. The parameter tt(msg) may be an additional textual
 message. The bf(Milter) class has no member comparable to the libmilter API
 function tt(smfi_setmlreply()).  the bf(Milter) class.
-    itb(void setTimeout(unsigned seconds = 7210))
+    itb(void setTimeout(size_t seconds = 7210))
         This member should be called before bf(start()) is called.
         Sets the number of seconds libmilter will wait for an MTA connection
 before timing out a socket. If bf(setTimeout()) is not called, a default

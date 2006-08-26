@@ -114,7 +114,7 @@ field is the function address associated with the command name.
 manpagesection(CONSTRUCTORS)
     itemization(
     itb(CmdFinder<FunctionPtr>(Entry const *begin, Entry const *end,
-                      unsigned mode = 0))
+                      size_t mode = 0))
         This constructor is defined in the bf(protected) section of the
 bf(CmdFinder) class. Its parameters tt(begin) and tt(end) define the half-open
 range of bf(Entry) objects, defining the associations between commands and
@@ -132,7 +132,7 @@ for tt(mode), an bf(FBB::Errno) exception is thrown.
 
 manpagesection(PUBLIC MEMBER FUNCTION)
     itemization(
-    itb(setMode(unsigned mode))
+    itb(setMode(size_t mode))
         This member function (defined in the class bf(CmdFinderBase)) may be
 called to redefine the mode of the bf(CmdFinder) object. The tt(mode)
 parameter should be initialized subject to the same restrictions as mentioned
@@ -150,7 +150,7 @@ and will be redefined at each call of bf(findCmd()) (see below).
         This member returns the original (untransformed) command as
 encountered by the bf(CmdFinder) object.  It is initially empty, and will be
 redefined at each call of bf(findCmd()) (see below).  object.
-    itb(unsigned count() const)
+    itb(size_t count() const)
         This member function returns the number of commands matching the
 command that is passed to the function bf(findCmd()) (see below). Its return
 value is 0 when bf(findCmd()) hasn't been called yet and is updated at each

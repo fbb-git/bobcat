@@ -1,6 +1,6 @@
 #include "configfile.ih"
 
-unsigned ConfigFile::append_next(istream &istr, string &line)
+size_t ConfigFile::append_next(istream &istr, string &line)
 {
     string next;
 
@@ -13,7 +13,7 @@ unsigned ConfigFile::append_next(istream &istr, string &line)
         removeComment(next);            // remove comment from next line
 
                                         // find first non-blank char
-    unsigned  pos = next.find_first_not_of(" \t");
+    size_t  pos = next.find_first_not_of(" \t");
 
     if (pos != string::npos)            // any non-blank chars?
         line += next.substr(pos);       // add the line without initial ws.

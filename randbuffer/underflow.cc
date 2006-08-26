@@ -11,7 +11,7 @@ int Randbuffer::underflow()
             static_cast<int>((d_max - d_min) * rand() / (RAND_MAX + 1.0)) << 
             " ";        
 
-    unsigned n = ostr.str().length();
+    size_t n = ostr.str().length();
 
     char *cp = new char[n];
     d_buffer.reset(cp);

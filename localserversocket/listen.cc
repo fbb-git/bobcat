@@ -1,6 +1,6 @@
 #include "localserversocket.ih"
 
-void LocalServerSocket::listen(unsigned backlog, bool blocking) throw (Errno)
+void LocalServerSocket::listen(size_t backlog, bool blocking) throw (Errno)
 {
     static char name[] = "LocalServerSocket::listen()";
 

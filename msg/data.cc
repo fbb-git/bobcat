@@ -2,10 +2,10 @@
 
 char const *Msg::s_warning = "[Warning] ";
 bool Msg::s_display;
-unsigned Msg::s_line;
-unsigned Msg::s_warnCount;
-unsigned Msg::s_count;
-unsigned Msg::s_maxCount = UINT_MAX;
+size_t Msg::s_line;
+size_t Msg::s_warnCount;
+size_t Msg::s_count;
+size_t Msg::s_maxCount = UINT_MAX;
 ostringstream Msg::s_msg;
 ostream Msg::s_out(cout.rdbuf());
 ostream Msg::s_info(cout.rdbuf());

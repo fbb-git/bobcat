@@ -11,7 +11,7 @@ namespace FBB
     template <typename FP>
     class CmdFinder: public CmdFinderBase
     {
-        unsigned d_count;
+        size_t d_count;
 
         protected:
             typedef FP FunctionPtr;                 // define template type 
@@ -57,7 +57,7 @@ namespace FBB
 
         protected:
             CmdFinder(Entry const *begin, Entry const *end,
-                      unsigned mode = 0)
+                      size_t mode = 0)
             :
                 CmdFinderBase(mode),
                 d_count(0),
@@ -83,7 +83,7 @@ namespace FBB
                             (d_end - 1)->second;
             }
 
-            unsigned count() const
+            size_t count() const
             {
                 return d_count;
             }

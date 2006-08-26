@@ -1,6 +1,6 @@
 #include "cmdfinderbase.ih"
 
-void CmdFinderBase::setMode(unsigned mode)
+void CmdFinderBase::setMode(size_t mode)
 {
     if (mode & ~s_all)
         throw Errno(1, "CmdFinder: ") << insertable << "mode 0x" << hex << 
