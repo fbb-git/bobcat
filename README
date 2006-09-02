@@ -1,36 +1,29 @@
-To create a new debian package:
+    This is the top-level directory of the bobcat library source tree.
 
-    0. Do
-        setenv DEBEMAIL f.b.brokken@rug.nl
-        (Not required for ./distribution)
+    The directory `sourceforge' probably not useful for anybody but me, but
+since it serves an important role for me in uploading the Bobcat docs to
+sourceforge, they belong to this project.
 
-    1. Keep the project/ name
+    To create a source archive, run
+
+        ./sourcetar
+
+    This will create an archive named like bobcat_1.10.2.tar.gz. 
+
+    To create an `upstream debian archive' provide sourcetar with an (any)
+    argument. E.g.,
+
+        ./sourcetar x 
+
+    This will create an archive named like bobcat_1.10.2.orig.tar.gz
+
+    The numbers will of course follow bobcat's version.
+
+    The `distribution' script is also probably not useful to anybody but me,
+    and it may be removed from new distributions at some future point in time.
+
     
-    2. Define the next version in project/VERSION
+    To create the library from its sources, either descend into the bobcat
+    directory, or unpack a created archive, cd into its top-level directory 
+    and follow the instructions provided in the INSTALL file found there.
 
-       THEN (upgrade the version for each new distribution):
-
-            cd bobcat/debian
-            dch -v [version just set in VERSION]
-            cd ../..
-
-
-    (See also: file:///usr/share/doc/maint-guide/
-                                maint-guide.en.html/ch-update.en.html):
-
-    3. Build a new, complete, package:
-
-        ./distribution
-
-    optionally:
-        cvs commit 
-        cvs tag v<version>-<revision>-<subrevision>
-        
-    4. Partial reruns (instead of full recompilation from scratch):
-        run in project/
-
-            fakeroot debian/rules binary
-
-    or
-
-        dpkg-buildpackage -rfakeroot
