@@ -9,9 +9,6 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-
-
-
 CFLAGS = -Wall -g
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
@@ -66,7 +63,6 @@ install: build
 	# Add here commands to install the package into debian/tmp
 	./build install debian/libbobcat1 debian/libbobcat1-dev
 
-
 # Build architecture-independent files here.
 binary-indep: build install
 # We have nothing to do by default.
@@ -75,8 +71,8 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs
-	dh_installdocs
+	dh_installchangelogs -A changelog
+	dh_installdocs -A CLASSES README.class-setup README.optimization
 	dh_installexamples
 	dh_installman
 	dh_link
@@ -94,19 +90,19 @@ binary-arch: build install
 
 
 # The following is for internal development usage only
-# Update that sum when new releases occur, this
-# catches silent file content forges at the server side
+# Update that sum when new _upstream_ releases occur, this
+# catches silent file content forges at the upstream server side
 
-MD5TRUSTED := 4a6166e197c39ec62e876d7edbf6893f
+MD5TRUSTED := e82b4fc25cdf9f6c3f7e24964959758b
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
 UPNAME := bobcat
-UPFILE := $(UPNAME)_$(UPVERSION).orig.tar.gz
+UPFILE := $(UPNAME)_$(UPVERSION).tar.gz
 DEFILE := $(UPNAME)_$(UPVERSION).orig.tar.gz
-URL    := http://heanet.dl.sourceforge.net/sourceforge/bobcat
+URL    := ftp://ftp.icce.rug.nl/pub/frank/debian/tarballs/bobcat
 MD5CURRENT := `md5sum ../tarballs/$(DEFILE) | original-awk '{print $$1}'`
-
+SVNTRUNK   := https://svn.sourceforge.net/svnroot/bobcat/trunk/bobcat
 
 get-orig-source:
 	@@dh_testdir
@@ -126,6 +122,18 @@ get-orig-source:
 	else \
 		echo "Upstream filename md5sum is trusted!" ; \
 	fi
+
+
+get-svn-trunk:
+	@@dh_testdir
+	@@[ -d ../tarballs/. ]||mkdir -p ../tarballs
+	rm -rf ../tarballs/$(DEFILE) ../tarballs/bobcat-svn-trunk
+	svn --force export $(SVNTRUNK) ../tarballs/bobcat-svn-trunk
+	@@if [ -d ../tarballs/bobcat-svn-trunk/debian ] ; then rm -rf ../tarballs/bobcat-svn-trunk/debian; fi
+	@@ echo Building the SVN TRUNK tarball in ../tarballs/$(DEFILE)
+	@@GZIP=-9 tar -b1 -czf ../tarballs/$(DEFILE) -C ../tarballs bobcat-svn-trunk
+	rm -rf ../tarballs/bobcat-svn-trunk
+
 
 print-version:
 	@@echo "Debian version:          $(DEBVERSION)"

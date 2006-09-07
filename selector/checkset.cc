@@ -1,11 +1,11 @@
 /*
                               selector.cc
 
-   $Id: checkset.cc,v 1.1.1.1 2005-08-19 15:12:52 frank Exp $
+   $Id: checkset.cc 2 2005-08-19 15:12:51Z frank $
 
-   $Log: checkset.cc,v $
-   Revision 1.1.1.1  2005-08-19 15:12:52  frank
-   The BOBCAT Class and Template Library
+   $Log$
+   Revision 1.1  2005/08/19 15:12:52  frank
+   Initial revision
 
    Revision 1.1.1.1  2003/05/31 13:19:21  frank
    Initial import of Selector
