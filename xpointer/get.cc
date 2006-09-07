@@ -5,7 +5,7 @@ bool Xpointer::get(int *x, int *y) const
     Window rootret;
     Window child;
     Window root = DefaultRootWindow(s_theDisplay);
-    size_t keys;
+    unsigned int keys;
     int dum_x;
     int dum_y;
 
