@@ -65,28 +65,27 @@ manpagesection(INHERITS FROM)
 
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(Wrap1<Type1, Typ2 [, Returntype = void]>(ReturnType (*fun)(Type1 &,
+    itb(Wrap2<Type1, Type2 [, Returntype = void]>(ReturnType (*fun)(Type1 &,
         Type2 &))) nl()
-        This constructor expects one argument: the address of a function that
-is called by its bf(operator()()) member.  The function receives
-bf(FBB::Wrap2)bf(::operator()()) arguments as its arguments. The template
-parameters tt(Type1) and tt(Type2) are the data types to which iterators
-eventually point.
+        This is an example of the form in which the class's constructurs may
+be called. Each constructor expects one argument: the address of a function to
+call from within its bf(operator()()) member. This function itself should
+expect two arguments.
+
+    Both arguments that are passed to the function pointed to by tt(fun)
+may be passed as: nl()
+    reference, nl()
+    pointer,nl()
+    const reference, or nl()
+    const pointer. nl()
+
+    Therefore, the class supports  16 different types of constructors. E.g.:
+
     itb(Wrap1<Type1, Typ2 [, Returntype = void]>(ReturnType 
         (*fun)(Type1 const &, Type2 const &))) nl()
-       This constructor is identical to the first constructor, except for the
-        actual type parameters that are passed to the function, which are
-        now tt(Type const &)s.
+    or:
     itb(Wrap1<Type1, Typ2 [, Returntype = void]>(ReturnType 
-        (*fun)(Type1 *, Type2 *))) nl()
-       This constructor is identical to the first constructor, except for the
-        actual type parameters that are passed to the function, which are
-        now tt(Type *)s.
-    itb(Wrap1<Type1, Typ2 [, Returntype = void]>(ReturnType 
-        (*fun)(Type1 const *, Type2 const *))) nl()
-       This constructor is identical to the first constructor, except for the
-        actual type parameters that are passed to the function, which are
-        now tt(Type const *)s.
+        (*fun)(Type1 *, Type2 const &))) nl()
     )
 
 manpagesection(OVERLOADED OPERATORS)
@@ -99,22 +98,17 @@ that's passed to bf(FBB::Wrap2)'s constructor. See the example below.
         This function is called by the generic algorithms, receiving the
 dereferenced iterators that are managed by the generic algorithm as its
 arguments (so, the iterators point to modifiable tt(Type1) and tt(Type2)
-objects). This operator is used with the first constructor.
-    itb(ReturnType operator()(Type1 const &param1, Type2 const &param2) const)
-        This function is called by the generic algorithms, receiving the
-dereferenced iterators that are managed by the generic algorithm as its
-arguments (so, the iterators point to immutable tt(Type1) and tt(Type2)
-objects). This operator is used with the first constructor.
-    itb(ReturnType operator()(Type1 *param1, Type2 *param2) const)
-        This function is called by the generic algorithms, receiving the
-dereferenced iterators that are managed by the generic algorithm as its
-arguments (so, the iterators points to pointers to modifiable tt(Type1) and
-tt(Type2) objects). This operator is used with the third constructor.
-    itb(ReturnType operator()(Type1 const *param1, Type2 const *param2) const)
-        This function is called by the generic algorithms, receiving the
-dereferenced iterators that are managed by the generic algorithm as its
-arguments (so, the iterators points to pointers to immutable tt(Type1) and
-tt(Type2) objects). This operator is used with the fourth constructor.
+objects). 
+
+    There are 16 overloaded versions of this function, one for each of the 4 x
+4 combinations of the two parameter types specified for the function whose
+address is passed to the class's constructor (i.e., each parameter may be
+specified as reference, pointer, const reference or const pointer).
+
+    Some (but not all) overloaded versions are:
+    itb(ReturnType operator()(Type1 const &param1, Type2 * param2) const)
+    or
+    itb(ReturnType operator()(Type1 *param1, Type2 &param2) const)
     )
 
 manpagesection(TYPEDEFS)

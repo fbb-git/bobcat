@@ -93,7 +93,7 @@ binary-arch: build install
 # Update that sum when new _upstream_ releases occur, this
 # catches silent file content forges at the upstream server side
 
-MD5TRUSTED := e82b4fc25cdf9f6c3f7e24964959758b
+MD5TRUSTED := be3345a3a263de56cce583374fde78c9
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
@@ -101,7 +101,7 @@ UPNAME := bobcat
 UPFILE := $(UPNAME)_$(UPVERSION).tar.gz
 DEFILE := $(UPNAME)_$(UPVERSION).orig.tar.gz
 URL    := ftp://ftp.icce.rug.nl/pub/frank/debian/tarballs/bobcat
-MD5CURRENT := `md5sum ../tarballs/$(DEFILE) | original-awk '{print $$1}'`
+MD5CURRENT := `md5sum ../tarballs/$(DEFILE) | sed -e 's/ .*//'`
 SVNTRUNK   := https://svn.sourceforge.net/svnroot/bobcat/trunk/bobcat
 
 get-orig-source:
