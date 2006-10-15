@@ -9,9 +9,9 @@ namespace FBB
         union
         {
             ReturnType (*d_ref)(Type &);
-            ReturnType (*d_constref)(Type const &);
+            ReturnType (*d_cref)(Type const &);
             ReturnType (*d_ptr)(Type *);
-            ReturnType (*d_constptr)(Type const *);
+            ReturnType (*d_cptr)(Type const *);
         };
 
         public:
@@ -19,43 +19,46 @@ namespace FBB
             typedef ReturnType  result_type;
 
 
-            Wrap1(ReturnType (*fun)(Type &))  // references
+            Wrap1(ReturnType (*fun)(Type &))
             :
                 d_ref(fun)
             {}
+
+            Wrap1(ReturnType (*fun)(Type *))
+            :
+                d_ptr(fun)
+            {}
+
+            Wrap1(ReturnType (*fun)(Type const &))  
+            :
+                d_cref(fun)
+            {}
+
+            Wrap1(ReturnType (*fun)(Type const *))  
+            :
+                d_cptr(fun)
+            {}
+
             ReturnType operator()(Type &param) const
             {
                 return (*d_ref)(param);
             }
 
-                                                        // const references
-            Wrap1(ReturnType (*fun)(Type const &))  
-            :
-                d_constref(fun)
-            {}
-            ReturnType operator()(Type const &param) const
-            {
-                return (*d_constref)(param);
-            }
-
-            Wrap1(ReturnType (*fun)(Type *))  // pointer
-            :
-                d_ptr(fun)
-            {}
             ReturnType operator()(Type *param) const
             {
                 return (*d_ptr)(param);
             }
 
-                                                        // const pointer
-            Wrap1(ReturnType (*fun)(Type const *))  
-            :
-                d_constptr(fun)
-            {}
+            ReturnType operator()(Type const &param) const
+            {
+                return (*d_cref)(param);
+            }
+
             ReturnType operator()(Type const *param) const
             {
-                return (*d_constptr)(param);
+                return (*d_cptr)(param);
             }
     };
 } // namespace FBB ends
 #endif
+

@@ -48,10 +48,12 @@ called without using objects.
 bf(operator()()) function. Specify a bf(plain) type, do not specify a pointer
 or reference type: if pointers or references are used, it will become obvious
 later on, as the template will be able to handle (const) references and
-pointers. Values are handled as const-references.
+(const) pointers. Note that plain values are handled as const-references, and
+that called functions should therefore not use value parameter types but
+tt(const &) types instead.
     itt(Context): the type of the bf(local context struct). This bf(struct) is
 a local bf(struct), that should be defined immediatey before applying the
-generic algorithm, specifying value, references or pointers to entities that
+generic algorithm, specifying values, references or pointers to entities that
 are available in the local context where the generic algorithm is called. If
 no generic algorithm would have been used, but a local implementation of the
 generic algorithm would have been used instead, then the called function would
@@ -61,15 +63,15 @@ the bf(struct) definition. The function will now receive a `standardized'
 parameter list, defined by the local context struct. The typename of the
 defined bf(struct) should be passed to the template as its second parameter. A
 concrete local context bf(struct) may be passed as either a tt(const) or
-non-tt(const) reference to bf(FBB::Wrap1c)'s constructor. When using a
-em(non-const) reference, the function may modifiy the bf(struct)'s value
-fields identically to the situation in which the field's values would have
-been passed to the function as reference parameters.
-    itt(ReturnType): the bf(ReturnType) is by default defined as tt(void). By
-specifying another type, the bf(FBB::Wrap1c) object's bf(operator()()) function will
-pass the called function's return value as a value of the specified type. E.g,
-by specifying a tt(bool) bf(ReturnType), the bf(FBB::Wrap1c) object may be interpreted as
-a em(Unary Predicate)
+non-tt(const) reference or pointer to bf(FBB::Wrap1c)'s constructor. When
+using a em(non-const) reference or pointer, the function may modify the
+bf(struct)'s value fields identically to the situation in which the field's
+values would have been passed to the function as reference parameters.
+    itt(ReturnType): the bf(ReturnType) is tt(void) by default. By specifying
+another type, the bf(FBB::Wrap1c) object's bf(operator()()) function will pass
+the called function's return value as a value of the specified type. E.g, by
+specifying a tt(bool) bf(ReturnType), the bf(FBB::Wrap1c) object may be
+interpreted as a em(Unary Predicate)
     )
 
 includefile(namespace.inc)
@@ -81,58 +83,42 @@ manpagesection(CONSTRUCTORS)
     itemization(
     itb(Wrap1c<Type, Context [, ReturnType = void]>
             (ReturnType (*fun)(Type &, Context &), Context &context)) nl()
-        This constructor expects two arguments: the address of a function to
-call from within its bf(operator()()) member, and a reference to a local
+        This is an example of the form in which the class's constructurs may
+be called. Each constructor expects two arguments: the address of a function to
+call from within its bf(operator()()) member, and a local
 context bf(struct) which is passed to the called function as its second
-argument. The function receives bf(FBB::Wrap1c)bf(::operator()())'s argument as
-its first argument. The template parameter tt(Type) is the data type to which
-iterators (as specified in, e.g., bf(std::for_each())) eventually point.
+argument. 
+
+    Both arguments that are passed to the function pointed to by tt(fun)
+and the context struct itself may be passed as: nl()
+    reference, nl()
+    pointer,nl()
+    const reference, or nl()
+    const pointer. nl()
+    (albeit that the restriction applies that the types of the
+tt(context) constructor parameter and the function's tt(context) parameter
+must be identical (e.g., both pointers or both const references)).
+
+    Therefore, the class supports  16 different types of constructors. E.g.:
+
     itb(Wrap1c<Type, Context [, ReturnType = void]>
             (ReturnType (*fun)(Type &, Context const &), 
                                 Context const &context)) nl()
-        This constructor acts identically to the previous one, but expects a
-tt(Context const &) (as well as a function expecting a tt(Context const &))
-rather than a non-const tt(Context &).
-
+    or
     itb(Wrap1c<Type, Context [, ReturnType = void]>
-        (ReturnType (*fun)(Type const &, Context &), Context &context)) nl()
-    This constructor is identical to the first constructor, except for the
-actual tt(Type) parameter that's passed to the function, which is now a
-tt(Type const &).
-    itb(Wrap1c<Type, Context [, ReturnType = void]>
-        (ReturnType (*fun)(Type const &, Context const &), 
-                                        Context const &context)) nl()
-        This constructor acts identically to the previous one, but expects a
-tt(Context const &) (as well as a function expecting a tt(Context const &))
-rather than a non-const tt(Context &).
-
-    itb(Wrap1c<Type, Context [, ReturnType = void]>
-        (ReturnType (*fun)(Type *, Context &), Context &context)) nl()
-    This constructor is identical to the first constructor, except for the
-actual tt(Type) parameter that's passed to the function, which is now a
-tt(Type *).
-    itb(Wrap1c<Type, Context [, ReturnType = void]>
-        (ReturnType (*fun)(Type *, Context &), Context &context)) nl()
-        This constructor acts identically to the previous one, but expects a
-tt(Context const &) (as well as a function expecting a tt(Context const &))
-rather than a non-const tt(Context &).
-
-    itb(Wrap1c<Type, Context [, ReturnType = void]>
-        (ReturnType (*fun)(Type const *, Context &), Context &context)) nl()
-    This constructor is identical to the first constructor, except for the
-actual tt(Type) parameter that's passed to the function, which is now a
-tt(Type const *).
-    itb(Wrap1c<Type, Context [, ReturnType = void]>
-        (ReturnType (*fun)(Type const *, Context &), Context &context)) nl()
-        This constructor acts identically to the previous one, but expects a
-tt(Context const &) (as well as a function expecting a tt(Context const &))
-rather than a non-const tt(Context &).
+            (ReturnType (*fun)(Type *, Context &), Context &context)) nl()
     )
-    Note: In situations where no context other than the class tt(Class) to
-which the class' (static) member function belongs, specify `tt(Class &obj)'
-or `tt(Class const &obj)'
+
+    When the function pointed to by tt(fun) is called from
+bf(FBB::Wrap1c)bf(::operator()()), it receives the latter function's argument
+as its first argument. The template parameter tt(Type) is the data type to
+which iterators (as specified in, e.g., bf(std::for_each())) eventually point.
+
+    Hint: In situations where no context other than the class tt(Class) to
+which the class' (static) member function belongs must be used
+`tt(Class &obj)' (or (const) pointer) can be specified 
 as the context parameter (and tt(Class) itself as the context template
-parameter), and pass, e.g., tt(*this) as the context. The static member
+parameter), passing, e.g., tt(*this) as the context. The static member
 function may then call any of its class member functions tt(member(Type
 [const] [&,*])) as tt(obj.member(argument)).
 
@@ -147,22 +133,26 @@ that's passed to bf(FBB::Wrap1c)'s constructor. See the example below.
         This function is called by generic algorithms, receiving the
 dereferenced iterator that is managed  by the generic algorithm as its
 argument (so, the iterator points to modifiable tt(Type) objects). This
-operator is used with the first constructor.
+operator is used when the first parameter of the specified function pointer is
+a reference parameter.
     itb(ReturnType operator()(Type const &param) const)
         This function is called by generic algorithms, receiving the
 dereferenced iterator that is managed  by the generic algorithm as its
 argument (so, the iterator points to immutable tt(Type) objects). This
-operator is used with the second constructor. 
+operator is used when the first parameter of the specified function pointer is
+a const reference parameter.
     itb(ReturnType operator()(Type *param) const)
         This function is called by generic algorithms, receiving the
 dereferenced iterator that is managed by the generic algorithm as its argument
 (so, the iterator points to pointers to modifiable tt(Type) objects). This
-operator is used with the third constructor.
+operator is used when the first parameter of the specified function pointer is
+a pointer parameter.
     itb(ReturnType operator()(Type const *param) const)
         This function is called by generic algorithms, receiving the
 dereferenced iterator that is managed by the generic algorithm as its argument
 (so, the iterator points to pointers to immutable tt(Type) objects). This
-operator is used with the fourth constructor.
+operator is used when the first parameter of the specified function pointer is
+a const pointer parameter.
     )
 
 manpagesection(TYPEDEFS)
