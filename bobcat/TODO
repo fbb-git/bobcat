@@ -2,5 +2,44 @@
 Move inline definitions of members below the interfaces. Done for a2x and
 datetime. Next classes to do: start from the end of the CLASSES list
 
+Expand Table to accept insertions, each insertion defining a table element.
+For this, use a scheme like the following:
+
+class Ins: public ostringstream
+{
+
+};
+
+namespace std
+{
+    template <typename T>
+    Ins &operator<<(Ins &obj, T const &x)
+    {
+        reinterpret_cast<ostringstream &>(obj) << x;
+        cout << "Inserted `" << obj.str() << "'\n";
+        obj.str("");
+
+        return obj;
+    }
+
+    Ins &operator<<(Ins &obj, ostream &(*fp)(ostream &))
+    {
+        reinterpret_cast<ostringstream &>(obj) << *fp;
+        cout << "Inserted `" << obj.str() << "'\n";
+        obj.str("");
+
+        return obj;
+    }
+}
+
+
+int main(int argc, char **argv)
+{
+    Ins in;
+    int *ip = &argc;
+
+    in << 5 << "hello" << "\n" << ip << endl;
+}
+
 --
 
