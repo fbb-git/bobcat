@@ -1,6 +1,6 @@
 #include "tablespec.ih"
 
-void TableSpec::init()
+void TableSpec::tabulate()
 {
     if (!d_string.size())                   // no elements
         return;                             // then do nothing
