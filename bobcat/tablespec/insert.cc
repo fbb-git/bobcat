@@ -26,4 +26,3 @@ ostream &TableSpec::insert(ostream &ostr) const
 
     return ostr;
 }
-

@@ -40,16 +40,14 @@ class TableSpec: public std::ostringstream
     private:
         TableSupport           *d_tableSupportPtr;
         TableSupport           &d_tableSupport;
-        size_t                d_maxWidth;
-        size_t                d_nRows;
-        size_t                d_nColumns;
+        size_t                  d_maxWidth;
+        size_t                  d_nRows;
+        size_t                  d_nColumns;
         WidthType               d_widthType;
-        std::vector<size_t>   d_colWidth;
-        size_t               (TableSpec::*d_widthFun)
-                                        (size_t col) const;
-        std::string const     &(TableSpec::*d_indexFun)
-                                        (size_t row, size_t col) const;
-
+        std::vector<size_t>     d_colWidth;
+        size_t                  (TableSpec::*d_widthFun)(size_t col) const;
+        std::string const       &(TableSpec::*d_indexFun)(size_t row, 
+                                                          size_t col) const;
     protected:
         std::vector<std::string> d_string;
 
@@ -58,6 +56,7 @@ class TableSpec: public std::ostringstream
 
         void tabulate();
         void next();
+        void clear();
 
         void push_back(std::string const &element);
                 
@@ -96,6 +95,10 @@ inline void TableSpec::push_back(std::string const &str)
     d_string.push_back(str);
 }
 
+inline void TableSpec::clear()
+{
+    d_string.clear();
+}
 
 inline void TableSpec::next()
 {

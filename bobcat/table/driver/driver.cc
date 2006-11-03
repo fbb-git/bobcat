@@ -1,7 +1,3 @@
-/*
-                              driver.cc
-*/
-
 #include <iostream>
 #include <algorithm>
 #include <iterator>
