@@ -3,230 +3,350 @@
 
 namespace FBB
 {
-    template <typename Type1, typename Type2,
-              typename ReturnType = void>
-    class Wrap2
+template <typename Type1, typename Type2, typename ReturnType = void>
+class Wrap2
+{
+    // parameters will be ref, ptr, const ref, const *
+    // since there are two params, 16 constructors are available
+    union
     {
-        // parameters will be ref, ptr, const ref, const *
-        // since there are two params, 16 constructors are available
-        union
-        {
-            ReturnType (*d_ref2)(Type1 &, Type2 &);
-            ReturnType (*d_refPtr)(Type1 &, Type2 *);
-            ReturnType (*d_refCref)(Type1 &, Type2 const &);
-            ReturnType (*d_refCptr)(Type1 &, Type2 const *);
+        ReturnType (*d_ref2)(Type1 &, Type2 &);
+        ReturnType (*d_refPtr)(Type1 &, Type2 *);
+        ReturnType (*d_refCref)(Type1 &, Type2 const &);
+        ReturnType (*d_refCptr)(Type1 &, Type2 const *);
 
-            ReturnType (*d_ptrRef)(Type1 *, Type2 &);
-            ReturnType (*d_ptr2)(Type1 *, Type2 *);
-            ReturnType (*d_ptrCref)(Type1 *, Type2 const &);
-            ReturnType (*d_ptrCptr)(Type1 *, Type2 const *);
+        ReturnType (*d_ptrRef)(Type1 *, Type2 &);
+        ReturnType (*d_ptr2)(Type1 *, Type2 *);
+        ReturnType (*d_ptrCref)(Type1 *, Type2 const &);
+        ReturnType (*d_ptrCptr)(Type1 *, Type2 const *);
 
-            ReturnType (*d_crefRef)(Type1 const &, Type2 &);
-            ReturnType (*d_crefPtr)(Type1 const &, Type2 *);
-            ReturnType (*d_cref2)(Type1 const &, Type2 const &);
-            ReturnType (*d_crefCptr)(Type1 const &, Type2 const *);
+        ReturnType (*d_crefRef)(Type1 const &, Type2 &);
+        ReturnType (*d_crefPtr)(Type1 const &, Type2 *);
+        ReturnType (*d_cref2)(Type1 const &, Type2 const &);
+        ReturnType (*d_crefCptr)(Type1 const &, Type2 const *);
 
-            ReturnType (*d_cptrRef)(Type1 const *, Type2 &);
-            ReturnType (*d_cptrPtr)(Type1 const *, Type2 *);
-            ReturnType (*d_cptrCref)(Type1 const *, Type2 const &);
-            ReturnType (*d_cptr2)(Type1 const *, Type2 const *);
-        };
-
-        public:
-            typedef Type1       first_argument_type;
-            typedef Type2       second_argument_type;
-            typedef ReturnType  result_type;
-
-        // Type 1: ref
-
-            Wrap2(ReturnType (*fun)(Type1 &, Type2 &))
-            :
-                d_ref2(fun)
-            {}
-                                                      
-            Wrap2(ReturnType (*fun)(Type1 &, Type2 *))
-            :
-                d_refPtr(fun)
-            {}
-                                                      
-            Wrap2(ReturnType (*fun)(Type1 &, Type2 const &))
-            :
-                d_refCref(fun)
-            {}
-                                                      
-            Wrap2(ReturnType (*fun)(Type1 &, Type2 const *))
-            :
-                d_refCptr(fun)
-            {}
-                                                      
-
-        // Type 1: ptr
-
-            Wrap2(ReturnType (*fun)(Type1 *, Type2 &))
-            :
-                d_ptrRef(fun)
-            {}
-                                                      
-            Wrap2(ReturnType (*fun)(Type1 *, Type2 *))
-            :
-                d_ptr2(fun)
-            {}
-                                                      
-            Wrap2(ReturnType (*fun)(Type1 *, Type2 const &))
-            :
-                d_ptrCref(fun)
-            {}
-                                                      
-            Wrap2(ReturnType (*fun)(Type1 *, Type2 const *))
-            :
-                d_ptrCptr(fun)
-            {}
-                                                      
-
-        // Type 1: const ref
-
-            Wrap2(ReturnType (*fun)(Type1 const &, Type2 &))
-            :
-                d_crefRef(fun)
-            {}
-                                                      
-            Wrap2(ReturnType (*fun)(Type1 const &, Type2 *))
-            :
-                d_crefPtr(fun)
-            {}
-                                                      
-            Wrap2(ReturnType (*fun)(Type1 const &, Type2 const &))
-            :
-                d_cref2(fun)
-            {}
-                                                      
-            Wrap2(ReturnType (*fun)(Type1 const &, Type2 const *))
-            :
-                d_crefCptr(fun)
-            {}
-                                                      
-
-        // Type 1: ptr
-
-            Wrap2(ReturnType (*fun)(Type1 const *, Type2 &))
-            :
-                d_cptrRef(fun)
-            {}
-                                                      
-            Wrap2(ReturnType (*fun)(Type1 const *, Type2 *))
-            :
-                d_cptrPtr(fun)
-            {}
-                                                      
-            Wrap2(ReturnType (*fun)(Type1 const *, Type2 const &))
-            :
-                d_cptrCref(fun)
-            {}
-                                                      
-            Wrap2(ReturnType (*fun)(Type1 const *, Type2 const *))
-            :
-                d_cptr2(fun)
-            {}
-                                                      
-
-        // Function call operators: 2 parameters, ref, ptr, const ref, const
-        // each, so 16 versions:
-
-        // Member functions: 16, for ref, ptr, const ref, const ptr,
-        //                       and two parameters per function
-
-        // Type 1: ref
-
-            ReturnType operator()(Type1 &param1, Type2 &param2) const
-            {
-                return (*d_ref2)(param1, param2);
-            }
-
-            ReturnType operator()(Type1 &param1, Type2 *param2) const
-            {
-                return (*d_ref2)(param1, *param2);
-            }
-
-            ReturnType operator()(Type1 &param1, Type2 const &param2) const
-            {
-                return (*d_refCref)(param1, param2);
-            }
-
-            ReturnType operator()(Type1 &param1, Type2 const *param2) const
-            {
-                return (*d_refCref)(param1, *param2);
-            }
-
-        // Type 1: ptr
-
-            ReturnType operator()(Type1 *param1, Type2 &param2) const
-            {
-                return (*d_ref2)(*param1, param2);
-            }
-
-            ReturnType operator()(Type1 *param1, Type2 *param2) const
-            {
-                return (*d_ref2)(*param1, *param2);
-            }
-
-            ReturnType operator()(Type1 *param1, Type2 const &param2) const
-            {
-                return (*d_refCref)(*param1, param2);
-            }
-
-            ReturnType operator()(Type1 *param1, Type2 const *param2) const
-            {
-                return (*d_refCref)(*param1, *param2);
-            }
-
-        // Type 2: const ref
-
-            ReturnType operator()(Type1 const &param1, Type2 &param2) const
-            {
-                return (*d_crefRef)(param1, param2);
-            }
-
-            ReturnType operator()(Type1 const &param1, Type2 *param2) const
-            {
-                return (*d_crefRef)(param1, *param2);
-            }
-
-            ReturnType operator()(Type1 const &param1, 
-                                  Type2 const &param2) const
-            {
-                return (*d_crefRef)(param1, param2);
-            }
-
-            ReturnType operator()(Type1 const &param1, 
-                                  Type2 const *param2) const
-            {
-                return (*d_crefRef)(param1, *param2);
-            }
-
-        // Type 2: const ptr
-
-            ReturnType operator()(Type1 const *param1, Type2 &param2) const
-            {
-                return (*d_crefRef)(*param1, param2);
-            }
-
-            ReturnType operator()(Type1 const *param1, Type2 *param2) const
-            {
-                return (*d_crefRef)(*param1, *param2);
-            }
-
-            ReturnType operator()(Type1 const *param1, 
-                                  Type2 const &param2) const
-            {
-                return (*d_crefRef)(*param1, param2);
-            }
-
-            ReturnType operator()(Type1 const *param1, 
-                                  Type2 const *param2) const
-            {
-                return (*d_crefRef)(*param1, *param2);
-            }
+        ReturnType (*d_cptrRef)(Type1 const *, Type2 &);
+        ReturnType (*d_cptrPtr)(Type1 const *, Type2 *);
+        ReturnType (*d_cptrCref)(Type1 const *, Type2 const &);
+        ReturnType (*d_cptr2)(Type1 const *, Type2 const *);
     };
-}
+
+    public:
+        typedef Type1       first_argument_type;
+        typedef Type2       second_argument_type;
+        typedef ReturnType  result_type;
+
+    // Type 1: ref
+        Wrap2(ReturnType (*fun)(Type1 &, Type2 &));
+        Wrap2(ReturnType (*fun)(Type1 &, Type2 *));
+        Wrap2(ReturnType (*fun)(Type1 &, Type2 const &));
+        Wrap2(ReturnType (*fun)(Type1 &, Type2 const *));
+
+    // Type 1: ptr
+        Wrap2(ReturnType (*fun)(Type1 *, Type2 &));
+        Wrap2(ReturnType (*fun)(Type1 *, Type2 *));
+        Wrap2(ReturnType (*fun)(Type1 *, Type2 const &));
+        Wrap2(ReturnType (*fun)(Type1 *, Type2 const *));
+
+    // Type 1: const ref
+        Wrap2(ReturnType (*fun)(Type1 const &, Type2 &));
+        Wrap2(ReturnType (*fun)(Type1 const &, Type2 *));
+        Wrap2(ReturnType (*fun)(Type1 const &, Type2 const &));
+        Wrap2(ReturnType (*fun)(Type1 const &, Type2 const *));
+
+    // Type 1: ptr
+        Wrap2(ReturnType (*fun)(Type1 const *, Type2 &));
+        Wrap2(ReturnType (*fun)(Type1 const *, Type2 *));
+        Wrap2(ReturnType (*fun)(Type1 const *, Type2 const &));
+        Wrap2(ReturnType (*fun)(Type1 const *, Type2 const *));
+
+    // Function call operators: 2 parameters, ref, ptr, const ref, const
+    // each, so 16 versions:
+
+    // Member functions: 16, for ref, ptr, const ref, const ptr,
+    //                       and two parameters per function
+
+    // Type 1: ref
+        ReturnType operator()(Type1 &param1, Type2 &param2) const;
+        ReturnType operator()(Type1 &param1, Type2 *param2) const;
+        ReturnType operator()(Type1 &param1, Type2 const &param2) const;
+        ReturnType operator()(Type1 &param1, Type2 const *param2) const;
+
+    // Type 1: ptr
+        ReturnType operator()(Type1 *param1, Type2 &param2) const;
+        ReturnType operator()(Type1 *param1, Type2 *param2) const;
+        ReturnType operator()(Type1 *param1, Type2 const &param2) const;
+        ReturnType operator()(Type1 *param1, Type2 const *param2) const;
+
+    // Type 2: const ref
+        ReturnType operator()(Type1 const &param1, Type2 &param2) const;
+        ReturnType operator()(Type1 const &param1, Type2 *param2) const;
+        ReturnType operator()(Type1 const &param1, 
+                              Type2 const &param2) const;
+        ReturnType operator()(Type1 const &param1, 
+                              Type2 const *param2) const;
+
+    // Type 2: const ptr
+        ReturnType operator()(Type1 const *param1, Type2 &param2) const;
+        ReturnType operator()(Type1 const *param1, Type2 *param2) const;
+        ReturnType operator()(Type1 const *param1, 
+                              Type2 const &param2) const;
+        ReturnType operator()(Type1 const *param1, 
+                              Type2 const *param2) const;
+
+};
+
+// Type 1: ref
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                            ReturnType (*fun)(Type1 &, Type2 &))
+    :
+        d_ref2(fun)
+    {}
+                                              
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                            ReturnType (*fun)(Type1 &, Type2 *))
+    :
+        d_refPtr(fun)
+    {}
+                                              
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                            ReturnType (*fun)(Type1 &, Type2 const &))
+    :
+        d_refCref(fun)
+    {}
+                                              
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                            ReturnType (*fun)(Type1 &, Type2 const *))
+    :
+        d_refCptr(fun)
+    {}
+                                              
+
+// Type 1: ptr
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                            ReturnType (*fun)(Type1 *, Type2 &))
+    :
+        d_ptrRef(fun)
+    {}
+                                              
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                            ReturnType (*fun)(Type1 *, Type2 *))
+    :
+        d_ptr2(fun)
+    {}
+                                              
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                            ReturnType (*fun)(Type1 *, Type2 const &))
+    :
+        d_ptrCref(fun)
+    {}
+                                              
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                            ReturnType (*fun)(Type1 *, Type2 const *))
+    :
+        d_ptrCptr(fun)
+    {}
+                                              
+
+// Type 1: const ref
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                            ReturnType (*fun)(Type1 const &, Type2 &))
+    :
+        d_crefRef(fun)
+    {}
+                                              
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                            ReturnType (*fun)(Type1 const &, Type2 *))
+    :
+        d_crefPtr(fun)
+    {}
+                                              
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                            ReturnType (*fun)(Type1 const &, Type2 const &))
+    :
+        d_cref2(fun)
+    {}
+                                              
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                            ReturnType (*fun)(Type1 const &, Type2 const *))
+    :
+        d_crefCptr(fun)
+    {}
+                                              
+
+// Type 1: ptr
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                                ReturnType (*fun)(Type1 const *, Type2 &))
+    :
+        d_cptrRef(fun)
+    {}
+                                              
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                                ReturnType (*fun)(Type1 const *, Type2 *))
+    :
+        d_cptrPtr(fun)
+    {}
+                                              
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                            ReturnType (*fun)(Type1 const *, Type2 const &))
+    :
+        d_cptrCref(fun)
+    {}
+                                              
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+                            ReturnType (*fun)(Type1 const *, Type2 const *))
+    :
+        d_cptr2(fun)
+    {}
+                                              
+
+// Function call operators: 2 parameters, ref, ptr, const ref, const
+// each, so 16 versions:
+
+// Member functions: 16, for ref, ptr, const ref, const ptr,
+//                       and two parameters per function
+
+// Type 1: ref
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                                Type1 &param1, Type2 &param2) const
+    {
+        return (*d_ref2)(param1, param2);
+    }
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                                Type1 &param1, Type2 *param2) const
+    {
+        return (*d_ref2)(param1, *param2);
+    }
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                                Type1 &param1, Type2 const &param2) const
+    {
+        return (*d_refCref)(param1, param2);
+    }
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                                Type1 &param1, Type2 const *param2) const
+    {
+        return (*d_refCref)(param1, *param2);
+    }
+
+// Type 1: ptr
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                                Type1 *param1, Type2 &param2) const
+    {
+        return (*d_ref2)(*param1, param2);
+    }
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                                Type1 *param1, Type2 *param2) const
+    {
+        return (*d_ref2)(*param1, *param2);
+    }
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                                Type1 *param1, Type2 const &param2) const
+    {
+        return (*d_refCref)(*param1, param2);
+    }
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                                Type1 *param1, Type2 const *param2) const
+    {
+        return (*d_refCref)(*param1, *param2);
+    }
+
+// Type 2: const ref
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                                Type1 const &param1, Type2 &param2) const
+    {
+        return (*d_crefRef)(param1, param2);
+    }
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                                Type1 const &param1, Type2 *param2) const
+    {
+        return (*d_crefRef)(param1, *param2);
+    }
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                                Type1 const &param1, 
+                          Type2 const &param2) const
+    {
+        return (*d_crefRef)(param1, param2);
+    }
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                            Type1 const &param1, Type2 const *param2) const
+    {
+        return (*d_crefRef)(param1, *param2);
+    }
+
+// Type 2: const ptr
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                            Type1 const *param1, Type2 &param2) const
+    {
+        return (*d_crefRef)(*param1, param2);
+    }
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                            Type1 const *param1, Type2 *param2) const
+    {
+        return (*d_crefRef)(*param1, *param2);
+    }
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                            Type1 const *param1, Type2 const &param2) const
+    {
+        return (*d_crefRef)(*param1, param2);
+    }
+
+    template <typename Type1, typename Type2, typename ReturnType>
+    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+                            Type1 const *param1, Type2 const *param2) const
+    {
+        return (*d_crefRef)(*param1, *param2);
+    }
+
+} // FBB
 
 #endif
