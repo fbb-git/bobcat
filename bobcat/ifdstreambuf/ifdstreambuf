@@ -46,23 +46,22 @@ namespace FBB
 
             void cleanup(Mode mode);
     };
-}
 
-inline IfdStreambuf::IFdStreambuf()
+inline IFdStreambuf::IFdStreambuf()
 :
     d_mode(KEEP_FD),         // comply with old default
     d_n(0),
     d_buffer(0)
 {}
 
-inline IfdStreambuf::IFdStreambuf(Mode mode)
+inline IFdStreambuf::IFdStreambuf(Mode mode)
 :
     d_mode(mode),
     d_n(0),
     d_buffer(0)
 {}
 
-inline IfdStreambuf::IFdStreambuf(int fd, size_t n)
+inline IFdStreambuf::IFdStreambuf(int fd, size_t n)
 :
     d_mode(KEEP_FD),        // comply with old default
     d_buffer(0)
@@ -70,7 +69,7 @@ inline IfdStreambuf::IFdStreambuf(int fd, size_t n)
     open(fd, KEEP_FD, n);
 }
 
-inline IfdStreambuf::IFdStreambuf(int fd, Mode mode, size_t n)
+inline IFdStreambuf::IFdStreambuf(int fd, Mode mode, size_t n)
 :
     d_mode(mode),
     d_buffer(0)
@@ -78,14 +77,16 @@ inline IfdStreambuf::IFdStreambuf(int fd, Mode mode, size_t n)
     open(fd, KEEP_FD, n);
 }
 
-inline IfdStreambuf::~IFdStreambuf()
+inline IFdStreambuf::~IFdStreambuf()
 {
     cleanup(d_mode);
 }
 
-inline void IfdStreambuf::open(int xfd, size_t n)
+inline void IFdStreambuf::open(int xfd, size_t n)
 {
     open(xfd, d_mode, n);
 }
+
+} // FBB
 
 #endif

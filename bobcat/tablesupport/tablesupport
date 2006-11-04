@@ -31,11 +31,12 @@ class TableSupport
         std::ostream &out() const;
 
         virtual void hline(size_t row) const;
+        virtual void hline() const;
         virtual void vline(size_t col) const;
         virtual void vline() const;
 };
 
-inline virtual TableSupport::~TableSupport()
+inline TableSupport::~TableSupport()
 {}
 
 inline void TableSupport::setParam(size_t maxWidth)
@@ -58,19 +59,19 @@ inline std::ostream &TableSupport::out() const
     return *d_streamPtr;
 }
 
-inline virtual void TableSupport::hline(size_t row) const
+inline void TableSupport::hline(size_t row) const
 {}
 
-inline virtual void TableSupport::hline() const
+inline void TableSupport::hline() const
 {}
 
-inline virtual void TableSupport::vline(size_t col) const
+inline void TableSupport::vline(size_t col) const
 {
     if (col)
         *d_streamPtr << ' ';
 }
 
-inline virtual void TableSupport::vline() const
+inline void TableSupport::vline() const
 {
     *d_streamPtr << '\n';
 }

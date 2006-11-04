@@ -93,73 +93,74 @@
                         
 namespace FBB
 {
-    enum Priority
-    {
-        NOTICE  = LOG_NOTICE,
-        EMERG   = LOG_EMERG,
-        ALERT   = LOG_ALERT,
-        CRIT    = LOG_CRIT,
-        ERR     = LOG_ERR,
-        WARNING = LOG_WARNING,
-        INFO    = LOG_INFO,
-        DEBUG   = LOG_DEBUG,
-    };
+enum Priority
+{
+    NOTICE  = LOG_NOTICE,
+    EMERG   = LOG_EMERG,
+    ALERT   = LOG_ALERT,
+    CRIT    = LOG_CRIT,
+    ERR     = LOG_ERR,
+    WARNING = LOG_WARNING,
+    INFO    = LOG_INFO,
+    DEBUG   = LOG_DEBUG,
+};
 
-    enum Facility
-    {
-       AUTHPRIV     = LOG_AUTHPRIV,
-       CRON         = LOG_CRON,
-       DAEMON       = LOG_DAEMON,
-       KERN         = LOG_KERN,
-       LOCAL0       = LOG_LOCAL0,
-       LOCAL1       = LOG_LOCAL1,
-       LOCAL2       = LOG_LOCAL2,
-       LOCAL3       = LOG_LOCAL3,
-       LOCAL4       = LOG_LOCAL4,
-       LOCAL5       = LOG_LOCAL5,
-       LOCAL6       = LOG_LOCAL6,
-       LOCAL7       = LOG_LOCAL7,
-       LPR          = LOG_LPR,
-       MAIL         = LOG_MAIL,
-       NEWS         = LOG_NEWS,
-       USER         = LOG_USER,
-       UUCP         = LOG_UUCP,
-    };
+enum Facility
+{
+   AUTHPRIV     = LOG_AUTHPRIV,
+   CRON         = LOG_CRON,
+   DAEMON       = LOG_DAEMON,
+   KERN         = LOG_KERN,
+   LOCAL0       = LOG_LOCAL0,
+   LOCAL1       = LOG_LOCAL1,
+   LOCAL2       = LOG_LOCAL2,
+   LOCAL3       = LOG_LOCAL3,
+   LOCAL4       = LOG_LOCAL4,
+   LOCAL5       = LOG_LOCAL5,
+   LOCAL6       = LOG_LOCAL6,
+   LOCAL7       = LOG_LOCAL7,
+   LPR          = LOG_LPR,
+   MAIL         = LOG_MAIL,
+   NEWS         = LOG_NEWS,
+   USER         = LOG_USER,
+   UUCP         = LOG_UUCP,
+};
 
-    class Syslogbuf: public std::streambuf
-    {
-        Priority    d_priority;
-        Priority    d_orgPriority;
-        std::string d_buffer;
+class Syslogbuf: public std::streambuf
+{
+    Priority    d_priority;
+    Priority    d_orgPriority;
+    std::string d_buffer;
 
-        public:
-            Syslogbuf(char const *ident,
-                Priority priority = NOTICE, Facility facility = USER,
-                int option = 0);
+    public:
+        Syslogbuf(char const *ident,
+            Priority priority = NOTICE, Facility facility = USER,
+            int option = 0);
 
-            ~Syslogbuf();
+        ~Syslogbuf();
 
-            Priority defaultPriority() const;
-            Priority priority() const;
+        Priority defaultPriority() const;
+        Priority priority() const;
 
-            Priority setDefaultPriority(Priority priority);
-            Priority setPriority(Priority priority);
+        Priority setDefaultPriority(Priority priority);
+        Priority setPriority(Priority priority);
 
-        protected:
-            virtual int sync();
-            virtual int overflow(int c);
-    };
-}
+    protected:
+        virtual int sync();
+        virtual int overflow(int c);
+};
 
-inline Syslogbuf::Priority Syslogbuf::defaultPriority()   const
+inline Priority Syslogbuf::defaultPriority()   const
 {
     return d_orgPriority;
 }
 
-inline Syslogbuf::Priority Syslogbuf::priority()   const
+inline Priority Syslogbuf::priority()   const
 {
     return d_priority;
 }
+
+} // FBB
 
 #endif
 
