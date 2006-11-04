@@ -32,14 +32,13 @@ class Errno: public std::ostringstream, public std::exception
         void initMsg();
 };
 
-Errno::~Errno() throw()
+inline Errno::~Errno() throw()
 {}
 
-int Errno::which() const throw()
+inline int Errno::which() const throw()
 {
     return d_errno;
 }
-
 
 inline std::ostream &insertable(std::ostream &errnoObject)
 {
