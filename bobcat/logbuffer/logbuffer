@@ -31,32 +31,16 @@ class LogBuffer: public std::streambuf
                 bool active = true,
                 char const *delim = " ");
 
-        void setStream(std::ostream &stream)
-        {
-            d_stream = &stream;
-        }
-        bool empty() const
-        {
-            return d_empty;
-        }
+        void setStream(std::ostream &stream);
+        bool empty() const;
 
         virtual int overflow(int c);
-        virtual int sync()
-        {
-            d_stream->flush();
-            return 0;
-        }
+        virtual int sync();
 
-        void setActive(bool active)
-        {
-            d_active = active;
-        }
+        void setActive(bool active);
         void settimestamp(TimeStamps timestamps, char const *delim = " ");
 
-        void setEmpty(bool empty)
-        {
-            d_empty = empty;
-        }
+        void setEmpty(bool empty);
 
     private:
         void insertTimestamp();
@@ -64,7 +48,32 @@ class LogBuffer: public std::streambuf
         LogBuffer &operator=(LogBuffer const &other);   // NI
 };
 
-} /* FBB */
+inline void LogBuffer::setStream(std::ostream &stream)
+{
+    d_stream = &stream;
+}
+inline bool LogBuffer::empty() const
+{
+    return d_empty;
+}
+
+inline virtual int LogBuffer::sync()
+{
+    d_stream->flush();
+    return 0;
+}
+
+inline void LogBuffer::setActive(bool active)
+{
+    d_active = active;
+}
+
+inline void LogBuffer::setEmpty(bool empty)
+{
+    d_empty = empty;
+}
+
+} // FBB
         
 #endif
 

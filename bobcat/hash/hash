@@ -140,8 +140,7 @@ class Hash_CaseString: public Hash_CaseCharPtr
 class Equal_CaseString
 {
     public: 
-        bool operator()(std::string const &s1, std::string const &s2) 
-                                                                    const;
+        bool operator()(std::string const &s1, std::string const &s2) const;
 };
 
 template<typename Value>
@@ -149,14 +148,10 @@ class HashCharPtr: public
     __gnu_cxx::hash_map<char const *, Value, Hash_CharPtr, Equal_CharPtr >
 {
     public:
-        HashCharPtr()
-        {}
+        HashCharPtr();
+
         template <typename InputIterator>
-        HashCharPtr(InputIterator first, InputIterator beyond)
-        :
-            __gnu_cxx::hash_map<char const *, Value, Hash_CharPtr,
-                                Equal_CharPtr>(first, beyond)
-        {}
+        HashCharPtr(InputIterator first, InputIterator beyond);
 };
 
 template<typename Value>
@@ -165,32 +160,21 @@ class HashCharCasePtr: public
                                              Equal_CaseCharPtr >
 {
     public:
-        HashCharCasePtr()
-        {}
+        HashCharCasePtr();
+
         template <typename InputIterator>
-        HashCharCasePtr(InputIterator first, InputIterator beyond)
-        :
-            __gnu_cxx::hash_map<char const *, Value, 
-                        Hash_CaseCharPtr, Equal_CaseCharPtr>
-                        (first, beyond)
-        {}
+        HashCharCasePtr(InputIterator first, InputIterator beyond);
 };
 
 template<typename Value>
-class HashString: public __gnu_cxx::hash_map<std::string, Value, 
-                                             Hash_String>
+class HashString: public __gnu_cxx::hash_map<std::string, Value, Hash_String>
 {
     public:
-        HashString()
-        {}
-        template <typename InputIterator>
-        HashString(InputIterator first, InputIterator beyond)
-        :
-            __gnu_cxx::hash_map<std::string, Value, Hash_String>
-                         (first, beyond)
-        {}
-};
+        HashString();
 
+        template <typename InputIterator>
+        HashString(InputIterator first, InputIterator beyond);
+};
 
 template<typename Value>
 class HashStringCase: public 
@@ -198,16 +182,12 @@ class HashStringCase: public
                             Equal_CaseString>
 {
     public:
-        HashStringCase()
-        {}
+        HashStringCase();
+
         template <typename InputIterator>
-        HashStringCase(InputIterator first, InputIterator beyond)
-        :
-            __gnu_cxx::hash_map<std::string, 
-                        int, Hash_CaseString, 
-                        Equal_CaseString>(first, beyond)
-        {}
+        HashStringCase(InputIterator first, InputIterator beyond);
 };
+
 
 inline size_t Hash_CharPtr::operator()(char const *str) const
 { 
@@ -231,7 +211,7 @@ inline void Hash_CaseCharPtr::operator()(char &c) const
     c = tolower(c);
 }
     
-inine bool Equal_CaseCharPtr::operator()(char const *x, char const *y) const 
+inline bool Equal_CaseCharPtr::operator()(char const *x, char const *y) const 
 { 
     return !strcasecmp(x, y); 
 }
@@ -251,6 +231,57 @@ inline bool Equal_CaseString::operator()(std::string const &s1,
 { 
     return !strcasecmp(s1.c_str(), s2.c_str()); 
 }
+
+
+template<typename Value>
+template <typename InputIterator>
+inline HashCharPtr<Value>::HashCharPtr(InputIterator first, 
+                                       InputIterator beyond)
+:
+    __gnu_cxx::hash_map<char const *, Value, Hash_CharPtr,
+                        Equal_CharPtr>(first, beyond)
+{}
+
+template<typename Value>
+inline HashCharCasePtr<Value>::HashCharCasePtr()
+{}
+
+template<typename Value>
+template <typename InputIterator>
+inline HashCharCasePtr<Value>::HashCharCasePtr(InputIterator first, 
+                                               InputIterator beyond)
+:
+    __gnu_cxx::hash_map<char const *, Value, Hash_CaseCharPtr, 
+                        Equal_CaseCharPtr>(first, beyond)
+{}
+
+
+template<typename Value>
+inline HashString<Value>::HashString()
+{}
+
+template<typename Value>
+template <typename InputIterator>
+inline HashString<Value>::HashString(InputIterator first, 
+                                     InputIterator beyond)
+:
+    __gnu_cxx::hash_map<std::string, Value, Hash_String>
+                 (first, beyond)
+{}
+
+template<typename Value>
+inline HashStringCase<Value>::HashStringCase()
+{}
+
+template<typename Value>
+template <typename InputIterator>
+inline HashStringCase<Value>::HashStringCase(InputIterator first, 
+                                             InputIterator beyond)
+:
+    __gnu_cxx::hash_map<std::string, 
+                int, Hash_CaseString, 
+                Equal_CaseString>(first, beyond)
+{}
 
 } // FBB
 

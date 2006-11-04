@@ -19,61 +19,61 @@ class TableSupport
     public:
         TableSupport();
 
-        virtual ~TableSupport()
-        {}
+        virtual ~TableSupport();
 
         void setParam(std::ostream &ostr, size_t rows, 
                         std::vector<size_t> const &colWidth,
-                        size_t maxWidth)
-        {
-            d_streamPtr = &ostr;
-            d_rows = rows;
-            d_colWidth = &colWidth;
-            d_maxWidth = maxWidth;  // 0 if colWidth should be used.
-            d_tableWidth = d_maxWidth ? 
-                                d_maxWidth * colWidth.size()
-                            :
-                                std::accumulate(colWidth.begin(), 
-                                                colWidth.end(), 0);
-        }
+                        size_t maxWidth);
 
-        void setParam(size_t maxWidth)
-        {
-            d_maxWidth = maxWidth;  // 0 if colWidth should be used.
-        }
+        void setParam(size_t maxWidth);
+        size_t tableWidth() const;
+        size_t nColumns() const;
+        std::ostream &out() const;
 
-        size_t tableWidth() const
-        {
-            return d_tableWidth;
-        }
-
-        size_t nColumns() const
-        {
-            return d_colWidth->size();
-        }
-
-        std::ostream &out() const
-        {
-            return *d_streamPtr;
-        }
-
-        virtual void hline(size_t row) const
-        {}
-
-        virtual void hline() const
-        {}
-
-        virtual void vline(size_t col) const
-        {
-            if (col)
-                *d_streamPtr << ' ';
-        }
-
-        virtual void vline() const
-        {
-            *d_streamPtr << '\n';
-        }
+        virtual void hline(size_t row) const;
+        virtual void vline(size_t col) const;
+        virtual void vline() const;
 };
+
+inline virtual TableSupport::~TableSupport()
+{}
+
+inline void TableSupport::setParam(size_t maxWidth)
+{
+    d_maxWidth = maxWidth;  // 0 if colWidth should be used.
+}
+
+inline size_t TableSupport::tableWidth() const
+{
+    return d_tableWidth;
+}
+
+inline size_t TableSupport::nColumns() const
+{
+    return d_colWidth->size();
+}
+
+inline std::ostream &TableSupport::out() const
+{
+    return *d_streamPtr;
+}
+
+inline virtual void TableSupport::hline(size_t row) const
+{}
+
+inline virtual void TableSupport::hline() const
+{}
+
+inline virtual void TableSupport::vline(size_t col) const
+{
+    if (col)
+        *d_streamPtr << ' ';
+}
+
+inline virtual void TableSupport::vline() const
+{
+    *d_streamPtr << '\n';
+}
 
 } // FBB
         

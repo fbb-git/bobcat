@@ -14,16 +14,8 @@ class IOStreambuf: public std::streambuf
     std::ostream *d_out;
 
     public:
-        IOStreambuf(std::istream &in, std::ostream &out)
-        {        
-            open(in, out);
-        }
-
-        IOStreambuf()
-        :
-            d_in(0),
-            d_out(0)
-        {}        
+        IOStreambuf(std::istream &in, std::ostream &out);
+        IOStreambuf();
 
         virtual ~IOStreambuf();
 
@@ -31,27 +23,39 @@ class IOStreambuf: public std::streambuf
 
     protected:
         virtual int underflow();
-
         virtual pos_type seekoff(off_type offset, std::ios::seekdir way,
                                  std::ios::openmode mode = 
                                                 std::ios::in | std::ios::out);
-
         virtual pos_type seekpos(pos_type offset, 
                                  std::ios::openmode mode = 
-                                                std::ios::in | std::ios::out)
-        {
-            return seekoff(offset, std::ios::beg, mode);
-        }
-
+                                                std::ios::in | std::ios::out);
         virtual int sync();
-        
         virtual int overflow(int c);
-
-        std::streamsize xsputn(char const *buffer, std::streamsize n)
-        {
-            return d_out->write(buffer, n) ? n : 0;
-        }
+        std::streamsize xsputn(char const *buffer, std::streamsize n);
 };
+
+inline IOStreambuf::IOStreambuf(std::istream &in, std::ostream &out)
+{        
+    open(in, out);
+}
+
+inline IOStreambuf::IOStreambuf()
+:
+    d_in(0),
+    d_out(0)
+{}        
+
+inline virtual pos_type IOStreambuf::seekpos(pos_type offset, 
+                         std::ios::openmode mode)
+{
+    return seekoff(offset, std::ios::beg, mode);
+}
+
+inline std::streamsize IOStreambuf::xsputn(char const *buffer, 
+                                           std::streamsize n)
+{
+    return d_out->write(buffer, n) ? n : 0;
+}
 
 } // namespace FBB
 

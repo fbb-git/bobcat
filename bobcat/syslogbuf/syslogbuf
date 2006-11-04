@@ -139,15 +139,8 @@ namespace FBB
 
             ~Syslogbuf();
 
-            Priority defaultPriority()   const
-            {
-                return d_orgPriority;
-            }
-
-            Priority priority()   const
-            {
-                return d_priority;
-            }
+            Priority defaultPriority() const;
+            Priority priority() const;
 
             Priority setDefaultPriority(Priority priority);
             Priority setPriority(Priority priority);
@@ -156,6 +149,16 @@ namespace FBB
             virtual int sync();
             virtual int overflow(int c);
     };
+}
+
+inline Syslogbuf::Priority Syslogbuf::defaultPriority()   const
+{
+    return d_orgPriority;
+}
+
+inline Syslogbuf::Priority Syslogbuf::priority()   const
+{
+    return d_priority;
 }
 
 #endif
