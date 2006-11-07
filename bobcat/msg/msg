@@ -45,58 +45,66 @@ class Msg
     static bool s_display;
 
     public:
-        static bool display()
-        {
-            return s_display;
-        }
-
+        static bool display();
         static void open(std::ifstream &in, std::string const &name);
         static void open(std::ofstream &out, std::string const &name);
-
         static bool setDisplay(bool mode);
-
         static void setOstream(std::string const &name);
-
-        static void setLine(size_t linenr)
-        {
-            s_line = linenr;
-        }            
-        static void setWarning(char const *pre = "[Warning] ")
-        {
-            s_warning = pre;
-        }
-
-        static void setMaxCount(size_t maxCount)
-        {
-            s_maxCount = maxCount;
-        }
-        static size_t count()
-        {
-            return s_count;
-        }
-        static bool errors()
-        {
-            return s_count;
-        }
-        static size_t warnings()
-        {
-            return s_warnCount;
-        }
+        static void setLine(size_t linenr);
+        static void setWarning(char const *pre = "[Warning] ");
+        static void setMaxCount(size_t maxCount);
+        static size_t count();
+        static bool errors();
+        static size_t warnings();
         static std::streambuf *setInfoBuf(std::streambuf *newBuffer,
                                           bool display = true);
-
-        static std::streambuf *infoToWarning()
-        {
-            return setInfoBuf(s_out.rdbuf());
-        }
-
+        static std::streambuf *infoToWarning();
 };
+
+
+inline bool Msg::display()
+{
+    return s_display;
+}
+
+inline void Msg::setLine(size_t linenr)
+{
+    s_line = linenr;
+}            
+
+inline void Msg::setWarning(char const *pre)
+{
+    s_warning = pre;
+}
+
+inline void Msg::setMaxCount(size_t maxCount)
+{
+    s_maxCount = maxCount;
+}
+inline size_t Msg::count()
+{
+    return s_count;
+}
+
+inline bool Msg::errors()
+{
+    return s_count;
+}
+
+inline size_t Msg::warnings()
+{
+    return s_warnCount;
+}
+
+inline std::streambuf *Msg::infoToWarning()
+{
+    return setInfoBuf(s_out.rdbuf());
+}
 
 inline std::ostringstream &msgstream()
 {
     return Msg::s_msg;
 }
-
 
 }   // namespace FBB
 

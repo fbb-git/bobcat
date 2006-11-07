@@ -5,25 +5,29 @@
 
 namespace FBB
 {
-    class Redirector
-    {
-        int d_fd;
 
-        public:
-            enum StandardFilenos
-            {
-                STDIN = 0,
-                STDOUT,
-                STDERR
-            };
+class Redirector
+{
+    int d_fd;
 
-            Redirector(int fd)
-            :
-                d_fd(fd)
-            {}
+    public:
+        enum StandardFilenos
+        {
+            STDIN = 0,
+            STDOUT,
+            STDERR
+        };
 
-            void accessVia(int alternateFd) const throw (Errno);
-    };            
-}
+        Redirector(int fd);
+
+        void accessVia(int alternateFd) const throw (Errno);
+};            
+
+inline Redirector::Redirector(int fd)
+:
+    d_fd(fd)
+{}
+
+} // FBB
 
 #endif
