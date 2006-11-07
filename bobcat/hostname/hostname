@@ -11,10 +11,7 @@ namespace FBB
     class Hostname: public Hostent
     {
         public:
-            Hostname()
-            :
-                Hostent()
-            {}
+            Hostname();
                                     // may be name or dotted decimal address
             Hostname(std::string const &host) throw(Errno);      // 1
 
@@ -23,7 +20,13 @@ namespace FBB
         private:
             void init();
     };
-}
+
+inline Hostname::Hostname()
+:
+    Hostent()
+{}
+
+} // FBB
 
 #endif
 
