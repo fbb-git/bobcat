@@ -69,25 +69,28 @@ class MultiStreambuf: public std::streambuf
         static void insert(stream &os, Insert &insert); 
 };
 
-inline MultiStreambuf::stream::stream(std::ostream &os, Mode mode = ON)
+inline MultiStreambuf::stream::stream(std::ostream &os, Mode mode)
 :
     d_os(&os),
     d_mode(mode)
 {}
-inline void MultiStreambuf::stream::::setMode(Mode mode)
+
+inline void MultiStreambuf::stream::setMode(Mode mode)
 {
     d_mode = mode;
 }
-inline Mode MultiStreambuf::stream::::mode() const
+
+inline MultiStreambuf::Mode MultiStreambuf::stream::mode() const
 {
     return d_mode;
 }
-inline std::ostream &MultiStreambuf::stream::::ostream()
+
+inline std::ostream &MultiStreambuf::stream::ostream()
 {
     return *d_os;
 }
 
-inline void MultiStreambuf::stream::::setOnce(stream &os)
+inline void MultiStreambuf::stream::setOnce(stream &os)
 {
     if (os.d_mode == RESET)
         os.d_mode = ONCE;
