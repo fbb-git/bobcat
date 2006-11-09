@@ -8,38 +8,41 @@
 
 namespace FBB
 {
-    class LocalServerSocket: public LocalSocketBase
-    {
-        bool        d_unlink;
-        std::string d_name;
 
-        public:
-            enum Socket
-            {
-                KEEP,
-                UNLINK,
-            };
+class LocalServerSocket: public LocalSocketBase
+{
+    bool        d_unlink;
+    std::string d_name;
 
-            LocalServerSocket()
-            {}                                       
-            LocalServerSocket(std::string const &name, Socket action = KEEP) 
-                                                        throw (Errno)
-            {
-                open(name, action);
-            }
+    public:
+        enum Socket
+        {
+            KEEP,
+            UNLINK,
+        };
 
-            void open(std::string const &name, Socket action = KEEP) 
-                                                        throw (Errno);
-            ~LocalServerSocket();
+        LocalServerSocket();
+        LocalServerSocket(std::string const &name, Socket action = KEEP) 
+                                                    throw (Errno);
+        ~LocalServerSocket();
 
-            void listen(size_t backlog = 5, bool blocking = true)  
-                                                                throw (Errno);
-            size_t accept() throw (Errno);
+        void open(std::string const &name, Socket action = KEEP) throw (Errno);
+        void listen(size_t backlog = 5, bool blocking = true) throw (Errno);
+        size_t accept() throw (Errno);
 
-        private:
-            LocalServerSocket(LocalServerSocket const &other);  // NI
-    };
+    private:
+        LocalServerSocket(LocalServerSocket const &other);  // NI
+};
 
+inline LocalServerSocket::LocalServerSocket()
+{}                                       
+
+inline LocalServerSocket LocalServerSocket(std::string const &name, 
+                                           Socket action) throw (Errno)
+{
+    open(name, action);
 }
+
+} // FBB
 
 #endif

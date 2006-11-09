@@ -15,25 +15,30 @@ std::ostream &operator<<(std::ostream &str, FBB::equalWidth const &ew);
 
 namespace FBB
 {
+
 class equalWidth
 {
-    TableSpec &d_table;
-
     friend std::ostream &::operator<<(std::ostream &, equalWidth const &);
 
+    TableSpec &d_table;
+
     public:
-        equalWidth(TableSpec &table)
-        :
-            d_table(table)
-        {}
+        equalWidth(TableSpec &table);
         
     private:
-        std::ostream &insertInto(std::ostream &str) const
-        {
-            d_table.setWidth(TableSpec::EqualWidth);
-            return str << d_table;
-        }
+        std::ostream &insertInto(std::ostream &str) const;
 };
+
+inline equalWidth::equalWidth(TableSpec &table)
+:
+    d_table(table)
+{}
+
+inline std::ostream &equalWidth::insertInto(std::ostream &str) const
+{
+    d_table.setWidth(TableSpec::EqualWidth);
+    return str << d_table;
+}
 
 } // FBB
 

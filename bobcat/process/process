@@ -64,51 +64,23 @@ class Process: private Fork, public IOStream
 
         Process(std::string const &command = "", 
                 iomode mode = CIN | COUT | CERR);
-                                                
         Process(size_t waitSeconds, std::string const &command = "", 
                 iomode mode = CIN | COUT | CERR);
+        virtual ~Process();
 
-                                                
-        void start(Program program = NO_PATH)
-        {   
-            start(1, d_mode, program);
-        }
-
-        void start(iomode mode, Program program = NO_PATH)
-        {
-            start(1, mode, program);
-        }
-
-        void start(size_t waitSeconds, 
-            iomode mode, Program program = NO_PATH);
-
-        virtual ~Process()
-        {
-            stop();
-        }
-
+        void start(Program program = NO_PATH);
+        void start(iomode mode, Program program = NO_PATH);
+        void start(size_t waitSeconds, iomode mode, 
+                                       Program program = NO_PATH);
         int stop();
 
         Process &operator+=(std::string const &text);   // add to the command
         int operator=(std::string const &cmd);          // set the command
 
-        std::istream &cerr()
-        {
-            return d_childCerr;
-        }
-
+        std::istream &cerr();
         size_t available();
-
-        void system()
-        {
-            start(USE_SHELL);
-        }
-
-        void system(iomode mode)
-        {
-            start(mode, USE_SHELL);
-        }
-
+        void system();
+        void system(iomode mode);
         size_t wait();
         size_t wait(size_t sec, size_t msec = 0);
 
@@ -127,23 +99,52 @@ class Process: private Fork, public IOStream
         ExecContext analyzeCommand();
 
         virtual void parentRedirections();
-        virtual void parentProcess()
-        {}
-
+        virtual void parentProcess();
         virtual void childRedirections();
         virtual void childProcess();
-
         void setPipes(iomode mode);
         size_t whichStream();
-
         void init(std::string const &command, iomode mode);
 
         Process(Process const &other);              // NI
         Process &operator=(Process const &other);   // NI
 };
 
-} 
-// namespace FBB        
+
+inline void Process::start(Program program)
+{   
+    start(1, d_mode, program);
+}
+
+inline void Process::start(iomode mode, Program program)
+{
+    start(1, mode, program);
+}
+
+inline ~Process::Process()
+{
+    stop();
+}
+
+inline std::istream &Process::cerr()
+{
+    return d_childCerr;
+}
+
+void system()
+{
+    start(USE_SHELL);
+}
+
+inline void Process::system(iomode mode)
+{
+    start(mode, USE_SHELL);
+}
+
+inline void Process::parentProcess()
+{}
+
+} // FBB        
 
 #endif
 
