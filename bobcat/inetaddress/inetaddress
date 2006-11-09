@@ -10,52 +10,62 @@
 */    
 namespace FBB
 {
-    class InetAddress
-    {
-        sockaddr_in     d_address;  // address/port: network byte order
-                                // sa_family_t  in_addr,    uint16_t
-                                // sin_family,  sin_addr,   sin_port
-        public:
-            uint16_t port() const
-            {
-                return ntohs(d_address.sin_port);
-            }
 
-                // replaces the formerly available getAddress() member.
-            std::string dottedDecimalAddress() const throw (Errno);
+class InetAddress
+{
+    sockaddr_in     d_address;  // address/port: network byte order
+                            // sa_family_t  in_addr,    uint16_t
+                            // sin_family,  sin_addr,   sin_port
+    public:
+        uint16_t port() const;
 
-            sockaddr const *sockaddrPtr() const
-            {
-                return reinterpret_cast<sockaddr const *>(&d_address);
-            }
+            // replaces the formerly available getAddress() member.
+        std::string dottedDecimalAddress() const throw (Errno);
+        sockaddr const *sockaddrPtr() const;
+        size_t size() const;
 
-            size_t size() const
-            {
-                return sizeof(d_address);
-            }
+    protected:
+        InetAddress(std::string const &host, uint16_t port) throw (Errno);
+        InetAddress(uint16_t port);
+        InetAddress(sockaddr_in const &address);
 
-        protected:
-                                                            // 1.cc
-            InetAddress(std::string const &host, uint16_t port) throw (Errno);
+        sockaddr *sockaddrPtr();
 
-            InetAddress(uint16_t port)
-            {
-                init(INADDR_ANY, port);
-            }
+    private:
+        void init(uint32_t addr, uint16_t port);    // host byte order !
+};
 
-            InetAddress(sockaddr_in const &address)       
-            :
-                d_address(address)
-            {}
 
-            sockaddr *sockaddrPtr() 
-            {
-                return reinterpret_cast<sockaddr *>(&d_address);
-            }
-
-        private:
-            void init(uint32_t addr, uint16_t port);    // host byte order !
-    };
+inline uint16_t InetAddress::port() const
+{
+    return ntohs(d_address.sin_port);
 }
+
+inline sockaddr const *InetAddress::sockaddrPtr() const
+{
+    return reinterpret_cast<sockaddr const *>(&d_address);
+}
+
+inline size_t InetAddress::size() const
+{
+    return sizeof(d_address);
+}
+
+inline InetAddress::InetAddress(uint16_t port)
+{
+    init(INADDR_ANY, port);
+}
+
+inline InetAddress::InetAddress(sockaddr_in const &address)       
+:
+    d_address(address)
+{}
+
+inline sockaddr *InetAddress::sockaddrPtr() 
+{
+    return reinterpret_cast<sockaddr *>(&d_address);
+}
+
+} // FBB
 
 #endif

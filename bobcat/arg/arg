@@ -83,13 +83,13 @@ class Arg
         static Arg &getInstance() throw (Errno);    // DEPRECATED: USE 
                                                     // instance()
         std::string const &basename() const;
-        inline size_t nArgs() const;
+        size_t nArgs() const;
 
             // total number of specified short (and combined long) options
-        inline size_t nOptions() const;
+        size_t nOptions() const;
 
             // total numer of long-only options specified
-        inline size_t nLongOptions() const;
+        size_t nLongOptions() const;
 
         size_t option(int option) const;              // 1
         size_t option(std::string const &optchars) const;     // 2
@@ -159,17 +159,17 @@ inline std::string const &Arg::basename() const
     return d_base;
 }
 
-inline inline size_t Arg::nArgs() const
+inline size_t Arg::nArgs() const
 {
     return d_argv.size();
 }
 
-inline inline size_t Arg::nOptions() const
+inline size_t Arg::nOptions() const
 {
     return d_nOptv;
 }
 
-inline inline size_t Arg::nLongOptions() const
+inline size_t Arg::nLongOptions() const
 {
     return d_nLongOptions;
 }

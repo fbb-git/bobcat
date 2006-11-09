@@ -143,7 +143,8 @@ inline void ConfigFile::setSearchCasing(SearchCasing type)
     d_caseSensitive = type == SearchCaseSensitive;
 }
 
-inline const_RE_iterator ConfigFile::beginRE(std::string const &re) const
+inline ConfigFile::const_RE_iterator 
+ConfigFile::beginRE(std::string const &re) const
 {
     return RE_iterator(
         const_cast<ConfigFile *>(this)->begin(), 
@@ -151,7 +152,7 @@ inline const_RE_iterator ConfigFile::beginRE(std::string const &re) const
         re, d_caseSensitive);
 }
 
-inline const_RE_iterator ConfigFile::endRE() const
+inline ConfigFile::const_RE_iterator ConfigFile::endRE() const
 {
     return RE_iterator(const_cast<ConfigFile *>(this)->end());
 }

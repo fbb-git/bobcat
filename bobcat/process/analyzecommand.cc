@@ -4,12 +4,12 @@ Process::ExecContext Process::analyzeCommand()
 {
 //    std::cerr << "Command: `" << d_command << "'" << endl;
 
-    String args(d_command);                 // First, analyze the arguments
+    string args(d_command);                 // First, analyze the arguments
      
     vector<String::SplitPair> elements;     // destination for the command's
                                             // elements,
     
-    size_t count = args.split(&elements); // now extract the elements
+    size_t count = String::split(&elements, args); // now extract the elements
     
                                             // set up a process struct
     ExecContext ec = {true, 0, 0, new char const *[count + 1]};

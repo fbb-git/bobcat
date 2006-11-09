@@ -121,7 +121,7 @@ inline void Process::start(iomode mode, Program program)
     start(1, mode, program);
 }
 
-inline ~Process::Process()
+inline Process::~Process()
 {
     stop();
 }
@@ -131,7 +131,7 @@ inline std::istream &Process::cerr()
     return d_childCerr;
 }
 
-void system()
+inline void Process::system()
 {
     start(USE_SHELL);
 }
