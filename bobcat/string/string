@@ -57,18 +57,11 @@ class String: public std::string
         static void tolower(char &chr);
         static void toupper(char &chr);
 
-        // DEPRECATED PRIVATE MEMBERS:
-        Type nextField(const_iterator *until, const_iterator from,
-                       std::string const &separators) const;
-        const_iterator separator(const_iterator from, 
-                                 std::string const &separators) const;
+    // Remaining members are DEPRECATED and should no longer be used:
 
-        const_iterator quoted(const_iterator from, int quote) const;
-        Type word(const_iterator *until, const_iterator from, 
-                          std::string const &separators) const;
+        static void warn();
 
-    public:     // These members are deprecated and should no longer be used
-    private:
+     public:
         String();
         String(std::string const &str);
         String(char const *str);
@@ -106,23 +99,67 @@ inline void String::toupper(char &chr)
 // DEPRECATED BELOW THIS LINE
 
 inline String::String()
-{}
+{
+    warn();
+}
 
 inline String::String(std::string const &str)
 :
     std::string(str)
-{}
+{
+    warn();
+}
 
 inline String::String(char const *str)
 :
     std::string(str)
-{}
+{
+    warn();
+}
 
 inline int String::casecmp(std::string const &other) const
 {
     return strcasecmp(c_str(), other.c_str());
 }
 
+inline String String::lc() const
+{
+    return lc(*this);
+}
+
+inline size_t String::split(std::vector<std::string> *words, 
+                char const *sep, bool addEmpty) const
+{
+    return split(words, *this, sep, addEmpty);
+}
+
+inline size_t String::split(std::vector<SplitPair> *words, char const *sep,
+                       bool addEmpty) const
+{
+    return split(words, *this, sep, addEmpty);
+}
+
+inline String String::trim() const
+{
+    return trim(*this);
+}
+
+inline String String::uc() const
+{
+    return uc(*this);
+}
+
+inline String String::unescape() const
+{
+    return unescape(*this);
+}
+
+inline String String::escape(char const *series) const
+{
+    return escape(*this, series);
+}
+
 } // FBB
+
 
 #endif

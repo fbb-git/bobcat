@@ -15,7 +15,7 @@ size_t String::split(std::vector<std::string> *words,
     {
 //cerr << "SCAN `" << string(from, beyond) << "'" << endl;
 
-        Type type = nextField(&until, from,     // get the from field, `until'
+        Type type = nextField(str, &until, from,// get the from field, `until'
                               separators);      // points beyond the field's
                                                 // last character
 //cerr << "\tFIELD: `" << string(from, until) << "'" << endl;
