@@ -12,6 +12,7 @@ namespace FBB
             A2x();
             A2x(char const *txt);                   // initialize from text
             A2x(std::string const &str);
+            A2x(A2x const &other);
 
             template <typename T>
             operator T();
@@ -33,6 +34,11 @@ inline A2x::A2x(char const *txt)                    // initialize from text
 inline A2x::A2x(std::string const &str)
 :
     std::istringstream(str.c_str())
+{}
+
+inline A2x::A2x(A2x const &other)
+:
+    std::istringstream(other.str())
 {}
 
 template <typename T>

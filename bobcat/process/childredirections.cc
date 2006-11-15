@@ -34,10 +34,10 @@ void Process::childRedirections()
             Redirector redirector(fd);
         
             if (d_mode & IGNORE_COUT)
-                redirector.accessVia(Redirector::STDOUT);
+                redirector.swallow(Redirector::STDOUT);
 
             if (d_mode & IGNORE_CERR)
-                redirector.accessVia(Redirector::STDERR);
+                redirector.swallow(Redirector::STDERR);
         }
     }    
 }

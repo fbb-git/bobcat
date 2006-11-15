@@ -78,10 +78,14 @@ used in the program to access (read, write) another file.
 manpagesection(MEMBER FUNCTIONS)
     itemization(
     itb(void accessVia(int alternateFd) const throw (Errno))
-        This is the only available member function. It expects the file
-descriptor of the file that will be redirected. If the redirection fails an
-bf(FBB::Errno) object is thrown, whose tt(which()) member shows the
-system's tt(errno) value set by the failing bf(dup2)(2) function.
+        This member is deprecated. Instead bf(swallow()) should be used.
+    itb(void swallow(int otherFd) const throw (Errno))
+        This member function expects the file descriptor of the file that will
+be redirected. Redirection means that the descriptor provided to the
+constructor will access the file descriptor provided to the bf(swallow())
+member (see the example below).  If the redirection fails an bf(FBB::Errno)
+object is thrown, whose tt(which()) member shows the system's tt(errno) value
+set by the failing bf(dup2)(2) function.
     )
 
 manpagesection(EXAMPLE)
@@ -95,7 +99,7 @@ manpagesection(EXAMPLE)
     int main()
     {
         Redirector redirector(Redirector::STDOUT);
-        redirector.accessVia(Redirector::STDERR);
+        redirector.swallow(Redirector::STDERR);
     
         cerr << "This appears at the standard output stream\n"
                 "use `a.out > /dev/null' to suppress this message" << endl;

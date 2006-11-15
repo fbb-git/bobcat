@@ -7,7 +7,7 @@ void Pipe::readFrom(int const *fd, size_t n)
     for (size_t idx = 0; idx < n; idx++)
     {
         Redirector r(d_fd[READ]);
-        r.accessVia(fd[idx]);
+        r.swallow(fd[idx]);
     }
 
     close(d_fd[READ]);

@@ -21,12 +21,18 @@ class Redirector
         Redirector(int fd);
 
         void accessVia(int alternateFd) const throw (Errno);
+        void swallow(int alternateFd) const throw (Errno);
 };            
 
 inline Redirector::Redirector(int fd)
 :
     d_fd(fd)
 {}
+
+inline void Redirector::accessVia(int alternateFd) const throw (Errno)
+{
+    swallow(alternateFd);
+}
 
 } // FBB
 
