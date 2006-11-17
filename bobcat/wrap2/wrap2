@@ -99,28 +99,28 @@ class Wrap2
 // Type 1: ref
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                             ReturnType (*fun)(Type1 &, Type2 &))
     :
         d_ref2(fun)
     {}
                                               
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                             ReturnType (*fun)(Type1 &, Type2 *))
     :
         d_refPtr(fun)
     {}
                                               
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                             ReturnType (*fun)(Type1 &, Type2 const &))
     :
         d_refCref(fun)
     {}
                                               
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                             ReturnType (*fun)(Type1 &, Type2 const *))
     :
         d_refCptr(fun)
@@ -130,28 +130,28 @@ class Wrap2
 // Type 1: ptr
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                             ReturnType (*fun)(Type1 *, Type2 &))
     :
         d_ptrRef(fun)
     {}
                                               
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                             ReturnType (*fun)(Type1 *, Type2 *))
     :
         d_ptr2(fun)
     {}
                                               
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                             ReturnType (*fun)(Type1 *, Type2 const &))
     :
         d_ptrCref(fun)
     {}
                                               
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                             ReturnType (*fun)(Type1 *, Type2 const *))
     :
         d_ptrCptr(fun)
@@ -161,28 +161,28 @@ class Wrap2
 // Type 1: const ref
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                             ReturnType (*fun)(Type1 const &, Type2 &))
     :
         d_crefRef(fun)
     {}
                                               
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                             ReturnType (*fun)(Type1 const &, Type2 *))
     :
         d_crefPtr(fun)
     {}
                                               
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                             ReturnType (*fun)(Type1 const &, Type2 const &))
     :
         d_cref2(fun)
     {}
                                               
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                             ReturnType (*fun)(Type1 const &, Type2 const *))
     :
         d_crefCptr(fun)
@@ -192,28 +192,28 @@ class Wrap2
 // Type 1: ptr
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                                 ReturnType (*fun)(Type1 const *, Type2 &))
     :
         d_cptrRef(fun)
     {}
                                               
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                                 ReturnType (*fun)(Type1 const *, Type2 *))
     :
         d_cptrPtr(fun)
     {}
                                               
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                             ReturnType (*fun)(Type1 const *, Type2 const &))
     :
         d_cptrCref(fun)
     {}
                                               
     template <typename Type1, typename Type2, typename ReturnType>
-    inline Wrap2<Type1, Type2, ReturnType>::Wrap2(
+    Wrap2<Type1, Type2, ReturnType>::Wrap2(
                             ReturnType (*fun)(Type1 const *, Type2 const *))
     :
         d_cptr2(fun)
@@ -229,28 +229,28 @@ class Wrap2
 // Type 1: ref
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                                 Type1 &param1, Type2 &param2) const
     {
         return (*d_ref2)(param1, param2);
     }
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                                 Type1 &param1, Type2 *param2) const
     {
         return (*d_ref2)(param1, *param2);
     }
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                                 Type1 &param1, Type2 const &param2) const
     {
         return (*d_refCref)(param1, param2);
     }
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                                 Type1 &param1, Type2 const *param2) const
     {
         return (*d_refCref)(param1, *param2);
@@ -259,28 +259,28 @@ class Wrap2
 // Type 1: ptr
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                                 Type1 *param1, Type2 &param2) const
     {
         return (*d_ref2)(*param1, param2);
     }
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                                 Type1 *param1, Type2 *param2) const
     {
         return (*d_ref2)(*param1, *param2);
     }
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                                 Type1 *param1, Type2 const &param2) const
     {
         return (*d_refCref)(*param1, param2);
     }
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                                 Type1 *param1, Type2 const *param2) const
     {
         return (*d_refCref)(*param1, *param2);
@@ -289,21 +289,21 @@ class Wrap2
 // Type 2: const ref
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                                 Type1 const &param1, Type2 &param2) const
     {
         return (*d_crefRef)(param1, param2);
     }
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                                 Type1 const &param1, Type2 *param2) const
     {
         return (*d_crefRef)(param1, *param2);
     }
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                                 Type1 const &param1, 
                           Type2 const &param2) const
     {
@@ -311,7 +311,7 @@ class Wrap2
     }
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                             Type1 const &param1, Type2 const *param2) const
     {
         return (*d_crefRef)(param1, *param2);
@@ -320,28 +320,28 @@ class Wrap2
 // Type 2: const ptr
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                             Type1 const *param1, Type2 &param2) const
     {
         return (*d_crefRef)(*param1, param2);
     }
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                             Type1 const *param1, Type2 *param2) const
     {
         return (*d_crefRef)(*param1, *param2);
     }
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                             Type1 const *param1, Type2 const &param2) const
     {
         return (*d_crefRef)(*param1, param2);
     }
 
     template <typename Type1, typename Type2, typename ReturnType>
-    inline ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
+    ReturnType Wrap2<Type1, Type2, ReturnType>::operator()(
                             Type1 const *param1, Type2 const *param2) const
     {
         return (*d_crefRef)(*param1, *param2);

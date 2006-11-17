@@ -31,49 +31,49 @@ namespace FBB
 
 
 template <typename Type, typename ReturnType>
-inline Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type &))
+Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type &))
 :
     d_ref(fun)
 {}
 
 template <typename Type, typename ReturnType>
-inline Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type *))
+Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type *))
 :
     d_ptr(fun)
 {}
 
 template <typename Type, typename ReturnType>
-inline Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type const &))  
+Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type const &))  
 :
     d_cref(fun)
 {}
 
 template <typename Type, typename ReturnType>
-inline Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type const *))  
+Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type const *))  
 :
     d_cptr(fun)
 {}
 
 template <typename Type, typename ReturnType>
-inline ReturnType Wrap1<Type, ReturnType>::operator()(Type &param) const
+ReturnType Wrap1<Type, ReturnType>::operator()(Type &param) const
 {
     return (*d_ref)(param);
 }
 
 template <typename Type, typename ReturnType>
-inline ReturnType Wrap1<Type, ReturnType>::operator()(Type *param) const
+ReturnType Wrap1<Type, ReturnType>::operator()(Type *param) const
 {
     return (*d_ptr)(param);
 }
 
 template <typename Type, typename ReturnType>
-inline ReturnType Wrap1<Type, ReturnType>::operator()(Type const &param) const
+ReturnType Wrap1<Type, ReturnType>::operator()(Type const &param) const
 {
     return (*d_cref)(param);
 }
 
 template <typename Type, typename ReturnType>
-inline ReturnType Wrap1<Type, ReturnType>::operator()(Type const *param) const
+ReturnType Wrap1<Type, ReturnType>::operator()(Type const *param) const
 {
     return (*d_cptr)(param);
 }
