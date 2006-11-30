@@ -12,15 +12,12 @@ class RefCount
 
     protected:
         RefCount();
-
         RefCount(RefCount const &other);           // used by clone()
 
-        virtual ~RefCount();
-
+        inline virtual ~RefCount();         // g++ bug workaround
         virtual RefCount *clone() const = 0;
 
         size_t refcount() const;
-
         void release();
 
         template <typename X>

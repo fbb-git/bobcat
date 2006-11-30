@@ -24,7 +24,7 @@ class Errno: public std::ostringstream, public std::exception
         Errno(char const *prefix); 
         Errno(int errnr, char const *text = 0);
         Errno(Errno const &other) throw();
-        virtual ~Errno() throw();
+        inline virtual ~Errno() throw();        // g++ bug workaround
         virtual const char *what() const throw();
         int which() const throw();
 
