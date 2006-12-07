@@ -1,11 +1,12 @@
 #include "string.ih"
 
-String::Type String::nextField(const_iterator *until, const_iterator from,
-                                string const &separators) const
+String::Type String::nextField(string const &str, 
+                    const_iterator *until, const_iterator from,
+                    string const &separators)
 {
     if (separators.find(*from) != string::npos) // saw a separator
-    {
-        *until = separator(from, separators);   // get it, `*until' points 
+    {                                           // get it, `*until' points 
+        *until = separator(str, from, separators);   
                                                 // beyond it.
         return SEPARATOR;
     }
@@ -13,22 +14,22 @@ String::Type String::nextField(const_iterator *until, const_iterator from,
     switch (*from)                              // handle all other cases
     {
         case '"':                               // d-quoted string
-            *until = quoted(from, '"');
+            *until = quoted(str, from, '"');
                                                 // if pointing at the matching
                                                 // " then it's ok, otherwise
                                                 // an error was encountered
-        return *until != end() ? DQUOTE : DQUOTE_UNTERMINATED;
+        return *until != str.end() ? DQUOTE : DQUOTE_UNTERMINATED;
 
         case '\'':    
-            *until = quoted(from, '\'');
+            *until = quoted(str, from, '\'');
                                                 // if pointing at the matching
                                                 // ' then it's ok, otherwise
                                                 // an error was encountered
 
-        return *until != end() ? SQUOTE : SQUOTE_UNTERMINATED;
+        return *until != str.end() ? SQUOTE : SQUOTE_UNTERMINATED;
 
-        default:
-        return word(until, from, separators);   // otherwise get the next word
+        default:                                // otherwise get the next word
+        return word(str, until, from, separators);
     }
 }
 

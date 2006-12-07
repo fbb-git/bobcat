@@ -1,9 +1,7 @@
 #ifndef _INCLUDED_BOBCAT_TABLE_
 #define _INCLUDED_BOBCAT_TABLE_
 
-#include <sstream>
-
-#include <bobcat/tablespec>
+// #include <bobcat/tablespec>
 
 namespace FBB
 {
@@ -20,7 +18,12 @@ class Table: public TableSpec
                 size_t nColumns, FillDirection direction);
         Table(Iterator const &begin, Iterator const &end, 
                 size_t nColumns, FillDirection direction);
+        Table(TableSupport &tableSupport,
+              size_t nColumns, FillDirection direction);
+        Table(size_t nColumns, FillDirection direction);
 
+        Table<Iterator> &append(string const &str, char const *sep = " \t",
+                                bool addEmpty = false);
     private:
         void fill(Iterator begin, Iterator const &end);
 
@@ -29,15 +32,23 @@ class Table: public TableSpec
 };
 
 template <typename Iterator>
+Table<Iterator> &Table<Iterator>::append(String const &str, char const *sep, 
+                                         bool addEmpty)
+{
+    TableSpec::append(str, sep, addEmpty);
+    return *this;
+}
+
+template <typename Iterator>
 void Table<Iterator>::fill(Iterator it, Iterator const &end)
 {
     while (it != end)
     {
         std::ostringstream str;
         str << *it++;
-        d_string.push_back(str.str());
+        push_back(str.str());
     }
-    init();
+    tabulate();
 }
 
 template <typename Iterator>
@@ -59,6 +70,62 @@ Table<Iterator>::Table(Iterator const &begin, Iterator const &end,
     fill(begin, end);
 }
 
+template <typename Iterator>
+Table<Iterator>::Table(TableSupport &tableSupport,
+                       size_t nColumns, FillDirection direction)
+:
+    TableSpec(tableSupport, nColumns, direction)
+{}
+
+template <typename Iterator>
+Table<Iterator>::Table(size_t nColumns, FillDirection direction)
+:
+    TableSpec(nColumns, direction)
+{}
+
+
+template <typename Iterator>
+void next(Table<Iterator> &obj)
+{
+    obj.next();
+}
+
+template <typename Iterator>
+void tabulate(Table<Iterator> &obj)
+{
+    obj.tabulate();
+}
+
 } // FBB
+
+namespace std
+{
+
+template <typename Iterator, typename Type>
+FBB::Table<Iterator> &operator<<(FBB::Table<Iterator> &obj, Type const &x)
+{
+    reinterpret_cast<ostringstream &>(obj) << x;
+    return obj;
+}
+
+template <typename Iterator>
+FBB::Table<Iterator> &operator<<(FBB::Table<Iterator> &obj, 
+                                 ostream &(*fp)(ostream &))
+{
+    reinterpret_cast<ostringstream &>(obj) << *fp;
+    return obj;
+}
+
+template <typename Iterator>
+FBB::Table<Iterator> &operator<<(FBB::Table<Iterator> &obj, 
+         void (*fp)(FBB::Table<Iterator> &))
+{
+    (*fp)(obj);
+    return obj;
+}
+
+} // std
+
+
 
 #endif

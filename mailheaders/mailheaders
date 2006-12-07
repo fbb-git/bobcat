@@ -7,76 +7,88 @@
 
 namespace FBB
 {
-    class MailHeaders: public std::vector<std::string>
-    {
-        public:
-            typedef std::vector<size_t>       HdrLine;
-            typedef std::vector<HdrLine>        Hdr;
-            typedef std::pair<std::string, Hdr> HdrPair;
 
-            typedef Hdr::const_iterator         const_iterator;
-            typedef std::reverse_iterator<const_iterator>
-                                                const_reverse_iterator; 
-            enum Mode
-            {
-                DONT_READ,
-                READ
-            };
-            enum Match
-            {
-                FAIL,
-                INITIAL,
-                PARTIAL,
-                FULL
-            };
+class MailHeaders: public std::vector<std::string>
+{
+    public:
+        typedef std::vector<size_t>       HdrLine;
+        typedef std::vector<HdrLine>        Hdr;
+        typedef std::pair<std::string, Hdr> HdrPair;
 
-        private:
-            std::vector<HdrPair>    d_index;
-            std::istream            &d_in;
-            std::string             d_hdr;
-            Match                   d_match;
-        
-            enum Where
-            {
-                BEGIN,
-                END,
-            };
+        typedef Hdr::const_iterator         const_iterator;
+        typedef std::reverse_iterator<const_iterator>
+                                            const_reverse_iterator; 
+        enum Mode
+        {
+            DONT_READ,
+            READ
+        };
+        enum Match
+        {
+            FAIL,
+            INITIAL,
+            PARTIAL,
+            FULL
+        };
 
-        public:
-            MailHeaders(std::istream &in, Mode mode = READ);
-            void read();
-            void setHeaderIterator(char const *header, Match match = FULL)
-            {
-                d_hdr = header;
-                d_match = match;
-            }
-            const_iterator beginh() const
-            {
-                return getIterator(BEGIN);
+    private:
+        std::vector<HdrPair>    d_index;
+        std::istream            &d_in;
+        std::string             d_hdr;
+        Match                   d_match;
+    
+        enum Where
+        {
+            BEGIN,
+            END,
+        };
 
-            }
-            const_iterator endh() const
-            {
-                return getIterator(END);
-            }
-            const_reverse_iterator rbeginh() const
-            {
-                return const_reverse_iterator(endh());
-            }
-            const_reverse_iterator rendh() const
-            {
-                return const_reverse_iterator(beginh());
-            }
+    public:
+        MailHeaders(std::istream &in, Mode mode = READ);
 
-        private:
-            void continueHeader(std::string const &line, HdrLine *hdrLine);
-            HdrLine *startHeader(std::string const &line);
-            std::string::size_type lookup(char const *header, Match type) 
-                                                                    const;
-            const_iterator getIterator(Where where) const;
-            
-    };
+        void read();
+        void setHeaderIterator(char const *header, Match match = FULL);
+        const_iterator beginh() const;
+        const_iterator endh() const;
+        const_reverse_iterator rbeginh() const;
+        const_reverse_iterator rendh() const;
+
+    private:
+        void continueHeader(std::string const &line, HdrLine *hdrLine);
+        HdrLine *startHeader(std::string const &line);
+        std::string::size_type lookup(char const *header, Match type) 
+                                                                const;
+        const_iterator getIterator(Where where) const;
+};
+
+inline void MailHeaders::setHeaderIterator(char const *header, Match match)
+{
+    d_hdr = header;
+    d_match = match;
 }
+
+inline MailHeaders::const_iterator MailHeaders::beginh() const
+{
+    return getIterator(BEGIN);
+
+}
+
+inline MailHeaders::const_iterator MailHeaders::endh() const
+{
+    return getIterator(END);
+}
+
+inline MailHeaders::const_reverse_iterator MailHeaders::rbeginh() const
+{
+    return const_reverse_iterator(endh());
+}
+
+inline MailHeaders::const_reverse_iterator MailHeaders::rendh() const
+{
+    return const_reverse_iterator(beginh());
+}
+
+} // FBB
         
 #endif
 

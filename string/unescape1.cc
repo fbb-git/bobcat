@@ -48,7 +48,7 @@ namespace
     }
 }
 
-String String::unescape() const
+string String::unescape(string const &str)
 {
     String ret;
 
@@ -57,19 +57,19 @@ String String::unescape() const
 
     while (true)
     {
-        pos = find('\\', pos);
-        ret += substr(prefix, pos - prefix);// append prefix
+        pos = str.find('\\', pos);
+        ret += str.substr(prefix, pos - prefix);// append prefix
 
         if (pos == string::npos)            // done if no more \-chars
             return ret;
 
         ++pos;                              // skip \-char
 
-        if (pos == length())                // \-char terminates: remove it
+        if (pos == str.length())            // \-char terminates: remove it
             return ret;                     // since we're removing \-chars
 
 
-        int next = (*this)[pos];            // determine next char
+        int next = str[pos];                // determine next char
 
         if (char *cp = strchr(escapeChars, next))// escape sequence ?
         {
@@ -77,13 +77,12 @@ String String::unescape() const
             ++pos;                          // next character to handle
         }
         else if (strchr("01234567", next))  // handle octal values
-            pos = handleOctal(&ret, *this, pos);
+            pos = handleOctal(&ret, str, pos);
 
         else if (strchr("xX", next))        // handle hex values
-            pos = handleHex(&ret, *this, pos);
-
+            pos = handleHex(&ret, str, pos);
         else                                // handle lone characters
-            ret += (*this)[pos++];     
+            ret += str[pos++];     
 
         prefix = pos; 
     }

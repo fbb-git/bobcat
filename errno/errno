@@ -11,41 +11,46 @@
 
 namespace FBB
 {
-    class Errno: public std::ostringstream, public std::exception
-    {
-        int d_errno;
-        std::string d_msg;
 
-        mutable std::string d_what;
-        
-        public:
-            Errno();
-            Errno(char const *prefix); 
-            Errno(int errnr, char const *text = 0);
-            Errno(Errno const &other) throw();
-            virtual ~Errno() throw()
-            {}
-            virtual const char *what() const throw();
-            int which() const throw()
-            {
-                return d_errno;
-            }
+class Errno: public std::ostringstream, public std::exception
+{
+    int d_errno;
+    std::string d_msg;
 
-        private:
-            void initMsg();
-    };
+    mutable std::string d_what;
+    
+    public:
+        Errno();
+        Errno(char const *prefix); 
+        Errno(int errnr, char const *text = 0);
+        Errno(Errno const &other) throw();
+        inline virtual ~Errno() throw();        // g++ bug workaround
+        virtual const char *what() const throw();
+        int which() const throw();
 
-    inline std::ostream &insertable(std::ostream &errnoObject)
-    {
-        return errnoObject;
-    }
+    private:
+        void initMsg();
+};
 
-    inline Errno *throwable()
-    {
-        return 0;
-    }
+inline Errno::~Errno() throw()
+{}
 
+inline int Errno::which() const throw()
+{
+    return d_errno;
 }
+
+inline std::ostream &insertable(std::ostream &errnoObject)
+{
+    return errnoObject;
+}
+
+inline Errno *throwable()
+{
+    return 0;
+}
+
+} // FBB
 
 inline FBB::Errno &operator<<(std::ostream &str, FBB::Errno *(*)())
 {

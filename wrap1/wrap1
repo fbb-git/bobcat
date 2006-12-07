@@ -18,47 +18,66 @@ namespace FBB
             typedef Type        argument_type;
             typedef ReturnType  result_type;
 
+            Wrap1(ReturnType (*fun)(Type &));
+            Wrap1(ReturnType (*fun)(Type *));
+            Wrap1(ReturnType (*fun)(Type const &));
+            Wrap1(ReturnType (*fun)(Type const *));
 
-            Wrap1(ReturnType (*fun)(Type &))
-            :
-                d_ref(fun)
-            {}
-
-            Wrap1(ReturnType (*fun)(Type *))
-            :
-                d_ptr(fun)
-            {}
-
-            Wrap1(ReturnType (*fun)(Type const &))  
-            :
-                d_cref(fun)
-            {}
-
-            Wrap1(ReturnType (*fun)(Type const *))  
-            :
-                d_cptr(fun)
-            {}
-
-            ReturnType operator()(Type &param) const
-            {
-                return (*d_ref)(param);
-            }
-
-            ReturnType operator()(Type *param) const
-            {
-                return (*d_ptr)(param);
-            }
-
-            ReturnType operator()(Type const &param) const
-            {
-                return (*d_cref)(param);
-            }
-
-            ReturnType operator()(Type const *param) const
-            {
-                return (*d_cptr)(param);
-            }
+            ReturnType operator()(Type &param) const;
+            ReturnType operator()(Type *param) const;
+            ReturnType operator()(Type const &param) const;
+            ReturnType operator()(Type const *param) const;
     };
+
+
+template <typename Type, typename ReturnType>
+Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type &))
+:
+    d_ref(fun)
+{}
+
+template <typename Type, typename ReturnType>
+Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type *))
+:
+    d_ptr(fun)
+{}
+
+template <typename Type, typename ReturnType>
+Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type const &))  
+:
+    d_cref(fun)
+{}
+
+template <typename Type, typename ReturnType>
+Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type const *))  
+:
+    d_cptr(fun)
+{}
+
+template <typename Type, typename ReturnType>
+ReturnType Wrap1<Type, ReturnType>::operator()(Type &param) const
+{
+    return (*d_ref)(param);
+}
+
+template <typename Type, typename ReturnType>
+ReturnType Wrap1<Type, ReturnType>::operator()(Type *param) const
+{
+    return (*d_ptr)(param);
+}
+
+template <typename Type, typename ReturnType>
+ReturnType Wrap1<Type, ReturnType>::operator()(Type const &param) const
+{
+    return (*d_cref)(param);
+}
+
+template <typename Type, typename ReturnType>
+ReturnType Wrap1<Type, ReturnType>::operator()(Type const *param) const
+{
+    return (*d_cptr)(param);
+}
+
 } // namespace FBB ends
 #endif
 

@@ -12,7 +12,7 @@ using namespace FBB;
 int main(int argc, char **argv, char **envp)
 {
     Redirector redirector(Redirector::STDOUT);
-    redirector.accessVia(Redirector::STDERR);
+    redirector.swallow(Redirector::STDERR);
 
     cerr << "This appears at the standard output stream\n"
             "use `a.out > /dev/null' to suppress this message" << endl;

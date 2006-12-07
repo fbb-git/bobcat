@@ -15,7 +15,7 @@ manpagedescription()
     bf(FBB::Table) objects may be used to create tables. The tables are filled
 either column-wise or row-wise. The class only has a minimal number of member
 functions and overloaded operators. Most of the table's characteristics may be
-find-tuned by a separate bf(FBB::TableSupport) object, described in a separate
+fine-tuned by a separate bf(FBB::TableSupport) object, described in a separate
 man-page (bf(TableSupport)(3bobcat)). When no bf(FBB::TableSupport) object is
 used, a plain row-wise or column-wise table will be inserted into a
 bf(std::ostream). 
@@ -25,6 +25,10 @@ includefile(namespace.inc)
 manpagesection(INHERITS FROM)
     bf(FBB::TableSpec) - The class bf(FBB::TableSpec) is a mere support class
 for bf(FBB::Table). Because of this, its features are repeated below.
+
+    bf(std::ostringstream) - Indirectly, bf(Table) inherits from
+bf(std::ostringstream), allowing insertions into a bf(Table) object 
+defining elements to be added to the table.
 
 manpagesection(ENUMERATIONS)
     The following enumerations are defined in the class bf(FBB::TableSpec),
@@ -74,10 +78,25 @@ expects an additional reference to a bf(FBB::TableSupport) object. A
 bf(FBB::TableSupport) object offers additional formatting features used by the
 table to define elements like horizontal lines  between rows, additional
 separators between elements etc.
+    itb(Table(size_t nColumns, TableSpec::FillDirection direction))
+        This constructor defines an empty table which can receive elements
+using, e.g., insertions, or its bf(push_back()) and bf(append()) members.  The
+parameter tt(nColumns) may be initialized with the number of columns the table
+should have. The number of rows are implied by the combination of this
+parameter and the number of elements in the iterator-range.
+    itb(Table(TableSupport &tableSupport,
+              size_t nColumns, TableSpec::FillDirection direction))
+        This constructor operates identically to the previous constructor, but
+expects an additional reference to a bf(FBB::TableSupport) object. A
+bf(FBB::TableSupport) object offers additional formatting features used by the
+table to define elements like horizontal lines  between rows, additional
+separators between elements etc.
     )
     The copy constructor is not available.
 
 manpagesection(OVERLOADED OPERATORS)
+    Note that the following operators are not defined in the namespace bf(FBB)
+but in bf(std).
     itemization(
     itb(std::ostream &::operator<<(std::ostream &, 
             FBB::Table<Iterator> const &table))
@@ -86,37 +105,86 @@ class bf(FBB::TableSpec), but since bf(FBB::TableSpec) is the baseclass of
 bf(FBB::Table), an bf(FBB::Table<Iterator>) object may be inserted into a
 bf(std::ostream). Tables may be inserted repeatedly (e.g., using a sequence of
 insertions). 
-
-    Note that this operator is not defined in the namespace bf(FBB).
+    itb(FBB::Table<Iterator> &operator<<(FBB::Table<Iterator> &obj, 
+        Type const &x))
+    This overloaded operator is defined as a template: bf(Type) is the
+name of a generic type for which bf(std::ostringstream) insertions are
+possible.  It inserts the value/object tt(x) into the bf(Table)'s
+bf(std::ostringstream) base class object.
+    itb(FBB::Table<Iterator> &operator<<(FBB::Table<Iterator> &obj, 
+                                 ostream &(*fp)(ostream &)))
+    This overloaded operator is defined as a template. It allows manipulators
+to be inserted into the bf(Table)'s bf(std::ostringstream) base class object.
+    itb(FBB::Table<Iterator> &operator<<(FBB::Table<Iterator> &obj, 
+         void (*fp)(FBB::Table<Iterator> &)))
+    This overloaded operator is defined as a template. It it used when
+applying the bf(tabulate) and bf(next) manipulators.
     )
     The overloaded assignment operator is not available.
 
 manpagesection(MEMBER FUNCTION)
     itemization(
+    itb(FBB::Table<Iterator> &append(std::string const &text
+                 char const *sep = " \t", bool addEmpty = false))
+        This member adds all fields in tt(text) separated by one of the
+characters in tt(sep) as additional elements to the currently defined
+table. Empty fields are ignored unless the parameter tt(addEmpty) is
+initialized to tt(true).
+    itb(void clear())
+        This member clears the table. All existing elements are removed, and
+the table will be empty.
+    itb(void next())
+        This member may be used to add the current contents of the base
+class's bf(ostringstream) object to the table. After calling this member the
+base-class's contents are empty. Note that there's also a bf(FBB::next)
+manipulator doing the same.
+    itb(void push_back(std::string const &element))
+        This member can be used to add another element to the table. It is
+also called from a tt(back_inserter) adaptor.
     itb(void setWidth(FBB::TableSpec::WidthType type))
         This member may be used to specify the width of indvidual or all
-columns of the table. Specify bf(TableSpec::EqualWidth) when all columns
+columns of the tableSpec. Specify bf(TableSpec::EqualWidth) when all columns
 should have equal widths, specify bf(TableSpec::ColumnWidth) when each column
-should be as wide as its widest element. This member is actually a member of
-bf(FBB::Table)'s baseclass bf(FBB::TableSpec).
+should be as wide as its widest element. 
+    itb(void tabulate())
+        This member may be used to prepare the bf(Table) object for insertions
+into a tt(std::ostream) object. Note that there's also a bf(FBB::tabulate)
+manipulator doing the same. This member is called automatically from bf(Table)
+constructors expecting iterators to a series of bf(std::string) objects to be
+inserted into the table. Following this call, the table will be `complete' in
+the sense that it defines a complete rectangular table. E.g., a table having
+two columns will contain six elements after inserting five elements followed
+by a bf(tabulate()) call.
     )
 
 
 manpagesection(MANPULATORS)
     itemization(
-    itb(FBB::equalWidth(FBB::Table<Iterator> &table))
-        This manipulator may be used to insert a table into a tt(std::ostream)
-object, enforcing equal column widths. To use this manipulator, the header
-file  tt(<bobcat/equalwidth>) must be inserted.
     itb(FBB::columnWidth(FBB::Table<Iterator> &table))
         This manipulator may be used to insert a table into a tt(std::ostream)
 object, enforcing column widths which are as
 wide as their widest elements. To use this manipulator, the header
 file  tt(<bobcat/columnwidth>) must be inserted.
+    itb(FBB::equalWidth(FBB::Table<Iterator> &table))
+        This manipulator may be used to insert a table into a tt(std::ostream)
+object, enforcing equal column widths. To use this manipulator, the header
+file  tt(<bobcat/equalwidth>) must be inserted.
+    itb(FBB next(FBB::Table<Iterator> &table))
+        This manipulator may be used to add the current contents of the base
+class's bf(ostringstream) object to the table. After calling this member the
+base-class's contents are empty.
+    itb(FBB::tabulate(FBB::Table<Iterator> &table))
+        This manipulator may be inserted into a bf(Table) object. It
+prepares the object for insertions into a tt(std::ostream) object. This
+manipulator table will `complete' the table in the sense that it defines a
+complete rectangular table. E.g., a table having two columns will contain six
+elements after inserting five elements followed by applying the 
+bf(FBB::tabulate) manipulator.
     )
 
 manpagesection(EXAMPLE)
-    To do
+
+    verbinclude(../../table/driver/driver.cc)
 
 manpagefiles()
     em(bobcat/table) - defines the class interface;nl()

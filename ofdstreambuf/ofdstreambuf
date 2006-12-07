@@ -5,77 +5,89 @@
 
 namespace FBB
 {    
-    class OFdStreambuf: public std::streambuf
-    {
-        public:
-                // Mode defines what to do with the file descriptor at
-                // destruction-time or when the default open is
-                // called. CLOSE_FD will close the fd, KEEP_FD will leave the
-                // fd as-is. When open is called with a Mode argument, then
-                // the provided argument is used for the actual fd. The Mode
-                // specified at the constructor is therefore only used for the
-                // mode-less open() call and for the destructor.
-            enum Mode
-            {
-                CLOSE_FD,
-                KEEP_FD,
-            };
 
-        private:
-            Mode        d_mode;
-            size_t    d_n;
-            int         d_fd;
-            char       *d_buffer;
+class OFdStreambuf: public std::streambuf
+{
+    public:
+            // Mode defines what to do with the file descriptor at
+            // destruction-time or when the default open is
+            // called. CLOSE_FD will close the fd, KEEP_FD will leave the
+            // fd as-is. When open is called with a Mode argument, then
+            // the provided argument is used for the actual fd. The Mode
+            // specified at the constructor is therefore only used for the
+            // mode-less open() call and for the destructor.
+        enum Mode
+        {
+            CLOSE_FD,
+            KEEP_FD,
+        };
 
-        public:
-            OFdStreambuf()
-            :
-                d_mode(CLOSE_FD),          // comply with old default
-                d_n(0),
-                d_buffer(0)
-            {}
-            OFdStreambuf(Mode mode)
-            :
-                d_mode(mode),
-                d_n(0),
-                d_buffer(0)
-            {}
-            OFdStreambuf(int fd, size_t n = 1)
-            :
-                d_mode(CLOSE_FD),
-                d_buffer(0)
-            {
-                open(fd, CLOSE_FD, n);
-            }
-            OFdStreambuf(int fd, Mode mode, size_t n = 1)
-            :
-                d_mode(mode),
-                d_buffer(0)
-            {
-                open(fd, CLOSE_FD, n);
-            }
-    
-            ~OFdStreambuf()
-            {
-                cleanup(d_mode);
-            }
-    
-            void open(int fd, Mode mode, size_t n = 1);
+    private:
+        Mode        d_mode;
+        size_t    d_n;
+        int         d_fd;
+        char       *d_buffer;
 
-            void open(int fd, size_t n = 1)
-            {
-                open(fd, d_mode, n);
-            }
+    public:
+        OFdStreambuf();
+        OFdStreambuf(Mode mode);
+        OFdStreambuf(int fd, size_t n = 1);
+        OFdStreambuf(int fd, Mode mode, size_t n = 1);
 
-            int sync();
-            int overflow(int c);
+        ~OFdStreambuf();
 
-        private:
-            OFdStreambuf(OFdStreambuf const &other);              // NI
-            OFdStreambuf &operator=(OFdStreambuf const &other);   // NI
+        void open(int fd, Mode mode, size_t n = 1);
+        void open(int fd, size_t n = 1);
+        int sync();
+        int overflow(int c);
 
-            void cleanup(Mode mode);
-    };
+    private:
+        OFdStreambuf(OFdStreambuf const &other);              // NI
+        OFdStreambuf &operator=(OFdStreambuf const &other);   // NI
+
+        void cleanup(Mode mode);
+};
+
+inline OFdStreambuf::OFdStreambuf()
+:
+    d_mode(CLOSE_FD),          // comply with old default
+    d_n(0),
+    d_buffer(0)
+{}
+
+inline OFdStreambuf::OFdStreambuf(Mode mode)
+:
+    d_mode(mode),
+    d_n(0),
+    d_buffer(0)
+{}
+
+inline OFdStreambuf::OFdStreambuf(int fd, size_t n)
+:
+    d_mode(CLOSE_FD),
+    d_buffer(0)
+{
+    open(fd, CLOSE_FD, n);
 }
+
+inline OFdStreambuf::OFdStreambuf(int fd, Mode mode, size_t n)
+:
+    d_mode(mode),
+    d_buffer(0)
+{
+    open(fd, CLOSE_FD, n);
+}
+
+inline OFdStreambuf::~OFdStreambuf()
+{
+    cleanup(d_mode);
+}
+
+inline void OFdStreambuf::open(int fd, size_t n)
+{
+    open(fd, d_mode, n);
+}
+
+} // FBB
 
 #endif

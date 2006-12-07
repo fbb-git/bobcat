@@ -1,8 +1,8 @@
 #include "string.ih"
 
-String String::uc() const
+string String::uc(string const &lhs)
 {
-    String ret(*this);
+    string ret(lhs);
 
     for_each(ret.begin(), ret.end(), Wrap1<char>(&String::toupper));
 

@@ -1,20 +1,8 @@
-#ifndef _INCLUDED_SELECTOR_H_
-#include "../selector.h"
-#endif
+#include "../selector"
+#include "../../errno/errno"
 
-#ifndef _INCLUDED_ERRNO_H_
-#include "../../errno/errno.h"
-#endif
-
-#ifndef _SYSINC_STRING_
 #include <string>
-#define _SYSINC_STRING_
-#endif
-
-#ifndef _SYSINC_IOSTREAM_
 #include <iostream>
-#define _SYSINC_IOSTREAM_
-#endif
 
 using namespace std;
 using namespace FBB;
@@ -43,6 +31,6 @@ int main(int argc, char **argv, char **envp)
     }
     catch (Errno const &e)
     {
-        cout << e.why() << endl;
+        cout << e.what() << endl;
     }
 }

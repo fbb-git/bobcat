@@ -3,763 +3,1174 @@
 
 namespace FBB
 {
-    template <typename Type1, typename Type2,
-              typename Context, typename ReturnType = void>
-    class Wrap2c
+
+template <typename Type1, typename Type2,
+          typename Context, typename ReturnType = void>
+class Wrap2c
+{
+    union
     {
-        union
-        {
-            Context *d_context;
-            Context const *d_contextconst;
-        };
-        union
-        {
-            // from right to left the following is varied: 
-            //          references, pointers, 
-            //          const references, const pointers
-            //  This makes for 4 variations on parameter 3, 
-            //      x 4 variations on parameter 2 
-            //      x 4 variations on parameter 1 = 64 variations
-
-            // set 1: 16  variations for Type1 &:
-
-            ReturnType (*d_ref3)(Type1 &, Type2 &, Context &);
-            ReturnType (*d_ref2ptr)(Type1 &, Type2 &, Context *);
-            ReturnType (*d_ref2cref)(Type1 &, Type2 &, Context const &);
-            ReturnType (*d_ref2cptr)(Type1 &, Type2 &, Context const *);
-
-            ReturnType (*d_refPtrRef)(Type1 &, Type2 *, Context &);
-            ReturnType (*d_refPtr2)(Type1 &, Type2 *, Context *);
-            ReturnType (*d_refPtrCref)(Type1 &, Type2 *, Context const &);
-            ReturnType (*d_refPtrCptr)(Type1 &, Type2 *, Context const *);
-    
-            ReturnType (*d_refCrefRef)(Type1 &, Type2 const &, Context &);
-            ReturnType (*d_refCrefPtr)(Type1 &, Type2 const &, Context *);
-            ReturnType (*d_refCref2)(Type1 &, Type2 const &, Context const &);
-            ReturnType (*d_refCrefCptr)(Type1 &, Type2 const &, 
-                                                            Context const *);
-
-            ReturnType (*d_refCptrRef)(Type1 &, Type2 const *, Context &);
-            ReturnType (*d_refCPtrPtr)(Type1 &, Type2 const *, Context *);
-            ReturnType (*d_refCptrCref)(Type1 &, Type2 const *, 
-                                                            Context const &);
-            ReturnType (*d_refCptr2)(Type1 &, Type2 const *, 
-                                                            Context const *);
-
-            // set 2: 16  variations for Type1 *:
-
-            ReturnType (*d_ptrRef2)(Type1 *, Type2 &, Context &);
-            ReturnType (*d_ptrRefPtr)(Type1 *, Type2 &, Context *);
-            ReturnType (*d_ptrRefCref)(Type1 *, Type2 &, Context const &);
-            ReturnType (*d_ptrRefCptr)(Type1 *, Type2 &, Context const *);
-
-            ReturnType (*d_ptr2ref)(Type1 *, Type2 *, Context &);
-            ReturnType (*d_ptr3)(Type1 *, Type2 *, Context *);
-            ReturnType (*d_ptr2Cref)(Type1 *, Type2 *, Context const &);
-            ReturnType (*d_ptr2Cptr)(Type1 *, Type2 *, Context const *);
-    
-            ReturnType (*d_ptrCrefRef)(Type1 *, Type2 const &, Context &);
-            ReturnType (*d_ptrCrefPtr)(Type1 *, Type2 const &, Context *);
-            ReturnType (*d_ptrCref2)(Type1 *, Type2 const &, Context const &);
-            ReturnType (*d_ptrCrefCptr)(Type1 *, Type2 const &, 
-                                                            Context const *);
-
-            ReturnType (*d_ptrCptrRef)(Type1 *, Type2 const *, Context &);
-            ReturnType (*d_ptrCPtrPtr)(Type1 *, Type2 const *, Context *);
-            ReturnType (*d_ptrCptrCref)(Type1 *, Type2 const *, 
-                                                            Context const &);
-            ReturnType (*d_ptrCptr2)(Type1 *, Type2 const *, 
-                                                            Context const *);
-
-            // set 3: 16  variations for Type1 const &:
-
-            ReturnType (*d_crefRef2)(Type1 const &, Type2 &, Context &);
-            ReturnType (*d_crefRefPtr)(Type1 const &, Type2 &, Context *);
-            ReturnType (*d_crefRefCref)(Type1 const &, Type2 &, 
-                                                            Context const &);
-            ReturnType (*d_crefRefCptr)(Type1 const &, Type2 &, 
-                                                            Context const *);
-
-            ReturnType (*d_crefPtrRef)(Type1 const &, Type2 *, Context &);
-            ReturnType (*d_crefPtr2)(Type1 const &, Type2 *, Context *);
-            ReturnType (*d_crefPtrCref)(Type1 const &, Type2 *, 
-                                                            Context const &);
-            ReturnType (*d_crefPtrCptr)(Type1 const &, Type2 *, 
-                                                            Context const *);
-    
-            ReturnType (*d_cref2ref)(Type1 const &, Type2 const &, 
-                                                            Context &);
-            ReturnType (*d_cref2ptr)(Type1 const &, Type2 const &, 
-                                                            Context *);
-            ReturnType (*d_cref3)(Type1 const &, Type2 const &, 
-                                                            Context const &);
-            ReturnType (*d_cref2cptr)(Type1 const &, Type2 const &, 
-                                                            Context const *);
-
-            ReturnType (*d_crefCptrRef)(Type1 const &, Type2 const *, 
-                                                            Context &);
-            ReturnType (*d_crefCPtrPtr)(Type1 const &, Type2 const *, 
-                                                            Context *);
-            ReturnType (*d_crefCptrCref)(Type1 const &, Type2 const *, 
-                                                            Context const &);
-            ReturnType (*d_crefCptr2)(Type1 const &, Type2 const *, 
-                                                            Context const *);
-
-            // set 4: 16  variations for Type1 const *:
-
-            ReturnType (*d_cptrRef2)(Type1 const *, Type2 &, Context &);
-            ReturnType (*d_cptrRefPtr)(Type1 const *, Type2 &, Context *);
-            ReturnType (*d_cptrRefCref)(Type1 const *, Type2 &, 
-                                                            Context const &);
-            ReturnType (*d_cptrRefCptr)(Type1 const *, Type2 &, 
-                                                            Context const *);
-
-            ReturnType (*d_cptrPtrRef)(Type1 const *, Type2 *, Context &);
-            ReturnType (*d_cptrPtr2)(Type1 const *, Type2 *, Context *);
-            ReturnType (*d_cptrPtrCref)(Type1 const *, Type2 *, 
-                                                            Context const &);
-            ReturnType (*d_cptrPtrCptr)(Type1 const *, Type2 *, 
-                                                            Context const *);
-    
-            ReturnType (*d_cptrCrefRef)(Type1 const *, Type2 const &, 
-                                                            Context &);
-            ReturnType (*d_cptrCrefPtr)(Type1 const *, Type2 const &, 
-                                                            Context *);
-            ReturnType (*d_cptrCref2)(Type1 const *, Type2 const &, 
-                                                            Context const &);
-            ReturnType (*d_cptrCrefCptr)(Type1 const *, Type2 const &, 
-                                                            Context const *);
-
-            ReturnType (*d_cptr2ref)(Type1 const *, Type2 const *, 
-                                                            Context &);
-            ReturnType (*d_cptr2ptr)(Type1 const *, Type2 const *, 
-                                                            Context *);
-            ReturnType (*d_cptr2cref)(Type1 const *, Type2 const *, 
-                                                            Context const &);
-            ReturnType (*d_cptr3)(Type1 const *, Type2 const *, 
-                                                            Context const *);
-
-
-        };
-
-        public:
-            typedef Type1       first_argument_type;
-            typedef Type2       second_argument_type;
-            typedef ReturnType  result_type;
-
-            // Type1 may be &, const &, * and const *
-            // Type2 may be &, const &, * and const *
-            // Context may be &, const &. * and const *
-            // This allows for 64 combinations
-
-        // First block of 16 constructors: Type1 &
-
-            // Type 1: &, Type2: &
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 &, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_ref3(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 &, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_ref2ptr(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 &, Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_ref2cref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 &, Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_ref2cptr(fun)
-            {}
-
-
-            // Type 1: &, Type2: *
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 *, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_refPtrRef(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 *, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_refPtr2(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 *, Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_refPtrCref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 *, Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_refPtrCptr(fun)
-            {}
-
-
-            // Type 1: &, Type2: const &
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 const &, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_refCrefRef(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 const &, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_refCrefPtr(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 const &, Context const &),
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_refCref2(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 const &, Context const *),
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_refCrefCptr(fun)
-            {}
-
-
-            // Type 1: &, Type2: const *
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 const *, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_refCptrRef(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 const *, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_refCPtrPtr(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 const *, Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_refCptrCref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 &, Type2 const *, Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_refCptr2(fun)
-            {}
-
-
-        // Second block of 16 constructors: Type1 *
-
-            // Type 1: *, Type2: &
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 &, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_ptrRef2(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 &, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_ptrRefPtr(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 &, Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_ptrRefCref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 &, Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_ptrRefCptr(fun)
-            {}
-
-
-            // Type 1: *, Type2: *
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 *, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_ptr2ref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 *, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_ptr3(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 *, Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_ptr2Cref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 *, Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_ptr2Cptr(fun)
-            {}
-
-
-            // Type 1: *, Type2: const &
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 const &, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_ptrCrefRef(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 const &, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_ptrCrefPtr(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 const &, Context const &),
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_ptrCref2(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 const &, Context const *),
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_ptrCrefCptr(fun)
-            {}
-
-
-            // Type 1: *, Type2: const *
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 const *, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_ptrCptrRef(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 const *, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_ptrCPtrPtr(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 const *, Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_ptrCptrCref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 *, Type2 const *, Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_ptrCptr2(fun)
-            {}
-
-
-        // Third block of 16 constructors: Type1 const &
-
-            // Type 1: const &, Type2: &
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 &, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_crefRef2(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 &, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_crefRefPtr(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 &, Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_crefRefCref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 &, Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_crefRefCptr(fun)
-            {}
-
-
-            // Type 1: const &, Type2: *
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 *, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_crefPtrRef(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 *, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_crefPtr2(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 *, Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_crefPtrCref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 *, Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_crefPtrCptr(fun)
-            {}
-
-
-            // Type 1: const &, Type2: const &
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const &, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_cref2ref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const &, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_cref2ptr(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const &, 
-                                                    Context const &),
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_cref3(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const &, 
-                                                    Context const *),
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_cref2cptr(fun)
-            {}
-
-
-            // Type 1: const &, Type2: const *
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const *, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_crefCptrRef(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const *, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_crefCPtrPtr(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const *,
-                                                    Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_crefCptrCref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const *, 
-                                                    Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_crefCptr2(fun)
-            {}
-
-
-        // Fourth block of 16 constructors: Type1 const *
-
-            // Type 1: const *, Type2: &
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 &, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_cptrRef2(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 &, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_cptrRefPtr(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 &, Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_cptrRefCref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 &, Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_cptrRefCptr(fun)
-            {}
-
-
-            // Type 1: const *, Type2: *
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 *, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_cptrPtrRef(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 *, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_cptrPtr2(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 *, Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_cptrPtrCref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 *, Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_cptrPtrCptr(fun)
-            {}
-
-
-            // Type 1: const *, Type2: const &
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const &, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_cptrCrefRef(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const &, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_cptrCrefPtr(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const &, 
-                                                    Context const &),
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_cptrCref2(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const &, 
-                                                    Context const *),
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_cptrCrefCptr(fun)
-            {}
-
-
-            // Type 1: const *, Type2: const *
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const *, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_cptr2ref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const *, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_cptr2ptr(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const *, 
-                                                    Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_cptr2cref(fun)
-            {}
-
-            Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const *, 
-                                                    Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_cptr3(fun)
-            {}
-
-        // Member functions: 16, for ref, ptr, const ref, const ptr,
-        //                       and two parameters per function
-
-        // Type 1: ref
-
-            ReturnType operator()(Type1 &param1, Type2 &param2) const
-            {
-                return (*d_ref3)(param1, param2, *d_context);
-            }
-
-            ReturnType operator()(Type1 &param1, Type2 *param2) const
-            {
-                return (*d_ref3)(param1, *param2, *d_context);
-            }
-
-            ReturnType operator()(Type1 &param1, Type2 const &param2) const
-            {
-                return (*d_refCrefRef)(param1, param2, *d_context);
-            }
-
-
-            ReturnType operator()(Type1 &param1, Type2 const *param2) const
-            {
-                return (*d_refCrefRef)(param1, *param2, *d_context);
-            }
-
-        // Type 1: ptr
-
-            ReturnType operator()(Type1 *param1, Type2 &param2) const
-            {
-                return (*d_ref3)(*param1, param2, *d_context);
-            }
-
-            ReturnType operator()(Type1 *param1, Type2 *param2) const
-            {
-                return (*d_ref3)(*param1, *param2, *d_context);
-            }
-
-            ReturnType operator()(Type1 *param1, Type2 const &param2) const
-            {
-                return (*d_refCrefRef)(*param1, param2, *d_context);
-            }
-
-            ReturnType operator()(Type1 *param1, Type2 const *param2) const
-            {
-                return (*d_refCrefRef)(*param1, *param2, *d_context);
-            }
-
-        // Type 2: const ref
-
-            ReturnType operator()(Type1 const &param1, Type2 &param2) const
-            {
-                return (*d_crefRef2)(param1, param2, *d_context);
-            }
-
-            ReturnType operator()(Type1 const &param1, Type2 *param2) const
-            {
-                return (*d_crefRef2)(param1, *param2, *d_context);
-            }
-
-            ReturnType operator()(Type1 const &param1, 
-                                  Type2 const &param2) const
-            {
-                return (*d_cref2ref)(param1, param2, *d_context);
-            }
-
-            ReturnType operator()(Type1 const &param1, 
-                                  Type2 const *param2) const
-            {
-                return (*d_cref2ref)(param1, *param2, *d_context);
-            }
-
-        // Type 2: const ptr
-
-            ReturnType operator()(Type1 const *param1, Type2 &param2) const
-            {
-                return (*d_crefRef2)(*param1, param2, *d_context);
-            }
-
-            ReturnType operator()(Type1 const *param1, Type2 *param2) const
-            {
-                return (*d_crefRef2)(*param1, *param2, *d_context);
-            }
-
-            ReturnType operator()(Type1 const *param1, 
-                                  Type2 const &param2) const
-            {
-                return (*d_cref2ref)(*param1, param2, *d_context);
-            }
-
-            ReturnType operator()(Type1 const *param1, 
-                                  Type2 const *param2) const
-            {
-                return (*d_cref2ref)(*param1, *param2, *d_context);
-            }
+        Context *d_context;
+        Context const *d_contextconst;
     };
-}
+    union
+    {
+        // from right to left the following is varied: 
+        //          references, pointers, 
+        //          const references, const pointers
+        //  This makes for 4 variations on parameter 3, 
+        //      x 4 variations on parameter 2 
+        //      x 4 variations on parameter 1 = 64 variations
+
+        // set 1: 16  variations for Type1 &:
+
+        ReturnType (*d_ref3)(Type1 &, Type2 &, Context &);
+        ReturnType (*d_ref2ptr)(Type1 &, Type2 &, Context *);
+        ReturnType (*d_ref2cref)(Type1 &, Type2 &, Context const &);
+        ReturnType (*d_ref2cptr)(Type1 &, Type2 &, Context const *);
+
+        ReturnType (*d_refPtrRef)(Type1 &, Type2 *, Context &);
+        ReturnType (*d_refPtr2)(Type1 &, Type2 *, Context *);
+        ReturnType (*d_refPtrCref)(Type1 &, Type2 *, Context const &);
+        ReturnType (*d_refPtrCptr)(Type1 &, Type2 *, Context const *);
+
+        ReturnType (*d_refCrefRef)(Type1 &, Type2 const &, Context &);
+        ReturnType (*d_refCrefPtr)(Type1 &, Type2 const &, Context *);
+        ReturnType (*d_refCref2)(Type1 &, Type2 const &, Context const &);
+        ReturnType (*d_refCrefCptr)(Type1 &, Type2 const &, 
+                                                        Context const *);
+
+        ReturnType (*d_refCptrRef)(Type1 &, Type2 const *, Context &);
+        ReturnType (*d_refCPtrPtr)(Type1 &, Type2 const *, Context *);
+        ReturnType (*d_refCptrCref)(Type1 &, Type2 const *, 
+                                                        Context const &);
+        ReturnType (*d_refCptr2)(Type1 &, Type2 const *, 
+                                                        Context const *);
+
+        // set 2: 16  variations for Type1 *:
+
+        ReturnType (*d_ptrRef2)(Type1 *, Type2 &, Context &);
+        ReturnType (*d_ptrRefPtr)(Type1 *, Type2 &, Context *);
+        ReturnType (*d_ptrRefCref)(Type1 *, Type2 &, Context const &);
+        ReturnType (*d_ptrRefCptr)(Type1 *, Type2 &, Context const *);
+
+        ReturnType (*d_ptr2ref)(Type1 *, Type2 *, Context &);
+        ReturnType (*d_ptr3)(Type1 *, Type2 *, Context *);
+        ReturnType (*d_ptr2Cref)(Type1 *, Type2 *, Context const &);
+        ReturnType (*d_ptr2Cptr)(Type1 *, Type2 *, Context const *);
+
+        ReturnType (*d_ptrCrefRef)(Type1 *, Type2 const &, Context &);
+        ReturnType (*d_ptrCrefPtr)(Type1 *, Type2 const &, Context *);
+        ReturnType (*d_ptrCref2)(Type1 *, Type2 const &, Context const &);
+        ReturnType (*d_ptrCrefCptr)(Type1 *, Type2 const &, 
+                                                        Context const *);
+
+        ReturnType (*d_ptrCptrRef)(Type1 *, Type2 const *, Context &);
+        ReturnType (*d_ptrCPtrPtr)(Type1 *, Type2 const *, Context *);
+        ReturnType (*d_ptrCptrCref)(Type1 *, Type2 const *, 
+                                                        Context const &);
+        ReturnType (*d_ptrCptr2)(Type1 *, Type2 const *, 
+                                                        Context const *);
+
+        // set 3: 16  variations for Type1 const &:
+
+        ReturnType (*d_crefRef2)(Type1 const &, Type2 &, Context &);
+        ReturnType (*d_crefRefPtr)(Type1 const &, Type2 &, Context *);
+        ReturnType (*d_crefRefCref)(Type1 const &, Type2 &, 
+                                                        Context const &);
+        ReturnType (*d_crefRefCptr)(Type1 const &, Type2 &, 
+                                                        Context const *);
+
+        ReturnType (*d_crefPtrRef)(Type1 const &, Type2 *, Context &);
+        ReturnType (*d_crefPtr2)(Type1 const &, Type2 *, Context *);
+        ReturnType (*d_crefPtrCref)(Type1 const &, Type2 *, 
+                                                        Context const &);
+        ReturnType (*d_crefPtrCptr)(Type1 const &, Type2 *, 
+                                                        Context const *);
+
+        ReturnType (*d_cref2ref)(Type1 const &, Type2 const &, 
+                                                        Context &);
+        ReturnType (*d_cref2ptr)(Type1 const &, Type2 const &, 
+                                                        Context *);
+        ReturnType (*d_cref3)(Type1 const &, Type2 const &, 
+                                                        Context const &);
+        ReturnType (*d_cref2cptr)(Type1 const &, Type2 const &, 
+                                                        Context const *);
+
+        ReturnType (*d_crefCptrRef)(Type1 const &, Type2 const *, 
+                                                        Context &);
+        ReturnType (*d_crefCPtrPtr)(Type1 const &, Type2 const *, 
+                                                        Context *);
+        ReturnType (*d_crefCptrCref)(Type1 const &, Type2 const *, 
+                                                        Context const &);
+        ReturnType (*d_crefCptr2)(Type1 const &, Type2 const *, 
+                                                        Context const *);
+
+        // set 4: 16  variations for Type1 const *:
+
+        ReturnType (*d_cptrRef2)(Type1 const *, Type2 &, Context &);
+        ReturnType (*d_cptrRefPtr)(Type1 const *, Type2 &, Context *);
+        ReturnType (*d_cptrRefCref)(Type1 const *, Type2 &, 
+                                                        Context const &);
+        ReturnType (*d_cptrRefCptr)(Type1 const *, Type2 &, 
+                                                        Context const *);
+
+        ReturnType (*d_cptrPtrRef)(Type1 const *, Type2 *, Context &);
+        ReturnType (*d_cptrPtr2)(Type1 const *, Type2 *, Context *);
+        ReturnType (*d_cptrPtrCref)(Type1 const *, Type2 *, 
+                                                        Context const &);
+        ReturnType (*d_cptrPtrCptr)(Type1 const *, Type2 *, 
+                                                        Context const *);
+
+        ReturnType (*d_cptrCrefRef)(Type1 const *, Type2 const &, 
+                                                        Context &);
+        ReturnType (*d_cptrCrefPtr)(Type1 const *, Type2 const &, 
+                                                        Context *);
+        ReturnType (*d_cptrCref2)(Type1 const *, Type2 const &, 
+                                                        Context const &);
+        ReturnType (*d_cptrCrefCptr)(Type1 const *, Type2 const &, 
+                                                        Context const *);
+
+        ReturnType (*d_cptr2ref)(Type1 const *, Type2 const *, 
+                                                        Context &);
+        ReturnType (*d_cptr2ptr)(Type1 const *, Type2 const *, 
+                                                        Context *);
+        ReturnType (*d_cptr2cref)(Type1 const *, Type2 const *, 
+                                                        Context const &);
+        ReturnType (*d_cptr3)(Type1 const *, Type2 const *, 
+                                                        Context const *);
+    };
+
+    public:
+        typedef Type1       first_argument_type;
+        typedef Type2       second_argument_type;
+        typedef ReturnType  result_type;
+
+        // Type1 may be &, const &, * and const *
+        // Type2 may be &, const &, * and const *
+        // Context may be &, const &. * and const *
+        // This allows for 64 combinations
+
+    // First block of 16 constructors: Type1 &
+        // Type 1: &, Type2: &
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 &, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 &, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 &, Context const &), 
+               Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 &, Context const *), 
+               Context const *context);
+
+        // Type 1: &, Type2: *
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 *, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 *, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 *, Context const &), 
+               Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 *, Context const *), 
+               Context const *context);
+
+        // Type 1: &, Type2: const &
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 const &, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 const &, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 const &, Context const &),
+               Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 const &, Context const *),
+               Context const *context);
+
+        // Type 1: &, Type2: const *
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 const *, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 const *, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 const *, Context const &), 
+               Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 &, Type2 const *, Context const *), 
+               Context const *context);
+
+    // Second block of 16 constructors: Type1 *
+        // Type 1: *, Type2: &
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 &, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 &, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 &, Context const &), 
+               Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 &, Context const *), 
+               Context const *context);
+
+        // Type 1: *, Type2: *
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 *, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 *, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 *, Context const &), 
+               Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 *, Context const *), 
+               Context const *context);
+
+        // Type 1: *, Type2: const &
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 const &, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 const &, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 const &, Context const &),
+               Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 const &, Context const *),
+               Context const *context);
+
+        // Type 1: *, Type2: const *
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 const *, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 const *, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 const *, Context const &), 
+               Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 *, Type2 const *, Context const *), 
+               Context const *context);
+
+    // Third block of 16 constructors: Type1 const &
+        // Type 1: const &, Type2: &
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 &, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 &, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 &, Context const &), 
+               Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 &, Context const *), 
+               Context const *context);
+
+        // Type 1: const &, Type2: *
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 *, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 *, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 *, Context const &), 
+               Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 *, Context const *), 
+               Context const *context);
+
+        // Type 1: const &, Type2: const &
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const &, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const &, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const &, 
+                                 Context const &), Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const &, 
+                                 Context const *), Context const *context);
+
+        // Type 1: const &, Type2: const *
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const *, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const *, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const *,
+                                 Context const &), Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const *, 
+                                 Context const *), Context const *context);
+
+    // Fourth block of 16 constructors: Type1 const *
+        // Type 1: const *, Type2: &
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 &, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 &, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 &, Context const &), 
+               Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 &, Context const *), 
+               Context const *context);
+
+        // Type 1: const *, Type2: *
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 *, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 *, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 *, Context const &), 
+               Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 *, Context const *), 
+               Context const *context);
+
+        // Type 1: const *, Type2: const &
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const &, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const &, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const &, 
+                                 Context const &), Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const &, 
+                                 Context const *), Context const *context);
+
+        // Type 1: const *, Type2: const *
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const *, Context &), 
+               Context &context);
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const *, Context *), 
+               Context *context);
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const *, 
+                                 Context const &), Context const &context);
+        Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const *, 
+                                 Context const *), Context const *context);
+
+    // Member functions: 16, for ref, ptr, const ref, const ptr,
+    //                       and two parameters per function
+
+    // Type 1: ref
+        ReturnType operator()(Type1 &param1, Type2 &param2) const;
+        ReturnType operator()(Type1 &param1, Type2 *param2) const;
+        ReturnType operator()(Type1 &param1, Type2 const &param2) const;
+        ReturnType operator()(Type1 &param1, Type2 const *param2) const;
+
+    // Type 1: ptr
+        ReturnType operator()(Type1 *param1, Type2 &param2) const;
+        ReturnType operator()(Type1 *param1, Type2 *param2) const;
+        ReturnType operator()(Type1 *param1, Type2 const &param2) const;
+        ReturnType operator()(Type1 *param1, Type2 const *param2) const;
+
+    // Type 2: const ref
+        ReturnType operator()(Type1 const &param1, Type2 &param2) const;
+        ReturnType operator()(Type1 const &param1, Type2 *param2) const;
+        ReturnType operator()(Type1 const &param1, Type2 const &param2) const;
+        ReturnType operator()(Type1 const &param1, Type2 const *param2) const;
+
+    // Type 2: const ptr
+        ReturnType operator()(Type1 const *param1, Type2 &param2) const;
+        ReturnType operator()(Type1 const *param1, Type2 *param2) const;
+        ReturnType operator()(Type1 const *param1, Type2 const &param2) const;
+        ReturnType operator()(Type1 const *param1, Type2 const *param2) const;
+};
+
+// First block of 16 constructors: Type1 &
+
+    // Type 1: &, Type2: &
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 &, Context &), Context &context)
+    :
+        d_context(&context),
+        d_ref3(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 &, Context *), Context *context)
+    :
+        d_context(context),
+        d_ref2ptr(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 &, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_ref2cref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 &, Context const *), 
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_ref2cptr(fun)
+    {}
+
+
+    // Type 1: &, Type2: *
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 *, Context &), Context &context)
+    :
+        d_context(&context),
+        d_refPtrRef(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 *, Context *), Context *context)
+    :
+        d_context(context),
+        d_refPtr2(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 *, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_refPtrCref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 *, Context const *), 
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_refPtrCptr(fun)
+    {}
+
+
+    // Type 1: &, Type2: const &
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 const &, Context &), 
+           Context &context)
+    :
+        d_context(&context),
+        d_refCrefRef(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 const &, Context *), 
+           Context *context)
+    :
+        d_context(context),
+        d_refCrefPtr(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 const &, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_refCref2(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 const &, Context const *), 
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_refCrefCptr(fun)
+    {}
+
+
+    // Type 1: &, Type2: const *
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 const *, Context &), 
+           Context &context)
+    :
+        d_context(&context),
+        d_refCptrRef(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 const *, Context *), 
+           Context *context)
+    :
+        d_context(context),
+        d_refCPtrPtr(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 const *, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_refCptrCref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 &, Type2 const *, Context const *), 
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_refCptr2(fun)
+    {}
+
+
+// Second block of 16 constructors: Type1 *
+
+    // Type 1: *, Type2: &
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 &, Context &), Context &context)
+    :
+        d_context(&context),
+        d_ptrRef2(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 &, Context *), Context *context)
+    :
+        d_context(context),
+        d_ptrRefPtr(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 &, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_ptrRefCref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 &, Context const *), 
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_ptrRefCptr(fun)
+    {}
+
+
+    // Type 1: *, Type2: *
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 *, Context &), Context &context)
+    :
+        d_context(&context),
+        d_ptr2ref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 *, Context *), Context *context)
+    :
+        d_context(context),
+        d_ptr3(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 *, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_ptr2Cref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 *, Context const *), 
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_ptr2Cptr(fun)
+    {}
+
+
+    // Type 1: *, Type2: const &
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 const &, Context &), 
+           Context &context)
+    :
+        d_context(&context),
+        d_ptrCrefRef(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 const &, Context *), 
+           Context *context)
+    :
+        d_context(context),
+        d_ptrCrefPtr(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 const &, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_ptrCref2(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 const &, Context const *), 
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_ptrCrefCptr(fun)
+    {}
+
+
+    // Type 1: *, Type2: const *
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 const *, Context &), 
+           Context &context)
+    :
+        d_context(&context),
+        d_ptrCptrRef(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 const *, Context *), 
+           Context *context)
+    :
+        d_context(context),
+        d_ptrCPtrPtr(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 const *, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_ptrCptrCref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 *, Type2 const *, Context const *), 
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_ptrCptr2(fun)
+    {}
+
+
+// Third block of 16 constructors: Type1 const &
+
+    // Type 1: const &, Type2: &
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 &, Context &), 
+           Context &context)
+    :
+        d_context(&context),
+        d_crefRef2(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 &, Context *), 
+           Context *context)
+    :
+        d_context(context),
+        d_crefRefPtr(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 &, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_crefRefCref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 &, Context const *), 
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_crefRefCptr(fun)
+    {}
+
+
+    // Type 1: const &, Type2: *
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 *, Context &), 
+        Context &context)
+    :
+        d_context(&context),
+        d_crefPtrRef(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 *, Context *), 
+           Context *context)
+    :
+        d_context(context),
+        d_crefPtr2(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 *, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_crefPtrCref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 *, Context const *), 
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_crefPtrCptr(fun)
+    {}
+
+
+    // Type 1: const &, Type2: const &
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const &, Context &), 
+           Context &context)
+    :
+        d_context(&context),
+        d_cref2ref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const &, Context *), 
+           Context *context)
+    :
+        d_context(context),
+        d_cref2ptr(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const &, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_cref3(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const &, Context const *),
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_cref2cptr(fun)
+    {}
+
+
+    // Type 1: const &, Type2: const *
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const *, Context &), 
+           Context &context)
+    :
+        d_context(&context),
+        d_crefCptrRef(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const *, Context *), 
+           Context *context)
+    :
+        d_context(context),
+        d_crefCPtrPtr(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const *, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_crefCptrCref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const &, Type2 const *, Context const *), 
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_crefCptr2(fun)
+    {}
+
+
+// Fourth block of 16 constructors: Type1 const *
+
+    // Type 1: const *, Type2: &
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 &, Context &), 
+           Context &context)
+    :
+        d_context(&context),
+        d_cptrRef2(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 &, Context *), 
+           Context *context)
+    :
+        d_context(context),
+        d_cptrRefPtr(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 &, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_cptrRefCref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 &, Context const *), 
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_cptrRefCptr(fun)
+    {}
+
+
+    // Type 1: const *, Type2: *
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 *, Context &), 
+           Context &context)
+    :
+        d_context(&context),
+        d_cptrPtrRef(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 *, Context *), 
+           Context *context)
+    :
+        d_context(context),
+        d_cptrPtr2(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 *, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_cptrPtrCref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 *, Context const *), 
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_cptrPtrCptr(fun)
+    {}
+
+
+    // Type 1: const *, Type2: const &
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const &, Context &), 
+           Context &context)
+    :
+        d_context(&context),
+        d_cptrCrefRef(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const &, Context *), 
+           Context *context)
+    :
+        d_context(context),
+        d_cptrCrefPtr(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const &, Context const &),
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_cptrCref2(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const &, Context const *),
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_cptrCrefCptr(fun)
+    {}
+
+
+    // Type 1: const *, Type2: const *
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const *, Context &), 
+           Context &context)
+    :
+        d_context(&context),
+        d_cptr2ref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const *, Context *), 
+           Context *context)
+    :
+        d_context(context),
+        d_cptr2ptr(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const *, Context const &), 
+           Context const &context)
+    :
+        d_contextconst(&context),
+        d_cptr2cref(fun)
+    {}
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    Wrap2c<Type1, Type2, Context, ReturnType>::
+    Wrap2c(ReturnType (*fun)(Type1 const *, Type2 const *, Context const *), 
+           Context const *context)
+    :
+        d_contextconst(context),
+        d_cptr3(fun)
+    {}
+
+// Member functions: 16, for ref, ptr, const ref, const ptr,
+//                       and two parameters per function
+
+// Type 1: ref
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 &param1, Type2 &param2) const
+    {
+        return (*d_ref3)(param1, param2, *d_context);
+    }
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 &param1, Type2 *param2) const
+    {
+        return (*d_ref3)(param1, *param2, *d_context);
+    }
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 &param1, Type2 const &param2) const
+    {
+        return (*d_refCrefRef)(param1, param2, *d_context);
+    }
+
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 &param1, Type2 const *param2) const
+    {
+        return (*d_refCrefRef)(param1, *param2, *d_context);
+    }
+
+// Type 1: ptr
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 *param1, Type2 &param2) const
+    {
+        return (*d_ref3)(*param1, param2, *d_context);
+    }
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 *param1, Type2 *param2) const
+    {
+        return (*d_ref3)(*param1, *param2, *d_context);
+    }
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 *param1, Type2 const &param2) const
+    {
+        return (*d_refCrefRef)(*param1, param2, *d_context);
+    }
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 *param1, Type2 const *param2) const
+    {
+        return (*d_refCrefRef)(*param1, *param2, *d_context);
+    }
+
+// Type 2: const ref
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 const &param1, Type2 &param2) const
+    {
+        return (*d_crefRef2)(param1, param2, *d_context);
+    }
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 const &param1, Type2 *param2) const
+    {
+        return (*d_crefRef2)(param1, *param2, *d_context);
+    }
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 const &param1, Type2 const &param2) const
+    {
+        return (*d_cref2ref)(param1, param2, *d_context);
+    }
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 const &param1, Type2 const *param2) const
+    {
+        return (*d_cref2ref)(param1, *param2, *d_context);
+    }
+
+// Type 2: const ptr
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 const *param1, Type2 &param2) const
+    {
+        return (*d_crefRef2)(*param1, param2, *d_context);
+    }
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 const *param1, Type2 *param2) const
+    {
+        return (*d_crefRef2)(*param1, *param2, *d_context);
+    }
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 const *param1, Type2 const &param2) const
+    {
+        return (*d_cref2ref)(*param1, param2, *d_context);
+    }
+
+    template<typename Type1, typename Type2, typename Context, 
+             typename ReturnType>
+    ReturnType Wrap2c<Type1, Type2, Context, ReturnType>::
+    operator()(Type1 const *param1, Type2 const *param2) const
+    {
+        return (*d_cref2ref)(*param1, *param2, *d_context);
+    }
+
+} // FBB
 
 #endif
 

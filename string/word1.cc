@@ -2,10 +2,10 @@
 
     // type should have been initialized to `NORMAL' by the caller
 
-String::Type String::word(const_iterator *until, 
-                          const_iterator from, string const &separators) const
+String::Type String::word(string const &str, const_iterator *until, 
+                          const_iterator from, string const &separators)
 {
-    const_iterator beyond = end();
+    const_iterator beyond = str.end();
 
     while (true)
     {

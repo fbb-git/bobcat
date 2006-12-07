@@ -15,25 +15,30 @@ std::ostream &operator<<(std::ostream &str, FBB::columnWidth const &cw);
 
 namespace FBB
 {
+
 class columnWidth
 {
-    TableSpec &d_table;
-
     friend std::ostream &::operator<<(std::ostream &, columnWidth const &);
 
+    TableSpec &d_table;
+
     public:
-        columnWidth(TableSpec &table)
-        :
-            d_table(table)
-        {}
+        columnWidth(TableSpec &table);
         
     private:
-        std::ostream &insertInto(std::ostream &str) const
-        {
-            d_table.setWidth(TableSpec::ColumnWidth);
-            return str << d_table;
-        }
+        std::ostream &insertInto(std::ostream &str) const;
 };
+
+inline columnWidth::columnWidth(TableSpec &table)
+:
+    d_table(table)
+{}
+
+inline std::ostream &columnWidth::insertInto(std::ostream &str) const
+{
+    d_table.setWidth(TableSpec::ColumnWidth);
+    return str << d_table;
+}
 
 } // FBB
 

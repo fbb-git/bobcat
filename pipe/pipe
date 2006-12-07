@@ -5,52 +5,58 @@
 
 namespace FBB
 {
-    class Pipe
-    {
-        protected:
-            enum  RW 
-            {
-                READ, 
-                WRITE 
-            };
-            int d_fd[2];
-    
-        public:
-            Pipe() throw(Errno);
 
-            Pipe(int const *fd);
+class Pipe
+{
+    protected:
+        enum  RW 
+        {
+            READ, 
+            WRITE 
+        };
+        int d_fd[2];
 
-            int readFd() const
-            {
-                return d_fd[READ];
-            }
-            int writeFd() const
-            {
-                return d_fd[WRITE];
-            }
+    public:
+        Pipe() throw(Errno);
+        Pipe(int const *fd);
 
-            int getReadFd() const       // DEPRECATED: USE readFd()
-            {
-                return d_fd[READ];
-            }
-            int getWriteFd() const      // DEPRECATED: USE writeFd()
-            {
-                return d_fd[WRITE];
-            }
+        int readFd() const;
+        int writeFd() const;
 
-            void readFrom(int filedescriptor);   
+        int getReadFd() const;      // DEPRECATED: USE readFd()
+        int getWriteFd() const;     // DEPRECATED: USE writeFd()
 
-            // experimental:
-            void readFrom(int const *filedescriptor, size_t n);
+        void readFrom(int filedescriptor);   
 
-            int readOnly();
+        // experimental:
+        void readFrom(int const *filedescriptor, size_t n);
 
-            void writtenBy(int filedescriptor);
+        int readOnly();
+        void writtenBy(int filedescriptor);
+        void writtenBy(int const *filedescriptor, size_t n = 2);
+        int writeOnly();
+};
 
-            void writtenBy(int const *filedescriptor, size_t n = 2);
-
-            int writeOnly();
-    };
+inline int Pipe::readFd() const
+{
+    return d_fd[READ];
 }
+
+inline int Pipe::writeFd() const
+{
+    return d_fd[WRITE];
+}
+
+inline int Pipe::getReadFd() const
+{
+    return d_fd[READ];
+}
+
+inline int Pipe::getWriteFd() const
+{
+    return d_fd[WRITE];
+}
+
+} // FBB
 
 #endif

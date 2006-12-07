@@ -17,58 +17,26 @@ class Hostent: private hostent
             
     public:
         Hostent();
-        Hostent(Hostent const &other)
-        {
-            copy(&other, other.d_nAliases, other.d_nAddresses);
-        }
+        Hostent(Hostent const &other);
         Hostent(hostent const *other);
 
-        ~Hostent()
-        {
-            destroy();
-        }
+        ~Hostent();
 
         Hostent &operator=(Hostent const &other);
 
-        char const *alias(size_t nr) const
-        {
-            return nr >= d_nAliases ? 0 : h_aliases[nr];
-        }
-        char const *binaryAddress(size_t nr) const    // length bytes!
-        {
-            return nr >= nAddresses() ? 0 : h_addr_list[nr];
-        }
-        char const * const *beginAlias() const
-        {
-            return h_aliases;
-        }
+        char const *alias(size_t nr) const;
+        char const *binaryAddress(size_t nr) const;         // length bytes!
+        char const * const *beginAlias() const;
 
         std::string dottedDecimalAddress(size_t nr) const;
 
-        char const * const *endAlias() const
-        {
-            return h_aliases + nAliases();
-        }
-        char const *hostname() const
-        {
-            return h_name;
-        }
-        size_t nAliases() const
-        {
-            return d_nAliases - 1;
-        }
-        size_t nAddresses() const
-        {
-            return d_nAddresses - 1;
-        }
-        size_t addressLength() const
-        {
-            return h_length;
-        }
-        size_t addressType() const
-        {
-            return h_addrtype;
-        }
+        char const * const *endAlias() const;
+        char const *hostname() const;
+        size_t nAliases() const;
+        size_t nAddresses() const;
+        size_t addressLength() const;
+        size_t addressType() const;
+
     private:
         static char *xstrdup(char const *src);
 
@@ -82,5 +50,60 @@ class Hostent: private hostent
                                             size_t length) const;
 };
 
-        
+inline Hostent::Hostent(Hostent const &other)
+{
+    copy(&other, other.d_nAliases, other.d_nAddresses);
+}
+
+
+inline Hostent::~Hostent()
+{
+    destroy();
+}
+
+inline char const *Hostent::alias(size_t nr) const
+{
+    return nr >= d_nAliases ? 0 : h_aliases[nr];
+}
+
+inline char const *Hostent::binaryAddress(size_t nr) const
+{
+    return nr >= nAddresses() ? 0 : h_addr_list[nr];
+}
+
+inline char const * const *Hostent::beginAlias() const
+{
+    return h_aliases;
+}
+
+inline char const * const *Hostent::endAlias() const
+{
+    return h_aliases + nAliases();
+}
+
+inline char const *Hostent::hostname() const
+{
+    return h_name;
+}
+
+inline size_t Hostent::nAliases() const
+{
+    return d_nAliases - 1;
+}
+
+inline size_t Hostent::nAddresses() const
+{
+    return d_nAddresses - 1;
+}
+
+inline size_t Hostent::addressLength() const
+{
+    return h_length;
+}
+
+inline size_t Hostent::addressType() const
+{
+    return h_addrtype;
+}
+
 #endif
