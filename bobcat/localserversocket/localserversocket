@@ -22,13 +22,12 @@ class LocalServerSocket: public LocalSocketBase
         };
 
         LocalServerSocket();
-        LocalServerSocket(std::string const &name, Socket action = KEEP) 
-                                                    throw (Errno);
+        LocalServerSocket(std::string const &name, Socket action = KEEP);
         ~LocalServerSocket();
 
-        void open(std::string const &name, Socket action = KEEP) throw (Errno);
-        void listen(size_t backlog = 5, bool blocking = true) throw (Errno);
-        size_t accept() throw (Errno);
+        void open(std::string const &name, Socket action = KEEP);
+        void listen(size_t backlog = 5, bool blocking = true);
+        size_t accept();
 
     private:
         LocalServerSocket(LocalServerSocket const &other);  // NI
@@ -38,7 +37,7 @@ inline LocalServerSocket::LocalServerSocket()
 {}                                       
 
 inline LocalServerSocket::LocalServerSocket(std::string const &name, 
-                                           Socket action) throw (Errno)
+                                           Socket action)
 {
     open(name, action);
 }

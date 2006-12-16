@@ -15,7 +15,7 @@ namespace
     static char const name[] = "Hostname::Hostname(InetAddress)";
 }
 
-Hostname::Hostname(InetAddress const &address) throw(Errno)
+Hostname::Hostname(InetAddress const &address)
 :
     Hostent
     (

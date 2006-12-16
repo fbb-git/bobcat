@@ -1,6 +1,6 @@
 #include "pattern.ih"
 
-Pattern::Regex::Regex(string pattern, int options) throw (Errno)
+Pattern::Regex::Regex(string pattern, int options)
 :
     d_referenceCount(1)
 {    

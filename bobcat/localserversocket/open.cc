@@ -1,6 +1,6 @@
 #include "localserversocket.ih"
 
-void LocalServerSocket::open(string const &name, Socket action) throw (Errno)
+void LocalServerSocket::open(string const &name, Socket action)
 {
     LocalSocketBase::open(name);
     d_unlink = action == UNLINK;

@@ -23,19 +23,19 @@ class Errno: public std::ostringstream, public std::exception
         Errno();
         Errno(char const *prefix); 
         Errno(int errnr, char const *text = 0);
-        Errno(Errno const &other) throw();
-        inline virtual ~Errno() throw();        // g++ bug workaround
-        virtual const char *what() const throw();
-        int which() const throw();
+        Errno(Errno const &other);
+        inline virtual ~Errno();        // g++ bug workaround
+        virtual const char *what() const;
+        int which() const;
 
     private:
         void initMsg();
 };
 
-inline Errno::~Errno() throw()
+inline Errno::~Errno()
 {}
 
-inline int Errno::which() const throw()
+inline int Errno::which() const
 {
     return d_errno;
 }

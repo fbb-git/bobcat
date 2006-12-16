@@ -45,7 +45,7 @@ class Pattern
         size_t            d_referenceCount;
         regex_t             d_regex;
 
-        Regex(std::string pattern, int options) throw (Errno);
+        Regex(std::string pattern, int options);
         ~Regex();
 
         private:
@@ -99,8 +99,7 @@ class Pattern
         Pattern(std::string const &pattern, 
                         bool caseSensitive = true, 
                         size_t nSub = 10,
-                        int options = REG_EXTENDED | REG_NEWLINE)
-                                                throw (Errno);
+                        int options = REG_EXTENDED | REG_NEWLINE);
         Pattern(Pattern const &other);
         ~Pattern();
 
@@ -111,8 +110,7 @@ class Pattern
         void setPattern(std::string const &pattern, 
                         bool caseSensitive = true, 
                         size_t nSub = 10,
-                        int options = REG_EXTENDED | REG_NEWLINE) 
-                                                        throw (Errno);
+                        int options = REG_EXTENDED | REG_NEWLINE);
 
         //  match a string with a pattern. true: string matched
         //  options could be:
@@ -129,7 +127,7 @@ class Pattern
         //      The  match-end-of-line  operator  always  fails  to
         //      match  (but  see  the  compilation flag REG_NEWLINE)
 
-        void match(std::string const &text, int options = 0) throw (Errno);
+        void match(std::string const &text, int options = 0);
 
         std::string before() const;  // text before the matched text
         std::string matched() const;   // the matched text
@@ -147,7 +145,7 @@ class Pattern
         size_t end() const;           // index beyond the last available
 
     private:
-        void newRegex(std::string const &pattern, int options) throw (Errno);
+        void newRegex(std::string const &pattern, int options);
         void destroy();
         void copy(Pattern const &other);    
 };
