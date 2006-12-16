@@ -1,6 +1,6 @@
 #include "inetaddress.ih"
 
-InetAddress::InetAddress(string const &host, uint16_t port) throw (Errno)
+InetAddress::InetAddress(string const &host, uint16_t port)
 {
     hostent const *hp = 
         GetHostent::gethostent("InetAddress::InetAddress(host, port)", host);

@@ -24,7 +24,7 @@ class RefCount
         static X *share(X const *x);
 
         template <typename X>
-        static X &modifying(X **x) throw (std::bad_cast);
+        static X &modifying(X **x);
 };
 
 inline RefCount::RefCount() 
@@ -53,7 +53,7 @@ inline X *RefCount::share(X const *x)
 }
 
 template <typename X>
-inline X &RefCount::modifying(X **x) throw (std::bad_cast)
+inline X &RefCount::modifying(X **x)
 {
     if ((*x)->d_refcount != 1)
     {

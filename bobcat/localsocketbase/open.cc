@@ -1,6 +1,6 @@
 #include "localsocketbase.ih"
 
-void LocalSocketBase::open(std::string const &name) throw (Errno)
+void LocalSocketBase::open(std::string const &name)
 {
     d_address.sun_family = AF_UNIX;
 

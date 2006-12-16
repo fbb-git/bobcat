@@ -1,6 +1,6 @@
 #include "arg.ih"
 
-Arg &Arg::instance() throw (Errno)
+Arg &Arg::instance()
 {
     if (!s_arg)
         throw Errno("Arg::instance(): not yet initialized");

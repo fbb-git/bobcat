@@ -14,11 +14,10 @@ class LocalClientSocket: public LocalSocketBase
 {
     public:
         LocalClientSocket();
-        LocalClientSocket(std::string const &name) throw (Errno);
+        LocalClientSocket(std::string const &name);
 
-        void open(std::string const &name) throw (Errno);
-        int connect() throw (Errno);    // returns fd (socket) to talk to
-                                        // the server
+        void open(std::string const &name);
+        int connect();          // returns fd (socket) to talk to the server
     private:
         LocalClientSocket(LocalClientSocket const &other);    // NI
 };
@@ -27,12 +26,11 @@ inline LocalClientSocket::LocalClientSocket()
 {}
 
 inline LocalClientSocket::LocalClientSocket(std::string const &name) 
-                                                                throw (Errno)
 :
     LocalSocketBase(name)
 {}
 
-inline void LocalClientSocket::open(std::string const &name) throw (Errno)
+inline void LocalClientSocket::open(std::string const &name)
 {
     LocalSocketBase::open(name);
 }

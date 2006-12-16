@@ -3,7 +3,7 @@
 Arg &Arg::initialize(char const *optstring,
                 LongOption const * const begin, 
                 LongOption const * const end, 
-                int argc, char **argv)  throw (Errno)
+                int argc, char **argv)
 {
     if (s_arg)
         throw Errno("Arg::initialize(): already initialized");

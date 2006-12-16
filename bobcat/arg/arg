@@ -72,16 +72,14 @@ class Arg
                 std::string const &getName() const;
         };
 
-        static Arg &initialize(char const *optstring, int argc, 
-                                            char **argv) throw (Errno);
+        static Arg &initialize(char const *optstring, int argc, char **argv);
         static Arg &initialize(char const *optstring,
                                 LongOption const * const begin,
                                 LongOption const * const end,
-                                int argc, char **argv) throw (Errno);
+                                int argc, char **argv);
 
-        static Arg &instance() throw (Errno);        
-        static Arg &getInstance() throw (Errno);    // DEPRECATED: USE 
-                                                    // instance()
+        static Arg &instance();        
+        static Arg &getInstance();    // DEPRECATED: USE instance()
         std::string const &basename() const;
         size_t nArgs() const;
 
@@ -108,7 +106,7 @@ class Arg
 
         void versionHelp(void (*usage)(std::string const &progname), 
             char const *version, size_t minArgs, int helpFlag = 'h', 
-            int versionFlag = 'v') const throw (int);
+            int versionFlag = 'v') const;
 
         char const **argPointers();
     private:
@@ -116,12 +114,12 @@ class Arg
         Arg &operator=(Arg const &other);                   // NI
 
                                                             // 1
-        Arg(char const *optstring, int argc, char **argv) throw (Errno);
+        Arg(char const *optstring, int argc, char **argv);
 
         Arg(char const *optstring,                          // 2
             LongOption const * const begin,
             LongOption const * const end,
-            int argc, char **argv) throw (Errno);
+            int argc, char **argv);
 
         void addCharOption(int option);
         void addLongOption(std::string const &longName);    // 1
@@ -141,7 +139,7 @@ class Arg
         bool plainLongOption(int *c, 
                         LongOption const &longOption);
         int setOptionType(std::string const &optString,
-                        LongOption const &longOption) throw (Errno);
+                        LongOption const &longOption);
 };
 
 inline std::string const &Arg::LongOption::getName() const
@@ -149,7 +147,7 @@ inline std::string const &Arg::LongOption::getName() const
     return d_name;
 }
 
-inline Arg &Arg::getInstance() throw (Errno)
+inline Arg &Arg::getInstance()
 {
     return instance();
 }

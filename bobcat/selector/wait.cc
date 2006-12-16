@@ -8,7 +8,7 @@ using namespace std;
 using namespace FBB;
 
 
-int Selector::wait() throw (Errno)
+int Selector::wait()
 {
     timeval t = d_alarm;
 

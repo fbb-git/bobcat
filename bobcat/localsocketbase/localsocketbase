@@ -18,15 +18,15 @@ class LocalSocketBase
 
     protected:
         LocalSocketBase();                                      // 1
-        LocalSocketBase(std::string const &name) throw (Errno);
+        LocalSocketBase(std::string const &name);
 
-        void open(std::string const &name) throw (Errno);
+        void open(std::string const &name);
         int socket() const;
         size_t size() const;
         sockaddr const *sockaddrPtr() const;
 };
 
-inline LocalSocketBase::LocalSocketBase(std::string const &name) throw (Errno)
+inline LocalSocketBase::LocalSocketBase(std::string const &name)
 {
     open(name);
 }
