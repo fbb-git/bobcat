@@ -1,9 +1,6 @@
-/*
-*/
-
 #include "errno.ih"
 
-Errno::Errno(Errno const &other) throw()
+Errno::Errno(Errno const &other)
 :
     ostringstream(other.str()),
     d_errno(other.d_errno),
