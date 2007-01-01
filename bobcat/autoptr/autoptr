@@ -1,0 +1,311 @@
+#include <algorithm>
+#include <bobcat/refcount>
+
+namespace FBB
+{
+
+template<typename Data>
+class AutoPtr
+{
+    class RefData: public RefCount
+    {
+        Data *d_data;
+        size_t d_size;      // 0: single pointer, otherwise array
+
+        public:
+            RefData();
+            RefData(Data *d_data, size_t size);
+            RefData(RefData const &other);          // NI
+
+            virtual ~RefData();
+
+            Data *get(int idx);
+            Data *releaseOne();                     // Return one allocated
+                                                    // copy, lose share count
+            Data *releaseAll();                     // Return allocated data
+                                                    // lose all shares
+            void reset(Data *data, size_t size = 0);// reset to data[size]
+                                                    // or data if size == 0
+        private:
+            virtual RefCount *clone() const;
+            void destroy();
+    };
+
+    RefData *d_data;
+    int d_base;         // base is used with arrays. It provides a base 
+                        // location from where index operations start to
+                        // count. 
+
+    public:
+        AutoPtr();                      // Default constructor
+
+        explicit AutoPtr(Data *data);   // Receive one allocated Data element
+
+        AutoPtr(Data *data, size_t size); // Array of n Data elements
+        AutoPtr(AutoPtr const &other);  // Copy constructor
+
+        ~AutoPtr();
+
+        AutoPtr &operator=(AutoPtr const &other);
+
+        Data &operator*();
+
+        Data *operator->();
+        Data *get();                    // same as operator->
+
+        Data *release();                // lose one reference count
+        Data *releaseAll();             // lose all references
+
+        void reset(Data *data, size_t size = 0);    // lose one reference, 
+                                                    // reassign data[size] or
+                                                    // data if size == 0
+
+        void resetAll(Data *data, size_t size = 0); // new data[size] or data
+                                                    // if size == 0
+        Data &operator[](int idx);
+
+        AutoPtr operator+(int idx);
+        AutoPtr operator-(int idx);
+
+    private:
+        AutoPtr(AutoPtr const &other, int base); // Copy ctor + base shift
+
+        void destroy();
+        void copy(AutoPtr const &other);    
+};
+
+// RefData members:
+
+template<typename Data>
+AutoPtr<Data>::RefData::RefData()
+:
+    d_data(0),
+    d_size(0)
+{}
+
+template<typename Data>
+AutoPtr<Data>::RefData::RefData(Data *data, size_t size)
+:
+    d_data(data),
+    d_size(size)
+{}
+
+template<typename Data>
+AutoPtr<Data>::RefData::~RefData()
+{
+    destroy();
+}
+
+template<typename Data>
+RefCount *AutoPtr<Data>::RefData::clone() const
+{
+    Data *data;
+
+    if (!d_size)
+        data = new Data(*d_data);
+    else
+    {
+        data = new Data[d_size];
+        std::copy(d_data, d_data + d_size, data);
+    }
+
+    return new RefData(d_data, d_size);
+}
+
+template<typename Data>
+Data *AutoPtr<Data>::RefData::get(int idx)
+{
+    return d_data + idx;
+}
+
+template<typename Data>
+Data *AutoPtr<Data>::RefData::releaseOne()
+{
+    Data *ret;
+    if (refcount() == 1)
+    {
+        ret = d_data;
+        d_data = 0;
+    }
+    else
+    {
+        if (!d_size)
+            ret = new Data(*d_data);
+        else
+        {
+            ret = new Data[d_size];
+            for (size_t idx = 0; idx < d_size; ++idx)
+                ret[idx] = d_data[idx];
+        }
+    }
+    release();
+    return ret;
+}
+
+template<typename Data>
+Data *AutoPtr<Data>::RefData::releaseAll()
+{
+    Data *ret = d_data;
+    d_data = 0;
+    release();
+
+    return ret;
+}
+
+template<typename Data>
+void AutoPtr<Data>::RefData::reset(Data *data, size_t size)
+{
+    destroy();
+    d_data = data;
+    d_size = size;
+}
+
+template<typename Data>
+void AutoPtr<Data>::RefData::destroy()
+{
+    if (d_size == 0)
+        delete d_data;
+    else
+        delete [] d_data;       // maybe add facility for double pointers, 
+                                // which will delete the individual data 
+                                // elements?
+}
+
+// AutoPtr members
+
+template<typename Data>         // Default constructor
+AutoPtr<Data>::AutoPtr()
+:
+    d_data(new RefData()),
+    d_base(0)
+{}
+
+template<typename Data>         // One data element
+AutoPtr<Data>::AutoPtr(Data *data)
+:
+    d_data(new RefData(data, 0)),
+    d_base(0)
+{}
+
+template<typename Data>         // Array of `size' data elements
+AutoPtr<Data>::AutoPtr(Data *data, size_t size)
+:
+    d_data(new RefData(data, size)),
+    d_base(0)
+{}
+
+template<typename Data>         // Copy constructor
+AutoPtr<Data>::AutoPtr(AutoPtr const &other)
+{
+    copy(other);
+}
+
+template<typename Data>         // Copy constructor + base shift
+AutoPtr<Data>::AutoPtr(AutoPtr const &other, int base)
+{
+    copy(other);
+    d_base += base;
+}
+
+template<typename Data>         // destructor
+AutoPtr<Data>::~AutoPtr()
+{
+    destroy();
+}
+
+template<typename Data>         // Assignment operator
+AutoPtr<Data> &AutoPtr<Data>::operator=(AutoPtr const &other)
+{
+    if (this != &other)
+    {
+        destroy();
+        copy(other);
+    }
+    return *this;
+}
+
+template<typename Data>         // Dereference operator
+Data &AutoPtr<Data>::operator*()
+{
+    return *d_data->get(d_base);
+}
+
+
+template<typename Data>         // Pointer operator
+Data *AutoPtr<Data>::operator->()
+{
+    return d_data->get(d_base);
+}
+
+template<typename Data>         // get() member
+Data *AutoPtr<Data>::get()
+{
+    return d_data->get(d_base);
+}
+
+template<typename Data>         // lose one share count, return alloc. copy
+Data *AutoPtr<Data>::release()
+{
+    return d_data->releaseOne();
+}
+
+template<typename Data>         // lose all shares, return alloc. data
+Data *AutoPtr<Data>::releaseAll()
+{
+    return d_data->releaseAll();
+}
+
+template<typename Data>         // lose one share count, point to alloc. copy
+void AutoPtr<Data>::reset(Data *data, size_t size)
+{
+    d_data->release();
+    d_data = new RefData(data, size);
+    d_base = 0;
+}
+
+template<typename Data>         // redefine data for all sharing objects
+void AutoPtr<Data>::resetAll(Data *data, size_t size)
+{
+    d_data->reset(data, size);
+    d_base = 0;
+}
+
+
+template<typename Data>
+void AutoPtr<Data>::copy(AutoPtr const &other)
+{
+    d_data = RefData::share(other.d_data);
+    d_base = other.d_base;
+}
+
+template<typename Data>
+void AutoPtr<Data>::destroy()
+{
+    d_data->release();
+}
+
+template<typename Data>
+Data &AutoPtr<Data>::operator[](int idx)
+{
+    return *d_data->get(d_base + idx);
+}
+
+template<typename Data>
+AutoPtr<Data> AutoPtr<Data>::operator+(int idx)
+{
+    return AutoPtr<Data>(*this, idx);
+}
+
+template<typename Data>
+AutoPtr<Data> AutoPtr<Data>::operator-(int idx)
+{
+    return AutoPtr<Data>(*this, -idx);
+}
+
+} // FBB
+
+template<typename Data>
+FBB::AutoPtr<Data> operator+(int idx, FBB::AutoPtr<Data> &rhs)
+{
+    return rhs + idx;
+}
