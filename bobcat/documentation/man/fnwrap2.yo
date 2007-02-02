@@ -1,25 +1,22 @@
 includefile(header.inc)
 
 COMMENT(manpage, section, releasedate, archive, short name)
-manpage(FBB::Wrap2)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
-                    (Binary Wrapper)
+manpage(FBB::FnWrap2)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Binary FnWrapper)
 
-manpagename(FBB::Wrap2)(STL binary argument wrapper template class)
+manpagename(FBB::FnWrap2)(STL binary argument wrapper template class)
 
 manpagesynopsis()
-    bf(#include <bobcat/wrap2>)nl()
+    bf(#include <bobcat/fnwrap2>)nl()
 
 manpagedescription()
-    This class is obsolete and will be removed in a future release. 
-    Use bf(FBB::FnWrap2) instead.
-
-    The bf(FBB::Wrap2) class is a configurable binary argument wrapper
+    The bf(FBB::FnWrap2) class is a configurable binary argument wrapper
 template class. Its primary use is in combination with the generic algorithms
 of the standard template libray.
 
     The callled function itself may be specified as one of the constructor's
 arguments. It must be a (static member) function. Using a (static member)
-function has various advantages, especially with the bf(Wrap?c) classes to
+function has various advantages, especially with the bf(FnWrap?c) classes to
 which a em(local context) can be passed:
     itemization(
     it() There is no introduced uncertainty about the bf(const)-ness of the
@@ -28,7 +25,7 @@ a bf(const) modifier;
     it() The passed function can also be a free (global) function to which a
 local context is passed;
     it() The passed function can be a static member function of the class
-using the generic algorithm to which the bf(FBB::Wrap2) object is passed. By
+using the generic algorithm to which the bf(FBB::FnWrap2) object is passed. By
 passing the calling object in the function's local context, the function may
 directly access the calling object's members.
     it() The passed function can be a static member function of the class
@@ -41,22 +38,22 @@ should be used in calling the function: static (member) functions may be
 called without using objects.
     )
 
-    The bf(FBB::Wrap2) template class has the following template parameters:
+    The bf(FBB::FnWrap2) template class has the following template parameters:
     itemization(
-    itt(Type1): the type of the first object passed to bf(FBB::Wrap2)'s
+    itt(Type1): the type of the first object passed to bf(FBB::FnWrap2)'s
 bf(operator()()) function. Specify a bf(plain) type, do not specify a pointer
 or reference type: if pointers or references are used, it will become obvious
 later on, as the template will be able to handle (const) references and
 pointers. Values of primitive types may be handled as const-references.
-    itt(Type2): the type of the second object passed to bf(FBB::Wrap2)'s
+    itt(Type2): the type of the second object passed to bf(FBB::FnWrap2)'s
 bf(operator()()) function. Specify a bf(plain) type, do not specify a pointer
 or reference type: if pointers or references are used, it will become obvious
 later on, as the template will be able to handle (const) references and
 pointers. Values of primitive types may be handled as const-references.
     itt(ReturnType): the bf(ReturnType) is by default defined as tt(void). By
-specifying another type, the bf(FBB::Wrap2) object's bf(operator()()) function
+specifying another type, the bf(FBB::FnWrap2) object's bf(operator()()) function
 will pass the called function's return value as a value of the specified
-type. E.g, by specifying a tt(bool) bf(ReturnType), the bf(FBB::Wrap2) object
+type. E.g, by specifying a tt(bool) bf(ReturnType), the bf(FBB::FnWrap2) object
 may be used as a em(Binary Predicate)
     )
 
@@ -68,7 +65,7 @@ manpagesection(INHERITS FROM)
 
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(Wrap2<Type1, Type2 [, Returntype = void]>(ReturnType (*fun)(Type1 &,
+    itb(FnWrap2<Type1, Type2 [, Returntype = void]>(ReturnType (*fun)(Type1 &,
         Type2 &))) nl()
         This is an example of the form in which the class's constructurs may
 be called. Each constructor expects one argument: the address of a function to
@@ -84,17 +81,17 @@ may be passed as: nl()
 
     Therefore, the class supports  16 different types of constructors. E.g.:
 
-    itb(Wrap1<Type1, Typ2 [, Returntype = void]>(ReturnType 
+    itb(FnWrap1<Type1, Typ2 [, Returntype = void]>(ReturnType 
         (*fun)(Type1 const &, Type2 const &))) nl()
     or:
-    itb(Wrap1<Type1, Typ2 [, Returntype = void]>(ReturnType 
+    itb(FnWrap1<Type1, Typ2 [, Returntype = void]>(ReturnType 
         (*fun)(Type1 *, Type2 const &))) nl()
     )
 
 manpagesection(OVERLOADED OPERATORS)
 
     In normal situations the following member functions will call the function
-that's passed to bf(FBB::Wrap2)'s constructor. See the example below.
+that's passed to bf(FBB::FnWrap2)'s constructor. See the example below.
 
     itemization(
     itb(ReturnType operator()(Type1 &param1, Type2 &param2) const)
@@ -130,7 +127,7 @@ manpagesection(EXAMPLES)
     #include <vector>
     #include <string>   
     #include <functional>
-    #include <bobcat/wrap2>
+    #include <bobcat/fnwrap2>
     
     using namespace std;
     using namespace FBB;
@@ -158,21 +155,21 @@ manpagesection(EXAMPLES)
         vector<string> vs(argv, argv + argc);
     
         find_if(vs.begin(), vs.end(), 
-            bind2nd(Wrap2<string, string, bool>(&cmp), string("hello")));
+            bind2nd(FnWrap2<string, string, bool>(&cmp), string("hello")));
     
         cout << endl;
     
         find_if(vs.begin(), vs.end(), 
-            bind2nd(Wrap2<string, string, bool>(&X::cmp), string("hello")));
+            bind2nd(FnWrap2<string, string, bool>(&X::cmp), string("hello")));
     }
         )
 
 manpagefiles()
-    em(bobcat/wrap2) - defines the class interface
+    em(bobcat/fnwrap2) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(wrap1)(3bobcat), bf(wrap1c)(3bobcat), 
-    bf(wrap2c)(3bobcat)
+    bf(bobcat)(7), bf(fnwrap1)(3bobcat), bf(fnwrap1c)(3bobcat), 
+    bf(fnwrap2c)(3bobcat)
 
 manpagebugs()
     None Reported.

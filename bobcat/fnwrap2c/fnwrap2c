@@ -1,0 +1,54 @@
+#ifndef _INCLUDED_BOBCAT_FNWRAP2C_H_
+#define _INCLUDED_BOBCAT_FNWRAP2C_H_
+
+#include <bobcat/typetrait>
+
+namespace FBB
+{
+
+template <typename Type1, typename Type2,
+          typename Context, typename ReturnType = void>
+class FnWrap2c
+{
+    ReturnType (*d_fun)(Type1, Type2, Context);
+    Context d_context;
+
+    public:
+        typedef typename TypeTrait<Type1>::Plain       first_argument_type;
+        typedef typename TypeTrait<Type2>::Plain       second_argument_type;
+        typedef typename TypeTrait<ReturnType>::Plain  result_type;
+
+        FnWrap2c(ReturnType (*fun)(Type1, Type2, Context), Context context);
+        ReturnType operator()(Type1 p1, Type2 p2) const;
+};
+
+template 
+<
+    typename Type1, typename Type2, 
+    typename Context, typename ReturnType
+>
+FnWrap2c<Type1, Type2, Context, ReturnType>::FnWrap2c
+(
+    ReturnType fun(Type1, Type2, Context), 
+    Context context
+)
+:
+    d_fun(fun),
+    d_context(context)
+{}
+
+template 
+<
+    typename Type1, typename Type2, 
+    typename Context, typename ReturnType
+>
+ReturnType FnWrap2c<Type1, Type2, Context, ReturnType>::operator()(
+                                                Type1 p1, Type2 p2) const
+{
+    return (*d_fun)(p1, p2, d_context);
+}
+
+} // FBB
+
+#endif
+

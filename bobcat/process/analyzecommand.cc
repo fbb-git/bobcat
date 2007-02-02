@@ -15,7 +15,7 @@ Process::ExecContext Process::analyzeCommand()
     ExecContext ec = {true, 0, 0, new char const *[count + 1]};
     
     for_each(elements.begin(), elements.end(), 
-                Wrap1c<String::SplitPair, ExecContext>
+                FnWrap1c<String::SplitPair const &, ExecContext &>
                     (&execContext, ec));
     
     if (!ec.ok)

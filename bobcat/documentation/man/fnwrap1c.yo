@@ -1,0 +1,211 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::FnWrap1c)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Configurable Unary FnWrapper)
+
+manpagename(FBB::FnWrap1c)(Configurabale unary argument wrapper template class)
+
+manpagesynopsis()
+    bf(#include <bobcat/fnwrap1c>)nl()
+
+manpagedescription()
+    The bf(FBB::FnWrap1c) class is a configurable unary argument wrapper
+template class. Its primary use is in combination with the generic algorithms
+from the standard template libray. The called function expects a em(local
+context struct) which is used to pass arguments to the function called by the
+generic algorithm which are available in the local context of the called
+generic algorithm. The local context struct can be either a tt(const) or
+non-tt(const) struct.
+
+    The called function itself may be specified as one of the constructor's
+arguments. It must be a (static member) function. Using a (static member)
+function has various advantages, especially with the bf(FnWrap?c) classes to
+which a em(local context) can be passed:
+    itemization(
+    it() There is no introduced uncertainty about the bf(const)-ness of the
+callled function, as static member functions do not support 
+a bf(const) modifier;
+    it() The passed function can also be a free (global) function to which a
+local context is passed;
+    it() The passed function can be a static member function of the class
+using the generic algorithm to which the bf(FBB::FnWrap1c) object is passed. By
+passing the calling object in the function's local context, the function may
+directly access the calling object's members.
+    it() The passed function can be a static member function of the class
+whose objects are passed to the function via the generic template function s
+iterator parameters. In that case the function may directly access the passed
+object's members.
+    it() Since no object is involved in calling the static function, no
+ambiguity can arise as to whether an object reference or an object pointer
+should be used in calling the function: static (member) functions may be
+called without using objects.
+    )
+
+    The bf(FBB::FnWrap1c) template class has the following template parameters:
+    itemization(
+    itt(Type): the type of the object passed to bf(FBB::FnWrap1c)'s
+bf(operator()()) function. Specify the type as used in the parameterlist of
+the function whose address is passed to the constructor (i.e., specify a plain
+value or a (const) pointer or reference).
+    itt(Context): the bf(local context struct). This bf(struct) is a local
+bf(struct), an object of which could have been defined immediatey before
+applying the generic algorithm. The local context struct object may specify
+values, references or pointers to entities that are available in the local
+context where the generic algorithm is called.
+
+    If no generic algorithm would have been used, but a local implementation
+of the generic algorithm would have been used instead, then the called
+function would have received certain arguments. The local context struct is a
+replacement of such a function's parameter list, mimicking the function's
+parameter list in the bf(struct) definition. The function will now receive a
+`standardized' parameter list, defined by the local context struct. The type
+of the defined bf(struct) as specified in the parameterlist of the function
+whose address is passed to bf(FnWrap1c)'s constructor should be specified for
+tt(Context). E.g., tt(LocalStruct &).
+
+When a em(non-const) reference or pointer is specified, the function may
+modify the bf(struct)'s value fields identically to the situation where the
+field's values are passed to the function as reference parameters.
+
+    itt(ReturnType): the bf(ReturnType) is by default defined as tt(void). By
+specifying another type, the bf(FBB::FnWrap1c) object's bf(operator()())
+function will return the called function's return value as a value of the
+specified type. E.g, by specifying a tt(bool) bf(ReturnType), the
+bf(FBB::FnWrap1c) object may be used as a em(Unary Predicate). Alternatively,
+pointers or references may be specified as return values.
+    )
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTOR)
+    itemization(
+    itb(FnWrap1c<Type, Context [, ReturnType = void]>
+            (ReturnType (*fun)(Type, Context), Context context)) nl()
+        This constructor expects two arguments: the address of a function to
+call from within its bf(operator()()) member, and a local
+context bf(struct) which is passed to the called function as its second
+argument. 
+
+    Both the argument that is passed to the function pointed to by tt(fun)
+and the context struct may be passed as: nl()
+    value, nl()
+    reference, nl()
+    pointer,nl()
+    const reference, or nl()
+    const pointer. nl()
+
+    When the function pointed to by tt(fun) is called from
+bf(FBB::FnWrap1c)bf(::operator()()), it receives the latter function's
+argument as its first argument. The template parameter tt(Type) must define
+the data type to which iterators (as specified in, e.g., bf(std::for_each()))
+eventually point.
+
+    Hint: In situations where no context other than the class tt(Class) to
+which the class' (static) member function belongs must be used `tt(Class
+&obj)' (or a (const) pointer) can be specified as the context parameter,
+passing, e.g., tt(*this) as the context. The static member function may then
+call any of the non-static member functions of the class tt(Class) using the
+normal syntax (e.g., tt(obj.member(argument)) if the static function defines
+as its second parameter tt(Class &obj)).
+
+
+manpagesection(OVERLOADED OPERATOR)
+
+    The following member function will call the function
+that's passed to bf(FBB::FnWrap1c)'s constructor. See the example below.
+
+    itemization(
+    itb(ReturnType operator()(Type param) const)
+        This function is called by generic algorithms, receiving the
+dereferenced iterator that is managed  by the generic algorithm as its
+argument (so, the iterator may points to modifiable tt(Type) objects). This
+function calls the function specified at bf(FBB::FnWrap1c)'s constructor,
+passing its parameter value to that function as its first argument, and the
+local context as its second argument.
+    )
+
+manpagesection(TYPEDEFS)
+
+    The class defines two types, which are used by generic algorithms:
+    itemization(
+    itb(argument_type), a synonym for the basic type specified with the 
+tt(Type) template parameter. E.g., if tt(Type) is specified as tt(std::string
+const *) then tt(argument_type) will be tt(std::string);
+    itb(result_type), a synonym for the basic type specified with the 
+bf(ReturnType) template parameter.
+    )
+
+manpagesection(EXAMPLE)
+        verb(
+    #include <iostream>
+    #include <vector>
+    #include <string>
+    #include <algorithm>
+    #include <bobcat/fnwrap1c>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    class Strings
+    {
+        vector<string> d_vs;
+    
+        public:
+            Strings()
+            {
+                d_vs.push_back("one");
+                d_vs.push_back("two");
+                d_vs.push_back("");
+                d_vs.push_back("three");
+            }
+    
+            void display(ostream &out) const
+            {
+                SContext c = {1, out};
+                find_if(d_vs.begin(), d_vs.end(),
+                    FnWrap1c<string const &, SContext &, bool>
+                         (&Strings::untilEmpty, c));
+            }
+    
+        private:
+            struct SContext
+            {
+                size_t nr;
+                ostream &out;
+            };
+    
+            static bool untilEmpty(string const &str, SContext &c)
+            {
+                if (str.empty())
+                    return true;        // stop
+    
+                c.out << c.nr++ << " " << str << endl;
+                return false;           // don't stop
+            }
+    };
+    
+    int main()
+    {
+        Strings s;
+    
+        s.display(cout);
+    }
+        )
+    After compilation and linking, simply call the program without any
+arguments. 
+
+manpagefiles()
+    em(bobcat/fnwrap1c) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(fnwrap1)(3bobcat), bf(fnwrap2)(3bobcat), 
+    bf(fnwrap2c)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

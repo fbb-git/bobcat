@@ -11,7 +11,7 @@ int main()
         {
             AutoPtr<int> auto2(autoInt);
             cout << *auto2 << endl;    
-            cout << *(auto2 + 0) << endl;    
+            cout << *((0 + auto2) - 2) << endl;    
         }
         cout << *autoInt << endl;    
     
@@ -39,7 +39,7 @@ int main()
         cout << *((autoInt + 4) - 2) << endl;
       
         cout << *((autoInt + 6) - 4) << endl;
-        cout << ((autoInt + 6) - 4)[0] << endl;
+        cout << ((6 + autoInt) - 4)[0] << endl;
     
     cout << "\n5: resetting\n\n";
 

@@ -4,7 +4,7 @@ vector<string>::const_iterator ConfigFile::findRE(string const &re) const
 {
     Pattern pattern(re, d_caseSensitive);
 
-    return find_if(begin(), end(), Wrap1c<string, Pattern, bool>
+    return find_if(begin(), end(), FnWrap1c<string const &, Pattern &, bool>
                                          (&match, pattern));
 }
 
