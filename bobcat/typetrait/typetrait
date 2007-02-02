@@ -15,6 +15,14 @@ class TypeTrait
 
         typedef U Plain;
     };
+    template <typename U> struct Type<U const>
+    {
+        enum { isPointer = false };
+        enum { isConst   = true };
+        enum { isRef     = false };
+
+        typedef U Plain;
+    };
     template <typename U> struct Type<U *>
     {
         enum { isPointer = true };

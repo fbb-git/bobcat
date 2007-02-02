@@ -44,8 +44,8 @@ called without using objects.
 
     The bf(FBB::FnWrap1c) template class has the following template parameters:
     itemization(
-    itt(Type): the type of the object passed to bf(FBB::FnWrap1c)'s
-bf(operator()()) function. Specify the type as used in the parameterlist of
+    itt(Type): the type of the argument passed to bf(FBB::FnWrap1c)'s
+bf(operator()()) function. Specify the type as the type of the parameter of
 the function whose address is passed to the constructor (i.e., specify a plain
 value or a (const) pointer or reference).
     itt(Context): the bf(local context struct). This bf(struct) is a local
@@ -90,19 +90,12 @@ call from within its bf(operator()()) member, and a local
 context bf(struct) which is passed to the called function as its second
 argument. 
 
-    Both the argument that is passed to the function pointed to by tt(fun)
-and the context struct may be passed as: nl()
-    value, nl()
-    reference, nl()
-    pointer,nl()
-    const reference, or nl()
-    const pointer. nl()
-
     When the function pointed to by tt(fun) is called from
 bf(FBB::FnWrap1c)bf(::operator()()), it receives the latter function's
-argument as its first argument. The template parameter tt(Type) must define
-the data type to which iterators (as specified in, e.g., bf(std::for_each()))
-eventually point.
+argument as its first argument and the local context struct as its second
+argument. With (STL) generic algorithms the template parameter tt(Type) must
+define the data type to which iterators (as specified in, e.g.,
+bf(std::for_each())) eventually point.
 
     Hint: In situations where no context other than the class tt(Class) to
 which the class' (static) member function belongs must be used `tt(Class
@@ -111,7 +104,7 @@ passing, e.g., tt(*this) as the context. The static member function may then
 call any of the non-static member functions of the class tt(Class) using the
 normal syntax (e.g., tt(obj.member(argument)) if the static function defines
 as its second parameter tt(Class &obj)).
-
+    )
 
 manpagesection(OVERLOADED OPERATOR)
 

@@ -40,8 +40,8 @@ called without using objects.
 
     The bf(FBB::FnWrap1) template class has the following template parameters:
     itemization(
-    itt(Type): the type of the object passed to bf(FBB::FnWrap1)'s
-bf(operator()()) function. Specify the type as used in the parameterlist of
+    itt(Type): the type of the argument passed to bf(FBB::FnWrap1)'s
+bf(operator()()) function. Specify the type as the type of the parameter of
 the function whose address is passed to the constructor (i.e., specify a plain
 value or a (const) pointer or reference).
     itt(ReturnType): the bf(ReturnType) is by default defined as tt(void). By
@@ -66,9 +66,11 @@ manpagesection(CONSTRUCTOR)
     itb(FnWrap1<Type [, Returntype = void]>(ReturnType (*fun)(Type))) nl()
        This constructor expects one argument: the address of a function to
         call from within its bf(operator()()) member. The function receives
-        bf(FBB::FnWrap1)bf(::operator()())'s argument as its argument. The
-        template parameter type tt(Type) is the data type to which iterators
-        (as specified in, e.g., bf(std::for_each())) eventually point.
+        bf(FBB::FnWrap1)bf(::operator()())'s argument as its argument. When
+        using (STL) generic algorithms, the template parameter type tt(Type)
+        is the data type to which iterators (as specified in, e.g.,
+        bf(std::for_each())) eventually point.
+    )
 
 manpagesection(OVERLOADED OPERATOR)
 
@@ -78,7 +80,7 @@ that is passed to bf(FBB::FnWrap1)'s constructor. See the example below.
     itemization(
     itb(ReturnType operator()(Type param) const)
         This function is called by the generic algorithms, receiving the
-dereferenced iterator that is managed  by the generic algorithm as its
+dereferenced iterator that is managed  by generic algorithms as its
 argument (e.g., the iterator points to modifiable tt(Type) objects). 
     )
 

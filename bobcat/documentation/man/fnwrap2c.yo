@@ -44,37 +44,39 @@ called without using objects.
 
     The bf(FBB::FnWrap2c) template class has the following template parameters:
     itemization(
-    itt(Type1): the type of the first object passed to
-bf(FBB::FnWrap2c)bf(::operator()())'s function.  Specify a bf(plain) type, do
-not specify a pointer or reference type: if pointers or references are used,
-it will become obvious later on, as the template will be able to handle
-(const) references and pointers. Values are handled as const-references.
-    itt(Type2): the type of the second object passed to
-bf(FBB::FnWrap2c)bf(::operator()())'s function.  Specify a bf(plain) type, do
-not specify a pointer or reference type: if pointers or references are used,
-it will become obvious later on, as the template will be able to handle
-(const) references and pointers. Values are handled as const-references.
-    itt(Context): the type of the bf(local context struct). This bf(struct) is
-a local bf(struct), that should be defined immediatey before applying the
-generic algorithm, specifying values, references or pointers to entities that
-are available in the local context where the generic algorithm is called. If
-no generic algorithm would have been used, but a local implementation of the
-generic algorithm would have been used instead, then the called function would
-have received certain arguments. The local context struct is a replacement of
-such a function's parameter list, mimicking the function's parameter list in
-the bf(struct) definition. The function will now receive a `standardized'
-parameter list, defined by the local context struct. The typename of the
-defined bf(struct) should be passed to the template as its second parameter. A
-concrete local context bf(struct) may be passed as either a tt(const) or
-non-tt(const) reference or pointer to bf(FBB::FnWrap2c)'s constructor. When
-using a em(non-const) reference or pointer, the function may modify the
-bf(struct)'s value fields identically to the situation in which the field's
-values would have been passed to the function as reference parameters.
+    itt(Type1): the type of the first argument passed to bf(FBB::FnWrap2c)'s
+bf(operator()()) function. Specify the type as the type of the first parameter
+of the function whose address is passed to the constructor (i.e., specify a
+plain value or a (const) pointer or reference).
+    itt(Type2): the type of the second argument passed to bf(FBB::FnWrap2c)'s
+bf(operator()()) function. Specify the type as the type of the second parameter
+of the function whose address is passed to the constructor.
+    itt(Context): the bf(local context struct). This bf(struct) is a local
+bf(struct), an object of which could have been defined immediatey before
+applying the generic algorithm. The local context struct object may specify
+values, references or pointers to entities that are available in the local
+context where the generic algorithm is called.
+
+    If no generic algorithm would have been used, but a local implementation
+of the generic algorithm would have been used instead, then the called
+function would have received certain arguments. The local context struct is a
+replacement of such a function's parameter list, mimicking the function's
+parameter list in the bf(struct) definition. The function will now receive a
+`standardized' parameter list, defined by the local context struct. The type
+of the defined bf(struct) as specified in the parameterlist of the function
+whose address is passed to bf(FnWrap2c)'s constructor should be specified for
+tt(Context). E.g., tt(LocalStruct &).
+
+When a em(non-const) reference or pointer is specified, the function may
+modify the bf(struct)'s value fields identically to the situation where the
+field's values are passed to the function as reference parameters.
+
     itt(ReturnType): the bf(ReturnType) is by default defined as tt(void). By
 specifying another type, the bf(FBB::FnWrap2c) object's bf(operator()())
-function will pass the called function's return value as a value of the
+function will return the called function's return value as a value of the
 specified type. E.g, by specifying a tt(bool) bf(ReturnType), the
-bf(FBB::FnWrap2c) object may be interpreted as a em(Binary Predicate)
+bf(FBB::FnWrap2c) object may be used as a em(Unary Predicate). Alternatively,
+pointers or references may be specified as return values.
     )
 
 includefile(namespace.inc)
@@ -82,145 +84,123 @@ includefile(namespace.inc)
 manpagesection(INHERITS FROM)
     -
 
-manpagesection(CONSTRUCTORS)
+manpagesection(CONSTRUCTOR)
     itemization(
     itb(FnWrap2c<Type1, Type2, Context [, ReturnType = void]>
-        (ReturnType (*fun)(Type1 &, Type2 &, Context &), Context &context))
-        nl()
-        This is an example of the form in which the class's constructurs may
-be called. Each constructor expects two arguments: the address of a function to
-call from within its bf(operator()()) member, and a local
-context bf(struct) which is passed to the called function as its second
-argument. 
+            (ReturnType (*fun)(Type1, Type2, Context), Context context)) nl()
+        This constructor expects two arguments: the address of a function to
+call from within its bf(operator()()) member, and a local context bf(struct)
+which is passed to the called function as its second argument.
 
-    All three arguments that are passed to the function pointed to by tt(fun)
-and the context struct itself may be passed as: nl()
-    reference, nl()
-    pointer,nl()
-    const reference, or nl()
-    const pointer. nl()
-    (albeit that the restriction applies that the types of the
-tt(context) constructor parameter and the function's tt(context) parameter
-must be identical (e.g., both pointers or both const references)).
-
-    Therefore, the class supports 64 different types of constructors. E.g.:
-
-    itb(FnWrap2c<Type1, Type2, Context [, ReturnType = void]>
-        (ReturnType (*fun)(Type1 &, Type2 *, Context const &), 
-                                            Context const &context))
-    or
-    itb(FnWrap2c<Type1, Type2, Context [, ReturnType = void]>
-        (ReturnType (*fun)(Type1 const *, Type2 &, Context *), 
-            Context *context)) nl()
-    )
+    When the function pointed to by tt(fun) is called from
+bf(FBB::FnWrap2c)bf(::operator()()), it receives the latter function's
+arguments as its first two arguments and the local context struct as its third
+argument. With (STL) generic algorithms, the template parameters tt(Type1) and
+tt(Type2) must define the data type to which iterators eventually point.
 
     Hint: In situations where no context other than the class tt(Class) to
-which the class' (static) member function belongs must be used
-`tt(Class &obj)' (or (const) pointer) can be specified 
-as the context parameter (and tt(Class) itself as the context template
-parameter), passing, e.g., tt(*this) as the context. The static member
-function may then call any of its class member functions
-tt(member(Type [const] [&,*])) as tt(obj.member(argument1, argument2)).
+which the class' (static) member function belongs must be used `tt(Class
+&obj)' (or a (const) pointer) can be specified as the context parameter,
+passing, e.g., tt(*this) as the context. The static member function may then
+call any of the non-static member functions of the class tt(Class) using the
+normal syntax (e.g., tt(obj.member(argument)) if the static function defines
+as its second parameter tt(Class &obj)).
+    )
 
-manpagesection(OVERLOADED OPERATORS)
+manpagesection(OVERLOADED OPERATOR)
 
-    In normal situations the following member functions will call the function
+    The following member function will call the function
 that's passed to bf(FBB::FnWrap2c)'s constructor. See the example below.
 
     itemization(
-    itb(ReturnType operator()(Type1 &param, Type1 &param) const)
+    itb(ReturnType operator()(Type1 param1, Type2 param2) const)
         This function is called by generic algorithms, receiving the
-dereferenced iterator that is managed  by the generic algorithm as its
-argument (so, the iterator points to modifiable tt(Type) objects). 
-
-    There are 16 overloaded versions of this function, one for each of the 4 x
-4 combinations of the first two parameter types specified for the function
-whose address is passed to the class's constructor (i.e., each parameter may
-be specified as reference, pointer, const reference or const pointer).
-
-    Some (but not all) overloaded versions are:
-    itb(ReturnType operator()(Type1 &param, Type1 *param) const)
-        or:
-    itb(ReturnType operator()(Type1 const *param, Type1 &param) const)
+dereferenced iterators that are managed by the generic algorithm as its
+arguments (so, the iterators may point to modifiable tt(Type1) and tt(Type2)
+objects). This function calls the function specified at bf(FBB::FnWrap2c)'s
+constructor, passing its parameters to that function as its first
+two arguments, and the local context as its third argument.
     )
 
 manpagesection(TYPEDEFS)
 
-    The class defines three types, which are used by generic algorithms:
+   The class defines three types, which are used by generic algorithms:
     itemization(
-    itb(first_argument_type), a synonym for bf(Type1);
-    itb(second_argument_type), a synonym for bf(Type2);
-    itb(result_type), a synonym for bf(ReturnType).
+    itb(first_argument_type), a synonym for the basic type specified with the 
+tt(Type1) template parameter. E.g., if tt(Type1) is specified as tt(std::string
+const *) then tt(argument_type) will be tt(std::string);
+    itb(second_argument_type), a synonym for the basic type specified with the 
+tt(Type2) template parameter.
+    itb(result_type), a synonym for the basic type specified with the 
+bf(ReturnType) template parameter.
     )
+
 
 manpagesection(EXAMPLES)
         verb(
-    // accumulating strings from a vector to one big string, using 
-    // `accumulate'
-    #include <iostream>
-    #include <numeric>
-    #include <string>
-    #include <vector>
-    #include <bobcat/fnwrap2c>
-
-    using namespace std;
-    using namespace FBB;
-    
-    class Strings
-    {
-        vector<string> d_vs;
-
-        public:
-            Strings()
-            {
-                d_vs.push_back("one");
-                d_vs.push_back("two");
-                d_vs.push_back("three");
-            }
-                
-            void display(ostream &out) const
-            {
-                SContext c = {1, out};
-
-                cout << "On Exit: " << 
-                    accumulate
-                    (
-                        d_vs.begin(), d_vs.end(), 
-                        string("HI"), 
-                        FnWrap2c
-                        <
-                            string const &, string const &, 
-                            SContext, string
-                        >(&show, c)
-                    ) << 
-                    endl;
-            }
-    
-        private:
-            struct SContext
-            {
-                size_t nr;
-                ostream &out;
-            };
-
-            static string show(string const &str1, 
-                                    string const &str2, 
-                                    SContext &c)
-            {
-                c.out << c.nr++ << " " << str1 << " " << str2 << 
-                         endl;
-                return str1 + " " + str2;
-            }
-    };
-    
-    
-    int main()
-    {
-        Strings s;
-    
-        s.display(cout);
-    }
+	// accumulating strings from a vector to one big string, using
+	// `accumulate'
+	#include <iostream>
+	#include <numeric>
+	#include <string>
+	#include <vector>
+	#include <bobcat/fnwrap2c>
+	
+	using namespace std;
+	using namespace FBB;
+	
+	class Strings
+	{
+	    vector<string> d_vs;
+	
+	    public:
+	        Strings()
+	        {
+	            d_vs.push_back("one");
+	            d_vs.push_back("two");
+	            d_vs.push_back("three");
+	        }
+	
+	        void display(ostream &out) const
+	        {
+	            SContext c = {1, out};
+	
+	            cout << "On Exit: " <<
+	                accumulate(
+	                    d_vs.begin(), d_vs.end(),
+	                    string("HI"),
+	                    FnWrap2c<string const &, string const &, 
+	                             SContext &, string>(&show, c)
+	                ) <<
+	                endl;
+	        }
+	
+	    private:
+	        struct SContext
+	        {
+	            size_t nr;
+	            ostream &out;
+	        };
+	
+	        static string show(string const &str1,
+	                                string const &str2,
+	                                SContext &c)
+	        {
+	            c.out << c.nr++ << " " << str1 << " " << str2 <<
+	                     endl;
+	            return str1 + " " + str2;
+	        }
+	};
+	
+	int main()
+	{
+	    Strings s;
+	
+	    s.display(cout);
+	}
         )
+    After compilation and linking, simply call the program without any
+arguments. 
 
 manpagefiles()
     em(bobcat/fnwrap2c) - defines the class interface

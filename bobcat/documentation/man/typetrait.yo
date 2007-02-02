@@ -1,55 +1,72 @@
 includefile(header.inc)
 
 COMMENT(manpage, section, releasedate, archive, short name)
-manpage(FBB::Errno)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+manpage(FBB::TypeTrait)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
                     (Error handler)
 
-manpagename(FBB::Errno)(shortdesc)
+manpagename(FBB::TypeTrait)(shortdesc)
 
 manpagesynopsis()
-    bf(#include <bobcat/errno>)nl()
-==================================
-REMOVE for plain template classes:    
-    Linking option: tt(-lbobcat) 
-==================================
+    bf(#include <bobcat/typetrait>)nl()
 
 manpagedescription()
+
+    bf(FBB::TypeTrait) is a traits class. It does not define any member
+functions or data members, but only types. It can be used to determine the
+basic type and other characteristics of (const) plain, (const) pointer or
+(const) reference types. It is used, e.g., by the bf(FBB::FnWrap*) family of
+template classes and was designed after Alexandrescu's (2001) tt(TypeTraits)
+template class.
 
 includefile(namespace.inc)
 
 manpagesection(INHERITS FROM)
     -
 
-manpagesection(CONSTRUCTORS)
+manpagesection(TYPE)
+    
     itemization(
-    itb(Errno())
-    itb(Errno(Errno const &other) throw()) 
-    The standard copy constructor is available.
+    itt(Plain): the plain type of any const or non-const plain, pointer or
+reference type. 
     )
 
-manpagesection(MEMBER FUNCTIONS)
-     All members of bf(std::ostringstream) and bf(  std::exception) are
-available, as bf(FBB::Errno) inherits from these classes.
+manpagesection(BOOL VALUES)
+    
     itemization(
-    itb(virtual char const *what() const throw()) 
-    )
-
-manpagesection(MANIPULATORS)
-    The following manipulators (which are em(not) part of the bf(FBB::Errno),
-class, but em(are) defined in the bf(FBB) namespace) can be inserted into the
-bf(FBB::Errno) object:
-    itemization(
-    itb(FBB::insertable) 
+    itt(isPointer): tt(true) if the template type argument represents a
+pointer type, tt(false) otherwise.
+    itt(isConst): tt(true) if the template type argument represents a
+const type, tt(false) otherwise.
+    itt(isRef): tt(true) if the template type argument represents a
+reference type, tt(false) otherwise.
     )
 
 manpagesection(EXAMPLE)
-    To do
+
+    The following example shows a fragment of the code used in the
+bf(FBB::FnWrap1) class determining the basic type of its tt(Type) template
+parameter: 
+        verb(
+    #include <bobcat/typetrait>
+    ...
+    template <typename Type, typename ReturnType = void>
+    class FnWrap1
+    {
+        ...
+        public:
+            typedef typename TypeTrait<Type>::Plain  argument_type;
+        ...
+    };
+        )    
+    The above code could have used tt(TypeTrait<Type>::isPointer) to determine
+whether tt(Type) actually represents a pointer type.    
 
 manpagefiles()
-    em(bobcat/errno) - defines the class interface
+    em(bobcat/typetrait) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7)
+    bf(bobcat)(7)nl()
+    Alexandrescu A. (2001) bf(Modern C++ Design), Addison-Wesley, Boston.
 
 manpagebugs()
     None Reported.
