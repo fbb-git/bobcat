@@ -1,6 +1,6 @@
 #include "fork.ih"
 
-void Fork::fork() throw (Errno)
+void Fork::fork()
 {
     if ((d_pid = ::fork()) < 0)
         throw Errno("Fork::fork()");

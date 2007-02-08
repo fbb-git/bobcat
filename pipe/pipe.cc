@@ -1,6 +1,6 @@
 #include "pipe.ih"
 
-Pipe::Pipe()  throw(Errno)
+Pipe::Pipe()
 {
     if (pipe(d_fd))
         throw Errno("Pipe::Pipe()");

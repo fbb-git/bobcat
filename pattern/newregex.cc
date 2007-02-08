@@ -1,6 +1,6 @@
 #include "pattern.ih"
 
-void Pattern::newRegex(string const &pattern, int options) throw (Errno)
+void Pattern::newRegex(string const &pattern, int options)
 {
     try
     {

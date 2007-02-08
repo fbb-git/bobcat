@@ -2,7 +2,7 @@
 
 Arg::Arg(char const *optstring, 
          LongOption const * const begin, LongOption const * const end,
-         int argc, char **argv) throw (Errno)
+         int argc, char **argv)
 :
     d_argPointer(0)
 {

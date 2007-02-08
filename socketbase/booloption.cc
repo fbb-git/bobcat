@@ -1,6 +1,6 @@
 #include "socketbase.ih"
 
-bool SocketBase::boolOption(int optname) const throw (Errno)
+bool SocketBase::boolOption(int optname) const
 {
     int         value;
     socklen_t   valueSize = sizeof(int);

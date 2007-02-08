@@ -1,6 +1,6 @@
 #include "socketbase.ih"
 
-SocketBase::SocketBase(string const &host, uint16_t port) throw (Errno)
+SocketBase::SocketBase(string const &host, uint16_t port)
 :
     InetAddress(host, port)
 {

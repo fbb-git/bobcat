@@ -1,6 +1,6 @@
 #include "msg.ih"
 
-void FBB::fatal(ostream &out) throw (Errno)
+void FBB::fatal(ostream &out)
 {
     ostringstream &os = dynamic_cast<ostringstream &>(out);
 
