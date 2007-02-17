@@ -91,7 +91,7 @@ AutoPtr<Data>::RefData::RefData(Data *data, size_t size)
 {}
 
 template<typename Data>
-AutoPtr<Data>::RefData::~RefData()
+inline AutoPtr<Data>::RefData::~RefData()
 {
     destroy();
 }
@@ -113,7 +113,7 @@ RefCount *AutoPtr<Data>::RefData::clone() const
 }
 
 template<typename Data>
-Data *AutoPtr<Data>::RefData::get(int idx)
+inline Data *AutoPtr<Data>::RefData::get(int idx)
 {
     return d_data + idx;
 }
@@ -195,7 +195,7 @@ AutoPtr<Data>::AutoPtr(Data *data, size_t size)
 {}
 
 template<typename Data>         // Copy constructor
-AutoPtr<Data>::AutoPtr(AutoPtr &other)
+inline AutoPtr<Data>::AutoPtr(AutoPtr &other)
 {
     copy(other);
 }
@@ -208,7 +208,7 @@ AutoPtr<Data>::AutoPtr(AutoPtr &other)
 // }
 
 template<typename Data>         // destructor
-AutoPtr<Data>::~AutoPtr()
+inline AutoPtr<Data>::~AutoPtr()
 {
     destroy();
 }
@@ -225,32 +225,32 @@ AutoPtr<Data> &AutoPtr<Data>::operator=(AutoPtr &other)
 }
 
 template<typename Data>         // Dereference operator
-Data &AutoPtr<Data>::operator*()
+inline Data &AutoPtr<Data>::operator*()
 {
     return *d_data->get(d_base);
 }
 
 
 template<typename Data>         // Pointer operator
-Data *AutoPtr<Data>::operator->()
+inline Data *AutoPtr<Data>::operator->()
 {
     return d_data->get(d_base);
 }
 
 template<typename Data>         // get() member
-Data *AutoPtr<Data>::get()
+inline Data *AutoPtr<Data>::get()
 {
     return d_data->get(d_base);
 }
 
 template<typename Data>         // lose one share count, return alloc. copy
-Data *AutoPtr<Data>::release()
+inline Data *AutoPtr<Data>::release()
 {
     return d_data->releaseOne();
 }
 
 template<typename Data>         // lose all shares, return alloc. data
-Data *AutoPtr<Data>::releaseAll()
+inline Data *AutoPtr<Data>::releaseAll()
 {
     return d_data->releaseAll();
 }
@@ -279,13 +279,13 @@ void AutoPtr<Data>::copy(AutoPtr &other)
 }
 
 template<typename Data>
-void AutoPtr<Data>::destroy()
+inline void AutoPtr<Data>::destroy()
 {
     d_data->release();
 }
 
 template<typename Data>
-Data &AutoPtr<Data>::operator[](int idx)
+inline Data &AutoPtr<Data>::operator[](int idx)
 {
     return *d_data->get(d_base + idx);
 }
@@ -298,25 +298,25 @@ AutoPtr<Data> &AutoPtr<Data>::operator+=(int idx)
 }
 
 template<typename Data>
-AutoPtr<Data> AutoPtr<Data>::operator+(int idx)
+inline AutoPtr<Data> AutoPtr<Data>::operator+(int idx)
 {
     return AutoPtr<Data>(*this) += idx;
 }
 
 template<typename Data>
-AutoPtr<Data> operator+(int idx, AutoPtr<Data> &rhs)
+inline AutoPtr<Data> operator+(int idx, AutoPtr<Data> &rhs)
 {
     return AutoPtr<Data>(rhs) += idx;
 }
 
 template<typename Data>
-AutoPtr<Data> &AutoPtr<Data>::operator-=(int idx)
+inline AutoPtr<Data> &AutoPtr<Data>::operator-=(int idx)
 {
     return *this += -idx;
 }
 
 template<typename Data>
-AutoPtr<Data> AutoPtr<Data>::operator-(int idx)
+inline AutoPtr<Data> AutoPtr<Data>::operator-(int idx)
 {
     return AutoPtr<Data>(*this) -= idx;
 }

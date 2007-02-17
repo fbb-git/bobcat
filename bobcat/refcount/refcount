@@ -47,14 +47,14 @@ inline size_t RefCount::refcount() const
 }
 
 template <typename X>
-inline X *RefCount::share(X const *x)
+X *RefCount::share(X const *x)
 {
     x->d_refcount++;
     return const_cast<X *>(x);
 }
 
 template <typename X>
-inline X &RefCount::modifying(X **x)
+X &RefCount::modifying(X **x)
 {
     if ((*x)->d_refcount != 1)
     {
