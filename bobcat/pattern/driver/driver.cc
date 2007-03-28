@@ -53,11 +53,6 @@ int main(int argc, char **argv)
     {
         cout << e.what() << ": compilation failed" << endl;
     }
-
-    if (pattern << "noot")
-        cout << "noot matches\n";
-    else
-        cout << "noot didn't match\n";
         
 /*
     gewenst patroon: 
