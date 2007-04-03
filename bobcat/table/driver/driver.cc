@@ -2,15 +2,17 @@
 #include <algorithm>
 #include <iterator>
 
-#include <bobcat/string>
-#include <table>
+#include "../table"
 
 using namespace std;
 using namespace FBB;
 
 int main(int argc, char **argv)
 {
-    Table<char **> table(2, TableSpec::Horizontal);
+    Table<char *> table(2, TableSpec::Horizontal);
+    vector<string> vs;
+    Table<string> tabe(vs.begin(), vs.end(), 2, TableSpec::Horizontal);
+
 
     copy(argv, argv + argc, back_inserter(table));
 
@@ -32,3 +34,4 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
