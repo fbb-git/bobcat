@@ -1,5 +1,4 @@
 #include "table.ih"
-#include <iostream>
 
 Table &Table::sync()
 {

@@ -69,15 +69,15 @@ int main(int argc, char **argv)
 
     Table tab(support, 3, Table::ROWWISE, Table::EQUALWIDTH);
 //    Table tab(support, 3, Table::ROWWISE);
-
+ 
     tab << Align(0, std::left);     // set column non-default alignment
     tab.fill(argv + 1, argv + argc);// fill range of values
     cout << tab << endl;            // complete the table and insert
-
+ 
     tab << "hello" << "" << "wo";   // add additional elements.
     if (tab.nRows() > 2)
         tab << Align(2, 2, center); // set the layout of a specific element
-
+ 
     cout << tab << endl;
 
     return 0;

@@ -1,5 +1,4 @@
 #include "tablesupport.ih"
-#include <iostream>
 
 void TableSupport::setParam(std::ostream &ostr, size_t rows, size_t nColumns,
                             std::vector<Align> const &align)
