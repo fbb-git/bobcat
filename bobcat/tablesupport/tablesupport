@@ -3,55 +3,162 @@
 
 #include <ostream>
 #include <vector>
+#include <map>
 #include <numeric>
+
+#include "../align/align"
 
 namespace FBB
 {
 
 class TableSupport
 {
-    std::ostream *d_streamPtr;
-    size_t d_rows;
-    std::vector<size_t> const *d_colWidth;
-    size_t d_maxWidth;
-    size_t d_tableWidth;
+    public:
+        struct HLine
+        {
+            size_t d_row;
+            size_t d_begin;
+            size_t d_end;
+        
+            HLine(size_t row, size_t begin, size_t end);
+        };
+
+    protected:    
+        typedef std::pair<size_t, size_t> BeginEnd;
+        typedef std::map<size_t, std::vector<BeginEnd> > SizeBeginEndMap;
+
+    private:
+        std::ostream *d_streamPtr;
+        size_t d_nRows;
+        size_t d_nColumns;
+        std::vector<Align> const *d_align;
+        size_t d_tableWidth;
+        SizeBeginEndMap     d_hline;
+        std::vector<std::string> d_sep;
 
     public:
         TableSupport();
 
         inline virtual ~TableSupport();     // g++ bug workaround
 
-        void setParam(std::ostream &ostr, size_t rows, 
-                        std::vector<size_t> const &colWidth,
-                        size_t maxWidth);
+        void setParam(std::ostream &ostr, size_t rows, size_t nColumns,
+                        std::vector<Align> const &align);
 
-        void setParam(size_t maxWidth);
-        size_t tableWidth() const;
-        size_t nColumns() const;
-        std::ostream &out() const;
+        size_t width() const;
 
         virtual void hline(size_t row) const;
         virtual void hline() const;
         virtual void vline(size_t col) const;
         virtual void vline() const;
+
+    protected:
+        enum Type
+        {
+            SKIP,
+            USE
+        };
+
+        struct Element
+        {
+            Type    type;
+            size_t  width;
+        };
+            
+        class const_iterator:
+            public std::iterator<std::input_iterator_tag, Element>
+        {
+            TableSupport const &d_support;
+            size_t  d_col;
+            bool    d_sep;
+            std::vector<BeginEnd>::const_iterator d_begin;
+            std::vector<BeginEnd>::const_iterator d_end;
+            Element d_element;
+            
+            public:
+                const_iterator(TableSupport const &support);
+                const_iterator(TableSupport const &support, 
+                               std::vector<BeginEnd> const &field);
+
+                const_iterator &operator++();
+                bool operator==(const_iterator const &other) const;
+                bool operator!=(const_iterator const &other) const;
+                Element const &operator*() const;
+                Element const *operator->() const;
+            private:
+                void setElement();
+        };
+
+        SizeBeginEndMap const &hlineMap() const;
+
+        const_iterator begin(size_t row) const;
+        const_iterator end() const;
+
+        size_t colWidth(size_t col) const;
+        size_t nColumns() const;
+        size_t nRows() const;
+        size_t sepWidth(size_t col) const;
+
+        std::ostream &out() const;
+
+        std::vector<Align> const &align() const;
+        std::vector<std::string> const &sep() const;
+
+    private:
+        static void add(std::string const &src, size_t &dest);
+
+        friend class const_iterator;
+        friend TableSupport &operator<<(TableSupport &support, size_t);
+        friend TableSupport &operator<<(TableSupport &support, 
+                                                    std::string const &sep);
+        friend TableSupport &operator<<(TableSupport &support, 
+                                                    HLine const &hline);
 };
 
-inline TableSupport::~TableSupport()
+inline TableSupport::~TableSupport()        // required: g++ bug workaround
 {}
 
-inline void TableSupport::setParam(size_t maxWidth)
+inline size_t TableSupport::colWidth(size_t col) const
 {
-    d_maxWidth = maxWidth;  // 0 if colWidth should be used.
+    return col < d_align->size() ? (*d_align)[col].col() : 0;
 }
 
-inline size_t TableSupport::tableWidth() const
+inline size_t TableSupport::sepWidth(size_t col) const
+{
+    return col < d_sep.size() ? d_sep[col].length() : 0;
+}
+
+inline bool TableSupport::const_iterator::operator==(
+        TableSupport::const_iterator const &other) const
+{
+    return d_sep == other.d_sep && d_col == other.d_col;
+}
+
+inline bool TableSupport::const_iterator::operator!=(
+    TableSupport::const_iterator const &other) const
+{
+    return not (*this == other);
+}
+
+inline TableSupport::Element const 
+    *TableSupport::const_iterator::operator->() const
+{
+    return &d_element;
+}
+
+inline TableSupport::Element const 
+    &TableSupport::const_iterator::operator*() const
+{
+    return *operator->();
+}
+
+inline TableSupport::const_iterator TableSupport::end() const
+{
+    return const_iterator(*this);
+}
+
+inline size_t TableSupport::width() const
 {
     return d_tableWidth;
-}
-
-inline size_t TableSupport::nColumns() const
-{
-    return d_colWidth->size();
 }
 
 inline std::ostream &TableSupport::out() const
@@ -63,19 +170,54 @@ inline void TableSupport::hline(size_t row) const
 {}
 
 inline void TableSupport::hline() const
-{}
+{
+    hline(d_nRows);
+}
 
 inline void TableSupport::vline(size_t col) const
-{
-    if (col)
-        *d_streamPtr << ' ';
-}
+{}
 
 inline void TableSupport::vline() const
 {
-    *d_streamPtr << '\n';
+    out() << '\n';
 }
 
+inline TableSupport::SizeBeginEndMap const &TableSupport::hlineMap() const
+{
+    return d_hline;
+}
+
+inline std::vector<std::string> const &TableSupport::sep() const
+{
+    return d_sep;
+}
+
+inline void TableSupport::add(std::string const &src, size_t &dest)
+{
+    dest += src.length();
+}
+
+inline size_t TableSupport::nColumns() const
+{
+    return d_nColumns;
+}
+
+inline size_t TableSupport::nRows() const
+{
+    return d_nRows;
+}
+
+inline std::vector<Align> const &TableSupport::align() const
+{
+    return *d_align;
+}
+
+TableSupport &operator<<(TableSupport &support, size_t);
+TableSupport &operator<<(TableSupport &support, std::string const &sep);
+TableSupport &operator<<(TableSupport &support, 
+                                        TableSupport::HLine const &hline);
+
 } // FBB
-        
+
+
 #endif

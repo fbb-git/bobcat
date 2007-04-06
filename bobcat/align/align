@@ -1,0 +1,84 @@
+#ifndef _INCLUDED_ALIGN_
+#define _INCLUDED_ALIGN_
+
+
+#include <ostream>
+#include <iomanip>
+
+namespace FBB
+{
+
+typedef std::ios_base &(*Manipulator)(std::ios_base &);
+
+inline std::ios_base &center(std::ios_base &stream)
+{
+    return stream;
+}
+
+class Align
+{
+    int d_row;              // -1 or the row index to align
+    size_t d_col;           // acts as field width when setting the width of 
+                            // an element.
+    Manipulator d_manip;
+
+    public:
+        Align(int row, size_t column, Manipulator manip);
+        Align(size_t col = 0, Manipulator manip = std::right);
+        Align(Manipulator manip);
+
+        bool hasRow() const;
+
+        operator size_t() const;
+
+        size_t col() const;
+        size_t row() const;
+
+        Manipulator manip() const;
+
+        void setWidth(size_t width);
+        void setManip(Manipulator manip);
+};
+
+inline Align::operator size_t() const
+{
+    return d_col;
+}
+
+inline size_t Align::col() const
+{
+    return d_col;
+}
+
+inline size_t Align::row() const
+{
+    return d_row;
+}
+
+inline bool Align::hasRow() const
+{
+    return d_row != -1;
+}
+
+inline Manipulator Align::manip() const
+{
+    return d_manip;
+}
+
+inline void Align::setManip(Manipulator manip)
+{
+    d_manip = manip;
+}
+
+inline void Align::setWidth(size_t size)
+{
+    d_col = size;
+}
+
+} // FBB
+
+#endif
+
+
+
+

@@ -40,6 +40,23 @@ string MAN;
     // MAN is the directory in which the manual pages will be stored
     // They are stored below man3 and man7
 
+    // According to Karel Kubat (karel at e dash tunity dot com) the bobcat
+    // library won't compile under BSD/MacOSX if the Linux options to create
+    // the dynamic library are used. Instead of 
+    //      -shared -Wl,-z,def,-soname,
+    // Karel suggests to use:
+    //      -dynamiclib -Wl,-single_module
+    //
+    // Also, he suggests to use the name libbobcat.dylib instead of
+    // libbobcat.so.1 
+
+    // In the directory ./contrib the script c-conf is found which is provided
+    // by Karel and which might be useful to construct the libraries under
+    // BSD/MacOSX systems. Don't contact me if you experience any problems
+    // with Karel's script. Instead, contact Karel directly.
+
+string SHAREDOPT;
+string SHAREDLIB;
 
 void setLocations()
 {
@@ -54,3 +71,4 @@ void setLocations()
     GPP = "g++";
     GCC = "gcc";
 }
+

@@ -25,88 +25,14 @@ void setClasses()
     CLASSES += " ";
 }
 
-/*
-    Default values for the following variables 
-    are found in $IM/default/defines.im
-
-    BISON_FLAGS:    This directive is only used when a grammar is generated 
-                    using bison++. It defines the set of flags that are
-                    given to bison++ when bison++ generates the parser.
-                    By default the following flags are specified: -v -l
-                    The -d and -o flags are always provided (not configurable)
-
-    BUILD_LIBRARY:  define this if you want to create a library for the object
-                    modules. Undefined by default: so NO LIBRARY IS
-                    BUILT. This links ALL object files to a program, which is
-                    a faster process than linking to a library. But it can
-                    bloat the executable: all o-modules, rather than those
-                    that are really used, become part of the program's code.
-    
-    BUILD_PROGRAM:  define if a program is to be built. If not defined,
-                    library maintenance is assumed  (by default it is defined 
-                    to the name of the program to be created).
-
-    COMPILER:       The compiler to use. 
-    COPT:           C-options used by COMPILER
-    LOPT:           Define this (default: to "`wx-config --lib`") if a
-                    wxWindows program is constructed. In that case, you
-                    probably also want to define the COPT option `wx-config
-                    --cxxflags`, using, e.g., the following definition:
-                        #define COPT   "-Wall `wx-config --cxxflags`"
-
-    ECHO_REQUEST:   ON (default) if command echoing is wanted, otherwise: set
-                    to OFF
-    GDB:            define if gdb-symbolic debug information is wanted
-                    (not defined by default)
-
-    GRAMMAR_LINES:  When this directive is defined, #line directives will
-                    be generated at the first C++ compound statement 
-                    in each individual grammar specification file. Undefine
-                    if no such #line directives are required.
-
-    LIBS:           Extra libraries used for linking
-    LIBPATH:        Extra library-searchpaths used for linking
-
-    QT:             Define this (default: to "qt") if the unthreaded QT 
-                    library is used. Define as "qt-mt" if the threaded QT
-                    library is used.
-                    If set, header files are grepped for the occurrence of 
-                    the string '^[[:space:]]*Q_OBJECT[[:space:]]*$'. If found,
-                    moc -o moc<CLASSNAME>.cc <CLASSNAME>.h is called if
-                    the moc-file doesn't exist or is older than the .h file.
-                    Also, if defined the proper QT library is linked, assuming
-                    that the library is found in the ld-search path
-                    (E.g., see the environment variable $LIBRARY_PATH).
-
-    Note that namespaces are NOT part of the build-script: they are only
-    listed below for convenience. When they must be altered, the defaults must
-    be changed in $IM/default/defines.im
-
-    RELINK:         Defined by default, causing a program to be
-                    relinked every time the script is called. Do not
-                    define it if relinking should only occur if a
-                    source is compiled. No effect for library maintenance.
-
-    Current values:
-*/
-//#define BUILD_LIBRARY
 #define BUILD_PROGRAM      "driver"
 
 #define COMPILER           "g++"
 #define COPT               "-Wall -O3"
-//#define LOPT             "`wx-config --libs`"
 
 #define ECHO_REQUEST       1
-//#define GDB              "-g"
 
 #define LIBS               "bobcat"
-// #define LIBPATH            ""
-
-// local namespace is: FBB
-// using-declarations generated for: std:FBB
-
-// qt-mt can be used to select the threaded QT library
-//#define QT               "qt"
 
 //                      NO CONFIGURABLE PARTS BELOW THIS LINE
 

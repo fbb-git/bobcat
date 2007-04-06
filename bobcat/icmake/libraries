@@ -38,9 +38,8 @@ void shared_library(string destDir, string libso, string libsoshared)
 
     if (sizeof(makelist("*/o/*.o")))
     {
-    
         libsomajor  = libso + "." + element(0, strtok(g_version, "."));
-    
+
         run(GCC + " -shared -Wl,-z,def,-soname," + libsomajor +
             " -o " + destDir + libsoshared + " */o/*.o");
     
@@ -89,3 +88,5 @@ void libraries(string libname, int all)
 
     exit(0);
 }
+
+
