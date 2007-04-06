@@ -22,14 +22,15 @@ class FnWrap2
 };
 
 template <typename Type1, typename Type2, typename ReturnType>
-FnWrap2<Type1, Type2, ReturnType>::FnWrap2(ReturnType (*fun)(Type1, Type2))
+inline FnWrap2<Type1, Type2, ReturnType>::FnWrap2(
+                                            ReturnType (*fun)(Type1, Type2))
 :
     d_fun(fun)
 {}
 
 template <typename Type1, typename Type2, typename ReturnType>
-ReturnType FnWrap2<Type1, Type2, ReturnType>::operator()(Type1 p1, Type2 p2) 
-                                                                        const
+inline ReturnType FnWrap2<Type1, Type2, ReturnType>::operator()(
+                                                    Type1 p1, Type2 p2) const
 {
     return (*d_fun)(p1, p2);
 }
