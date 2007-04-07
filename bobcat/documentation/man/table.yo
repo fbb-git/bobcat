@@ -120,7 +120,7 @@ member's iterator pair are inserted into the table as new elements.
 also called from a tt(back_inserter) adaptor).
     itb(size_t nRows())
         This member returns the currently available number of rows in the
-table. Its value is only defined after calling bf(sync()).
+table. Its value is only defined after calling bf(CHAR(d)ef()).
     itb(Table &setAlign(Align const &align))
         This member is used to specify the alignment of either a column or an
 element of the bf(Table) object. The standard alignments tt(std::left,
@@ -134,7 +134,7 @@ their column. A construction like
     requests centering of element [2][3]. It is the responsibility of the
 programmer to ensure that such elements exist. By default, all elements are
 right-aligned.
-    itb(Table &sync())
+    itb(Table &CHAR(d)ef())
         This member may be used to `complete' a bf(Table) object to a full
 rectangular object, for which all column widths and alignments have been
 determined. It is implied by tt(operator<<(ostream, Table)). In
@@ -144,12 +144,11 @@ its working is complex, since new elements added to a tt(COLUMNWISE) filled
 table will reshuffle its elements over the table's columns. 
     )
 
-
 manpagesection(MANPULATORS)
     itemization(
-    itb(Table &sync())
-        This member may be called explicitly as a member function but it can
-also be inserted into a bf(Table) object.
+    itb(Table &CHAR(d)ef(Table &table))
+        This manipulator can be inserted into a table to call the table's
+bf(CHAR(d)ef()) member.
     )
 
 manpagesection(EXAMPLE)
@@ -163,7 +162,8 @@ manpageseealso()
     bf(bobcat)(7), bf(align)(3bobcat), bf(tablesupport)(3bobcat)
     
 manpagebugs()
-    Note that tt(sync()) will reshuffle elements over the table's columns when
-new elements are added to the table subsequent to calling tt(sync())
+    Note that tt(CHAR(d)ef()) will reshuffle elements over the table's
+columns when new elements are added to the table subsequent to calling
+tt(CHAR(d)ef())
 
 includefile(trailer.inc)

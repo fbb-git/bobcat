@@ -1,6 +1,6 @@
 #include "table.ih"
 
-Table &Table::sync()
+Table &Table::def()
 {
     if (d_tabulated || !d_string.size())    // no elements or already 
         return *this;                       // tabulated then do nothing

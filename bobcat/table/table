@@ -82,11 +82,11 @@ class Table: public std::ostringstream
 
         Table &setAlign(Align const &align);    // set an alignment
 
-        Table &sync();                      // fillup an incomplete table
+        Table &def();                       // fillup an incomplete table
                                             // automatically at insertions
 
         size_t nRows() const;               // Number of rows currently
-                                            // in the table (following sync)
+                                            // in the table (following def)
     private:
         Table(Table const &other);                          // NI
         Table &operator=(Table const &other);               // NI
@@ -187,7 +187,11 @@ inline Table &operator<<(Table &tab, Align const &align)
     return tab.setAlign(align);
 }
 
-                        // For sync
+inline Table &def(Table &table)
+{
+    return table.def();
+}
+                        // For def
 inline Table &operator<<(Table &table, Table &(*fun)(Table &))
 {
     return (*fun)(table);

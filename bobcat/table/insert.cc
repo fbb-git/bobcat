@@ -2,7 +2,7 @@
 
 ostream &Table::insert(ostream &ostr)
 {
-    sync();
+    def();
 
     if (!d_nRows)
         return ostr;
