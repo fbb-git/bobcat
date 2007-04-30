@@ -41,13 +41,18 @@ manpagesection(ENUMERATIONS)
 
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(Glob(std::string const &pattern = "*", Flags flags = PERIOD,
+    itb(Glob(std::string const &pattern = "*", int flags = PERIOD,
              Dots dots = FIRST)) 
         This constructor (which can also be used as the default constructor)
     determines all elements in the current directory. The tt(.) and tt(..)
     relative filenames are not part of the listings. Used as default
     constructor, other directory elements starting with a period will be the
     first elements in the series of detected directory elements.
+
+    Multiple plags may be specified, separated by the tt(bitor) operator. An
+tt(FBB::Errno) exception is thrown if either unknown flags were specified or
+the bf(glob)(3) function failed.
+
     itb(Glob(Glob const &other)) 
         The copy constructor is available.
     )
