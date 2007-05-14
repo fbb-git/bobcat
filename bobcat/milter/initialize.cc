@@ -81,7 +81,7 @@ void Milter::initialize(string const &name, Milter &milter,
 #endif /* SMFI_VERSION > 2 */
 
 #if SMFI_VERSION > 3
-            case EOM:
+            case DATA:  // EOM: typo ?
                 descr.xxfi_data = &mData;
             break;
 #endif /* SMFI_VERSION > 3 */

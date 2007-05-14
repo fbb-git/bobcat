@@ -275,7 +275,7 @@ class Milter
                     const_cast<char *>(name.c_str()));
         }
 #if SMFI_VERSION > 2
-        virtual sfsistat unknown(char *ptr)
+        virtual sfsistat unknown(char const *ptr)
         {
             return CONTINUE;
         }
@@ -329,7 +329,7 @@ class Milter
         static sfsistat mClose(SMFICTX *ctx);
 
 #if SMFI_VERSION > 2
-        static sfsistat mUnknown(SMFICTX *ctx, char *ptr)
+        static sfsistat mUnknown(SMFICTX *ctx, char const *ptr)
         {
             return install(ctx)->unknown(ptr);
         }
