@@ -152,8 +152,9 @@ line at the end of the table. By default it calls tt(hline(nRows)).
         This member is called just before the indicated column element
 (offset, not number) is inserted into the bf(std::ostream). Its intended task
 is to write a separator either before the first element of a row (col == 0) or
-between two subsequent elements in the table's rows. By default it performs no
-actions.
+between two subsequent elements in the table's rows. By default it inserts
+tt(separator[col]) if if is available. If that separator is not available, no
+action is performed.
     itb(virtual void vline() const)
         This member is called when the last element of a row has been inserted
 into the tt(ostr) stream.  Its intended task is to write a line separator,
