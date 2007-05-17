@@ -2,7 +2,7 @@
 
 void TableSupport::vline(size_t col) const
 {
-    if (d_sep.size() < col)
+    if (col < d_sep.size())
         out() << d_sep[col];
 }
 
