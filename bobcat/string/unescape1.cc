@@ -5,7 +5,7 @@ namespace
     char const escapeChars[] = "abfnrtv";
     char const escapeValue[] = {'\a', '\b', '\f', '\n', '\r', '\t', '\v'};
 
-    size_t handleOctal(String *dest, String const &src, size_t pos)
+    size_t handleOctal(string *dest, string const &src, size_t pos)
     {
         size_t const nOct = 3;                // need exactly 3 octals
 
@@ -26,7 +26,7 @@ namespace
         return pos2;                            // pos. of next to handle
     }
 
-    size_t handleHex(String *dest, String const &src, size_t pos)
+    size_t handleHex(string *dest, string const &src, size_t pos)
     {
         size_t const nHex = 2;                // need exactly 2 hex digits
 
@@ -50,7 +50,7 @@ namespace
 
 string String::unescape(string const &str)
 {
-    String ret;
+    string ret;
 
     size_t prefix = 0;                    // prefix text before \-char
     size_t pos = 0;
