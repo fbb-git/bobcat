@@ -48,6 +48,19 @@ type. Extraction is also still possible.
 manpagesection(MEMBER FUNCTIONS)
     All members of the bf(istringstream) class are available.
 
+    itemization(
+    itb(Type to()) 
+        This member returns any type tt(Type) supporting extractions from
+tt(i[string]streams). If the extraction fails, the bf(FBB::A2x) object's
+tt(good()) member will return tt(false), and the tt(Type)'s default value is
+returned. This operator was implemented as a template member function. There
+is also a type conversion operator available (see below), but the member
+function variant may be preferred over the conversion operator in situations
+where explicit disambiguation is required (e.g., in cases where a
+conversion has no obvious type solution such as direct insertions) An example
+is provided in the bf(EXAMPLE) section below.
+    )
+
 manpagesection(OVERLOADED OPERATORS)
     itemization(
     itb(operator Type()) 
@@ -90,6 +103,9 @@ manpagesection(EXAMPLE)
     a2x = " a";
 
     char c = a2x;   // c now 'a'
+
+                    // explicit conversion to `double'
+    cout << A2x("12.4").to<double>() << endl;
         )
 
 manpagefiles()

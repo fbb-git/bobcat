@@ -1,12 +1,10 @@
 /*
                               driver.cc
 
-   $Id$
-
 */
 
 #include <iostream>
-#include <bobcat/a2x>
+#include "../a2x"
 
 
 using namespace std;
@@ -32,6 +30,7 @@ int main(int argc, char **argv, char **envp)
 
     cout << d << endl;
 
+    cout << "Again: " << A2x("12.345").to<double>() << endl;
     a2x = "err";
 
     d = a2x;        // d now 0
