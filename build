@@ -34,6 +34,8 @@ list
 void main(int argc, list argv, list envp)
 {
     string option;
+    string all;
+    string strip;
 
     echo(ECHO_COMMANDS);
 
@@ -55,7 +57,16 @@ void main(int argc, list argv, list envp)
         clean();
 
     if (option == "libraries")
-        libraries("bobcat", element(2, argv) == "all");
+    {
+        all = element(2, argv);
+
+        if (all == "all")
+            strip = element(3, argv);
+        else
+            strip = all;
+
+        libraries("bobcat", all == "all", strip == "strip");
+    }
 
     if (option == "man")
         man();
@@ -65,13 +76,15 @@ void main(int argc, list argv, list envp)
 
     printf("Usage: build what\n"
         "Where `what' is one of:\n"
-        "   clean             - clean up remnants of previous compilations\n"
-        "   install <rss dev> - to install the software in the locations\n"
-        "                       defined in the INSTALL.im file, optionally\n"
-        "                       below <rss> (run-time package) and\n"
-        "                       <dev> (development package)\n"
-        "   man             - build the manual page (requires Yodl)\n"
-        "   libraries       - build the bobcat(-dev) libraries\n"
+        "   clean               - clean up remnants of previous compilations\n"
+        "   install <rss dev>   - to install the software in the locations\n"
+        "                         defined in the INSTALL.im file,\n"
+        "                         optionally below <rss> (run-time package)\n"
+        "                         and <dev> (development package)\n"
+        "   man                 - build the manual page (requires Yodl)\n"
+        "   libraries [all] [strip] - build the bobcat(-dev) libraries\n"
+        "                         (optionally add optional classes,\n"
+        "                         optionally strip the libraries)\n"
         "\n"
         "If the environment variable DRYRUN is defined, no commands are\n"
         "actually executed\n"
