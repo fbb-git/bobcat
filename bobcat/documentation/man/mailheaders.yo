@@ -23,10 +23,11 @@ manpagesection(INHERITS FROM)
     bf(std::vector<std::string>)
 
 manpagesection(ENUMERATIONS)
-    The following enumerations are defined in the class bf(FBB::MailHeaders):
+    The following enumerations and enumeration values can be used with the
+class bf(FBB::MailHeaders):
 
     bf(enum Mode)nl()
-    This enumeration holds two values:
+    This enumeration defines two values:
     itemization(
     itb(READ)
         When this value is specified at construction time, e-mail is
@@ -37,10 +38,8 @@ using the bf(read()) member (see below).
     )
 
     bf(enum Match)nl()
-    This enumeration holds four values:
+    This enumeration defines the following values:
     itemization(
-    itb(FAIL)
-    Not to be used by public members.
     itb(FULL)
     Used by the bf(setHeaderIterator) (see below) to indicate that the headers
 must exactly match a specified header name.
@@ -50,6 +49,16 @@ part of the headers must match the specified header text.
     itb(PARTIAL)
     Used by the bf(setHeaderIterator) (see below) to indicate that the 
 headers must contain the specified header text.
+    )
+
+    bf(enum Casing)nl()
+    This enumeration defines the following values:
+user-programs: 
+    itemization(
+    itb(CASE_INSENSITIVE)
+    Headers are matched case insensitively
+    itb(CASE_SENSITIVE)
+    Headers are matched case sensitively
     )
 
 manpagesection(CONSTRUCTOR)
@@ -64,27 +73,37 @@ tt(read()) can be called to process the e-mail later.
     The standard copy constructor is available.
 
 manpagesection(MEMBER FUNCTIONS)
-     All members of bf(std::vector<std::string>) are available, as bf(FBB::MailHeaders)
-inherts from this class.
+     All members of bf(std::vector<std::string>) are available, as
+bf(FBB::MailHeaders) inherts from this class.
 
     itemization(
     itb(void read()) 
-    Reads the mail-headers from the file passed to the bf(FBB::MailHeaders) object's
-constructor. An bf(FBB::Errno) object is thrown if the mailheaders were
-already read or if the file is incomplete (i.e., the (obligatory) blank line
-wasn't found).
-     itb(void setHeaderIterator(char const *header, Match match = FULL))
+    Reads the mail-headers from the file passed to the bf(FBB::MailHeaders)
+object's constructor. An bf(FBB::Errno) object is thrown if the mailheaders
+were already read or if the file is incomplete (i.e., the (obligatory) blank
+line wasn't found).
+     itb(void setHeaderIterator(char const *header, Match match = FULL, Casing
+casing = CASE_SENSITIVE))
     Sets the header-iterators to the specified tt(header). The parameter
-tt(match) defines the match-type used for recognizing the header. By default
-it is bf(FBB::MailHeaders::FULL), meaning that the text provided in tt(header) must
-match exactly an e-mail header (e.g., tt(From) won't match a tt(From:)
-header). Other matching strategies are bf(FBB::MailHeaders::INITIAL), meaning that
-tt(header) must match the em(initial) text of an e-mail header (e.g., tt(From)
-matches a tt(From:) header); and bf(FBB::MailHeaders::PARTIAL), meaning that tt(header)
-must match the em(initial) text of an e-mail header (e.g., tt(om) matches
-matches a tt(From:) header (but also a tt(From) header)). An bf(FBB::Errno)
-exception is thrown if bf(setHeaderIterator()) is called when no mail headers
-are available.
+tt(match) defines the match-type used for recognizing the header. The
+parameter tt(casing) defines the way letters are matched. The defaults are,
+respectively bf(FBB::MailHeaders::FULL), meaning that the text provided in
+tt(header) must match exactly an e-mail header (e.g., tt(From) won't match a
+tt(From:) header) and bf(FBB::MailHeaders::CASE_SENSITIVE) meaning letter
+casings are respected. 
+
+    Alternative matching strategies are bf(FBB::MailHeaders::INITIAL), meaning
+that tt(header) must match the em(initial) text of an e-mail header (e.g.,
+tt(From) matches a tt(From:) header); and bf(FBB::MailHeaders::PARTIAL),
+meaning that tt(header) must match the em(initial) text of an e-mail header
+(e.g., tt(om) matches matches a tt(From:) header (but also a tt(From)
+header)). 
+
+    When bf(FBB::MailHeaders::CASE_INSENSITIVE) is specified case insensitive
+matches are performed.
+
+An bf(FBB::Errno) exception is thrown if bf(setHeaderIterator()) is
+called when no mail headers are available.
     itb(const_iterator beginh() const)
     Returns the begin-iterator (a bf(FBB::MailHeaders:const_iterator) object)
 corresponding to the header and matching type defined by

@@ -5,19 +5,15 @@
 #include <string>
 #include <vector>
 
+#include <bobcat/string>
+#include <bobcat/errno>
+
 namespace FBB
 {
 
 class MailHeaders: public std::vector<std::string>
 {
     public:
-        typedef std::vector<size_t>       HdrLine;
-        typedef std::vector<HdrLine>        Hdr;
-        typedef std::pair<std::string, Hdr> HdrPair;
-
-        typedef Hdr::const_iterator         const_iterator;
-        typedef std::reverse_iterator<const_iterator>
-                                            const_reverse_iterator; 
         enum Mode
         {
             DONT_READ,
@@ -28,37 +24,85 @@ class MailHeaders: public std::vector<std::string>
             FAIL,
             INITIAL,
             PARTIAL,
-            FULL
+            FULL,
+
+            caseInsensitive,
+            CASE_INITIAL = caseInsensitive,
+            CASE_PARTIAL,
+            CASE_FULL,
+            lastMatch = CASE_FULL
         };
 
     private:
-        std::vector<HdrPair>    d_index;
+        enum Size
+        {
+            SIZEOFMATCH = lastMatch + 1,
+        };
+
         std::istream            &d_in;
         std::string             d_hdr;
         Match                   d_match;
-    
-        enum Where
+
+        class const_hdr_iterator:
+            public std::iterator<std::input_iterator_tag, 
+                                std::string const>
         {
-            BEGIN,
-            END,
+            friend class MailHeaders;
+            typedef bool(*Comparator)(std::string const &header, 
+                                      std::string const &key);
+
+            MailHeaders const  *d_mh;
+            std::string         d_key;
+            Comparator          d_comparator;
+            const_iterator      d_current;
+
+            static Comparator s_comparator[];
+
+            const_hdr_iterator(MailHeaders const *mailHeaders,
+                               const_iterator begin);
+
+            const_iterator lookup(const_iterator const &old) const;
+            const_iterator lookdown(const_iterator const &old) const;
+
+            static bool fail(std::string const &hdr, 
+                                std::string const &key);
+            static bool initial(std::string const &hdr, 
+                                std::string const &key);
+            static bool partial(std::string const &hdr, 
+                                std::string const &key);
+            static bool full(std::string const &hdr, 
+                                std::string const &key);
+            static bool caseInitial(std::string const &hdr, 
+                                std::string const &key);
+            static bool casePartial(std::string const &hdr, 
+                                std::string const &key);
+            static bool caseFull(std::string const &hdr, 
+                                std::string const &key);
+            public:
+                const_hdr_iterator &operator++();
+                const_hdr_iterator &operator--();
+                const_hdr_iterator const operator++(int);
+                const_hdr_iterator const operator--(int);
+                bool operator==(const_hdr_iterator const &other) const;
+                bool operator!=(const_hdr_iterator const &other) const;
+                std::string const &operator*() const;
+                std::string const *operator->() const;
         };
 
     public:
+        typedef std::reverse_iterator<const_hdr_iterator>
+                                            const_reverse_hdr_iterator; 
+
         MailHeaders(std::istream &in, Mode mode = READ);
 
         void read();
         void setHeaderIterator(char const *header, Match match = FULL);
-        const_iterator beginh() const;
-        const_iterator endh() const;
-        const_reverse_iterator rbeginh() const;
-        const_reverse_iterator rendh() const;
 
-    private:
-        void continueHeader(std::string const &line, HdrLine *hdrLine);
-        HdrLine *startHeader(std::string const &line);
-        std::string::size_type lookup(char const *header, Match type) 
-                                                                const;
-        const_iterator getIterator(Where where) const;
+        const_hdr_iterator beginh() const;
+        const_hdr_iterator endh() const;
+
+        const_reverse_hdr_iterator rbeginh() const;
+        const_reverse_hdr_iterator rendh() const;
 };
 
 inline void MailHeaders::setHeaderIterator(char const *header, Match match)
@@ -67,29 +111,136 @@ inline void MailHeaders::setHeaderIterator(char const *header, Match match)
     d_match = match;
 }
 
-inline MailHeaders::const_iterator MailHeaders::beginh() const
+inline MailHeaders::const_hdr_iterator MailHeaders::beginh() const
 {
-    return getIterator(BEGIN);
-
+    return const_hdr_iterator(this, begin()); 
+                                        // returns iterator over all headers
+                                        // matching d_hdr by the d_match type
 }
 
-inline MailHeaders::const_iterator MailHeaders::endh() const
+inline MailHeaders::const_hdr_iterator MailHeaders::endh() const
 {
-    return getIterator(END);
+                                        // returns address of the sentinel
+    return const_hdr_iterator(this, end()); 
 }
 
-inline MailHeaders::const_reverse_iterator MailHeaders::rbeginh() const
+inline MailHeaders::const_reverse_hdr_iterator MailHeaders::rbeginh() const
 {
-    return const_reverse_iterator(endh());
+    return const_reverse_hdr_iterator(endh());
 }
 
-inline MailHeaders::const_reverse_iterator MailHeaders::rendh() const
+inline MailHeaders::const_reverse_hdr_iterator MailHeaders::rendh() const
 {
-    return const_reverse_iterator(beginh());
+    return const_reverse_hdr_iterator(beginh());
 }
+
+inline bool MailHeaders::const_hdr_iterator::initial
+(
+    std::string const &hdr, std::string const &key
+)
+{
+    return hdr.substr(0, hdr.find(':')).find(key) == 0;
+}
+
+inline bool MailHeaders::const_hdr_iterator::partial
+(
+    std::string const &hdr, std::string const &key
+)
+{
+    return hdr.substr(0, hdr.find(':')).find(key) != std::string::npos;
+}
+
+inline bool MailHeaders::const_hdr_iterator::fail
+(
+    std::string const &hdr, std::string const &key
+)
+{
+    throw FBB::Errno(1, "MailHeaders: setHeaderIterator() not called");
+    return false;       // not reached
+}
+
+
+inline bool MailHeaders::const_hdr_iterator::full
+(
+    std::string const &hdr, std::string const &key
+)
+{
+    return hdr.substr(0, hdr.find(':')) == key;
+}
+
+
+inline bool MailHeaders::const_hdr_iterator::caseInitial
+(
+    std::string const &hdr, std::string const &key
+)
+{
+  return FBB::String::lc(hdr.substr(0, hdr.find(':'))).find(key) == 0;
+}
+
+inline bool MailHeaders::const_hdr_iterator::casePartial
+(
+    std::string const &hdr, std::string const &key
+)
+{
+    return FBB::String::lc(hdr.substr(0, hdr.find(':'))).find(key) 
+           != std::string::npos;
+}
+
+inline bool MailHeaders::const_hdr_iterator::caseFull
+(
+    std::string const &hdr, std::string const &key
+)
+{
+    return FBB::String::lc(hdr.substr(0, hdr.find(':'))) == key;
+}
+
+inline MailHeaders::const_hdr_iterator 
+&MailHeaders::const_hdr_iterator::operator++()
+{
+    d_current = lookup(++d_current);
+    return *this;
+}
+
+inline MailHeaders::const_hdr_iterator 
+&MailHeaders::const_hdr_iterator::operator--()
+{
+    d_current = lookdown(d_current);
+    return *this;
+}
+
+inline MailHeaders::const_hdr_iterator const
+MailHeaders::const_hdr_iterator::operator++(int)
+{
+    return const_hdr_iterator(d_mh, d_current++);
+}
+
+inline bool MailHeaders::const_hdr_iterator::operator==
+(
+    const_hdr_iterator const &other
+) const
+{
+    return d_current == other.d_current;
+}
+
+inline bool MailHeaders::const_hdr_iterator::operator!=
+(
+    const_hdr_iterator const &other
+) const
+{
+    return d_current != other.d_current;
+}
+
+inline std::string const &MailHeaders::const_hdr_iterator::operator*() const
+{
+    return *d_current;
+}
+
+inline std::string const *MailHeaders::const_hdr_iterator::operator->() const
+{
+    return &*d_current;
+}
+
 
 } // FBB
         
 #endif
-
-

@@ -8,28 +8,31 @@ void MailHeaders::read()
         Errno(funName) << insertable <<
                         "Mail headers already read" << throwable;
 
-    HdrLine *hdrLine = 0;
     while (true)
     {
         string line;
 
-        if (!getline(d_in, line))           // no more header lines
-            Errno(funName) << insertable <<    // is an error condition
+        if (!getline(d_in, line))               // no more header lines
+            Errno(funName) << insertable <<     // is an error condition
                 "Headers incomplete after line " << 
                 size() << throwable;
 
         if (line.find_first_not_of(" \t") == string::npos)  // blank line
         {
-            push_back(line);                        // store the header line
-            break;                                  // then done
+            resize(size() + 1);                 // last line will be used as
+                                                // the search sentinel
+            return;
         }
 
-        if (!isspace(line[0]))                      // new header line
-            hdrLine = startHeader(line);
-        else
-            continueHeader(line, hdrLine);
-
-        push_back(line);                            // store the header line
+        if (line[0] != ' ' && line[0] != '\t')  // add the new header line
+            push_back(line);
+        else 
+        {
+            if (not size())                     // no header yet: error
+                Errno(funName) << insertable <<
+                "Invalid begin of headers"  << throwable;
+            (back() += "\n") += line;           // add line continuation
+        }
     }
 }
 
