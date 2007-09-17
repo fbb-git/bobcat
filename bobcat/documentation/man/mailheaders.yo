@@ -17,6 +17,12 @@ stops at (and including) the first blank line, which becomes the last element
 of the bf(FBB::MailHeaders) object, interpreted as a bf(vector). The actual
 e-mail content is therefore left unread on the file containing the e-mail.
 
+    Each line stored in a bf(MailHeaders) object represents a complete header
+line. Headers continuing over multiple input lines are concatenated at a
+single element of bf(MailHeaders) objects. They are separated from each other
+by newline (tt(\n)) characters. The last line to join a multi-line header is
+not terminated by a newline character.
+
 includefile(namespace.inc)
 
 manpagesection(INHERITS FROM)
@@ -34,32 +40,48 @@ class bf(FBB::MailHeaders):
 immediately read by the constructor.
     itb(DONT_READ)
         When this value is specified at construction time, e-mail is read
-using the bf(read()) member (see below).
+using the tt(read()) member (see below).
     )
 
     bf(enum Match)nl()
     This enumeration defines the following values:
     itemization(
     itb(FULL)
-    Used by the bf(setHeaderIterator) (see below) to indicate that the headers
-must exactly match a specified header name.
+    Used by the tt(setHeaderIterator()) (see below) to indicate that the
+headers must exactly match a specified header name.
     itb(INITIAL)
-    Used by the bf(setHeaderIterator) (see below) to indicate that the initial
-part of the headers must match the specified header text.
+    Used by the tt(setHeaderIterator()) (see below) to indicate that the
+initial part of the headers must match the specified header text.
     itb(PARTIAL)
-    Used by the bf(setHeaderIterator) (see below) to indicate that the 
+    Used by the tt(setHeaderIterator()) (see below) to indicate that the 
 headers must contain the specified header text.
+    itb(CASE_FULL)
+    Used by the tt(setHeaderIterator()) (see below) to indicate that the
+headers must exactly match a specified header name. The matching is performed
+case insensititvely.
+    itb(CASE_INITIAL)
+    Used by the tt(setHeaderIterator()) (see below) to indicate that the
+initial part of the headers must match the specified header text. The matching
+is performed case insensititvely.
+    itb(CASE_PARTIAL)
+    Used by the tt(setHeaderIterator()) (see below) to indicate that the
+headers must contain the specified header text. The matching is performed case
+insensititvely.
     )
 
-    bf(enum Casing)nl()
-    This enumeration defines the following values:
-user-programs: 
+manpagesection(NESTED TYPES)
+
+    The class tt(MailHeaders) defines the following types:
     itemization(
-    itb(CASE_INSENSITIVE)
-    Headers are matched case insensitively
-    itb(CASE_SENSITIVE)
-    Headers are matched case sensitively
+    itb(const_hdr_iterator)
+    An input iterator iterating over the headers selected by the member
+tt(setHeaderIterator()) (see below)
+    itb(const_reverse_hdr_iterator)
+    An input iterator reversely iterating over the headers selected by the
+member tt(setHeaderIterator()) (see below)
     )
+    Objects of these two iterator types point to header lines. Their
+derefenced types are tt(std::string const).
 
 manpagesection(CONSTRUCTOR)
     itemization(
@@ -82,61 +104,44 @@ bf(FBB::MailHeaders) inherts from this class.
 object's constructor. An bf(FBB::Errno) object is thrown if the mailheaders
 were already read or if the file is incomplete (i.e., the (obligatory) blank
 line wasn't found).
-     itb(void setHeaderIterator(char const *header, Match match = FULL, Casing
-casing = CASE_SENSITIVE))
+     itb(void setHeaderIterator(std::string const &header, Match match = FULL))
     Sets the header-iterators to the specified tt(header). The parameter
-tt(match) defines the match-type used for recognizing the header. The
-parameter tt(casing) defines the way letters are matched. The defaults are,
-respectively bf(FBB::MailHeaders::FULL), meaning that the text provided in
-tt(header) must match exactly an e-mail header (e.g., tt(From) won't match a
-tt(From:) header) and bf(FBB::MailHeaders::CASE_SENSITIVE) meaning letter
-casings are respected. 
-
-    Alternative matching strategies are bf(FBB::MailHeaders::INITIAL), meaning
-that tt(header) must match the em(initial) text of an e-mail header (e.g.,
-tt(From) matches a tt(From:) header); and bf(FBB::MailHeaders::PARTIAL),
-meaning that tt(header) must match the em(initial) text of an e-mail header
-(e.g., tt(om) matches matches a tt(From:) header (but also a tt(From)
-header)). 
-
-    When bf(FBB::MailHeaders::CASE_INSENSITIVE) is specified case insensitive
-matches are performed.
-
-An bf(FBB::Errno) exception is thrown if bf(setHeaderIterator()) is
-called when no mail headers are available.
-    itb(const_iterator beginh() const)
-    Returns the begin-iterator (a bf(FBB::MailHeaders:const_iterator) object)
-corresponding to the header and matching type defined by
-bf(setHeaderIterator()). bf(endh()) is returned if no such header is
-available. Note that the member function ends in tt(h), in order to
-distinguish it from the bf(vector<string>::begin()) member. The
-bf(FBB::MailHeaders:const_iterator) is an iterator to a tt(vector<size_t>)
-object, containing the indices in the bf(FBB::MailHeaders) vector where the
-particular header information is found. If the header line consists of only
-one line, then the iterator points to a vector holding just one index. Headers
-extending over multiple lines have the indices of these lines stored in the
-returned vector.
-    itb(const_iterator endh() const)
-    Returns the end-iterator (a bf(FBB::MailHeaders:const_iterator) object)
-corresponding to the header and matching type defined by
-bf(setHeaderIterator()). Note that the member function ends in tt(h), in order
-to distinguish it from the bf(vector<string>::end()) member.
-    itb(const_reverse_iterator rbeginh() const)
-    Returns the reversed begin-iterator (a
-bf(FBB::MailHeaders:const_reverse_iterator) object) corresponding to the
-header and matching type defined by bf(setHeaderIterator()). bf(rendh()) is
-returned if no such header is available. Note that the member function ends in
-tt(h), in order to distinguish it from the bf(vector<string>::rbegin())
-member.
-    itb(const_iterator rendh() const) 
-    Returns the end-iterator (a bf(FBB::MailHeaders:const_reverse_iterator)
-object) corresponding to the header and matching type defined by
-bf(setHeaderIterator()). Note that the member function ends in tt(h), in order
-to distinguish it from the bf(vector<string>::rend()) member.
+tt(match) defines the match-type to use when selecting headers. The default
+bf(FBB::MailHeaders::FULL), indicates that the text provided in
+tt(header) must match exactly an e-mail header. nl()
+    When matching headers the
+colon terminating the header is em(not) considered and should therefore
+em(not) be specified by tt(setHeaderIterator()). nl()
+    Alternative matching strategies are used when other values of 
+the enumeration bf(FBB::Match) are specified.nl()
+    The member tt(setHeaderIterator()) em(must) have been called at least once
+or the members tt(beginh()) and tt(rendh()) will throw an bf(FBB::Errno)
+exception. An bf(FBB::Errno) exception is also thrown if
+tt(setHeaderIterator()) is called when no mail headers are available.
+    itb(const_hdr_iterator beginh() const)
+    Returns the begin-iterator 
+corresponding to the first header selected by the 
+tt(setHeaderIterator()) member.
+Note that the member function's name ends in tt(h), to
+distinguish it from the tt(vector<string>::begin()) member. 
+    itb(const_hdr_iterator endh() const)
+    Returns the end-iterator matching tt(beginh()).
+Note that the member function's name ends in tt(h), to
+distinguish it from the tt(vector<string>::end()) member. 
+    itb(const_reverse_hdr_iterator rbeginh() const)
+    Returns the reversed begin-iterator 
+corresponding to the last header selected by the 
+tt(setHeaderIterator()) member.
+Note that the member function's name ends in tt(h), to
+distinguish it from the tt(vector<string>::rbegin()) member. 
+    itb(const_reverse_hdr_iterator endh() const)
+    Returns the reversed end-iterator matching tt(rbeginh()).
+Note that the member function's name ends in tt(h), to
+distinguish it from the tt(vector<string>::rend()) member. 
     )
 
 manpagesection(EXAMPLE)
-    The following example shows the normal use of these manipulators:
+    The following example shows the normal use of these members:
         verb(
                 // create a MailHeader object
     MailHeaders mh(cin, MailHeaders::DONT_READ);
@@ -153,22 +158,11 @@ manpagesection(EXAMPLE)
     cout << "There are " << mh.size() << " header lines\n";
 
                 // look for the Received: headers    
-    mh.setHeaderIterator("Received:");
+    mh.setHeaderIterator("Received");
 
-                // iterators returning vectors of line numbers
-    for (MailHeaders::const_iterator it = mh.beginh(); it != mh.endh(); it++)
-    {
-        for 
-        (       // iterators returning line numbers
-            vector<size_t>::const_iterator nr = it->begin(); 
-                nr != it->end();
-                    nr++
-        )       
-            cout << mh[*nr] << endl;    // print lines of MailHeader object
-
-                // separate each full Received header by +'s
-        cout << "+++++++++++++++++++++++++++++++" << endl;
-    }
+                // show the Received headers
+    copy(mh.beginh(), mh.endh(), 
+            ostream_iterator<std::string const>(cout, "\n"));
     )
 
 manpagefiles()
