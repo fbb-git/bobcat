@@ -22,23 +22,23 @@ execute the child process, and allow em(shell-scripts) to be executed as
 well. 
 
     The standard input, output and error streams of executed child processes
-may be accessed using the bf(FBB::Process) object. When child processes
-themselves redirect their standard streams, then bf(FBB::Process) objects will
+may be accessed using the tt(Process) object. When child processes
+themselves redirect their standard streams, then tt(Process) objects will
 not be able to access them anymore (of course).
 
-    The same bf(FBB::Process) object may be used repeatedly to execute child
-processes repeatedly. Before doing so, bf(FBB::Process)'s bf(stop()) member
+    The same tt(Process) object may be used repeatedly to execute child
+processes repeatedly. Before doing so, tt(Process)'s tt(stop()) member
 must be called.
 
     Programs may be called directly from the constructor, or whenever
-appropriate using the bf(start()) member. Since some child processes will
-continue until their standard input stream is exhausted, the bf(stop()) member
+appropriate using the tt(start()) member. Since some child processes will
+continue until their standard input stream is exhausted, the tt(stop()) member
 is provided to close these streams and to terminate child processes. The
-bf(stop()) member will first close the child process' standard input
+tt(stop()) member will first close the child process' standard input
 stream, followed by the sending of termination signals (tt(SIGTERM) and
 tt(SIGKILL)), to ensure that child processes terminate properly. 
 
-The class bf(FBB::Process) offers no facilities to construct em(daemon)
+The class tt(Process) offers no facilities to construct em(daemon)
 processes, which may be constructed easily using the bf(FBB::Fork) class.
 
 includefile(namespace.inc)
@@ -67,24 +67,13 @@ manpagesection(ENUMERATIONS)
 
 
     bf(enum IOMode):nl()
-       This enumeration has the following values:
+       This enumeration defines the following values:
         itemization(
-        itb(CIN)
-            This value is used to indicate that information written (inserted)
-to the bf(FBB::Process) object should be sent to its child process.
-        itb(COUT)
-            This value is used to indicate that information read (extracted)
-from the bf(FBB::Process) object should be the information written by the
-child process to its standard output stream.
-        itb(CERR)
-            This value is used to indicate that information written by the
-child process to its standard error stream should be accessible through the
-bf(FBB::Process::cerr()) member.
         itb(MERGE_COUT_CERR)
             This value is used to indicate that information read (extracted)
-from the bf(FBB::Process) object should be the information written by the
+from the tt(Process) object should be the information written by the
 child process to its standard output and standard error streams. This
-bf(IOMode) will overrule an explicitly specified bf(CERR) mode., 
+bf(IOMode) will overrule an explicitly specified bf(CERR) mode (see below). 
         itb(IGNORE_COUT)
             This value is used to indicate that information written by the
 child process to its standard output stream should besent to tt(/dev/null). It
@@ -93,6 +82,17 @@ is ignored when either bf(COUT) or bf(MERGE_COUT_CERR) is specified.
             This value is used to indicate that information written by the
 child process to its standard error stream should be sent to tt(/dev/null). It
 is ignored when either bf(CERR) or bf(MERGE_COUT_CERR) is specified.
+        itb(CIN)
+            This value is used to indicate that information written (inserted)
+to the tt(Process) object should be sent to its child process.
+        itb(COUT)
+            This value is used to indicate that information read (extracted)
+from the tt(Process) object should be the information written by the
+child process to its standard output stream.
+        itb(CERR)
+            This value is used to indicate that information written by the
+child process to its standard error stream should be accessible through the
+tt(FBB::Process::cerr()) member.
             )
 
 manpagesection(TYPE)
@@ -107,30 +107,36 @@ manpagesection(CONSTRUCTORS)
     itemization(
     itb(Process(std::string const &cmd = "", iomode mode = CIN | COUT | CERR))
        This constructor may also be used as default constructor. By default it
-defines a bf(FBB::Process) object without setting a command. By default the
-command's standard streams are accessible via the bf(FBB::Process) object.
+defines a tt(Process) object without setting a command. By default the
+command's standard streams are accessible via the tt(Process) object.
 The string that is provided as its first argument may be (the initial part of)
 the external program to run. If the command starts and ends with a
 em(back-tick) (tt(`)) then the back-ticks are removed, and the resulting
-contents are interpreted as a command that should directly be executed by the
-bf(start(Program)) member, using that member's default argument (see
-below). When the tt(FBB::Process) object goes out of scope or when its
-bf(stop()) member is called, the child is given one second to terminate. If
+contents are interpreted as the command that should be executed by the
+tt(start(Program)) member, using that member's default argument (see
+below). When the tt(Process) object goes out of scope or when its
+tt(stop()) member is called, the child is given one second to terminate. If
 the child didn't terminate within one second, it is twice sent a tt(SIG_TERM)
-signal, followed by a tt(SIG_KILL) signal.
+signal, followed by a tt(SIG_KILL) signal.nl()
+    The child process is em(not) started once a tt(Process) object has been
+constructed. To start the child process, the tt(start()) member must
+be called.
     itb(Process(size_t waitSeconds, std::string const &cmd = "", 
             iomode mode = CIN | COUT | CERR))
-       By default this constructor defines a bf(FBB::Process) object without
+       By default this constructor defines a tt(Process) object without
 setting a command, while the command's standard streams are accessible via the
-bf(FBB::Process) object.  The string that is provided as its first argument
+tt(Process) object.  The string that is provided as its first argument
 may be (the initial part of) the external program to run. If the command
 starts and ends with a em(back-tick) (tt(`)) then the back-ticks are removed,
-and the resulting contents are interpreted as a command that should directly
-be executed by the bf(start(Program)) member, using that member's default
-argument (see below). When the tt(FBB::Process) object goes out of scope or
-when its bf(stop()) member is called, the child is given tt(waitSeconds)
+and the resulting contents are interpreted as a command that should
+be executed by the tt(start(Program)) member, using that member's default
+argument (see below). When the tt(Process) object goes out of scope or
+when its tt(stop()) member is called, the child is given tt(waitSeconds)
 seconds to terminate. If the child didn't terminate within one second, it is
-twice sent a tt(SIG_TERM) signal, followed by a tt(SIG_KILL) signal.
+twice sent a tt(SIG_TERM) signal, followed by a tt(SIG_KILL) signal. nl()
+    The child process is em(not) started once a tt(Process) object has been
+constructed. To start the child process, the tt(start()) member must
+be called.
     )
     The bf(FBB::Process) class does not offer a copy constructor.
 
@@ -141,12 +147,12 @@ manpagesection(OVERLOADED OPERATORS)
         This operator may be used to insert information into the child
 process' standard input stream if tt(IOMode CIN) was specified. If tt(IOMODE
 CIN) was not specified the insertion is silently ignored. Note that
-information em(inserted) into bf(FBB::Process) objects is em(extracted) by
+information em(inserted) into tt(Process) objects is em(extracted) by
 their child processes. 
 
-    Note: this operator can only be used between bf(start()) and
-bf(stop()) calls (see below). It may produce unexpected results if used
-otherwise. Note that the bf(FBB::Process) constructor may imply a bf(start())
+    Note: this operator can only be used between tt(start()) and
+tt(stop()) calls (see below). It may produce unexpected results if used
+otherwise. Note that the tt(Process) constructor may imply a tt(start())
 call. 
     itb(std::istream &operator>>(FBB::Process &, ...))
         This operator may be used to extract information from the child
@@ -154,38 +160,38 @@ process' standard output stream or from both the standard output and standard
 error streams. Information from both streams is extracted if tt(IOMode
 MERGE_CIN_COUT) was specified. If tt(IOMODE COUT) was specified the
 information written by the child process to its standard output stream is
-extracted. Note that information em(extracted) from bf(FBB::Process) objects
+extracted. Note that information em(extracted) from tt(Process) objects
 is em(inserted) by their child processes. If neither modes are specified, the
 default processing of the child's standard streams takes place.
 
-    Note: this operator can only be used between bf(start()) and
-bf(stop()) calls (see below). It may produce unexpected results if used
-otherwise. Note that the bf(FBB::Process) constructor may imply a bf(start())
+    Note: this operator can only be used between tt(start()) and
+tt(stop()) calls (see below). It may produce unexpected results if used
+otherwise. Note that the tt(Process) constructor may imply a tt(start())
 call. 
     itb(Process &operator+=(std::string const &))
        This operator adds the provided tt(std::string) object to the command
-already stored in a bf(FBB::Process) object.  Note that this member does not
+already stored in a tt(Process) object.  Note that this member does not
 add, e.g., a separating blank space between its argument and information that
 may already have been inserted. 
 
-    Note: this operator will not have an effect if used between bf(start())
-and bf(stop()) calls (see below). 
+    Note: this operator will not have an effect if used between tt(start())
+and tt(stop()) calls (see below). 
     itb(int operator=(std::string const &))
-       The bf(operator=()) member (re)defines the command currently stored in
-an bf(FBB::Process) object.  If the command starts and ends with a
-em(back-tick) (tt(`)) then the back-ticks are removed, and the resulting
-contents are interpreted as a command that should directly be executed by the
-bf(start(Program)) member, using that member's default argument (see below).
-This operator also calls bf(stop()) (see below). The return value is undefined
-if there was no child process that was stopped, otherwise it is the child
-process' exit value.
+       The tt(operator=()) member (re)defines the command currently stored in
+an tt(Process) object.  If the command starts and ends with a em(back-tick)
+(tt(`)) then the back-ticks are removed, and the resulting contents are
+interpreted as a command to be executed by the tt(start(Program)) member,
+using that member's default argument (see below).  This operator first calls
+tt(stop()) (see below). Then the new command is started using the
+tt(start()) member. The return value of this operator equals the
+return value of the called tt(stop()) member.
        )
     The default overloaded assignment operator is not available.
 
 manpagesection(MEMBERS)
 
-The function's return value is the return value of the used bf(exec)
-function. See also the member bf(system), below. Arguments surrounded by
+The function's return value is the return value of the used tt(exec)
+function. See also the member tt(system), below. Arguments surrounded by
 double quotes will have their double quotes removed, interpreting any
 escape-sequences that may have been used within. Arguments surrounded by
 single quotes will have their single quotes removed, accepting their contents
@@ -206,11 +212,11 @@ error stream is available.
 child process to its standard error stream. It can only be used for this when
 bf(IOMode) tt(CERR) was specified.
     itb(int start(Program program = NO_PATH))
-        The current contents of the command buffer are executed using
+        The currently specified command is  executed using
 bf(system)(3) or a member of the bf(execl)(3) family. Before starting the
 child process, all redirections are set according to the current bf(IOMode)
 specification. This mode may be set or modified by the constructor, by
-bf(start())'s overloaded version (see below) or by the bf(system()) member
+tt(start())'s overloaded version (see below) or by the tt(system()) member
 (see below).  By default (as a security measure), the tt(PATH) environment
 variable is em(not) used to search the program to execute. If it is considered
 safe to use the tt(PATH) environment variable, tt(USE_PATH) may be
@@ -218,36 +224,38 @@ specified. By default the first white-space delimited element of the defined
 command is used as the name of the program to execute. If the program should
 be called as a command to bf(sh)(1), specify tt(USE_SHELL). If tt(USE_SHELL)
 is specified, the defined command is passed as argument to the bf(system)(3)
-member (see below). When the tt(FBB::Process) object goes out of scope or when
-its bf(Process::stop()) member is called, the child is given one second to
+member (see below). When the tt(Process) object goes out of scope or when
+its tt(stop()) member is called, the child is given one second to
 terminate. If the child didn't terminate within one second, it is twice sent a
 tt(SIG_TERM) signal, followed by a tt(SIG_KILL) signal. The function has no
 effect if the command buffer is empty.
     itb(int start(iomode mode, Program program = NO_PATH))
-        Before transferring control to the above bf(start()) member, the
+        Before transferring control to the above tt(start()) member, the
 bf(IOMode) is set to tt(mode). Having set bf(IOMode), the child process is
-started according to the procedure described with the former bf(start())
+started according to the procedure described with the former tt(start())
 member.
     itb(int start(size_t waitSeconds, iomode mode, 
                   Program program = NO_PATH))
-        Before transferring control to the first bf(start()) member, the
+        Before transferring control to the first tt(start()) member, the
 bf(IOMode) is set to tt(mode). Having set bf(IOMode), the child process is
-started according to the procedure described with the former bf(start())
-member. However, when the tt(FBB::Process) object goes out of scope or when
-its bf(stop()) member is called, the child is given tt(waitSeconds) seconds to
+started according to the procedure described with the former tt(start())
+member. However, when the tt(Process) object goes out of scope or when
+its tt(stop()) member is called, the child is given tt(waitSeconds) seconds to
 terminate. If the child didn't terminate within one second, it is twice sent a
 tt(SIG_TERM) signal, followed by a tt(SIG_KILL) signal.
     itb(int stop())
        This member closes the connections to the child's input, output and
-error streams (if any) and erases the contents of a bf(FBB::Process) object's
+error streams (if any) and erases the contents of a tt(Process) object's
 command buffer. Next it will wait for at most one second or for the number of
-seconds specified at the bf(FBB::Process) object's construction (or as
-specified when its bf(start()) member was called) allowing the child to
+seconds specified at the tt(Process) object's construction (or as
+specified when its tt(start()) member was called) allowing the child to
 complete. If the child didn't terminate within one second, it is twice sent a
-tt(SIG_TERM) signal, followed by a tt(SIG_KILL) signal.  Following bf(stop())
-a new command may be constructed. This member's return value is the child
-process' exit value. This member is also called when the bf(FBB::Process)
-object goes out of scope.
+tt(SIG_TERM) signal, followed by a tt(SIG_KILL) signal.  This member's return
+value is the exit-value of the child process that was stopped. It is
+underfined if it was called without a running child process. nl()
+    Following tt(stop()) a new command may be called using the overloaded
+assignment operator (see earlier). The member tt(stop()) is also called when
+the tt(Process) object goes out of scope.
     itb(void system())
         This member executes the stored command using the bf(system)(3) system
 call (therefore executing the command as a shell command).  When using

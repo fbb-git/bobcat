@@ -13,9 +13,9 @@ manpagesynopsis()
 
 manpagedescription()
     This class allows the programmer to manipulate date and time
-values. bf(FBB::DateTime) objects can be added to each other or subtracted from
+values. tt(DateTime) objects can be added to each other or subtracted from
 each other, converting their sums to tt(UTC) values. It is also possible to
-add or subtract seconds or bf(tm) structures to or from bf(FBB::DateTime)
+add or subtract seconds or bf(tm) structures to or from tt(DateTime)
 objects. This operation keeps the current time zone (tt(UTC) or local).
 
 includefile(namespace.inc)
@@ -34,7 +34,7 @@ manpagesection(ENUMS defined in DateTime)
                 bf(SpecialMode) values (one match suffices);
         )
      itb(DateTime::Month)
-        This enumeration has the following values:
+        This enumeration has the following (ordered) values:
         itemization(
         it() bf(JANUARY),
         it() bf(FEBRUARY),
@@ -49,8 +49,11 @@ manpagesection(ENUMS defined in DateTime)
         it() bf(NOVEMBER),
         it() bf(DECEMBER).
         )
+        It may be assumed that these values are ordered using the default
+        bf(C++) tt(enum) values. 
+
     itb(DateTime::WeekDay)
-        This enumeration has the following values:
+        This enumeration has the following (ordered) values:
         itemization(
         it() bf(SUNDAY),
         it() bf(MONDAY),
@@ -60,6 +63,8 @@ manpagesection(ENUMS defined in DateTime)
         it() bf(FRIDAY),
         it() bf(SATURDAY).
         )
+        It may be assumed that these values are ordered using the default
+        bf(C++) tt(enum) values. 
     itb(DateTime::TimeType)
         This enumeration has the following values:
         itemization(
@@ -85,13 +90,13 @@ default argument specifies that the conversion is performed to the machine's
 local time representation. Alternatively, tt(UTC) may be specified to
 represent the time as a Universal Time Coordinated time. 
     itb(DateTime(time_t time, TimeType type = LOCALTIME))
-        Initializes a bf(FBB::DateTime) object with information stored in the
+        Initializes a tt(DateTime) object with information stored in the
 provided tt(time_t) value. The second argument specifies that the conversion
 is performed to the machine's local time representation. Alternatively,
 tt(UTC) may be specified to represent the time as a Universal Time Coordinated
 time.
     itb(DateTime(tm *tm, TimeType type = LOCALTIME))
-        Initializes a bf(FBB::DateTime) object with information stored in the
+        Initializes a tt(DateTime) object with information stored in the
 provided tt(struct tm) value. The second argument specifies that the conversion
 is performed to the machine's local time representation. Alternatively,
 tt(UTC) may be specified to represent the time as a Universal Time Coordinated
@@ -111,67 +116,87 @@ time. The tt(struct tm) is defined as follows:
     };
         )
     itb(DateTime(DateTime const &other))
-        The standard copy constructor is available by default.
+        The copy constructor is available.
     )
 
 manpagesection(OVERLOADED OPERATORS)
     itemization(
     itb(operator bool() const)
         Returns bf(true) if the time decomposition could be performed without
-error. bf(FBB::DateTime) object use bf(localtime_r)(3) or bf(gmtime_r)(3)
+error. tt(DateTime) object use bf(localtime_r)(3) or bf(gmtime_r)(3)
 functions to break down the tt(time_t) values into elements.  If the time
 could not be broken down, the bf(error()) member returns the error number
 (tt(errno)) associated with the error.
     itb(ostream &operator<<(ostream &str, FBB::DateTime) const &dt)
         Inserts a standard textual representation (without the trailing
-newline), of the time represented in the bf(FBB::DateTime) object into the
+newline), of the time represented in the tt(DateTime) object into the
 indicated tt(ostream). If the time value was broken down as tt(LOCALTIME) it
 is represented as local time, otherwise it's inserted as the Universal Time
 Coordinated time.
     itb(DateTime operator-(DateTime const &left, DateTime const &right))
-        Subtracts two bf(FBB::DateTime) objects, and returns their difference
+        Subtracts two tt(DateTime) objects, and returns their difference
 in tt(UTC) format.
     itb(DateTime operator-(DateTime const &left, time_t seconds))
-       Subtracts the number of seconds from the bf(FBB::DateTime) object,
+       Subtracts the number of seconds from the tt(DateTime) object,
 keeping the current time format (tt(UTC) or localtime).
     itb(DateTime operator-(DateTime const &left, tm const &fields))
        Subtracts the fields stored in the bf(tm) struct from the
-bf(FBB::DateTime) object, keeping the current time format (tt(UTC) or
+tt(DateTime) object, keeping the current time format (tt(UTC) or
 localtime).
     itb(DateTime &operator-=(DateTime const &right))
-       Subtracts the argument's time values from the current bf(FBB::DateTime)
+       Subtracts the argument's time values from the current tt(DateTime)
 object's time values, returning the difference in tt(UTC) format.
     itb(DateTime operator-=(time_t seconds))
-       Subtracts the number of seconds from the bf(FBB::DateTime) object,
+       Subtracts the number of seconds from the tt(DateTime) object,
 keeping the current time format (tt(UTC) or localtime).
     itb(DateTime operator+(tm const &fields))
-       Adds the fields stored in the bf(tm) struct to the bf(FBB::DateTime)
+       Adds the fields stored in the bf(tm) struct to the tt(DateTime)
 object, keeping the current time format (tt(UTC) or localtime).
     itb(DateTime operator+(DateTime const &left, DateTime const &right))
-        Adds two bf(FBB::DateTime) objects, and returns their difference in
+        Adds two tt(DateTime) objects, and returns their difference in
 tt(UTC) format.
 
     itb(DateTime operator+(DateTime const &left, time_t seconds))
-       Adds the number of seconds to the bf(FBB::DateTime) object, keeping the
+       Adds the number of seconds to the tt(DateTime) object, keeping the
 current time format (tt(UTC) or localtime).
     itb(DateTime operator+(DateTime const &left, tm const &fields))
-       Adds the fields stored in the bf(tm) struct to the bf(FBB::DateTime)
+       Adds the fields stored in the bf(tm) struct to the tt(DateTime)
 object, keeping the current time format (tt(UTC) or localtime).
     itb(DateTime &operator+=(DateTime const &right))
-       Adds the argument's time values to the current bf(FBB::DateTime)
+       Adds the argument's time values to the current tt(DateTime)
 object's time values, returning the difference in tt(UTC) format.
     itb(DateTime operator+=(time_t seconds))
-       Adds the number of seconds to the bf(FBB::DateTime) object, keeping the
+       Adds the number of seconds to the tt(DateTime) object, keeping the
 current time format (tt(UTC) or localtime).
     itb(DateTime operator+(tm const &fields))
-       Adds the fields stored in the bf(tm) struct to the bf(FBB::DateTime)
+       Adds the fields stored in the bf(tm) struct to the tt(DateTime)
 object, keeping the current time format (tt(UTC) or localtime).
+    itb(bool operator==(DateTime const &other))
+       Returns tt(true) if the current tt(DateTime) object represents the same
+time as the time represented by tt(other).
+    itb(bool operator!=(DateTime const &other))
+       Returns tt(true) if the current tt(DateTime) object represents a
+different time as the time represented by tt(other).
+    itb(bool operator<(DateTime const &other))
+       Returns tt(true) if the current tt(DateTime) object represents a
+moment in time before the time represented by tt(other).
+    itb(bool operator<=(DateTime const &other))
+       Returns tt(true) if the current tt(DateTime) object represents a
+moment in time before or equal to the time represented by tt(other).
+    itb(bool operator>(DateTime const &other))
+       Returns tt(true) if the current tt(DateTime) object represents a
+moment in time after the time represented by tt(other).
+    itb(bool operator>=(DateTime const &other))
+       Returns tt(true) if the current tt(DateTime) object represents a
+moment in time equal to or after the time represented by tt(other).
+    itb(DateTime &operator=(DateTime const &other))
+        The overloaded asignment operator is available.
     )
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
     itb(bool breakDown(TimeType type))
-        Breaks up the tt(time_t) value stored in the bf(FBB::DateTime) object 
+        Breaks up the tt(time_t) value stored in the tt(DateTime) object 
 according to the specified time type. It returns tt(true) if the time could be
 broken down, tt(false) otherwise. The member bf(error()) returns the
 associated tt(errno) value.
@@ -183,44 +208,76 @@ returning a time-element do so according to the latest time-representation
 use 0 as their lowest return values, except for the bf(...Nr()) members, which
 start at 1.
     itb(size_t error() const)
-        Returns the tt(errno) value after the bf(FBB::DateTime) object
+        Returns the tt(errno) value after the tt(DateTime) object
 construction.  It can be interpreted by, e.g., bf(FBB::Errno).
     itb(size_t hours() const)
-        Returns the number of hours of the time stored in a bf(FBB::DateTime)
+        Returns the number of hours of the time stored in a tt(DateTime)
 object (0-23).
     itb(size_t minutes() const)
-        Returns the number of minutes of the time stored in a bf(FBB::DateTime)
+        Returns the number of minutes of the time stored in a tt(DateTime)
 object (0-59).
     itb(Month month() const)
-        Returns the tt(Month) value of the time stored in a bf(FBB::DateTime)
+        Returns the tt(Month) value of the time stored in a tt(DateTime)
 object.
     itb(size_t monthDayNr() const)
         Returns the number of the day in the month of the time stored in a
-bf(FBB::DateTime) object (1-31).
+tt(DateTime) object (1-31).
     itb(size_t seconds() const)
-        Returns the number of seconds of the time stored in a bf(FBB::DateTime)
+        Returns the number of seconds of the time stored in a tt(DateTime)
 object (0-59, but 60 and 61 may occur due to possible leap seconds).
+    itb(bool setHours(int hours))
+        Reassigns the number of hours set in the tt(DateTime) object. The
+object date is revalidated so that its tt(hours()) member returns a value
+between 0 and 23. If the assignment resulted in a new (valid) time tt(true) is
+returned. Otherwise tt(false) is returned.
+    itb(bool setMinutes(int minutes))
+        Reassigns the number of minutes set in the tt(DateTime) object. The
+object date is revalidated so that its tt(minutes()) member returns a value
+between 0 and 59.  If the assignment resulted in a new (valid) time tt(true)
+is returned. Otherwise tt(false) is returned.
+    itb(bool setMonth(DateTime::Month month))
+        Reassigns the month set in the tt(DateTime) object. The object date is
+revalidated so that its tt(month()) member returns a value between tt(JANUARY)
+and tt(DECEMBER).  If the assignment resulted in a new (valid) time tt(true)
+is returned. Otherwise tt(false) is returned.
+    itb(bool setSeconds(int seconds))
+        Reassigns the number of seconds set in the tt(DateTime) object. The
+object date is revalidated so that its tt(seconds()) member returns a value
+between 0 and 59. If the assignment resulted in a new (valid) time tt(true) is
+returned. Otherwise tt(false) is returned.
+    itb(bool setTime(time_t time))
+        Reassigns the number of seconds set in the tt(DateTime) object. The
+object date is revalidated. Time value 0 represents Jan, 1, 1970, 0:00:00
+hours. If the assignment resulted in a new (valid) time tt(true) is
+returned. Otherwise tt(false) is returned.
+    itb(bool setYear(size_t year))
+        Reassigns the year set in the tt(DateTime) object. The date is
+revalidated so that its tt(year()) member returns a value of at least 1970. If
+the assignment resulted in a new (valid) time tt(true) is returned. Otherwise
+tt(false) is returned.
     itb(time_t time() const)
-        Returns the tt(time_t) values stored in the bf(FBB::DateTime) object
+        Returns the tt(time_t) values stored in the tt(DateTime) object
 itself.
     itb(WeekDay weekday() const)
         Returns the tt(WeekDay) value of the time stored in a
-bf(FBB::DateTime) object.
+tt(DateTime) object.
     itb(size_t year() const)
-        Returns the year element of the time stored in a bf(FBB::DateTime)
+        Returns the year element of the time stored in a tt(DateTime)
 object.
     itb(size_t yearDay() const)
         Returns the day within the year of the time stored in a
-bf(FBB::DateTime) object. January 1 is returned as 0.
+tt(DateTime) object. January 1 is returned as 0.
     itb(size_t yearDayNr() const)
         Returns the day within the year of the time stored in a
-bf(FBB::DateTime) object. January 1 is returned as 1.
+tt(DateTime) object. January 1 is returned as 1.
     itb(FBB:DayTime::TriVal dst() const)
         Returns an indication of an active Daylight Saving Time (DST) state
-for the (local) time represented in the bf(FBB::DateTime) object. When DST is
+for the (local) time represented in the tt(DateTime) object. When DST is
 active, the local time is one hour later as compared to the situation where
 DST is not active.
     )
+    Whenever a tt(set...()) member is used in such a way that the resulting
+date would be invalid the original tt(DateTime) object's value is unaltered.
 
 manpagefiles()
     em(bobcat/datetime) defines the class interface.

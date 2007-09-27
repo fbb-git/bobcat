@@ -88,6 +88,21 @@ class DateTime
         DateTime &operator-=(time_t seconds);           // d_type
         DateTime &operator-=(tm const &tm);             // d_type
 
+        bool operator==(DateTime const &other) const;
+        bool operator!=(DateTime const &other) const;
+        bool operator<(DateTime const &other)  const;
+        bool operator<=(DateTime const &other) const;
+        bool operator>(DateTime const &other)  const;
+        bool operator>=(DateTime const &other) const;
+
+
+        bool setSeconds(int seconds);
+        bool setTime(time_t time);
+        bool setYear(size_t year);
+        bool setHours(int hours);
+        bool setMinutes(int minutes);
+        bool setMonth(Month month);
+
         size_t seconds() const;
         time_t time() const;
         WeekDay weekday() const;

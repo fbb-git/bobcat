@@ -7,6 +7,20 @@ bobcat (1.17.1)
   * Changed the implementation and interface of MailHeaders. See 'man -e
     bobcat mailheaders' for details
 
+  * Process init() member removed. setCommand() added, and constructors no
+    longer call the process start() member. They shouldn't as start() forks,
+    and forking an object that isn't constructed yet seems to be
+    inappropriate. The open() call in init() is now placed in
+    start(). Therefore the correct sequence becomes: 
+    Process(), start(), ...(insert/extract)..., stop(). Process::operator=()
+    now performs: stop(), setCommand(), start(). Multiple stops() could be
+    given, so ... stop(), operator=(), ... is acceptable.
+    The Process man-page is updated accordingly.
+
+  * The DateTime class has been enlarged. It now contains members to reassign
+    indivual time components as well as members to compare the (in)equality of
+    the times represented by two DateTime objects.
+
 bobcat (1.16.1)
 
   * The `build' script `library' command bow has an additional optional 
