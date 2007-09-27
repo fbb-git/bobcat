@@ -36,7 +36,24 @@ int main(int argc, char **argv, char **envp)
     cout << "Difference between added and local time:\n";
     cout << diff.hours() << endl;
     cout << diff << endl;
+
+    cout << "Month to set in current time " << dt << ": ";
+    int x;
+    cin >> x;
     
+    DateTime save(dt);
+
+    dt.setMonth(static_cast<DateTime::Month>(x));
+    cout << dt << endl;
+
+    dt = save;
+    dt.setMonth(static_cast<DateTime::Month>(x), DateTime::LAST);
+    cout << dt << endl;
+
+    dt = save;
+    dt.setMonth(static_cast<DateTime::Month>(x), DateTime::NEXT);
+    cout << dt << endl;
+
     return 0;
 }
 

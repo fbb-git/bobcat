@@ -43,6 +43,12 @@ class DateTime
             NOVEMBER,
             DECEMBER,
         };
+        enum Relative
+        {
+            THIS_YEAR,
+            LAST,
+            NEXT
+        };
         enum WeekDay
         {
             SUNDAY,
@@ -62,8 +68,8 @@ class DateTime
 
     private:
         TimeType    d_type; // current type of info in d_tm member
-        time_t      d_time; // 
-        struct tm   d_tm;   // 
+        time_t      d_time; // time used by members
+        struct tm   d_tm;   // time's elements
         bool        d_ok;
         size_t    d_errno;
 
@@ -95,13 +101,12 @@ class DateTime
         bool operator>(DateTime const &other)  const;
         bool operator>=(DateTime const &other) const;
 
-
         bool setSeconds(int seconds);
         bool setTime(time_t time);
         bool setYear(size_t year);
         bool setHours(int hours);
         bool setMinutes(int minutes);
-        bool setMonth(Month month);
+        bool setMonth(Month month, Relative where = THIS_YEAR);
 
         size_t seconds() const;
         time_t time() const;
@@ -110,6 +115,10 @@ class DateTime
         size_t yearDay() const;
         size_t yearDayNr() const;
         TriVal dst() const;
+
+    private:
+        bool breakDown(struct tm *tmStruct, TimeType type, time_t time);
+        bool updateTime(struct tm *tmPtr);
 };
 
 inline DateTime::operator bool() const
@@ -213,6 +222,36 @@ inline FBB::DateTime operator+(FBB::DateTime const &left,   // d_type
                                tm const &right)
 {
     return FBB::DateTime(left) += right;
+}   
+
+inline bool FBB::DateTime::operator==(FBB::DateTime const &other) const
+{
+    return d_time == other.d_time;
+}   
+
+inline bool FBB::DateTime::operator!=(FBB::DateTime const &other) const
+{
+    return d_time != other.d_time;
+}   
+
+inline bool FBB::DateTime::operator<(FBB::DateTime const &other) const
+{
+    return d_time < other.d_time;
+}   
+
+inline bool FBB::DateTime::operator<=(FBB::DateTime const &other) const
+{
+    return d_time <= other.d_time;
+}   
+
+inline bool FBB::DateTime::operator>(FBB::DateTime const &other) const
+{
+    return d_time > other.d_time;
+}   
+
+inline bool FBB::DateTime::operator>=(FBB::DateTime const &other) const
+{
+    return d_time >= other.d_time;
 }   
 
 
