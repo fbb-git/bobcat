@@ -41,17 +41,7 @@ int main(int argc, char **argv, char **envp)
     int x;
     cin >> x;
     
-    DateTime save(dt);
-
-    dt.setMonth(static_cast<DateTime::Month>(x));
-    cout << dt << endl;
-
-    dt = save;
-    dt.setMonth(static_cast<DateTime::Month>(x), DateTime::LAST);
-    cout << dt << endl;
-
-    dt = save;
-    dt.setMonth(static_cast<DateTime::Month>(x), DateTime::NEXT);
+    dt.setMonth(x);
     cout << dt << endl;
 
     return 0;

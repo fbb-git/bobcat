@@ -102,11 +102,14 @@ class DateTime
         bool operator>=(DateTime const &other) const;
 
         bool setSeconds(int seconds);
+        bool setDay(int day);
         bool setTime(time_t time);
         bool setYear(size_t year);
         bool setHours(int hours);
         bool setMinutes(int minutes);
         bool setMonth(Month month, Relative where = THIS_YEAR);
+        bool setMonth(int month);       // set month, using 0: januari
+                                        // correct for overflows.
 
         size_t seconds() const;
         time_t time() const;
