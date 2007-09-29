@@ -52,6 +52,14 @@ manpagesection(ENUMS defined in DateTime)
         It may be assumed that these values are ordered using the default
         bf(C++) tt(enum) values. 
 
+    itb(DateTime::RELATIVE)
+        This enumeration is used with the tt(setMonth()) member (see below).
+        It has the following values:
+        itemization(
+        it() bf(THIS_YEAR),
+        it() bf(LAST),
+        it() bf(NEXT)
+        )
     itb(DateTime::WeekDay)
         This enumeration has the following (ordered) values:
         itemization(
@@ -225,6 +233,11 @@ tt(DateTime) object (1-31).
     itb(size_t seconds() const)
         Returns the number of seconds of the time stored in a tt(DateTime)
 object (0-59, but 60 and 61 may occur due to possible leap seconds).
+    itb(bool setDay(int days))
+        Reassigns the number of days set in the tt(DateTime) object. The
+object date is revalidated so that its tt(days()) member returns a value
+fitting the object's month. If the assignment resulted in a new (valid) time
+tt(true) is returned. Otherwise tt(false) is returned.
     itb(bool setHours(int hours))
         Reassigns the number of hours set in the tt(DateTime) object. The
 object date is revalidated so that its tt(hours()) member returns a value
@@ -235,7 +248,19 @@ returned. Otherwise tt(false) is returned.
 object date is revalidated so that its tt(minutes()) member returns a value
 between 0 and 59.  If the assignment resulted in a new (valid) time tt(true)
 is returned. Otherwise tt(false) is returned.
-    itb(bool setMonth(DateTime::Month month))
+    itb(bool setMonth(DateTime::Month month, DateTime::Relative where =
+            THIS_YEAR)) 
+        Reassigns the month set in the tt(DateTime) object. The object date is
+revalidated so that its tt(month()) member returns a value between tt(JANUARY)
+and tt(DECEMBER). By default the month will be set in the current
+year. tt(DateTime::LAST) may be specified to ensure that the requested month
+will be before the current month (e.g., the current month: tt(JUNE),
+requesting tt(AUGUST, LAST) will decrement the object's year, but tt(MAY,
+LAST) won't). Analogously, tt(DateTime::NEXT) may be specified to ensure that
+the requested month will be following the current month. If the assignment
+resulted in a new (valid) time tt(true) is returned. Otherwise tt(false) is
+returned.
+    itb(bool setMonth(int month)) 
         Reassigns the month set in the tt(DateTime) object. The object date is
 revalidated so that its tt(month()) member returns a value between tt(JANUARY)
 and tt(DECEMBER).  If the assignment resulted in a new (valid) time tt(true)

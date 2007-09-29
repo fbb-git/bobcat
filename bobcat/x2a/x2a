@@ -9,6 +9,8 @@ namespace FBB
 {
 class X2a: public std::ostringstream
 {
+    static bool s_lastFail;
+
     public:
         template <typename T>                   // initialize from 
         X2a(T const &x);                        // (insertable) type
@@ -25,7 +27,7 @@ class X2a: public std::ostringstream
 template <typename T>                   // initialize from 
 inline X2a::X2a(T const &x)             // (insertable) type
 {
-    *this << x;
+    s_lastFail = (*this << x).fail();
 }
 
 inline X2a::X2a(X2a const &other)

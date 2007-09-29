@@ -39,6 +39,19 @@ right-aligned into the field of tt(width) characters.
     )
     The standard copy constructor is available as well.
 
+manpagesection(STATIC MEMBER FUNCTION)
+    itemization(
+    itb(bool lastFail()) 
+        This member returns tt(true) if the last conversion failed (i.e., the
+object's tt(fail()) member returned tt(true) and returns tt(false) otherwise.
+This member allows checks on the success of the extraction/conversion using
+anonymous tt(A2x) objects. The member also returns tt(true) when no
+conversions have as yet been performed.nl()
+    Note that this member is a thread-unsafe em(static) member: in a
+multithreaded program locks may be required to ensure that the proper
+conversion result is inspected.
+    )
+
 manpagesection(MEMBER FUNCTIONS)
      All members of bf(std::ostringstream) are
 available, as bf(FBB::X2a) inherits from this class.

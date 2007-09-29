@@ -12,7 +12,7 @@ manpagesynopsis()
 
 manpagedescription()
     bf(FBB::A2x) objects offer the bf(C++) equivalent of the standard bf(C)
-conversion functions bf(atoi)(3), bf(atol)(3), bf(atof)(3) etc.  bf(FBB::A2x)
+conversion functions bf(atoi)(3), bf(atol)(3), bf(atof)(3) etc.  tt(A2x)
 objects generalize these bf(C) functions to em(any) type that can be extracted
 from an bf(istream) object. Since bf(FBB::A2x) represents the object-variant
 of the bf(C) functions, and is therefore em(type-safe) and em(extensible),
@@ -29,29 +29,42 @@ manpagesection(INHERITS FROM)
 manpagesection(CONSTRUCTORS)
     itemization(
     itb(A2x())
-        This constructor constructs an empty bf(FBB::A2x) objects. No
-information can be converted from a bf(FBB::A2x) object, thus constructed.
+        This constructor constructs an empty tt(A2x) object. No
+information can be converted from a  thus constructed tt(A2x) object.
     itb(A2x(char const *text)) 
         This constructor stores tt(text). If tt(text) represents a textual
-value of some type, the bf(FBB::A2x) object may be used to initialize or assign
+value of some type, the tt(A2x) object may be used to initialize or assign
 this value to a variable of that particular type. Extraction, however is also
 still possible.
     itb(A2x(std::string const &str)) 
         This constructor stores the text contained in tt(str). If this text
-represents a textual value of some type, the bf(FBB::A2x) object may be used to
+represents a textual value of some type, the tt(A2x) object may be used to
 initialize or assign this value to a variable of that particular
 type. Extraction is also still possible.
     itb(A2x(A2x const &other)) 
         The standard copy constructor is available.
     )
 
-manpagesection(MEMBER FUNCTIONS)
+manpagesection(STATIC MEMBER FUNCTION)
+    itemization(
+    itb(bool lastFail()) 
+        This member returns tt(true) if the last conversion failed (i.e., the
+object's tt(fail()) member returned tt(true) and returns tt(false) otherwise.
+This member allows checks on the success of the extraction/conversion using
+anonymous tt(A2x) objects. The member also returns tt(true) when no
+conversions have as yet been performed.nl()
+    Note that this member is a thread-unsafe em(static) member: in a
+multithreaded program locks may be required to ensure that the proper
+conversion result is inspected.
+    )
+
+manpagesection(MEMBER FUNCTION)
     All members of the bf(istringstream) class are available.
 
     itemization(
     itb(Type to()) 
         This member returns any type tt(Type) supporting extractions from
-tt(i[string]streams). If the extraction fails, the bf(FBB::A2x) object's
+tt(i[string]streams). If the extraction fails, the tt(A2x) object's
 tt(good()) member will return tt(false), and the tt(Type)'s default value is
 returned. This operator was implemented as a template member function. There
 is also a type conversion operator available (see below), but the member
@@ -65,23 +78,23 @@ manpagesection(OVERLOADED OPERATORS)
     itemization(
     itb(operator Type()) 
         Conversion to any type tt(Type) supporting
-extractions from tt(i[string]streams). If the extraction fails, the bf(FBB::A2x)
+extractions from tt(i[string]streams). If the extraction fails, the tt(A2x)
 object's tt(good()) member will return tt(false), and the tt(Type)'s default
 value is returned. This operator was implemented as a template member
 function.
     itb(istream &operator>>(istream &, Type &)) 
         Extraction to any type tt(Type) supporting extractions from
-tt(i[string]streams). If the extraction fails, the bf(FBB::A2x) object's
+tt(i[string]streams). If the extraction fails, the tt(A2x) object's
 tt(good()) member will return tt(false), and the tt(Type)'s default value is
 returned (this facility is implied by the fact that this class inherits from
 bf(istringstream), but it's probably useful to stress that the extraction
 operation is still available).
     itb(A2x &operator=(char const *)) 
-        Stores new text in the bf(FBB::A2x) object, resets the status flags to
+        Stores new text in the tt(A2x) object, resets the status flags to
 tt(ios::good). If a 0-pointer is passed, an empty string is stored.
     itb(A2x &operator=(std::string const &)) 
         Stores the text stored in the tt(std::string) argument in the
-bf(FBB::A2x) object, resets the status flags to tt(ios::good).
+tt(A2x) object, resets the status flags to tt(ios::good).
     itb(A2x &operator=(A2x const &)) 
     The standard overloaded assignment operator is available
     )
