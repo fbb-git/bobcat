@@ -13,10 +13,14 @@ manpagesynopsis()
 
 manpagedescription()
     This class allows the programmer to manipulate date and time
-values. tt(DateTime) objects can be added to each other or subtracted from
-each other, converting their sums to tt(UTC) values. It is also possible to
-add or subtract seconds or bf(tm) structures to or from tt(DateTime)
-objects. This operation keeps the current time zone (tt(UTC) or local).
+values. Individual time fields can be requested or modified, returning
+`sanitized' times (e.g., a date like march 33 or a time like 56 hours will
+never be returned. Times may be specified in local time or in 
+em(Universal Time Coordinated) (tt(UTC))
+values. It is also possible to add or subtract seconds or bf(struct tm)
+structures to or from tt(DateTime) objects. This operation keeps the current
+time zone (tt(UTC) or local). Conversions between local time and tt(UTC) are 
+also supported.
 
 includefile(namespace.inc)
 
@@ -96,19 +100,20 @@ manpagesection(CONSTRUCTORS)
         The default constructor, initialized to the current date and time. The
 default argument specifies that the conversion is performed to the machine's 
 local time representation. Alternatively, tt(UTC) may be specified to
-represent the time as a Universal Time Coordinated time. 
+represent the time in em(Universal Time Coordinated) time. 
     itb(DateTime(time_t time, TimeType type = LOCALTIME))
         Initializes a tt(DateTime) object with information stored in the
 provided tt(time_t) value. The second argument specifies that the conversion
 is performed to the machine's local time representation. Alternatively,
-tt(UTC) may be specified to represent the time as a Universal Time Coordinated
-time.
-    itb(DateTime(tm *tm, TimeType type = LOCALTIME))
+tt(UTC) may be specified to represent the time in em(Universal Time
+Coordinated) time.
+    itb(DateTime(struct tm *tm, TimeType type = LOCALTIME))
         Initializes a tt(DateTime) object with information stored in the
-provided tt(struct tm) value. The second argument specifies that the conversion
-is performed to the machine's local time representation. Alternatively,
-tt(UTC) may be specified to represent the time as a Universal Time Coordinated
-time. The tt(struct tm) is defined as follows:
+provided bf(struct tm) value. The second argument specifies that the
+conversion is performed to the machine's local time
+representation. Alternatively, tt(UTC) may be specified to represent the time
+in tt(Universal Time Coordinated) time. The bf(struct tm) is defined as
+follows:
         verb(
     struct tm 
     {
@@ -128,6 +133,10 @@ time. The tt(struct tm) is defined as follows:
     )
 
 manpagesection(OVERLOADED OPERATORS)
+    All class-less overloaded operators are defined in the tt(FBB) namespace,
+except for the overloaded insertion operator, which is defined in the tt(std)
+namespace. 
+
     itemization(
     itb(operator bool() const)
         Returns bf(true) if the time decomposition could be performed without
@@ -135,66 +144,58 @@ error. tt(DateTime) object use bf(localtime_r)(3) or bf(gmtime_r)(3)
 functions to break down the tt(time_t) values into elements.  If the time
 could not be broken down, the bf(error()) member returns the error number
 (tt(errno)) associated with the error.
-    itb(ostream &operator<<(ostream &str, FBB::DateTime) const &dt)
+    itb(std::ostream &std::operator<<(std::ostream &str, FBB::DateTime 
+        const &dt))
         Inserts a standard textual representation (without the trailing
 newline), of the time represented in the tt(DateTime) object into the
 indicated tt(ostream). If the time value was broken down as tt(LOCALTIME) it
 is represented as local time, otherwise it's inserted as the Universal Time
 Coordinated time.
-    itb(DateTime operator-(DateTime const &left, DateTime const &right))
-        Subtracts two tt(DateTime) objects, and returns their difference
-in tt(UTC) format.
-    itb(DateTime operator-(DateTime const &left, time_t seconds))
-       Subtracts the number of seconds from the tt(DateTime) object,
-keeping the current time format (tt(UTC) or localtime).
-    itb(DateTime operator-(DateTime const &left, tm const &fields))
-       Subtracts the fields stored in the bf(tm) struct from the
-tt(DateTime) object, keeping the current time format (tt(UTC) or
-localtime).
-    itb(DateTime &operator-=(DateTime const &right))
-       Subtracts the argument's time values from the current tt(DateTime)
-object's time values, returning the difference in tt(UTC) format.
+    itb(DateTime const operator-(DateTime const &left, time_t seconds))
+       Returns a copy of tt(left) from which time tt(seconds) have been
+subtracted. 
+    itb(DateTime const operator-(DateTime const &left, 
+                                struct tm const &fields))
+       Returns a copy of tt(left) from which the date (e.g., tt(tm_year)) and
+time (e.g., tt(tm_hour)) fields stored in the bf(struct tm) struct have been
+subtracted.
     itb(DateTime operator-=(time_t seconds))
        Subtracts the number of seconds from the tt(DateTime) object,
 keeping the current time format (tt(UTC) or localtime).
-    itb(DateTime operator+(tm const &fields))
-       Adds the fields stored in the bf(tm) struct to the tt(DateTime)
-object, keeping the current time format (tt(UTC) or localtime).
-    itb(DateTime operator+(DateTime const &left, DateTime const &right))
-        Adds two tt(DateTime) objects, and returns their difference in
-tt(UTC) format.
-
-    itb(DateTime operator+(DateTime const &left, time_t seconds))
-       Adds the number of seconds to the tt(DateTime) object, keeping the
-current time format (tt(UTC) or localtime).
-    itb(DateTime operator+(DateTime const &left, tm const &fields))
-       Adds the fields stored in the bf(tm) struct to the tt(DateTime)
-object, keeping the current time format (tt(UTC) or localtime).
-    itb(DateTime &operator+=(DateTime const &right))
-       Adds the argument's time values to the current tt(DateTime)
-object's time values, returning the difference in tt(UTC) format.
+    itb(DateTime &operator-=(struct tm const &fields))
+       Subtracts the date (e.g., tt(tm_year)) and
+time (e.g., tt(tm_hour)) fields stored in the bf(struct tm) struct from the
+tt(DateTime) object.
+    itb(DateTime const operator+(DateTime const &left, time_t seconds))
+       Returns a copy of tt(left) to which tt(seconds) have been added.
+    itb(DateTime const operator+(DateTime const &left, 
+                                            struct tm const &fields))
+       Returns a copy of tt(left) to which  the date (e.g., tt(tm_year)) and
+time (e.g., tt(tm_hour)) fields stored in the bf(struct tm) struct have been
+added.
     itb(DateTime operator+=(time_t seconds))
        Adds the number of seconds to the tt(DateTime) object, keeping the
 current time format (tt(UTC) or localtime).
-    itb(DateTime operator+(tm const &fields))
-       Adds the fields stored in the bf(tm) struct to the tt(DateTime)
-object, keeping the current time format (tt(UTC) or localtime).
-    itb(bool operator==(DateTime const &other))
+    itb(DateTime &operator+=(struct tm const &fields))
+       Adds the date (e.g., tt(tm_year)) and
+time (e.g., tt(tm_hour)) fields stored in the bf(struct tm) struct to the
+tt(DateTime) object.
+    itb(bool operator==(DateTime const &left, DateTime const &right))
        Returns tt(true) if the current tt(DateTime) object represents the same
-time as the time represented by tt(other).
-    itb(bool operator!=(DateTime const &other))
+time as the time represented by tt(left, DateTime const &right).
+    itb(bool operator!=(DateTime const &left, DateTime const &right))
        Returns tt(true) if the current tt(DateTime) object represents a
 different time as the time represented by tt(other).
-    itb(bool operator<(DateTime const &other))
+    itb(bool operator<(DateTime const &left, DateTime const &right))
        Returns tt(true) if the current tt(DateTime) object represents a
 moment in time before the time represented by tt(other).
-    itb(bool operator<=(DateTime const &other))
+    itb(bool operator<=(DateTime const &left, DateTime const &right))
        Returns tt(true) if the current tt(DateTime) object represents a
 moment in time before or equal to the time represented by tt(other).
-    itb(bool operator>(DateTime const &other))
+    itb(bool operator>(DateTime const &left, DateTime const &right))
        Returns tt(true) if the current tt(DateTime) object represents a
 moment in time after the time represented by tt(other).
-    itb(bool operator>=(DateTime const &other))
+    itb(bool operator>=(DateTime const &left, DateTime const &right))
        Returns tt(true) if the current tt(DateTime) object represents a
 moment in time equal to or after the time represented by tt(other).
     itb(DateTime &operator=(DateTime const &other))
@@ -295,11 +296,20 @@ tt(DateTime) object. January 1 is returned as 0.
     itb(size_t yearDayNr() const)
         Returns the day within the year of the time stored in a
 tt(DateTime) object. January 1 is returned as 1.
-    itb(FBB:DayTime::TriVal dst() const)
+    itb(DayTime::TriVal dst() const)
         Returns an indication of an active Daylight Saving Time (DST) state
 for the (local) time represented in the tt(DateTime) object. When DST is
 active, the local time is one hour later as compared to the situation where
 DST is not active.
+    itb(DateTime utc() const)
+        Returns a copy of the tt(DateTime) object representing its time in
+tt(UTC).
+    itb(DateTime localTime() const)
+        Returns a copy of the tt(DateTime) object representing its local time.
+    itb(DateTime to(DateTime::TimeType type) const)
+        Returns a copy of the tt(DateTime) object representing its time in
+tt(UTC) if tt(DateTime::UTC) was specified, and in local time if
+tt(DateTime::LOCALTIME) was specified.
     )
     Whenever a tt(set...()) member is used in such a way that the resulting
 date would be invalid the original tt(DateTime) object's value is unaltered.
