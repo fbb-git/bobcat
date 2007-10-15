@@ -1,0 +1,170 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Log)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Log messages)
+
+manpagename(FBB::Log)(bf(std::ostream) handling log messages)
+
+manpagesynopsis()
+    bf(#include <bobcat/log>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(std::ostream)
+
+manpagesection(ENUMERATIONS)
+
+    The enumeration bf(TimeStamps) is defined in the namespace bf(FBB),
+primarily for initializing bf(FBB::LogBuffer) objects. It is used with
+bf(FBB::Log) members as well. It has the following values:
+    itemization(
+    itb(NOTIMESTAMPS)
+        Log-messages will not have timestamps prepended to them.
+    itb(TIMESTAMPS)
+        Log-messages will have timestamps prepended to them.
+    )
+
+    The enumeration bf(LogManipulator) is used to handle special or
+exceptional situations through manipulators. It is defined in the namespace
+bf(FBB) and has the following two values:
+    itemization(
+    itb(FATAL)
+        This value may be inserted into an bf(FBB::Log) object to throw an
+bf(FBB::Errno) exception (see bf(operator<<()) below);
+    itb(nl)
+        This value may be inserted into an bf(FBB::Log) object to terminate
+the current line. It will em(not) cause the next line to begin with a
+time stamp (if applicable) and the current em(message level) cannot be
+modified using a bf(level)(3bobcat) manipulator. It is used to allow a single 
+log message to occupy multiple textual lines.
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Log(char const *delim = " "))
+        The default constructor creates a bf(FBB::Log) object which isn't yet
+associated with a stream to log messages on. The member bf(open()) (see below)
+may be used to define such a stream.  By default, all messages will have a
+time stamp prepended to them (see the description of the member
+bf(setTimestamp()) below). The parameter bf(delim) is inserted immediately
+beyond the time stamp. If a delimiter is inappropriate, an empty string or a
+0-pointer may be specified.
+    itb(Log(std::ostream &out, char const *delim = " "))
+        This constructor creates a nbf(FBB::Log) object logging its messages
+to the provided tt(std::ostream) object. By default, all messages will have a
+time stamp prepended to them (see the description of the member
+bf(setTimestamp()) below).  The parameter bf(delim) is inserted immediately
+beyond the time stamp. If a delimiter is inappropriate, an empty string or a
+0-pointer may be specified.
+    itb(FBB::Log(std::string const &filename,
+            std::ios::openmode mode = std::ios::out | std::ios::app, 
+            char const *delim = " "))
+        This constructor creates a bf(FBB::Log) object logging its messages to
+the named file. If tt(filename == "&1") the logmessages will be written to the
+standard output stream. If tt(filename == "&2") the logmessages will be
+written to the standard error stream.  By default the file is created if not
+existing, and all messages are appended to the stream.  By default, all
+messages will have a time stamp prepended to them (see the description of the
+member bf(setTimestamp()) below).  The parameter bf(delim) is inserted
+immediately beyond the time stamp. If a delimiter is inappropriate, an empty
+string or a 0-pointer may be specified.
+    )
+    The copy constructor is not available.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::ostream) are available, as bf(FBB::Log) inherits
+from this class.
+    itemization(
+    itb(std::ostream &level(size_t useLevel))
+        This member defines a log-level. Messages will be inserted into
+the stream when tt(useLevel) is equal to or exceeds the level set by
+bf(setLevel()). The maximum level which can be selected is bf(UNIT_MAX). If
+not even such messages should be inserted into the bf(ostream), then the
+stream should be deactivated, using bf(off()), see below. The selected level
+remains active until redefined. Alternatively, the bf(FBB::level) manipulator
+may be inserted into an (empty) bf(FBB::Log) object (see bf(level)(3bobcat)).
+    itb(void off())
+        Prevents any log messages from being generated. It may be cancelled by
+bf(setLevel()) (see below).
+    itb(void open(std::string const &filename,
+            std::ios::openmode mode = std::ios::out | std::ios::app, 
+            char const *delim = " "))
+        This member (re)associates an bf(FBB::Log) object with the named
+file. If tt(filename == "&1") the logmessages will be written to the standard
+output stream. If tt(filename == "&2") the logmessages will be written to the
+standard error stream.  By default the file is created if not existing, and
+all messages are appended to the stream.  By default, all messages will have a
+time stamp prepended to them (see the description of the member
+bf(setTimestamp()) below).  The parameter bf(delim) is inserted immediately
+beyond the time stamp. If a delimiter is inappropriate, an empty string or a
+0-pointer may be specified.
+    itb(void setLevel(size_t newLevel))
+        Redefines the internal message level. Messages having at least
+level tt(newLevel) will be written. If the member is used without explicit
+argument, logging is suspended.
+    itb(void setTimestamp(FBB::TimeStamps stamp, char const *delim = " "))
+        The member function (de)activates time stamp prepending. Use the value
+bf(FBB::TIMESTAMPS) to prepend time stamps, bf(FBB::NOTIMESTAMPS) suppresses
+time stamps.  A timestamp consists of the month, the day number of the month
+and the (local) time of the current message, as usually appearing in messages
+in tt(/var/log) files. E.g., tt(Aug 5 13:52:23). The parameter bf(delim) is
+inserted immediately beyond the time stamp. If a delimiter is inappropriate,
+an empty string or a 0-pointer may be specified. When bf(stamps ==
+FBB::NOTIMESTAMPS delim) is ignored.
+    )
+
+manpagesection(STATIC MEMBER)
+    itemization(
+    itb(FBB::Log &initialize(std::string const &filename,
+            std::ios::openmode mode = std::ios::out | std::ios::app, 
+            char const *delim = " "))
+        
+        Returns a reference to a static bf(FBB::Log) object. It may only be
+called once, or an tt(FBB::Errno) exception is thrown. It associates a static
+bf(FBB::Log) object with the named file. If tt(filename == "&1") the
+logmessages will be written to the standard output stream. If tt(filename ==
+"&2") the logmessages will be written to the standard error stream.  By
+default the file is created if not existing, and all messages are appended to
+the stream.  By default, all messages will have a time stamp prepended to them
+(see the description of the member bf(setTimestamp()) below).  The parameter
+bf(delim) is inserted immediately beyond the time stamp. If a delimiter is
+inappropriate, an empty string or a 0-pointer may be specified.
+    itb(FBB::Log &getInstance())
+        Returns a reference to a static bf(FBB::Log) object, available after
+calling bf(Log::initialize()). If called before tt(Log::initialize())
+an tt(FBB::Errno) exception is thrown. 
+    )
+
+manpagesection(OVERLOADED OPERATOR)
+    The following overloaded operator is defined outside of the bf(FBB)
+namespace. It may be used to insert an bf(FBB::LogManipulator) into an
+bf(FBB::Log) object. If the overloaded operator is used in combination with
+another type of object it performs no actions.
+    itemization(
+    itb(std::ostream &::operator<<(std::ostream &str, FBB::LogManipulator)) 
+        When inserting bf(FBB::FATAL) an bf(FBB::Errno) exception is thrown;
+when inserting bf(FBB::nl) the line is terminated, but next insertions will
+not start with a time stamp (if applicable). 
+    )
+
+manpagesection(EXAMPLE)
+    To do
+
+manpagefiles()
+    em(bobcat/log) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(errno)(3bobcat), bf(level)(3bobcat),
+    bf(logbuffer)(3bobcat)
+
+manpagebugs()
+    None reported
+
+includefile(trailer.inc)
+
+

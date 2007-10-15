@@ -1,0 +1,497 @@
+#!/usr/bin/perl
+
+use strict;
+use Getopt::Std;
+
+# Globals
+my $VER = "1.05";
+# 1.05 [KK 2006-09-28] Flag -s (silent) implemented. Usage text updated.
+# 1.04 [KK 2006-09-05] C-compilers: gcc/g++ get selected first, instead of
+#			cc/c++. Helps HP-UX ports. [Thanks, Bernd Krumboeck.]
+# 1.03 [KK 2006-07-19] 'subfiles' keeps track of visited dirs incase of
+#		       recursion. Testing is now by inode, used to be by name.
+# 1.02 [KK 2006-06-01] 'findbin' searches for .exe too now, for Cygwin support
+# 1.01 [KK 2005-09-29] Implemented context-sensitive help via -h.
+#		       Action 'header' implemented.
+# 1.00 [KK 2005-09-28] First version
+
+# Configuration
+my @def_headerdirs = ('/usr/include',
+		      '/usr/local/include',
+		      "$ENV{HOME}/include",
+		     );
+my @def_libdirs = ('/usr/lib',
+		   '/usr/local/lib',
+		   '/usr/ucblib',
+		   "$ENV{HOME}/lib",
+		  );
+my @c_compilers = ('gcc', 'cc');
+my @cpp_compilers = ('g++', 'c++');
+
+# Globals
+my %opts;
+my $base;
+my @warnings;
+my $printed;
+my @headerdirs;
+my @libdirs;
+
+# Show usage and croak
+sub usage {
+    die <<"ENDUSAGE"
+
+This is c-conf, the C compilation configuration helper V$VER
+Copyright (c) e-tunity. Contact <info\@e-tunity.com> for information.
+
+Usage:
+    $base [flags] header FILE.H [FILE.H...] Searches for directories
+	containing the named header(s), returns appropriate -I flags.
+    $base [flags] headerdir DIR [DIR...]: Searches for directory
+	containing headers, returns appropriate -I flags.
+    $base [flags] ifheader FILE.H DEFINE Searches for the named header.
+	If found, a compilation flag -DDEFINE is returned, indicating that
+	the header is found.
+    $base [flags] libfunction FUNC DEFINE Creates a small program that
+	tries to use FUNC. If this succeeds, a -DDEFINE=1 flag is returned.
+    $base [flags] lib NAME [NAME...]: Searches for libNAME.{a,so,...},
+	returns appropriate -L and -l flags.
+    $base [flags] so-name NAME: Returns filename of a shared-object for NAME,
+        e.g. libNAME.so
+    $base [flags] so-cflags: Returns compilation flags to build shared
+        objects
+    $base [flags] so-lflags: Returns linkage flags to produce a shared-object
+	library
+    $base [flags] c-compiler: Returns name of C compiler
+    $base [flags] c++-compiler: Returns name of C++ compiler
+
+Optional flags:
+    -h: to show short help for an action, e.g. try '$base -h so-name'
+    -s: to suppress showing of warnings
+    -v: to show verbose messages
+    -I DIR[,DIR..]: to add DIR(s) to the searchpath for headers, default
+	searchpath is @headerdirs
+    -L DIR[,DIR..]: to add DIR(s) to the searchpath for libraries, default
+	searchpath is @libdirs
+
+Meaningful output is returned on stdout. Verbose messages, warnings and
+errors go to stderr.
+
+ENDUSAGE
+}
+
+# Issue a warning
+sub warning {
+    push (@warnings, "@_");
+}
+
+# Show a message
+sub msg {
+    return unless ($opts{v});
+    print STDERR ("$base: ", @_);
+}
+
+# Show help info if -h was given
+sub checkhelp {
+    return unless ($opts{h});
+    print STDERR (@_);
+    exit (1);
+}
+
+# Basename / dirname of a file.
+sub basename ($) {
+    my $name = shift;
+    $name =~ s{.*/}{};
+    return ($name);
+}
+sub dirname ($) {
+    my $name = shift;
+    return (undef) unless ($name =~ /\//);
+    $name =~ s{/[^/]$}{};
+    return ($name);
+}
+
+# Get the uname.
+sub uname() {
+    my $ret = `uname`;
+    chomp ($ret);
+    msg ("uname: $ret\n");
+    return ($ret);
+}
+
+# Find a binary along the path.
+sub findbin($) {
+    my $bin = shift;
+    msg ("Looking for executable '$bin'\n");
+    foreach my $d (split (/:/, $ENV{PATH})) {
+	if (-x "$d/$bin" or -f "$d/bin.exe") {
+	    msg ("Found as '$d/$bin'\n");
+	    return ("$d/$bin");
+	}
+    }
+    msg ("Not found!\n");
+}
+
+# Recursively determine the files under a given dir.
+my %_dir_visited;
+sub subfiles ($$$) {
+    my ($dir, $mask, $recursive) = @_;
+
+    %_dir_visited = () unless ($recursive);
+    my ($dev, $ino) = stat($dir)
+      or return (undef);
+    my $tag = sprintf ("%d-%d", $dev, $ino);
+    if ($_dir_visited{$tag}) {
+	msg ("Path '$dir' was already visited (as $_dir_visited{$tag})\n");
+	return (undef);
+    }
+    $_dir_visited{$tag} = $dir;
+
+    msg ("Scanning for '$mask' under '$dir'\n");
+    if (! -d $dir) {
+	msg ("Scan path ends, '$dir' is not an accessible directory\n");
+	return (undef);
+    }
+
+    my @ret = ();
+    foreach my $f (glob ("$dir/$mask")) {
+	if (-f $f) {
+	    push (@ret, $f);
+	    msg ("Found a hit as '$f'\n");
+	}
+	msg ("Hits so far: ", $#ret + 1, "\n") if ($#ret > -1);
+    }
+    foreach my $d (glob ("$dir/*")) {
+	next unless (-d $d);
+	msg ("Recursing from '$dir' into '$d'\n");
+	my @subret = subfiles ("$d", $mask, 1);
+	my $added = 0;
+	foreach my $f (@subret) {
+	    if (-f $f) {
+		push (@ret, $f);
+		$added++;
+	    }
+	}
+	msg ("Added ", $added, " hits from '$d'\n") if ($added);
+    }
+    if ($#ret > -1) {
+	msg ("Found ", $#ret + 1, " entries matching '$mask' under '$dir'\n");
+	return (@ret);
+    } else {
+	# msg ("No entries matching '$mask' under '$dir' found\n");
+	return (undef);
+    }
+}
+
+# Output stuff
+sub output {
+    print (' ') if ($printed++);
+    print (@_);
+}
+
+# Find a header, output a define if found.
+sub if_header {
+    checkhelp <<"ENDHELP";
+'ifheader' tries to find a header file in the 'include' directories.
+When found, a define-flag for the C compiler is returned.
+E.g.: $base ifheader malloc.h HAVE_MALLOC_H (may return -DHAVE_MALLOC_H)
+Use in a Makefile as in:
+CFLAGS = \$(CFLAGS) \$(shell c-conf ifheader malloc.h HAVE_MALLOC_H
+Then in a C source as:
+#ifdef HAVE_MALLOC_H
+#include <malloc.h>
+#endif
+ENDHELP
+
+    usage() if ($#_ != 1);
+
+    my ($h, $def) = @_;
+    msg ("Looking for '$h'\n");
+
+    foreach my $d (@headerdirs) {
+	if (-f "$d/$h") {
+	    output ("-D$def");
+	    return;
+	}
+    }
+}
+
+# Find a header
+sub header {
+    checkhelp <<"ENDHELP";
+'header' locates one or more C headers in the 'include' directories.
+E.g.: $base header e-lib.h stdio.h (may return -I/usr/include -I/usr/e/include)
+Use in a Makefile as in:
+CFLAGS = -C -Wall \$(shell c-conf header e-lib.h)
+Then in a C source as:
+#include <e-lib.h>
+ENDHELP
+
+    usage() if ($#_ == -1);
+    foreach my $h (@_) {
+	msg ("Looking for '$h'\n");
+	my $found = 0;
+	foreach my $d (@headerdirs) {
+	    msg ("Trying '$d/$h'\n");
+	    if (-f "$d/$h") {
+		$found++;
+		msg ("Found\n");
+		output ("-I$d");
+		last;
+	    }
+	}
+	warning ("Failed to locate header '$h' in @headerdirs\n")
+	  unless ($found);
+    }
+}
+
+# Find a header directory
+sub headerdir {
+    checkhelp <<"ENDHELP";
+'headerdir' locates directories under which (in steps) C headers are
+E.g.: $base headerdir libxml2 (may return '-I/usr/include/libxml2')
+Use in a Makefile as in:
+CFLAGS = -C -Wall \$(shell c-conf headerdir libxml2)
+Then in a C source as:
+#include <libxml/xpath.h>
+ENDHELP
+
+    usage() if ($#_ == -1);
+    foreach my $headerdir (@_) {
+	msg ("Looking for header dir '$headerdir'\n");
+	my $found = 0;
+	foreach my $d (@headerdirs) {
+	    msg ("Trying as '$d/$headerdir'\n");
+	    my $target = "$d/$headerdir";
+	    if (subfiles ($target, '*.h', 0)) {
+		output ("-I$target");
+		$found++;
+	    }
+	}
+	warning ("Header dir '$headerdir' not found\n")
+	  unless ($found);
+    }
+}
+
+# Find a library
+sub lib {
+    checkhelp <<"ENDHELP";
+'lib' generates the linkage flags for a given library name. The name
+is bare, without 'lib' and '.so' and the like.
+E.g.: $base lib xml2 (may return '-L/usr/lib -lxml2')
+Use in a Makefile as in:
+LDFLAGS = \$(shell c-conf lib xml2)
+ENDHELP
+
+    usage() if ($#_ == -1);
+    foreach my $lib (@_) {
+	msg ("Looking for lib '$lib'\n");
+	my $found = 0;
+	foreach my $d (@libdirs) {
+	    msg ("Trying under '$d'\n");
+	    my $hit = (subfiles ($d, "lib$lib.*", 0))[0];
+	    if ($hit) {
+		msg ("Found as '$hit'\n");
+		$found++;
+		$hit =~ s{/[^/]*$}{};
+		output ("-L$hit -l$lib");
+	    }
+	}
+	warning ("Library '$lib' not found\n")
+	  unless ($found);
+    }
+}
+
+# Compilation flags to make a so-ready object.
+sub so_cflags {
+    checkhelp <<"ENDHELP";
+'so-cflags' returns the compilation flags that are necessary when
+building objects for a shared library.
+E.g.: $base so-cflags (may return '-fPIC')
+Use in a Makefile as in:
+CFLAGS = -c -g -Wall \$(shell c-conf so-cflags)
+ENDHELP
+
+    usage() if ($#_ > -1);
+    if (uname() eq 'Darwin') {
+	output ('-fPIC');
+    } elsif (uname() eq 'Linux') {
+	output ('-fpic');
+    }
+}
+
+# Linkage flags to make an so.
+sub so_lflags {
+    checkhelp << "ENDHELP";
+'so-lflags' returns the linkage flags that are necessary when
+combining objects into a shared library.
+E.g.: $base so-lflags (may return '-dynamiclib -Wl,-single_module')
+Use in a Makefile as in:
+MY_SO = \$(shell c-conf so-name my)
+\$(MY_SO): *.o
+	\$(CC) -o \$(MY_SO) \$(shell c-conf so-lflags) *.o
+ENDHELP
+
+    usage() if ($#_ > -1);
+    my $lib = shift;
+
+    if (uname() eq 'Darwin') {
+	output ("-dynamiclib -Wl,-single_module");
+    } else {
+	output ("-shared");
+    }
+}
+
+# Get the C compiler
+sub c_compiler {
+    checkhelp <<"ENDHELP";
+'c-compiler' tries to find a C compiler and returns its (bare) name.
+E.g.: $base c-compiler
+      -> gcc
+ENDHELP
+
+    usage() if ($#_ > -1);
+    foreach my $c (@c_compilers) {
+	if (findbin ($c)) {
+	    output ($c);
+	    return;
+	}
+    }
+    warning ("No C compiler found\n");
+}
+
+# Get the C++ compiler
+sub cpp_compiler {
+    checkhelp <<"ENDHELP";
+'c++-compiler' tries to find a C++ compiler and returns its (bare) name.
+E.g.: $base c++-compiler
+      -> g++
+ENDHELP
+
+    usage() if ($#_ > -1);
+    foreach my $c (@cpp_compilers) {
+	if (findbin ($c)) {
+	    output ($c);
+	    return;
+	}
+    }
+    warning ("No C++ compiler found\n");
+}
+
+# Get the name for an SO.
+sub so_name {
+    checkhelp <<"ENDHELP";
+'so-name' returns the filename of a shared library, based on the LIB
+argument.
+E.g.: $base so-name test
+      -> libtest.so
+ENDHELP
+
+    usage() if ($#_ != 0);
+    my $name = shift;
+
+    my $dir  = dirname ($name);
+    my $base = basename ($name);
+
+    my $dest;
+    if (uname() eq 'Darwin') {
+	$dest = "lib$base.dylib";
+    } else {
+	$dest = "lib$base.so";
+    }
+
+    if ($dir ne '') {
+	output ("$dir/$dest");
+    } else {
+	output ("$dest");
+    }
+}
+
+# Check that a libfunction is present.
+sub libfunction {
+    checkhelp <<"ENDHELP";
+'libfunction' checks whether a library function is present. There are
+two arguments: the function to check, and a define to output when the
+function is found. The output is a -D flag for the compiler commandline.
+E.g.: $base libfunction printf HAVE_PRINTF
+      -> -DHAVE_PRINTF=1
+      $base libfunction foo_bar HAVE_FOOBAR
+      -> (nothing)      
+ENDHELP
+
+    usage() if ($#_ != 1);
+    my ($func, $def) = @_;
+
+    # Create a temp .c file.
+    my $src = "/tmp/$$.c";
+    my $dst = "/tmp/$$.out";
+    open (my $of, ">$src")
+      or die ("Cannot write $src: $!\n");
+    print $of ("main () {\n",
+	       "    void $func (void);\n",
+	       "    $func();\n",
+	       "}\n");
+    close ($of);
+
+    my $cc;
+    foreach my $c (@c_compilers) {
+	if (findbin ($c)) {
+	    $cc = $c;
+	    last;
+	}
+    }
+    die ("Failed to locate C compiler\n") if ($cc eq '');
+    my $ret = system ("$cc -o $dst $src >/dev/null 2>&1");
+    unlink ($src, $dst);
+
+    output ("-D$def=1") if ($ret == 0);
+}
+
+# Main starts here
+
+$base = $0;
+$base =~ s{.*/}{};
+usage () unless (getopts ('vhI:L:s', \%opts));
+foreach my $d (split (/,/, $opts{L})) {
+    push (@libdirs, $d);
+}
+foreach my $d (split (/,/, $opts{I})) {
+    push (@headerdirs, $d);
+}    
+
+push (@libdirs, @def_libdirs);
+push (@headerdirs, @def_headerdirs);
+my $action = shift (@ARGV);
+
+if ($action eq 'header') {
+    header (@ARGV);
+} elsif ($action eq 'headerdir') {
+    headerdir (@ARGV);
+} elsif ($action eq 'lib') {
+    lib (@ARGV);
+} elsif ($action eq 'so-cflags') {
+    so_cflags (@ARGV);
+} elsif ($action eq 'so-lflags') {
+    so_lflags (@ARGV);
+} elsif ($action eq 'c-compiler') {
+    c_compiler(@ARGV);
+} elsif ($action eq 'c++-compiler') {
+    cpp_compiler(@ARGV);
+} elsif ($action eq 'so-name') {
+    so_name (@ARGV);
+} elsif ($action eq 'ifheader') {
+    if_header (@ARGV);
+} elsif ($action eq 'libfunction') {
+    libfunction (@ARGV);
+} else {
+    usage ();
+}
+
+print ("\n") if ($printed);
+if ($#warnings > -1) {
+    foreach my $w (@warnings) {
+	print STDERR ("$base WARNING: $w") unless ($opts{s});
+    }
+    exit (1);
+}
+exit (0);
+

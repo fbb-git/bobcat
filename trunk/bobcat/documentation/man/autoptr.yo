@@ -1,0 +1,213 @@
+includefile(header.inc)
+
+def(ap)(0)(bf(AutoPtr))
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::AutoPtr)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Error handler)
+
+manpagename(FBB::AutoPtr)(a generalization of std::auto_ptr)
+
+manpagesynopsis()
+    bf(#include <bobcat/autoptr>)nl()
+
+manpagedescription()
+    The class ap() implements a generalization of the class
+tt(std::auto_ptr). Like bf(std::auto_ptr) ab() can be used to handle a pointer
+to an allocated data element, but unline bd(std::auto_ptr) ap() can also be
+used to handle a pointer to an array of data elements. Moreover, ap() supports
+non-destructive assignment and copy construction, therefore allowing ap()
+objects to be stored in, e.g., abstract containers. These latter
+characteristics are supported through the use of reference counting.
+
+Since almost all operators and members provide access to (mutable) data stored
+in the ap() object, no members return or expect tt(const) references, pointers
+or ap() objects.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+
+    bf(FBB:RefCount)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(AutoPtr<Type>()) 
+        The default constructor, initializing its data element pointer 
+to a 0-pointer to a tt(Type) data type.
+
+    itb(explicit AutoPtr<Type>(Type *data)) 
+        The constructor initializing its data element pointer to tt(data). The
+tt(data) pointer must have been dynamically allocated and is owned by the
+ap() object.
+
+    itb(AutoPtr<Type>(Type *data, size_t size)) 
+        The constructor initializing its data element pointer to tt(data),
+which is an array of tt(size) tt(Data) elements. The
+tt(data) pointer must have been dynamically allocated and is owned by the
+ap() object.
+
+    itb(AutoPtr<Type>(AutoPtr<Type> &other))
+        The copy constructor copies the information referred to by tt(other)
+to the current ap() using reference counting.
+    )
+
+manpagesection(OVERLOADED OPERATORS)
+    Some of the following operators return references or pointers to data
+elements owned by the ap() object. It should be noted that, since reference
+counting is used for the data pointer and not for the data itself, modifying a
+data element using one ap() object will usually also modify the data element
+of other ap() objects sharing the object's data pointer.
+    itemization(
+    itb(AutoPtr<Type> &operator=(AutoPtr<Type> &other)) 
+        The assignment operator assigns the information referred to by
+tt(other) to the current ap() using reference counting.
+    itb(Type &operator*()) 
+        The dereference operator returns a reference to the data element
+pointed to by the ap(). If the ap() object points to an array of tt(Type)
+elements, a reference to its first element is returned. 
+    itb(Type *operator->()) 
+        The pointer to member operator returns a pointer to the data element
+pointed to by the ap(). If the ap() object points to an array of tt(Type)
+elements, a pointer to its first element is returned. 
+    itb(Type &operator[](int idx)) 
+        The index operator returns a reference to the element tt(idx) 
+owned  by the ap(). No array-bound checking is performed. 
+    itb(AutoPtr<Type> operator+(int idx)) 
+        The plus operator returns an ap() object whose dereference operator
+will return element tt(idx) of the current ap() object, allowing users to
+apply pointer arithmetic. The returned ap() object shares the data with the
+current object, but uses an offset value of its own to specify its own first
+element. Consequently, ap()'s pointer arithmetic operators may be nested.
+    itb(AutoPtr<Type> &operator+=(int idx)) 
+        The plus arithmetic assignment operator returns the current ap()
+object whose dereference operator is incremented by tt(idx).
+    itb(AutoPtr<Type> operator-(int idx)) 
+        The minus operator returns an ap() object whose dereference operator
+will return element tt(-idx) of the current ap() object, allowing users to
+apply pointer arithmetic. The returned ap() object shares the data with the
+current object, but uses an offset value of its own to specify its own first
+element. Consequently, ap()'s pointer arithmetic operators may be nested.
+    itb(AutoPtr<Type> &operator+=(int idx)) 
+        The subtract arithmetic assignment operator returns the current ap()
+object whose dereference operator is decremented by tt(idx).
+    )
+
+manpagesection(PUBLIC MEMBER FUNCTIONS)
+     All members of bf(std::ostringstream) and bf(  std::exception) are
+available, as bf(FBB::AutoPtr) inherits from these classes.
+
+    Some of the following members return references or pointers to data
+elements owned by the ap() object. It should be noted that, since reference
+counting is used for the data pointer and not for the data itself, modifying a
+data element using one ap() object will usually also modify the data element
+of other ap() objects sharing the object's data pointer.
+    itemization(
+    itb(Type *get()) 
+        The bf(get()) member returns a pointer to the data element
+pointed to by the ap(). If the ap() object points to an array of tt(Type)
+elements, a pointer to that array's first element is returned. 
+    itb(Type *release()) 
+        The bf(release()) member returns a pointer to the data element pointed
+to by the ap(). If the ap() object points to an array of tt(Type) elements, a
+pointer to its first element is returned. The returned pointer is owned by
+bf(release())'s caller and the current object's data pointer is set to
+zero. If the data were shared among several ap() objects, the remaining
+objects will keep their data. In that case the returned pointer is a pointer
+to a copy of the shared data. The tt(Type) data type must support a copy
+constructor.
+    itb(Type *releaseAll()) 
+        The bf(releaseAll()) member returns a pointer to the data element
+pointed to by the ap(). If the ap() object points to an array of tt(Type)
+elements, a pointer to its first element is returned. The returned pointer is
+owned by bf(releaseAll())'s caller. The data pointers of all ap() objects that
+shared the returned data become zero-pointers. if the ap() object contains a
+pointer to an array of tt(Type) objects, the returned pointer will also point
+to such an array. The tt(Type) data type must support a copy constructor.
+    )
+
+manpagesection(FREE OVERLOADED OPERATOR)
+    Note that the following operator is defined in the tt(FBB)
+namespace. Koenig lookup is used to select it whenever the appropriate types
+of arguments are provided to the plus operator.
+    itemization(
+    itb(AutoPtr<Type> FBB::operator+(int idx, AutoPtr<Type> &rhs)) 
+        This free (classless) plus operator returns an ap() object whose
+dereference operator will return element tt(idx) of the tt(rhs) ap() object,
+allowing users to apply pointer arithmetic. The returned ap() object shares
+the data with the tt(rhs) object, but uses an offset value of its own to
+specify its own first element. Consequently, ap()'s pointer arithmetic
+operators may be nested.
+    )
+
+
+manpagesection(EXAMPLE)
+    verb(
+    #include "../autoptr"
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main()
+    {
+        AutoPtr<int> autoInt(new int(4));
+        cout << "\n1: test simple construction and copy construction\n\n";
+        {
+            AutoPtr<int> auto2(autoInt);
+            cout << *auto2 << endl;    
+            cout << *((0 + auto2) - 2) << endl;    
+        }
+        cout << *autoInt << "\n" <<
+                "\n2: test array\n\n";
+        {
+            AutoPtr<int> autoarr(new int[5], 5);
+        
+            autoarr[1] = 1;
+            autoarr[2] = 2;
+        
+            cout << autoarr[2] << "\n" <<
+                    autoarr[3] << endl;
+    
+        cout << "\n3: assign to former autoPtr of different data size\n\n";
+    
+            autoInt = autoarr;
+        }
+            
+        cout << autoInt[2] << "\n" <<
+                autoInt[3] << endl;
+    
+        cout << "\n4: pointer-based operations\n\n";
+      
+            cout << *((autoInt + 4) - 2) << "\n" <<
+                    *((autoInt + 6) - 4) << "\n" <<
+                    ((6 + autoInt) - 4)[0] << endl;
+        
+        cout << "\n5: resetting\n\n";
+    
+            AutoPtr<int> autoSave(autoInt);
+        
+            autoInt.reset(new int(12345));
+            cout << *autoInt << "\n" <<
+                    autoSave[2] << endl;
+
+        cout << "\n6: resetting all\n\n";
+    
+            autoSave = autoInt;
+        
+            autoInt.resetAll(new int(12345));
+            cout << *autoInt << "\n" <<
+                    *autoSave << endl;
+    }
+ )
+
+
+manpagefiles()
+    em(bobcat/autoptr) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(RefCount)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

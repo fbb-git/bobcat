@@ -1,0 +1,13 @@
+#include "xpointer.ih"
+
+Xpointer::Xpointer()
+{
+    if (s_counter++)
+        return;         // One more object
+
+    s_theDisplay = XOpenDisplay(0);
+    if (!s_theDisplay)
+        throw Errno() << insertable << "Can't open the display" << throwable;
+}
+    
+    

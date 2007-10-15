@@ -1,0 +1,267 @@
+#ifndef _INCLUDED_BOBCAT_DATETIME_
+#define _INCLUDED_BOBCAT_DATETIME_
+
+#include <ctime>
+#include <iosfwd>
+
+namespace FBB
+{
+    class DateTime;
+}
+
+namespace std
+{
+    ostream &operator<<(ostream &str, FBB::DateTime const &dt);
+}
+
+namespace FBB
+{
+
+class DateTime
+{
+
+    friend  std::ostream &std::operator<<(std::ostream &str, 
+                                          DateTime const &dt);
+
+    friend bool operator==(DateTime const &left, DateTime const &right);
+    friend bool operator!=(DateTime const &left, DateTime const &right);
+    friend bool operator<(DateTime const &left, DateTime const &right);
+    friend bool operator<=(DateTime const &left, DateTime const &right);
+    friend bool operator>(DateTime const &left, DateTime const &right);
+    friend bool operator>=(DateTime const &left, DateTime const &right);
+
+    public:
+        enum TimeType
+        {
+            LOCALTIME,
+            UTC
+        };
+        enum Month
+        {
+            JANUARY,
+            FEBRUARY,
+            MARCH,
+            APRIL,
+            MAY,
+            JUNE,
+            JULY,
+            AUGUST,
+            SEPTEMBER,
+            OCTOBER,
+            NOVEMBER,
+            DECEMBER,
+        };
+        enum Relative
+        {
+            THIS_YEAR,
+            LAST,
+            NEXT
+        };
+        enum WeekDay
+        {
+            SUNDAY,
+            MONDAY,
+            TUESDAY,
+            WEDNESDAY,
+            THIRSDAY,
+            FRIDAY,
+            SATURDAY,
+        };
+        enum TriVal
+        {
+            UNKNOWN,
+            NO,
+            YES
+        };
+
+    private:
+        TimeType    d_type; // current type of info in d_tm member
+        time_t      d_time; // time used by members
+        struct tm   d_tm;   // time's elements
+        bool        d_ok;
+        size_t    d_errno;
+
+    public:
+        DateTime(TimeType type = LOCALTIME);
+        DateTime(time_t time, TimeType type = LOCALTIME);
+        DateTime(tm *t, TimeType type = LOCALTIME);
+
+        operator bool() const;
+        bool breakDown(TimeType type);
+        size_t error() const;
+        size_t hours() const;
+        size_t minutes() const;
+        Month month() const;
+        size_t monthDayNr() const;
+
+        DateTime &operator+=(time_t seconds);           // d_type
+        DateTime &operator+=(tm const &tm);             // d_type
+
+        DateTime &operator-=(time_t seconds);           // d_type
+        DateTime &operator-=(tm const &tm);             // d_type
+
+
+        bool setSeconds(int seconds);
+        bool setDay(int day);
+        bool setTime(time_t time);
+        bool setYear(size_t year);
+        bool setHours(int hours);
+        bool setMinutes(int minutes);
+        bool setMonth(Month month, Relative where = THIS_YEAR);
+        bool setMonth(int month);       // set month, using 0: januari
+                                        // correct for overflows.
+
+        size_t seconds() const;
+        time_t time() const;
+        WeekDay weekday() const;
+        size_t year() const;
+        size_t yearDay() const;
+        size_t yearDayNr() const;
+        TriVal dst() const;
+
+        DateTime utc() const;
+        DateTime localTime() const;
+        DateTime to(TimeType type) const;
+
+    private:
+        bool breakDown(struct tm *tmStruct, TimeType type, time_t time);
+        bool updateTime(struct tm *tmPtr);
+};
+
+inline DateTime::operator bool() const
+{
+    return d_ok;
+}
+
+inline size_t DateTime::error() const
+{
+    return d_errno;
+}
+
+inline size_t DateTime::hours() const
+{
+    return d_tm.tm_hour;
+}
+
+inline size_t DateTime::minutes() const
+{
+    return d_tm.tm_min;
+}
+
+inline DateTime::Month DateTime::month() const
+{
+    return static_cast<Month>(d_tm.tm_mon);
+}
+
+inline size_t DateTime::monthDayNr() const
+{
+    return d_tm.tm_mday;
+}
+
+inline size_t DateTime::seconds() const
+{
+    return d_tm.tm_sec;
+}
+
+inline time_t DateTime::time() const
+{
+    return d_time;
+}
+
+inline DateTime::WeekDay DateTime::weekday() const
+{
+    return static_cast<WeekDay>(d_tm.tm_wday);
+}
+
+inline size_t DateTime::year() const
+{
+    return d_tm.tm_year + 1900;
+}
+
+inline size_t DateTime::yearDay() const
+{
+    return d_tm.tm_yday;
+}
+
+inline size_t DateTime::yearDayNr() const
+{
+    return d_tm.tm_yday + 1;
+}
+
+inline DateTime::TriVal DateTime::dst() const
+{
+    return static_cast<TriVal>(d_tm.tm_isdst);  
+}
+
+inline DateTime DateTime::utc() const
+{
+    return to(UTC);
+}   
+
+inline DateTime DateTime::localTime() const
+{
+    return to(LOCALTIME);
+}   
+
+inline DateTime DateTime::to(TimeType type) const
+{
+    return DateTime(d_time, type);
+}
+
+inline DateTime const operator-(DateTime const &left,   // d_type
+                               time_t right)
+{
+    return DateTime(left) -= right;
+}   
+
+inline DateTime const operator-(DateTime const &left,   // d_type
+                               tm const &right)
+{
+    return DateTime(left) -= right;
+}   
+
+inline DateTime const operator+(DateTime const &left,   // d_type
+                               time_t right)
+{
+    return DateTime(left) += right;
+}   
+
+inline DateTime const operator+(DateTime const &left,   // d_type
+                               tm const &right)
+{
+    return DateTime(left) += right;
+}   
+
+inline bool operator==(DateTime const &left, DateTime const &right)
+{
+    return left.d_time == right.d_time;
+}   
+
+inline bool operator!=(DateTime const &left, DateTime const &right)
+{
+    return left.d_time != right.d_time;
+}   
+
+inline bool operator<(DateTime const &left, DateTime const &right)
+{
+    return left.d_time < right.d_time;
+}   
+
+inline bool operator<=(DateTime const &left, DateTime const &right)
+{
+    return left.d_time <= right.d_time;
+}   
+
+inline bool operator>(DateTime const &left, DateTime const &right)
+{
+    return left.d_time > right.d_time;
+}   
+
+inline bool operator>=(DateTime const &left, DateTime const &right)
+{
+    return left.d_time >= right.d_time;
+}   
+
+}
+
+#endif

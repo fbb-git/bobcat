@@ -1,0 +1,216 @@
+#ifndef _INCLUDED_BOBCAT_TABLE_
+#define _INCLUDED_BOBCAT_TABLE_
+
+#include <ostream>
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include <bobcat/align>
+#include <bobcat/tablesupport>
+
+namespace FBB
+{
+
+class Table: public std::ostringstream
+{
+    friend std::ostream &operator<<(std::ostream &str, Table &table); 
+
+    template <typename Type>
+    friend Table &operator<<(Table &table, Type const &ref);
+
+    public:
+        enum FillDirection
+        {
+            ROWWISE,
+            COLUMNWISE
+        };
+
+        enum WidthType
+        {
+            COLUMNWIDTH,
+            EQUALWIDTH,
+        };
+
+    private:
+        struct Element
+        {
+            std::string d_text;
+            std::ios_base &(*d_manip)(std::ios_base &);
+    
+            Element(std::string text = "", 
+                    std::ios_base &(*manip)(std::ios_base &) = 0);
+            size_t length() const;
+        };
+    
+        bool                    d_tabulated;
+
+        size_t                  d_nRows;
+        size_t                  d_nColumns;
+        WidthType               d_widthType;
+
+        std::vector<Align>      d_align;
+        std::vector<Element>    d_string;               // table contents
+        TableSupport           *d_ptr;
+        TableSupport           &d_tableSupport;
+    
+        Element                &(Table::*d_indexFun)(size_t row, size_t col);
+
+    public:
+        typedef Element const &const_reference;  // required for push_back()
+
+        Table(size_t nColumns, FillDirection direction,             // 0
+                                WidthType widthType = COLUMNWIDTH); 
+
+        Table(TableSupport &tableSupport,                           // 1
+                size_t nColumns, FillDirection direction,             
+                WidthType widthType = COLUMNWIDTH);
+
+        ~Table();
+
+        Table &append(std::string const &str, char const *sep = " \t",
+                            bool addEmpty = false);
+
+        void clear();                       // clear the table-elements
+
+        template <typename InputIterator>
+        void fill(InputIterator begin, InputIterator end);
+
+        void push_back(Element const &element); // add another element to the
+                                                // table, using the default
+                                                // alignment. 
+
+        Table &setAlign(Align const &align);    // set an alignment
+
+        Table &def();                       // fillup an incomplete table
+                                            // automatically at insertions
+
+        size_t nRows() const;               // Number of rows currently
+                                            // in the table (following def)
+    private:
+        Table(Table const &other);                          // NI
+        Table &operator=(Table const &other);               // NI
+
+        std::ostream &insert(std::ostream &ostr);
+
+        size_t columnWidth(size_t col) const;
+        Manipulator columnManip(size_t col) const;
+
+                                    // returns element at particular location
+        Element &elementAt(size_t row, size_t col);
+
+        Element &hIndex(size_t row, size_t col);
+        Element &vIndex(size_t row, size_t col);
+
+        Table &flush();                     // insert the text currently
+                                            // inserted into the Table object
+                                            // into the table 
+};
+
+inline Table::~Table()
+{
+    delete d_ptr;
+}
+
+template <typename Iter>
+void Table::fill(Iter it, Iter end)
+{
+    clear();
+
+    while (it != end)
+    {
+        std::ostringstream str;
+        str << *it++;
+        push_back(str.str());
+    }
+}
+
+inline void Table::push_back(Element const &element)
+{
+    d_tabulated = false;
+    d_string.push_back(element);
+}
+
+inline void Table::clear()
+{
+    d_tabulated = false;
+    d_string.clear();
+}
+
+inline Table::Element &Table::hIndex(size_t row, size_t col)
+{
+    return d_string[row * d_nColumns + col];
+}
+
+inline Table::Element &Table::vIndex(size_t row, size_t col)
+{
+    return d_string[col * d_nRows + row];
+}
+
+inline Table::Element &Table::elementAt(size_t row, size_t col)
+{
+    return (this->*d_indexFun)(row, col);
+}
+
+inline size_t Table::columnWidth(size_t col) const
+{
+    return d_align[col];
+}
+
+inline Manipulator Table::columnManip(size_t col) const
+{
+    Manipulator manip = d_align[col].manip();
+    return manip ? manip : std::right;
+}
+
+inline Table::Element::Element(std::string text, 
+                    std::ios_base &(*manip)(std::ios_base &))
+:
+    d_text(text),
+    d_manip(manip)
+{}
+
+inline size_t Table::Element::length() const
+{
+    return d_text.length();
+}
+
+                        // display the table
+inline std::ostream &operator<<(std::ostream &str, Table &table)
+{
+    return table.insert(str);
+}
+            
+                        // Insert column or element alignments
+inline Table &operator<<(Table &tab, Align const &align)
+{
+    return tab.setAlign(align);
+}
+
+inline Table &def(Table &table)
+{
+    return table.def();
+}
+                        // For def
+inline Table &operator<<(Table &table, Table &(*fun)(Table &))
+{
+    return (*fun)(table);
+}
+
+template <typename Type>    // Insert any other insertable type into a Table
+Table &operator<<(Table &table, Type const &ref)
+{
+    reinterpret_cast<std::ostringstream &>(table) << ref;
+    return table.flush();
+}
+
+inline size_t Table::nRows() const
+{
+    return d_nRows;
+}
+
+} // FBB
+
+
+
+#endif

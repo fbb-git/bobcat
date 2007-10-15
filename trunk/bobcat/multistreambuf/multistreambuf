@@ -1,0 +1,161 @@
+#ifndef _INCLUDED_BOBCAT_MULTISTREAMBUF_
+#define _INCLUDED_BOBCAT_MULTISTREAMBUF_
+
+#include <streambuf>
+#include <vector>
+#include <ostream>
+#include <string>
+
+namespace FBB
+{
+
+class MultiStreambuf: public std::streambuf
+{
+    public:
+        enum Mode
+        {
+            OFF,                // stream not used
+            ON,                 // stream always used
+            ONCE,               // stream used until flushed
+            RESET,              // stream once used. Set to ONCE to re-use
+        };
+
+        class stream            // holds a pointer to a stream and a indicator
+        {                       // telling us whether or not to use the stream
+            friend class MultiStreambuf;
+
+            std::ostream *d_os;
+            Mode          d_mode;
+
+            public:
+                stream(std::ostream &os, Mode mode = ON);
+                void setMode(Mode mode);
+                Mode mode() const;
+                std::ostream &ostream();
+            private:
+                static void setOnce(stream &os);
+        };
+
+        typedef std::vector<stream>::iterator iterator;
+        typedef std::vector<stream>::const_iterator const_iterator;
+
+    private:
+        std::string d_buffer;
+        std::vector<stream> d_os;
+
+    public:
+        MultiStreambuf();
+        MultiStreambuf(std::ostream &os, Mode mode = ON);
+        MultiStreambuf(std::vector<stream> const &osvector);
+        void insert(std::ostream &os, Mode mode = ON);
+        void insert(std::vector<stream> const &os);
+        iterator begin();
+        iterator end();
+        const_iterator begin() const;
+        const_iterator end() const;
+        void setOnce();             // reset all `RESET' modes to `ONCE'
+        
+    protected:
+        virtual int overflow(int c);
+        virtual std::streamsize xsputn(char const *buffer, std::streamsize n);
+        virtual int sync();
+
+    private:
+        struct Insert
+        {
+            std::string &buffer;
+            bool ok;
+        };
+        static void insert(stream &os, Insert &insert); 
+};
+
+inline MultiStreambuf::stream::stream(std::ostream &os, Mode mode)
+:
+    d_os(&os),
+    d_mode(mode)
+{}
+
+inline void MultiStreambuf::stream::setMode(Mode mode)
+{
+    d_mode = mode;
+}
+
+inline MultiStreambuf::Mode MultiStreambuf::stream::mode() const
+{
+    return d_mode;
+}
+
+inline std::ostream &MultiStreambuf::stream::ostream()
+{
+    return *d_os;
+}
+
+inline void MultiStreambuf::stream::setOnce(stream &os)
+{
+    if (os.d_mode == RESET)
+        os.d_mode = ONCE;
+}
+
+inline MultiStreambuf::MultiStreambuf()
+{}
+
+inline MultiStreambuf::MultiStreambuf(std::ostream &os, Mode mode)
+{
+    insert(os, mode);
+}
+
+inline MultiStreambuf::MultiStreambuf(std::vector<stream> const &osvector)
+{
+    insert(osvector);
+}
+
+inline void MultiStreambuf::insert(std::ostream &os, Mode mode)
+{
+    d_os.push_back(stream(os, mode));
+}
+
+inline void MultiStreambuf::insert(std::vector<stream> const &os)
+{
+    d_os.insert(d_os.end(), os.begin(), os.end());
+}
+
+inline MultiStreambuf::iterator MultiStreambuf::begin()
+{
+    return d_os.begin();
+}
+
+inline MultiStreambuf::iterator MultiStreambuf::end()
+{
+    return d_os.end();
+}
+
+inline MultiStreambuf::const_iterator MultiStreambuf::begin() const
+{
+    return d_os.begin();
+}
+
+inline MultiStreambuf::const_iterator MultiStreambuf::end() const
+{
+    return d_os.end();
+}
+
+inline int MultiStreambuf::overflow(int c)
+{
+    if (c == EOF)
+        sync();
+    else 
+        d_buffer += c;
+
+    return c;
+}
+
+inline std::streamsize 
+    MultiStreambuf::xsputn(char const *buffer, std::streamsize n)
+{
+    d_buffer.append(buffer, n);
+    return n;
+}
+
+} // namespace FBB
+        
+#endif

@@ -1,0 +1,267 @@
+bobcat (1.10.2-1) unstable; urgency=low
+
+  * New upstream release. See the upstream changelog
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Wed, 30 Aug 2006 15:53:41 +0200
+
+bobcat (1.10.1-1) unstable; urgency=low
+
+  * Changed make/xxx scripts to construction scripts based on icmake. Debian
+    now uses icmake scripts, and INSTALL.im to define the locations of the 
+    various targets. Added the directory ./icmake.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Mon, 14 Aug 2006 04:10:05 +0200
+
+bobcat (1.10.0-1) unstable; urgency=low
+
+  *  License changed to the GNU GENERAL PUBLIC LICENSE. See the file
+    `copyright'. 
+
+    Introduced George Danchev <danchev@spnet.net> as uploader
+
+    CmdFinder now properly clears beyond() when using mode USE_FIRST
+
+    From now on this file will only reflect Debian-specific changes. See the
+    newly added file changelog for `upstream' changes. At this point, 
+    changelog will be a copy of debian's changelog file.
+
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Tue, 18 Jul 2006 21:38:21 +0200
+
+bobcat (1.9.0) unstable; urgency=low
+
+  * Following suggestions made by George Danchev, this version was compiled by
+    the unstable's g++ compiler (version >= 4.1), which unveiled several flaws
+    in the library's class header files. These flaws were removed (i.e.,
+    repaired).
+
+    In order to facilitate compiler selection, the compiler to use is defined
+    in the INSTALL.cf file.
+
+    The debian control-files (i.e., all files under the debian subdirectory)
+    were removed from the source distribution, which is now also named in
+    accordance with the Debian policy. A diff.gz file was added.
+
+    At the contents level: the class ConfigFile was extended with two
+    overloaded members index(), returning line offset of the original
+    configuration file associated with a particular line that may be retrieved
+    from the ConfigFile object itself.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Tue,  4 Jul 2006 21:17:56 +0200
+
+bobcat (1.8.0) unstable; urgency=low
+
+  * make/install script slightly modified: header files are copied before the
+            compilation starts to prevent unavailable header files.
+    Added the following classes:
+        * CmdFinder and CmdFinderBase: CmdFinder is a class handling
+                command-lookup and command-function associations
+        * OneKey: Objects of the class OneKey allow single-keystroke input (not
+                requiring `Enter' to be pressed.
+        * RefCount: Base class allowing its derived classes to share their
+                memory, using reference counting.
+    Modified the layout and contents of the file README.class-setup to improve 
+    the current class organization's representation.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Mon, 26 Jun 2006 08:42:18 +0200
+
+bobcat (1.7.1) unstable; urgency=low
+
+  * Bobcat now `lintianized'. The libraries are now in the libbobcat1 and
+    libbocat1-dev packages. The package's info has been upgraded. Note that
+    packages depending on bobcat (e.g., stealth and bisonc++) require an
+    upgrade as well.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Fri, 26 May 2006 15:02:22 +0200
+
+bobcat (1.7.0) unstable; urgency=low
+
+  * milter and xpointer are included optionally. `make/library all' includes
+    them automatically
+
+    New class Indent and associated manipulators implementing indentation
+    defined.
+    
+    ofdstreambuf and ifdstreambuf constructors have additional parameters to
+    either close or keep open the file descriptor that is passed to the
+    constructor. The default situation is for ofdstreambuf to close the file
+    descriptor and for ifdstreambuf to keep de file descriptor open. Thus the
+    new implementation is backward compatible with earlier bobcat versions.
+    
+    Msg has a new free function msgstream() returning the not-cleared msg()
+    stream. This allows certain STL algorithms to be used, see `man -e bobcat
+    msg' 
+    
+    wrap1c and wrap2c now also accept const contexts; see, e.g., `man -e
+    bobcat wrap1c'. Errors in wrap2c's template definition repaired.
+    
+    ConfigFile now has additional members beginRE() and endRE(), allowing
+    iterators to produce all lines matching a RE.
+    Repaired ConfigFile in accordance with the man-page: 
+        initial ws are now removed from the stored lines, 
+        find(target): `target' may be found anywhere within a configuration
+                      line. 
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Tue,  2 May 2006 19:31:02 +0200
+
+bobcat (1.6.0) unstable; urgency=low
+
+  * minor repair in Pattern- and Selector manpages
+
+    added MultiStrambuf, IOStreambuf, IOStream: see the manpages for details.
+
+    redesigned Process: insertions insert to the child process, extractions
+    extract from the child process. STDOUT and STDERR can or cannot be
+    merged. See the man-page for details.
+
+    redesigned Arg: same functionality as before, but allows for multiple
+    specifications of options, also those having arguments. When multiple
+    options having arguments are specified, each individual argument is
+    retrievable. 
+
+    added string::escape()
+    
+    `get...' accessors removed from all classes, (Arg, Fork and Pipe)
+    Old names are kept for the time being.
+    
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Mon, 26 Dec 2005 19:04:24 +0100
+
+bobcat (1.5.0) unstable; urgency=low
+
+  * The general bobcat manpage did not have links to wrap1c and wrap2c. Now 
+    Repaired. 
+
+    The Log-class interface is modified. See the man -e bobcat log manpage for
+    details. The main difference is that a static initialize() member is now
+    used to define the static Log-object. Also, logs may be written to stdout
+    using a simpler specification than before. The Log class also supports an
+    open() member, allowing you to open a local Log object after its
+    construction. 
+
+    Added the class Milter, offering a C++ interface to the (sendmail)
+    libmilter API. This class uses the `virtual constructor' Design Pattern to
+    prevent the need for saving and accessing private connection based data
+    using the libmilter api smfi_setpriv() and smfi_getpriv(). See `man -e
+    bobcat milter' for details.
+
+    Added the class Xpointer, setting and retrieving the X-windows pointer
+    coordinates. 
+
+    With the shared object library, functions from both libmilter and libX11
+    must be available before a program can be fully linked. To prevent
+    unnessary linking to these libraries, required dummy C functions were
+    added to the bobcat library. When using libmilter and/or libX11, that
+    these libraries should be mentioned to the linker before libbobcat.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Thu,  8 Dec 2005 20:52:44 +0100
+
+bobcat (1.4.0) unstable; urgency=low
+
+  * 1.4.0 and beyond: compiled with g++-4.0 compiler series.
+    Minor modifications in the log/log and level/level header files:
+        ::operator<<() changed into operator<<()
+
+    Further support of the 1.2.x series is discontinued
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Fri, 18 Nov 2005 21:44:13 +0100
+
+bobcat (1.2.1) unstable; urgency=low
+
+  * added missing constructor description in the Pattern manpage
+    removed leftover cerr insertion from localserversocket::listen()
+    
+    defined default localsocketbase constructor.
+    added /bobcat/localsocketbase/open.cc
+    
+    defined default localserversocket constructor.
+    removed /bobcat/localserversocket/localserversocket1.cc
+    added /bobcat/localserversocket/open.cc
+
+    defined default localclientsocket constructor.
+    defined LocalClientSocket::open()
+
+    Pattern missed some throwlists in its implementations. Repaired.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Thu, 17 Nov 2005 14:05:26 +0100
+
+bobcat (1.2.0) unstable; urgency=low
+
+  * Added the following classes:
+    localsocketbase     - base class for unix domain sockets
+    localserversocket   - defines server for unix domain sockets
+    localclientsocket   - defined client for unix domain sockets
+    randbuffer          - std::streambuf producing random numbers
+    irandstream         - istream producing random numbers
+    mailheaders         - handles SMTP mail message headers
+
+    Repaired incorrect header inclusion in datetime.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Fri, 11 Nov 2005 16:47:31 +0100
+
+bobcat (1.1.2) unstable; urgency=low
+
+  * Repaired -I statement in make/parameters, and changed tmp/inc into
+    tmp/bobcat (repairs resulting from feedback by Vincent Hecht)
+    Changed the ordering of the classes tablesupport and tablespec
+    in CLASSES
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Thu,  8 Sep 2005 19:40:43 +0200
+
+bobcat (1.1.1) unstable; urgency=low
+
+  * Removed the compilation dependency on `icmake'. See INSTALL for
+    instructions about how to compile and install bobcat yourself, rather than
+    using the binary distribution
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Sat,  3 Sep 2005 16:47:24 +0200
+
+bobcat (1.1.0) unstable; urgency=low
+
+  * Added the following classes:
+
+       FBB::ClientSocket: a socket for tcp-communication with a server.
+       FBB::columnWidth: Manipulator class for the class Table.
+       FBB::DateTime: Manipulations with date and time values.
+       FBB::equalWidth: Manipulator class for the class Table.
+       FBB::GetHostent: Obtains hostent struct from hostname or -address.
+       FBB::Glob: Obtain a list of files matching a certain pattern.
+       FBB::Hostent: Wrapper around the hostent struct.
+       FBB::Hostname:  Derived  from Hostent, allows the initialization from a
+       FBB::IFdStream: stream extracting information from a device whose  file
+       FBB::IFdStreambuf:  Input  stream buffer initialized by a file descrip-
+       FBB::InetAddress: Base class (no public constructor) for objects repre-
+       FBB::level: Manipulator setting the log-level of FBB::Log objects.
+       FBB::Log: std::ostream handling log messages.
+       FBB::LogBuffer: std::streambuf handling log messages.
+       FBB::OFdStream: stream inserting information into a device  whose  file
+       FBB::OFdStreambuf: Output stream buffer initialized by a file descrip-
+                          tor.
+       FBB::Process: Runs child processes, piping output to parents.
+       FBB::ServerSocket: defines a socket to which clients can connect.
+       FBB::SocketBase: Base class for ClientSocket and ServerSocket.
+       FBB::Stat:   Determines file characteristics.
+       FBB::Syslogbuf: streambuf to Buffer generating syslog(3) messages.
+       FBB::SyslogStream: stream to Output  stream  inserting  syslog(3)  mes-
+                          sages.
+       FBB::Table:  Display tables row- or column-wise.
+       FBB::TableSpec: Base class for the class Table.
+       FBB::TableSupport: Support class for the class Table.
+       FBB::User:   Determines the current user's parameters from /etc/passwd.
+
+    Added an examples directory under /usr/share/doc/bobcat-dev
+    Added a contrib directory under /usr/share/doc/bobcat-dev, currently 
+          containing the `solib' script making shared libraries
+
+    o   The minor release number will be incremented when new information
+            (classes, documentation, etc.) is added,
+    o   The subrelease number will be incremented at bugfixes.
+    o   I don't know yet when I'll upgrade the major release number
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Wed, 31 Aug 2005 12:57:03 +0200
+
+bobcat (1.0.0-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Mon, 15 Aug 2005 11:32:09 +0200
+

@@ -1,0 +1,166 @@
+#ifndef _INCLUDED_BOBCAT_STRING_
+#define _INCLUDED_BOBCAT_STRING_
+
+#include <string>
+#include <vector>
+#include <cctype>
+
+namespace FBB
+{
+
+class String: public std::string
+{
+    public:
+        enum Type
+        {
+            DQUOTE_UNTERMINATED,    // unterminated d-quoted element
+            SQUOTE_UNTERMINATED,    // unterminated s-quoted element
+            ESCAPED_END,            // word with plain \ at the end
+            SEPARATOR, // separator encountered
+            NORMAL, // normal string-element in the original string
+            DQUOTE, // string-element originally surrounded by " chars
+            SQUOTE, // string-element originally surrounded by ' chars
+        };
+        typedef std::pair<std::string, Type> SplitPair;
+        typedef std::string::const_iterator const_iterator;
+
+        static char const **argv(std::vector<std::string> const &lines);
+
+        static int casecmp(std::string const &lhs, std::string const &rhs);
+        static std::string lc(std::string const &str);
+        static size_t split(std::vector<std::string> *words,
+                        std::string const &str,
+                        char const *separators = " \t",
+                        bool addEmpty = false);
+        static size_t split(std::vector<SplitPair> *words,
+                        std::string const &str,
+                        char const *separators = " \t",
+                        bool addEmpty = false);
+        static std::string trim(std::string const &str);
+        static std::string uc(std::string const &str);
+        static std::string unescape(std::string const &str);
+        static std::string escape(std::string const &str, 
+                            char const *series = "'\"\\");
+
+    private:
+        static Type nextField(std::string const &str,
+                        const_iterator *until, const_iterator from,
+                        std::string const &separators);
+        static const_iterator separator(std::string const &str,
+                                const_iterator from, 
+                                std::string const &separators);
+        static const_iterator quoted(std::string const &str,
+                                const_iterator from, int quote);
+        static Type word(std::string const &str,
+                            const_iterator *until, const_iterator from, 
+                            std::string const &separators);
+
+        static void tolower(char &chr);
+        static void toupper(char &chr);
+
+    // Remaining members are DEPRECATED and should no longer be used:
+
+        static void warn();
+
+     public:
+        String();
+        String(std::string const &str);
+        String(char const *str);
+
+        int casecmp(std::string const &other) const;
+        String lc() const;
+        size_t split(std::vector<std::string> *words,
+                        char const *separators = " \t",
+                        bool addEmpty = false) const;
+        size_t split(std::vector<SplitPair> *words,
+                        char const *separators = " \t",
+                        bool addEmpty = false) const;
+        String trim() const;
+        String uc() const;
+        String unescape() const;
+        String escape(char const *series = "'\"\\") const;
+};
+
+inline int String::casecmp(std::string const &lhs, std::string const &rhs)
+{
+    return strcasecmp(lhs.c_str(), rhs.c_str());
+}
+
+inline void String::tolower(char &chr)
+{
+    chr = ::tolower(chr);
+}
+
+inline void String::toupper(char &chr)
+{
+    chr = ::toupper(chr);
+}
+
+
+// DEPRECATED BELOW THIS LINE
+
+inline String::String()
+{
+    warn();
+}
+
+inline String::String(std::string const &str)
+:
+    std::string(str)
+{
+    warn();
+}
+
+inline String::String(char const *str)
+:
+    std::string(str)
+{
+    warn();
+}
+
+inline int String::casecmp(std::string const &other) const
+{
+    return strcasecmp(c_str(), other.c_str());
+}
+
+inline String String::lc() const
+{
+    return lc(*this);
+}
+
+inline size_t String::split(std::vector<std::string> *words, 
+                char const *sep, bool addEmpty) const
+{
+    return split(words, *this, sep, addEmpty);
+}
+
+inline size_t String::split(std::vector<SplitPair> *words, char const *sep,
+                       bool addEmpty) const
+{
+    return split(words, *this, sep, addEmpty);
+}
+
+inline String String::trim() const
+{
+    return trim(*this);
+}
+
+inline String String::uc() const
+{
+    return uc(*this);
+}
+
+inline String String::unescape() const
+{
+    return unescape(*this);
+}
+
+inline String String::escape(char const *series) const
+{
+    return escape(*this, series);
+}
+
+} // FBB
+
+
+#endif

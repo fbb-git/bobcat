@@ -1,0 +1,62 @@
+#ifndef _INCLUDED_BOBCAT_PIPE_
+#define _INCLUDED_BOBCAT_PIPE_
+
+#include <bobcat/errno>
+
+namespace FBB
+{
+
+class Pipe
+{
+    protected:
+        enum  RW 
+        {
+            READ, 
+            WRITE 
+        };
+        int d_fd[2];
+
+    public:
+        Pipe();
+        Pipe(int const *fd);
+
+        int readFd() const;
+        int writeFd() const;
+
+        int getReadFd() const;      // DEPRECATED: USE readFd()
+        int getWriteFd() const;     // DEPRECATED: USE writeFd()
+
+        void readFrom(int filedescriptor);   
+
+        // experimental:
+        void readFrom(int const *filedescriptor, size_t n);
+
+        int readOnly();
+        void writtenBy(int filedescriptor);
+        void writtenBy(int const *filedescriptor, size_t n = 2);
+        int writeOnly();
+};
+
+inline int Pipe::readFd() const
+{
+    return d_fd[READ];
+}
+
+inline int Pipe::writeFd() const
+{
+    return d_fd[WRITE];
+}
+
+inline int Pipe::getReadFd() const
+{
+    return d_fd[READ];
+}
+
+inline int Pipe::getWriteFd() const
+{
+    return d_fd[WRITE];
+}
+
+} // FBB
+
+#endif

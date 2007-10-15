@@ -1,0 +1,25 @@
+#!/bin/bash
+PROJECT=bobcat
+
+. ${PROJECT}/VERSION                    # load the version
+
+DISTRIBUTION=${PROJECT}-${VERSION}      # define the distribution's dir name
+
+ln -s ${PROJECT} ${DISTRIBUTION}        # distribution's dir name
+
+if [ "$#" != "0" ]                      # any arg? make debian .orig file
+then
+                                        # create the .orig source tar
+    tar czvf \
+        ${HOME}/debian/${PROJECT}/tarballs/${PROJECT}_${VERSION}.orig.tar.gz \
+             --exclude-from=excluded  ${DISTRIBUTION}/*
+else
+    tar czvf ${PROJECT}_${VERSION}.tar.gz \
+             --exclude-from=excluded  ${DISTRIBUTION}/*
+
+    scp ${PROJECT}_${VERSION}.tar.gz oosix:ftp/debian/tarballs/${PROJECT}
+    md5sum ${PROJECT}_${VERSION}.tar.gz
+fi
+
+rm ${DISTRIBUTION}                      # rm the link
+

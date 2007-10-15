@@ -1,0 +1,170 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Table)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Table-formatter)
+
+manpagename(FBB::Table)(Generates row- or column-wise filled tables)
+
+manpagesynopsis()
+    bf(#include <bobcat/table>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+
+    bf(FBB::Table) objects may be used to create tables. The tables are filled
+either column-wise or row-wise. Many of the table's characteristics may be
+fine-tuned by a separate bf(FBB::TableSupport) object, described in a separate
+man-page (bf(TableSupport)(3bobcat)). When no bf(FBB::TableSupport) object is
+used, a plain row-wise or column-wise table will be constructed which can be
+inserted into a bf(std::ostream).
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+
+    bf(std::ostringstream) - bf(Table) inherits from bf(std::ostringstream),
+allowing insertions into a bf(Table) object. Each separate insertion adds
+another element to the bf(Table) object.
+
+manpagesection(ENUMERATIONS)
+    The following enumerations are defined in the class bf(FBB::TableSpec),
+allowing the programmer to specifiy values like bf(FBB::TableSpec::Vertical)
+rather than bf(FBB::Table<std::istream_const_iterator>::Vertical).
+
+    bf(enum FillDirection)nl()
+    This enumeration holds two values:
+    itemization(
+    itb(ROWWISE)
+        When this value is specified at construction time, elements are added
+row-wise to the table. I.e., the second element inserted into the bf(Table)
+will be found in the second column of the first row.
+    itb(COLUMNWISE)
+        When this value is specified at construction time, elements are added
+column-wise to the table. I.e., the second element will be found in the second
+row of the first column.
+    )
+
+    bf(enum WidthType)nl()
+    This enumeration holds two values:
+    itemization(
+    itb(COLUMNWIDTH)
+        This value may be specified when the columns should be allowed
+variable widths. In this case each column will be as wide as its widest
+element. This is the default bf(WidthType) used by bf(Table) objects. 
+    itb(EQUALWIDTH)
+        This value may be specified when all the table's columns should have
+equal width (i.e., equal to the width of the widest table element), 
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Table(size_t nColumns, Table::FillDirection direction,
+            Table::WidthType widthType = Table::COLUMNWIDTH))
+        This constructor expects the table's number of columns.  The number of
+rows are implied by the combination of this parameter and the number of
+elements that will be inserted into the bf(Table) object.  The bf(direction)
+parameter specifies the way new elements will be added to the bf(Table)
+object: row-wise or column-wise. Finally, the tt(widthType) parameter is used
+to specify the way the width of the table's columns is determined: each column
+may either have its own width or all columns will have equal widths.
+    itb(Table(TableSupport &tableSupport, Table::FillDirection direction,
+            Table::WidthType widthType = Table::COLUMNWIDTH))
+        This constructor operates identically to the previous constructor, but
+expects an additional reference to a bf(TableSupport) object. A
+bf(TableSupport) object offers additional formatting features used by the
+table to define elements like horizontal lines between rows, additional
+separators between elements etc. Note that the bf(TableSupport) object is
+passed as a non-const reference as the bf(Table) object must be able to
+manipulate its data.
+    )
+    The copy constructor is not available.
+
+manpagesection(OVERLOADED OPERATORS)
+
+    itemization(
+    itb(std::ostream &operator<<(std::ostream &str, Table const &table))
+        This operator inserts a bf(Table) into a tt(std::ostream) object.
+    itb(Table &operator<<(Table &obj, Align const &align))
+        This operator is used to change the default alignment of either a
+column or an element. It is a wrapper around the member tt(setAlign()) (see
+below for its description). By default, all elements are right-aligned.
+    itb(Table &operator<<(Table &obj, Type const &x))
+        This overloaded operator is defined as a template: bf(Type) is a
+template type parameter instantiated to a type for which
+bf(std::ostringstream) insertions are possible.  It inserts the value/object
+tt(x) into the bf(Table)'s bf(std::ostringstream) base class object as the
+next element of the table.
+    )
+    The overloaded assignment operator is not available.
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(Table &append(std::string const &text
+                 char const *sep = " \t", bool addEmpty = false))
+        This member adds all fields in tt(text) separated by one of the
+characters in tt(sep) as additional elements to the bf(Table) object. Empty
+fields are ignored unless the parameter tt(addEmpty) is initialized to
+tt(true).
+    itb(void clear())
+        This member clears the table. All existing elements are removed, and
+the table will be empty.
+    itb(void fill(InputIterator begin, InputIterator end))
+        This member is defined as a template; tt(InputIterator) is a template
+type parameter representing any input iterator. It can also be, e.g., a
+pointer to an insertable type. The iterators must point to data elements which
+can be inserted into an tt(std::ostream). The range of values implied by the
+member's iterator pair are inserted into the table as new elements.
+    itb(void push_back(std::string const &element))
+        This member can be used to add another element to the table (it is
+also called from a tt(back_inserter) adaptor).
+    itb(size_t nRows())
+        This member returns the currently available number of rows in the
+table. Its value is only defined after calling bf(CHAR(d)ef()).
+    itb(Table &setAlign(Align const &align))
+        This member is used to specify the alignment of either a column or an
+element of the bf(Table) object. The standard alignments tt(std::left,
+std::right) and tt(std::internal) may be specified, but in addition the
+alignment tt(FBB::center) may be used if elements should be centered into
+their column. A construction like
+        verb(tab << Align(2, FBB::center))
+    requests centering of all elements in table column having index value 2
+(i.e., the table's 3rd column), whereas a construction like
+        verb(tab << Align(2, 3, FBB::center))
+    requests centering of element [2][3]. It is the responsibility of the
+programmer to ensure that such elements exist. By default, all elements are
+right-aligned.
+    itb(Table &CHAR(d)ef())
+        This member may be used to `complete' a bf(Table) object to a full
+rectangular object, for which all column widths and alignments have been
+determined. It is implied by tt(operator<<(ostream, Table)). In
+other situations it may be called explicitly to force the insertion of another
+row in a table using tt(ROWWISE) insertions. With tt(COLUMNWISE) insertions
+its working is complex, since new elements added to a tt(COLUMNWISE) filled
+table will reshuffle its elements over the table's columns. 
+    )
+
+manpagesection(MANPULATORS)
+    itemization(
+    itb(Table &CHAR(d)ef(Table &table))
+        This manipulator can be inserted into a table to call the table's
+bf(CHAR(d)ef()) member.
+    )
+
+manpagesection(EXAMPLE)
+
+    verbinclude(../../table/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/table) - defines the class interface;nl()
+
+manpageseealso()
+    bf(bobcat)(7), bf(align)(3bobcat), bf(manipulator)(3bobcat),
+    bf(tablesupport)(3bobcat)
+    
+manpagebugs()
+    Note that tt(CHAR(d)ef()) will reshuffle elements over the table's
+columns when new elements are added to the table subsequent to calling
+tt(CHAR(d)ef())
+
+includefile(trailer.inc)

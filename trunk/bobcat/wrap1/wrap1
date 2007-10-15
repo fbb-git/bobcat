@@ -1,0 +1,85 @@
+#ifndef _INCLUDED_BOBCAT_WRAP1_
+#define _INCLUDED_BOBCAT_WRAP1_
+
+#warning Wrap1 is obsolete. Use FnWrap1 instead
+
+namespace FBB
+{
+    template <typename Type, typename ReturnType = void>
+    class Wrap1
+    {
+        union
+        {
+            ReturnType (*d_ref)(Type &);
+            ReturnType (*d_cref)(Type const &);
+            ReturnType (*d_ptr)(Type *);
+            ReturnType (*d_cptr)(Type const *);
+        };
+
+        public:
+            typedef Type        argument_type;
+            typedef ReturnType  result_type;
+
+            Wrap1(ReturnType (*fun)(Type &));
+            Wrap1(ReturnType (*fun)(Type *));
+            Wrap1(ReturnType (*fun)(Type const &));
+            Wrap1(ReturnType (*fun)(Type const *));
+
+            ReturnType operator()(Type &param) const;
+            ReturnType operator()(Type *param) const;
+            ReturnType operator()(Type const &param) const;
+            ReturnType operator()(Type const *param) const;
+    };
+
+
+template <typename Type, typename ReturnType>
+Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type &))
+:
+    d_ref(fun)
+{}
+
+template <typename Type, typename ReturnType>
+Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type *))
+:
+    d_ptr(fun)
+{}
+
+template <typename Type, typename ReturnType>
+Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type const &))  
+:
+    d_cref(fun)
+{}
+
+template <typename Type, typename ReturnType>
+Wrap1<Type, ReturnType>::Wrap1(ReturnType (*fun)(Type const *))  
+:
+    d_cptr(fun)
+{}
+
+template <typename Type, typename ReturnType>
+ReturnType Wrap1<Type, ReturnType>::operator()(Type &param) const
+{
+    return (*d_ref)(param);
+}
+
+template <typename Type, typename ReturnType>
+ReturnType Wrap1<Type, ReturnType>::operator()(Type *param) const
+{
+    return (*d_ptr)(param);
+}
+
+template <typename Type, typename ReturnType>
+ReturnType Wrap1<Type, ReturnType>::operator()(Type const &param) const
+{
+    return (*d_cref)(param);
+}
+
+template <typename Type, typename ReturnType>
+ReturnType Wrap1<Type, ReturnType>::operator()(Type const *param) const
+{
+    return (*d_cptr)(param);
+}
+
+} // namespace FBB ends
+#endif
+
