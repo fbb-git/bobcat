@@ -38,11 +38,11 @@ class Pattern
     typedef std::pair<char const *, char const *> conversion;
 
     static conversion       s_patmod[];
-    static size_t         s_sizeofPatmod;
+    static size_t           s_sizeofPatmod;
 
     struct Regex
     {
-        size_t            d_referenceCount;
+        size_t              d_referenceCount;
         regex_t             d_regex;
 
         Regex(std::string pattern, int options);
@@ -153,6 +153,11 @@ class Pattern
 inline Pattern::Regex::~Regex()
 {
     regfree(&d_regex);
+}
+
+inline void Pattern::newRegex(std::string const &pattern, int options)
+{
+    d_regex = new Regex(pattern, options);
 }
 
 inline Pattern::Pattern(Pattern const &other)

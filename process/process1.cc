@@ -9,5 +9,5 @@ Process::Process(std::string const &command, iomode mode)
     d_mode(mode),
     d_waitSeconds(1)
 {
-    init(command, mode);
+    setCommand(command);
 }
