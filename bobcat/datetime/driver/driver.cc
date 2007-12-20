@@ -9,14 +9,14 @@ int main(int argc, char **argv, char **envp)
     DateTime dt;
 
     if (dt)
-        cout << dt;
+        cout << dt << ", RFC 2822 format: " << dt.rfc2822() << "\n";
     else
         cout << "DateTime construction failed\n";
 
     DateTime utc(dt.time(), DateTime::UTC);
 
     if (utc)
-        cout << utc;
+        cout << utc << "\n";
     else
         cout << "UTC DateTime construction failed\n";
 

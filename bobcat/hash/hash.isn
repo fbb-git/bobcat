@@ -1,20 +1,22 @@
 #ifndef _INCLUDED_BOBCAT_HASH_
 #define _INCLUDED_BOBCAT_HASH_
 
-#include <string.h>
-#include <strings.h>
 #include <string>
+#include <string.h>
 #include <cctype>
 #include <algorithm>
 
-// This is of course VERY BAD PRACTICE, but I know that ext/hash_map will soon
-// be replaced by unordered_map, but until those changes can be effectuated I
-// don't want to be bothered with the warning anymore. Also see the changelog
-// (FBB).
+#if __GNUC__ > 4 || \
+              (__GNUC__ == 4 && (__GNUC_MINOR__ > 2))
 
-#define _BACKWARD_BACKWARD_WARNING_H 1
+#define UNORDERED
+
+// FOR NOW, THE OPTION -std=c++0x IS REQUIRED
+#include <unordered_map>
+
+#else
 #include <ext/hash_map>
-#undef  _BACKWARD_BACKWARD_WARNING_H
+#endif
 
 /*
     Note that with the Gnu g++ compiler 3.2 (and beyond?) the ext/ header
@@ -153,6 +155,33 @@ class Equal_CaseString
         bool operator()(std::string const &s1, std::string const &s2) const;
 };
 
+#ifdef UNORDERED
+
+template<typename Value>
+class HashCharPtr: public 
+    std::unordered_map<char const *, Value, Hash_CharPtr> //, Equal_CharPtr >
+{
+    public:
+        HashCharPtr();
+
+        template <typename InputIterator>
+        HashCharPtr(InputIterator first, InputIterator beyond);
+};
+
+
+inline size_t Hash_CharPtr::operator()(char const *str) const
+{ 
+    size_t ret = 0;
+
+    for (size_t idx = 0; *str; ++idx, ++str)
+        ret += idx + *str;
+
+    return ret;
+}
+
+
+#else
+
 template<typename Value>
 class HashCharPtr: public 
     __gnu_cxx::hash_map<char const *, Value, Hash_CharPtr, Equal_CharPtr >
@@ -198,16 +227,21 @@ class HashStringCase: public
         HashStringCase(InputIterator first, InputIterator beyond);
 };
 
-
 inline size_t Hash_CharPtr::operator()(char const *str) const
 { 
     return __gnu_cxx::hash<char const *>()(str);
 }
 
+#endif
+
+
 inline bool Equal_CharPtr::operator()(char const *x, char const *y) const 
 { 
     return !strcmp(x, y); 
 }
+
+#ifdef UNORDERED
+#else
 
 inline size_t Hash_CaseCharPtr::operator()(char const *str) const
 { 
@@ -215,6 +249,8 @@ inline size_t Hash_CaseCharPtr::operator()(char const *str) const
     for_each(s.begin(), s.end(), *this);
     return __gnu_cxx::hash<char const *>()(s.c_str());
 }
+
+#endif
 
 inline void Hash_CaseCharPtr::operator()(char &c) const
 {
@@ -226,10 +262,15 @@ inline bool Equal_CaseCharPtr::operator()(char const *x, char const *y) const
     return !strcasecmp(x, y); 
 }
     
+#ifdef UNORDERED
+#else
+
 inline size_t Hash_String::operator()(std::string const &str) const
 { 
     return __gnu_cxx::hash<char const *>()(str.c_str());
 }
+
+#endif
     
 inline size_t Hash_CaseString::operator()(std::string const &str) const
 { 
@@ -242,6 +283,23 @@ inline bool Equal_CaseString::operator()(std::string const &s1,
     return !strcasecmp(s1.c_str(), s2.c_str()); 
 }
 
+#ifdef UNORDERED
+
+template<typename Value>
+inline HashCharPtr<Value>::HashCharPtr()
+{}
+
+
+template<typename Value>
+template <typename InputIterator>
+inline HashCharPtr<Value>::HashCharPtr(InputIterator first, 
+                                       InputIterator beyond)
+:
+    std::unordered_map<char const *, Value, Hash_CharPtr>(first, beyond)
+{}
+
+
+#else
 
 template<typename Value>
 template <typename InputIterator>
@@ -293,6 +351,12 @@ inline HashStringCase<Value>::HashStringCase(InputIterator first,
                 Equal_CaseString>(first, beyond)
 {}
 
+#endif
+
 } // FBB
+
+#ifdef UNORDERED
+#undef UNORDERED
+#endif
 
 #endif

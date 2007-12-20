@@ -231,6 +231,16 @@ object.
     itb(size_t monthDayNr() const)
         Returns the number of the day in the month of the time stored in a
 tt(DateTime) object (1-31).
+    itb(string rfc2822() const)
+        Returns the date displayed according to the format specified in RFC
+2822. This format is used, e.g., by the tt(date -R) command
+(cf. bf(date)(1)). For example:
+        verb(
+        Mon, 17 Dec 2007 13:49:10 +0100
+        )
+        The function uses the information provided by the last tt(breakdown())
+function call (which is called by the tt(DateTime) constructors and other
+time-modifying members).
     itb(size_t seconds() const)
         Returns the number of seconds of the time stored in a tt(DateTime)
 object (0-59, but 60 and 61 may occur due to possible leap seconds).
