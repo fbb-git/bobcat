@@ -1,6 +1,5 @@
 #include "process.ih"
 
-
 void Process::childRedirections()
 {
     if (d_mode & CIN)
@@ -21,9 +20,9 @@ void Process::childRedirections()
 
         if 
         (
-            d_mode & IGNORE_COUT && !(d_mode & COUT)
+            (d_mode & IGNORE_COUT && !(d_mode & COUT))
             ||
-            d_mode & IGNORE_CERR && !(d_mode & CERR)
+            (d_mode & IGNORE_CERR && !(d_mode & CERR))
         )
         {
             int fd = ::open("/dev/null", 0);

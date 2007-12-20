@@ -12,9 +12,9 @@
 CFLAGS = -Wall -g
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-		CFLAGS += -O0
+				CFLAGS += -O0
 else
-		CFLAGS += -O2
+				CFLAGS += -O2
 endif
 
 # shared library versions, option 1
@@ -28,40 +28,40 @@ major=2
 
 configure: configure-stamp
 configure-stamp:
-		dh_testdir
-		# Add here commands to configure the package.
+				dh_testdir
+				# Add here commands to configure the package.
 
-		touch configure-stamp
+				touch configure-stamp
 
 
 build: build-stamp
 build-stamp: configure-stamp
-		dh_testdir
+				dh_testdir
 
-		# Add here commands to compile the package.
-		./build libraries all
-		./build man
+				# Add here commands to compile the package.
+				./build libraries all
+				./build man
 
-		touch build-stamp
+				touch build-stamp
 
 clean:
-		dh_testdir
-		dh_testroot
-		rm -f build-stamp configure-stamp
+				dh_testdir
+				dh_testroot
+				rm -f build-stamp configure-stamp
 
-		# Add here commands to clean up after the build process.
-		./build clean
+				# Add here commands to clean up after the build process.
+				./build clean
 
-		dh_clean
+				dh_clean
 
 install: build
-		dh_testdir
-		dh_testroot
-		dh_clean -k
-		dh_installdirs
+				dh_testdir
+				dh_testroot
+				dh_clean -k
+				dh_installdirs
 
-		# Add here commands to install the package into debian/tmp
-		./build install debian/libbobcat1 debian/libbobcat1-dev
+				# Add here commands to install the package into debian/tmp
+				./build install debian/libbobcat1 debian/libbobcat1-dev
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -69,22 +69,22 @@ binary-indep: build install
 
 # Build architecture-dependent files here.
 binary-arch: build install
-		dh_testdir
-		dh_testroot
-		dh_installchangelogs -A changelog
-		dh_installdocs -A CLASSES README.class-setup README.optimization
-		dh_installexamples
-		dh_installman
-		dh_link
-		dh_strip
-		dh_compress
-		dh_fixperms
-		dh_makeshlibs
-		dh_installdeb
-		dh_shlibdeps
-		dh_gencontrol
-		dh_md5sums
-		dh_builddeb
+				dh_testdir
+				dh_testroot
+				dh_installchangelogs -A changelog
+				dh_installdocs -A CLASSES README.class-setup README.optimization
+				dh_installexamples
+				dh_installman
+				dh_link
+				dh_strip
+				dh_compress
+				dh_fixperms
+				dh_makeshlibs
+				dh_installdeb
+				dh_shlibdeps
+				dh_gencontrol
+				dh_md5sums
+				dh_builddeb
 
 
 
@@ -93,53 +93,55 @@ binary-arch: build install
 # Update that sum when new _upstream_ releases occur, this
 # catches silent file content forges at the upstream server side
 
-# archive downloaded from ftp.icce.rug.nl/pub/frank/debian/tarballs/bobcat
-#	(bobcat_x.y.z..tar.gz)
-MD5TRUSTED := 8e32cd9ee417bbb26a3e157640406164
+# archive downloaded from https://www.icce.rug.nl/debian/bobcat
+#		(bobcat_x.y.z..tar.gz)
+#	1.17.0: 2c0c3091765034c1dd83051841470c34
+MD5TRUSTED := ed970aba8b6521cdb3e55e335a7c09d1
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
 UPNAME := bobcat
 UPFILE := $(UPNAME)_$(UPVERSION).tar.gz
 DEFILE := $(UPNAME)_$(UPVERSION).orig.tar.gz
-URL	   := ftp://ftp.icce.rug.nl/pub/frank/debian/tarballs/bobcat
+URL		   := https://www.icce.rug.nl/debian/bobcat
 MD5CURRENT := `md5sum ../tarballs/$(DEFILE) | sed -e 's/ .*//'`
 SVNTRUNK   := https://svn.sourceforge.net/svnroot/bobcat/trunk/bobcat
 
 get-orig-source:
-		@@dh_testdir
-		@@[ -d ../tarballs/. ]||mkdir -p ../tarballs
+	@@dh_testdir
+	@@[ -d ../tarballs/. ]||mkdir -p ../tarballs
 
-		-@if [ ! -f ../tarballs/$(DEFILE) ] ; then \
-				echo "Downloading $(URL)/$(UPFILE) from $(URL)/$(UPFILE) ..." ; \
-				wget -N -nv -T10 -t3 -O ../tarballs/$(DEFILE) $(URL)/$(UPFILE) ; \
-		else \
-				echo "Upstream source tarball have been already downloaded" ; \
-		fi
+	-@if [ ! -f ../tarballs/$(DEFILE) ] ; then \
+		echo "Downloading $(URL)/$(UPFILE) from $(URL)/$(UPFILE) ..." ; \
+	wget --no-check-certificate --quiet -N -nv -T10 -t3 -O \
+	 ../tarballs/$(DEFILE) $(URL)/$(UPFILE) ; \
+	else \
+		echo "Upstream source tarball have been already downloaded" ; \
+	fi
 
-		-@if [ "$(MD5CURRENT)" != "$(MD5TRUSTED)" ] ; then \
-				echo "Expecting upstream filename md5sum $(MD5TRUSTED), but $(MD5CURRENT) found" ; \
-				echo "Upstream filename md5sum is NOT trusted! Possible upstream filename forge!" ; \
-				false ; \
-		else \
-				echo "Upstream filename md5sum is trusted!" ; \
-		fi
+	-@if [ "$(MD5CURRENT)" != "$(MD5TRUSTED)" ] ; then \
+	echo "Expecting upstream filename md5sum $(MD5TRUSTED), but $(MD5CURRENT) found" ; \
+		echo "Upstream filename md5sum is NOT trusted! Possible upstream filename forge!" ; \
+		false ; \
+	else \
+		echo "Upstream filename md5sum is trusted!" ; \
+	fi
 
 
 get-svn-trunk:
-		@@dh_testdir
-		@@[ -d ../tarballs/. ]||mkdir -p ../tarballs
-		rm -rf ../tarballs/$(DEFILE) ../tarballs/bobcat-svn-trunk
-		svn --force export $(SVNTRUNK) ../tarballs/bobcat-svn-trunk
-		@@if [ -d ../tarballs/bobcat-svn-trunk/debian ] ; then rm -rf ../tarballs/bobcat-svn-trunk/debian; fi
-		@@ echo Building the SVN TRUNK tarball in ../tarballs/$(DEFILE)
-		@@GZIP=-9 tar -b1 -czf ../tarballs/$(DEFILE) -C ../tarballs bobcat-svn-trunk
-		rm -rf ../tarballs/bobcat-svn-trunk
+				@@dh_testdir
+				@@[ -d ../tarballs/. ]||mkdir -p ../tarballs
+				rm -rf ../tarballs/$(DEFILE) ../tarballs/bobcat-svn-trunk
+				svn --force export $(SVNTRUNK) ../tarballs/bobcat-svn-trunk
+				@@if [ -d ../tarballs/bobcat-svn-trunk/debian ] ; then rm -rf ../tarballs/bobcat-svn-trunk/debian; fi
+				@@ echo Building the SVN TRUNK tarball in ../tarballs/$(DEFILE)
+				@@GZIP=-9 tar -b1 -czf ../tarballs/$(DEFILE) -C ../tarballs bobcat-svn-trunk
+				rm -rf ../tarballs/bobcat-svn-trunk
 
 
 print-version:
-		@@echo "Debian version:			 $(DEBVERSION)"
-		@@echo "Upstream version:		 $(UPVERSION)"
+				@@echo "Debian version:					 $(DEBVERSION)"
+				@@echo "Upstream version:				 $(UPVERSION)"
 
 
 binary: binary-indep binary-arch
