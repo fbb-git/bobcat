@@ -1,0 +1,184 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::CmdFinder)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Command-function associations)
+
+manpagename(FBB::CmdFinder)
+            (Determine (member) function associated with a command)
+
+manpagesynopsis()
+    bf(#include <bobcat/cmdfinder>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+
+    Objects of the class bf(CmdFinder) determine which (member) function to
+call given a command. Although associations between commands and (member)
+functions are often defined in a switch, a switch is not the preferred way to
+define these associations because of the fect that the maintainability and
+clarity of switches suffer for even moderately large command sets. Moreover,
+the switch is hardly ever self-supporting, since usually 
+some command-processing is required to determine command/bf(case)-value
+associations. 
+
+    The alternative (and preferred) approach, which is also taken by
+bf(CmdFinder) is to define an array of pointers to (member) functions, and to
+define the associations between commands and member functions as a mapping of
+commands to array indices. Plain associations between (textual) commands and
+functions to be called can also easily be defined using a bf(std::map) or
+other hash-type data structure. However, the syntactical requirements for such
+a bf(std::map) structure are non-trivial, and besides: user-entered commands
+often require some preprocessing before a command can be used as an index in a
+bf(std::map).
+
+    The class bf(CmdFinder) is an attempt to offer a versatile implementation
+of associations between commands and (member) functions.  In particular, the
+class offers the following features:
+    itemization(
+    it() Associations between textual commands and (member) functions are
+defined in a simple array of pairs: the first element defining a command, the
+second element containing the address of the function associated with the
+command. The function addresses may either be addresses of free or static
+member functions or they may be defined as member function addresses.
+    it() Commands may be used `as-is', or the first word in a bf(std::string)
+may be used as the command;
+    it() Commands may be specified case sensitively or case insensitively;
+    it() Commands may have to be specified in full, or unique abbreviations of
+the commands may be accepted;
+    it() Several types are defined by the class bf(CmdFinder), further
+simplifying the deriviation of classes from bf(CmdFinder).
+    )
+
+    The class bf(CmdFinder) itself is defined as a template class. This
+template class should be used as a base class of a user-defined derived class
+defining the array of command-function associations. The class bf(CmdFinder)
+itself is a derived class of the class bf(CmdFinderBase), defining some
+template-independent functionality that is used by bf(CmdFinder). The
+enumeration and member functions sections below also contain the members that
+are available to classes derived from bf(CmdFinder), but which are actually
+defined in the class bf(CmdFinderBase).
+
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::CmdFinderBase)
+
+manpagesection(ENUMERATION)
+    The enumeration bf(Mode) is defined in the class bf(CmdFinderBase). It
+contains the following values, which may be combined by the bf(bit_or)
+operator to specify the bf(CmdFinder) object's required mode of operation:
+    itemization(
+    itb(USE_FIRST) 
+        This value can be specified when the first word (any white-space
+separated series of characters) of a provided textual command should be used
+as the command to find. Both the command that is used and any trailing
+information that may be present can be obtained from the bf(CmdFinder)
+object. By default, the complete contents of the a provided command is used.
+    itb(UNIQUE) 
+        This value can be specified when any unique abbreviation of a command
+may be accepted. Assuming that the commands tt(help) and tt(version) are
+defined, then the following (non-exhaustive) series are all accepted as
+specifications of the tt(help) command if bf(UNIQUE) is specified: tt(h, he,
+el, p). By default the command must match a command-key as found in the array
+of command-function associations exactly.
+    itb(INSENSITIVE) 
+        When this value is specified, commands may be specified disregarding
+letter-casing. E.g., when bf(INSENSITIVE) is specified, both tt(Help) and
+tt(HELP) are recognized as tt(help). By default, letter casing is obeyed.
+    )
+    So, by default a full, literal match between provided command and
+predefined command-keys is required.
+
+manpagesection(TEMPLATE TYPE PARAMETER)
+    The template class bf(CmdFinder) has one template type parameter, which is
+the prototype of the functions defined in the array of command-function
+associations. This type becomes available as the typename
+bf(FunctionPtr) (defined by the class bf(CmdFinder) in the class that is
+derived from bf(CmdFinder).
+
+manpagesection(PROTECTED DEFINED TYPES)
+    The following (bf(protected)) types are defined by the template class
+bf(CmdFinder): 
+    itemization(
+    itb(FunctionPtr) 
+        This type represents a pointer to the functions whose addresses are
+stored in the array of command-function associations.
+    itb(Entry) 
+        This type represents the type bf(std::pair<char const *,
+FunctionPtr>). Its em(first) field is the name of a command, its em(second)
+field is the function address associated with the command name.
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(CmdFinder<FunctionPtr>(Entry const *begin, Entry const *end,
+                      size_t mode = 0))
+        This constructor is defined in the bf(protected) section of the
+bf(CmdFinder) class. Its parameters tt(begin) and tt(end) define the half-open
+range of bf(Entry) objects, defining the associations between commands and
+functions. The parameter tt(begin) should be initialized to the first element
+of an array of bf(Entry) objects, the parameter tt(end) must point just beyond
+the last element of the array. The parameter tt(mode) may be speified using
+any combination of values of the bf(Mode) enumeration, using the bf(bit_or)
+operator to combine multiple values. When a non-supported value is specified
+for tt(mode), an bf(FBB::Errno) exception is thrown.
+    itb(CmdFinder(CmdFinder const &other) throw()) 
+    The standard copy constructor is available.
+    itb(Note)
+    There is no default constructor.
+    )
+
+manpagesection(PUBLIC MEMBER FUNCTION)
+    itemization(
+    itb(setMode(size_t mode))
+        This member function (defined in the class bf(CmdFinderBase)) may be
+called to redefine the mode of the bf(CmdFinder) object. The tt(mode)
+parameter should be initialized subject to the same restrictions as mentioned
+with the bf(CmdFinder)'s constructor.
+    )
+
+manpagesection(PROTECTED MEMBER FUNCTIONS)
+    itemization(
+    itb(std::string const &beyond() const)
+        This member function returns the text that may have been entered
+beyond the command (if bf(Mode) value bf(USE_FIRST) was specified). It is
+empty if no text beyond the command was encountered. It is initially empty,
+and will be redefined at each call of bf(findCmd()) (see below).
+    itb(std::string const &cmd() const)
+        This member returns the original (untransformed) command as
+encountered by the bf(CmdFinder) object.  It is initially empty, and will be
+redefined at each call of bf(findCmd()) (see below).  object.
+    itb(size_t count() const)
+        This member function returns the number of commands matching the
+command that is passed to the function bf(findCmd()) (see below). Its return
+value is 0 when bf(findCmd()) hasn't been called yet and is updated at each
+new call of bf(findCmd()).
+    itb(FunctionPtr findCmd(std::string const &cmd))
+        Regarding the bf(CmdFinder) object's bf(mode) setting, this function
+returns the address of the function to call given the provided command. By
+default, if no match was found, the address of the function stored in the last
+element of the array of command-function associations is returned (i.e,
+element tt(end[-1])).
+    )
+
+manpagesection(PROTECTED DATA MEMBERS)
+    The class bf(CmdFinder) has access to some protected data members of the
+class bf(CmdFinderBase), which should not be used or modified by classes
+derived from bf(CmdFinder).
+
+manpagesection(EXAMPLE)
+    verbinclude(../../cmdfinder/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/cmdfinder) - defines the class interface+nl()
+    em(bobcat/cmdfinderbase) - defines the base class of bf(CmdFinder).
+
+manpageseealso()
+    bf(bobcat)(7), bf(cmdfinderbase)(3bobcat), bf(errno)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

@@ -1,0 +1,96 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::X2a)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (X-to-ASCII conversions)
+
+manpagename(FBB::X2a)(Objects performing x-to-Ascii conversions)
+
+manpagesynopsis()
+    bf(#include <bobcat/x2a>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB:X2a) objects convert values of any (insertable) type to text. The
+returned text is automatically made available as a standard bf(C++) string.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(std::ostringstream)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(X2a(T const &value)) 
+        In this constructor tt(T) may be any type that can be inserted into an
+tt(o[string]stream).
+    itb(X2a(double value, size_t behind)) 
+        Double tt(value) is truncated to tt(behind) digits behind the decimal
+dot.  If a value doesn't occupy tt(behind) digits behind the decimal point,
+then missing digits are added as tt(0). For example, a value of 7.1, will be
+displayed as 7.10 if two digits behind the decimal dot are requested. A value
+of 7 will be displayed as 7.00.
+
+    itb(X2a(double value, size_t width, size_t behind, std::ios::fmtflags
+            flags = std::ios::right)) 
+        The value is displayed over tt(width) character positions, extending
+the amount if the value so requires. The converted value is placed
+right-aligned into the field of tt(width) characters.
+    )
+    The standard copy constructor is available as well.
+
+manpagesection(STATIC MEMBER FUNCTION)
+    itemization(
+    itb(bool lastFail()) 
+        This member returns tt(true) if the last conversion failed (i.e., the
+object's tt(fail()) member returned tt(true) and returns tt(false) otherwise).
+This member allows checks on the success of the extraction/conversion using
+anonymous tt(A2x) objects. The member also returns tt(true) when no
+conversions have as yet been performed.nl()
+    Note that this member is a thread-unsafe em(static) member: in a
+multithreaded program locks may be required to ensure that the proper
+conversion result is inspected.
+    )
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::ostringstream) are
+available, as bf(FBB::X2a) inherits from this class.
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itbf(operator std::ostream &operator<<(std::ostream &ostr, X2a const &x2a))
+        This conversion operator inserts the converted value in the tt(x2a)
+parameter into the provided tt(ostream).
+    itb(operator std::string const() const): this conversion operator returns
+the information stored inside the bf(FBB::X2a) object.
+    )
+    The standard overloaded assignment operator is available as well.
+
+
+manpagesection(EXAMPLE)
+         verb(
+    string is(X2a(5));      // initializes `is' with "5"
+    string ds(X2a(5.25));   // initializes `ds' with "5.25"
+
+    cout << X2a(7.0 / 3, 4) << endl;
+                            // display a value using 4 digits behind the
+                            // decimal dot.
+    cout << X2a(7.0 / 3, 8, 4) << endl;
+                            // display a value over 8 positions, right
+                            // adjusted, 4 digits behind the decimal dot.
+    cout << X2a(7.0 / 3, 8, 4, std::ios::left) << endl;
+                            // display a value over 8 positions, left
+                            // adjusted, 4 digits behind the decimal dot.
+        )
+
+
+manpagefiles()
+    em(bobcat/x2a) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(a2x)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

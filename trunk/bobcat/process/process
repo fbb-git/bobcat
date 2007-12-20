@@ -1,0 +1,159 @@
+#ifndef _INCLUDED_BOBCAT_PROCESS_
+#define _INCLUDED_BOBCAT_PROCESS_
+
+#include <string>
+#include <memory>
+
+#include <bobcat/fork>
+#include <bobcat/string>
+#include <bobcat/pipe>
+#include <bobcat/selector>
+#include <bobcat/ifdstreambuf>
+#include <bobcat/ofdstreambuf>
+
+#include <bobcat/iostream>
+
+namespace FBB
+{
+
+class Process: private Fork, public IOStream                
+{
+    std::auto_ptr<Pipe> d_child_inp;          // cin read by the CHILD
+    std::auto_ptr<Pipe> d_child_outp;         // cout written by the CHILD
+    std::auto_ptr<Pipe> d_child_errp;         // cerr written by the CHILD    
+
+    OFdStreambuf    d_childCinbuf;      // Child extracts,  
+    std::ostream    d_childCin;         // Parent inserts to child's cin
+
+    IFdStreambuf    d_childCoutbuf;     // Child inserts,
+    std::istream    d_childCout;        // Parent extracts child's cout
+
+    IFdStreambuf    d_childCerrbuf;     // Child inserts
+    std::istream    d_childCerr;        // Parent extracts child's cerr
+
+    Selector        d_selector;         // sense activities on outp/errp
+
+    std::string     d_command;
+
+    int             d_ret;              // return value of last executed
+                                        // process 
+    size_t        d_mode;
+    size_t        d_processType;
+    size_t        d_waitSeconds;      // seconds to wait for 
+                                        // child-termination
+    public:
+        enum Program
+        {
+            NO_PATH,
+            USE_PATH,
+            USE_SHELL,
+        };
+
+        enum IOMode
+        {
+            CIN             = 1 << 0,
+            COUT            = 1 << 1,
+            CERR            = 1 << 2,
+            IGNORE_COUT     = 1 << 3,
+            IGNORE_CERR     = 1 << 4,
+            
+
+            MERGE_COUT_CERR = 1 << 5,
+        };
+        typedef size_t iomode;
+
+        Process(std::string const &command = "", 
+                iomode mode = CIN | COUT | CERR);
+        Process(size_t waitSeconds, std::string const &command = "", 
+                iomode mode = CIN | COUT | CERR);
+        virtual ~Process();
+
+        void start(Program program = NO_PATH);
+        void start(iomode mode, Program program = NO_PATH);
+        void start(size_t waitSeconds, iomode mode, 
+                                       Program program = NO_PATH);
+        int stop();
+
+        Process &operator+=(std::string const &text);   // add to the command
+        int operator=(std::string const &cmd);          // set the command
+
+        std::istream &cerr();
+        size_t available();
+        void system();
+        void system(iomode mode);
+        size_t wait();
+        size_t wait(size_t sec, size_t msec = 0);
+
+    private:
+        struct ExecContext
+        {
+            bool ok;                // true: status is ok
+            size_t argc;          // must eventually be at least 1
+            char const *message;    // only set if !ok
+            char const **args;      // 0-terminated array of pointers to the 
+                                    // arguments
+        };
+
+        static void execContext(String::SplitPair const &splitPair,
+                                ExecContext &ec);
+        ExecContext analyzeCommand();
+
+        virtual void parentRedirections();
+        virtual void parentProcess();
+        virtual void childRedirections();
+        virtual void childProcess();
+        void setPipes(iomode mode);
+        size_t whichStream();
+        void setCommand(std::string const &command);
+
+        Process(Process const &other);              // NI
+        Process &operator=(Process const &other);   // NI
+};
+
+
+inline void Process::start(Program program)
+{   
+    start(1, d_mode, program);
+}
+
+inline void Process::start(iomode mode, Program program)
+{
+    start(1, mode, program);
+}
+
+inline Process::~Process()
+{
+    stop();
+}
+
+inline std::istream &Process::cerr()
+{
+    return d_childCerr;
+}
+
+inline void Process::system()
+{
+    start(USE_SHELL);
+}
+
+inline void Process::system(iomode mode)
+{
+    start(mode, USE_SHELL);
+}
+
+inline void Process::parentProcess()
+{}
+
+} // FBB        
+
+#endif
+
+
+
+
+
+
+
+
+
+

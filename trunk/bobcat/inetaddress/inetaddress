@@ -1,0 +1,71 @@
+#ifndef _INCLUDED_BOBCAT_INETADDRESS_
+#define _INCLUDED_BOBCAT_INETADDRESS_
+
+#include <netinet/in.h>
+#include <string>
+#include <bobcat/errno>
+
+/*
+    int-info coming in or going out: host byte order
+*/    
+namespace FBB
+{
+
+class InetAddress
+{
+    sockaddr_in     d_address;  // address/port: network byte order
+                            // sa_family_t  in_addr,    uint16_t
+                            // sin_family,  sin_addr,   sin_port
+    public:
+        uint16_t port() const;
+
+            // replaces the formerly available getAddress() member.
+        std::string dottedDecimalAddress() const;
+        sockaddr const *sockaddrPtr() const;
+        size_t size() const;
+
+    protected:
+        InetAddress(std::string const &host, uint16_t port);
+        InetAddress(uint16_t port);
+        InetAddress(sockaddr_in const &address);
+
+        sockaddr *sockaddrPtr();
+
+    private:
+        void init(uint32_t addr, uint16_t port);    // host byte order !
+};
+
+
+inline uint16_t InetAddress::port() const
+{
+    return ntohs(d_address.sin_port);
+}
+
+inline sockaddr const *InetAddress::sockaddrPtr() const
+{
+    return reinterpret_cast<sockaddr const *>(&d_address);
+}
+
+inline size_t InetAddress::size() const
+{
+    return sizeof(d_address);
+}
+
+inline InetAddress::InetAddress(uint16_t port)
+{
+    init(INADDR_ANY, port);
+}
+
+inline InetAddress::InetAddress(sockaddr_in const &address)       
+:
+    d_address(address)
+{}
+
+inline sockaddr *InetAddress::sockaddrPtr() 
+{
+    return reinterpret_cast<sockaddr *>(&d_address);
+}
+
+} // FBB
+
+#endif

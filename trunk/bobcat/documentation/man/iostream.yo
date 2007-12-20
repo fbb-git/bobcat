@@ -1,0 +1,77 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::IOStream)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (std::istream and std::ostream)
+
+manpagename(FBB::IOStream)(Combines std::istream and std::ostream features)
+
+manpagesynopsis()
+    bf(#include <bobcat/iostream>)nl()
+    Linking option: tt(-lbobcat) 
+
+
+manpagedescription()
+
+    This class combines the features of the bf(std::istream) and
+bf(std::ostream) classes. The bf(std::istream) and bf(std::ostream) may be
+physically different streams. bf(FBB:IOStream) objects may, e.g., be
+associated with streams wrapped around em(pipes) (see, e.g.,
+bf(FBB::IfdStream) and bf(FBB::OFdStream), to construct bi-directional pipes.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::IOStreambuf) (private inheritance),nl()
+    bf(std::istream),nl()
+    bf(std::ostream)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(IOStream())
+        The default constructor constructs an empty bf(FBB::IOStream)
+objects. It should not be used before its bf(open()) member (see below) was
+called.
+    itb(IOStream(std::istream &in, std::ostream &out))
+        This constructor associates the bf(IOStream) object with a
+bf(std::istream) and a bf(std::ostream). All output operations will be passed
+on to the bf(std::ostream), all input operations to the bf(std::istream). The
+streams passed to bf(IOStream()) should outlive the bf(IOStream) object.
+    )
+    De copy constructor is available as well.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::istream) and bf(std::ostream)  are
+available, as bf(FBB::IOStream) inherits from these classes. Furthermore, when
+switching between bf(std::istream) and bf(std::ostream) operations, no
+intermediate bf(seekg()) or bf(seekp()) operation will normally be required,
+since the base classes will normally be associated with physically different
+streams. 
+    itemization(
+    itb(void open(std::istream &in, std::ostream &out))
+        This member (re)associates the bf(IOStream) object with a
+bf(std::istream) and a bf(std::ostream). All output operations will be passed
+on to the bf(std::ostream), all input operations to the bf(std::istream). The
+streams passed to bf(IOStream()) should outlive the bf(IOStream) object. If
+this member is called for an bf(IOStream) object already associated with an
+bf(std::ostream) object, the already associated bf(std::ostream) object is
+flushed before setting up the new association.
+    itb(void clear())
+        This member clears the error states of the associated bf(std::istream)
+and bf(std::ostream) objects.
+    )
+
+manpagesection(EXAMPLE)
+    See the example provided with bf(process)(3bobcat).
+
+manpagefiles()
+    em(bobcat/iostream) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(ifdstream)(3bobcat), bf(iostreambuf)(3bobcat), 
+    bf(ofdstream)(3bobcat), bf(process)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

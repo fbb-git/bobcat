@@ -1,0 +1,22 @@
+#ifndef _INCLUDED_BOBCAT_XPOINTER_
+#define _INCLUDED_BOBCAT_XPOINTER_
+
+#include <X11/Xlib.h>
+
+namespace FBB
+{
+    class Xpointer
+    {
+        static size_t s_counter;
+        static Display *s_theDisplay;
+
+        public:
+            Xpointer();
+            ~Xpointer();
+    
+            bool set(int x, int y) const;
+            bool get(int *x, int *y) const;
+    };
+}
+
+#endif

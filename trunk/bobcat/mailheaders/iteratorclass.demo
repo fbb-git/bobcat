@@ -1,0 +1,40 @@
+/*
+            class const_iterator: public 
+                    std::iterator<std::input_iterator_tag, std::string const>
+            {
+                friend class MailHeaders;
+
+                MailHeaders const &d_mh;
+                Hdr::const_iterator d_begin;
+                Hdr::const_iterator d_end;
+
+                public:
+                    const_iterator(MailHeaders const &mh, 
+                             char const *hdr, Match match, Where where);
+
+                    const_iterator &operator++();
+                    const_iterator const operator++(int);
+
+                    const *operator->() 
+                    {
+                        return ;
+                    }
+                    const &operator*()
+                    {
+                        return *operator->();
+                    }
+                    bool operator==(const_iterator const &rvalue) const
+                    {
+                        return &d_mh == &rvalue.d_mh &&
+                               d_begin == rvalue.d_begin;
+                    }
+                    bool operator!=(const_iterator const &rvalue) const
+                    {
+                        return !operator==(rvalue);
+                    }
+                private:                              
+                    const_iterator &operator--();
+                    const_iterator const operator--(int);
+            };
+            friend class MailHeaders::const_iterator;
+*/

@@ -1,0 +1,96 @@
+void setClasses()
+{
+    list class;
+
+    while (sizeof(class = fgets("CLASSES", (int)element(1, class))))
+        g_classes += (list)element(0, strtok(element(0, class), " \t\n"));
+}
+
+void cpHeaders()
+{
+    int idx;
+    string file;
+    string class;
+
+    for (idx = g_nClasses; idx--; )
+    {
+        class = element(idx, g_classes);
+        file = class + "/" + class;
+    
+        if (file newer g_tmphdr + class)
+            run("cp " + file + " " + g_tmphdr);
+    }
+}
+
+void static_library(string library)
+{
+    if (sizeof(makelist("*/o/*.o")))
+    {
+        run("ar cru " + library + " */o/*.o");
+        run("ranlib " + library);
+        run("rm */o/*.o");
+    }
+}
+
+void shared_library(string destDir, string libso, string libsoshared, 
+                    int strip)
+{
+    string libsomajor;
+
+    if (sizeof(makelist("*/o/*.o")))
+    {
+        libsomajor  = libso + "." + element(0, strtok(g_version, "."));
+
+        run(GCC + " -shared -Wl,-z,def,-soname," + libsomajor +
+            " -o " + destDir + libsoshared + " */o/*.o");
+    
+        chdir(destDir);
+    
+        if (strip)
+            run("strip --strip-unneeded " + libsoshared);
+
+        run("chmod -x " + libsoshared);
+        
+        run("ln -sf " + libsoshared + " " + libsomajor);
+        run("ln -sf " + libsomajor  + " " + libso);
+    
+        run("rm -f */o/*");
+
+        chdir(g_cwd);
+    }
+}
+
+void libraries(string libname, int all, int strip)
+{
+    string libso;
+    string libsoshared;
+    string staticLib;
+
+    staticLib = g_tmplib + "lib" LIBRARY ".a";
+
+    setClasses();
+    special(1, all);
+
+    md(g_tmplib + " " + g_tmphdr);
+
+    cpHeaders();
+    
+    g_copt = COPT;                              // std set of compiler options
+    library(staticLib);                         // compile for static lib.
+    static_library(staticLib);                  // build static library
+
+#ifndef STATIC
+    libso = "libbobcat.so";
+    libsoshared = libso + "." + g_version;
+
+    g_copt += " -fPIC";                         // add option for shared lib
+    library(g_tmplib + libsoshared);            // compile the shared lib
+
+
+    shared_library(g_tmplib, libso, libsoshared, strip);
+#endif
+
+    exit(0);
+}
+
+

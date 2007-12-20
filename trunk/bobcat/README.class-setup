@@ -1,0 +1,104 @@
+The following diagram shows the class dependencies. Classes listed on the same
+line have no mutual dependencies. Classes listed on lines starting with the
+digit 0 are not depenent on other bobcat classes. Then, diagrams showing
+dependencies of other classes. Dependencies should be read downwards, e.g.,
+String depends on Wrap1 and A2x, Hostname depends on Hostent and Errno.
+
+Dependencies refer to the construction of the class members as well as the use
+of the class headers. So, when compiling the class Msg the class Errno must be
+available (if not compile-time then most likely run-time). The dependencies
+are not necessarily related to inheritance.
+
+The file CLASSES lists all classes, indenting them according to their
+dependency level. E.g., Errono is not indented, Msg is indented
+once, Arg is indented twice, etc. The classes `Milter' and `Xpointer'
+are optionally compiled, and are therefore not listed in the CLASSES file.
+
+Entries below, tagged with `(cont)' were mentioned earlier in the next
+hierarchy. Entries tagged with (Obs) are obsolete, and will be removed in a
+future relase: 
+
+0   X2a     Hash   Hostent  TypeTrait
+                                |
+                +--------+------+-------+------------+
+0           FnWrap1  FnWrap1c         FnWrap2     FnWrap2c
+
+
+0   DateTime       SyslogBuf          RandBuffer        Indent      RefCount
+       |               |                   |                           |
+     Stat         SyslogStream         IRandStream                  AutoPtr
+
+0                             Errno                                   LogBuffer
+                                |                                        |
+                  +--------+----+---------+------+---------+---+----+    |
+                  |        |              |      |         |   |    |    |
+              Pattern     Msg             |   OneKey      User |    +--+-+
+                  |                       |                    |       |
+           +------+-------+     Wrap1c    |                    |      Log
+           |              |     (cont)    |                    |      Log
+           |              |       |       |                    |       |
+           |              +-------+       |                    |       |
+           |              |               |                    |       |
+      GetHostent      ConfigFile          |                    |     level
+           |                              |         Hostent    | 
+      InetAddress                         |         (cont)     |
+           |                              |            |       |
+       SocketBase                  LocalSocketBase     +---+---+
+           |                              |                |
+    +------+---------+          +---------+---------+   Hostname
+    |                |          |                   |
+ ClientSocket   ServerSocket    |                   |
+                                |                   |
+                        LocalClientSocket  LocalServerSocket
+
+
+0    Errno(cont)
+        |
+        +---------+--------+----+----+-----+------+----------+    IOStreambuf
+        |         |        |    |    |     |      |          |         |
+    Xpointer MailHeaders Milter |   Pipe  Fork  Selector Redirector  IOStream
+                                |    |     |      |          |         |
+                                |    +-----+------+----------+---------+
+                                |    |
+0      FnWrap1(cont)   A2x      |    |      FnWrap1c(cont)     Errno(cont)
+             |          |       |    |            |                 |
+             +----+-----+       |    |  +---------+-----------+     |
+                  |             |    |  |         |           |     |
+                  |             |    |  |         |           +-----+ 
+                  |             |    |  |         |           | 
+               String           |    +--+    MultiStreambuf  Glob
+                  |             |    |
+             +----+----+        |    |
+             |         |        |    |
+             |         +--------+    |
+             |         |        |    |
+             |         |       Arg   |
+             |         |             |
+             |         +-------------+
+       CmdFinderBase                 |
+             |                       |
+          CmdFinder                  |
+                                     |
+0                   OFdStreambuf     |     IFdStreambuf
+                         |           |          |
+             +-----------+           |          +--------+
+             |           |           |          |        |
+          OFdStream      +-----------+----------+     IFdStream
+                                     |
+                                  Process
+
+
+0          String(cont)       Align
+                |               |
+                |          TableSupport     
+                |               |
+                +-------+-------+
+                        |
+                      Table
+
+0   Wrap1(Obs)  Wrap1c(Obs)  Wrap2(Obs)  Wrap2c(Obs)
+
+
+
+
+

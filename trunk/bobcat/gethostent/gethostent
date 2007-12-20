@@ -1,0 +1,27 @@
+#ifndef _INCLUDED_BOBCAT_GETHOSTENT_
+#define _INCLUDED_BOBCAT_GETHOSTENT_
+
+#include <string>
+#include <bobcat/errno>
+
+struct hostent;
+
+namespace FBB
+{
+
+class GetHostent
+{
+    public:
+        static hostent const *gethostent(char const *errorprefix, 
+                            std::string const &nameOrAddress);
+
+        static std::string addressToString(char const *errorprefix, 
+                                           void const *ads);
+    private:
+        static Errno hosterror(char const *prefix);
+};
+
+} // FBB
+
+#endif
+

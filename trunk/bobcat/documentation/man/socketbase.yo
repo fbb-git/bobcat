@@ -1,0 +1,77 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::SocketBase)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Base class for sockets)
+
+manpagename(FBB::SocketBase)(Base class for socket-constructing classes)
+
+manpagesynopsis()
+    bf(#include <bobcat/socketbase>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    This class is a base class for the bf(FBB::ServerSocket) and
+bf(FBB::ClientSocket) classes. Since it is designed as a base class, all its
+constructors are protected.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::InetAddress)
+
+manpagesection(PROTECTED CONSTRUCTORS)
+    itemization(
+    itb(SocketBase(size_t port) throw (FBB::Errno)) 
+        This constructor creates a bf(SocketBase) to be used with
+bf(ServerSocket)-objects, listening on tt(port). If the socket could
+not be constructed, an bf(FBB::Errno) exception is thrown.
+    itb(SocketBase(std::string const &host, unit_16_t port)) 
+        This constructor creates a bf(FBB::SocketBase) to be used with a
+bf(ClientSocket)-object, connecting to tt(hostname), at port `tt(port)'.  If
+the socket could not be constructed or if the host's address information could
+not be determined, an bf(FBB::Errno) exception is thrown.
+    itb(SocketBase(int socket, sockaddr_in const &address))
+        This constructor constructs a bf(FBB::SocketBase) object initializing
+its socket and bf(FBB::InetAddress) part from available external objects.
+    )
+    The copy constructor is not available.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(FBB::InetAddress) are
+available, as bf(FBB::SocketBase) inherits from this class.
+    itemization(
+    itb(bool debug() const throw(Errno))
+        This accessor returns bf(true) if the socket's em(debug)
+(bf(SO_DEBUG)) socket option is active. It throws an bf(FBB::Errno) exception
+if the status of the debug option could not be determined.
+    itb(bool reuse() const throw(Errno))
+        This accessor returns bf(true) if the socket's em(reuse)
+(bf(SO_REUSEADDR)) socket option is active. It throws an bf(FBB::Errno)
+exception if the status of the reuse option could not be determined.
+    itb(void setDebug(bool trueIsOn) const throw(Errno))
+        This member may be used to modify the socket's em(debug)
+(bf(SO_DEBUG)) socket option. It throws an bf(FBB::Errno) exception
+if the socket's debug option could not be modified.
+    itb(void setReuse(bool trueIsOn) const throw(Errno))
+        This member may be used to modify the socket's em(reuse)
+(bf(SO_REUSEADDR)) socket option. It throws an bf(FBB::Errno) exception
+if the socket's reuse option could not be modified.
+    itb(int socket() const)
+        This accessor returns the bf(FBB::SocketBase)'s socket value.
+    )
+
+manpagesection(EXAMPLE)
+    To do
+
+manpagefiles()
+    em(bobcat/socketbase) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(clientsocket)(3bobcat), bf(inetaddress)(3bobcat),
+    bf(localsocketbase)(3bobcat), bf(serversocket)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

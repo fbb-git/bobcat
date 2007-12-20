@@ -1,0 +1,129 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::GetHostent)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Host information)
+
+manpagename(FBB::GetHostent)
+            (Obtain bf(hostent) struct from hostname or -address)
+
+manpagesynopsis()
+    bf(#include <bobcat/gethostent>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB::GetHostent) objects produce tt(hostent) structs which may
+be used by other types of objects. The bf(FBB::GetHostent) class is therefore
+primarily used as a base-class for other classes and is seldomly used
+`stand-alone'. The tt(hostent) structs are static structs, but a
+non-static copy may be obtained using an bf(FBB::Hostent) object.
+
+A tt(hostent) struct is defined as follows:
+        verb(
+    struct hostent 
+    {
+        char    *h_name;        // official name of host 
+        char    **h_aliases;    // alias list 
+        int     h_addrtype;     // host address type (always AF_INET)
+        int     h_length;       // length of address 
+        char    **h_addr_list;  // list of addresses 
+    }
+        )
+    The tt(address) fields are binary values of the addresses, each address
+requiring tt(h_length) bytes, the last address being equal to 0. These binary
+values may be converted to character-representations by the
+tt(addressToString()) member, which uses bf(inet_ntop()), internally.
+
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+    All members of the class bf(FBB::GetHostent) are static. Consequently,
+there is no need to construct a bf(FBB::GetHostent) object. However, the
+default- and copy-constructors are available.
+
+
+manpagesection(STATIC MEMBERS)
+    itemization(
+    itb(hostent const *gethostent(char const *errorprefix, 
+                 std::string const &nameOrAddress) throw(FBB::Errno))
+        The bf(gethostent()) member returns a pointer to a static bf(struct
+hostent). It contains the information about the host whose name or dotted
+decimal address was provided as its second argument. Its first argument is an
+error string prefix, prefixing the error message in an bf(FBB::Errno)
+object. Such an object is thrown as an exception when the host's information
+could not be retrieved.
+    itb(std::string addressToString(char const *errorprefix, 
+                              void const *ads) throw(FBB::Errno))
+        This member returns the dotted decimal address of the host whose
+binary address is provided at bf(ads). Its first argument is an error string
+prefix, prefixing the error message in an bf(FBB::Errno) object. Such an
+object is thrown as an exception when the dotted decimal address could not be
+determined.
+
+    The class' members can only be used when the host whose name or address is
+searched can be resolved by a name resolution process, e.g., bf(bind)(1).
+    )
+
+manpagesection(EXAMPLE)
+        verb(
+    #include <iostream>
+    #include <algorithm>
+    #include <iterator>
+
+    #include <bobcat/hostent>
+    #include <bobcat/gethostent>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main(int argc, char **argv)
+    {
+        if (argc == 1)
+        {
+            cerr << "Provide a host name or host address to solve\n";
+            return 1;
+        }
+    
+        try
+        {
+            Hostent he(GetHostent::gethostent(argv[1], argv[1]));
+            cout << "Hostname: " << he.hostname() << endl;
+    
+            cout << "Aliases:\n";
+            copy(he.beginAlias(), he.endAlias(), 
+                    ostream_iterator<char const *>(cout, "\n"));
+    
+            cout << "Addresses:\n";
+            for (size_t idx = 0; idx < he.nAddresses(); idx++)
+                cout << he.dottedDecimalAddress(idx) << endl;
+        }
+        catch (Errno const &err)
+        {
+            cout << err.what() << endl;
+            return 1;
+        }
+        return 0;
+    }
+        )
+
+
+manpagefiles()
+    em(bobcat/gethostent) - defines the class interface
+
+manpageseealso()
+    bf(bind)(1),
+    bf(bobcat)(7), 
+    bf(gethostbyaddr)(3)
+    bf(gethostbyname)(3),  
+    bf(hostent)(3bobcat),
+    bf(inetaddress)(3bobcat),
+    bf(inet_ntop)(3)
+  
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

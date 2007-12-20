@@ -1,0 +1,177 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::ServerSocket)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Server Socket)
+
+manpagename(FBB::ServerSocket)
+            (Server socket accepting Internet connection requests)
+
+manpagesynopsis()
+    bf(#include <bobcat/serversocket>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    An bf(FBB::ServerSocket) may be constructed to listen for connection
+requests from the Internet or from the local host. Connection requests may be
+accepted in either em(blocking) or em(non-blocking) modes. When a connection
+is accepted a socket is returned which may be used to read information from or
+write information to the client that requested the connection. The socket that
+is made available is a em(file descriptor) which may be used to initialize a
+bf(std::istream) and/or bf(std::ostream). The bf(std::istream) is used to read
+information from the client process; the bf(std::ostream) is used to send
+information to the client process.  Since a socket may be considered a em(file
+descriptor) the avaiable bf(FBB::IFdStream), bf(FBB::IFdStreamBuf),
+bf(FBB::OFdStream), and bf(FBB::OFdStreamBuf) classes may be used profitably
+here. Note that having available a socket does not mean that this defines the
+communication protocol. It is (still) the responsibility of the programmer to
+comply with an existing protocol or to implement a tailor-made protocol. The
+latter situation implies that the sequence of input- and output operations is
+defined by the programmer.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::SocketBase)
+
+manpagesection(CONSTRUCTOR)
+    itemization(
+    itb(ServerSocket(size_t  port) throw (Errno))
+        This constructor initializes an bf(FBB::ServerSocket) object, which
+will listen for connections at the specified port.  An bf(FBB::Errno) is
+thrown if the socket could not be constructed. The construction of the socket
+does not mean that the bf(FBB::ServerSocket) object is actually listening for
+connections. To start listening, the member bf(listen()) should be used. 
+    itb(ServerSocket(std::string const &name) throw (Errno))
+        This constructor initializes an bf(FBB::ServerSocket) object, which
+will listen for connections at the specified port.  An bf(FBB::Errno) is
+thrown if the socket could not be constructed. The construction of the socket
+does not mean that the bf(FBB::ServerSocket) object is actually listening for
+connections. To start listening, the member bf(listen()) should be used. 
+    )
+    The copy constructor is not available.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(FBB::SocketBase) (and thus of bf(FBB::InetAddress) are
+available, as bf(FBB::ServerSocket) inherits from these classes.
+    itemization(
+    itb(void listen(size_t backlog = 5, bool blocking = true) throw (Errno))
+        The bf(listen()) member defines the way the bf(FBB::ServerSocket) will
+listen for clients requesting a connection.  It can be used only once with a
+bf(FBB::ServerSocket). An bf(FBB::Errno) object is thrown if listening fails.
+
+     The bf(listen()) member's tt(backlog) parameter defines the size of the
+bf(FBB::ServerSocket)'s internal queue in which connection requests may be
+stored waiting for their turn to be serviced. When tt(backlog) requests are
+waiting and another request arrives, then that request is lost. 
+
+    The member's second parameter, tt(blocking), is used to control the
+blocking mode. By default, blocking is used, and tt(listen()) will wait until
+a connection is established. This is ok in situations where clients connect
+infrquently and for relatively short time intervals. Otherwise, in more
+complex programs, an bf(FBB::Selector) object can be used to sense input on
+the server socket and/or on various client sockets.
+
+    itb(SocketBase accept() throw (Errno))
+        The bf(accept()) member returns an bf(FBB::SocketBase) object
+containing information about the client whose connection request was
+accepted. The bf(FBB::SocketBase) object's socket value may be used to
+initialize streams that can be used to communicate with the client. In more
+complex programs the bf(FBB::SocketBase) could be passed to a class derived
+from bf(FBB::Fork), handling the communication with the child as a separate
+(child) process. 
+    )
+
+
+manpagesection(EXAMPLE)
+    See also the bf(clientsocket)(3bobcat) example.
+        verb(
+    #include <iostream>
+    #include <bobcat/serversocket>
+    #include <bobcat/ifdstream>
+    #include <bobcat/ofdstream>
+    
+    #include <bobcat/a2x>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main(int argc, char **argv)
+    try
+    {
+        if (argc == 1)
+        {
+            cerr << "Provide server port number\n";
+            return 1;
+        }
+    
+        size_t portnr = A2x(argv[1]);
+    
+        ServerSocket server(portnr);
+    
+        cerr << "server listens on port " << argv[1] << endl;
+    
+        cerr << "serversocket returns:\n" <<
+            "address = " << server.dottedDecimalAddress() << "\n"
+            "port    = " << server.port() << endl;
+    
+        int fd = server.socket();       // open the socket's descriptor
+    
+        cout << "File descriptor of the socket is " << fd << "\n"
+            "The server terminates when it receives a "
+                                        "single `q' on a line\n"
+            "A connection is terminated when no input "
+                                        "is received anymore.\n"
+            "Then another connection is possible" << endl;
+    
+        server.listen();                // listen in blocking mode
+    
+        while (true)
+        {
+            SocketBase fdb = server.accept();
+            int fd = fdb.socket();
+    
+            cerr << "Client FD = " << fd << ", " << endl <<
+                    "address = " << fdb.dottedDecimalAddress() << ", " << 
+                    endl <<
+                    "communication through port " << fdb.port() << endl;
+    
+            IFdStream in(fd);           // stream to read from client
+            OFdStream out(fd);          // stream to write to client
+            string cmd;
+            
+            while (getline(in, cmd))
+            {
+                cout << "Got: " << cmd << endl;
+                out << "Got: " << cmd << "\r" << endl;
+    
+                if (cmd[0] == 'q')
+                    return 0;
+            }
+            cout << "Ready for another connection\n";
+        }
+    }
+    catch (Errno const &err)
+    {
+        cerr <<
+            err.what() << endl <<
+            "Server socket on port " << argv[1] << 
+            " can't be opened" << endl;
+        return -1;
+    }        
+        )
+
+manpagefiles()
+    em(bobcat/serversocket) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(clientsocket)(3bobcat), bf(fork)(3bobcat),
+bf(ifdstream)(3bobcat), bf(ifdstreambuf)(3bobcat), bf(inetaddress)(3bobcat),
+bf(localserversocket)(3bobcat), bf(ofdstream)(3bobcat),
+bf(ofdstream)(3bobcat), bf(select)(2), bf(selector)(3bobcat),
+bf(socketbase)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

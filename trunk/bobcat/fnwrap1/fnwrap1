@@ -1,0 +1,37 @@
+#ifndef _INCLUDED_BOBCAT_FNWRAP1_
+#define _INCLUDED_BOBCAT_FNWRAP1_
+
+#include <bobcat/typetrait>
+
+namespace FBB
+{
+
+template <typename Type, typename ReturnType = void>
+class FnWrap1
+{
+    ReturnType (*d_fun)(Type);
+
+    public:
+        typedef typename TypeTrait<Type>::Plain         argument_type;
+        typedef typename TypeTrait<ReturnType>::Plain   result_type;
+
+        FnWrap1(ReturnType fun(Type));
+        ReturnType operator()(Type param) const;
+};
+
+template <typename Type, typename ReturnType>
+FnWrap1<Type, ReturnType>::FnWrap1(ReturnType fun(Type))
+:
+    d_fun(fun)
+{}
+
+template <typename Type, typename ReturnType>
+inline ReturnType FnWrap1<Type, ReturnType>::operator()(Type param) const
+{
+    return (*d_fun)(param);
+}
+
+} // FBB
+
+#endif
+

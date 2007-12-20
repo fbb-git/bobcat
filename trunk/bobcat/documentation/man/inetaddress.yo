@@ -1,0 +1,111 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::InetAddress)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Network Byte Order)
+
+manpagename(FBB::InetAddress)
+            (Converting between host byte order and network byte order)
+
+manpagesynopsis()
+    bf(#include <bobcat/inetaddress>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    Computers differ their word-byte order, called `endianness'. A
+little-endian computer has its least significant byte at the byte having the
+lower address of a two-byte value, whereas a big-endian computer has its least
+significant byte at at the byte having the higher address of a two-byte
+value. In order to allow these computers to communicate over over Internet,
+em(host byte order) was designed. Objects of the class bf(FBB::InetAddress)
+may be used to convert between network byte order and host byte order (and
+vice versa).
+
+    The class only has a few public members. Most members are protected, and
+bf(FBB::InetAddress) is therefore primarily used as a base class from which
+other classes are derived. In practice there will be little need to construct
+objects of the class bf(FBB::InetAddress), which is primarily a support class
+for the bf(FBB) socket-classes.
+
+    Internally, all data are stored in network byte order.
+
+    As the class' constructors depend on the proper functioning of members of
+the bf(FBB:GetHostent) class, the class' objects can only be constructed when
+the host whose name or address is searched can be resolved by a name
+resolution process, e.g., bf(bind)(1).
+
+    Objects of the class bf(FBB::InetAddress) store address information about
+a host in a bf(struct sockaddr_in) data member. A bf(struct sockaddr_in) is
+the data type used to represent socket addresses in the Internet namespace.
+It has the following members:
+    itemization(
+    itb(sa_family_t sin_family)
+        This identifies the address family or format of the socket
+        address.  It holds the value bf(AF_INET).
+    itb(struct in_addr sin_addr)
+        This is the Internet address of the host machine stored as a binary
+        value. 
+    itb(size_t short int sin_port)
+        This field holds the port number.
+    )
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(PROTECTED CONSTRUCTORS)
+    itemization(
+    itb(InetAddress(std::string const &host, uint16_t port) throw (Errno))
+        This constructor expects a host name or dotted decimal address and 
+and an (size_t) port number, and determines the host's address
+information. An bf(FBB::Errno) exception is thrown if the address could not be
+determined. 
+    itb(InetAddress(uint16_t port))
+        This constructor constructs the `generic' address information that is
+used when constructing, e.g. server sockets.
+    itb(InetAddress(sockaddr_in const &address))
+        This constructor constructs an bf(FBB::InetAddress) object from an
+initialized bf(sockaddr_in) object. It is primarily used to promote a
+bf(sockaddr_in) to an bf(FBB::InetAddresss).
+    )
+    The copy constructor is not available.
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(uint16_t port() const)
+        Accessor returning the object's port value.
+    itb(std::string dottedDecimalAddress() const throw (Errno))
+        Accessor returning the object's Internet address as a dotted decimal
+string. If the address could not be determined, an bf(FBB::Errno) object is
+thrown. 
+    itb(size_t size() const)
+        Accessor returning the size of the object's bf(sockaddr_in) (address)
+information. 
+    itb(sockaddr const *sockaddrPtr() const)
+        Accessor returning the pointer to the object's bf(sockaddr). 
+    )
+
+manpagesection(PROTECTED MEMBER FUNCTIONS)
+    itemization(
+    itb(sockaddr *sockaddrPtr())
+        This member returns the object's address information as a pointer to
+a modifiable bf(sockaddr). This allows (contrary to the public member having
+the same name) derived objects to manipulate the object's address information
+directly. 
+    )
+
+manpagesection(EXAMPLE)
+    To do
+
+manpagefiles()
+    em(bobcat/inetaddress) - defines the class interface
+
+manpageseealso()
+    bf(bind)(1), bf(bobcat)(7), bf(gethostent)(3bobcat),
+    bf(socketbase)(3bobcat) 
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)
