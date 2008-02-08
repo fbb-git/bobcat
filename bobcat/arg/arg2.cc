@@ -8,6 +8,9 @@ Arg::Arg(char const *optstring,
 {
     setBasename(argv[0]);
 
+    string opts(*optstring == ':' ? "" : ":");  // ensure initial char is ':'
+    opts += optstring;
+
     OptStructArray optStructs(end - begin + 1); // create array of n + 1 
                                                 // structs for long options
 
@@ -18,8 +21,8 @@ Arg::Arg(char const *optstring,
 
     while (true)
     {
-        int c = getopt_long(argc, argv, optstring, optStructs.get(), 
-                                                    &longOptionIndex);
+        int c = getopt_long(argc, argv, opts.c_str(), optStructs.get(), 
+                                                     &longOptionIndex);
 
         switch (c)
         {
