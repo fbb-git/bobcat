@@ -6,11 +6,14 @@ Arg::Arg(char const *optstring, int argc, char **argv)
 {
     setBasename(argv[0]);
 
+    string opts(*optstring == ':' ? "" : ":");  // ensure initial char is ':'
+    opts += optstring;
+
     opterr = 0;                     // prevent getopt() msgs to stderr
 
     while (true)
     {
-        int c = getopt(argc, argv, optstring);
+        int c = getopt(argc, argv, opts.c_str());
 
         switch (c)
         {

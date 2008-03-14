@@ -74,7 +74,7 @@ binary-arch: build install
 				dh_installchangelogs -A changelog
 				dh_installdocs -A CLASSES README.class-setup README.optimization
 				dh_installexamples
-				dh_installman
+				#dh_installman
 				dh_link
 				dh_strip
 				dh_compress
@@ -95,8 +95,8 @@ binary-arch: build install
 
 # archive downloaded from https://www.icce.rug.nl/debian/bobcat
 #		(bobcat_x.y.z..tar.gz)
-#	1.17.0: 2c0c3091765034c1dd83051841470c34
-MD5TRUSTED := ed970aba8b6521cdb3e55e335a7c09d1
+#	1.17.1: ed970aba8b6521cdb3e55e335a7c09d1
+MD5TRUSTED := cfbd7bc04649b472b70db37a6ad72fdf
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')

@@ -83,8 +83,11 @@ manipulate its data.
 manpagesection(OVERLOADED OPERATORS)
 
     itemization(
-    itb(std::ostream &operator<<(std::ostream &str, Table const &table))
-        This operator inserts a bf(Table) into a tt(std::ostream) object.
+    itb(std::ostream &operator<<(std::ostream &str, Table &table))
+        This operator inserts a bf(Table) into a tt(std::ostream) object. Note
+that this operator requires a non-const table as it may have to fill out a
+table with empty elements (i.e., empty strings) to obtain a fully rectangular
+table. 
     itb(Table &operator<<(Table &obj, Align const &align))
         This operator is used to change the default alignment of either a
 column or an element. It is a wrapper around the member tt(setAlign()) (see
