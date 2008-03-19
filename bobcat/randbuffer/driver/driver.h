@@ -1,7 +1,7 @@
 //                              driver.h
 
-#ifndef _H_driver_
-#define _H_driver_
+#ifndefH_driver_
+#defineH_driver_
 
 /*
    $Id$

@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void _bobcat_fatal(char const *);
+void bobcat_fatal_(char const *);
 
 int XQueryPointer()
 {
-    _bobcat_fatal("XQueryPointer");
+    bobcat_fatal_("XQueryPointer");
     return 0;
 }

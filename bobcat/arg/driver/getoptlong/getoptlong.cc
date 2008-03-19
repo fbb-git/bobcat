@@ -1,28 +1,7 @@
-/*
-                              getoptlong.cc
-
-   $Id$
-
-   $Log$
-   Revision 1.1  2005/08/19 15:12:52  frank
-   Initial revision
-
-   Revision 1.1.1.1  2003/05/28 13:50:17  frank
-   Initial import of FBB::Arg
-
-*/
-
 #include "getoptlong.h"
 
-#ifndef _SYSINC_CSTDLIB_
 #include <cstdlib>
-#define _SYSINC_CSTDLIB_
-#endif
-
-#ifndef _SYSINC_GETOPT_H_
 #include <getopt.h>
-#define _SYSINC_GETOPT_H_
-#endif
 
 using namespace std;
 using namespace FBB;

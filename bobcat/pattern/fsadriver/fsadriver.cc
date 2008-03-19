@@ -14,7 +14,7 @@
 
 #include "fsadriver.h"
 
-#ifndef _INCLUDED_PATTERN_H_
+#ifndef INCLUDED_PATTERN_H_
 #include "../pattern.ih"
 #endif
 

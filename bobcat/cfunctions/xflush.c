@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void _bobcat_fatal(char const *);
+void bobcat_fatal_(char const *);
 
 int XFlush()
 {
-    _bobcat_fatal("XFlush");
+    bobcat_fatal_("XFlush");
     return 0;
 }

@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void _bobcat_fatal(char const *);
+void bobcat_fatal_(char const *);
 
 int XCloseDisplay()
 {
-    _bobcat_fatal("XCloseDisplay");
+    bobcat_fatal_("XCloseDisplay");
     return 0;
 }
