@@ -1,0 +1,41 @@
+When using the X11 library (which may be implied, e.g., when linking the GTK
+library) in combination with Bobcat, make sure the X11 library is passed to
+the linker before the bobcat library is specified.
+
+E.g., use -lX11 -lbobcat
+
+If the bobcat library is specified before the X11 library the following 
+stand-in functions defined in the bobcat library will be used:
+
+	`XOpenDisplay'
+	`XCloseDisplay'
+	`XFlush'
+	`XWarpPointer'
+	`XQueryPointer'
+	`XGetWindowAttributes'
+
+These symbols were included in the bobcat library to prevent `undefined
+reference' linker errors from being generated when shared libraries are used
+but the X11 library is *not* used.
+
+What happens when X11 is specified before bobcat is that although the bobcat
+library defines stand-in functions they are presented to the linker only after
+the linker has seen the similarly named symbols in the X11 library. The linker
+uses the symbols first encountered, and will therefore properly use the
+symbols defined in the X11 library.
+
+However, if the X11 library is not used (e.g., Xpointer is not used) and if
+bobcat itself would not define the above symbols then those symbols would not
+be defined in the shared libraries inspected by the linker, producing linker
+errors. 
+
+Although these errors could be prevented by specifying the option
+
+    -Wl,--allow-shlib-undefined 
+
+requiring this option seems like a more complex instruction than requiring
+that when using the X11 library it must be specified before the bobcat
+library.
+
+
+

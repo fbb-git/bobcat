@@ -3,8 +3,8 @@
 
 void bobcat_fatal_(char const *, char const *);
 
-int smfi_register()
+int XOpenDisplay()
 {
-    bobcat_fatal("smfi_register", "milter");
+    bobcat_fatal_("XOpenDisplay", "X");
     return 0;
 }

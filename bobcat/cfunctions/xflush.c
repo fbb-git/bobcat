@@ -3,8 +3,8 @@
 
 void bobcat_fatal_(char const *, char const *);
 
-int smfi_register()
+int XFlush()
 {
-    bobcat_fatal("smfi_register", "milter");
+    bobcat_fatal_("XFlush", "X");
     return 0;
 }

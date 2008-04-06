@@ -3,8 +3,8 @@
 
 void bobcat_fatal_(char const *, char const *);
 
-int smfi_register()
+int XWarpPointer()
 {
-    bobcat_fatal("smfi_register", "milter");
+    bobcat_fatal_("XWarpPointer", "X");
     return 0;
 }
