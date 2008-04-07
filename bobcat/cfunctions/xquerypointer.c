@@ -5,6 +5,6 @@ void bobcat_fatal_(char const *, char const *);
 
 int XQueryPointer()
 {
-    bobcat_fatal_("XQueryPointer", "X");
+    bobcat_fatal_("XQueryPointer", "X11");
     return 0;
 }

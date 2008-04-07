@@ -5,6 +5,6 @@ void bobcat_fatal_(char const *, char const *);
 
 int XOpenDisplay()
 {
-    bobcat_fatal_("XOpenDisplay", "X");
+    bobcat_fatal_("XOpenDisplay", "X11");
     return 0;
 }

@@ -5,6 +5,6 @@ void bobcat_fatal_(char const *, char const *);
 
 int XFlush()
 {
-    bobcat_fatal_("XFlush", "X");
+    bobcat_fatal_("XFlush", "X11");
     return 0;
 }
