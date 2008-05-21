@@ -21,4 +21,3 @@ PerlSetFSA::PerlSetFSA()
         for_each(s_stateTransitions, s_stateTransitions_end, initialize);
     }
 }
-        

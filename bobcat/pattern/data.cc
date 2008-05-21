@@ -80,8 +80,3 @@ PerlSetFSA::TransitionMatrix *PerlSetFSA::s_stateTransitions_end =
         sizeof(PerlSetFSA::TransitionMatrix);
 
 vector<PerlSetFSA::statePair> PerlSetFSA::s_transition;
-
-
-
-
-

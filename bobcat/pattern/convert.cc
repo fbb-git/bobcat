@@ -1,5 +1,4 @@
-// #include <iostream>
-// #include <iomanip>
+//#include <iomanip>
 
 #include "pattern.ih"
 
@@ -7,18 +6,21 @@ void PerlSetFSA::convert(string &pattern)
 {
     d_next = pattern.begin();
 
+//cerr << "Pattern: " << pattern << endl;
+//cerr << "Target: " << d_target << endl;
+
     d_target.clear();
     
     State state = Start;
 
-//    cout << "Original: " << pattern << endl;
+//cerr << "Original: " << pattern << endl;
 
     for (   ; d_next != pattern.end(); d_next++)
     {
         int  current = *d_next;
 
-//cout << "state: " << setw(2) << state << ", input: " << current <<
-//      " (" << static_cast<char>(current) << ") " <<
+//cerr << "state: " << setw(2) << state << ", input: " << current <<
+//    " (" << static_cast<char>(current) << ") " <<
 //    " from: " <<  (s_transition[state].first - s_stateTransitions) <<
 //    ", to: "  <<  (s_transition[state].second - s_stateTransitions) << endl;
 
@@ -30,7 +32,7 @@ void PerlSetFSA::convert(string &pattern)
         while (mp->d_input != current)
             mp++;           // find the appropriate state transition element
 
-//cout << "next state: " << setw(2) << mp->d_next << endl;
+//cerr << "next state: " << setw(2) << mp->d_next << endl;
         
         (this->*mp->d_action)();  // do the appropriate action
         
@@ -38,5 +40,5 @@ void PerlSetFSA::convert(string &pattern)
     }
     pattern = d_target;
 
-//    cout << "Converted: " << pattern << endl;
+//cerr << "Converted: " << pattern << endl;
 }

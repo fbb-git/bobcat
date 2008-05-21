@@ -12,4 +12,3 @@ catch (...)
     d_matchOptions = 0;
     return false;
 }
-

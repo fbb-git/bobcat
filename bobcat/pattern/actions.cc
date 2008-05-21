@@ -44,6 +44,3 @@ void PerlSetFSA::s_Nest()
 {
     d_target += "[[:space:]]";
 }
-
-
-

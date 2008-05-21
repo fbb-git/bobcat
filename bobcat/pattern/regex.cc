@@ -4,8 +4,7 @@ Pattern::Regex::Regex(string pattern, int options)
 :
     d_referenceCount(1)
 {    
-    static PerlSetFSA fsa;
-    fsa.convert(pattern);
+    PerlSetFSA().convert(pattern);
 
     int errcode = regcomp(&d_regex, pattern.c_str(), options);
 

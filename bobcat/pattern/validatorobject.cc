@@ -24,4 +24,3 @@ void PerlSetFSA::Validator::operator()(TransitionMatrix const &state)
         d_used[d_state] = true;
     }
 }
-        
