@@ -1,0 +1,68 @@
+#ifndef INCLUDED_BOBCAT_FOREACH_
+#define INCLUDED_BOBCAT_FOREACH_
+
+#include <bobcat/typetrait>
+
+namespace FBB
+{
+
+template <bool derefenceable, typename Iter, typename Function>
+struct FE3
+{
+    inline void operator()(Iter begin, Iter end, Function &fun)
+    {
+        for ( ; begin != end; )
+            fun(begin++);
+    }
+};
+
+template <typename Iter, typename Function>
+struct FE3<true, Iter, Function>
+{
+    inline void operator()(Iter begin, Iter end, Function &fun)
+    {
+        for ( ; begin != end; )
+            fun(*begin++);
+    }
+};
+
+
+template <bool derefenceable, typename Iter, typename Class, typename Member>
+struct FE4
+{
+    inline void operator()(Iter begin, Iter end, Class &obj, Member member)
+    {
+        for ( ; begin != end; )
+            (obj.*member)(begin++);
+    }
+};
+
+template <typename Iter, typename Class, typename Member>
+struct FE4<true, Iter, Class, Member>
+{
+    inline void operator()(Iter begin, Iter end, Class &obj, Member member)
+    {
+        for ( ; begin != end; )
+            (obj.*member)(*begin++);
+    }
+};
+
+
+template <typename Iter, typename Function>
+void for_each( Iter begin, Iter end, Function function)
+{
+    FE3<TypeTrait<Iter>::isDereferenceable, Iter, Function>()
+                                                    (begin, end, function);
+}
+
+template<typename Iter, typename Object, typename Member>
+inline void for_each(Iter begin, Iter const &end, 
+                     Object &object, Member member)
+{
+    FE4<TypeTrait<Iter>::isDereferenceable, Iter, Object, Member>()
+                                            (begin, end, object, member);
+}
+
+} // FBB
+
+#endif
