@@ -1,18 +1,18 @@
 The following diagram shows the class dependencies. Classes listed on the same
 line have no mutual dependencies. Classes listed on lines starting with the
 digit 0 are not depenent on other bobcat classes. Then, diagrams showing
-dependencies of other classes. Dependencies should be read downwards, e.g.,
-String depends on Wrap1 and A2x, Hostname depends on Hostent and Errno.
+dependencies of other classes. Dependencies should be read upwards, e.g.,
+String depends on FnWrap1 and A2x, Hostname depends on Hostent and Errno.
 
 Dependencies refer to the construction of the class members as well as the use
 of the class headers. So, when compiling the class Msg the class Errno must be
 available (if not compile-time then most likely run-time). The dependencies
 are not necessarily related to inheritance.
 
-The file CLASSES lists all classes, indenting them according to their
-dependency level. E.g., Errono is not indented, Msg is indented
-once, Arg is indented twice, etc. The classes `Milter' and `Xpointer'
-are optionally compiled, and are therefore not listed in the CLASSES file.
+The file CLASSES lists all classes, in something resembling the order of
+addition of the classes to the Bobcat library. The classes `Milter' and
+`Xpointer' are optionally compiled, and are therefore not listed in the
+CLASSES file.
 
 Entries below, tagged with `(cont)' were mentioned earlier in the next
 hierarchy. Entries tagged with (Obs) are obsolete, and will be removed in a
@@ -20,8 +20,8 @@ future relase:
 
 0   X2a     Hash   Hostent  TypeTrait
                                 |
-                +--------+------+-------+------------+
-0           FnWrap1  FnWrap1c         FnWrap2     FnWrap2c
+                +--------+------+-------+------------+-----------+--------+
+            FnWrap1  FnWrap1c         FnWrap2     FnWrap2c    foreach  repeat
 
 
 0   DateTime       SyslogBuf          RandBuffer        Indent      RefCount
@@ -34,8 +34,8 @@ future relase:
                   |        |              |      |         |   |    |    |
               Pattern     Msg             |   OneKey      User |    +--+-+
                   |                       |                    |       |
-           +------+-------+     Wrap1c    |                    |      Log
-           |              |     (cont)    |                    |      Log
+           +------+-------+   FnWrap1c    |                    |      Log
+           |              |     (cont)    |                    |       |  
            |              |       |       |                    |       |
            |              +-------+       |                    |       |
            |              |               |                    |       |
@@ -52,15 +52,16 @@ future relase:
                         LocalClientSocket  LocalServerSocket
 
 
-0    Errno(cont)
+     Errno(cont)
         |
-        +---------+--------+----+----+-----+------+----------+    IOStreambuf
+0       +---------+--------+----+----+-----+------+----------+    IOStreambuf
         |         |        |    |    |     |      |          |         |
     Xpointer MailHeaders Milter |   Pipe  Fork  Selector Redirector  IOStream
                                 |    |     |      |          |         |
                                 |    +-----+------+----------+---------+
                                 |    |
-0      FnWrap1(cont)   A2x      |    |      FnWrap1c(cont)     Errno(cont)
+0                      A2x      |    |                                     
+       FnWrap1(cont)    |       |    |      FnWrap1c(cont)     Errno(cont)
              |          |       |    |            |                 |
              +----+-----+       |    |  +---------+-----------+     |
                   |             |    |  |         |           |     |
@@ -88,17 +89,22 @@ future relase:
                                   Process
 
 
-0          String(cont)       Align
-                |               |
-                |          TableSupport     
-                |               |
-                +-------+-------+
-                        |
-                      Table
-
-0   Wrap1(Obs)  Wrap1c(Obs)  Wrap2(Obs)  Wrap2c(Obs)
-
-
-
+0                     Align
+                        |  
+   String(cont)         |  
+        |               |
+        |          TableSupport     
+        |               |
+        +-------+-------+
+        |       |
+        |     Table
+        |
+        |
+        |   Stat(cont) Pattern(cont)  X2a(cont)  foreach(cont)
+        |       |           |            |           |
+        +-------+-----------+-----+------+-----------+ 
+                                  |
+                                  |
+                                 CGI
 
 
