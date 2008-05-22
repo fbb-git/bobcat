@@ -18,6 +18,13 @@ inline void repeat(Counter count, Class &object, Member member)
         (object.*member)();
 }
 
+template<typename Counter, typename Class, typename Member>
+inline void repeat(Counter count, Class *object, Member member)
+{
+    for (; count--; )
+        (object->*member)();
+}
+
 
 } // FBB
 

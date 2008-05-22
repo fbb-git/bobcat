@@ -1,19 +1,35 @@
 #!/bin/bash
 
 # uncomment the following to use the library created in ../tmp/lib
-#INC="-I../../tmp"
-#LIB="-L../../tmp/lib"
-
-for x in *.cc 
-do
-    NAME=`echo $x | sed 's/\..*//'`
-    if [ ! -s ${NAME}.o ]
-    then
-        echo "g++ -c $x"
-        g++ ${INC} -o ${NAME}.o -c $x || exit 1
-    fi
-done
+TMP=1
 
 rm -f driver
 
-g++ -o driver *.o ${LIB} -lbobcat
+if [ "$TMP" == "1" ] ; then
+    for x in *.cc 
+    do
+        NAME=`echo $x | sed 's/\..*//'`
+        if [ ! -s ${NAME}.o -o ${NAME}.cc -nt ${NAME}.o ]
+        then
+            echo "g++ -c $x"
+            g++ -I../../tmp -o ${NAME}.o -c $x || exit 1
+        fi
+    done
+
+    g++ -static -o driver *.o -L../../tmp/lib -lbobcat
+else
+    for x in *.cc 
+    do
+        NAME=`echo $x | sed 's/\..*//'`
+        if [ ! -s ${NAME}.o -o ${NAME}.cc -nt ${NAME}.o ]
+        then
+            echo "g++ -c $x"
+            g++ -o ${NAME}.o -c $x || exit 1
+        fi
+    done
+    
+    g++ -o driver *.o -lbobcat
+fi
+
+
+

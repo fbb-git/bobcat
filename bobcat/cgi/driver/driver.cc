@@ -73,8 +73,6 @@ catch (Errno const &err)
 }
 catch (...)
 {
-    cerr << "Caught exception\n";
-
     return 1;
 }
 

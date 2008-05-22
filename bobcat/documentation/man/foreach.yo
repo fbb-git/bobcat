@@ -67,11 +67,31 @@ same type as the first tt(for_each) parameter.
         tt(object.*member). If tt(begin) and tt(end) are class- or pointer
         type variables tt(*begin) is passed to tt(fun) otherwise tt(begin) is
         passed to tt(fun).
+    itb(void for_each(Iter begin, Iter end, Class *object, Member member))
+       tt(object->*member) is called tt(end - begin) times, passing tt(begin)
+        or tt(*begin) with tt(begin) iterating towards tt(end) to
+        tt(object->*member). If tt(begin) and tt(end) are class- or pointer
+        type variables tt(*begin) is passed to tt(fun) otherwise tt(begin) is
+        passed to tt(fun).
     )
-
+    tt(Class) and tt(Member) may also be defined as tt(const) objects. 
 
 manpagesection(EXAMPLES)
-        TO DO
+    Assume a class tt(CGIFSA) defines the following inline function, using the
+array tt(bool d_escape[]) and the variable tt(bool d_setEscape):
+        verb(
+    inline void CGIFSA::setEscape(size_t idx)
+    {
+        d_escape[idx] = d_setEscape;
+    }
+        )
+    To set a series of tt(d_escape) elements to tt(d_setEscape) a member
+function of the class tt(CGIFSA) may use the following code (with tt(size_t
+begin, end)):
+        verb(
+    if (begin <= end)
+        for_each(begin, end + 1, this, &CGIFSA::setEscape);
+        )    
 
 manpagefiles()
     em(bobcat/foreach) - defines the class interface
@@ -82,6 +102,7 @@ manpageseealso()
     bf(repeat)(3bobcat)
 
 manpagebugs()
-    None Reported.
+    Note that the tt(for_each) algorithms iterate until tt(begin) equals
+tt(end); hence the test for tt(begin <= end) in the above example.
 
 includefile(trailer.inc)

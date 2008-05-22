@@ -6,7 +6,7 @@ CGI &CGI::operator<<(std::pair<char, char> range)
     {
         for_each(d_escape + static_cast<unsigned char>(range.first),
              d_escape + static_cast<unsigned char>(range.second) + 1,
-             *this, &CGI::init);
+             this, &CGI::init);
 
         d_escape['\\'] = true;
     }

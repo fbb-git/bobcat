@@ -13,7 +13,7 @@ CGI::CGI(bool defaultEscape, char const *header, std::ostream &out)
     d_maxUploadSize(100ULL * 1024 * 1024)
 {
     for_each(d_escape, d_escape + sizeof(d_escape) / sizeof(bool), 
-                  *this, &CGI::init);
+             this, &CGI::init);
 
     d_escapeValue = !d_escapeValue;     // all changes will now change the 
                                         // default

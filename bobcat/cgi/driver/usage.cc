@@ -16,6 +16,7 @@ void usage(std::string  const  &progname)
     "Usage: " << progname << " [options] args\n"
     "Where:\n"
     "   [options] - optional arguments (short options between parentheses):\n"
+    "      -e               - show the environment variables that were set\n"
     "      -m<size>[bkmg]   - max uploadsize to use\n"
     "      -h               - provide this help\n"
     "      -v               - show version information and terminate\n"

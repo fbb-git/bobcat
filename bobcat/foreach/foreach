@@ -27,6 +27,8 @@ struct FE3<true, Iter, Function>
 };
 
 
+// Generic case: anything that's not specialized. 
+// In practice: not dereferenceable, object reference
 template <bool derefenceable, typename Iter, typename Class, typename Member>
 struct FE4
 {
@@ -37,6 +39,7 @@ struct FE4
     }
 };
 
+// Specialization: dereferenceable, object reference
 template <typename Iter, typename Class, typename Member>
 struct FE4<true, Iter, Class, Member>
 {
@@ -44,6 +47,30 @@ struct FE4<true, Iter, Class, Member>
     {
         for ( ; begin != end; )
             (obj.*member)(*begin++);
+    }
+};
+
+
+// Specialization: dereferenceable, object pointer
+template <typename Iter, typename Class, typename Member>
+struct FE4<true, Iter, Class *, Member>
+{
+    inline void operator()(Iter begin, Iter end, Class *obj, Member member)
+    {
+        for ( ; begin != end; )
+            (obj->*member)(*begin++);
+    }
+};
+
+
+// Specialization: Not dereferenceable, object pointer
+template <typename Iter, typename Class, typename Member>
+struct FE4<false, Iter, Class *, Member>
+{
+    inline void operator()(Iter begin, Iter end, Class *obj, Member member)
+    {
+        for ( ; begin != end; )
+            (obj->*member)(begin++);
     }
 };
 
@@ -60,6 +87,14 @@ inline void for_each(Iter begin, Iter const &end,
                      Object &object, Member member)
 {
     FE4<TypeTrait<Iter>::isDereferenceable, Iter, Object, Member>()
+                                            (begin, end, object, member);
+}
+
+template<typename Iter, typename Object, typename Member>
+inline void for_each(Iter begin, Iter const &end, 
+                     Object *object, Member member)
+{
+    FE4<TypeTrait<Iter>::isDereferenceable, Iter, Object *, Member>()
                                             (begin, end, object, member);
 }
 
