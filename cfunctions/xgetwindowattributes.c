@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void _bobcat_fatal(char const *);
+void bobcat_fatal_(char const *, char const *);
 
 int XGetWindowAttributes()
 {
-    _bobcat_fatal("XGetWindowAttributes");
+    bobcat_fatal_("XGetWindowAttributes", "X11");
     return 0;
 }

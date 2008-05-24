@@ -1,30 +1,6 @@
-/*
-                              driver.cc
-
-   $Id: driver.cc 2 2005-08-19 15:12:51Z frank $
-
-   $Log$
-   Revision 1.1  2005/08/19 15:12:52  frank
-   Initial revision
-
-   Revision 1.1.1.1  2003/05/28 13:32:23  frank
-   Initial installation of FBB::Errno
-
-*/
-
-#ifndef _SYSINC_IOSTREAM_
 #include <iostream>
-#define _SYSINC_IOSTREAM_
-#endif
-
-#ifndef _INCLUDED_ERRNO_H_
 #include "../errno.h"
-#endif
-
-#ifndef _SYSINC_ERRNO_H_
 #include <errno.h>
-#define _SYSINC_ERRNO_H_
-#endif
 
 using namespace std;
 using namespace FBB;

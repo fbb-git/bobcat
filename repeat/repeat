@@ -1,0 +1,31 @@
+#ifndef INCLUDED_BOBCAT_REPEAT_
+#define INCLUDED_BOBCAT_REPEAT_
+
+namespace FBB
+{
+
+template<typename Counter, typename Function>
+inline void repeat(Counter count, Function &fun)
+{
+    for (; count--; )
+        fun();
+}
+
+template<typename Counter, typename Class, typename Member>
+inline void repeat(Counter count, Class &object, Member member)
+{
+    for (; count--; )
+        (object.*member)();
+}
+
+template<typename Counter, typename Class, typename Member>
+inline void repeat(Counter count, Class *object, Member member)
+{
+    for (; count--; )
+        (object->*member)();
+}
+
+
+} // FBB
+
+#endif

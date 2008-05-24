@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void _bobcat_fatal(char const *);
+void bobcat_fatal_(char const *, char const *);
 
 int XOpenDisplay()
 {
-    _bobcat_fatal("XOpenDisplay");
+    bobcat_fatal_("XOpenDisplay", "X11");
     return 0;
 }

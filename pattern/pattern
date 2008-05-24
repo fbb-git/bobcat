@@ -1,5 +1,5 @@
-#ifndef _INCLUDED_BOBCAT_PATTERN_
-#define _INCLUDED_BOBCAT_PATTERN_
+#ifndef INCLUDED_BOBCAT_PATTERN_
+#define INCLUDED_BOBCAT_PATTERN_
 
 #include <string>
 #include <utility>              // for pair<>
@@ -45,6 +45,8 @@ class Pattern
         size_t              d_referenceCount;
         regex_t             d_regex;
 
+        static std::string  s_converted;
+
         Regex(std::string pattern, int options);
         ~Regex();
 
@@ -55,8 +57,8 @@ class Pattern
 
     Regex                  *d_regex;
     regmatch_t             *d_subExpression;
-    size_t                d_nSub;
-    size_t                d_beyondLast;
+    size_t                  d_nSub;
+    size_t                  d_beyondLast;
     std::string             d_text;
     int                     d_matchOptions;
 
@@ -144,6 +146,8 @@ class Pattern
         std::string operator[](size_t index) const; 
         size_t end() const;           // index beyond the last available
 
+        std::string const &pattern() const; // compiled pattern
+
     private:
         void newRegex(std::string const &pattern, int options);
         void destroy();
@@ -175,12 +179,16 @@ inline std::string Pattern::matched() const
     return (*this)[0];
 }
 
+inline std::string const &Pattern::pattern() const 
+{
+    return Regex::s_converted;
+}
+
 inline size_t Pattern::end() const
 {
     return d_beyondLast;
 }
 
 } // FBB
-
 
 #endif

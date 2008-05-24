@@ -1,5 +1,5 @@
-#ifndef _INCLUDED_BOBCAT_STAT_
-#define _INCLUDED_BOBCAT_STAT_
+#ifndef INCLUDED_BOBCAT_STAT_
+#define INCLUDED_BOBCAT_STAT_
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -16,10 +16,6 @@ class Stat
     struct stat d_stat;
     bool d_errno;
     std::string d_name;
-
-    static char const *s_specialMode[];
-    static char const *s_mode[];
-    static char const *s_type[];
 
     public:
         typedef struct stat stat;   // Defines Stat::stat for clients
@@ -55,7 +51,7 @@ class Stat
         };
         enum Type
         {
-            BLOCK_DEVICE        =  0140000,
+            BLOCK_DEVICE        =  0060000,
             CHARACTER_DEVICE    =  0020000,   
             DIRECTORY           =  0040000,
             FIFO                =  0010000,
@@ -92,7 +88,6 @@ class Stat
         std::string const &name();
         std::string modeStr() const;
         std::string path();
-        std::string specialModeStr() const;
         std::string typeStr() const;
 
     private:

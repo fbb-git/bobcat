@@ -72,7 +72,8 @@ binary-arch: build install
 				dh_testdir
 				dh_testroot
 				dh_installchangelogs -A changelog
-				dh_installdocs -A CLASSES README.class-setup README.optimization
+				dh_installdocs
+#				dh_installdocs -A CLASSES README.class-setup README.optimization README.milter README.X11
 				dh_installexamples
 				#dh_installman
 				dh_link
@@ -95,8 +96,8 @@ binary-arch: build install
 
 # archive downloaded from https://www.icce.rug.nl/debian/bobcat
 #		(bobcat_x.y.z..tar.gz)
-#	1.17.1: ed970aba8b6521cdb3e55e335a7c09d1
-MD5TRUSTED := cfbd7bc04649b472b70db37a6ad72fdf
+#	1.17.2: cfbd7bc04649b472b70db37a6ad72fdf
+MD5TRUSTED := f44c625660668bc9b34619cda3809366
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
@@ -113,7 +114,7 @@ get-orig-source:
 
 	-@if [ ! -f ../tarballs/$(DEFILE) ] ; then \
 		echo "Downloading $(URL)/$(UPFILE) from $(URL)/$(UPFILE) ..." ; \
-	wget --no-check-certificate --quiet -N -nv -T10 -t3 -O \
+	wget --no-check-certificate --quiet -nv -T10 -t3 -O \
 	 ../tarballs/$(DEFILE) $(URL)/$(UPFILE) ; \
 	else \
 		echo "Upstream source tarball have been already downloaded" ; \

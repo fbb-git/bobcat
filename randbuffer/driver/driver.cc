@@ -1,14 +1,14 @@
-#ifndef _INCLUDED_IOSTREAM_
+#ifndef INCLUDED_IOSTREAM_
 #include <iostream>
-#define _INCLUDED_IOSTREAM_
+#define INCLUDED_IOSTREAM_
 #endif
 
-#ifndef _INCLUDED_ISTREAM_
+#ifndef INCLUDED_ISTREAM_
 #include <istream>
-#define _INCLUDED_ISTREAM_
+#define INCLUDED_ISTREAM_
 #endif
 
-#ifndef _INCLUDED_RANDBUFFER_H_
+#ifndef INCLUDED_RANDBUFFER_H_
 #include "../randbuffer.h"
 #endif
 

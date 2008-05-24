@@ -10,3 +10,4 @@ Pattern::Pattern(string const &pattern, bool caseSensitive, size_t nSub,
 {
     newRegex(pattern, options | (caseSensitive ? 0 : REG_ICASE));
 }
+

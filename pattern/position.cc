@@ -2,8 +2,7 @@
 
 Pattern::Position Pattern::position(size_t index) const
 {
-    regoff_t
-        begin;
+    regoff_t begin;
 
     return
         (

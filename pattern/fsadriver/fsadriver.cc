@@ -1,7 +1,7 @@
 /*
                               fsadriver.cc
 
-   $Id: fsadriver.cc 2 2005-08-19 15:12:51Z frank $
+   $Id: fsadriver.cc 224 2008-03-19 15:16:28Z fbb $
 
    $Log$
    Revision 1.1  2005/08/19 15:12:52  frank
@@ -14,7 +14,7 @@
 
 #include "fsadriver.h"
 
-#ifndef _INCLUDED_PATTERN_H_
+#ifndef INCLUDED_PATTERN_H_
 #include "../pattern.ih"
 #endif
 

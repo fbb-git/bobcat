@@ -1,3 +1,34 @@
+bobcat (1.18.1)
+
+  * Repaired a flaw in Pattern due to which a segfault could occur becasue of
+    a failure to initialize the Finite State Automaton processing Perl-like
+    character-set abbreviations. Also the HANDLING OF BACKSLASHES by Pattern
+    objects was modified: to specify a literal backslash is must now be
+    specified twice. 
+    NOTE that this change *may* require some maintenance of patterns that were
+    hard-coded in programs already using the Pattern class. See the `pattern'
+    man-page for details.
+
+  * Removed all left-over redundant include guards
+  
+  * Renamed all identifiers (macro defines, etc.) that started with _ into
+    names not starting with _. This only affects include-guard identifiers and
+    symbols used internally, so programs using Bobcat should not be affected
+    by this modification.
+
+  * Added the files README.X11 and README.milter 
+
+  * Several members of FBB::State were not documented in the bobcat/stat
+    man-page: missing documentation is now included (TODO).
+
+  * Added the class CGI processing forms submitted using the Common Gateway
+    Interface 
+
+  * Added for_each() and repeat() function templates (and their man-pages)
+
+  * Reorganized the main bobcat man-page, adding a categorization of Bobcat's
+    classes 
+
 bobcat (1.17.2)
 
   * Arg's constructors changed in accordance with the new (?) getopt()
