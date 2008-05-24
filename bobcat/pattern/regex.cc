@@ -10,11 +10,15 @@ Pattern::Regex::Regex(string pattern, int options)
 
     if (errcode)
     {
-        char buffer[100];
+        auto_ptr<char> buffer(new char[100]);
 
-        regerror(errcode, &d_regex, buffer, 100);
+        regerror(errcode, &d_regex, buffer.get(), 100);
 
         throw Errno(errcode, "Pattern::Pattern(") << 
-                    insertable << pattern << "): " << buffer << throwable;
+                    insertable << pattern << "): " << buffer.get() << 
+                    throwable;
     }
+
+    s_converted = pattern;          // make the converted pattern available
+                                    // to who's interested in it.
 }

@@ -7,13 +7,10 @@ void PerlSetFSA::convert(string &pattern)
     d_next = pattern.begin();
 
 //cerr << "Pattern: " << pattern << endl;
-//cerr << "Target: " << d_target << endl;
 
     d_target.clear();
     
     State state = Start;
-
-//cerr << "Original: " << pattern << endl;
 
     for (   ; d_next != pattern.end(); d_next++)
     {
@@ -39,6 +36,4 @@ void PerlSetFSA::convert(string &pattern)
         state = mp->d_next;
     }
     pattern = d_target;
-
-//cerr << "Converted: " << pattern << endl;
 }

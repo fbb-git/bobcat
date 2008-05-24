@@ -24,11 +24,11 @@ void cpHeaders()
 
 void static_library(string library)
 {
-    if (sizeof(makelist("*/o/*.o")))
+    if (sizeof(makelist("*/oa/*.o")))
     {
-        run("ar cru " + library + " */o/*.o");
+        run("ar cru " + library + " */oa/*.o");
         run("ranlib " + library);
-        run("rm */o/*.o");
+        run("rm */oa/*.o");
     }
 }
 
@@ -37,12 +37,12 @@ void shared_library(string destDir, string libso, string libsoshared,
 {
     string libsomajor;
 
-    if (sizeof(makelist("*/o/*.o")))
+    if (sizeof(makelist("*/os/*.o")))
     {
         libsomajor  = libso + "." + element(0, strtok(g_version, "."));
 
         run(GCC + " -shared -Wl,-z,def,-soname," + libsomajor +
-            " -o " + destDir + libsoshared + " */o/*.o");
+            " -o " + destDir + libsoshared + " */os/*.o");
     
         chdir(destDir);
     
@@ -54,7 +54,7 @@ void shared_library(string destDir, string libso, string libsoshared,
         run("ln -sf " + libsoshared + " " + libsomajor);
         run("ln -sf " + libsomajor  + " " + libso);
     
-        run("rm -f */o/*");
+//        run("rm -f */os/*");
 
         chdir(g_cwd);
     }
@@ -75,17 +75,16 @@ void libraries(string libname, int all, int strip)
 
     cpHeaders();
     
-    g_copt = COPT;                              // std set of compiler options
-    library(staticLib);                         // compile for static lib.
-    static_library(staticLib);                  // build static library
+    g_copt = COPT;                          // std set of compiler options
+    library("oa", staticLib);               // compile for static lib.
+    static_library(staticLib);              // build static library
 
 #ifndef STATIC
     libso = "libbobcat.so";
     libsoshared = libso + "." + g_version;
 
     g_copt += " -fPIC";                         // add option for shared lib
-    library(g_tmplib + libsoshared);            // compile the shared lib
-
+    library("os", g_tmplib + libsoshared);      // compile the shared lib
 
     shared_library(g_tmplib, libso, libsoshared, strip);
 #endif

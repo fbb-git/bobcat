@@ -14,13 +14,14 @@ reversed:
 (etc).
 
     The character sets s, d, and w are currently supported. \b and \B are 
-already part of the current regex implementation. 
+already part of the standard regex implementation. 
 
 */
 
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <memory>
 
 
 namespace FBB
@@ -35,18 +36,14 @@ namespace FBB
         {
             Start,
             Bs,
-            DQuote,
-            Apostrophy,
             Set,
-            DQuoteBs,
-            ApostrophyBs,
-            NotSet,
+            NegatedSet,
             SetBs,
-            SetNested,
-            InSet,
-            NotSetBs,
-            NotSetNested,
-            InNotSet,
+            NestedSet,
+            InsideASet,
+            NegatedSetBs,
+            NegatedNestedSet,
+            InsideANegatedSet,
 
             nStates_
         };

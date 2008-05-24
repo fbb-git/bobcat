@@ -1,76 +1,60 @@
 #include "pattern.ih"
 
-//    Note: all transitions of a state MUST be clustered
-//          the last element of a cluster is the default transition.
+//    Note: all state transitions MUST be clustered per state
+//          the last element of a state cluster is the default transition.
 //          its 0-value will be overwritten by the conversion.
 //
 PerlSetFSA::TransitionMatrix PerlSetFSA::s_stateTransitions[] =
 {
-    {Start,             '\\',   Bs,             &PerlSetFSA::nop    },
-    {Start,             '\"',   DQuote,         &PerlSetFSA::copy   },
-    {Start,             '\'',   Apostrophy,     &PerlSetFSA::copy   },
-    {Start,             '[',    Set,            &PerlSetFSA::copy   },
-    {Start,             0,      Start,          &PerlSetFSA::copy   },
+    {Start,             '\\',   Bs,                 &PerlSetFSA::nop    },
+    {Start,             '[',    Set,                &PerlSetFSA::copy   },
+    {Start,             0,      Start,              &PerlSetFSA::copy   },
+                                                    
+    {Bs,                'd',    Start,              &PerlSetFSA::d_Set  },
+    {Bs,                's',    Start,              &PerlSetFSA::s_Set  },
+    {Bs,                'w',    Start,              &PerlSetFSA::w_Set  },
+    {Bs,                'D',    Start,              &PerlSetFSA::D_Set  },
+    {Bs,                'S',    Start,              &PerlSetFSA::S_Set  },
+    {Bs,                'W',    Start,              &PerlSetFSA::W_Set  },
+    {Bs,                0,      Start,              &PerlSetFSA::copybs },
 
-    {Bs,                's',    Start,          &PerlSetFSA::s_Set  },
-    {Bs,                'S',    Start,          &PerlSetFSA::S_Set  },
-    {Bs,                'd',    Start,          &PerlSetFSA::d_Set  },
-    {Bs,                'D',    Start,          &PerlSetFSA::D_Set  },
-    {Bs,                'w',    Start,          &PerlSetFSA::w_Set  },
-    {Bs,                'W',    Start,          &PerlSetFSA::W_Set  },
-    {Bs,                '\\',   Start,          &PerlSetFSA::copy   },
-    {Bs,                0,      Start,          &PerlSetFSA::copybs },
+    {Set,               '^',    NegatedSet,         &PerlSetFSA::copy   },
+    {Set,               '\\',   SetBs,              &PerlSetFSA::nop    },
+    {Set,               '[',    NestedSet,          &PerlSetFSA::copy   },
+    {Set,               0,      InsideASet,         &PerlSetFSA::copy   },
 
-    {DQuote,            '\\',   DQuoteBs,       &PerlSetFSA::nop    },
-    {DQuote,            '\"',   Start,          &PerlSetFSA::copy   },
-    {DQuote,            0,      DQuote,         &PerlSetFSA::copy   },
+    {NegatedSet,        '\\',   NegatedSetBs,       &PerlSetFSA::nop    },
+    {NegatedSet,        '[',    NegatedNestedSet,   &PerlSetFSA::copy   },
+    {NegatedSet,        0,      InsideANegatedSet,  &PerlSetFSA::copy   },
 
-    {DQuoteBs,          0,      DQuote,         &PerlSetFSA::copybs },
-    
-    {Apostrophy,        '\\',   ApostrophyBs,   &PerlSetFSA::nop    },
-    {Apostrophy,        '\'',   Start,          &PerlSetFSA::copy   },
-    {Apostrophy,        0,      Apostrophy,     &PerlSetFSA::copy   },
+    {NegatedSetBs,      'd',    NegatedSet,         &PerlSetFSA::d_Nest },
+    {NegatedSetBs,      's',    NegatedSet,         &PerlSetFSA::s_Nest },
+    {NegatedSetBs,      'w',    NegatedSet,         &PerlSetFSA::w_Nest },
+    {NegatedSetBs,      '\\',   NegatedSet,         &PerlSetFSA::copy   },
+    {NegatedSetBs,      ']',    Start,              &PerlSetFSA::copy   },
+    {NegatedSetBs,      0,      NegatedSet,         &PerlSetFSA::copybs },
 
-    {ApostrophyBs,      0,      Apostrophy,     &PerlSetFSA::copybs },
+    {InsideANegatedSet, ']',    Start,              &PerlSetFSA::copy   },
+    {InsideANegatedSet, '[',    NegatedNestedSet,   &PerlSetFSA::copy   },
+    {InsideANegatedSet, '\\',   NegatedSetBs,       &PerlSetFSA::nop    },
+    {InsideANegatedSet, 0,      NegatedNestedSet,   &PerlSetFSA::copy   },
 
-    {Set,               '^',    NotSet,         &PerlSetFSA::copy   },
-    {Set,               '\\',   SetBs,          &PerlSetFSA::nop    },
-    {Set,               '[',    SetNested,      &PerlSetFSA::copy   },
-    {Set,               0,      InSet,          &PerlSetFSA::copy   },
+    {NegatedNestedSet,  ']',    InsideANegatedSet,  &PerlSetFSA::copy   },
+    {NegatedNestedSet,  0,      NegatedNestedSet,   &PerlSetFSA::copy   },
 
-    {NotSet,            '\\',   NotSetBs,       &PerlSetFSA::nop    },
-    {NotSet,            '[',    NotSetNested,   &PerlSetFSA::copy   },
-    {NotSet,            0,      InNotSet,       &PerlSetFSA::copy   },
+    {InsideASet,        '[',    NestedSet,          &PerlSetFSA::copy   },
+    {InsideASet,        ']',    Start,              &PerlSetFSA::copy   },
+    {InsideASet,        '\\',   SetBs,              &PerlSetFSA::nop    },
+    {InsideASet,        0,      InsideASet,         &PerlSetFSA::copy   },
 
-    {NotSetBs,          's',    NotSet,         &PerlSetFSA::s_Nest },
-    {NotSetBs,          'd',    NotSet,         &PerlSetFSA::d_Nest },
-    {NotSetBs,          'w',    NotSet,         &PerlSetFSA::w_Nest },
-    {NotSetBs,          '\\',   NotSet,         &PerlSetFSA::copy   },
-    {NotSetBs,          ']',    Start,          &PerlSetFSA::copy   },
-    {NotSetBs,          0,      NotSet,         &PerlSetFSA::copybs },
+    {SetBs,             'd',    InsideASet,         &PerlSetFSA::d_Nest },
+    {SetBs,             's',    InsideASet,         &PerlSetFSA::s_Nest },
+    {SetBs,             'w',    InsideASet,         &PerlSetFSA::w_Nest },
+    {SetBs,             '\\',   InsideASet,         &PerlSetFSA::copy   },
+    {SetBs,             0,      InsideASet,         &PerlSetFSA::copybs },
 
-    {InNotSet,          ']',    Start,          &PerlSetFSA::copy   },
-    {InNotSet,          '[',    NotSetNested,   &PerlSetFSA::copy   },
-    {InNotSet,          0,      NotSetNested,   &PerlSetFSA::copy   },
-
-    {NotSetNested,      ']',    InNotSet,       &PerlSetFSA::copy   },
-    {NotSetNested,      0,      NotSetNested,   &PerlSetFSA::copy   },
-
-    {InSet,             '[',    SetNested,      &PerlSetFSA::copy   },
-    {InSet,             ']',    Start,          &PerlSetFSA::copy   },
-    {InSet,             '\\',   SetBs,          &PerlSetFSA::nop    },
-    {InSet,             0,      InSet,          &PerlSetFSA::copy   },
-
-    {SetBs,             's',    InSet,          &PerlSetFSA::s_Nest },
-    {SetBs,             'd',    InSet,          &PerlSetFSA::d_Nest },
-    {SetBs,             'w',    InSet,          &PerlSetFSA::w_Nest },
-    {SetBs,             '\\',   InSet,          &PerlSetFSA::copy   },
-    {SetBs,             0,      InSet,          &PerlSetFSA::copybs },
-
-
-    {SetNested,         ']',    InSet,          &PerlSetFSA::copy   },
-    {SetNested,         0,      SetNested,      &PerlSetFSA::copy   },
-
+    {NestedSet,         ']',    InsideASet,         &PerlSetFSA::copy   },
+    {NestedSet,         0,      NestedSet,          &PerlSetFSA::copy   },
 };
 
 PerlSetFSA::TransitionMatrix *PerlSetFSA::s_stateTransitions_end = 
@@ -80,3 +64,5 @@ PerlSetFSA::TransitionMatrix *PerlSetFSA::s_stateTransitions_end =
         sizeof(PerlSetFSA::TransitionMatrix);
 
 vector<PerlSetFSA::statePair> PerlSetFSA::s_transition;
+
+string Pattern::Regex::s_converted;

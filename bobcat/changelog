@@ -1,5 +1,14 @@
 bobcat (1.18.1)
 
+  * Repaired a flaw in Pattern due to which a segfault could occur becasue of
+    a failure to initialize the Finite State Automaton processing Perl-like
+    character-set abbreviations. Also the HANDLING OF BACKSLASHES by Pattern
+    objects was modified: to specify a literal backslash is must now be
+    specified twice. 
+    NOTE that this change *may* require some maintenance of patterns that were
+    hard-coded in programs already using the Pattern class. See the `pattern'
+    man-page for details.
+
   * Removed all left-over redundant include guards
   
   * Renamed all identifiers (macro defines, etc.) that started with _ into
@@ -19,10 +28,6 @@ bobcat (1.18.1)
 
   * Reorganized the main bobcat man-page, adding a categorization of Bobcat's
     classes 
-
-  * Repaired a flaw in Pattern due to which a segfault could occur becasue of 
-    a failure to initialize the Finite State Automaton processing Perl-like
-    character-set abbreviations. 
 
 bobcat (1.17.2)
 

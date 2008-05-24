@@ -16,7 +16,6 @@ PerlSetFSA::PerlSetFSA()
     if (!s_transition.size())
     {
 //        for_each(s_stateTransitions, s_stateTransitions_end, Validator());
-
         s_transition.resize(nStates_);
         for_each(s_stateTransitions, s_stateTransitions_end, initialize);
     }

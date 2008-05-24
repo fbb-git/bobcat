@@ -11,33 +11,60 @@ manpagesynopsis()
     Linking option: tt(-lbobcat) 
 
 manpagedescription()
-    bf(FBB::Pattern) objects may be used for Regular Expression (RE) pattern
+    bf(Pattern) objects may be used for Regular Expression (RE) pattern
 matching. The class is a wrapper around the bf(regcomp)(3) family of
-functions. 
+functions. By default it uses `extended regular expressions', requiring you to
+escape multipliers and bounding-characters when they should be interpreted as
+ordinary characters (i.e., tt(*, +, ?, ^, $, |, (, ), [, ], {, }) should be
+escaped when used as literal characters).
 
-    Patterns may use: nl()
+    The bf(Pattern) class supports the use of the following (Perl-like)
+special escape sequences: nl()
         \b - indicating a word-boundary nl()
-        \d - indicating a digit         nl()
-        \s - indicating a white-space (tt([:space:])) char  nl()
-        \w - indicating a word (tt([:alnum:])) char
+        \d - indicating a digit (tt([[:digit:]])) character nl()
+        \s - indicating a white-space (tt([:space:])) character nl()
+        \w - indicating a word (tt([:alnum:])) character
 
     The corresponding capitals (e.g., bf(\W)) define the complementary
-character sets. The capital sets cannot be used in character-classes (tt([
-... ]) constructions). 
+character sets. The capitalized character set shorthands are not expanded
+inside explicit character-classes (i.e., tt([ ... ]) constructions). So
+tt([\W]) represents a set of two characters: tt(\) and tt(W).
 
-    As the tt(\) is treated as a special character it should be doubled in
-patterns that are passed to tt(Pattern) objects: When a tt(\s) must be
-matched, the pattern should therefore be written as tt(\\s). More in general,
-stand-alone backslashes should be treated as follows:
+    As the backslash (tt(\)) is treated as a special character it should be
+handled carefully. bf(Pattern) converts the escape sequences tt(\d \s \w) (and
+outside of explicit character classes the sequences tt(\D \S \W)) to their
+respective character classes. All other escape sequences are kept as is, and
+the resulting regular expression is offered to the pattern matching
+compilation function bf(regcomp)(3). This function will again interpret
+escape sequences. Consequently some care should be exercised when defining
+patterns containing escape sequences. Here are the rules:
+    itemization(
+    it() Special escape sequences (like tt(\d)) are converted to character
+classes. E.g.,
         verb(
-    ------------------------------------------------------------
-    Required pattern        Provide Pattern()   Use as argument:
-                            internally with:
-    ------------------------------------------------------------
-    \\                      \\\\                \\\\\\\\    
-    \d                      \d                  \\d
-    ------------------------------------------------------------
+    ---------------------------------------------------------
+    Specify:    Converts to:    regcomp uses:      Matches:
+    ---------------------------------------------------------
+    \d          [[:digit:]]     [[:digit:]]        3
+    ---------------------------------------------------------
         )
+    it() Ordinary escape sequences (like tt(\x)) are kept as-is. E.g.,
+        verb(
+    ---------------------------------------------------------
+    Specify:    Converts to:    regcomp uses:      Matches:
+    ---------------------------------------------------------
+    \x          \x              x                  x
+    ---------------------------------------------------------
+        )
+    it() To specify a literal escape sequence, it must be written twice. E.g.,
+        verb(
+    ---------------------------------------------------------
+    Specify:    Converts to:    regcomp uses:      Matches:
+    ---------------------------------------------------------
+    \\x         \\x             \x                 \x
+    ---------------------------------------------------------
+        )
+    )
 
 includefile(namespace.inc)
 
@@ -58,8 +85,8 @@ manpagesection(CONSTRUCTORS)
     itb(Pattern())
         The default constructor defines no pattern, but is available as a
 placeholder for, e.g., containers requiring default constructors. A
-bf(FBB::Pattern) object thus constructed cannot be used to match patterns, but
-can be the em(lvalue) in assignments where another bf(FBB::Pattern) object is
+bf(Pattern) object thus constructed cannot be used to match patterns, but
+can be the em(lvalue) in assignments where another bf(Pattern) object is
 the em(rvalue). However, it can receive a pattern using the member
 bf(setPattern()) (see below). An bf(FBB::Errno) object is thrown if the object
 could not be constructed.
@@ -67,7 +94,7 @@ could not be constructed.
                             bool caseSensitive = true, 
                             size_t nSub = 10,
                         int options = REG_EXTENDED | REG_NEWLINE))
-        This constructor compiles tt(pattern), preparing the bf(FBB::Pattern)
+        This constructor compiles tt(pattern), preparing the bf(Pattern)
 object for pattern matches. The second parameter determines whether case
 sensitive matching will be used (the default) or not. Subexpressions are
 defined by parentheses pairs. Each matching pair defines a subexpression,
@@ -110,7 +137,7 @@ The em(options) flags may be:
 
 manpagesection(MEMBER FUNCTIONS)
      All members of bf(std::ostringstream) and bf(  std::exception) are
-available, as bf(FBB::Pattern) inherits from these classes.
+available, as bf(Pattern) inherits from these classes.
     itemization(
     itb(std::string before() const)  
         Following a successful match, bf(before()) returns the text before the
@@ -141,6 +168,11 @@ Options may be:
                     match  (but  see  the  compilation flag REG_NEWLINE)
     itb(std::string matched() const)
         Following a successful match, this function returns the matched text.
+    itb(std::string const &pattern() const)
+        This member function returns the pattern that is offered to
+bf(regcomp)(3). It returns the contents of a tt(static) string that is
+overwritten at each construction of a bf(Pattern) object and at each call of
+the tt(setPattern()) member function.
     itb(Pattern::Position position(size_t index) const) 
         With em(index == 0) the fully matched text is returned (identical to
 tt(matched())). Other index values return the corresponding
@@ -151,7 +183,7 @@ is at least bf(end()) (which may happen at index value 0).
                             size_t nSub = 10,
                         int options = REG_EXTENDED | REG_NEWLINE))
         This member function installs a new  compiled tt(pattern) in its
-bf(FBB::Pattern) object. This member's parameters are identical to the second
+bf(Pattern) object. This member's parameters are identical to the second
 constructor's parameters. Refer to that constructor for details about the
 parameters. Like the constructor, an bf(FBB::Errno) exception is thrown if the
 new pattern could not be compiled.
@@ -179,13 +211,13 @@ bf(false) otherwise.
     )
 
 manpagesection(EXAMPLE)
-    To do
+    verbinclude(../../pattern/driver/driver.cc)
 
 manpagefiles()
     em(bobcat/pattern) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7)
+    bf(bobcat)(7), bf(regcomp)(3), bf(regex)(3), bf(regex)(7)
 
 manpagebugs()
     None Reported.

@@ -37,93 +37,63 @@ int main(int argc, char **argv)
             Pattern extra(Pattern(pattern));
         }
     
-        cerr << "Here we are\n";
-
-        try
-        {
-            pattern.match("noot");
+        if (pattern << "noot")
             cout << "noot matches\n";
-        }
-        catch (Errno const &e)
-        {
-            cout << e.what() << ": noot doesn't match" << endl;
-        }
+        else
+            cout << ": noot doesn't match\n";
     }
     catch (Errno const &e)
     {
         cout << e.what() << ": compilation failed" << endl;
     }
         
-/*
-    gewenst patroon: 
-        \\
-    aanbieden aan de de patroon-vertaler:
-        \\\\
-    dus in de string constante:
-        \\\\\\\\
-
-    gewenst:
-        \d
-    aanbieden aan de patroon vertaler:
-        \d
-    in de string constante:
-        \\d
-*/
-
-    string
-        pat = "(\\\\\\\\)*(\\\\\\$|\\$(\\d)+)";
+    string pat = "\\d+";
 
     while (true)
     {
-        cout << "Patroon: '" << pat << "'\n";
+        cout << "Pattern: '" << pat << "'\n";
 
         try
         {
-            Pattern 
-                patt(pat, argv[1] != 0);
-            Pattern 
-                pattern;
+            Pattern patt(pat, argc == 1);   // case sensitive by default,
+                                            // any arg for case insensitive
 
-            pattern = patt;
+            cout << "Compiled pattern: " << patt.pattern() << endl;
 
-            pattern.setPattern(pat, argv[1] != 0);
-    
+            Pattern pattern;
+            pattern = patt;                 // assignment operator
+
             while (true)
             {
-                string
-                    st;
-                cerr << "string to match : " << flush;
+                cout << "string to match : ";
+
+                string st;
                 getline(cin, st);
-        
                 if (st == "")
                     break;
-    
                 cout << "String: '" << st << "'\n";
-    
                 try
                 {
                     pattern.match(st);
 
                     Pattern p3(pattern);
         
-                    cerr << "before:  " << p3.before() << endl;
-                    cerr << "matched: " << p3.matched() << endl;
-                    cerr << "beyond:  " << pattern.beyond() << endl;
-                    cerr << "end() = " << pattern.end() << endl;
+                    cout << "before:  " << p3.before() << "\n"
+                            "matched: " << p3.matched() << "\n"  
+                            "beyond:  " << pattern.beyond() << "\n"  
+                            "end() = " << pattern.end() << endl;
         
                     for (size_t idx = 0; idx < pattern.end(); ++idx)
                     {
-                        string
-                            str = pattern[idx];
+                        string str = pattern[idx];
             
                         if (str == "")
-                            cerr << "part " << idx << " not present\n";
+                            cout << "part " << idx << " not present\n";
                         else
                         {
-                            Pattern::Position
-                                pos = pattern.position(idx);
+                            Pattern::Position pos = pattern.position(idx);
         
-                            cerr << "part " << idx << ": '" << str << "' (" <<
+                            cout << "part " << idx << ": '" << str << "' (" <<
                                     pos.first << "-" << pos.second << ")\n";
                         }
                     }
@@ -140,7 +110,7 @@ int main(int argc, char **argv)
             cout << e.what() << ": compilation failed" << endl;
         }
 
-        cout << "New pattern: " << flush;
+        cout << "New pattern: ";
 
         if (!getline(cin, pat) || !pat.length())
             return 0;
