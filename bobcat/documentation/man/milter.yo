@@ -314,9 +314,20 @@ function modifications to the message headers, body, and envelope can be made
 (see the bf(add-, change-) and bf(delete-) members listed below).
     itb(virtual sfsistat header(char *headerf, char *headerv))
         This message-oriented member is called zero or more times between
-bf(recipient()) and bf(eoh()), once per message header. Details about header
-information is given in RFC 882.
-
+bf(recipient()) and bf(eoh()), once per message header. The tt(headerf)
+parameter will contain the text of the header, the tt(headerv) parameter will
+contain its value. E.g., if an e-mail message contains the following headers:
+        verb(
+    From: sender <f@example.com>
+    Subject:no
+        )
+    then tt(header()) will be called twice with the following values for,
+respectively tt(headerf) and tt(headerv):
+        verb(
+    First header:   "From",     " sender <f@example.com>"
+    Second header:  "Subject",  "no"
+        )
+    Further details about header information is given in RFC 882. 
     itb(virtual sfsistat helo(char *helohost))
         This connection-oriented member is called whenever the client sends a
 HELO/EHLO command. It may therefore be called between zero and three
@@ -490,7 +501,8 @@ manpagefiles()
 
 manpageseealso()
     bf(bobcat)(7), bf(getpeername)(2), bf(listen)(2), nl()
-    tt(http://www.milter.org/milter_api/)nl()
+    tt(http://www.milter.org) (e.g., 
+        tt(http://www.milter.org/developers/api))nl()
     tt(http://sendmail.org/m4/readme.html)nl()
     tt(http://rfc.net/rfc821.html)nl()
     tt(http://rfc.net/rfc822.html)nl()
