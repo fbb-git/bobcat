@@ -1,0 +1,43 @@
+#ifndef INCLUDED_BOBCAT_BINARYSEARCH_
+#define INCLUDED_BOBCAT_BINARYSEARCH_
+
+namespace FBB
+{
+
+template <typename Iterator, typename Type>
+Iterator binary_search(Iterator begin, Iterator end, Type value)
+{
+    Iterator ret = end;
+
+    while (begin != end)
+    {
+        Iterator mid = begin + (end - begin >> 1);
+        if (value < *mid)       // left half
+            end = mid;
+        else if (*mid < value)  // right half
+            begin = mid + 1;
+        else
+            return mid;
+    }
+    return ret;
+}
+    
+template <typename Iterator, typename Type, typename Class>
+Iterator binary_search(Iterator begin, Iterator end, Type value, Class object)
+{
+    Iterator ret = end;
+
+    while (begin != end)
+    {
+        Iterator mid = begin + (end - begin >> 1);
+        if (object(value, *mid))        // left half
+            end = mid;
+        else if (object(*mid, value))   // right half
+            begin = mid + 1;
+        else
+            return mid;
+    }
+    return ret;
+}
+
+#endif

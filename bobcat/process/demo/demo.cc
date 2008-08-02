@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <bobcat/process>
+#include "../process"
 
 using namespace std;
 using namespace FBB;
