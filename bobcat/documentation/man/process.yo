@@ -30,7 +30,7 @@ objects will no longer be able to access these streams when child processes
 themselves redirect their standard streams.
 
     When using (output) redirection with the tt(USE_SHELL) path specification
-(see below for the path and imode specifications) the tt(IGNORE_COUT iomode)
+(see below for the path and IOMode specifications) the tt(IGNORE_COUT IOMode)
 (and possibly tt(IGNORE_CERR)) should normally be specified.
 
     The same tt(Process) object may be used repeatedly to execute the same or
@@ -77,7 +77,7 @@ manpagesection(ENUMERATIONS)
             This value indicates that the external program should be called as
         a command (using its tt(-c) option) to bf(/bin/sh). When
         (output) redirection is used with the specified command the
-        tt(IGNORE_COUT iomode) (and possibly the tt(IGNORE_CERR iomode) as
+        tt(IGNORE_COUT IOMode) (and possibly the tt(IGNORE_CERR IOMode) as
         well) should be specified.
         )
 
@@ -113,16 +113,16 @@ tt(FBB::Process::cerr()) member.
 
 manpagesection(TYPE)
     itemization(
-    itb(iomode)
+    itb(IOMode)
         Sets of values of the bf(enum IOMode) may be used as value of a
-variable of this type. In functions expecting an bf(iomode) argument the empty
-set should not normally be specified. To specify multiple tt(iomode) values
+variable of this type. In functions expecting an bf(IOMode) argument the empty
+set should not normally be specified. To specify multiple tt(IOMode) values
 the tt(bit_or) operator should be used.
     )
 
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(Process(std::string const &cmd = "", iomode mode = CIN | COUT | CERR))
+    itb(Process(std::string const &cmd = "", IOMode mode = CIN | COUT | CERR))
        This constructor can also be used as default constructor. By default it
 defines a tt(Process) object without setting a command and by default the
 command's standard streams are accessible via the tt(Process) object.  The
@@ -139,7 +139,7 @@ signal.nl()
 has been constructed. To start the child process, the tt(start()) member must
 be called.
     itb(Process(size_t waitSeconds, std::string const &cmd = "", 
-            iomode mode = CIN | COUT | CERR))
+            IOMode mode = CIN | COUT | CERR))
        By default this constructor defines a tt(Process) object without
 setting a command, while the command's standard streams are accessible via the
 tt(Process) object.  The string that is provided as its first argument may be
@@ -173,8 +173,8 @@ otherwise.
     itb(std::istream &operator>>(FBB::Process &, ...))
         This operator may be used to extract information from the child
 process's standard output stream or from both the standard output and standard
-error streams. Information from both streams is extracted if tt(iomode
-MERGE_CIN_COUT) was specified. If tt(iomode COUT) was specified the
+error streams. Information from both streams is extracted if tt(IOMode
+MERGE_CIN_COUT) was specified. If tt(IOMode COUT) was specified the
 information written by the child process to its standard output stream is
 extracted. Note that information em(extracted) from tt(Process) objects
 is em(inserted) by their child processes. If neither modes are specified, the
@@ -198,7 +198,7 @@ an tt(Process) object.  If the command starts and ends with a em(back-tick)
 (tt(`)) then the back-ticks are removed, and the resulting contents are
 interpreted as a command to be executed by the tt(start(Program)) member. This
 operator does not change the tt(Process) object's current path setting,
-tt(iomode) or wait-seconds setting.nl()
+tt(IOMode) or wait-seconds setting.nl()
     This operator first calls tt(stop()) (see below) then the new command is
 started using the tt(start()) member. nl()
     The return value of this operator equals the return value of the called
@@ -222,7 +222,7 @@ error stream is available.
     itb(std::istream &cerr())
         This member may be used to extract the information written by the
 child process to its standard error stream. It can only be used for this when
-bf(iomode) tt(CERR) was specified.
+bf(IOMode) tt(CERR) was specified.
     itb(void setCommand(std::string const &cmd))
        The tt(setCommand=()) member (re)defines the command currently stored in
 an tt(Process) object.  If the command starts and ends with a em(back-tick)
@@ -231,7 +231,7 @@ interpreted as a command to be executed by the tt(start(Program)) member.
 
     Different from tt(operator=()) this command will em(not) call tt(stop())
 or tt(start()). Thus, it can be used to set another command using the
-currently set tt(iomode) and tt(Program) settings using the following scheme:
+currently set tt(IOMode) and tt(Program) settings using the following scheme:
             verb(
     Process process("some command", iodmode-setting);
     process.start(program-setting); // or: process.system()
@@ -239,7 +239,7 @@ currently set tt(iomode) and tt(Program) settings using the following scheme:
         // terminate the currently running program
 
     process.setCommand("another command");
-        // using the previously set iomode and Program 
+        // using the previously set IOMode and Program 
         // settings
 
     process.start(program-setting); // or: process.system()
@@ -256,7 +256,7 @@ explicitly reset.
     itb(int start(Program program = NO_PATH))
         The currently specified command is  executed using
 bf(system)(3) or a member of the bf(execl)(3) family. Before starting the
-child process, all redirections are set according to the current bf(iomode)
+child process, all redirections are set according to the current bf(IOMode)
 specification. This mode may be set or modified by the constructor, by
 tt(start())'s overloaded version (see below) or by the tt(system()) member
 (see below).  By default (as a security measure), the tt(PATH) environment
@@ -271,15 +271,15 @@ its tt(stop()) member is called, the child is given one second to
 terminate. If the child didn't terminate within one second, it is twice sent a
 tt(SIG_TERM) signal, followed by a tt(SIG_KILL) signal. The function has no
 effect if the command buffer is empty.
-    itb(int start(iomode mode, Program program = NO_PATH))
+    itb(int start(IOMode mode, Program program = NO_PATH))
         Before transferring control to the above tt(start()) member, the
-bf(iomode) is set to tt(mode). Having set bf(iomode), the child process is
+bf(IOMode) is set to tt(mode). Having set bf(IOMode), the child process is
 started according to the procedure described with the former tt(start())
 member.
-    itb(int start(size_t waitSeconds, iomode mode, 
+    itb(int start(size_t waitSeconds, IOMode mode, 
                   Program program = NO_PATH))
         Before transferring control to the first tt(start()) member, the
-bf(iomode) is set to tt(mode). Having set bf(iomode), the child process is
+bf(IOMode) is set to tt(mode). Having set bf(IOMode), the child process is
 started according to the procedure described with the former tt(start())
 member. However, when the tt(Process) object goes out of scope or when
 its tt(stop()) member is called, the child is given tt(waitSeconds) seconds to
@@ -302,12 +302,12 @@ the tt(Process) object goes out of scope.
         This member executes the stored command using the bf(system)(3) system
 call (therefore executing the command as a shell command).  When using
 bf(system) redirections can be included in the command itself (although this
-might undo the previously set bf(iomode)).
-    itb(void system(iomode mode))
-        This member sets a new bf(iomode) set, and then executes the stored
+might undo the previously set bf(IOMode)).
+    itb(void system(IOMode mode))
+        This member sets a new bf(IOMode) set, and then executes the stored
 command using the bf(system)(3) system call (therefore executing the command
 as a shell command).  When using bf(system) redirections can be included in
-the command itself (although this might undo the just set bf(iomode)).
+the command itself (although this might undo the just set bf(IOMode)).
     itb(int wait())
         This member waits for information written by the child process to its
 standard output or error streams.  1 is returned if information from the child
