@@ -39,7 +39,7 @@ class Process: private Fork, public IOStream
                                         // process 
     size_t        d_mode;
     size_t        d_processType;
-    size_t        d_waitSeconds;      // seconds to wait for 
+    size_t        d_waitSeconds;        // seconds to wait for 
                                         // child-termination
     public:
         enum Program
@@ -75,7 +75,9 @@ class Process: private Fork, public IOStream
         int stop();
 
         Process &operator+=(std::string const &text);   // add to the command
-        int operator=(std::string const &cmd);          // set the command
+
+        int operator=(std::string const &cmd);  // set and execute the command
+        void setCommand(std::string const &command);    // merely set cmd
 
         std::istream &cerr();
         size_t available();
@@ -83,6 +85,8 @@ class Process: private Fork, public IOStream
         void system(iomode mode);
         size_t wait();
         size_t wait(size_t sec, size_t msec = 0);
+
+        void setWait(size_t waitSeconds = 1);
 
     private:
         struct ExecContext
@@ -104,7 +108,6 @@ class Process: private Fork, public IOStream
         virtual void childProcess();
         void setPipes(iomode mode);
         size_t whichStream();
-        void setCommand(std::string const &command);
 
         Process(Process const &other);              // NI
         Process &operator=(Process const &other);   // NI
@@ -143,6 +146,11 @@ inline void Process::system(iomode mode)
 
 inline void Process::parentProcess()
 {}
+
+inline void Process::setWait(size_t waitSeconds)
+{
+    d_waitSeconds = waitSeconds;
+}
 
 } // FBB        
 
