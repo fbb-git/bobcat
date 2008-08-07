@@ -1,0 +1,62 @@
+#ifndef INCLUDED_BOBCAT_ERRNO_
+#define INCLUDED_BOBCAT_ERRNO_
+
+    // errno.h is included to allow using errno values, like EINVAL
+#include <sys/errno.h>
+#include <string>
+#include <sstream>
+#include <iosfwd>
+#include <exception>
+#include <iostream>
+
+namespace FBB
+{
+
+class Errno: public std::ostringstream, public std::exception
+{
+    int d_errno;
+    std::string d_msg;
+
+    mutable std::string d_what;
+    
+    // throw() lists below are required by the std::exception base class
+
+    public:
+        Errno();
+        Errno(char const *prefix); 
+        Errno(int errnr, char const *text = 0);
+        Errno(Errno const &other);
+        inline virtual ~Errno() throw();            // g++ bug workaround
+        virtual const char *what() const throw();
+        int which() const;
+
+    private:
+        void initMsg();
+};
+
+inline Errno::~Errno() throw()
+{}
+
+inline int Errno::which() const
+{
+    return d_errno;
+}
+
+inline std::ostream &insertable(std::ostream &errnoObject)
+{
+    return errnoObject;
+}
+
+inline Errno *throwable()
+{
+    return 0;
+}
+
+} // FBB
+
+inline FBB::Errno &operator<<(std::ostream &str, FBB::Errno *(*)())
+{
+    return *static_cast<FBB::Errno *>(&(str << std::flush));
+}
+   
+#endif

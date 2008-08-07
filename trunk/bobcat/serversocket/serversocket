@@ -1,0 +1,20 @@
+#ifndef INCLUDED_BOBCAT_SERVERSOCKET_
+#define INCLUDED_BOBCAT_SERVERSOCKET_
+
+#include <string>
+#include <bobcat/socketbase>
+
+namespace FBB
+{
+
+class ServerSocket: public SocketBase
+{
+    public:
+        ServerSocket(size_t port);
+        void listen(size_t backlog = 5, bool blocking = true);
+        SocketBase accept();
+};
+
+} // FBB
+
+#endif

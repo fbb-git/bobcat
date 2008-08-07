@@ -1,0 +1,176 @@
+#ifndef INCLUDED_BOBCAT_CGI_
+#define INCLUDED_BOBCAT_CGI_
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <cstdlib>
+#include <vector>
+#include <map>
+
+#include <bobcat/pattern>
+
+namespace FBB
+{
+    class CGI;
+}
+
+namespace std
+{
+    ostream &operator<<(ostream &out, FBB::CGI const &cgi);
+}
+
+namespace FBB
+{
+
+class CGI
+{
+    friend std::ostream &std::operator<<(std::ostream &out, CGI const &cgi);
+
+    public:
+        typedef std::map<std::string, std::vector<std::string> >
+                MapStringVector;
+
+        enum Method
+        {
+            UNDETERMINED,
+            GET,
+            POST
+        };
+        enum Create
+        {
+            DONT_CREATE_PATH,
+            CREATE_PATH
+        };
+
+    private:
+        enum Boundary           // see multipartFormData()
+        {
+            NO_BOUNDARY,
+            BOUNDARY,
+            END_BOUNDARY
+        };
+
+        Method d_method;
+
+        bool d_escapeValue;
+        bool d_escape[256];     // initially all d_defaultEscape
+    
+        MapStringVector d_param;
+        std::string d_query;
+        std::string d_boundary; // boundary of the multipart/form-data forms
+                                // empty if POST produces GET-like info on 
+                                // stdin.
+
+        unsigned long long d_contentLength;
+
+        std::string d_filePath;     // uploaded files are named 
+        std::string d_filePrefix;   // d_filePath / d_filePrefix d_fileNr++
+        size_t d_fileNr;
+
+        Pattern d_contentDisposition;
+        Pattern d_contentFile;
+
+        std::string d_status;
+        bool d_activated;
+        unsigned long long d_maxUploadSize;
+
+        static std::vector<std::string> s_empty;
+        static size_t const s_uploadBlock = 8000;   // upload.cc
+        static size_t const s_nTries = 100;         // upload.cc
+
+    public:
+        CGI(bool defaultEscape = true,
+            char const *header = "Content-type: text/html", 
+            std::ostream &out = std::cout);
+
+        CGI &operator<<(std::string const &set);
+        CGI &operator<<(std::pair<char, char> range);
+        CGI &operator<<(int ch);
+
+        void setFileDestination(std::string const &path, 
+                                std::string const &prefix = "",
+                                Create create = CREATE_PATH);
+        void setMaxUploadSize(size_t maxUploadSize, int unit = 'M');
+
+        void report() const;                // also called by param()
+
+    // accessors:
+        char const *operator[](std::string const &key) const;
+
+        unsigned long long maxUploadSize() const;
+
+        Method method() const;
+        std::string const &query() const;   // empty with multipart/form-data
+
+        std::vector<std::string> const &param(std::string const &variable);
+        MapStringVector::const_iterator begin();
+        MapStringVector::const_iterator end();
+
+    // static members:
+                                    // unpercent also does the '+' to ' '
+                                    // conversion 
+        static std::string unPercent(std::string const &text);
+        static std::string dos2unix(std::string const &text);
+        
+    private:
+        void setQuery();
+
+        void get();
+        void post();
+        void addParam(std::string const &param);
+        void init(bool &target);
+        std::string escape(std::string const &text);
+        void next(std::string *line);
+        void multipartFormData();
+
+        Boundary typeOf(std::string const &line) const;
+
+        bool isFile(std::string const &line);
+        void readPart(std::string *line);
+        void setMethod();
+        void setParam();
+        void upload(std::string *line);
+};
+
+inline void CGI::init(bool &target)
+{
+    target = d_escapeValue;
+}
+
+inline char const *CGI::operator[](std::string const &key) const
+{
+    return getenv(key.c_str());
+}
+
+inline std::string const &CGI::query() const
+{
+    return d_query;
+}
+
+inline CGI::Method CGI::method() const
+{
+    return d_method;
+}
+
+inline CGI::MapStringVector::const_iterator CGI::begin()
+{
+    setParam();
+    return d_param.begin();
+}
+
+inline CGI::MapStringVector::const_iterator CGI::end()
+{
+    setParam();
+    return d_param.end();
+}
+
+inline unsigned long long CGI::maxUploadSize() const
+{
+    return d_maxUploadSize;
+}
+
+}   // namespace
+
+
+#endif

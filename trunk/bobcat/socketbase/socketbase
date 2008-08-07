@@ -1,0 +1,72 @@
+#ifndef INCLUDED_BOBCAT_SOCKETBASE_
+#define INCLUDED_BOBCAT_SOCKETBASE_
+
+#include <bobcat/inetaddress>
+#include <string>
+#include <sys/socket.h>
+
+/*
+    int info coming in/going out: host byte order
+*/
+
+namespace FBB
+{
+
+class SocketBase: public InetAddress
+{
+    int         d_sock;
+
+    public:
+        bool debug() const;
+        bool reuse() const;
+        int socket() const;
+        bool setDebug(bool trueIsOn);
+        bool setReuse(bool trueIsOn);
+
+    protected:
+        SocketBase(uint16_t port);
+        SocketBase(std::string const &host, uint16_t port);
+        SocketBase(int socket, sockaddr_in const &address);
+
+    private:
+        bool boolOption(int optname) const;
+        bool setBoolOption(int optname, bool newValue);
+};
+
+inline bool SocketBase::debug() const
+{
+    return boolOption(SO_DEBUG);
+}
+
+inline bool SocketBase::reuse() const
+{
+    return boolOption(SO_REUSEADDR);
+}
+
+inline int SocketBase::socket() const
+{
+    return d_sock;
+}
+
+inline bool SocketBase::setDebug(bool trueIsOn)
+{
+    return setBoolOption(SO_DEBUG, trueIsOn);
+}
+
+inline bool SocketBase::setReuse(bool trueIsOn)
+{
+    return setBoolOption(SO_REUSEADDR, trueIsOn);
+}
+
+inline SocketBase::SocketBase(int socket, sockaddr_in const &address)
+:
+    InetAddress(address),
+    d_sock(socket)
+{}
+
+} // FBB
+
+#endif
+
+
+

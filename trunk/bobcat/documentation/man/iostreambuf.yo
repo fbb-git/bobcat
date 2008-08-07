@@ -1,0 +1,107 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::IOStreambuf)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Error handler)
+
+manpagename(FBB::IOStreambuf)(streambuf allowing input and output operations)
+
+manpagesynopsis()
+    bf(#include <bobcat/iostreambuf>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    This class implements a specialization of the bf(std::streambuf) class,
+allowing input operations from and output operations to different files. It is
+intended to be used in combination with bf(FBB::IOStream), thus allowing all
+stream-based input and output operations using the same object without the
+need to use em(seek)-operations. Using an bf(FBB::IOStream) object it is,
+e.g., possible to construct two-way communications using pipes, much like the
+facilities offered by sockets.
+
+    If the streams that will be associated with the bf(IOStreambuf) object
+support seeking, then the bf(IOStreambuf) will do so to. Seeking might also be
+availble for a single stream (either the bf(std::istream) or the
+bf(std::ostream)). 
+
+When the bf(IOStreambuf) object goes out of scope, its associated
+bf(std::ostream) object is flushed.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(std::streambuf)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(IOStreambuf())
+        The default constructor results in a bf(IOStreambuf) object that
+cannot be immediately used. Its member bf(open()) must be called first.
+    itb(IOStreambuf(std::istream &in, std::ostream &out)) 
+        This constructor associates the bf(IOStreambuf) object with a
+bf(std::istream) and a bf(std::ostream). All output operations will be passed
+on to the bf(std::ostream), all input operations to the bf(std::istream). The
+streams passed to bf(IOStreambuf()) should outlive the bf(IOStreambuf)
+object. 
+    )
+    De copy constructor is available as well.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::streambuf) are
+available, as bf(FBB::IOStreambuf) inherits from these classes.
+    itemization(
+    itb(void open(std::istream &in, std::ostream &out))
+        This member (re)associates the bf(IOStreambuf) object with a
+bf(std::istream) and a bf(std::ostream). All output operations will be passed
+on to the bf(std::ostream), all input operations to the bf(std::istream). The
+streams passed to bf(IOStreambuf()) should outlive the bf(IOStreambuf)
+object. If this member is called for an bf(IOStreambuf) object already
+associated with an bf(std::ostream) object, the already associated 
+bf(std::ostream) object is flushed before setting up the new association.
+    )
+
+manpagesection(VIRTUAL PROTECTED MEMBER FUNCTIONS)
+
+    The following bf(std::streambuf) member functions are overruled by
+bf(IOStreambuf). They should only be called when the bf(FBB::Streambuf) object
+is associated with bf(std::istream) and bf(std::ostream) objects (i.e., they
+should not be called between the construction of a default bf(FBB:IOStreambuf)
+object and a subsequent call of bf(IOStreambuf::open())):
+    itemization(
+    itb(int overflow(int c)) 
+        Inserts the next character into the associated bf(std::ostream)
+object. 
+    itb(int underflow()) 
+        Returns the next character from the associated bf(std::istream)
+object. 
+    itb(pos_type seekoff(off_type offset, std::ios::seekdir way,
+                                 std::ios::openmode mode = 
+                                                std::ios::in | std::ios::out))
+        With seekable streams, repositions the associated bf(std::istream)
+or bf(std::ostream) is repositioned to offset tt(offset), relative to
+tt(way).
+    itb(pos_type seekpos(off_type offset, std::ios::openmode mode = 
+                                                std::ios::in | std::ios::out))
+        With seekable streams, repositions the associated bf(std::istream)
+or bf(std::ostream) is repositioned to offset tt(offset), relative to
+the beginning of the stream.
+    itb(int sync())
+        This member flushes the associated bf(std::ostream) object.
+    itb(std::streamsize xsputn(char const *buffer, std::streamsize n))
+        This member inserts tt(n) characters from tt(buffer) into the
+associated bf(std::ostream) stream.
+    )
+
+manpagesection(EXAMPLE)
+    See the example provided with bf(process)(3bobcat).
+
+manpagefiles()
+    em(bobcat/iostreambuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(iostream)(3bobcat), bf(process)(3bobcat)
+
+manpagebugs()
+    None reported.
+
+includefile(trailer.inc)

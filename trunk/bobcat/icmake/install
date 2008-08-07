@@ -1,0 +1,90 @@
+void rungzip9(string src, string dest)
+{
+    int idx;
+    string file;
+    list man;
+
+    chdir(src);
+    man = makelist("*");
+    chdir(g_cwd);
+    for (idx = sizeof(man); idx--; )
+    {
+        file = element(idx, man);
+        run("gzip -9 < " + src + file + " > " + dest + file + ".gz");
+    }
+}
+
+void reqzip(string dest, string src)
+{
+    list files;
+    int idx;
+    string file;
+
+    files = strtok(src, " ");
+    for (idx = sizeof(files); idx--; )
+    {
+        file = element(idx, files);
+        run("gzip -9 < " + file + " > " + dest + file + ".gz");
+    }
+}
+    
+void install(string rss, string dev)
+{
+#ifdef LIBRARIES
+    printf("\n  installing the libraries\n");
+
+#ifndef STATIC
+    md(rss + LIB);
+    run("cp -d tmp/lib/*so.* " + rss + LIB);
+
+    md(dev + LIB);
+    run("cp -d tmp/lib/*.a tmp/lib/*.so " + dev + LIB);
+#else
+    md(dev + LIB);
+    run("cp -d tmp/lib/*.a " + dev + LIB);
+#endif
+#endif
+
+#ifdef HEADERS
+    printf("\n  installing the headers\n");
+    md(dev + INC);
+    run("cp tmp/bobcat/* " + dev + INC);
+#endif
+
+#ifdef MANPAGES
+    printf("\n  installing the manual pages\n");
+    md(dev + MAN + "/man3 " + dev + MAN + "/man7");
+    rungzip9("tmp/man/man3/", dev + MAN + "/man3/");
+    
+    run("gzip -9 < tmp/man/man7/bobcat.7 > " +
+                   dev + MAN + "/man7/bobcat.7.gz");
+#endif
+
+#ifdef MANHTML
+    printf("\n  installing the html versions of the manual pages\n");
+    md(dev + DOCDEV + "/man");
+    rungzip9("tmp/manhtml/", dev + DOCDEV + "/man/");
+    run("ln -sf bobcat.7.html " + dev + DOCDEV + "/man/index.html");
+    run("cp documentation/man/bobcat.jpg " + dev + DOCDEV + "/man");
+#endif
+
+#ifdef DOCOTHER
+    printf("\n  installing remaining documentation\n");
+    reqzip(dev + DOCDEV + "/", 
+            "README README.optimization README.class-setup "
+            "README.X11 README.milter TODO");
+    run("cp -r documentation/examples " + dev + DOCDEV);
+
+    if (DOC != "")
+    {
+        md(rss + DOC);
+        reqzip(rss + DOC + "/", "README");
+    }
+#endif
+
+    printf("\n  Installation completed\n");
+
+    exit(0);
+}
+
+

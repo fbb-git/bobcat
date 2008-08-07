@@ -1,0 +1,68 @@
+#ifndef INCLUDED_BOBCAT_USER
+#define INCLUDED_BOBCAT_USER
+
+#include <string>
+#include <bobcat/errno>
+
+namespace FBB
+{
+class User
+{
+    std::string d_name;
+    std::string d_password;
+    std::string d_realname;
+    std::string d_homedir;
+    std::string d_shell;
+    size_t d_uid;
+    size_t d_gid;
+
+    public:
+        User();
+
+        size_t groupid() const;
+        size_t userid() const;
+        std::string const &homedir() const;
+        std::string const &name() const;
+        std::string const &password() const;
+        std::string const &realname() const;
+        std::string const &shell() const;
+};
+
+inline size_t User::groupid() const
+{
+    return d_gid;
+}
+
+inline std::string const &User::homedir() const
+{
+    return d_homedir;
+}
+
+inline std::string const &User::name() const
+{
+    return d_name;
+}
+
+inline std::string const &User::password() const
+{
+    return d_password;
+}
+
+inline std::string const &User::realname() const
+{
+    return d_realname;
+}
+
+inline std::string const &User::shell() const
+{
+    return d_shell;
+}
+
+inline size_t User::userid() const
+{
+    return d_uid;
+}
+
+} // FBB
+
+#endif

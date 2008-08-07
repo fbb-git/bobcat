@@ -1,0 +1,32 @@
+DEFINEMACRO(Manpage)(1)(\
+    whenman((Manpage: bf(man -e bobcat ARG1)))\
+    whenhtml((Manpage: url(ARG1(3bobcat))(ARG1.3.html)))\
+)
+
+DEFINEMACRO(itb)(1)(it() bf(ARG1):nl())
+DEFINEMACRO(itt)(1)(it() tt(ARG1))
+DEFINEMACRO(itrange)(2)(tt(CHAR(91)ARG1, ARG2+CHAR(41)))
+
+includefile(../../release.yo)
+
+htmlbodyopt(text)(#27408B)
+htmlbodyopt(bgcolor)(#FFFAF0)
+whenhtml(mailto(Frank B. Brokken: f.b.brokken@rug.nl))
+
+DEFINEMACRO(lsoption)(3)(\
+    bf(--ARG1)=tt(ARG3) (bf(-ARG2))\
+)
+DEFINEMACRO(loption)(1)(\
+    bf(--ARG1)\
+)
+DEFINEMACRO(soption)(1)(\
+    bf(-ARG1)\
+)
+
+DEFINEMACRO(ix)(0)(bf(imgx))
+DEFINEMACRO(Ix)(0)(bf(Imgx))
+
+
+DELETEMACRO(tt)
+DEFINEMACRO(tt)(1)(em(ARG1))
+

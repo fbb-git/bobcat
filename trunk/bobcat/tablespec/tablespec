@@ -1,0 +1,141 @@
+#ifndef INCLUDED_BOBCAT_TABLESPEC_
+#define INCLUDED_BOBCAT_TABLESPEC_
+
+#include <ostream>
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include <bobcat/tablesupport>
+
+namespace FBB
+{
+    class TableSpec;
+    class String;
+}
+
+std::ostream &operator<<(std::ostream &str, FBB::TableSpec const &tableType);
+
+namespace FBB
+{
+
+class TableSpec: public std::ostringstream
+{
+    friend std::ostream &::operator<<(std::ostream &str, 
+                                    FBB::TableSpec const &tableType); 
+    public:
+        typedef std::string const &const_reference;
+
+        enum WidthType
+        {
+            EqualWidth,
+            ColumnWidth,
+        };
+        enum FillDirection
+        {
+            Horizontal,
+            Vertical
+        };
+
+    private:
+        TableSupport           *d_tableSupportPtr;
+        TableSupport           &d_tableSupport;
+        size_t                  d_maxWidth;
+        size_t                  d_nRows;
+        size_t                  d_nColumns;
+        WidthType               d_widthType;
+        std::vector<size_t>     d_colWidth;
+        size_t                  (TableSpec::*d_widthFun)(size_t col) const;
+        std::string const       &(TableSpec::*d_indexFun)(size_t row, 
+                                                          size_t col) const;
+    protected:
+        std::vector<std::string> d_string;
+
+    public:
+        void setWidth(WidthType type);
+
+        void tabulate();
+        void next();
+        void clear();
+
+        void push_back(std::string const &element);
+                
+    protected:
+        TableSpec(TableSupport &tableSupport, size_t nColumns,
+                    FillDirection direction);
+
+        TableSpec(size_t nColumns, FillDirection direction);
+
+        ~TableSpec();
+
+        void append(std::string const &str, char const *sep, bool addEmpty);
+
+    private:
+        std::ostream &insert(std::ostream &ostr) const;
+        size_t width(size_t col) const;     // returns correct column width,
+                                            // given d_widthType
+
+        size_t maxWidth(size_t) const;
+        size_t columnWidth(size_t col) const;
+
+                                    // returns string at particular location
+        std::string const &stringAt(size_t row, size_t col) const;
+
+        std::string const &hIndex(size_t row, size_t col) const;
+        std::string const &vIndex(size_t row, size_t col) const;
+};
+
+inline TableSpec::~TableSpec()
+{
+    delete d_tableSupportPtr;
+}
+
+inline void TableSpec::push_back(std::string const &str)
+{
+    d_string.push_back(str);
+}
+
+inline void TableSpec::clear()
+{
+    d_string.clear();
+}
+
+inline void TableSpec::next()
+{
+    d_string.push_back(str());
+    str("");
+}
+
+inline size_t TableSpec::width(size_t col) const 
+{
+    return (this->*d_widthFun)(col);
+}
+
+inline size_t TableSpec::maxWidth(size_t) const
+{
+    return d_maxWidth;
+}
+
+inline size_t TableSpec::columnWidth(size_t col) const
+{
+    return d_colWidth[col];
+}
+
+inline std::string const &TableSpec::stringAt(size_t row, size_t col) const
+{
+    return (this->*d_indexFun)(row, col);
+}
+
+inline std::string const &TableSpec::hIndex(size_t row, size_t col) const
+{
+    return d_string[row * d_nColumns + col];
+}
+
+inline std::string const &TableSpec::vIndex(size_t row, size_t col) const
+{
+    return d_string[col * d_nRows + row];
+}
+
+} // FBB
+
+#endif

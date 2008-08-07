@@ -1,0 +1,40 @@
+#!/bin/bash
+
+rm -f driver
+
+case $1 in
+    (tmp)
+        for x in *.cc 
+        do
+            NAME=`echo $x | sed 's/\..*//'`
+            if [ ! -s ${NAME}.o -o ${NAME}.cc -nt ${NAME}.o ]
+            then
+                echo "g++ -c $x"
+                g++ -I../../tmp -o ${NAME}.o -c $x || exit 1
+            fi
+        done
+        g++ -static -o driver *.o -L../../tmp/lib -lbobcat
+    ;;
+    (lib)
+        for x in *.cc 
+        do
+            NAME=`echo $x | sed 's/\..*//'`
+            if [ ! -s ${NAME}.o -o ${NAME}.cc -nt ${NAME}.o ]
+            then
+                echo "g++ -c $x"
+                g++ -o ${NAME}.o -c $x || exit 1
+            fi
+        done
+        g++ -o driver *.o -lbobcat
+    ;;
+    (*)
+    echo "
+Usage: 
+    build tmp   - build the driver using the static library created in
+                  ../../tmp/lib
+    build lib   - build the driver using the shared bobcat library installed
+                  in the standard location for shared libs
+"
+    exit 1
+    ;;
+esac
