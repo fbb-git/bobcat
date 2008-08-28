@@ -6,6 +6,8 @@
 #include <string>
 #include <bobcat/glob>
 
+using namespace std;
+using namespace FBB;
 
 int main(int argc, char **argv)
 {
