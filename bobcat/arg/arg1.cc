@@ -13,21 +13,23 @@ Arg::Arg(char const *optstring, int argc, char **argv)
 
     while (true)
     {
-        int c = getopt(argc, argv, opts.c_str());
+        d_getOpt = getopt(argc, argv, opts.c_str());
 
-        switch (c)
+        switch (d_getOpt)
         {
             case EOF:
                 copy(argv + optind, argv + argc, back_inserter(d_argv));
             return;
 
             case ':':
-                throw Errno(c, "ArgData::ArgData(): missing option value");
+                s_optChar[0] = optopt;
+                d_optErr = (optopt ? s_optChar : argv[optind - 1]);
             return;
 
             case '?':
-                throw Errno(optopt, "ArgData::ArgData(): unknown option");
-            break;
+                s_optChar[0] = optopt;
+                d_optErr = (optopt ? s_optChar : argv[optind - 1]);
+            return;
 
             default:
                 addCharOption(c);

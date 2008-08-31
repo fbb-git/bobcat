@@ -39,15 +39,21 @@ class Arg
                                                 // 1st value: option char;
                                                 // 2nd value: optionvalue
                                                 //      or empty string.
-    size_t           d_nOptv;                 // count of ALL of the
+    size_t           d_nOptv;                   // count of ALL of the
                                                 // previous options
 
     StringStringVectorMap   d_longOptv;         // specified long options
-    size_t                d_nLongOptions;     // count of ALL of the
+    size_t                  d_nLongOptions;     // count of ALL of the
                                                 // following options
-    static Arg                      *s_arg;     // points to Singleton Arg
-    static std::string              s_dirsep;
 
+    std::string             d_optErr;           // info about erroneous opt.
+    int                     d_getOpt;           // value returned by getopt()
+
+    static Arg            *s_arg;               // points to Singleton Arg
+
+    static std::string    s_dirsep;
+    static char          s_optChar[];           // used by the constructors
+        
     public:
         enum Type
         {
@@ -126,6 +132,8 @@ class Arg
         void addLongOption(OptStruct *optStructs,           // 2
                         std::string const &optString,
                         LongOption const &longOption);
+
+        void checkState();          
 
         size_t firstNonEmpty(size_t *idx, std::string *value, 
                         StringVector const &sv) const;

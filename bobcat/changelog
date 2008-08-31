@@ -2,6 +2,21 @@ bobcat (1.19.1) (ISN)
 
   * Added missing namespace declarations to glob/driver/driver.cc
 
+  * Prevented exception from being thrown from the Arg constructor, repaired
+    report of the argument before an undefined option instead of the undefined
+    option (as in, e.g., 
+        tmp/bin/xd --verbose -tm
+        ArgData::ArgData(): unknown option: --verbose
+    or:
+        tmp/bin/xd -tm
+        ArgData::ArgData(): unknown option: tmp/bin/xd
+
+  * Removed 'throw()' phrases from various functions and man-pages (except
+    from various Errno members, as there throw() specifications are required
+    by its std::exception base class
+
+  * Removed inline in inline virtual ~Errno() (old g++ bug, now repaired)
+
 bobcat (1.19.0)
 
   * Added the template function binary_search that returning iterator to the
