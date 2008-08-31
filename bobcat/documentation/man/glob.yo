@@ -49,9 +49,12 @@ manpagesection(CONSTRUCTORS)
     constructor, other directory elements starting with a period will be the
     first elements in the series of detected directory elements.
 
-    Multiple plags may be specified, separated by the tt(bitor) operator. An
-tt(FBB::Errno) exception is thrown if either unknown flags were specified or
-the bf(glob)(3) function failed.
+    Multiple flags may be specified, separated by the tt(bitor) operator. 
+
+    If either unknown flags were specified or the bf(glob)(3) function failed
+bf(Glob)'s tt(operator bool()) (see below) will return tt(false) and
+tt(Glob::ok()) (see below) will throw an tt(Errno) exception.
+
 
     itb(Glob(Glob const &other)) 
         The copy constructor is available.
@@ -59,6 +62,11 @@ the bf(glob)(3) function failed.
 
 manpagesection(OVERLOADED OPERATORS)
     itemization(
+    itb(operator bool() const)
+        This operator returns tt(true) if the bf(Glob) constructor received a
+set of proper bf(Glob Flags) values (see above) and if the bf(glob)(3)
+function returned without errors. This function or the tt(ok()) member should
+be called before using other bf(Glob) members.
     itb(Glob &operator=(Glob const &other))
         The assignment operator is available.
     itb(char const *operator[](size_t idx) const)
@@ -68,6 +76,11 @@ manpagesection(OVERLOADED OPERATORS)
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
+    itb(void ok() const)
+        This operator throws an tt(Errno) exception if the bf(Glob)
+constructor did not receive a set of proper bf(Glob Flags) values (see above)
+or if the bf(glob)(3) function failed. This function or bf(Glob::operator
+bool()) should be called before using other bf(Glob) members.
     itb(size_t size() const)
         Returns the number of elements that were detected.
     itb(char const *const *begin() const)
