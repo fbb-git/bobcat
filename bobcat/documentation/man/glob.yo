@@ -51,10 +51,10 @@ manpagesection(CONSTRUCTORS)
 
     Multiple flags may be specified, separated by the tt(bitor) operator. 
 
-    If either unknown flags were specified or the bf(glob)(3) function failed
-bf(Glob)'s tt(operator bool()) (see below) will return tt(false) and
-tt(Glob::ok()) (see below) will throw an tt(Errno) exception.
-
+    This constructor properly completes its task if only defined bf(Flag)
+values were specified and if the bf(glob)(3) function returned without
+errors. The proper completion of this constructor should be checked by calling
+the tt(Glob::verify()) member (see below).
 
     itb(Glob(Glob const &other)) 
         The copy constructor is available.
@@ -62,11 +62,6 @@ tt(Glob::ok()) (see below) will throw an tt(Errno) exception.
 
 manpagesection(OVERLOADED OPERATORS)
     itemization(
-    itb(operator bool() const)
-        This operator returns tt(true) if the bf(Glob) constructor received a
-set of proper bf(Glob Flags) values (see above) and if the bf(glob)(3)
-function returned without errors. This function or the tt(ok()) member should
-be called before using other bf(Glob) members.
     itb(Glob &operator=(Glob const &other))
         The assignment operator is available.
     itb(char const *operator[](size_t idx) const)
@@ -76,11 +71,10 @@ be called before using other bf(Glob) members.
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
-    itb(void ok() const)
+    itb(void verify() const)
         This operator throws an tt(Errno) exception if the bf(Glob)
-constructor did not receive a set of proper bf(Glob Flags) values (see above)
-or if the bf(glob)(3) function failed. This function or bf(Glob::operator
-bool()) should be called before using other bf(Glob) members.
+constructor did not properly complete. It should be called before using any
+other bf(Glob) member (not required after using the copy constructor).
     itb(size_t size() const)
         Returns the number of elements that were detected.
     itb(char const *const *begin() const)

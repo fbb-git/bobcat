@@ -1,6 +1,6 @@
 #include "glob.ih"
 
-Glob::Glob(string const &pattern, int flags, Dots dots)
+Glob::Glob(string const &pattern, int flags, Dots dots, bool)
 :
     d_share(new GlobShare)
 {
@@ -8,9 +8,9 @@ Glob::Glob(string const &pattern, int flags, Dots dots)
 
     d_ok = 
         (
-            glob(pattern.c_str(), flags, 0, &d_share->globStruct)
-            ||
-            flags & ~(ERR | MARK | NOSORT | NOESCAPE | PERIOD)
+            (flags & ~(ERR | MARK | NOSORT | NOESCAPE | PERIOD)) == 0
+            &&
+            glob(pattern.c_str(), flags, 0, &d_share->globStruct) == 0
         );
 
     if (!d_ok)

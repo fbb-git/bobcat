@@ -6,5 +6,8 @@ void Glob::destroy()
     {
         globfree(&d_share->globStruct);
         delete d_share;
+
+        if (!s_ok)
+            s_ok = bobcatVerify("Glob");
     }
 }

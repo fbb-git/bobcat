@@ -4,7 +4,8 @@
 
 #include <iostream>
 #include <string>
-#include <bobcat/glob>
+//#include <bobcat/glob>
+#include "../glob"
 
 using namespace std;
 using namespace FBB;
@@ -20,6 +21,7 @@ int main(int argc, char **argv)
     cout << "General:\n";
 
     Glob general;
+    general.verify();
 
     for (size_t idx = 0; idx < general.size(); idx++)
         cout << idx << ": " << general[idx] << endl;
@@ -27,6 +29,7 @@ int main(int argc, char **argv)
     cout << "Pattern: " << argv[1] << "\n";
 
     Glob pattern(argv[1], Glob::PERIOD, Glob::DEFAULT);
+    pattern.verify();
 
     for (size_t idx = 0; idx < pattern.size(); idx++)
         cout << idx << ": " << pattern[idx] << endl;

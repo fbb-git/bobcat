@@ -17,7 +17,11 @@ class Glob
 
     GlobShare *d_share;
     bool d_ok;
-    
+
+    static bool s_ok;           // set to true by calls of verify()
+                                // indicating that glob()'s proper completion 
+                                // was actually checked. The destructor will 
+                                // check for s_ok
     public:
         enum Flags
         {
@@ -37,7 +41,8 @@ class Glob
         };
             
         Glob(std::string const &pattern = "*", int flags = PERIOD,
-             Dots dots = FIRST);
+             Dots dots = FIRST, bool tmp = true);   // see the 1.20.0
+                                                    // changelog
         Glob(Glob const &other);
         ~Glob();
 
@@ -47,9 +52,8 @@ class Glob
         char const *const *begin() const;
         char const *const *end() const;
 
-        operator bool() const;      // true if glob's constructor worked fine
-        void ok() const;            // throws exception if not OK 
-                                    // (previously by the constructor)
+        void verify() const;        // throws exception if the constructor did
+                                    // not properly terminate
     private:
         char const **mbegin() const;
         char const **mend() const;
@@ -100,18 +104,6 @@ inline char const **Glob::mend() const
     return const_cast<char const **>
             (d_share->globStruct.gl_pathv + size());
 }
-
-inline Glob::operator bool() const
-{
-    return d_ok;
-}
-
-inline void Glob::ok() const
-{
-    if (!d_ok)
-        throw Errno("Glob: glob() failed or illegal Flag specified");
-}
-
 
 } // FBB
         
