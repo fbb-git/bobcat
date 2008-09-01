@@ -4,13 +4,14 @@
 
 #include <iostream>
 #include <string>
-//#include <bobcat/glob>
-#include "../glob"
+#include <bobcat/glob>
+#include <bobcat/errno>
 
 using namespace std;
 using namespace FBB;
 
 int main(int argc, char **argv)
+try
 {
     if (argc == 1)
     {
@@ -36,4 +37,8 @@ int main(int argc, char **argv)
 
     return 0;
 }
-
+catch (Errno const &err)
+{
+    cout << err.what() << endl;
+    return err.which();
+}

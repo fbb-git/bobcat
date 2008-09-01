@@ -9,13 +9,10 @@ namespace FBB
 
 class OneKey
 {
-    termios d_saved;
-    bool    d_useEcho;          // default false
-    int     d_err;
-    char const *d_errMsg;
-
-
-    static  bool s_ok;
+    termios     d_saved;
+    bool        d_useEcho;          // default false
+    int         d_err;
+    char const *d_msg;
 
     public:
         enum Mode
@@ -24,7 +21,7 @@ class OneKey
             ON      
         };
 
-        OneKey(Mode state = OFF, bool tmp = true);    
+        OneKey(Mode state = OFF);    
         ~OneKey();
         
         int get() const;                // get the next char

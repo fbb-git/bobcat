@@ -15,8 +15,11 @@ namespace FBB
 class SocketBase: public InetAddress
 {
     int         d_sock;
+    char const *d_msg;
 
     public:
+        void verify() const;
+
         bool debug() const;
         bool reuse() const;
         int socket() const;
@@ -27,11 +30,17 @@ class SocketBase: public InetAddress
         SocketBase(uint16_t port);
         SocketBase(std::string const &host, uint16_t port);
         SocketBase(int socket, sockaddr_in const &address);
+        ~SocketBase();
 
     private:
         bool boolOption(int optname) const;
         bool setBoolOption(int optname, bool newValue);
 };
+
+inline SocketBase::~SocketBase()
+{
+    verify();
+}
 
 inline bool SocketBase::debug() const
 {

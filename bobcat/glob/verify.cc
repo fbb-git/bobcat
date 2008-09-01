@@ -2,7 +2,9 @@
 
 void Glob::verify() const
 {
-    s_ok = true;
-    if (!d_ok)
-        throw Errno("Glob: glob() failed or illegal Flag specified");
+    if (int x = d_share->err)
+    {
+        d_share->err = 0;
+        throw Errno(x, "Glob: glob() failed or illegal Flag specified");
+    }
 }

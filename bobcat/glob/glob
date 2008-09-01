@@ -12,16 +12,12 @@ class Glob
     struct GlobShare
     {
         glob_t      globStruct;
-        size_t    users;
+        size_t      users;
+        int         err;
     };
 
     GlobShare *d_share;
-    bool d_ok;
 
-    static bool s_ok;           // set to true by calls of verify()
-                                // indicating that glob()'s proper completion 
-                                // was actually checked. The destructor will 
-                                // check for s_ok
     public:
         enum Flags
         {
@@ -41,8 +37,8 @@ class Glob
         };
             
         Glob(std::string const &pattern = "*", int flags = PERIOD,
-             Dots dots = FIRST, bool tmp = true);   // see the 1.20.0
-                                                    // changelog
+             Dots dots = FIRST);
+
         Glob(Glob const &other);
         ~Glob();
 

@@ -1,6 +1,6 @@
 #include "onekey.ih"
 
-OneKey::OneKey(Mode state, bool)
+OneKey::OneKey(Mode state)
 :
     d_err(0)
 {

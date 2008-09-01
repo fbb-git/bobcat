@@ -1,16 +1,16 @@
 bobcat (1.20.0) (ISN)
 
   * Removed exception thrown from constructors of the following classes:
-    Glob, OneKey, 
-    Instead, these classes now define a member 'verify()' which should be
-    called following the construction of objects of these classes before using
-    any other of their members.
+    Arg, Glob, OneKey, Pipe, ServerSocket, SocketBase,
+
+    Except for the classes Arg and ServerSocket these classes now define a
+    public member 'verify()' which should be called following the construction
+    of objects of these classes before using any other of their members.
 
   * Added missing namespace declarations to glob/driver/driver.cc
 
-  * Prevented exception from being thrown from the Arg constructor, repaired
-    report of the argument before an undefined option instead of the undefined
-    option (as in, e.g., 
+  * Repaired reporting the argv-argument before an undefined option instead of
+    the undefined option itself as in, e.g., 
         tmp/bin/xd --verbose -tm
         ArgData::ArgData(): unknown option: --verbose
     or:
