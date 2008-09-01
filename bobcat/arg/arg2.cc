@@ -43,7 +43,7 @@ Arg::Arg(char const *optstring,
             return;
 
             case 0:
-                if (plainLongOption(&d_getOpt, begin[longOptionIndex]))
+                if (plainLongOption(begin[longOptionIndex]))
                     break;
 
             // FALLING THROUGH IF LONG OPTION IS ALSO SHORT CHAR OPTION
@@ -51,7 +51,7 @@ Arg::Arg(char const *optstring,
                 // char option
 
             default:
-                addCharOption(d_getOpt);
+                addCharOption();
             break;    
         }
     }

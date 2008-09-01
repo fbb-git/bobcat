@@ -32,7 +32,7 @@ Arg::Arg(char const *optstring, int argc, char **argv)
             return;
 
             default:
-                addCharOption(c);
+                addCharOption();
             break;    
         }
     }

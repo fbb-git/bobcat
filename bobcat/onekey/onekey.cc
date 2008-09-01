@@ -1,15 +1,22 @@
 #include "onekey.ih"
 
-OneKey::OneKey(Mode state)
+OneKey::OneKey(Mode state, bool)
+:
+    d_err(0)
 {
     setEcho(state);
 
     if (!isatty(STDIN_FILENO))
-        throw Errno(-1, "OneKey::OneKey(): STDIN is not a tty");
+    {
+        setErr(2, "OneKey::OneKey(): STDIN is not a tty");
+        return;
+    }
 
     if (tcgetattr(STDIN_FILENO, &d_saved))
-        throw Errno(-1, 
-                "OneKey::OneKey(): can't save the current stdin state");
+    {
+        setErr(2, "OneKey::OneKey(): can't save the current stdin state");
+        return;
+    }
     
     termios tattr;
 
@@ -20,7 +27,6 @@ OneKey::OneKey(Mode state)
     tattr.c_cc[VTIME] = 0;
     
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &tattr))
-        throw Errno(-1, 
-                "OneKey::OneKey(): can't change the stdin state to "
-                                                        "direct input");
+        setErr(1, "OneKey::OneKey(): can't change the stdin state to "
+                                                              "direct input");
 }

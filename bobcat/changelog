@@ -1,11 +1,11 @@
 bobcat (1.20.0) (ISN)
 
-  * Removed exception thrown from Glob's constructor. 
-    Alternatives: Glob::operator bool() and Glob::ok(). 
+  * Removed exception thrown from constructors of the following classes:
+    Glob, OneKey, 
+    Instead, these classes now define a member 'verify()' which should be
+    called following the construction of objects of these classes before using
+    any other of their members.
 
-    NOTE  this CHANGES the Glob API: Programs using Glob should be recompiled
-    NOTE  and check for the proper return of the Glob constructor
-    
   * Added missing namespace declarations to glob/driver/driver.cc
 
   * Prevented exception from being thrown from the Arg constructor, repaired

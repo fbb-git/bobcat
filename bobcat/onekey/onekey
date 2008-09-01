@@ -11,6 +11,11 @@ class OneKey
 {
     termios d_saved;
     bool    d_useEcho;          // default false
+    int     d_err;
+    char const *d_errMsg;
+
+
+    static  bool s_ok;
 
     public:
         enum Mode
@@ -19,15 +24,19 @@ class OneKey
             ON      
         };
 
-        OneKey(Mode state = OFF);    
+        OneKey(Mode state = OFF, bool tmp = true);    
         ~OneKey();
         
         int get() const;                // get the next char
         void setEcho(Mode state);
 
+        void verify() const;
+
     private:
         OneKey(OneKey const &other);                    // NI
         OneKey const &operator=(OneKey const &other);   // NI
+
+        void setErr(int nr, char const *txt);
 };
 
 inline void OneKey::setEcho(Mode state)

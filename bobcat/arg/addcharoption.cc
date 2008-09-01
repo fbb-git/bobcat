@@ -1,7 +1,7 @@
 #include "arg.ih"
 
-void Arg::addCharOption(int option)
+void Arg::addCharOption()
 {
-    d_optv[option].push_back(optarg ? optarg : "");
+    d_optv[d_getOpt].push_back(optarg ? optarg : "");
     ++d_nOptv;
 }

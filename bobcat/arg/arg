@@ -127,7 +127,7 @@ class Arg
             LongOption const * const end,
             int argc, char **argv);
 
-        void addCharOption(int option);
+        void addCharOption();       // in d_getOpt
         void addLongOption(std::string const &longName);    // 1
         void addLongOption(OptStruct *optStructs,           // 2
                         std::string const &optString,
@@ -144,8 +144,7 @@ class Arg
                         std::string const &optString,
                         LongOption const * const begin,
                         LongOption const * const end);
-        bool plainLongOption(int *c, 
-                        LongOption const &longOption);
+        bool plainLongOption(LongOption const &longOption);
         int setOptionType(std::string const &optString,
                         LongOption const &longOption);
 };
