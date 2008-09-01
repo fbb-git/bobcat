@@ -1,9 +1,10 @@
 #include "xpointer.ih"
 
-Xpointer::~Xpointer()
+void Xpointer::verify() const
 {
-    verify();
-
+    if (!s_theDisplay)
+        throw Errno(1, "Can't open the display");
+        
     if (!--s_counter)               // No more Xpointer objects ?
         XCloseDisplay(s_theDisplay);
 }

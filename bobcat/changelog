@@ -1,11 +1,15 @@
 bobcat (1.20.0) (ISN)
 
   * Removed exception thrown from constructors of the following classes:
-    Arg, Glob, OneKey, Pipe, ServerSocket, SocketBase, User
+    Arg, Glob, OneKey, Pipe, ServerSocket, SocketBase, User, Xpointer
 
     Except for the classes Arg and ServerSocket these classes now define a
     public member 'verify()' which should be called following the construction
-    of objects of these classes before using any other of their members.
+    of objects of these classes before using any other of their members. The
+    verify() member throws the exception if applicable. As a safeguard
+    verify() is also called from the classes' destructors, but in some
+    programs that might be (too) late to pinpoint the reason for the
+    exception.
 
   * Added missing namespace declarations to glob/driver/driver.cc
 
