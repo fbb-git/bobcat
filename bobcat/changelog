@@ -1,15 +1,18 @@
 bobcat (1.20.0) (ISN)
 
   * Removed exception thrown from constructors of the following classes:
-    Arg, Glob, OneKey, Pipe, ServerSocket, SocketBase, User, Xpointer
+    Arg, Glob, OneKey, Pipe, 
+    ServerSocket, SocketBase, User, Xpointer
 
     Except for the classes Arg and ServerSocket these classes now define a
     public member 'verify()' which should be called following the construction
     of objects of these classes before using any other of their members. The
-    verify() member throws the exception if applicable. As a safeguard
-    verify() is also called from the classes' destructors, but in some
-    programs that might be (too) late to pinpoint the reason for the
-    exception.
+    verify() member throws the Errno exception if the object could not
+    properly be constructed. As a safeguard verify() is also called from the
+    classes' destructors, but in some programs that might be rather late,
+    causing surprise for the program's users.
+
+    The man-pages are updated accordingly
 
   * Added missing namespace declarations to glob/driver/driver.cc
 
@@ -22,10 +25,11 @@ bobcat (1.20.0) (ISN)
         ArgData::ArgData(): unknown option: tmp/bin/xd
 
   * Removed 'throw()' phrases from various functions and man-pages (except
-    from various Errno members, as there throw() specifications are required
-    by its std::exception base class
+    from several Errno members, as their throw() specifications are required
+    by Errno's std::exception base class
 
-  * Removed inline in inline virtual ~Errno() (old g++ bug, now repaired)
+  * Removed inline in inline virtual ~Errno() (needed because of a previous
+    bug in g++, which has now been repaired)
 
 
 bobcat (1.19.0)
