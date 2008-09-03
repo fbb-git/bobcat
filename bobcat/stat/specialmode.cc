@@ -8,9 +8,9 @@ bool Stat::specialMode(size_t mode, Combine combi) const
                 throwable;
 
     return
-        combi == ALL && mode == (d_stat.st_mode & (SUID | SGID | SB))
+        (combi == ALL && mode == (d_stat.st_mode & (SUID | SGID | SB)))
     ||
-        combi == ANY && (mode & d_stat.st_mode);
+        (combi == ANY && (mode & d_stat.st_mode));
 }
 
 

@@ -8,9 +8,9 @@ bool Stat::mode(size_t mode, Combine combi) const
                 throwable;
 
     return
-        combi == ALL && mode == (d_stat.st_mode & RWX)
+        (combi == ALL && mode == (d_stat.st_mode & RWX))
     ||
-        combi == ANY && (mode & d_stat.st_mode);
+        (combi == ANY && (mode & d_stat.st_mode));
 }
 
 
