@@ -18,6 +18,8 @@ class SocketBase: public InetAddress
     char const *d_msg;
 
     public:
+        ~SocketBase();
+
         void verify() const;
 
         bool debug() const;
@@ -30,7 +32,6 @@ class SocketBase: public InetAddress
         SocketBase(uint16_t port);
         SocketBase(std::string const &host, uint16_t port);
         SocketBase(int socket, sockaddr_in const &address);
-        ~SocketBase();
 
     private:
         bool boolOption(int optname) const;
