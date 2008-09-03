@@ -23,7 +23,6 @@ User::User()
             return;
         }
     }
-
     d_msg = "Unable to determine actual user information from `/etc/passwd'";
 }
 

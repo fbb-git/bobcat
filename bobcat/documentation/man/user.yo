@@ -22,12 +22,12 @@ manpagesection(INHERITS FROM)
 
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(User() trow(FBB::Errno))
-        The default constructor determines the current user's data. If
-these can't be found, an bf(FBB::Errno) exception is thrown.
-    itb(User(User const &other)) 
-    The standard copy constructor is available.
+    itb(User())
+        The default constructor determines the current user's data.  The
+proper completion of this constructor should be checked by calling the
+tt(User::verify()) member (see below).
     )
+    The copy constructor is available.
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
@@ -47,6 +47,11 @@ manpagesection(MEMBER FUNCTIONS)
         Returns the user's shell.
     itb(size_t userid() const):nl()
         Returns the user's user-id.
+    itb(void verify() const)
+        This operator throws an tt(Errno) exception if the bf(User)
+constructor did not properly complete because the current user name could not
+be found in tt(/etc/passwd). It should be called before using any other
+bf(User) member (not required after using the copy constructor).
     )
 
 manpagesection(EXAMPLE)

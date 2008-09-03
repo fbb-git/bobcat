@@ -26,9 +26,11 @@ manpagesection(CONSTRUCTORS)
         The default constructor. Connects to the Display. throws an bf(Errno)
 exception if the display cannot be opened. With multiple bf(Xpointer) objects,
 the connection to the display is opened only once.
-    itb(Xpointer(Xpointer const &other)) 
-    The standard copy constructor is available.
+
+    The proper completion of this constructor should be checked by calling
+the tt(Xpointer::verify()) member (see below).
     )
+    The copy constructor is available.
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
@@ -43,6 +45,10 @@ right screen-margin of the root window (going left), a negative y-coordinate
 is measured from the bottom screen-margin of the root window (going up). On
 success tt(true) is returned; tt(false) is returned if the pointer could not
 be moved.
+    itb(void verify() const)
+        This operator throws an tt(Errno) exception if the bf(Xpointer)
+constructor could not connect to the Display. It should be called before using
+any other bf(Xpointer) member (not required after using the copy constructor).
     )
 
 manpagesection(EXAMPLE)
