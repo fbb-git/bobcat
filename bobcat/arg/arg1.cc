@@ -23,12 +23,12 @@ Arg::Arg(char const *optstring, int argc, char **argv)
 
             case ':':
                 s_optChar[0] = optopt;
-                d_optErr = (optopt ? s_optChar : argv[optind - 1]);
+                d_msg = (optopt ? s_optChar : argv[optind - 1]);
             return;
 
             case '?':
                 s_optChar[0] = optopt;
-                d_optErr = (optopt ? s_optChar : argv[optind - 1]);
+                d_msg = (optopt ? s_optChar : argv[optind - 1]);
             return;
 
             default:

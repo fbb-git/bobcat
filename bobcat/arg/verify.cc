@@ -7,12 +7,12 @@ void Arg::verify()
         case ':':
             throw Errno(1, 
                 "ArgData::ArgData(): missing value for option: ") <<
-                insertable << d_optErr << throwable;
+                insertable << d_msg << throwable;
         // exception thrown
 
         case '?':
             throw Errno(1, "ArgData::ArgData(): unknown option: ") <<
-                    insertable << d_optErr << throwable;
+                    insertable << d_msg << throwable;
         // exception thrown
 
         default:
