@@ -8,7 +8,7 @@ String::const_iterator String::separator(string const &str,
                                         const_iterator from, 
                                         string const &separators)
 {
-    size_type idx = str.find_first_not_of(separators, from - str.begin());
-    return idx == npos ? str.end() : str.begin() + idx;
+    string::size_type idx = str.find_first_not_of(separators, from - str.begin());
+    return idx == string::npos ? str.end() : str.begin() + idx;
 }
 

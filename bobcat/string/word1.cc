@@ -15,7 +15,7 @@ String::Type String::word(string const &str, const_iterator *until,
         (
             from == beyond          // at the end or at a separator
             ||                      
-            separators.find(*from) != npos
+            separators.find(*from) != string::npos
         )
         {
             *until = from;          // indicate the word's end
