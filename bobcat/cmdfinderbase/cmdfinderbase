@@ -71,24 +71,6 @@ inline std::string const &CmdFinderBase::cmd() const
     return d_cmd;
 }
 
-inline bool CmdFinderBase::matchExact(std::string const &key) const
-{
-    return d_cmd == key && d_cmd.length();
-}
-
-inline bool CmdFinderBase::matchUnique(std::string const &key) const
-{
-    return key.find(d_cmd) != std::string::npos && d_cmd.length();
-}
-
-inline bool CmdFinderBase::matchInsensitive(std::string const &key) const
-{
-    return 
-        strcasecmp(d_cmd.c_str(), key.c_str()) == 0 
-        &&
-        d_cmd.length();
-}
-
 } // FBB
 
         
