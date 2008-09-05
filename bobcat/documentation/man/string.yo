@@ -21,7 +21,7 @@ manpagesection(NAMESPACE)
 man-page, are defined in the namespace bf(FBB).
 
 manpagesection(INHERITS FROM)
-    bf(std::string) (deprecated, see below)
+    --
 
 manpagesection(ENUMERATION)
     itemization(
@@ -62,11 +62,8 @@ manpagesection(HISTORY)
 bf(std::string), however, is considerd bad design as tt(std::string) was
 not designed as a base-class. 
 
-    Currently bf(FBB::String) offers a series of em(static) member functions
-providing the facilities originally implemented in non-static members.  The
-non-static members are still avaialble for reasons of backward compatibility,
-but should no longer be used. They will be removed in subsequent releases of
-the bf(Bobcat) library.
+    Currently bf(String) offers a series of em(static) member functions
+providing the facilities originally implemented in non-static members.
 
 manpagesection(STATIC MEMBER FUNCTIONS)
     itemization(
@@ -123,68 +120,6 @@ backslash are interpreted as an octal number. In all other cases, the
 backslash is removed and the character following the backslash is kept.
     itb(std::string uc(std::string const &str))
         Returns a copy of the tt(str) object in which all letters were
-capitalized. 
-    )
-
-manpagesection(DEPRECATED CONSTRUCTORS)
-    All constructors are deprecated and should no longer be used.
-    itemization(
-    itb(String())
-        The default constructor, creating an empty bf(FBB::String) object.
-    itb(String(std::string const &str))
-        Initializes a bf(FBB::String) with the contents of an existing
-bf(std::string).
-    itb(String(char const *cp)):nl()
-        Initializes a bf(FBB::String) with the contents of an existing
-bf(C)-string: bf(cp) should not be a 0-pointer
-    )
-    The copy constructor is available.
-
-manpagesection(DEPRECATED MEMBER FUNCTIONS)
-    All public non-static members are deprecated and should no longer be
-used:
-    itemization(
-    itb(int casecmp(std::string const &other) const)
-        Performs a case-insensitive comparison between the current object's
-contents and the contenst of tt(other). A negative value is returned if the
-current object should be ordered before tt(other); 0 is returned if the two
-strings have identical contents; a positive value is returned if the
-current object should be ordered beyond tt(other).
-    itb(String lc() const)
-        Returns a copy of the current string in which all letters were
-transformed to lower case letters.
-    itb(String trim() const)
-        Returns a copy of the current string from which the leading and
-trailing blanks have been removed.
-    itb(size_t  split(std::vector<std::string> *words,
-                    char const *separators = " \t", bool addEmpty = false))
-        Fills tt(words) with all elements of the current string, separated by
-any of the characters in tt(separators). If the parameter tt(addEmpty) is set
-to tt(true), the individual separators are stored as empty strings in
-tt(words). If a word starts with tt(") or tt(') all characters until a
-matching terminating tt(") or tt(') at the end of a word are considered as one
-word.  The surrounding quotes are not stored. The function returns the number
-of elements in the vector pointed to by tt(words). This vector is initially
-cleared.
-    itb(size_t  split(std::vector<SplitPair> *words,
-                    char const *separators = " \t", bool addEmpty = false))
-        Same functionality as the former member, but the tt(words) vector is
-filled with pairs, of which the first elements are the recognized strings, and
-the second elements values of the tt(String::Type) enumeration. If
-bf(addEmpty) is requested, then the bf(string) elements contain the actual
-contents of the separator, while the bf(Type) elements are set to
-bf(SEPARATOR).
-    itb(String unescape() const)
-        Returns a tt(String) object in which the escaped (i.e., prefixed by a
-backslash) characters have been interpreted. All standard escape characters
-(tt(\a), tt(\b), tt(\f), tt(\n), tt(\r), tt(\t), tt(\v)) are recognized. If an
-escape character is followed by tt(x) or tt(X) the next two characters are
-interpreted as a hexadecimal number. If an escape character is followed by an
-octal digit, then the next three characters following the backslash are
-interpreted as an octal number. In all other cases, the backslash is removed
-and the character following the backslash is kept.
-    itb(String uc() const)
-        Returns a copy of the current string in which all letters were
 capitalized. 
     )
 

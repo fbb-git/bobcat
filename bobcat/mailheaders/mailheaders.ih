@@ -9,7 +9,7 @@ using namespace FBB;
 
 inline bool MailHeaders::const_hdr_iterator::fail
 (
-    std::string const &hdr, std::string const &key
+    string const &hdr, string const &key
 )
 {
     throw Errno(1, "MailHeaders: setHeaderIterator() not called");
@@ -18,7 +18,7 @@ inline bool MailHeaders::const_hdr_iterator::fail
 
 inline bool MailHeaders::const_hdr_iterator::initial
 (
-    std::string const &hdr, std::string const &key
+    string const &hdr, string const &key
 )
 {
     return hdr.substr(0, hdr.find(':')).find(key) == 0;
@@ -26,15 +26,15 @@ inline bool MailHeaders::const_hdr_iterator::initial
 
 inline bool MailHeaders::const_hdr_iterator::partial
 (
-    std::string const &hdr, std::string const &key
+    string const &hdr, string const &key
 )
 {
-    return hdr.substr(0, hdr.find(':')).find(key) != std::string::npos;
+    return hdr.substr(0, hdr.find(':')).find(key) != string::npos;
 }
 
 inline bool MailHeaders::const_hdr_iterator::full
 (
-    std::string const &hdr, std::string const &key
+    string const &hdr, string const &key
 )
 {
     return hdr.substr(0, hdr.find(':')) == key;
@@ -42,7 +42,7 @@ inline bool MailHeaders::const_hdr_iterator::full
 
 inline bool MailHeaders::const_hdr_iterator::caseInitial
 (
-    std::string const &hdr, std::string const &key
+    string const &hdr, string const &key
 )
 {
   return String::lc(hdr.substr(0, hdr.find(':'))).find(key) == 0;
@@ -50,16 +50,16 @@ inline bool MailHeaders::const_hdr_iterator::caseInitial
 
 inline bool MailHeaders::const_hdr_iterator::casePartial
 (
-    std::string const &hdr, std::string const &key
+    string const &hdr, string const &key
 )
 {
     return String::lc(hdr.substr(0, hdr.find(':'))).find(key) 
-           != std::string::npos;
+           != string::npos;
 }
 
 inline bool MailHeaders::const_hdr_iterator::caseFull
 (
-    std::string const &hdr, std::string const &key
+    string const &hdr, string const &key
 )
 {
     return String::lc(hdr.substr(0, hdr.find(':'))) == key;
@@ -101,12 +101,12 @@ inline bool MailHeaders::const_hdr_iterator::operator!=
     return d_current != other.d_current;
 }
 
-inline std::string const &MailHeaders::const_hdr_iterator::operator*() const
+inline string const &MailHeaders::const_hdr_iterator::operator*() const
 {
     return *d_current;
 }
 
-inline std::string const *MailHeaders::const_hdr_iterator::operator->() const
+inline string const *MailHeaders::const_hdr_iterator::operator->() const
 {
     return &*d_current;
 }

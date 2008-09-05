@@ -60,7 +60,7 @@ namespace FBB
 
         class Validator
         {
-            std::vector<bool> d_used;
+            vector<bool> d_used;
             int     d_last;
             State   d_state;
             bool    d_valid;
@@ -87,18 +87,18 @@ namespace FBB
             // second: points just beyond the last element of corresponding
             //          state in s_transition
 
-        typedef std::pair<TransitionMatrix *, 
+        typedef pair<TransitionMatrix *, 
                           TransitionMatrix *> statePair;
 
-        static std::vector<statePair> s_transition;
+        static vector<statePair> s_transition;
 
-        std::string d_target;
-        std::string::iterator d_next;
+        string d_target;
+        string::iterator d_next;
 
         public:
             //static void setup();
             PerlSetFSA();
-            void convert(std::string &pattern);
+            void convert(string &pattern);
 
         private:
             static void initialize(TransitionMatrix &stateDescription);
@@ -124,7 +124,7 @@ inline Pattern::Regex::~Regex()
     regfree(&d_regex);
 }
 
-inline void Pattern::newRegex(std::string const &pattern, int options)
+inline void Pattern::newRegex(string const &pattern, int options)
 {
     d_regex = new Regex(pattern, options);
 }
