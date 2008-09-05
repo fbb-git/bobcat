@@ -26,7 +26,6 @@ already part of the standard regex implementation.
 
 namespace FBB
 {
-
     class PerlSetFSA
     {
         class Validator;
@@ -119,15 +118,18 @@ namespace FBB
             void s_Nest();
     };
 
+
+inline Pattern::Regex::~Regex()
+{
+    regfree(&d_regex);
+}
+
+inline void Pattern::newRegex(std::string const &pattern, int options)
+{
+    d_regex = new Regex(pattern, options);
+}
+
 } // FBB
 
 using namespace std;
 using namespace FBB;
-
-
-
-
-
-
-
-

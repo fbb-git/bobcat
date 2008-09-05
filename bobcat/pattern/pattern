@@ -154,16 +154,6 @@ class Pattern
         void copy(Pattern const &other);    
 };
 
-inline Pattern::Regex::~Regex()
-{
-    regfree(&d_regex);
-}
-
-inline void Pattern::newRegex(std::string const &pattern, int options)
-{
-    d_regex = new Regex(pattern, options);
-}
-
 inline Pattern::Pattern(Pattern const &other)
 {
     copy(other);
