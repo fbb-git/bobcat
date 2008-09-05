@@ -7,3 +7,34 @@
 using namespace std;
 using namespace FBB;
 
+inline bool RE_iterator::operator==(RE_iterator const &other) const
+{
+    return d_current == other.d_current;
+}
+
+inline bool RE_iterator::operator!=(RE_iterator const &other) const
+{
+    return d_current != other.d_current;
+}
+
+inline string const &RE_iterator::operator*() const
+{
+    return *d_current;
+}
+
+inline string const *RE_iterator::operator->() const
+{                     
+    return &*d_current;
+}
+
+inline bool ConfigFile::contains(string const &str, 
+                     string &target)
+{
+    return str.find(target) != string::npos;
+}
+
+inline bool ConfigFile::match(string const &str, Pattern &pat)
+{
+    return pat << str;
+}
+
