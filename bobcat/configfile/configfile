@@ -107,6 +107,27 @@ class ConfigFile: public std::vector<std::string>
         void removeTrailingBlanks(std::string &line);
 };
 
+
+inline bool RE_iterator::operator==(RE_iterator const &other) const
+{
+    return d_current == other.d_current;
+}
+
+inline bool RE_iterator::operator!=(RE_iterator const &other) const
+{
+    return d_current != other.d_current;
+}
+
+inline string const &RE_iterator::operator*() const
+{
+    return *d_current;
+}
+
+inline string const *RE_iterator::operator->() const
+{                     
+    return &*d_current;
+}
+
 inline RE_iterator::RE_iterator(iterator const &end)
 :
     d_current(end),
@@ -146,6 +167,7 @@ inline size_t ConfigFile::index(const_iterator const &iterator)
 {
     return d_index[iterator - begin()];
 }
+
 
 } // FBB
 
