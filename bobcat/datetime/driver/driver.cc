@@ -2,7 +2,13 @@
                               driver.cc
 */
 
-#include "driver.h"
+#include <iostream>
+#include <string>
+
+#include "../datetime"
+
+using namespace std;
+using namespace FBB;
 
 int main(int argc, char **argv, char **envp)
 {
@@ -25,7 +31,21 @@ int main(int argc, char **argv, char **envp)
     DateTime loc(utc.time(), DateTime::LOCALTIME);
     cout << loc << endl;
 
-//
+    cout << dt << '\n' <<
+            "Enter new day (0 = sun, 6 = sat) and\n"
+            "   relativity: < 0: previous week, 0: this week, > 0: next "
+                                                                "week: ";
+    int day;
+    int rel;
+    cin >> day >> rel;
+
+    DateTime newDay(dt);
+    newDay.setWeekday(static_cast<DateTime::WeekDay>(day),
+                rel < 0 ? DateTime::LAST :
+                rel > 0 ? DateTime::NEXT :
+                          DateTime::THIS_WEEK);
+    cout << newDay << "\n\n";
+
 //    cout << "Enter hours to add to the current (local) time: ";
 //    int hours;
 //    cin >> hours;
