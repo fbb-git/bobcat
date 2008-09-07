@@ -20,6 +20,8 @@ void reqzip(string dest, string src)
     int idx;
     string file;
 
+    md(dest);
+
     files = strtok(src, " ");
     for (idx = sizeof(files); idx--; )
     {
@@ -74,6 +76,8 @@ void install(string rss, string dev)
             "README README.optimization README.class-setup "
             "README.X11 README.milter TODO");
     run("cp -r documentation/examples " + dev + DOCDEV);
+    md(dev + DOCDEV + "/scripts");
+    rungzip9("scripts/", dev + DOCDEV + "/scripts/");
 
     if (DOC != "")
     {
