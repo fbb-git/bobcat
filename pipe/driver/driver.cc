@@ -11,6 +11,7 @@ using namespace FBB;
 int main(int argc, char **argv, char **envp)
 {
     Pipe p;                         // construct a pipe
+    p.verify();
 
     cout << "Read file descriptor: " << p.getReadFd() << endl;
     cout << "Write file descriptor: " << p.getWriteFd() << endl;

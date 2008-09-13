@@ -14,6 +14,8 @@ int main()
     try
     {
         OneKey onekey;
+        onekey.verify();
+
         cout << "Usage: 1: next chars are echoed, 0: no echo, q: quits\n";
 
         while (true)

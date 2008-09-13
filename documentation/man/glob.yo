@@ -49,13 +49,16 @@ manpagesection(CONSTRUCTORS)
     constructor, other directory elements starting with a period will be the
     first elements in the series of detected directory elements.
 
-    Multiple plags may be specified, separated by the tt(bitor) operator. An
-tt(FBB::Errno) exception is thrown if either unknown flags were specified or
-the bf(glob)(3) function failed.
+    Multiple flags may be specified, separated by the tt(bitor) operator. 
 
-    itb(Glob(Glob const &other)) 
-        The copy constructor is available.
+    This constructor properly completes its task if only defined bf(Flag)
+values were specified and if the bf(glob)(3) function returned without
+errors. 
+
+    The proper completion of this constructor should be checked by calling
+the tt(Glob::verify()) member (see below).
     )
+    The copy constructor is available.
 
 manpagesection(OVERLOADED OPERATORS)
     itemization(
@@ -68,6 +71,10 @@ manpagesection(OVERLOADED OPERATORS)
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
+    itb(void verify() const)
+        This operator throws an tt(Errno) exception if the bf(Glob)
+constructor did not properly complete. It should be called before using any
+other bf(Glob) member (not required after using the copy constructor).
     itb(size_t size() const)
         Returns the number of elements that were detected.
     itb(char const *const *begin() const)

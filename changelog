@@ -1,3 +1,56 @@
+bobcat (1.20.0) (ISN)
+
+  * Removed deprecated members from String, removed the std::string base class
+    from String
+
+  * Moved inline private members to their internal header files where
+    possible. Users of those classes will never need these inline members, so
+    they can be used from the class interface, thus speeding up compilations.
+
+  * Removed exception thrown from constructors of the following classes:
+    Arg, Glob, OneKey, Pipe, ServerSocket, SocketBase, User, Xpointer
+
+    Except for the classes Arg and ServerSocket these classes now define a
+    public member 'verify()' which should be called following the construction
+    of objects of these classes before using any other of their members. The
+    verify() member throws the Errno exception if the object could not
+    properly be constructed. As a safeguard verify() is also called from the
+    classes' destructors, but in some programs that might be rather late,
+    causing surprise for the program's users.
+
+    The man-pages are updated accordingly.
+
+    EXISTING PROGRAMS using the classes Arg, Glob, OneKey, Pipe, SocketBase,
+                      or User should be recompiled, as the data-organization
+                      of objects of these classes has changed. Xpointer's data
+                      organization was not altered.
+    To find all source (text) files using the above classes the script
+    scripts/check1.20.0 could be used. 
+
+  * Added missing namespace declarations to glob/driver/driver.cc
+
+  * Repaired reporting the argv-argument before an undefined option instead of
+    the undefined option itself as in, e.g., 
+        tmp/bin/xd --verbose -tm
+        ArgData::ArgData(): unknown option: --verbose
+    or:
+        tmp/bin/xd -tm
+        ArgData::ArgData(): unknown option: tmp/bin/xd
+
+  * Removed 'throw()' lists from various functions and man-pages (except
+    from several Errno members, as their throw() lists are required
+    by Errno's std::exception base class
+
+  * Removed inline in inline virtual ~Errno() (needed because of a previous
+    bug in g++, which has now been repaired)
+
+  * Added missing mode() and specialMode() functions to Stat, and added info
+    to the stat manpage indicating what fields of the 'struct stat' are
+    returned by specific accessor members.
+
+  * Added DayTime::setWeekday() member to DateTime to alter dates based on the
+    day of the week. DateTime's man-page adapted accordingly.
+
 bobcat (1.19.0)
 
   * Added the template function binary_search that returning iterator to the

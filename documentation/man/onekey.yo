@@ -38,19 +38,13 @@ manpagesection(CONSTRUCTORS)
         This constructor initializes the bf(OneKey) input object. By
         default, entered characters are not echoed. By constructing the object
         with the bf(OneKey::ON) argument, entered characters are echoed to
-        the standard output stream. An bf(FBB::Errno) exception is thrown when
-            itemization(
-            it() the standard input stream is not a tty (e.g., when the
-             standard input stream is redirected to a file);
-            it() the current state of the standard input stream can't be
-             determined;
-            it() the standard input stream's state can't be changed to the
-             `direct keyboard input' mode.
-            )
-    itb(Note)
+        the standard output stream. 
+
+    The proper completion of this constructor should be checked by calling
+the tt(OneKey::verify()) member (see below).
+    )
         The copy constructor (and the overloaded assignement operator) are not
         available. 
-    )
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
@@ -60,6 +54,19 @@ manpagesection(MEMBER FUNCTIONS)
     itb(void setEcho(OneKey::Mode state)) 
         Changes the echo-state of the bf(OneKey) object. The argument may be
         either bf(OneKey::ON) or bf(OneKey::OFF).
+    itb(void verify() const)
+        This operator throws an tt(Errno) exception if the bf(OneKey)
+constructor did not properly complete. It should be called before using any
+other bf(OneKey) member. The bf(OneKey) constructor may fail for the following
+reasons:
+            itemization(
+            it() the standard input stream is not a tty (e.g., when the
+             standard input stream is redirected to a file);
+            it() the current state of the standard input stream can't be
+             determined;
+            it() the standard input stream's state can't be changed to the
+             `direct keyboard input' mode.
+            )
     )
 
 manpagesection(EXAMPLE)

@@ -34,8 +34,7 @@ single bf(FBB::Arg) object. See below.
 
 manpagesection(STATIC MEMBERS)
     itemization(
-    itb(FBB::Arg &initialize(char const *optstring, int argc, char **argv)
-        throw (Errno))
+    itb(FBB::Arg &initialize(char const *optstring, int argc, char **argv))
         Initializes the bf(FBB::Arg) singleton. Must be called only once.
 Throws an bf(FBB::Errno) exception if called repeatedly or if called with
 tt(argv) not containing a defined option (which is shown by the
@@ -149,7 +148,7 @@ untouched if long option was not present. 0 may be specified for bf(value) if
 the long option does not have a value or if the value should not be stored.
     itb(void versionHelp(void (*usage)(std::string const &progname), 
         char const *version, size_t minArgs, int helpFlag = 'h', 
-        int versionFlag = 'v') const throw (int) throw (int))
+        int versionFlag = 'v') const)
     If tt(versionFlag) was specified, and the tt(helpFlag) was not specified
 the program's name (using bf(basename())) and tt(version) is displayed to
 tt(std::cout). Otherwise, if the tt(helpFlag) was provided or if there are

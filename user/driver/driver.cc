@@ -7,6 +7,7 @@ using namespace FBB;
 int main()
 {
     User  user;
+    user.verify();
 
     cout << "\n"
         "name       : " << user.name()      << "\n" <<

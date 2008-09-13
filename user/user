@@ -15,9 +15,13 @@ class User
     std::string d_shell;
     size_t d_uid;
     size_t d_gid;
+    char const *d_msg;
 
     public:
         User();
+        ~User();
+
+        void verify() const;
 
         size_t groupid() const;
         size_t userid() const;
@@ -27,6 +31,11 @@ class User
         std::string const &realname() const;
         std::string const &shell() const;
 };
+
+inline User::~User()
+{
+    verify();
+}
 
 inline size_t User::groupid() const
 {

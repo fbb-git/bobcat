@@ -12,11 +12,12 @@ class Glob
     struct GlobShare
     {
         glob_t      globStruct;
-        size_t    users;
+        size_t      users;
+        int         err;
     };
 
     GlobShare *d_share;
-    
+
     public:
         enum Flags
         {
@@ -37,6 +38,7 @@ class Glob
             
         Glob(std::string const &pattern = "*", int flags = PERIOD,
              Dots dots = FIRST);
+
         Glob(Glob const &other);
         ~Glob();
 
@@ -46,6 +48,8 @@ class Glob
         char const *const *begin() const;
         char const *const *end() const;
 
+        void verify() const;        // throws exception if the constructor did
+                                    // not properly terminate
     private:
         char const **mbegin() const;
         char const **mend() const;
@@ -83,18 +87,6 @@ inline char const *const *Glob::begin() const
 inline char const *const *Glob::end() const
 {
     return d_share->globStruct.gl_pathv + size();
-}
-
-inline char const **Glob::mbegin() const
-{
-    return const_cast<char const **>
-            (d_share->globStruct.gl_pathv);
-}
-
-inline char const **Glob::mend() const
-{
-    return const_cast<char const **>
-            (d_share->globStruct.gl_pathv + size());
 }
 
 } // FBB

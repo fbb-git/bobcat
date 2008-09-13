@@ -25,15 +25,16 @@ manpagesection(CONSTRUCTORS)
     itemization(
     itb(Pipe())
         The default bf(Pipe()) constructor constructs a basic pipe, calling
-bf(pipe)(2). If the construction fails, an bf(FBB::Errno) object is thrown,
-whose tt(which()) member shows the system's tt(errno) value set by the failing
-bf(pipe)(2) function.
+bf(pipe)(2). 
+
+    The proper completion of this constructor should be checked by calling
+the tt(Pipe::verify()) member (see below).
     itb(Pipe(int const *fd))
         This constructor expects two file descriptors, which already define a
 pipe.
-    itb(Pipe(Pipe const &other) throw()) 
-        The standard copy constructor is available.
     )
+        The copy constructor is available.
+
     Note that when the pipe goes out of scope, no bf(close)(2) operation is
 performed on the pipe's ends. If the pipe should be closed by the desctructor,
 derive a class from bf(Pipe)(3bobcat), whose destructor performs the required
@@ -54,6 +55,12 @@ reading from any of the bf(n) provided filedescriptors (experimental).
     itb(int readOnly())
         Closes the writing end of the pipe, returns the reading end's file
 descriptor. 
+    itb(void verify() const)
+        This operator throws an tt(Errno) exception if the default bf(Pipe)
+constructor did not properly complete. It should be called before using any
+other member of objects constructed by the default bf(Pipe) constructor.  The
+thrown bf(Errno) object's tt(which()) member shows the system's tt(errno)
+value set by the failing bf(pipe)(2) function.
     itb(int writeFd() const)
         Returns the pipe's file descriptor that is used for writing
     itb(void writtenBy(int filedescriptor))

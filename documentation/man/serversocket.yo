@@ -1,7 +1,8 @@
 includefile(header.inc)
 
 COMMENT(manpage, section, releasedate, archive, short name)
-manpage(FBB::ServerSocket)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+manpage(FBB::ServerSocket)(3bobcat)
+    (_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
                     (Server Socket)
 
 manpagename(FBB::ServerSocket)
@@ -36,29 +37,25 @@ manpagesection(INHERITS FROM)
 
 manpagesection(CONSTRUCTOR)
     itemization(
-    itb(ServerSocket(size_t  port) throw (Errno))
+    itb(ServerSocket(size_t  port))
         This constructor initializes an bf(FBB::ServerSocket) object, which
-will listen for connections at the specified port.  An bf(FBB::Errno) is
-thrown if the socket could not be constructed. The construction of the socket
-does not mean that the bf(FBB::ServerSocket) object is actually listening for
-connections. To start listening, the member bf(listen()) should be used. 
-    itb(ServerSocket(std::string const &name) throw (Errno))
-        This constructor initializes an bf(FBB::ServerSocket) object, which
-will listen for connections at the specified port.  An bf(FBB::Errno) is
-thrown if the socket could not be constructed. The construction of the socket
-does not mean that the bf(FBB::ServerSocket) object is actually listening for
-connections. To start listening, the member bf(listen()) should be used. 
+will listen for connections at the specified port.  The construction of the
+socket does not mean that the bf(FBB::ServerSocket) object is actually
+listening for connections. To start listening, the member bf(listen()) should
+be used.
     )
     The copy constructor is not available.
 
 manpagesection(MEMBER FUNCTIONS)
      All members of bf(FBB::SocketBase) (and thus of bf(FBB::InetAddress)) are
-available, as bf(FBB::ServerSocket) inherits from these classes.
+available, as bf(FBB::ServerSocket) inherits from bf(FBB::SocketBase).
     itemization(
-    itb(void listen(size_t backlog = 5, bool blocking = true) throw (Errno))
+    itb(void listen(size_t backlog = 5, bool blocking = true))
         The bf(listen()) member defines the way the bf(FBB::ServerSocket) will
 listen for clients requesting a connection.  It can be used only once with a
-bf(FBB::ServerSocket). An bf(FBB::Errno) object is thrown if listening fails.
+bf(FBB::ServerSocket). An bf(FBB::Errno) object is thrown if listening fails,
+if the constructor could not create a socket, or if the bf(SocketBase) base
+class could not properly be constructed.
 
      The bf(listen()) member's tt(backlog) parameter defines the size of the
 bf(FBB::ServerSocket)'s internal queue in which connection requests may be
@@ -72,7 +69,7 @@ infrquently and for relatively short time intervals. Otherwise, in more
 complex programs, an bf(FBB::Selector) object can be used to sense input on
 the server socket and/or on various client sockets.
 
-    itb(SocketBase accept() throw (Errno))
+    itb(SocketBase accept())
         The bf(accept()) member returns an bf(FBB::SocketBase) object
 containing information about the client whose connection request was
 accepted. The bf(FBB::SocketBase) object's socket value may be used to

@@ -107,6 +107,7 @@ class ConfigFile: public std::vector<std::string>
         void removeTrailingBlanks(std::string &line);
 };
 
+
 inline bool RE_iterator::operator==(RE_iterator const &other) const
 {
     return d_current == other.d_current;
@@ -167,16 +168,6 @@ inline size_t ConfigFile::index(const_iterator const &iterator)
     return d_index[iterator - begin()];
 }
 
-inline bool ConfigFile::contains(std::string const &str, 
-                     std::string &target)
-{
-    return str.find(target) != std::string::npos;
-}
-
-inline bool ConfigFile::match(std::string const &str, Pattern &pat)
-{
-    return pat << str;
-}
 
 } // FBB
 
