@@ -74,6 +74,9 @@ class Process: private Fork, public IOStream
                                        Program program = NO_PATH);
         int stop();
 
+        void close();                   // to be used by the parent to 
+                                        // end input to the child
+
         Process &operator+=(std::string const &text);   // add to the command
 
         int operator=(std::string const &cmd);  // set and execute the command
@@ -151,6 +154,11 @@ inline void Process::parentProcess()
 inline void Process::setWait(size_t waitSeconds)
 {
     d_waitSeconds = waitSeconds;
+}
+
+inline void Process::close()
+{
+    d_childCinbuf.open(0);
 }
 
 } // FBB        
