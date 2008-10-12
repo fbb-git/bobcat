@@ -1,15 +1,12 @@
 #ifndef INCLUDED_BOBCAT_CONFIGFILE_
 #define INCLUDED_BOBCAT_CONFIGFILE_
 
-/*
-    Lines are stored with initial WS removed.
-    If a line ends in \, then the next line (initial WS removed)
-    is appended to the current line.
-    Information at and beyond the first # on individual lines is removed
-    if the rmComment flag is set to true
-    Then, lines containing only blanks and tabs are not stored
-
-*/
+//    Lines are stored with initial WS removed.
+//    If a line ends in \, then the next line (initial WS removed)
+//    is appended to the current line.
+//    Information at and beyond the first # on individual lines is removed
+//    if the rmComment flag is set to true
+//    Then, lines containing only blanks and tabs are not stored
 
 #include <fstream>
 #include <vector>
@@ -94,6 +91,8 @@ class ConfigFile: public std::vector<std::string>
         const_RE_iterator endRE() const;
         const_iterator find(std::string const &target) const;
         const_iterator findRE(std::string const &re) const;
+        std::string findKey(std::string const &key, size_t idx) const;
+
         size_t index(size_t lineNr);
         size_t index(const_iterator const &iterator);
 

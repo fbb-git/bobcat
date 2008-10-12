@@ -72,9 +72,7 @@ class Process: private Fork, public IOStream
         void start(size_t waitSeconds, iomode mode, 
                                        Program program = NO_PATH);
         int stop();
-
-        void close();                   // to be used by the parent to 
-                                        // end input to the child
+        void close();                   // close input to the child
 
         Process &operator+=(std::string const &text);   // add to the command
 
@@ -89,6 +87,7 @@ class Process: private Fork, public IOStream
         size_t wait(size_t sec, size_t msec = 0);
 
         void setWait(size_t waitSeconds = 1);
+        std::string const &str() const;
 
     private:
         struct ExecContext
@@ -158,6 +157,11 @@ inline void Process::setWait(size_t waitSeconds)
 inline void Process::close()
 {
     d_childCinbuf.open(0);
+}
+
+inline std::string const &Process::str() const
+{
+    return d_command;
 }
 
 } // FBB        

@@ -93,6 +93,15 @@ bf(FBB::ConfigFile::end()) member to determine the end-iterator. It is not
 guaranteed that all lines between the returned iterator and bf(end()) will
 also contain tt(target).  This member also interprets the tt(SearchCasing)
 flag.
+    itb(std::string findKey(std::string const &keyPattern, 
+                                                        size_t nr = 1) const)
+        This member can be used to retrieve information from lines having the
+general pattern `tt(keyPattern value)'. White space surrounding
+tt(keyPattern) and tt(value) are ignored. The member returns tt(value) or an
+empty string if at most tt(nr - 1) lines were found matching
+tt(keyPattern). The member tt(findKey) uses the member tt(findRE()) (see
+below) to retrieve lines matching tt(keyPattern). tt(keyPattern) should not
+contain white space.
     itb(ConfigFile::const_iterator findRE(std::string const &target) const)
         This member returns an iterator to the first element (i.e., line) of
 the bf(FBB::ConfigFile) object in which the regular expression tt(target) is

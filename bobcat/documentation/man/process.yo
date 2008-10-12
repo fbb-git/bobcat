@@ -100,7 +100,9 @@ child process to its standard error stream should be sent to tt(/dev/null). It
 is ignored when either bf(CERR) or bf(MERGE_COUT_CERR) is specified.
         itb(CIN)
             This value indicates that information written (inserted)
-to the tt(Process) object should be sent to its child process.
+to the tt(Process) object should be sent to its child process. If a process
+does em(not) read its standard input stream then the tt(CIN) specification can
+be omitted.
         itb(COUT)
             This value indicates that information read (extracted)
 from the tt(Process) object should be the information written by the
@@ -223,6 +225,11 @@ error stream is available.
         This member may be used to extract the information written by the
 child process to its standard error stream. It can only be used for this when
 bf(IOMode) tt(CERR) was specified.
+    itb(void close())
+        This member may be called from the parent process to close the child's
+input stream. In situations where the child continuously reads information
+from its standard input stream this member must be used to inform the child
+process that input has terminated.
     itb(void setCommand(std::string const &cmd))
        The tt(setCommand=()) member (re)defines the command currently stored in
 an tt(Process) object.  If the command starts and ends with a em(back-tick)
@@ -298,11 +305,16 @@ underfined if it was called without a running child process. nl()
     Following tt(stop()) a new command may be called using the overloaded
 assignment operator (see earlier). The member tt(stop()) is also called when
 the tt(Process) object goes out of scope.
+    itb(std::string const &str() const)
+        This member returns the text of the command currently stored in the
+tt(Process) object. It shows the command as it will be executed by tt(start())
+or tt(system()).
     itb(void system())
         This member executes the stored command using the bf(system)(3) system
 call (therefore executing the command as a shell command).  When using
 bf(system) redirections can be included in the command itself (although this
-might undo the previously set bf(IOMode)).
+might undo the previously set bf(IOMode)). Calling tt(system()) implies
+calling tt(start()).
     itb(void system(IOMode mode))
         This member sets a new bf(IOMode) set, and then executes the stored
 command using the bf(system)(3) system call (therefore executing the command
@@ -343,26 +355,33 @@ int main()
 {
     string line;
                                         // setup a command
-    Process process("/bin/cat", Process::CIN | 
-                                Process::COUT | 
+    Process process("/usr/bin/sha1sum -", Process::CIN |
+                                Process::COUT |
                                 Process::IGNORE_CERR);
 
     process.start();                    // start it
 
     process << "hello world" << endl;   // insert this text
+    process.close();
+
     getline(process, line);             // read its `cat' output
     cout << line << endl;               // show it
 
-    process = "`/bin/ls`";              // run another command 
-                                        // (assignment stops the
-                                        // previous command and
-                                        // starts the new command)
+    process = "`/bin/ls`";              // stop the existing command,
+                                        // start another command
+                                        // (assignment implies
+                                        // `stop()')
 
     while (getline(process, line))      // read all its output
         cout << line << endl;
 
-    cout << process.stop() << endl;     // show the process's exit
+    cout << process.stop() << endl;     // show the process' exit
                                         // value
+
+    process = "/bin/ls -Fla /usr/bin > out";
+    process.system();
+    process.wait();
+
     return 0;
 }
         )
