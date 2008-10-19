@@ -3,7 +3,7 @@
 void Process::parentRedirections()
 {
     d_selector = Selector();
-    
+
     if (d_mode & CIN)
         d_childCinbuf.open(d_child_inp->writeOnly());
     

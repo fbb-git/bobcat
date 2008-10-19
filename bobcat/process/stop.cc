@@ -2,49 +2,24 @@
 
 int Process::stop()
 {
-    if (!pid())                     // pid = 0 occurs when a Process 
-        return 0;                   // object was created, but did not yet
-                                    // fork(), and its program terminates.
-                                    // This may happen, e.g., in a daemon.
+    if (!d_active)
+        return -1;
 
-    if (d_child_inp.get())
-    {
-        ::close(d_child_inp->writeFd());
-        d_child_inp.reset(0);
-    }
+    d_active = false;
 
-    if (d_child_outp.get())
-    {
-        ::close(d_child_outp->readFd());
-        d_child_outp.reset(0);
-    }
+    if (!verify())                  // No running child process
+        return d_child.ret;
 
-    if (d_child_errp.get())
-    {
-        ::close(d_child_errp->readFd());
-        d_child_errp.reset(0);
-    }
+    discontinue(d_child);
+    verify();
 
-    d_selector.setAlarm(d_waitSeconds);
-    try
-    {
-        d_selector.wait();
-    }
-    catch(...)
-    {}
+    close(d_child_inp);
+    close(d_child_outp);
+    close(d_child_errp);
 
     d_command.clear();
 
-    if (pid_t p = pid())
-        kill(p, SIGTERM);
-
-    if (pid_t p = pid())
-        kill(p, SIGTERM);
-
-    if (pid_t p = pid())
-        kill(p, SIGKILL);
-
-    return d_ret = waitForChild();
+    return d_child.ret;
 }
 
 

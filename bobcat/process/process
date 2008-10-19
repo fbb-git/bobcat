@@ -3,6 +3,8 @@
 
 #include <string>
 #include <memory>
+#include <ostream>
+#include <istream>
 
 #include <bobcat/fork>
 #include <bobcat/string>
@@ -31,16 +33,29 @@ class Process: private Fork, public IOStream
     IFdStreambuf    d_childCerrbuf;     // Child inserts
     std::istream    d_childCerr;        // Parent extracts child's cerr
 
-    Selector        d_selector;         // sense activities on outp/errp
+    Selector        d_selector;         // senses activities on Parent's
+                                        // outp/errp
 
     std::string     d_command;
 
-    int             d_ret;              // return value of last executed
-                                        // process 
-    size_t        d_mode;
-    size_t        d_processType;
-    size_t        d_waitSeconds;        // seconds to wait for 
+    size_t          d_mode;
+    size_t          d_processType;
+    size_t          d_waitSeconds;      // seconds to wait for 
                                         // child-termination
+
+    struct RetPid
+    {
+        int     ret;
+        pid_t   pid;
+
+        RetPid();
+    };
+
+    RetPid d_child;
+    RetPid d_waiter;
+
+    bool            d_active;           // child process is active
+
     public:
         enum Program
         {
@@ -61,35 +76,98 @@ class Process: private Fork, public IOStream
         };
         typedef size_t iomode;
 
+        enum TimeOut
+        {
+            TIMEOUT
+        };
+
+                                // prepare the object, don't do anything else
         Process(std::string const &command = "", 
                 iomode mode = CIN | COUT | CERR);
         Process(size_t waitSeconds, std::string const &command = "", 
                 iomode mode = CIN | COUT | CERR);
-        virtual ~Process();
+        virtual ~Process();     // stop()s any ongoing process
 
+                                // start() calls stop, then starts the
+                                // child process followed by the timer-process
         void start(Program program = NO_PATH);
         void start(iomode mode, Program program = NO_PATH);
-        void start(size_t waitSeconds, iomode mode, 
+        void start(size_t waitSeconds, iomode mode,
                                        Program program = NO_PATH);
+
+        void system();          // calls /bin/sh calling cmd; redirs OK
+        void system(iomode mode);   // Uses Program USE_SHELL
+        void system(size_t waitSeconds, iomode mode);  
+
+        int operator=(std::string const &cmd);  // sets and starts a command
+
+
+                                // stop inspects the pids. if the child is
+                                // running it is terminated, and if the
+                                // waiter is running it is terminated
         int stop();
-        void close();                   // close input to the child
+        void close();           // closes input to the child
 
-        Process &operator+=(std::string const &text);   // add to the command
 
-        int operator=(std::string const &cmd);  // set and execute the command
-        void setCommand(std::string const &command);    // merely set cmd
+        std::istream &cerr();   // READ cerr from the child
+        size_t available();     // ...
 
-        std::istream &cerr();
-        size_t available();
-        void system();
-        void system(iomode mode);
-        size_t wait();
+        void setCommand(std::string const &command);    // sets cmd,
+                                                        // eats backticks
+        Process &operator+=(std::string const &text);   // adds to the command
+
+        std::string const &str() const; // currently set cmd 
+
+        void setPath(Program type);
+        void setIOMode(iomode mode);            // NEW changes IOMode
+        Process &operator()(iomode mode);
+
+        void setWait(size_t waitSeconds = 1);   // for the next cmd to start
+                                                // 0 means: no time monitor
+
+        Process &operator()(size_t waitSeconds, iomode mode);
+
+
+                                // wait functions are OBSOLETE 
+        size_t wait();              
         size_t wait(size_t sec, size_t msec = 0);
 
-        void setWait(size_t waitSeconds = 1);
-        std::string const &str() const;
+        
+        template <typename Type>
+        Process &operator<<(Type value)
+        {
+            if (verify())
+                dynamic_cast<std::ostream &>(*this) << value;
+
+            return *this;
+        }
+
+        Process &operator<<(std::ostream &(*pf)(std::ostream &))
+        {
+            if (verify())
+                dynamic_cast<std::ostream &>(*this) << pf;
+            return *this;
+        }
+//
+//        template <typename Type>
+//        Process &operator>>(Type value)
+//        {
+//            if (verify())
+//                dynamic_cast<IOStream &>(*this) >> value;    // or reinterpret
+//            else
+//                setstate(std::ios::badbit);
+//
+//            return *this;
+//        }
+
+        bool verify();
 
     private:
+        void forking();
+        pid_t discontinue(RetPid &proc);
+
+        void close(std::auto_ptr<Pipe> &pipe);
+
         struct ExecContext
         {
             bool ok;                // true: status is ok
@@ -111,6 +189,7 @@ class Process: private Fork, public IOStream
         Pipe *newPipe() const;
         size_t whichStream();
 
+                                    
         Process(Process const &other);              // NI
         Process &operator=(Process const &other);   // NI
 };
@@ -118,12 +197,12 @@ class Process: private Fork, public IOStream
 
 inline void Process::start(Program program)
 {   
-    start(1, d_mode, program);
+    start(d_waitSeconds, d_mode, program);
 }
 
 inline void Process::start(iomode mode, Program program)
 {
-    start(1, mode, program);
+    start(d_waitSeconds, mode, program);
 }
 
 inline Process::~Process()
@@ -154,9 +233,19 @@ inline void Process::setWait(size_t waitSeconds)
     d_waitSeconds = waitSeconds;
 }
 
+inline void Process::setIOMode(iomode mode)
+{
+    d_mode = mode;
+}
+
+inline void Process::setPath(Program type)
+{
+    d_processType = type;
+}
+
 inline void Process::close()
 {
-    d_childCinbuf.open(0);
+    ::close(d_child_inp->writeFd());
 }
 
 inline std::string const &Process::str() const
@@ -164,16 +253,25 @@ inline std::string const &Process::str() const
     return d_command;
 }
 
+inline Process &Process::operator()(iomode mode)
+{
+    setIOMode(mode);
+    return *this;
+}
+
 } // FBB        
 
 #endif
 
+// How to preset a program?
+//  setCommand  - define program to start
 
+//  setIOMode   - define streams to use
+//  setWait     - define max time to run
+//  setPath     - use path or shell
 
+// start([NO_PATH])                     - changes path and runs
+// start(iomode, [NO_PATH])             - and mode
+// start(waitSecs, iomode, [NO_PATH])   - and waitsec
 
-
-
-
-
-
-
+// op= does setCommand and start

@@ -28,7 +28,8 @@ void Process::childRedirections()
             int fd = ::open("/dev/null", 0);
 
             if (fd == -1)
-                exit(2);                    // 2: can't create /dev/null
+                throw Errno("Process ") << insertable << d_command << 
+                        ": can't open /dev/null" << throwable;
 
             Redirector redirector(fd);
         
@@ -40,4 +41,7 @@ void Process::childRedirections()
         }
     }    
 }
+
+
+
 

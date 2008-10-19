@@ -6,56 +6,89 @@ using namespace std;
 using namespace FBB;
 
 int main()
+try
 {
     string line;
 
-    Process process;
+     Process process;       // define (as yet unused) streams
 
-//                                        // example waiting for input()
-//    process = "/bin/cat";
-//    process.start(Process::COUT | Process::IGNORE_CERR);
+//     process = "/bin/ls";
 //
-//    cout << "Press Enter ";
-//    getline(cin, line);
-//    cout << "You entered: " << line << endl;
-//
-//    process << endl;
-//
-//    process.wait(5);                    // at most for 5 seconds
+//    size_t count = 0;
+//    while (getline(process, line))
+//        cout << ++count << ' ' << line << endl;
 
 
-                                        // setup a command
-    process = "/usr/bin/sha1sum -";
 
-    cout << "Command to execute: " << process.str() << endl;
+// 
+//     process(Process::COUT | Process::IGNORE_CERR) 
+//         = "`/bin/ls -Fla driver.cc`";         // stop the existing command,
+//                                         // start another command
+//                                         // (assignment implies
+//                                         // `stop()')
+// 
+//     while (getline(process, line))      // read all its output
+//         cout << line << endl;
+// 
 
-    process.start(Process::CIN |        // start it
-                  Process::COUT |
-                  Process::IGNORE_CERR);
+     process(5, Process::CIN | Process::COUT) = "/bin/cat";
+     cout << "5 secs interaction\n";
 
+     while (process.verify())
+     {
+         cout << "? ";
+ 
+         if (!getline(cin, line))
+             break;
+ 
+        process << line << endl;
+        cout << "To the child: " << line << endl;
+
+        line.erase();
+
+        getline(process, line);
+        cout << "Received fm the child: " << line << endl;
+     }
+
+     process(Process::CIN | Process::COUT | Process::IGNORE_CERR)
+            = "/usr/bin/sha1sum";
+ 
+     cout << "Command to execute: " << process.str() << endl;
+ 
     process << "hello world" << endl;   // insert this text
     process.close();
-
-    getline(process, line);             // read its `cat' output
+ 
+    getline(process, line);             // read its output
     cout << line << endl;               // show it
 
-    process = "`/bin/ls`";              // stop the existing command,
-                                        // start another command
-                                        // (assignment implies
-                                        // `stop()')
-
-    process.start(Process::COUT | Process::IGNORE_CERR);
-    while (getline(process, line))      // read all its output
-        cout << line << endl;
-
-                                        // example using system()
-    process = "/bin/ls -Fla /usr/bin > out";
-    process.system();
-    process.wait();
-
-    cout << process.stop() << endl;     // show the process' exit
-                                        // value
-
+// 
+//                                         // example using system()
+// //    process = "/bin/ls -Fla /usr/bin > out";
+// //    process.system();
+// ////    process.wait();
+// //
+// //    cout << process.stop() << endl;     // show the process' exit
+//                                         // value
+// 
     return 0;
 }
+catch (Process::TimeOut)
+{
+    return 0;
+}
+catch (Errno const &err)
+{
+    cerr << err.what() << endl;
+    return 1;
+}
+catch (...)
+{
+    cerr << "Unrecognized exception in main()\n";
+    return 0;
+}
+
+
+
+
+
 
