@@ -1,3 +1,12 @@
 #!/bin/sh
 
-g++ -o driver *.cc ../tmp/o/*.o -lbobcat -s
+ln -sf ../process .
+ln -sf ../process.ih .
+
+if [ "$1" != "" ]
+then
+    g++ -o driver *.cc ../tmp/o/*.o -lbobcat -s
+else
+    g++ -o driver *.cc -lbobcat -s
+fi
+

@@ -34,13 +34,16 @@ try
      process(5, Process::CIN | Process::COUT) = "/bin/cat";
      cout << "5 secs interaction\n";
 
-     while (process.verify())
+     while (true)
      {
          cout << "? ";
  
-         if (!getline(cin, line))
+         if (!getline(cin, line) || line.empty())
              break;
  
+        if (!process.verify())
+            break;
+
         process << line << endl;
         cout << "To the child: " << line << endl;
 

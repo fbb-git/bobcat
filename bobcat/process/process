@@ -148,17 +148,15 @@ class Process: private Fork, public IOStream
                 dynamic_cast<std::ostream &>(*this) << pf;
             return *this;
         }
-//
-//        template <typename Type>
-//        Process &operator>>(Type value)
-//        {
-//            if (verify())
-//                dynamic_cast<IOStream &>(*this) >> value;    // or reinterpret
-//            else
-//                setstate(std::ios::badbit);
-//
-//            return *this;
-//        }
+
+        template <typename Type>
+        Process &operator>>(Type value)
+        {
+            if (verify())
+                dynamic_cast<IOStream &>(*this) >> value;    // or reinterpret
+
+            return *this;
+        }
 
         bool verify();
 
