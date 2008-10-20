@@ -3,10 +3,15 @@
 ln -sf ../process .
 ln -sf ../process.ih .
 
-if [ "$1" != "" ]
-then
-    g++ -o driver *.cc ../tmp/o/*.o -lbobcat -s
-else
-    g++ -o driver *.cc -lbobcat -s
-fi
-
+case $1 in
+    (o)
+        g++ -o driver *.cc ../tmp/o/*.o -lbobcat -s
+    ;;
+    (c)
+        g++ -o driver *.cc -lbobcat -s
+    ;;
+    (*)
+    echo $0 o links to the files in ../tmp/o
+    echo $0 c links to the files in the current dir only
+    ;;
+esac

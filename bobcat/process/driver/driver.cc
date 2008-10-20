@@ -10,48 +10,61 @@ try
 {
     string line;
 
-     Process process;       // define (as yet unused) streams
-
-//     process = "/bin/ls";
-//
-//    size_t count = 0;
-//    while (getline(process, line))
-//        cout << ++count << ' ' << line << endl;
+     Process process;
 
 
+     process(1, Process::COUT) = "/bin/ls";
 
-// 
-//     process(Process::COUT | Process::IGNORE_CERR) 
-//         = "`/bin/ls -Fla driver.cc`";         // stop the existing command,
-//                                         // start another command
-//                                         // (assignment implies
-//                                         // `stop()')
-// 
-//     while (getline(process, line))      // read all its output
-//         cout << line << endl;
-// 
+     size_t count = 0;
+     while (getline(process, line))
+         cout << ++count << ' ' << line << endl;
 
-     process(5, Process::CIN | Process::COUT) = "/bin/cat";
-     cout << "5 secs interaction\n";
-
-     while (true)
-     {
-         cout << "? ";
+     process(1, Process::COUT | Process::IGNORE_CERR) 
+         = "`/bin/ls -Fla driver.cc`";         // stop the existing command,
+                                         // start another command
+                                         // (assignment implies
+                                         // `stop()')
  
-         if (!getline(cin, line) || line.empty())
-             break;
+     while (getline(process, line))      // read all its output
+         cout << line << endl;
  
-        if (!process.verify())
-            break;
 
-        process << line << endl;
-        cout << "To the child: " << line << endl;
+//    process(Process::CIN) = "./a.out";
+//    process << endl;
 
-        line.erase();
+    try
+    {
+        while (true)
+        {
+             process(Process::CIN | Process::COUT) = "/bin/cat";
+    
+             while (true)
+             {
+                cout << "r restarts, empty quits ? ";
+ 
+                if (!getline(cin, line) || line.empty())
+                    throw false;
 
-        getline(process, line);
-        cout << "Received fm the child: " << line << endl;
-     }
+                if (line == "r")
+                    break;
+ 
+                if (!process.verify())
+                    break;
+
+                process << line << endl;
+                cout << "To the child: " << line << endl;
+
+                line.erase();
+
+                getline(process, line);
+                cout << "Received fm the child: " << line << endl;
+            }
+        }
+    }
+    catch (bool)
+    {
+        cout << "/bin/cat ended\n";
+    }
 
      process(Process::CIN | Process::COUT | Process::IGNORE_CERR)
             = "/usr/bin/sha1sum";

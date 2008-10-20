@@ -1,28 +1,30 @@
 #include "process.ih"
 
-
 void Process::start(size_t waitSeconds, iomode mode, Program program)
 {
-    if (d_command.empty())
-        return;
+    if (d_active)
+        stop();
 
-    stop();
-
-    open(d_childCout, d_childCin);  // associate in/out streams
+    d_active = true;
 
     d_waitSeconds = waitSeconds;
 
-    clear();                        // clear the IO stream
+    setPipes(mode);
 
     d_childCout.clear();
     d_childCerr.clear();
     d_childCin.clear();
 
-    setPipes(mode);
+    clear();                        // clear the IO stream
+    open(d_childCout, d_childCin);  // associate in/out streams
 
     d_processType = program;
 
     forking();
 }
+
+
+
+
 
 

@@ -5,19 +5,12 @@ int Process::stop()
     if (!d_active)
         return -1;
 
-    d_active = false;
-
-    if (!verify())                  // No running child process
-        return d_child.ret;
+    d_command.clear();
 
     discontinue(d_child);
-    verify();
+    discontinue(d_waiter);
 
-    close(d_child_inp);
-    close(d_child_outp);
-    close(d_child_errp);
-
-    d_command.clear();
+    d_active = false;
 
     return d_child.ret;
 }

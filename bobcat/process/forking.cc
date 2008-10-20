@@ -1,12 +1,14 @@
 #include "process.ih"
 
+#include <iostream>
+
 void Process::forking()
 {
-    d_active = true;
-
     fork();
     
     d_child.pid = pid();
+
+//std::cerr << "FORKING CHILD " << d_child.pid << endl;
 
     if (d_waitSeconds == 0)
     {
@@ -25,9 +27,9 @@ void Process::forking()
     }
     else if (d_waiter.pid == 0)
     {
-        close(d_child_inp);
-        close(d_child_outp);
-        close(d_child_errp);
+        close(d_child_inp,  &Pipe::writeFd);  // close pipes inherited from
+        close(d_child_outp, &Pipe::readFd);   // the parent
+        close(d_child_errp, &Pipe::readFd);
 
         ::close(STDIN_FILENO);
         ::close(STDOUT_FILENO);

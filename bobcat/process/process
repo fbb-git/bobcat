@@ -20,9 +20,12 @@ namespace FBB
 
 class Process: private Fork, public IOStream                
 {
-    std::auto_ptr<Pipe> d_child_inp;          // cin read by the CHILD
-    std::auto_ptr<Pipe> d_child_outp;         // cout written by the CHILD
-    std::auto_ptr<Pipe> d_child_errp;         // cerr written by the CHILD    
+    std::auto_ptr<Pipe> d_child_inp;    // cin read by the CHILD
+    int                 d_fdIn;         // last used redirected pipe Fd
+    std::auto_ptr<Pipe> d_child_outp;   // cout written by the CHILD
+    int                 d_fdOut;        // last used redirected pipe Fd
+    std::auto_ptr<Pipe> d_child_errp;   // cerr written by the CHILD    
+    int                 d_fdErr;        // last used redirected pipe Fd
 
     OFdStreambuf    d_childCinbuf;      // Child extracts,  
     std::ostream    d_childCin;         // Parent inserts to child's cin
@@ -43,6 +46,8 @@ class Process: private Fork, public IOStream
     size_t          d_waitSeconds;      // seconds to wait for 
                                         // child-termination
 
+    bool            d_active;
+
     struct RetPid
     {
         int     ret;
@@ -53,8 +58,6 @@ class Process: private Fork, public IOStream
 
     RetPid d_child;
     RetPid d_waiter;
-
-    bool            d_active;           // child process is active
 
     public:
         enum Program
@@ -122,7 +125,7 @@ class Process: private Fork, public IOStream
         void setIOMode(iomode mode);            // NEW changes IOMode
         Process &operator()(iomode mode);
 
-        void setWait(size_t waitSeconds = 1);   // for the next cmd to start
+        void setWait(size_t waitSeconds);       // for the next cmd to start
                                                 // 0 means: no time monitor
 
         Process &operator()(size_t waitSeconds, iomode mode);
@@ -164,7 +167,7 @@ class Process: private Fork, public IOStream
         void forking();
         pid_t discontinue(RetPid &proc);
 
-        void close(std::auto_ptr<Pipe> &pipe);
+        void close(std::auto_ptr<Pipe> &pipe, int (Pipe::*fdFun)() const);
 
         struct ExecContext
         {
@@ -253,8 +256,7 @@ inline std::string const &Process::str() const
 
 inline Process &Process::operator()(iomode mode)
 {
-    setIOMode(mode);
-    return *this;
+    return operator()(0, mode);
 }
 
 } // FBB        
