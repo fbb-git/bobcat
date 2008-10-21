@@ -77,6 +77,18 @@ try
     getline(process, line);             // read its output
     cout << line << endl;               // show it
 
+    cout << "sending mail to myself\n";
+
+    process(Process::CIN) = "/usr/bin/mail -s 'to myself' frank@localhost";
+
+    process << "Hello world" << endl;
+    process.close();
+
+    cout << "closed\n";
+    process.waitForChild();
+    cout << "done\n";
+
+
 // 
 //                                         // example using system()
 // //    process = "/bin/ls -Fla /usr/bin > out";

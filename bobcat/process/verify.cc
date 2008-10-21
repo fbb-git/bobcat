@@ -4,6 +4,8 @@ bool Process::verify()
 {
     static fstream null(0);
 
+//std::cerr << "VERIFY: PID IN = " << d_child.pid << endl;
+
     if (d_waiter.pid != 0)
     {
         int retWaiter = waitpid(d_waiter.pid, &d_waiter.ret, WNOHANG);
@@ -27,6 +29,8 @@ bool Process::verify()
 
     if (d_child.pid == 0)
         open(null, null);
+
+//std::cerr << "VERIFY: PID OUT = " << d_child.pid << endl;
         
     return d_child.pid;
 }

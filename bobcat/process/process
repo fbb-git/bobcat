@@ -12,7 +12,6 @@
 #include <bobcat/selector>
 #include <bobcat/ifdstreambuf>
 #include <bobcat/ofdstreambuf>
-
 #include <bobcat/iostream>
 
 namespace FBB
@@ -20,32 +19,30 @@ namespace FBB
 
 class Process: private Fork, public IOStream                
 {
-    std::auto_ptr<Pipe> d_child_inp;    // cin read by the CHILD
     int                 d_fdIn;         // last used redirected pipe Fd
-    std::auto_ptr<Pipe> d_child_outp;   // cout written by the CHILD
     int                 d_fdOut;        // last used redirected pipe Fd
-    std::auto_ptr<Pipe> d_child_errp;   // cerr written by the CHILD    
     int                 d_fdErr;        // last used redirected pipe Fd
 
+    std::auto_ptr<Pipe> d_child_inp;    // cin read by the CHILD
+    std::auto_ptr<Pipe> d_child_outp;   // cout written by the CHILD
+    std::auto_ptr<Pipe> d_child_errp;   // cerr written by the CHILD    
+
     OFdStreambuf    d_childCinbuf;      // Child extracts,  
-    std::ostream    d_childCin;         // Parent inserts to child's cin
-
     IFdStreambuf    d_childCoutbuf;     // Child inserts,
-    std::istream    d_childCout;        // Parent extracts child's cout
-
     IFdStreambuf    d_childCerrbuf;     // Child inserts
+
+    std::ostream    d_childCin;         // Parent inserts to child's cin
+    std::istream    d_childCout;        // Parent extracts child's cout
     std::istream    d_childCerr;        // Parent extracts child's cerr
 
     Selector        d_selector;         // senses activities on Parent's
                                         // outp/errp
-
     std::string     d_command;
 
     size_t          d_mode;
     size_t          d_processType;
     size_t          d_waitSeconds;      // seconds to wait for 
                                         // child-termination
-
     bool            d_active;
 
     struct RetPid
@@ -69,6 +66,7 @@ class Process: private Fork, public IOStream
 
         enum IOMode
         {
+            IGNORE_ALL      = 0,
             CIN             = 1 << 0,
             COUT            = 1 << 1,
             CERR            = 1 << 2,
@@ -131,38 +129,25 @@ class Process: private Fork, public IOStream
         Process &operator()(size_t waitSeconds, iomode mode);
 
 
+        template <typename Type>
+        Process &operator<<(Type value);
+
+        Process &operator<<(std::ostream &(*pf)(std::ostream &));
+
+        template <typename Type>
+        Process &operator>>(Type value);
+
+        bool verify();
+
                                 // wait functions are OBSOLETE 
         size_t wait();              
         size_t wait(size_t sec, size_t msec = 0);
 
+        int waitForChild()
+        {
+            return Fork::waitForChild();
+        }
         
-        template <typename Type>
-        Process &operator<<(Type value)
-        {
-            if (verify())
-                dynamic_cast<std::ostream &>(*this) << value;
-
-            return *this;
-        }
-
-        Process &operator<<(std::ostream &(*pf)(std::ostream &))
-        {
-            if (verify())
-                dynamic_cast<std::ostream &>(*this) << pf;
-            return *this;
-        }
-
-        template <typename Type>
-        Process &operator>>(Type value)
-        {
-            if (verify())
-                dynamic_cast<IOStream &>(*this) >> value;    // or reinterpret
-
-            return *this;
-        }
-
-        bool verify();
-
     private:
         void forking();
         pid_t discontinue(RetPid &proc);
@@ -258,6 +243,25 @@ inline Process &Process::operator()(iomode mode)
 {
     return operator()(0, mode);
 }
+
+template <typename Type>
+Process &Process::operator<<(Type value)
+{
+    if (verify())
+        dynamic_cast<std::ostream &>(*this) << value;
+
+    return *this;
+}
+
+template <typename Type>
+Process &Process::operator>>(Type value)
+{
+    if (verify())
+        dynamic_cast<IOStream &>(*this) >> value;    // or reinterpret
+
+    return *this;
+}
+
 
 } // FBB        
 
