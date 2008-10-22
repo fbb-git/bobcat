@@ -23,38 +23,30 @@ void Process::setPath(ProcessType type)
 
 Process::Process(size_t waitSeconds, std::string const &command, iomode mode)
 :
+    d_command(command),
+
     d_childCin(0),
     d_childCout(0),
-//    d_childCerr(0),   
-
-    d_mode(mode),
-    d_processType(NO_PATH),
-    d_waitSeconds(waitSeconds),
-    d_active(false)
+    d_childCerr(0)
 {
     static bool warned = false;
 
     warned = notice(warned, "Process::Process(waitSeconds, command, mode)");
-    setCommand(command);
-    open(d_childCout, d_childCin);
+    initialize(waitSeconds, mode, NO_PATH);
 }
 
 Process::Process(std::string const &command, iomode mode)
 :
+    d_command(command),
+
     d_childCin(0),
     d_childCout(0),
-//    d_childCerr(0),   
-
-    d_mode(mode),
-    d_processType(NO_PATH),
-    d_waitSeconds(0),
-    d_active(false)
+    d_childCerr(0)
 {
     static bool warned = false;
 
     warned = notice(warned, "Process::Process(command, mode)");
-    setCommand(command);
-    open(d_childCout, d_childCin);
+    initialize(0, mode, NO_PATH);
 }
 
 

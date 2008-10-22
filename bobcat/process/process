@@ -17,11 +17,6 @@
 namespace FBB
 {
 
-//    std::auto_ptr<Pipe> d_child_errp;   // cerr written by the CHILD    
-//    IFdStreambuf    d_childCerrbuf;     // Child inserts
-//  std::auto_ptr<std::istream>   d_childCerr; // Parent extracts child's cerr
-
-
 class Process: private Fork, public IOStream
 {
     public:
@@ -34,27 +29,31 @@ class Process: private Fork, public IOStream
     typedef ProcessType Program;        // OBSOLETE: removed shortly
 
     private:
+        bool            d_active;
+        size_t          d_mode;
+        size_t          d_waitSeconds;      // seconds allowed to child-process
+        ProcessType     d_processType;
+    
+        std::string     d_command;
+
         std::auto_ptr<Pipe> d_child_inp;    // cin read by the CHILD
         std::auto_ptr<Pipe> d_child_outp;   // cout written by the CHILD
+        std::auto_ptr<Pipe> d_child_errp;   // cerr written by the CHILD    
     
+        int d_oldIn;                        // File Descriptors of previously 
+        int d_oldOut;                       // used pipes
+        int d_oldErr;
+
         OFdStreambuf    d_childCinbuf;      // Child extracts,  
         IFdStreambuf    d_childCoutbuf;     // Child inserts,
+        IFdStreambuf    d_childCerrbuf;     // Child inserts
     
         std::ostream   d_childCin;          // Parent inserts to child's cin
         std::istream   d_childCout;         // Parent extracts child's cout
+        std::istream   d_childCerr;         // Parent extracts child's cerr
     
-        int d_oldIn;
-        int d_oldOut;
-
-        Selector        d_selector;         // senses activities on Parent's
-                                            // outp/errp
-        size_t          d_mode;
-        std::string     d_command;
-        ProcessType     d_processType;
-        size_t          d_waitSeconds;      // seconds allowed to child-process
-        bool            d_active;
-
-    
+        Selector        d_selector;         // senses activities on Child's
+                                            // out/err streams
         struct RetPid
         {
             int     ret;
@@ -63,7 +62,7 @@ class Process: private Fork, public IOStream
             RetPid();
         };
         RetPid d_child;
-        RetPid d_waiter;
+        RetPid d_monitor;
 
     public:
         enum IOMode
@@ -162,15 +161,19 @@ class Process: private Fork, public IOStream
 
 
     private:
-        size_t whichStream();
-        Pipe *newPipe() const;
-        pid_t discontinue(RetPid &proc);
         virtual void childProcess();
         virtual void childRedirections();
         virtual void parentProcess();
         virtual void parentRedirections();
+
+        Pipe *newPipe() const;
+        pid_t discontinue(RetPid &proc);
+        size_t whichStream();
+        void close(int fd);
         void forking();
-        void setPipes(iomode mode);
+        void initialize(size_t waitSeconds, iomode mode, 
+                                                ProcessType processType);
+        void setPipes();
 
         struct ExecContext
         {
@@ -229,11 +232,6 @@ Process &Process::operator>>(Type value)
     return *this;
 }
 
-inline void Process::setIOMode(iomode mode)
-{
-    d_mode = mode;
- }
-
 inline std::string const &Process::str() const
 {
     return d_command;
@@ -290,10 +288,10 @@ inline int Process::waitForChild()
     return Fork::waitForChild();
 }
 
-//inline std::istream &Process::cerr()
-//{
-//    return *d_childCerr;
-//}
+inline std::istream &Process::cerr()
+{
+    return d_childCerr;
+}
 
 } // FBB        
 

@@ -3,15 +3,11 @@
 Process::Process(size_t waitSeconds, iomode mode, ProcessType processType, 
                                                   string const &command)
 :
+    d_command(command),
+
     d_childCin(0),
     d_childCout(0),
-//    d_childCerr(0),   
-
-    d_mode(mode),
-    d_command(command),
-    d_processType(processType),
-    d_waitSeconds(waitSeconds),
-    d_active(false)
+    d_childCerr(0)
 {
-    open(d_childCout, d_childCin);
+    initialize(waitSeconds, mode, processType);
 }
