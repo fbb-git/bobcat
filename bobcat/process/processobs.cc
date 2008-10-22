@@ -21,7 +21,7 @@ void Process::setPath(ProcessType type)
     d_processType = type;
 }
 
-Process::Process(size_t waitSeconds, std::string const &command, iomode mode)
+Process::Process(size_t timeLimit, std::string const &command, iomode mode)
 :
     d_command(command),
 
@@ -31,8 +31,8 @@ Process::Process(size_t waitSeconds, std::string const &command, iomode mode)
 {
     static bool warned = false;
 
-    warned = notice(warned, "Process::Process(waitSeconds, command, mode)");
-    initialize(waitSeconds, mode, NO_PATH);
+    warned = notice(warned, "Process::Process(timeLimit, command, mode)");
+    initialize(timeLimit, mode, NO_PATH);
 }
 
 Process::Process(std::string const &command, iomode mode)

@@ -31,11 +31,11 @@ class Process: private Fork, public IOStream
     private:
         bool            d_active;
         size_t          d_mode;
-        size_t          d_waitSeconds;      // seconds allowed to child-process
+        size_t          d_timeLimit;      // seconds allowed to child-process
         ProcessType     d_processType;
 
         size_t          d_setMode;          // these values are set by the 
-        size_t          d_setWaitSeconds;   // set members and used as 
+        size_t          d_setTimeLimit;   // set members and used as 
         ProcessType     d_setProcessType;   // defaults unless overridden by
                                             // actual values
                                             // Constructors set these values 
@@ -85,10 +85,6 @@ class Process: private Fork, public IOStream
         };
         typedef size_t iomode;
 
-        enum TimeOut
-        {
-            TIMEOUT
-        };
         enum ChildOutput
         {
             NOTHING_AVAILABLE   = 0,
@@ -100,12 +96,12 @@ class Process: private Fork, public IOStream
         Process(iomode mode, std::string const &command = "");          // 2
         Process(iomode mode, ProcessType type,                          // 3
                                     std::string const &command = "");
-        Process(iomode mode, ProcessType type, size_t waitSeconds,      // 4
+        Process(iomode mode, ProcessType type, size_t timeLimit,      // 4
                                     std::string const &command = "");
 
                                             // OBSOLETE                 // obs
         Process(std::string const &command, iomode mode);
-        Process(size_t waitSeconds, std::string const &command, iomode mode);
+        Process(size_t timeLimit, std::string const &command, iomode mode);
 
                 
         virtual ~Process();                 // stop()s any ongoing process
@@ -117,11 +113,11 @@ class Process: private Fork, public IOStream
         void start();
         void start(iomode mode);
         void start(iomode mode, ProcessType type);
-        void start(iomode mode, ProcessType type, size_t waitSeconds);
-
+        void start(iomode mode, ProcessType type, size_t timeLimit);
+// SO FAR
         void system();              // calls /bin/sh -c cmd; shell redirs OK
         void system(iomode mode);   
-        void system(iomode mode, size_t waitSeconds);  
+        void system(iomode mode, size_t timeLimit);  
 
 
         int operator=(std::string const &cmd);  // sets and starts a command
@@ -146,12 +142,12 @@ class Process: private Fork, public IOStream
         void setPath(ProcessType type);         // OBS: use setProcessType
         void setProcessType(ProcessType type);
 
-        void setWait(size_t waitSeconds);       // for the next cmd to start
+        void setWait(size_t timeLimit);       // for the next cmd to start
                                                 // 0 means: no time monitor
 
         Process &operator()(iomode mode);
         Process &operator()(iomode mode, ProcessType type);
-        Process &operator()(iomode mode, ProcessType type, size_t waitSeconds);
+        Process &operator()(iomode mode, ProcessType type, size_t timeLimit);
 
         void close();                           // closes input to the child
 
@@ -178,7 +174,7 @@ class Process: private Fork, public IOStream
         size_t whichStream();
         void close(int fd);
         void forking();
-        void initialize(size_t waitSeconds, iomode mode, 
+        void initialize(size_t timeLimit, iomode mode, 
                                                 ProcessType processType);
         iomode sanitizeIOMode(iomode mode);
         void setPipes();
@@ -206,17 +202,17 @@ inline Process::~Process()
 
 inline void Process::start()
 {   
-    start(d_setMode, d_setProcessType, d_setWaitSeconds);
+    start(d_setMode, d_setProcessType, d_setTimeLimit);
 }
 
 inline void Process::start(iomode mode)
 {
-    start(mode, d_setProcessType, d_setWaitSeconds);
+    start(mode, d_setProcessType, d_setTimeLimit);
 }
 
 inline void Process::start(iomode mode, ProcessType type)
 {
-    start(mode, type, d_setWaitSeconds);
+    start(mode, type, d_setTimeLimit);
 }
 
 inline void Process::parentProcess()
@@ -247,17 +243,17 @@ inline std::string const &Process::str() const
 
 inline void Process::system()
 {
-    start(d_mode, USE_SHELL, d_waitSeconds);
+    start(d_mode, USE_SHELL, d_timeLimit);
 }
 
 inline void Process::system(iomode mode)
 {
-    start(mode, USE_SHELL, d_waitSeconds);
+    start(mode, USE_SHELL, d_timeLimit);
 }
 
-inline void Process::system(iomode mode, size_t waitSeconds)
+inline void Process::system(iomode mode, size_t timeLimit)
 {
-    start(mode, USE_SHELL, waitSeconds);
+    start(mode, USE_SHELL, timeLimit);
 }
 
 inline Process &Process::operator+=(std::string const &command)
@@ -276,9 +272,9 @@ inline void Process::setProcessType(ProcessType type)
     d_setProcessType = d_processType = type;
 }
 
-inline void Process::setWait(size_t waitSeconds)
+inline void Process::setWait(size_t timeLimit)
 {
-    d_setWaitSeconds = d_waitSeconds = waitSeconds;
+    d_setTimeLimit = d_timeLimit = timeLimit;
 }
 
 inline void Process::setIOMode(iomode mode)
@@ -298,12 +294,12 @@ inline std::istream &Process::cerr()
 
 inline Process &Process::operator()(iomode mode)
 {
-    return operator()(mode, d_setProcessType, d_setWaitSeconds);
+    return operator()(mode, d_setProcessType, d_setTimeLimit);
 }
 
 inline Process &Process::operator()(iomode mode, ProcessType type)
 {
-    return operator()(mode, type, d_setWaitSeconds);
+    return operator()(mode, type, d_setTimeLimit);
 }
 
 } // FBB        

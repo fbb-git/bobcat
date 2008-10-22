@@ -64,10 +64,6 @@ catch (Errno const &err)
     cerr << err.what() << endl;
     return 1;
 }
-catch (Process::TimeOut)
-{
-    return 0;   // monitor times out
-}
 catch (...)
 {
     cerr << "Unrecognized exception in main()\n";

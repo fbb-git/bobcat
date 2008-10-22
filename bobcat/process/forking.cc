@@ -12,7 +12,7 @@ void Process::forking()
 
 //std::cerr << "FORKED CHILD " << pid() << endl;
 
-    if (d_waitSeconds == 0)         // no wait, set monitor.pid to 0: no 
+    if (d_timeLimit == 0)         // no wait, set monitor.pid to 0: no 
     {                               // time monitoring
         d_monitor.pid = 0;
         return;
@@ -31,16 +31,16 @@ void Process::forking()
     {
                                     // close open pipes inherited from the
                                     // parent process
-//        if (d_mode & CIN)           
-//            ::close(d_child_inp->writeOnly());
-//        if (d_mode & (COUT | MERGE_COUT_CERR))
-//            ::close(d_child_outp->readOnly());
-//        if (d_mode & CERR)
-//            ::close(d_child_errp->readOnly());
+        if (d_mode & CIN)           
+            ::close(d_child_inp->writeOnly());
+        if (d_mode & (COUT | MERGE_COUT_CERR))
+            ::close(d_child_outp->readOnly());
+        if (d_mode & CERR)
+            ::close(d_child_errp->readOnly());
 
-        sleep(d_waitSeconds);
+        sleep(d_timeLimit);
 
-        throw TIMEOUT;              // NOTE: PROCESS SHOULD CATCH THE TIMEOUT
+        exit(0);
     }
 }
 

@@ -1,12 +1,12 @@
 #include "process.ih"
 
-void Process::start(iomode mode, ProcessType type, size_t waitSeconds)
+void Process::start(iomode mode, ProcessType type, size_t timeLimit)
 {
     if (d_active)
         stop();
 
     d_active = true;
-    d_waitSeconds = waitSeconds;
+    d_timeLimit = timeLimit;
     d_processType = type;
 
     sanitizeIOMode(mode);

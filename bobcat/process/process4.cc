@@ -1,6 +1,6 @@
 #include "process.ih"
 
-Process::Process(iomode mode, ProcessType processType, size_t waitSeconds, 
+Process::Process(iomode mode, ProcessType processType, size_t timeLimit, 
                  string const &command)
 :
     d_command(command),
@@ -9,5 +9,5 @@ Process::Process(iomode mode, ProcessType processType, size_t waitSeconds,
     d_childCout(0),
     d_childCerr(0)
 {
-    initialize(waitSeconds, mode, processType);
+    initialize(timeLimit, mode, processType);
 }
