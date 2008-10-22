@@ -2,17 +2,19 @@
 
 int Process::stop()
 {
-    if (!d_active)
-        return -1;
-
-    d_command.clear();
+//    if (!d_active)
+//        return -1;
+//
+//    d_command.clear();
 
     discontinue(d_child);
-    discontinue(d_waiter);
+//    discontinue(d_waiter);
 
-    d_active = false;
+//    d_active = false;
+//
+//    return d_child.ret;
 
-    return d_child.ret;
+    return 0;
 }
 
 

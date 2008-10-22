@@ -4,60 +4,41 @@ void Process::parentRedirections()
 {
     d_selector = Selector();
 
-    int fd_i = -1;
-    int fd_o = -1;
-    int fd_e = -1;
+    int fd;
 
     if (d_mode & CIN)
     {
-        d_childCinbuf.open(fd_i = d_child_inp->writeOnly());
-//std::cerr << "USING FD " << fd_i << endl;
+        d_childCinbuf.open(fd = d_child_inp->writeOnly());
+        d_childCin.rdbuf(&d_childCinbuf);
+std::cerr << "USING FD " << fd << endl;
     }
 
     if (d_mode & (MERGE_COUT_CERR | COUT))
     {
-        fd_o = d_child_outp->readOnly();
-//std::cerr << "USING FD " << fd_o << endl;
-
-        d_selector.addReadFd(fd_o);
-        d_childCoutbuf.open(fd_o);
+        fd = d_child_outp->readOnly();
+        d_childCoutbuf.open(fd);
+        d_childCout.rdbuf(&d_childCoutbuf);
+        d_selector.addReadFd(fd);
+std::cerr << "USING FD " << fd << endl;
     }
 
-    if ((d_mode & CERR) && !(d_mode & MERGE_COUT_CERR))
-    {
-        fd_e = d_child_errp->readOnly();
+//    if ((d_mode & CERR) && !(d_mode & MERGE_COUT_CERR))
+//    {
+//        fd_e = d_child_errp->readOnly();
 //std::cerr << "USING FD " << fd_e << endl;
-        d_selector.addReadFd(fd_e);
-        d_childCerrbuf.open(fd_e);
-    }
+//
+//        d_selector.addReadFd(fd_e);
+//        d_childCerrbuf.open(fd_e);
+//        d_childCerr.reset(new istream(&d_childCerrbuf));
+//    }
 
 
-        if (d_fdErr != -1)
-{
-//    std::cerr << "CLOSING " << d_fdErr << endl;
-            if (::close(d_fdErr))
-                ;   //std::cerr << "CANT CLOSE " << d_fdErr << endl;
-}
-        d_fdErr = fd_e;
+    if (d_oldIn != -1)
+        ::close(d_oldIn);
+    if (d_oldOut != -1)
+        ::close(d_oldOut);
 
-
-        if (d_fdOut != -1)
-{
-//    std::cerr << "CLOSING " << d_fdOut << endl;
-            if (::close(d_fdOut))
-                ;   // std::cerr << "CANT CLOSE " << d_fdOut << endl;
-}
-        d_fdOut = fd_o;
-
-
-        if (d_fdIn != -1)
-{
-//    std::cerr << "CLOSING " << d_fdIn << endl;
-            if (::close(d_fdIn))
-                ;   //std::cerr << "CANT CLOSE " << d_fdIn << endl;
-}
-        d_fdErr = fd_i;
-
+    clear();
 }
 
 

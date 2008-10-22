@@ -1,7 +1,9 @@
 #include "process.ih"
 
-void Process::close(auto_ptr<Pipe> &pipe, int (Pipe::*fdFun)() const)
+void Process::close()
 {
-    if (pipe.get())
-        ::close((pipe.get()->*fdFun)());
+    ::close(d_child_inp->writeFd());
+
+    d_child_inp.reset(newPipe());
+    d_child_inp->writeOnly();
 }

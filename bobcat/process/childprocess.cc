@@ -22,11 +22,7 @@ void Process::childProcess()
     (*(d_processType == USE_PATH ? execvp : execv))
         (ec.args[0], const_cast<char * const *>(ec.args));
 
-    exit(-1); 
+    throw Errno("Process: ") << insertable << " cannot execv[p] " << 
+                                                d_command << throwable;
 }
-
-
-
-
-
 
