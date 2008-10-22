@@ -1,7 +1,7 @@
 #include "process.ih"
 
-Process::Process(size_t waitSeconds, iomode mode, ProcessType processType, 
-                                                  string const &command)
+Process::Process(iomode mode, ProcessType processType, size_t waitSeconds, 
+                 string const &command)
 :
     d_command(command),
 

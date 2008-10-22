@@ -30,12 +30,10 @@ try
 
     process.stop();
 
-    prompt("10 seconds /bin/cat");
+    process.setWait(5);
+    prompt("5 seconds /bin/cat");
 
-    process(10, Process::CIN | Process::COUT) = "/bin/cat";
-
-    cout << "/bin/cat/started\n";
-    getline(cin, line);
+    process = "/bin/cat";
 
     while (process.verify())
     {
@@ -47,12 +45,13 @@ try
         cout << "Received: " << line << endl;
     }
 
+    process.setWait(0);
 
     for (size_t trial = 0; trial < 5; ++trial)
     {
         prompt("ls");
 
-        process(0, Process::CIN | Process::COUT) = "/bin/ls";
+        process(Process::CIN | Process::COUT) = "/bin/ls";
 
         cerr << process.str() << endl;
         size_t count = 0;

@@ -5,14 +5,13 @@ void Process::initialize(size_t waitSeconds, iomode mode,
 {
     d_active = false;
 
-    d_waitSeconds = waitSeconds;
-    d_processType = processType; 
+    d_setWaitSeconds = d_waitSeconds = waitSeconds;
+    d_setProcessType = d_processType = processType; 
+    d_setMode = sanitizeIOMode(mode);
 
     d_oldIn = -1;
     d_oldOut = -1; 
     d_oldErr = -1;
-
-    setIOMode(mode);
 
     open(d_childCout, d_childCin);
 }

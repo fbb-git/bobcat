@@ -6,6 +6,6 @@ int Process::operator=(std::string const &command)
 
     setCommand(command);
 
-    start();
+    start(d_mode, d_processType, d_waitSeconds);
     return ret;
 }

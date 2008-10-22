@@ -1,6 +1,6 @@
 #include "process.ih"
 
-Process::Process(size_t waitSeconds, iomode mode, std::string const &command)
+Process::Process(iomode mode, ProcessType type, std::string const &command)
 :
     d_command(command),
 
@@ -8,5 +8,5 @@ Process::Process(size_t waitSeconds, iomode mode, std::string const &command)
     d_childCout(0),
     d_childCerr(0)
 {
-    initialize(waitSeconds, mode, NO_PATH);
+    initialize(0, mode, type);
 }

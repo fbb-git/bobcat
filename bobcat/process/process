@@ -33,7 +33,14 @@ class Process: private Fork, public IOStream
         size_t          d_mode;
         size_t          d_waitSeconds;      // seconds allowed to child-process
         ProcessType     d_processType;
-    
+
+        size_t          d_setMode;          // these values are set by the 
+        size_t          d_setWaitSeconds;   // set members and used as 
+        ProcessType     d_setProcessType;   // defaults unless overridden by
+                                            // actual values
+                                            // Constructors set these values 
+                                            // too.
+
         std::string     d_command;
 
         std::auto_ptr<Pipe> d_child_inp;    // cin read by the CHILD
@@ -91,9 +98,9 @@ class Process: private Fork, public IOStream
             
         Process(std::string const &command = "");                       // 1
         Process(iomode mode, std::string const &command = "");          // 2
-        Process(size_t waitSeconds, iomode mode,                        // 3
+        Process(iomode mode, ProcessType type,                          // 3
                                     std::string const &command = "");
-        Process(size_t waitSeconds, iomode mode, ProcessType path,      // 4
+        Process(iomode mode, ProcessType type, size_t waitSeconds,      // 4
                                     std::string const &command = "");
 
                                             // OBSOLETE                 // obs
@@ -108,13 +115,13 @@ class Process: private Fork, public IOStream
         Process &operator+=(std::string const &text);   // adds to the command
         
         void start();
-        void start(ProcessType type);
+        void start(iomode mode);
         void start(iomode mode, ProcessType type);
-        void start(size_t waitSeconds, iomode mode, ProcessType type);
+        void start(iomode mode, ProcessType type, size_t waitSeconds);
 
         void system();              // calls /bin/sh -c cmd; shell redirs OK
         void system(iomode mode);   
-        void system(size_t waitSeconds, iomode mode);  
+        void system(iomode mode, size_t waitSeconds);  
 
 
         int operator=(std::string const &cmd);  // sets and starts a command
@@ -142,9 +149,9 @@ class Process: private Fork, public IOStream
         void setWait(size_t waitSeconds);       // for the next cmd to start
                                                 // 0 means: no time monitor
 
-        Process &operator()(iomode mode);       // set things using function 
-        Process &operator()(size_t waitSeconds, iomode mode);   //  objects 
-        Process &operator()(size_t waitSeconds, iomode mode, ProcessType type);
+        Process &operator()(iomode mode);
+        Process &operator()(iomode mode, ProcessType type);
+        Process &operator()(iomode mode, ProcessType type, size_t waitSeconds);
 
         void close();                           // closes input to the child
 
@@ -173,6 +180,7 @@ class Process: private Fork, public IOStream
         void forking();
         void initialize(size_t waitSeconds, iomode mode, 
                                                 ProcessType processType);
+        iomode sanitizeIOMode(iomode mode);
         void setPipes();
 
         struct ExecContext
@@ -198,17 +206,17 @@ inline Process::~Process()
 
 inline void Process::start()
 {   
-    start(d_waitSeconds, d_mode, d_processType);
+    start(d_setMode, d_setProcessType, d_setWaitSeconds);
 }
 
-inline void Process::start(ProcessType type)
-{   
-    start(d_waitSeconds, d_mode, type);
+inline void Process::start(iomode mode)
+{
+    start(mode, d_setProcessType, d_setWaitSeconds);
 }
 
 inline void Process::start(iomode mode, ProcessType type)
 {
-    start(d_waitSeconds, mode, type);
+    start(mode, type, d_setWaitSeconds);
 }
 
 inline void Process::parentProcess()
@@ -239,17 +247,17 @@ inline std::string const &Process::str() const
 
 inline void Process::system()
 {
-    start(USE_SHELL);
+    start(d_mode, USE_SHELL, d_waitSeconds);
 }
 
 inline void Process::system(iomode mode)
 {
-    start(mode, USE_SHELL);
+    start(mode, USE_SHELL, d_waitSeconds);
 }
 
-inline void Process::system(size_t waitSeconds, iomode mode)
+inline void Process::system(iomode mode, size_t waitSeconds)
 {
-    start(waitSeconds, mode, USE_SHELL);
+    start(mode, USE_SHELL, waitSeconds);
 }
 
 inline Process &Process::operator+=(std::string const &command)
@@ -265,22 +273,17 @@ inline void Process::setCommand(std::string const &command)
 
 inline void Process::setProcessType(ProcessType type)
 {
-    d_processType = type;
+    d_setProcessType = d_processType = type;
 }
 
 inline void Process::setWait(size_t waitSeconds)
 {
-    d_waitSeconds = waitSeconds;
+    d_setWaitSeconds = d_waitSeconds = waitSeconds;
 }
 
-inline Process &Process::operator()(iomode mode)
+inline void Process::setIOMode(iomode mode)
 {
-    return operator()(d_waitSeconds, mode, d_processType);
-}
-
-inline Process &Process::operator()(size_t waitSeconds, iomode mode)
-{
-    return operator()(waitSeconds, mode, d_processType);
+    d_setMode = sanitizeIOMode(mode);
 }
 
 inline int Process::waitForChild()
@@ -291,6 +294,16 @@ inline int Process::waitForChild()
 inline std::istream &Process::cerr()
 {
     return d_childCerr;
+}
+
+inline Process &Process::operator()(iomode mode)
+{
+    return operator()(mode, d_setProcessType, d_setWaitSeconds);
+}
+
+inline Process &Process::operator()(iomode mode, ProcessType type)
+{
+    return operator()(mode, type, d_setWaitSeconds);
 }
 
 } // FBB        

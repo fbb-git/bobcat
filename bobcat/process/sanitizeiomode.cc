@@ -1,6 +1,6 @@
 #include "process.ih"
 
-void Process::setIOMode(iomode mode)
+Process::iomode Process::sanitizeIOMode(iomode mode)
 {
     d_mode = mode;
 
@@ -12,5 +12,7 @@ void Process::setIOMode(iomode mode)
 
     if (d_mode & MERGE_COUT_CERR)       // overrules either COUT or CERR
         d_mode &= ~(COUT | CERR);
+
+    return d_mode;
 }
 
