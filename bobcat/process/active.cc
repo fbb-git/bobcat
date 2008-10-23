@@ -1,6 +1,6 @@
 #include "process.ih"
 
-bool Process::verify()
+bool Process::active()
 {
 //    static fstream null(0);
 

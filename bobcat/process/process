@@ -114,7 +114,7 @@ class Process: private Fork, public IOStream
         void start(iomode mode);
         void start(iomode mode, ProcessType type);
         void start(iomode mode, ProcessType type, size_t timeLimit);
-// SO FAR
+
         void system();              // calls /bin/sh -c cmd; shell redirs OK
         void system(iomode mode);   
         void system(iomode mode, size_t timeLimit);  
@@ -135,7 +135,7 @@ class Process: private Fork, public IOStream
         template <typename Type>
         Process &operator>>(Type value);
 
-        bool verify();
+        bool active();
 
         void setIOMode(iomode mode);            // change IOMode
 
@@ -221,7 +221,7 @@ inline void Process::parentProcess()
 template <typename Type>
 Process &Process::operator<<(Type value)
 {
-    if (verify())
+    if (active())
         dynamic_cast<std::ostream &>(*this) << value;
 
     return *this;
@@ -230,7 +230,7 @@ Process &Process::operator<<(Type value)
 template <typename Type>
 Process &Process::operator>>(Type value)
 {
-    if (verify())
+    if (active())
         dynamic_cast<std::istream &>(*this) >> value;    // or reinterpret
 
     return *this;

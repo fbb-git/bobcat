@@ -2,7 +2,7 @@
 
 Process &Process::operator<<(std::ostream &(*pf)(std::ostream &))
 {
-    if (verify())
+    if (active())
         dynamic_cast<std::ostream &>(*this) << pf;
     return *this;
 }
