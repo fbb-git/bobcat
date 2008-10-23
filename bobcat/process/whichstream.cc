@@ -11,11 +11,11 @@ size_t Process::whichStream()
 
         case 1:
         return d_selector.getReadFd() == d_child_outp->readFd() ? 
-                    CHILD_OUTPUT 
+                    CHILD_COUT 
                 : 
-                    CHILD_ERROR;
+                    CHILD_CERR;
         case 2:
-        return CHILD_OUTPUT | CHILD_ERROR;
+        return CHILD_COUT | CHILD_CERR;
 
         default:
             throw Errno("Process::whichStream(): internal error. "

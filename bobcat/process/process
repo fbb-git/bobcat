@@ -88,8 +88,8 @@ class Process: private Fork, public IOStream
         enum ChildOutput
         {
             NOTHING_AVAILABLE   = 0,
-            CHILD_OUTPUT        = 1 << 0,
-            CHILD_ERROR         = 1 << 1,
+            CHILD_COUT          = 1 << 0,
+            CHILD_CERR          = 1 << 1,
         };
             
         Process(std::string const &command = "");                       // 1
@@ -105,6 +105,18 @@ class Process: private Fork, public IOStream
 
                 
         virtual ~Process();                 // stop()s any ongoing process
+
+        iomode ioMode() const;              // returns default IOMode
+        ProcessType processType() const;    // returns default ProcessType
+        size_t timeLimit() const;           // returns default time limit
+
+        void setIOMode(iomode mode);            // change IOMode
+
+        void setPath(ProcessType type);         // OBS: use setProcessType
+        void setProcessType(ProcessType type);
+
+        void setTimeLimit(size_t timeLimit);    // for the next cmd to start
+                                                // 0 means: no time monitor
 
         void setCommand(std::string const &command);    // sets cmd,
                                                         // eats backticks
@@ -128,22 +140,14 @@ class Process: private Fork, public IOStream
         int stop();                     // terminate a running childprocess
 
         template <typename Type>
-        Process &operator<<(Type value);
+        Process &operator<<(Type const &value);
 
         Process &operator<<(std::ostream &(*pf)(std::ostream &));
 
         template <typename Type>
-        Process &operator>>(Type value);
+        Process &operator>>(Type &value);
 
         bool active();
-
-        void setIOMode(iomode mode);            // change IOMode
-
-        void setPath(ProcessType type);         // OBS: use setProcessType
-        void setProcessType(ProcessType type);
-
-        void setWait(size_t timeLimit);       // for the next cmd to start
-                                                // 0 means: no time monitor
 
         Process &operator()(iomode mode);
         Process &operator()(iomode mode, ProcessType type);
@@ -219,7 +223,7 @@ inline void Process::parentProcess()
 {}
 
 template <typename Type>
-Process &Process::operator<<(Type value)
+Process &Process::operator<<(Type const &value)
 {
     if (active())
         dynamic_cast<std::ostream &>(*this) << value;
@@ -228,10 +232,10 @@ Process &Process::operator<<(Type value)
 }
 
 template <typename Type>
-Process &Process::operator>>(Type value)
+Process &Process::operator>>(Type &value)
 {
-    if (active())
-        dynamic_cast<std::istream &>(*this) >> value;    // or reinterpret
+    if ((available() & CHILD_COUT) || active())
+        dynamic_cast<std::istream &>(*this) >> value;
 
     return *this;
 }
@@ -272,7 +276,7 @@ inline void Process::setProcessType(ProcessType type)
     d_setProcessType = d_processType = type;
 }
 
-inline void Process::setWait(size_t timeLimit)
+inline void Process::setTimeLimit(size_t timeLimit)
 {
     d_setTimeLimit = d_timeLimit = timeLimit;
 }
@@ -287,11 +291,6 @@ inline int Process::waitForChild()
     return Fork::waitForChild();
 }
 
-inline std::istream &Process::cerr()
-{
-    return d_childCerr;
-}
-
 inline Process &Process::operator()(iomode mode)
 {
     return operator()(mode, d_setProcessType, d_setTimeLimit);
@@ -301,6 +300,22 @@ inline Process &Process::operator()(iomode mode, ProcessType type)
 {
     return operator()(mode, type, d_setTimeLimit);
 }
+
+inline Process::iomode Process::ioMode() const
+{
+    return d_mode;
+}
+
+inline Process::ProcessType Process::processType() const
+{
+    return d_setProcessType;
+}
+
+inline size_t Process::timeLimit() const
+{
+    return d_setTimeLimit;
+}
+
 
 } // FBB        
 

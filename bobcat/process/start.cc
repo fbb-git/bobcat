@@ -16,4 +16,8 @@ void Process::start(iomode mode, ProcessType type, size_t timeLimit)
         d_command = d_command.substr(1, d_command.length() - 2);
 
     forking();
+
+    d_mode = d_setMode;                     // revert to the default process
+    d_processType = d_setProcessType;       // parameters for a next run
+    d_timeLimit = d_setTimeLimit;
 }

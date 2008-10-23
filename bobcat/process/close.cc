@@ -10,11 +10,11 @@ void Process::close()
     d_child_inp.reset(newPipe());
     d_childCinbuf.open(d_child_inp->writeOnly());
 
-    //    d_childCin.rdbuf(&d_childCinbuf);     not required as d_childCin
-    //                                          won't be used anymore in this
-    //                                          run. At parentRedirecions
-    //                                          it may eventually be
-    //                                          reassigned again.
+    d_childCin.rdbuf(&d_childCinbuf);     // not required as d_childCin
+                                          // won't be used anymore in this
+                                          // run. At parentRedirecions
+                                          // it may eventually be
+                                          // reassigned again.
 
     close(d_oldIn);
 }
