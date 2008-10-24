@@ -69,7 +69,7 @@ try
 }
 catch (Errno const &err)
 {
-    cerr << err.what() << endl;
+    cerr << "EXCEPTION CAUGHT: " << err.what() << endl;
     return 1;
 }
 catch (...)

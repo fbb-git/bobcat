@@ -8,7 +8,7 @@ Process::iomode Process::sanitizeIOMode(iomode mode)
         d_mode &= ~(IGNORE_COUT);
 
     if (d_mode & CERR)                  // overrules IGNORE_CERR
-        d_mode &= ~(IGNORE_CERR);
+        d_mode &= ~IGNORE_CERR;
 
     if (d_mode & MERGE_COUT_CERR)       // overrules either COUT or CERR
         d_mode &= ~(COUT | CERR);
