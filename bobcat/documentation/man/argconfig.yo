@@ -1,0 +1,161 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::ArgConfig)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Program Arguments)
+
+manpagename(FBB::ArgConfig)(A singleton class processing program arguments)
+
+manpagesynopsis()
+    bf(#include <bobcat/argConfig>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    Singleton class (see Gamma em(et al.), 1995) built around bf(getopt())(3)
+and bf(getopt_long())(3). The class handles short- and long command-line
+options as well as configuration files.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::Arg),nl()
+    bf(FBB::ConfigFile)
+
+manpagesection(CONSTRUCTORS)
+    Since the class is a em(Singleton), no public constructors are
+available. Instead, static members are offered to initialize and access the
+single bf(ArgConfig) object. See below.
+
+manpagesection(STATIC MEMBERS)
+    itemization(
+    itb(FBB::ArgConfig &initialize(char const *optstring, int argc, char **argv))
+        Initializes the bf(FBB::ArgConfig) singleton. Must be called only once.
+Throws an bf(FBB::Errno) exception if called repeatedly or if called with
+tt(argv) not containing a defined option (which is shown by the
+bf(FBB::Errno)'s tt(what()) member). Returns a reference to the singleton
+object, allowing code initializing bf(ArgConfig) to use the initialized object
+immediately.
+    itb(FBB::ArgConfig &initialize(char const *optstring,
+                                LongOption const * const begin,
+                                LongOption const * const end,
+                                int argc, char **argv))
+        Initializes the bf(FBB::ArgConfig) singleton. Accepts two iterators of an
+array of bf(Arg::LongOption) objects, holding long-options. Must be called
+only once. Throws an bf(FBB::Errno) exception if called repeatedly or if
+called with tt(argv) not containing a defined option (which is shown by the
+bf(FBB::Errno)'s tt(what()) member).  See the description of
+bf(Arg::LongOption) below.  Returns a reference to the singleton object,
+allowing code initializing bf(ArgConfig) to use the initialized object immediately.
+
+        tt(optstring) should consist of letters, possibly postfixed by:
+        itemization(
+        it() a colon (tt(:)), indicating that the option has a required
+            argument;
+        it() a double colon (tt(::)), indicating that the option itself 
+            has an optional argument (in that case, the option's value 
+            will be empty, unless specified).
+        )
+
+    itb(FBB::ArgConfig &instance()) 
+        Returns the instance of the bf(ArgConfig) object, available after calling
+one of the bf(ArgConfig::initialize()) members.  If called before initialization, an
+tt(FBB::Errno) exception is thrown.
+    )
+
+manpagesection(NON-STATIC MEMBER FUNCTIONS)
+    All public members of the tt(Arg) and tt(ConfigFile) classes are also
+offered by the tt(ArgConfig) class. As several  tt(option()) members were
+reimplemented by this class all tt(option()) members are discussed below. All
+other members inherit straight from the classes tt(Arg) and
+tt(ConfigFile). Consult their man pages for details.
+    itemization(
+    itb(size_t option(int option) const)
+        Returns the number of times `option' (or its long option synonym, if
+defined) was specified as command line option or as as a configuration file
+option.
+
+    itb(size_t option(std::string const &options) const)
+        Returns the total number of times any of the characters specified in
+the `options' string (or their long option synonyms)
+was specified as command line option or as as a configuration file
+option.
+
+    itb(size_t option(string *value, int option) const)
+        Returns the number of times the provided option (or its long option
+synonym) was present as either a command line option or as a configuration
+file option. If the return value is non-zero then the value of the
+first occurrence of this option (first checking the command line options; then
+checking the configuration file) is stored in tt(*value), which is left
+untouched if `option' was not present. 0 may be specified for bf(value) if the
+option does not have a value or if the value should not be stored.
+
+    itb(size_t option(size_t idx, string *value, int option) const)
+        This member acts identically to the tt(Arg::option()) member having
+the identical prototype. It does not consider the configuration file but 
+merely returns the number of times the provided option (or its long option
+synonym) was present. If the return value is non-zero then the value of the
+tt(idx)th occurrence (0-based offset) of this option is stored in tt(*value),
+which is left untouched if `option' was not present or if tt(idx) is or
+exceeds the number of specifications of the provided option. 0 may be
+specified for bf(value) if the option does not have a value or if the value
+should not be stored. 
+
+    itb(size_t option(size_t *idx, string *value, int option) const)
+        This member acts identically to the tt(Arg::option()) member having
+the identical prototype. It does not consider the configuration file but
+merely returns the number of times the provided option (or its long option
+synonym) was present. If the return value is non-zero then the offset (within
+the series of tt(option) specifications) of the first option having a
+non-empty option value is returned in tt(*idx), while its option value is
+stored in tt(*value). Both tt(*value) and tt(*idx) are left untouched if
+`option' was not present. 0 may be specified for bf(value) if the option does
+not have a value or if the value should not be stored.
+
+    itb(size_t option(string *value, char const *longOption) const)
+        Returns the number of times the specified long option (not having a
+single-character synonym) was present as either a command line option or in
+the configuration file. If found, then the value found at the first occurrence
+of the option (first considering the command line options, then the
+configuration file) is stored in tt(*value). The string pointed to by
+tt(value) is left untouched if the long option was not present. 0 may be
+specified for bf(value) if the option does not have a value or if the value
+should not be stored.
+
+    itb(size_t option(size_t idx, string *value, 
+                                        char const * longOption) const)
+        This member acts identically to the tt(Arg::option()) member having
+the identical prototype. It does not consider the configuration file but
+merely returns the number of times the provided long option (not having a
+single-character synonym) was present. If the return value is non-zero then
+the value of the tt(idx)th occurrence (0-based offset) of this long option is
+stored in tt(*value), which is left untouched if the long option was not
+present or if tt(idx) is or exceeds the number of specifications of the
+provided long option. 0 may be specified for bf(value) if the long option does
+not have a value or if the value should not be stored.
+
+    itb(size_t option(size_t *idx, string *value, int longOption) const)
+        This member acts identically to the tt(Arg::option()) member having
+the identical prototype. It does not consider the configuration file but
+merely returns the number of times the provided long option (not having a
+single-character synonym) was present. If the return value is non-zero then
+the offset (within the series of this long option specifications) of the first
+long option having a non-empty option value is returned in tt(*idx), while its
+option value is stored in tt(*value). Both tt(*value) and tt(*idx) are left
+untouched if long option was not present. 0 may be specified for bf(value) if
+the long option does not have a value or if the value should not be stored.
+
+
+manpagesection(EXAMPLE)
+
+    TO DO
+
+manpagefiles()
+    em(bobcat/argconfig) - defines the class interface
+
+manpageseealso()
+    bf(arg)(3bobcat), bf(configfile)(3obcat), bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

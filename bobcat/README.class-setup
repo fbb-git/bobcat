@@ -66,28 +66,30 @@ future relase:
 0                      A2x      |    |                                     
        FnWrap1(cont)    |       |    |      FnWrap1c(cont)   Errno(cont)
              |          |       |    |            |               |
-             +----+-----+       |    |  +---------+-----------+   |  IUO
-                  |             |    |  |         |           |   |   |
-                  |             |    |  |         |           +---+---+
-                  |             |    |  |         |           | 
-               String           |    +--+    MultiStreambuf  Glob
-                  |             |    |
-             +----+----+        |    |
-             |         |        |    |
-             |         +--------+    |
-             |         |        |    |
-             |         |       Arg   |
-             |         |             |
-             |         +-------------+
-       CmdFinderBase                 |
-             |                       |
-          CmdFinder                  |
-                                     |
-0                   OFdStreambuf     |     IFdStreambuf
-                         |           |          |
-             +-----------+           |          +--------+
-             |           |           |          |        |
-          OFdStream      +-----------+----------+     IFdStream
+             +----+-----+       |    |    +-------+-----------+   |  IUO
+                  |             |    |    |       |           |   |   |
+                  |             |    |    |       |           +---+---+
+                  |             |    |    |       |           | 
+               String           |    +----+  MultiStreambuf  Glob
+                  |             |         |
+             +----+----+        |         |
+             |         |        |         |
+             |         +---+----+         |
+             |         |   |              |
+             |         |  Arg  ConfigFile |
+             |         |   |     (cont)   |
+             |         |   |       |      |
+       CmdFinderBase   |   +---+---+      |
+             |         |       |          |
+             |         |   ArgConfig      |
+             |         |                  |
+          CmdFinder    +------------------+
+                                          |
+0                   OFdStreambuf          | IFdStreambuf
+                         |                |     |
+             +-----------+                |     +--------+
+             |           |                |     |        |
+          OFdStream      +-----------+----+-----+     IFdStream
                                      |
                                   Process
 

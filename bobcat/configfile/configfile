@@ -8,6 +8,7 @@
 //    if the rmComment flag is set to true
 //    Then, lines containing only blanks and tabs are not stored
 
+#include <climits>
 #include <fstream>
 #include <vector>
 #include <string>
@@ -29,6 +30,7 @@ class RE_iterator: public std::iterator<std::input_iterator_tag, std::string>
 
     public:
         RE_iterator &operator++();
+        size_t operator-(RE_iterator const &other) const;
 
         bool operator==(RE_iterator const &other) const;
         bool operator!=(RE_iterator const &other) const;
