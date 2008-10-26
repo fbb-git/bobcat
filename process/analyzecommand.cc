@@ -2,8 +2,6 @@
 
 Process::ExecContext Process::analyzeCommand()
 {
-//    std::cerr << "Command: `" << d_command << "'" << endl;
-
     string args(d_command);                 // First, analyze the arguments
      
     vector<String::SplitPair> elements;     // destination for the command's
@@ -19,20 +17,12 @@ Process::ExecContext Process::analyzeCommand()
                     (&execContext, ec));
     
     if (!ec.ok)
-    {
-//     std::cerr << "Process::execute(): " << ec.message << endl;
-        exit(-1); 
-    }    
+        throw Errno("Process ") << insertable << d_command << ": " << 
+                                                ec.message << throwable;
     
     if (!ec.argc)
-    {
-//     std::cerr << "Process::execute(): missing program to execute" << endl;
-        exit(-1); 
-    }    
-    
-//    std::cerr << "Process::execute(): executing `" << ec.args[0] << "'" << 
-//                endl;
-    
+        throw Errno("Process: can't execute ") << insertable << d_command <<
+                                                                    throwable;
     ec.args[ec.argc] = 0;
      
     return ec;

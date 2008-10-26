@@ -3,21 +3,40 @@
 void Process::parentRedirections()
 {
     d_selector = Selector();
-    
+
+    int fd;
+
+
     if (d_mode & CIN)
-        d_childCinbuf.open(d_child_inp->writeOnly());
-    
-    if (d_mode & (MERGE_COUT_CERR | COUT))
     {
-        int fd = d_child_outp->readOnly();
-        d_selector.addReadFd(fd);
-        d_childCoutbuf.open(fd);
+        d_childCinbuf.open(fd = d_child_inp->writeOnly());
+        d_childCin.rdbuf(&d_childCinbuf);
     }
 
-    if ((d_mode & CERR) && !(d_mode & MERGE_COUT_CERR))
+    if (d_mode & (COUT | MERGE_COUT_CERR))
     {
-        int fd = d_child_errp->readOnly();
+        fd = d_child_outp->readOnly();
+        d_childCoutbuf.open(fd);
+        d_childCout.rdbuf(&d_childCoutbuf);
         d_selector.addReadFd(fd);
-        d_childCerrbuf.open(fd);
     }
+
+    if (d_mode & CERR)
+    {
+        fd = d_child_errp->readOnly();
+        d_childCerrbuf.open(fd);
+        d_childCerr.rdbuf(&d_childCerrbuf);
+        d_selector.addReadFd(fd);
+    }
+
+    close(d_oldIn);
+    close(d_oldOut);
+    close(d_oldErr);
+
+    clear();
 }
+
+
+
+
+

@@ -37,7 +37,7 @@ int main(int argc, char **argv)
     
     while (true)
     {
-        cerr << "Literal search for: \n";
+        cout << "Literal search for: \n";
         string param;
         if (!getline(cin, param) || !param.length())
             break;
@@ -52,7 +52,7 @@ int main(int argc, char **argv)
     
     while (true)
     {
-        cerr << "RE search for: \n";
+        cout << "RE search for: \n";
         string param;
         if (!getline(cin, param) || !param.length())
             break;
@@ -63,6 +63,22 @@ int main(int argc, char **argv)
             cout << *it << ": at index " << cf.index(it) << endl;
         else        
             cout << " < not found > " << endl;
+    }
+    
+    cout << "Finding all lines matching a RE.\n"
+            "Enter the RE: ";
+    string param;
+    if (!getline(cin, param) || !param.length())
+        return 0;
+
+    ConfigFile::const_RE_iterator begin = cf.beginRE(param);
+    ConfigFile::const_RE_iterator end = cf.endRE();
+
+    cout << "Counting: " << (end - begin) << " matches\n";
+    while (begin != end)
+    {
+        cout << *begin << endl;
+        ++begin;
     }
     
     return 0;

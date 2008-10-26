@@ -1,13 +1,12 @@
 #include "process.ih"
 
-Process::Process(std::string const &command, iomode mode)
+Process::Process(std::string const &command)
 :
-    d_childCin(&d_childCinbuf),     // Prepare cin/cout/cerr overtake: 
-    d_childCout(&d_childCoutbuf),   // set up buffers/streams
-    d_childCerr(&d_childCerrbuf),   
-    d_ret(-1),
-    d_mode(mode),
-    d_waitSeconds(1)
+    d_command(command),
+
+    d_childCin(0),
+    d_childCout(0),
+    d_childCerr(0)
 {
-    setCommand(command);
+    initialize(0, CIN | COUT | CERR, NO_PATH);
 }

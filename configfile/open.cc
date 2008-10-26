@@ -2,11 +2,8 @@
 
 void ConfigFile::open(string const &fname)
 {
-    ifstream stream(fname.c_str());
-
-    if (!stream)
-        throw Errno("ConfigFile::open()") << insertable <<
-                    ": can't open " << fname << throwable;
+    ifstream stream;
+    Msg::open(stream, fname);
 
     clear();                        // clear the vector
     d_index.clear();                // clear the line indices

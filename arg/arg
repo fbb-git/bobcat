@@ -52,7 +52,7 @@ class Arg
     static Arg            *s_arg;               // points to Singleton Arg
 
     static std::string    s_dirsep;
-    static char          s_optChar[];           // used by the constructors
+    static char           s_optChar[];          // used by the constructors
         
     public:
         enum Type
@@ -70,7 +70,8 @@ class Arg
             int         d_optionChar;
             
             friend class Arg;
-            
+            friend class ArgConfig;
+
             public:
                 LongOption(char const *name, Arg::Type type = None);
                 LongOption(char const *name, int optionChar);
@@ -83,9 +84,8 @@ class Arg
                                 LongOption const * const begin,
                                 LongOption const * const end,
                                 int argc, char **argv);
-
         static Arg &instance();        
-        static Arg &getInstance();    // DEPRECATED: USE instance()
+
         std::string const &basename() const;
         size_t nArgs() const;
 
@@ -119,6 +119,8 @@ class Arg
         Arg(Arg const &other);                              // NI
         Arg &operator=(Arg const &other);                   // NI
 
+        friend class ArgConfig;     // accesses the constructors and
+                                    // longOption()
                                                             // 1
         Arg(char const *optstring, int argc, char **argv);
 
@@ -152,11 +154,6 @@ class Arg
 inline std::string const &Arg::LongOption::getName() const
 {
     return d_name;
-}
-
-inline Arg &Arg::getInstance()
-{
-    return instance();
 }
 
 inline std::string const &Arg::basename() const

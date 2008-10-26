@@ -18,7 +18,7 @@ Arg::Arg(char const *optstring,
 
     fillLongOptions(optStructs.get(), optstring, begin, end);
 
-    opterr = 0;                     // prevent getopt() msgs to stderr
+    opterr = 0;                // prevent getopt() msgs to stderr
     int longOptionIndex;       // receives the index of the long options
 
     while (true)

@@ -1,12 +1,11 @@
 #include "process"
 
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
-#include <signal.h>
-#include <cstdlib>
-#include <unistd.h>
 #include <algorithm>
+
+#include <sys/types.h>
+// #include <sys/stat.h>
+#include <sys/wait.h>
 
 #include <bobcat/errno>
 #include <bobcat/redirector>
@@ -15,3 +14,8 @@
 using namespace std;
 using namespace FBB;
 
+inline Process::RetPid::RetPid()
+:
+    ret(0),
+    pid(0)
+{}
