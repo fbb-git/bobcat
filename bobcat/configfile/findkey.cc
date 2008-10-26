@@ -7,15 +7,5 @@ string ConfigFile::findKey(string const &key, size_t idx) const
 {
     static Pattern pattern("^\\s*\\S+\\s+(\\S+)");  // pick 2nd term as [1]
 
-    const_RE_iterator iter = beginRE("^\\s*" + key);
-
-    while (idx--)
-    {
-        if (iter == endRE())
-            return "";
-        ++iter;
-    }
-
-    pattern << *iter;
-    return pattern[1];
+    return searchFor(key, pattern, idx);
 }

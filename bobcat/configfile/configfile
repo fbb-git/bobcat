@@ -94,6 +94,7 @@ class ConfigFile: public std::vector<std::string>
         const_iterator find(std::string const &target) const;
         const_iterator findRE(std::string const &re) const;
         std::string findKey(std::string const &key, size_t idx) const;
+        std::string findKeyTail(std::string const &key, size_t idx) const;
 
         size_t index(size_t lineNr);
         size_t index(const_iterator const &iterator);
@@ -106,6 +107,8 @@ class ConfigFile: public std::vector<std::string>
         bool nextLine(std::istream &istr, std::string &line);
         void removeComment(std::string &line);
         void removeTrailingBlanks(std::string &line);
+        std::string searchFor(std::string const &key, Pattern &pattern, 
+                                                            size_t idx) const;
 };
 
 

@@ -11,7 +11,7 @@ size_t ArgConfig::option(string *value, char const *longOption) const
 
     ret = endRE() - optIt;
     if (ret != 0)
-        *value = findKey(longOption, 0);
+        *value = findKeyTail(longOption, 0);
 
     return ret;
 }
