@@ -12,6 +12,7 @@ namespace FBB
 namespace std
 {
     ostream &operator<<(ostream &str, FBB::DateTime const &dt);
+    ostream &operator>>(ostream &str, FBB::DateTime &dt);
 }
 
 namespace FBB
@@ -76,17 +77,63 @@ class DateTime
         };
 
     private:
-        TimeType    d_type; // current type of info in d_tm member
-        time_t      d_time; // time used by members
+        int         d_type; // current type of info in d_tm member
+        time_t      d_time; // time (in UTC) 
         struct tm   d_tm;   // time's elements
         bool        d_ok;
         size_t      d_errno;
         int         d_timezone; // used for rfc2822
+        int         d_displayZone;  // correction to displayed times (minutes)
+        int         d_zoneShift;    // shift in initialization/extraction
+                                    // times (minutes)
+
+        static char const *s_month[];
 
     public:
-        DateTime(TimeType type = LOCALTIME);
+        DateTime(TimeType type = LOCALTIME);    // 1. time displayed as 
+                                                //    TimeType
+
+        DateTime(int displayOffset);            // 2. time displayed wrt
+                                                //    zoneOffset 
+
+                                                // 3. specify UTC time in 
+                                                //    seconds; display as 
+                                                //             specified
         DateTime(time_t time, TimeType type = LOCALTIME);
+
+                                                // 4. UTC in secs + zoneShift
+                                                //    display as specified
+        DateTime(time_t time, TimeType type, int zoneShift);
+
+                                                // 5. UTC in secs + zoneshift
+                                                //    display + displayOffset
+        DateTime(time_t time, int displayOffset, int zoneShift = 0);
+
+                                                // 6. specify UTC tm fields
+                                                //    display as specified
         DateTime(tm *t, TimeType type = LOCALTIME);
+
+                                                // 7. specify UTC tm fields
+                                                //    + zoneshift, display 
+                                                //    as specified   
+        DateTime(tm *tm, TimeType type, int zoneShift);
+
+                                                // 8. specify UTC tm fields
+                                                //    + zoneshift, display 
+                                                //    + displayOffset
+        DateTime(struct tm *tm, int displayOffset, int zoneShift = 0);
+
+                                                // *9. specify local text time
+                                                //    + zoneshift, display 
+                                                //    as specified
+        DateTime(std::string const &timeStr, TimeType type = LOCALTIME, 
+            int zoneShift = 0);
+
+                                                // *a. specify local text time
+                                                //    + zoneshift, display 
+                                                //    + displayOffset
+        DateTime(std::string const &timeStr, int displayOffset, 
+                 int zoneShift = 0);
 
         operator bool() const;
         bool breakDown(TimeType type);
@@ -128,13 +175,24 @@ class DateTime
         DateTime to(TimeType type) const;
 
         std::string rfc2822() const;
+
+        bool valid() const;
         
     private:
         bool breakDown(struct tm *tmStruct, TimeType type, time_t time);
         bool updateTime(struct tm *tmPtr);
+        void initializeZones(int displayZone, int zoneShift);
+        struct tm *utcCorrection(struct tm &ts);
+        void parse(std::string const &timeStr);
+        void parseFromDayName(std::istringstream &in);
 };
 
 inline DateTime::operator bool() const
+{
+    return d_ok;
+}
+
+inline DateTime::valid() const
 {
     return d_ok;
 }
