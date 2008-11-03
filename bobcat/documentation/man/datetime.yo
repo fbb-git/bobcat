@@ -163,19 +163,21 @@ in em(Universal Time Coordinated) time.
         This constructor initializes the object to the date and time at offset
 tt(displayOffset) from UTC.
 
-    itb(DateTime(time_t time, TimeType type = LOCALTIME, int zoneShift = 0))
+    itb(DateTime(time_t time, TimeType type, int zoneShift = 0))
         Initializes a tt(DateTime) object with information stored in the
-provided tt(time_t) value. This value is interpreted as a time in UTC to which
-the time zone shift tt(zoneShift) (in minutes) is added.  The
-second argument specifies the way the time is displayed by the tt(DateTime)
-object, by default using the computer's local time representation.
-Alternatively, tt(UTC) may be specified to display the time in em(Universal
-Time Coordinated) time.
+provided tt(time_t) value. The object's time in UTC is defined as tt(time) (in
+seconds) plus the time zone shift tt(zoneShift) (in minutes). E.g., if
+tt(time) is initialized to tt(time(0)) it will return the real UTC time. By
+specifying tt(zoneShift) as 3 * 60 the object's UTC time is defined three
+hours later.  The second argument specifies the way the time is displayed by
+the tt(DateTime) object, by default using the computer's local time
+representation.  Alternatively, tt(UTC) may be specified to display the time
+as the object's UTC time.
 
     itb(DateTime(time_t time, int displayOffset, int zoneShift = 0))
         Initializes a tt(DateTime) object with information stored in the
 provided tt(time_t) value. This value is interpreted as a time in UTC to which
-the time zone shift tt(zoneShift) (in minutes) is added.  The
+the time zone shift tt(zoneShift) (in minutes) has been added.  The
 second argument specifies the way the time is displayed by the tt(DateTime)
 object, adding tt(displayOffset) (in minutes) to the time in UTC.
 
@@ -185,7 +187,7 @@ object, adding tt(displayOffset) (in minutes) to the time in UTC.
 provided bf(struct tm) value. It is assumed that the tt(tm) parameter points
 to a tt(struct tm) containing the broken down UTC time fields (as returned by
 the tt(gmtime()) function). To this the time zone shift tt(zoneShift) (in
-minutes) is added.  The second argument specifies the way the time is
+minutes) has been added.  The second argument specifies the way the time is
 displayed by the tt(DateTime) object, by default using the computer's local
 time representation.  Alternatively, tt(UTC) may be specified to display the
 time in em(Universal Time Coordinated) time.nl()
@@ -215,7 +217,7 @@ compute a point in time in the next day.
 provided bf(struct tm) value. It is assumed that the tt(tm) parameter points
 to a tt(struct tm) containing the broken down UTC time fields (as returned by
 the tt(gmtime(time(0))) function). To this the time zone shift tt(zoneShift)
-(in minutes) is added.  The second argument specifies the way the time is
+(in minutes) has been added.  The second argument specifies the way the time is
 displayed by the tt(DateTime) object, adding tt(displayOffset) (in minutes) to
 the time in UTC.
 
@@ -223,7 +225,7 @@ the time in UTC.
             int zoneShift = 0)) 
         Initializes a tt(DateTime) object with information stored in the
 provided tt(std::string) which is interpreted as the em(local time). To this
-the time zone shift tt(zoneShift) (in minutes) is added. nl()
+the time zone shift tt(zoneShift) (in minutes) has been added. nl()
     The second argument specifies the way the time is displayed by the
 tt(DateTime) object, by default using the computer's local time
 representation.  Alternatively, tt(UTC) may be specified to display the time
@@ -235,7 +237,7 @@ described in section bf(STANDARD TEXTUAL TIME REPRESENTATIONS).
                  int zoneShift = 0))
         Initializes a tt(DateTime) object with information stored in the
 provided tt(std::string) which is interpreted as the em(local time).  To this
-the time zone shift tt(zoneShift) (in minutes) is added.nl()
+the time zone shift tt(zoneShift) (in minutes) has been added.nl()
     The second argument specifies the way the time is displayed by the
 tt(DateTime) object, adding tt(displayOffset) (in minutes) to the time in UTC.nl()
     The time contained in the tt(timeStr) parameter should be formatted as

@@ -1,8 +1,8 @@
 #include "datetime.ih"
 
-bool DateTime::breakDown(TimeType type)
+bool DateTime::breakDown()
 {
-    d_ok = breakDown(&d_tm, type, d_time);
+    d_ok = breakDown(&d_tm);
     d_errno = errno;
 
     if (d_ok)

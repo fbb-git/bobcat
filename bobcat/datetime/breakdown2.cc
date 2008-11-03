@@ -1,9 +1,11 @@
 #include "datetime.ih"
 
-bool DateTime::breakDown(struct tm *tmStruct, TimeType type, time_t time)
+bool DateTime::breakDown(struct tm *tmStruct)
 {
-    return type == LOCALTIME ?
-                localtime_r(&time, tmStruct)
-            :
-                gmtime_r(&time, tmStruct);
+    time_t time = d_time - d_zoneShift + d_displayZone; // get back to utc
+                                                        // then add local time
+                                                        // shift
+
+    cout << d_zoneShift << " " << d_displayZone << endl;
+    return gmtime_r(&time, tmStruct);
 }
