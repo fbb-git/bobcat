@@ -88,6 +88,7 @@ class DateTime
                                     // times (minutes)
 
         static char const *s_month[];
+        static char const *s_day[];
 
     public:
         DateTime(TimeType type = LOCALTIME);    // 1. time displayed as 
@@ -185,6 +186,7 @@ class DateTime
         struct tm *utcCorrection(struct tm &ts);
         void parse(std::string const &timeStr);
         void parseFromDayName(std::istringstream &in);
+        std::ostream &timeStr(std::ostream &out);
 };
 
 inline DateTime::operator bool() const

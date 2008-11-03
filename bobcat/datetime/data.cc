@@ -15,3 +15,16 @@ char const *DateTime::s_month[] =
     "Nov",
     "Dec",
 };
+
+char const *DateTime::s_day[] =
+{
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat"
+};
+
+
