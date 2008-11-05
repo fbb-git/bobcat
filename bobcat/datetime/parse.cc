@@ -22,8 +22,6 @@ void DateTime::parse(string const &timeStr)
 
     d_tm.tm_year -= 1900;
 
-    d_tm.tm_min += d_zoneShift;         // by default don't correct ->
-                                        // localtime, so compute UTC seconds:
-
     d_time = mktime(&d_tm);             // the intended UTC time in seconds
+    breakDown();    
 }
