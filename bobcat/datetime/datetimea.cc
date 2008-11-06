@@ -2,9 +2,9 @@
 
 DateTime::DateTime(string const &timeStr,  int displayOffset, int zoneShift)
 :
-    d_type(type),
+    d_type(-1)
 {
-    parse(timeStr);
     initializeZones(displayOffset, zoneShift);
-    breakDown(type);
+    istringstream in(timeStr);
+    parse(in);
 }

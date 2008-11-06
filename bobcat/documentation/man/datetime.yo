@@ -43,8 +43,7 @@ the time in UTC by the current local time shift. E.g., the program
         verbinclude(../../datetime/driver/demos/localtime.cc)
     displays the current em(UTC) clock's hour setting, but reports the
 difference in seconds between the local time and the UTC time (e.g., the
-difference between CET and UTC is one hour, and the program will display 3600
-in that case.
+difference between CET and UTC is one hour, and the program displays 3600.
 
 To obtain the time in UTC-seconds from tt(mktime)(3) the function
 bf(localtime)(3) must be used to obtain the tt(struct tm) values:
@@ -150,6 +149,11 @@ command (and the tt(rfc2822()) member, see below);
 --rfc-3339=seconds) command (and the tt(rfc3339()) member, see below).
     )
 
+The time zone time shift specifications (+0100, +01:00) are required as they
+are part of the rfc specifications but are ignored for the actual local time
+construction as the tt(DateTime) object determines the time zone specification
+from the computer's current time zone setting.
+
 manpagesection(CONSTRUCTORS)
     itemization(
     itb(DateTime(TimeType type = LOCALTIME))
@@ -246,7 +250,8 @@ described in section bf(STANDARD TEXTUAL TIME REPRESENTATIONS).
         The copy constructor is available.
 
 manpagesection(OVERLOADED OPERATORS)
-    All class-less overloaded operators are defined in the tt(FBB) namespace,
+
+All class-less overloaded operators are defined in the tt(FBB) namespace,
 except for the overloaded insertion operator, which is defined in the tt(std)
 namespace. 
 
@@ -256,25 +261,33 @@ namespace.
 error. tt(DateTime) object use bf(localtime_r)(3) or bf(gmtime_r)(3)
 functions to break down the tt(time_t) values into elements.  If the time
 could not be broken down, the bf(error()) member returns the error number
-(tt(errno)) associated with the error.
+(tt(errno)) associated with the error. When the time could not be determined
+from a textual string representing the time (cf. section bf(CONSTRUCTORS))
+then tt(errno) is set to 0 and tt(operator bool()) will return tt(false).
 
-    itb(std::ostream &std::operator>>(std::ostream &str, FBB::DateTime &dt))
+    itb(std::istream &std::operator>>(std::istream &str, FBB::DateTime &dt))
         Extracts a textual date/time representation into the tt(DateTime)
 object using the current tt(displayOffset) and tt(zoneShift) values.nl()
     The time to extract should be formatted as described in section
-bf(STANDARD TEXTUAL TIME REPRESENTATIONS).
+bf(STANDARD TEXTUAL TIME REPRESENTATIONS). As documented in that section,
+time zone time shift specifications (+0100, +01:00) may be omitted. However,
+if the time zone specification is provided it is extracted  from the 
+tt(istream).nl()
+    If the time could not be determined from a textual string representing the
+time (cf. section bf(CONSTRUCTORS)) then tt(errno) is set to 0 and tt(operator
+bool()) will return tt(false).
 
     itb(std::ostream &std::operator<<(std::ostream &str, FBB::DateTime 
         const &dt))
         Inserts a standard textual representation (without the trailing
 newline), of the time represented in the tt(DateTime) object into the
-indicated tt(ostream). If the time value was broken down as tt(LOCALTIME) it
-is represented as local time, otherwise it's inserted as the Universal Time
-Coordinated time.
+indicated tt(ostream). The time will be displayed according to the latest
+tt(displayOffset) or tt(TimeType) specification (tt(LOCALTIME) or tt(UTC)).
 
     itb(DateTime const operator-(DateTime const &left, time_t seconds))
        Returns a copy of tt(left) from which time tt(seconds) have been
 subtracted. 
+
     itb(DateTime const operator-(DateTime const &left, 
                                 struct tm const &fields))
        Returns a copy of tt(left) from which the date (e.g., tt(tm_year)) and
@@ -287,38 +300,49 @@ keeping the current time format (tt(UTC) or localtime).
        Subtracts the date (e.g., tt(tm_year)) and
 time (e.g., tt(tm_hour)) fields stored in the bf(struct tm) struct from the
 tt(DateTime) object.
+
     itb(DateTime const operator+(DateTime const &left, time_t seconds))
        Returns a copy of tt(left) to which tt(seconds) have been added.
+
     itb(DateTime const operator+(DateTime const &left, 
                                             struct tm const &fields))
        Returns a copy of tt(left) to which  the date (e.g., tt(tm_year)) and
 time (e.g., tt(tm_hour)) fields stored in the bf(struct tm) struct have been
 added.
+
     itb(DateTime operator+=(time_t seconds))
        Adds the number of seconds to the tt(DateTime) object, keeping the
 current time format (tt(UTC) or localtime).
+
     itb(DateTime &operator+=(struct tm const &fields))
        Adds the date (e.g., tt(tm_year)) and
 time (e.g., tt(tm_hour)) fields stored in the bf(struct tm) struct to the
 tt(DateTime) object.
+
     itb(bool operator==(DateTime const &left, DateTime const &right))
        Returns tt(true) if the current tt(DateTime) object represents the same
 time as the time represented by tt(left, DateTime const &right).
+
     itb(bool operator!=(DateTime const &left, DateTime const &right))
        Returns tt(true) if the current tt(DateTime) object represents a
 different time as the time represented by tt(other).
+
     itb(bool operator<(DateTime const &left, DateTime const &right))
        Returns tt(true) if the current tt(DateTime) object represents a
 moment in time before the time represented by tt(other).
+
     itb(bool operator<=(DateTime const &left, DateTime const &right))
        Returns tt(true) if the current tt(DateTime) object represents a
 moment in time before or equal to the time represented by tt(other).
+
     itb(bool operator>(DateTime const &left, DateTime const &right))
        Returns tt(true) if the current tt(DateTime) object represents a
 moment in time after the time represented by tt(other).
+
     itb(bool operator>=(DateTime const &left, DateTime const &right))
        Returns tt(true) if the current tt(DateTime) object represents a
 moment in time equal to or after the time represented by tt(other).
+
     itb(DateTime &operator=(DateTime const &other))
         The overloaded asignment operator is available.
     )

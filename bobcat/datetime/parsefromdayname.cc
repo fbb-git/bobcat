@@ -1,12 +1,13 @@
 #include "datetime.ih"
 
-void DateTime::parseFromDayName(istringstream &in)
+void DateTime::parseFromDayName(istream &in)
 {
-    string mon;
-
     in.clear();
 
-    in >> mon >> mon;
+    string day;
+    string mon;
+
+    in >> day >> mon;
     d_tm.tm_mon = find(s_month, s_month + 12, mon) - s_month;
 
     char sep;
@@ -15,6 +16,9 @@ void DateTime::parseFromDayName(istringstream &in)
           d_tm.tm_min >> sep >>  
           d_tm.tm_sec >>
           d_tm.tm_year;
+
+    if (day.find(',') != string::npos)  // Sun, Nov 2 13:29:11 2008 +0100
+        in.ignore(6);
 
     if (!in)        // At the name of he timezone
     {

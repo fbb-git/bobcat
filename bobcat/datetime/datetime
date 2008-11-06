@@ -12,7 +12,7 @@ namespace FBB
 namespace std
 {
     ostream &operator<<(ostream &str, FBB::DateTime const &dt);
-    ostream &operator>>(ostream &str, FBB::DateTime &dt);
+    istream &operator>>(istream &str, FBB::DateTime &dt);
 }
 
 namespace FBB
@@ -23,6 +23,7 @@ class DateTime
 
     friend  std::ostream &std::operator<<(std::ostream &str, 
                                           DateTime const &dt);
+    friend  std::istream &std::operator>>(std::istream &str, DateTime &dt);
 
     friend bool operator==(DateTime const &left, DateTime const &right);
     friend bool operator!=(DateTime const &left, DateTime const &right);
@@ -78,11 +79,15 @@ class DateTime
 
     private:
         int         d_type; // current type of info in d_tm member
+                            // (-1: use displayZone)
+    
         time_t      d_time; // time (in UTC) 
         struct tm   d_tm;   // time's elements
         bool        d_ok;
         size_t      d_errno;
-        int         d_timezone; // used for rfc2822
+
+        int         d_timezone; // used for rfc2822     ? Not used anymore?
+
         time_t      d_displayZone;  // correction to displayed times (minutes)
         time_t      d_zoneShift;    // shift in initialization/extraction
                                     // times (minutes)
@@ -131,7 +136,7 @@ class DateTime
         DateTime(std::string const &timeStr, TimeType type = LOCALTIME, 
             int zoneShift = 0);
 
-                                                // *a. specify local text time
+                                                // a. specify local text time
                                                 //    + zoneshift, display 
                                                 //    + displayOffset
         DateTime(std::string const &timeStr, int displayOffset, 
@@ -185,8 +190,8 @@ class DateTime
         bool updateTime(struct tm *tmPtr);
         void initializeZones(int displayZone, int zoneShift);
         struct tm *utcCorrection(struct tm &ts);
-        void parse(std::string const &timeStr);
-        void parseFromDayName(std::istringstream &in);
+        void parse(std::istream &in);
+        void parseFromDayName(std::istream &in);
         std::ostream &timeStr(std::ostream &out);
 };
 
