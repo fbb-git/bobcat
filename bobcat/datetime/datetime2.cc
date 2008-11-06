@@ -1,10 +1,10 @@
 #include "datetime.ih"
 
-DateTime::DateTime(int displayOffset)
+DateTime::DateTime(int displayZoneShift)
 :
-    d_type(-1),
+    d_type(LOCALTIME),
     d_time(::time(0))
 {
-    initializeZones(displayOffset, 0);
+    initializeTime(displayZoneShift, 0);
     breakDown();
 }

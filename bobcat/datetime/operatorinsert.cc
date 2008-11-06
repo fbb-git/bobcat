@@ -6,7 +6,7 @@
 namespace std
 {
 
-ostream &operator<<(ostream &out, FBB::DateTime const &dt)
+ostream &operator<<(ostream &out, DateTime const &dt)
 {
     char buf[26];           // Magical number provided by ctime's man-page
 
