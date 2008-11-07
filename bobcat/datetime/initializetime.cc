@@ -8,7 +8,7 @@ void DateTime::initializeTime(int displayZoneShift, int utcZoneShift)
 
     if (d_type == UTC)
         d_displayZoneShift = 0;
-    else if (displayZone)
+    else if (displayZoneShift)
         d_displayZoneShift = displayZoneShift / 30 * 30 % (12 * 60) * 60;
     else
     {

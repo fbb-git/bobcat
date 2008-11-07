@@ -1,9 +1,8 @@
 #include "datetime.ih"
 
-DateTime &DateTime::operator+=(tm const &fields)
+DateTime &DateTime::operator+=(TimeStruct const &fields)
 {
-    tm work = fields;
-    d_time += mktime(&work);
-    breakDown(d_type);
+    d_time += utcCorrection(&fields);
+    breakDown();
     return *this;
 }

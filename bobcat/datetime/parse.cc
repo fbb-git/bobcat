@@ -21,7 +21,7 @@ void DateTime::parse(istream &in)
     }
 
     d_ok = in;
-    errno = 0;
+    d_errno = 0;
 
     if (d_ok)
     {

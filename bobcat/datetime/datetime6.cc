@@ -1,12 +1,10 @@
 #include "datetime.ih"
 
-DateTime::DateTime(tm const *t, TimeType type)
+DateTime::DateTime(TimeStruct const *ts, TimeType type)
 :
     d_type(type),
-    d_tm(*t)
+    d_time(utcCorrection(ts)) 
 {
-    d_time = mktime(utcCorrection(d_tm));        // d_time in UTC
-
-    initializeZones(0, 0);
+    initializeTime(0, 0);
     breakDown();
 }

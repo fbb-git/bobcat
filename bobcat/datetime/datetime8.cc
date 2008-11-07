@@ -1,11 +1,10 @@
 #include "datetime.ih"
 
-DateTime::DateTime(tm const *t, int displayZoneShift, int utcZoneShift)
+DateTime::DateTime(TimeStruct const *t, int displayZoneShift, int utcZoneShift)
 :
-    d_type(-1),
-    d_tm(*t)
+    d_type(LOCALTIME),
+    d_time(utcCorrection(ts))
 {
-    d_time = mktime(utcCorrection(d_tm));        // d_time in UTC
-    initializeZones(displayZoneShift, utcZoneShift);
+    initializeTime(displayZoneShift, utcZoneShift);
     breakDown();
 }

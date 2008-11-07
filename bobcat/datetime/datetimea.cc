@@ -1,10 +1,11 @@
 #include "datetime.ih"
 
-DateTime::DateTime(string const &timeStr,  int displayZoneShift, int utcZoneShift)
+DateTime::DateTime(string const &timeStr,  int displayZoneShift, 
+                                           int utcZoneShift)
 :
-    d_type(-1)
+    d_type(LOCALTIME)
 {
-    initializeZones(displayZoneShift, utcZoneShift);
+    initializeTime(displayZoneShift, utcZoneShift);
     istringstream in(timeStr);
     parse(in);
 }

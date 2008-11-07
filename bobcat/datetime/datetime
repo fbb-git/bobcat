@@ -83,12 +83,13 @@ class DateTime
                             // (LOCALTIME (implied by using displayZone) 
                             // or UTC)
     
-        time_t      d_time;         // time in seconds (UTC) 
-        time_t      d_displayZone;  // correction to UTC when displaying
-                                    // times
-                                    // this takes care of dst as well.
+        time_t      d_time;             // time in seconds (UTC) 
+        time_t      d_displayZoneShift; // correction to UTC when displaying
+                                        // times
+                                        // this takes care of dst as well.
 
-        TimeStruct  d_tm;           // time's elements
+        TimeStruct  d_tm;               // time's elements 
+
         bool        d_ok;
         size_t      d_errno;
 
@@ -96,7 +97,7 @@ class DateTime
         static char const *s_day[];
 
     public:
-        DateTime(TimeType type = LOCALTIME);    // 1. time displayed as 
+        DateTime(TimeType type = UTC);          // 1. time displayed as 
                                                 //    TimeType
 
         DateTime(int displayZoneShift);         // 2. time displayed wrt
@@ -118,22 +119,23 @@ class DateTime
 
                                                 // 6. specify UTC tm fields
                                                 //    display as specified
-        DateTime(tm const *t, TimeType type = LOCALTIME);
+        DateTime(TimeStruct const *t, TimeType type = UTC);
 
                                                 // 7. specify UTC tm fields
                                                 //    + zoneshift, display 
                                                 //    as specified   
-        DateTime(tm const *tm, TimeType type, int utcZoneShift);
+        DateTime(TimeStruct const *tm, TimeType type, int utcZoneShift);
 
                                                 // 8. specify UTC tm fields
                                                 //    + zoneshift, display 
                                                 //    + displayZoneShift
-        DateTime(tm const *tm, int displayZoneShift, int utcZoneShift = 0);
+        DateTime(TimeStruct const *tm, int displayZoneShift, 
+                                       int utcZoneShift = 0);
 
                                                 // 9. specify local text time
                                                 //    + zoneshift, display 
                                                 //    as specified
-        DateTime(std::string const &timeStr, TimeType type = LOCALTIME, 
+        DateTime(std::string const &timeStr, TimeType type = UTC, 
             int utcZoneShift = 0);
 
                                                 // a. specify local text time
@@ -189,7 +191,7 @@ class DateTime
         bool breakDown(struct tm *tmStruct);
         bool updateTime(struct tm *tmPtr);
         void initializeTime(int displayZoneShift, int utcZoneShift);
-        struct tm *utcCorrection(struct tm &ts);
+        time_t utcCorrection(TimeStruct const *ts);
         void parse(std::istream &in);
         void parseFromDayName(std::istream &in);
         std::ostream &timeStr(std::ostream &out);
