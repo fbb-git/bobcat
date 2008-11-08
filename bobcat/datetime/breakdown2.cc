@@ -1,8 +1,8 @@
 #include "datetime.ih"
 
-bool DateTime::breakDown(TimeStruct *ts)
+bool DateTime::breakDown(time_t time, TimeStruct *ts)
 {
-    time_t time = d_time + d_displayZoneShift; // add local time (if available)
+    time += d_displayZoneShift;     // add local time (if any)
 
     return gmtime_r(&time, ts);
 }

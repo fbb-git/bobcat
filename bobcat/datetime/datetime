@@ -84,6 +84,7 @@ class DateTime
                             // or UTC)
     
         time_t      d_time;             // time in seconds (UTC) 
+        time_t      d_zoneCorrection;   // correction for the computer's zone
         time_t      d_displayZoneShift; // correction to UTC when displaying
                                         // times
                                         // this takes care of dst as well.
@@ -145,7 +146,6 @@ class DateTime
                  int utcZoneShift = 0);
 
         operator bool() const;
-        bool breakDown();
         size_t error() const;
         size_t hours() const;
         size_t minutes() const;
@@ -184,17 +184,19 @@ class DateTime
         DateTime to(TimeType type) const;
 
         std::string rfc2822() const;
+        std::string rfc3339() const;
 
         bool valid() const;
         
     private:
-        bool breakDown(struct tm *tmStruct);
+        bool breakDown();           // sets d_errno
+        bool breakDown(time_t time, struct tm *tmStruct);
         bool updateTime(struct tm *tmPtr);
         void initializeTime(int displayZoneShift, int utcZoneShift);
         time_t utcCorrection(TimeStruct const *ts);
         void parse(std::istream &in);
         void parseFromDayName(std::istream &in);
-        std::ostream &timeStr(std::ostream &out);
+        std::ostream &timeStr(std::ostream &out) const;
 };
 
 inline DateTime::operator bool() const
