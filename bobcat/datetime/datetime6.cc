@@ -3,8 +3,8 @@
 DateTime::DateTime(TimeStruct const *ts, TimeType type)
 :
     d_type(type),
-    d_time(utcCorrection(ts)) 
+    d_time(timeStruct2utcSec(ts)) 
 {
     initializeTime(0, 0);
-    breakDown();
+    utcSec2timeStruct(&d_tm, time);
 }

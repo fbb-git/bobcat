@@ -2,9 +2,16 @@
 
 DateTime::DateTime(TimeStruct const *ts, TimeType type, int utcZoneShift)
 :
-    d_type(type),
-    d_time(utcCorrection(ts))
+    d_type(type)
 {
-    initializeTime(0, utcZoneShift);
-    breakDown();
+    zoneCorrection();
+
+    utcZoneShift = initializeTime(::time(0), 0, utcZoneShift);
+
+    d_tm = *ts;
+    d_time = timeStruct2utcSec(&d_tm) + utcZoneShift;
+
+    setDisplayZone(0);
+
+    utcSec2timeStruct(&d_tm, d_time);
 }

@@ -6,5 +6,5 @@ DateTime::DateTime(time_t time, int displayZoneShift, int utcZoneShift)
     d_time(time)             // UTC is time + utcZoneShift
 {
     initializeTime(displayZoneShift, utcZoneShift);
-    breakDown();
+    utcTime2timeStruct(&d_tm, time);
 }

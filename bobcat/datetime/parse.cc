@@ -24,10 +24,11 @@ void DateTime::parse(istream &in)
     d_errno = 0;
 
     if (d_ok)
-    {
         d_tm.tm_year -= 1900;
-    
-        d_time = mktime(&d_tm);     // the intended UTC time in seconds
-        breakDown();
-    }
+
+    cout << "PARSE: " << asctime(&d_tm);
 }
+
+
+
+

@@ -12,9 +12,9 @@ bool DateTime::setHours(int hours)
 
     // NEXT IN A SEPARATE FUNCTION
 
-    time_t time = mktime(&tm) - d_displayZoneShift + d_zoneCorrection;
+    time_t time = timeStruct2utcSec(&tm);
 
-    bool ok = breakDown(time, &tm);
+    bool ok = utcSec2timeStruct(&tm, time);
     if (ok)
     {
         d_tm = tm;
@@ -24,3 +24,6 @@ bool DateTime::setHours(int hours)
 
     return ok;
 }
+
+
+
