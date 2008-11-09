@@ -6,7 +6,7 @@ DateTime::DateTime(time_t time, TimeType type, int utcZoneShift)
 {
     zoneCorrection();
 
-    utcZoneShift = initializeTime(time, 0, utcZoneShift);
+    utcZoneShift = initializeTime(time, utcZoneShift);
     d_time += utcZoneShift;
 
     setDisplayZone(0);

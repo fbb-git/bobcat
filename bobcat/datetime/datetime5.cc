@@ -2,9 +2,13 @@
 
 DateTime::DateTime(time_t time, int displayZoneShift, int utcZoneShift)
 :
-    d_type(LOCALTIME),
-    d_time(time)             // UTC is time + utcZoneShift
+    d_type(LOCALTIME)
 {
-    initializeTime(displayZoneShift, utcZoneShift);
-    utcTime2timeStruct(&d_tm, time);
+    zoneCorrection();
+
+    utcZoneShift = initializeTime(time, utcZoneShift);
+    d_time += utcZoneShift;
+
+    setDisplayZone(displayZoneShift);
+    utcSec2timeStruct(&d_tm, d_time);
 }
