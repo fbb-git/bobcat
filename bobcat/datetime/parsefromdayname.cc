@@ -14,17 +14,22 @@ void DateTime::parseFromDayName(istream &in)
     in >> d_tm.tm_mday >> 
           d_tm.tm_hour >> sep >>  
           d_tm.tm_min >> sep >>  
-          d_tm.tm_sec >>
-          d_tm.tm_year;
+          d_tm.tm_sec;
 
-    if (day.find(',') != string::npos)  // Sun, Nov 2 13:29:11 2008 +0100
-        in.ignore(6);
-
-    if (!in)        // At the name of he timezone
+    if (!(in >> d_tm.tm_year))
     {
-        in.clear();
+        in.clear();                     // extract TZ name first
         in >> mon >> d_tm.tm_year;
+
+        if (day.find(',') != string::npos)  // Sun, Nov 2 13:29:11 2008 +0100
+            in.ignore(6);
     }
+
+    cout << d_tm.tm_year << endl;
 
     // called from parse(); parse() will subtract 1900 from tm_year
 }
+
+
+
+

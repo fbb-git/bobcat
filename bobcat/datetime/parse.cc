@@ -24,9 +24,10 @@ void DateTime::parse(istream &in)
     d_errno = 0;
 
     if (d_ok)
+    {
         d_tm.tm_year -= 1900;
-
-    cout << "PARSE: " << asctime(&d_tm);
+        d_time = mktime(&d_tm);
+    }
 }
 
 
