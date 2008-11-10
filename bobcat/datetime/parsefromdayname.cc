@@ -25,8 +25,6 @@ void DateTime::parseFromDayName(istream &in)
             in.ignore(6);
     }
 
-    cout << d_tm.tm_year << endl;
-
     // called from parse(); parse() will subtract 1900 from tm_year
 }
 

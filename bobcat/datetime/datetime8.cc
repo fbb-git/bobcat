@@ -1,17 +1,21 @@
 #include "datetime.ih"
 
-DateTime::DateTime(TimeStruct const *ts, int displayZoneShift, 
-                                         int utcZoneShift)
+DateTime::DateTime(string const &timeStr,  int displayZoneShift, 
+                                           int utcZoneShift)
 :
     d_type(LOCALTIME)
 {
-    zoneCorrection();
-    utcZoneShift = initializeTime(::time(0), utcZoneShift);
+    istringstream in(timeStr);
+    parse(in);
 
-    d_tm = *ts;
-    d_displayZoneShift = 0;
-    d_time = timeStruct2utcSec(&d_tm) + utcZoneShift;
+    if (d_ok)
+    {
+        zoneCorrection();
 
-    setDisplayZone(displayZoneShift);
-    utcSec2timeStruct(&d_tm, d_time);
+        d_time += utcZoneShift / 30 * 30 % (12 * 60) * 60;  // time zones are
+                                                            // multiples of 30'
+        setDisplayZone(displayZoneShift);
+        utcSec2timeStruct(&d_tm, d_time);
+    }
 }
+

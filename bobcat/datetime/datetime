@@ -107,40 +107,26 @@ class DateTime
 
                                                 // 3. specify UTC time in 
                                                 //    seconds; display as 
-                                                //             specified
-        DateTime(time_t time, TimeType type);
+        DateTime(time_t time, TimeType type);   //             specified
 
-                                                // 4. UTC = time (secs) + 
-                                                //      utcZoneShift (min.) 
-                                                //    display as specified
-        DateTime(time_t time, TimeType type, int utcZoneShift);
-
-                                                // 5. UTC = time + zoneshift
+                                                // 4. UTC = time 
                                                 //  display + displayZoneShift
-        DateTime(time_t time, int displayZoneShift, int utcZoneShift = 0);
+        DateTime(time_t time, int displayZoneShift);
 
-                                                // 6. specify UTC tm fields
+                                                // 5. specify UTC tm fields
                                                 //    display as specified
         DateTime(TimeStruct const *t, TimeType type = UTC);
 
-                                                // 7. specify UTC tm fields
-                                                //    + zoneshift, display 
-                                                //    as specified   
-        DateTime(TimeStruct const *tm, TimeType type, int utcZoneShift);
+                                                // 6. specify UTC tm fields
+                                                // display + displayZoneShift
+        DateTime(TimeStruct const *tm, int displayZoneShift);
 
-                                                // 8. specify UTC tm fields
-                                                //    + zoneshift, display 
-                                                //    + displayZoneShift
-        DateTime(TimeStruct const *tm, int displayZoneShift, 
-                                       int utcZoneShift = 0);
-
-                                                // 9. specify local text time
+                                                // 7. specify local text time
                                                 //    + zoneshift, display 
                                                 //    as specified
         DateTime(std::string const &timeStr, TimeType type = UTC, 
             int utcZoneShift = 0);
-
-                                                // a. specify local text time
+                                                // 8. specify local text time
                                                 //    + zoneshift, display 
                                                 //    + displayZoneShift
         DateTime(std::string const &timeStr, int displayZoneShift, 
@@ -191,7 +177,9 @@ class DateTime
         
     private:
         bool updateTime(struct tm *tmPtr);
-        int initializeTime(time_t seconds, int utcZoneShift);
+
+//        int initializeTime(time_t seconds, int utcZoneShift);
+
         void setDisplayZone(int displayZoneShift);
         void parse(std::istream &in);
         void parseFromDayName(std::istream &in);

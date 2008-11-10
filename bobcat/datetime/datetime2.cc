@@ -2,11 +2,11 @@
 
 DateTime::DateTime(int displayZoneShift)
 :
-    d_type(LOCALTIME)
+    d_type(LOCALTIME),
+    d_time(::time(0))
 {
     zoneCorrection();
 
-    initializeTime(::time(0), 0);
     setDisplayZone(displayZoneShift);
     utcSec2timeStruct(&d_tm, d_time);
 }
