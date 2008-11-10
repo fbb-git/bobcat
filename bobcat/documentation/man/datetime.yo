@@ -11,55 +11,55 @@ manpagesynopsis()
     Linking option: tt(-lbobcat) 
 
 manpagedescription()
+
     This class allows the programmer to manipulate date and time
 values. Individual time fields can be requested or modified, returning
 `sanitized' times (e.g., a date like march 33 or a time like 56 hours will
 never be returned). Times may be specified in local time or in em(Universal
 Time Coordinated) (tt(UTC)) values. It is also possible to add or subtract
 seconds or bf(struct tm) structures to or from tt(DateTime) objects. This
-operation keeps the current time zone (tt(UTC) or local). Conversions between
-local time and tt(UTC) are also supported.
+operation keeps the current time zone (tt(UTC), local or another time
+zone). Conversions between time zones and tt(UTC) are also supported.
 
 The class tt(DateTime) supports various ways to initialize objects. Time may
-be specified in local time or UTC or any other offset from UTC may be
-used. Time may also be represented in localtime, UTC or in any other time-zone
-offset. When a non-UTC and non-local time offset is required the time offsets
-are specified as an tt(int) value representing the time offset in minutes,
-with time zones East of Greenwich using positive time offsets and time zones
-West of Greenwich using negative time offsets. Specified time offsets are
-always corrected modulo 12 * 60, as no time zone has a shift exceeding the
-(absolute) shift of 12 * 60. Daylight saving times are in effect in many time
-zones. Except for the local time zone tt(DateTime) may not be able to show the
-correct daylight saving time correction.
+be specified in UTC, as local time or using any other offset from UTC. When a
+non-UTC and non-local time offset is required the time offsets are specified
+as an tt(int) value representing the time offset in minutes, with time zones
+East of Greenwich using positive time offsets and time zones West of Greenwich
+using negative time offsets. Time zone offsets are truncated to multiples of
+30 minutes and are always computed modulo 12 * 60, as no time zone has a shift
+exceeding the (absolute) shift of 12 * 60. Daylight saving times are in effect
+in many time zones. Except for the local time zone tt(DateTime) may not be
+able to show the correct daylight saving time correction.
 
 There are various ways to construct tt(DateTime) objects: time in seconds
-since the beginning of the `era' (midnight Jan 1, 1970 UTC), tt(struct tm) or
-textual representations may be used. These values may then be corrected using
-UTC and display zone shifts. The UTC zone shift corrects the provided (or
-default) UTC time by the specified zone shift, the display zone shift
-determines the difference between the UTC time zone and the actual local time
-zone.  Time zone shifts are specified in minutes and are truncated to
-multiples of 30 minutes and their values are reduced to modulo 12 * 60
-minutes. If a display zone shift is explicitly specified no additional
-daylight saving time (DST) zone shift is added to the display time. If the
-actual local time is requested (specified by the tt(TimeType) value
-tt(LOCALTIME) a DST correction is automatically applied when appropriate.
+since the beginning of the `era' (midnight Jan 1, 1970 UTC), a tt(struct tm),
+or a textual time representations may be used. These values may themselves be
+corrected using display zone shifts. A display zone shift determines the
+difference between the UTC time and the local time zone to be used when
+displaying time or returning time fields.  Sometimes a UTC zone shift may be
+provided correcting a provided local time to UTC. 
 
-Except for the member tt(error()) the members of the class tt(DateTime)
-will not return meaningfull values if tt(operator bool()) returns
-tt(false). 
+If a display zone shift is explicitly specified no additional daylight saving
+time (DST) zone shift is added to the display time. If the actual local time
+is requested (specified by the tt(TimeType) value tt(LOCALTIME) a DST
+correction is automatically applied when appropriate.
 
-Handling time is somewhat complex. The bf(C) function bf(time)(2) returns the
-time in seconds. This time is normally represented in UTC. The
-function bf(gmtime)(3) when provided with tt(time())'s output returns the
-broken down time in a tt(struct tm). Remarkably (and confusingly), when this
-tt(struct tm) is then passed to the bf(mktime)(3) function the latter function
-does em(not) return the UTC-time in seconds, but a time that differs from
-the time in UTC by the current local time shift. E.g., the program
-        verbinclude(../../datetime/driver/demos/localtime.cc)
-    displays the current em(UTC) clock's hour setting, but reports the
-difference in seconds between the local time and the UTC time (e.g., the
-difference between CET and UTC is one hour, and the program displays 3600.
+Members of the class tt(DateTime) should only be used if tt(operator bool())
+returns tt(true). The member tt(error()) can also be used if tt(operator
+bool()) returns false.
+
+Handling time is complex. The bf(C) function bf(time)(2) returns the time in
+seconds. This time is normally represented in UTC. The function bf(gmtime)(3)
+when provided with tt(time())'s output returns the broken down time in a
+tt(struct tm). Remarkably (and confusingly), when this tt(struct tm) is then
+passed to the bf(mktime)(3) function the latter function does em(not) return
+the UTC-time in seconds, but a time that differs from the time in UTC by the
+current local time shift. E.g., the program
+verbinclude(../../datetime/driver/demos/localtime.cc) displays the current
+em(UTC) clock's hour setting, but reports the difference in seconds between
+the local time and the UTC time (e.g., the difference between CET and UTC is
+one hour, and the program displays 3600.
 
 To obtain the time in UTC-seconds from tt(mktime)(3) the function
 bf(localtime)(3) must be used to obtain the tt(struct tm) values:
@@ -176,45 +176,31 @@ manpagesection(CONSTRUCTORS)
     itb(DateTime(TimeType type = UTC))
         The default constructor, initializing the object to the current date
 and time.  The argument specifies the way the time is displayed by the
-tt(DateTime) object, by default using the computer's local time
-representation.  Alternatively, tt(UTC) may be specified to display the time
-in em(Universal Time Coordinated) time.
+tt(DateTime) object using either (by default) time in UTC or using local time.
 
     itb(DateTime(int displayZoneShift))
         This constructor initializes the object to the date and time at offset
-tt(displayZoneShift) from UTC.
+tt(displayZoneShift) (in minutes) from UTC.
 
-    itb(DateTime(time_t time, TimeType type, int utcZoneShift = 0))
+    itb(DateTime(time_t time, TimeType type))
         Initializes a tt(DateTime) object with information stored in the
 provided tt(time_t) value. The object's time in UTC is defined as tt(time) (in
-seconds) plus the time zone shift tt(utcZoneShift) (in minutes). E.g., if
-tt(time) is initialized to tt(time(0)) it will return the real UTC time. By
-specifying tt(utcZoneShift) as 3 * 60 the object's UTC time is defined three
-hours later.  The second argument specifies the way the time is displayed by
-the tt(DateTime) object, by default using the computer's local time
-representation.  Alternatively, tt(UTC) may be specified to display the time
-as the object's UTC time.
+seconds).  The second argument specifies the way the time is displayed by the
+tt(DateTime) object using either (by default) time in UTC or using local time.
 
-    itb(DateTime(time_t time, int displayZoneShift, int utcZoneShift = 0))
+    itb(DateTime(time_t time, int displayZoneShift))
         Initializes a tt(DateTime) object with information stored in the
-provided tt(time_t) value. This value is interpreted as a time in UTC to which
-the time zone shift tt(utcZoneShift) (in minutes) has been added.  The
+provided tt(time_t) value. This value is interpreted as a time in UTC. The
 second argument specifies the way the time is displayed by the tt(DateTime)
 object, adding tt(displayZoneShift) (in minutes) to the time in UTC.
 
-
-    itb(DateTime(struct tm const *tm, TimeType type = UTC, 
-                int utcZoneShift = 0)) 
+    itb(DateTime(struct tm const *tm, TimeType type = UTC))
         Initializes a tt(DateTime) object with information stored in the
 provided bf(struct tm) value. It is assumed that the tt(tm) parameter points
-to a tt(struct tm) containing the broken down UTC time fields (as returned by
-the tt(gmtime()) function). To this the time zone shift tt(utcZoneShift) (in
-minutes) is added to obtain the UTC time that will be used by the object.  The
-second argument specifies the way the time is displayed by the tt(DateTime)
-object, by default using the computer's local time representation.
-Alternatively, tt(UTC) may be specified to display the time in em(Universal
-Time Coordinated) time.nl()
-    The bf(struct tm) is defined as follows:
+to a tt(struct tm) representing the broken down UTC time fields.  The second
+argument specifies the way the time is displayed by the object using either
+(by default) time in UTC or using local time. The bf(struct tm) is defined as
+follows:
         verb(
     struct tm 
     {
@@ -230,45 +216,64 @@ Time Coordinated) time.nl()
                         // > 0: yes, 0: no, < 0: unknown
     };
         )
-    Values outside of these ranges can sometimes be used (with various
+    Values outside of these ranges may sometimes be used (with various
 set..() members, see below) to compute a point in time in the future or in the
-past. E.g., by specifying 30 for the hour-setting bf(DateTime) objects will
-compute a point in time in the next day.
+past. E.g., by specifying 30 for the hour-setting bf(DateTime) objects 
+a point in time in the next day will be used.
 
-    itb(DateTime(struct tm const *tm, int displayZoneShift, 
-        int utcZoneShift = 0))
+    itb(DateTime(struct tm const *tm, int displayZoneShift))
         Initializes a tt(DateTime) object with information stored in the
 provided bf(struct tm) value. It is assumed that the tt(tm) parameter points
-to a tt(struct tm) containing the broken down UTC time fields (as returned by
-the tt(gmtime(time(0))) function). To this the time zone shift
-tt(utcZoneShift) (in minutes) is added.  The second argument specifies
-the way the time is displayed by the tt(DateTime) object, adding
+to a tt(struct tm) representing the broken down UTC time fields. The second
+argument specifies the way the time is displayed by the object, adding
 tt(displayZoneShift) (in minutes) to the time in UTC.
 
-    itb(DateTime(std::string const &timeStr, TimeType type = UTC, 
-            int utcZoneShift = 0)) 
-        Initializes a tt(DateTime) object with information stored in the
-provided tt(std::string) which is interpreted as the em(local time). To this
-the time zone shift tt(utcZoneShift) (in minutes) has been added. nl()
-    The second argument specifies the way the time is displayed by the
-tt(DateTime) object, by default using the computer's local time
-representation.  Alternatively, tt(UTC) may be specified to display the time
-in em(Universal Time Coordinated) time.nl()
+    itb(DateTime(std::string const &timeStr, TimeType type = UTC, int
+            utcZoneShift = 0)) 
+    Initializes a tt(DateTime) object with information stored in the provided
+tt(std::string) which is interpreted as the time in the current (local) time
+zone. To obtain the time in UTC the tt(DateTime) object subtracts the current
+difference between the local time zone and UTC from the provided time and adds
+tt(utcZoneShift).nl() The second argument specifies the way the time is
+displayed by the tt(DateTime) object: either as time UTC or using the current
+display zone offset.  E.g., if the current time zone is UTC + 1 hour then the
+time displayed by
+        verb( 
+    DateTime dt("Sun Nov 2 13:29:11 2008", DateTime::LOCALTIME, 120);
+    cout << dt << endl; 
+        ) 
+    is tt(Sun Nov 2 17:29:11 2008): the object computes the UTC hour value as
+13 - 1 (current zone offset) + 2 (utc Zone shift in hours) = 14. To this a
+current display zone shift of 1 hour will be added, resulting in a displayed
+hour value 15.nl()
     The time contained in the tt(timeStr) parameter should be formatted as
 described in section bf(STANDARD TEXTUAL TIME REPRESENTATIONS).
 
     itb(DateTime(std::string const &timeStr, int displayZoneShift, 
                  int utcZoneShift = 0))
         Initializes a tt(DateTime) object with information stored in the
-provided tt(std::string) which is interpreted as the em(local time).  To this
-the time zone shift tt(utcZoneShift) (in minutes) has been added.nl()
+provided tt(std::string) which is interpreted as the time in the current
+(local) time zone. To obtain the time in UTC the tt(DateTime) object subtracts
+the current difference between the local time zone and UTC from the provided
+time and adds tt(utcZoneShift).nl()
     The second argument specifies the way the time is displayed by the
 tt(DateTime) object, adding tt(displayZoneShift) (in minutes) to the time in
-UTC.nl()
+UTC.  E.g., if the current time zone is UTC + 1 hour then the time displayed
+by
+        verb(
+    DateTime dt("Sun Nov 2 13:29:11 2008", 180, 120);
+    cout << dt << endl;
+        )
+    is tt(Sun Nov 2 17:29:11 2008): the object computes the UTC hour
+value as 13 - 1 (current zone offset) + 2 (utc Zone shift in hours) =
+14. To this a display zone shift of 3 hours will be added, resulting
+in a displayed hour value 17.nl()
     The time contained in the tt(timeStr) parameter should be formatted as
 described in section bf(STANDARD TEXTUAL TIME REPRESENTATIONS).
-    )
+
+    itb(DateTime(DateTime const &other))
         The copy constructor is available.
+    )
 
 manpagesection(OVERLOADED OPERATORS)
 
