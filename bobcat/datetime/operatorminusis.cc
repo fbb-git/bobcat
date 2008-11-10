@@ -1,10 +1,10 @@
 #include "datetime.ih"
 
-DateTime &DateTime::operator+=(TimeStruct const &fields)
+DateTime &DateTime::operator-=(TimeStruct const &fields)
 {
     TimeStruct ts = fields;
 
-    d_time += mktime(&ts) + s_zoneCorrection;
+    d_time -= mktime(&ts) + s_zoneCorrection;
 
     utcSec2timeStruct(&d_tm, d_time);
     return *this;
