@@ -132,19 +132,13 @@ class DateTime
         DateTime(std::string const &timeStr, int displayZoneShift, 
                  int utcZoneShift = 0);
 
-        operator bool() const;
-        size_t error() const;
-        size_t hours() const;
-        size_t minutes() const;
-        Month month() const;
-        size_t monthDayNr() const;
-
         DateTime &operator+=(time_t seconds);           // 1.
         DateTime &operator+=(TimeStruct const &tm);     // 2. 
 
         DateTime &operator-=(time_t seconds);           // i.
         DateTime &operator-=(tm const &tm);
 
+        operator bool() const;
 
         bool setDay(int day);           // 'int' values may be negative or 
         bool setHours(int hours);       // postive. 0 
@@ -157,25 +151,31 @@ class DateTime
         bool setWeekday(WeekDay weekday, Relative where = NEXT);
         bool setYear(size_t year);
 
-
+        int displayZoneShift() const;
+        TriVal dst() const;
+        size_t error() const;
+        size_t hours() const;
+        size_t minutes() const;
+        Month month() const;
+        size_t monthDayNr() const;
+        std::string rfc2822() const;
+        std::string rfc3339() const;
         size_t seconds() const;
         time_t time() const;
+        TimeStruct const *timeStruct() const;
+        bool valid() const;
         WeekDay weekday() const;
         size_t year() const;
         size_t yearDay() const;             // starts counting at 0
         size_t yearDayNr() const;           // starts counting at 1
-        TriVal dst() const;
-        TimeStruct const &timeStruct() const;
+
+        
 
         DateTime utc() const;
         DateTime localTime() const;
+        DateTime localTime(int displayZoneShift) const;
         DateTime to(TimeType type) const;
 
-        std::string rfc2822() const;
-        std::string rfc3339() const;
-
-        bool valid() const;
-        
     private:
         bool updateTime(struct tm *tmPtr);
 
@@ -231,6 +231,11 @@ inline size_t DateTime::seconds() const
     return d_tm.tm_sec;
 }
 
+inline int DateTime::displayZoneShift() const
+{
+    return d_displayZoneShift;
+}
+
 inline time_t DateTime::time() const
 {
     return d_time;
@@ -276,9 +281,9 @@ inline DateTime DateTime::to(TimeType type) const
     return DateTime(d_time, type);
 }
 
-inline struct tm const &DateTime::timeStruct() const
+inline struct tm const *DateTime::timeStruct() const
 {
-    return d_tm;
+    return &d_tm;
 }
 
 inline DateTime &DateTime::operator-=(time_t seconds)

@@ -6,7 +6,7 @@ string DateTime::rfc3339() const
 
     out <<  setfill('0') <<
             1900 + d_tm.tm_year << '-' << 
-            setw(2) << d_tm.tm_mon << '-' <<
+            setw(2) << (d_tm.tm_mon + 1) << '-' <<
             setw(2) << d_tm.tm_mday << ' ';
 
      timeStr(out) << ' ' << 

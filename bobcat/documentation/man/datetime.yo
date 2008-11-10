@@ -56,10 +56,10 @@ tt(struct tm). Remarkably (and confusingly), when this tt(struct tm) is then
 passed to the bf(mktime)(3) function the latter function does em(not) return
 the UTC-time in seconds, but a time that differs from the time in UTC by the
 current local time shift. E.g., the program
-verbinclude(../../datetime/driver/demos/localtime.cc) displays the current
-em(UTC) clock's hour setting, but reports the difference in seconds between
-the local time and the UTC time (e.g., the difference between CET and UTC is
-one hour, and the program displays 3600.
+        verbinclude(../../datetime/driver/demos/localtime.cc)
+    displays the current em(UTC) clock's hour setting, but reports the
+difference in seconds between the local time and the UTC time (e.g., the
+difference between CET and UTC is one hour, and the program displays 3600.
 
 To obtain the time in UTC-seconds from tt(mktime)(3) the function
 bf(localtime)(3) must be used to obtain the tt(struct tm) values:
@@ -121,7 +121,7 @@ manpagesection(ENUMS defined in DateTime)
         it() bf(MONDAY),
         it() bf(TUESDAY),
         it() bf(WEDNESDAY),
-        it() bf(THIRSDAY),
+        it() bf(THURSDAY),
         it() bf(FRIDAY),
         it() bf(SATURDAY).
         )
@@ -398,11 +398,20 @@ tt(false).
 manpagesection(MEMBER FUNCTIONS)
 
 All members returning a time-element do so according to the latest
-time-representation (i.e., tt(LOCALTIME) or tt(UTC)). All members returning
-numerical values use 0 as their smallest return value, except for the
-bf(...Nr()) members, which start at 1.
-
+time-representation (i.e., tt(UTC), tt(LOCALTIME), or using an explicitly set
+display zone shift value). All members returning numerical values use 0 as
+their smallest return value, except for the bf(...Nr()) members, which start
+at 1.
     itemization(
+    itb(int displayZoneShift() const)
+        Returns the object's current display zone shift value in minutes.
+
+    itb(DayTime::TriVal dst() const)
+        Returns an indication of an active Daylight Saving Time (DST) state
+for the (local) time represented in the tt(DateTime) object. When DST is
+active, the local time is one hour later as compared to the situation where
+DST is not active.
+
     itb(size_t error() const)
         Returns the tt(errno) value after the tt(DateTime) object. 
 construction.  It can be interpreted by, e.g., bf(FBB::Errno).
@@ -410,6 +419,15 @@ construction.  It can be interpreted by, e.g., bf(FBB::Errno).
     itb(size_t hours() const)
         Returns the number of hours of the time stored in a tt(DateTime)
 object (0-23).
+
+    itb(DateTime localTime() const)
+        Returns a copy of the tt(DateTime) object representing its local
+time. If the object does not define a local time or display zone shift the
+returned object merely copies the orginal object's UTC time.
+
+    itb(DateTime localTime(int displayZoneShift) const)
+        Returns a copy of the tt(DateTime) object representing its time using
+the display zone shift provided by the member's argument.
 
     itb(size_t minutes() const)
         Returns the number of minutes of the time stored in a tt(DateTime)
@@ -430,9 +448,6 @@ tt(DateTime) object (1-31).
         verb(
         Mon, 17 Dec 2007 13:49:10 +0100
         )
-        The function uses the information provided by the last tt(breakdown())
-function call (which is called by the tt(DateTime) constructors and other
-time-modifying members).
 
     itb(string rfc3339() const)
         Returns the date displayed according to the format specified in RFC
@@ -441,9 +456,6 @@ time-modifying members).
         verb(
         2008-11-02 13:29:11+01:00
         )
-        The function uses the information provided by the last tt(breakdown())
-function call (which is called by the tt(DateTime) constructors and other
-time-modifying members).
 
     itb(size_t seconds() const)
         Returns the number of seconds of the time stored in a tt(DateTime)
@@ -517,38 +529,44 @@ tt(false) is returned.
 revalidated so that its tt(year()) member returns a value of at least 1970. If
 the assignment resulted in a new (valid) time tt(true) is returned. Otherwise
 tt(false) is returned.
+
     itb(time_t time() const)
-        Returns the tt(time_t) values stored in the tt(DateTime) object
-itself.
-    itb(WeekDay weekday() const)
-        Returns the tt(WeekDay) value of the time stored in a
+        Returns the (UTC) tt(time_t) value (in seconds) stored in the
 tt(DateTime) object.
-    itb(size_t year() const)
-        Returns the year element of the time stored in a tt(DateTime)
-object.
-    itb(size_t yearDay() const)
-        Returns the day within the year of the time stored in a
-tt(DateTime) object. January 1 is returned as 0.
-    itb(size_t yearDayNr() const)
-        Returns the day within the year of the time stored in a
-tt(DateTime) object. January 1 is returned as 1.
-    itb(DayTime::TriVal dst() const)
-        Returns an indication of an active Daylight Saving Time (DST) state
-for the (local) time represented in the tt(DateTime) object. When DST is
-active, the local time is one hour later as compared to the situation where
-DST is not active.
-    itb(DateTime utc() const)
-        Returns a copy of the tt(DateTime) object representing its time in
-tt(UTC).
-    itb(DateTime localTime() const)
-        Returns a copy of the tt(DateTime) object representing its local time.
+
+    itb(struct tm const *timeStruct() const)
+        Returns a pointer to the objects latest tt(struct tm) values,
+representing the time as displayed by, e.g., the insertion operator.
+
     itb(DateTime to(DateTime::TimeType type) const)
         Returns a copy of the tt(DateTime) object representing its time in
 tt(UTC) if tt(DateTime::UTC) was specified, and in local time if
 tt(DateTime::LOCALTIME) was specified.
+
+    itb(DateTime utc() const)
+        Returns a copy of the tt(DateTime) object representing its time in
+tt(UTC).
+
     itb(bool valid() const)
         Returns tt(true) if no errors were detected during the object's
 construction (same semantics as tt(operator bool())).
+
+    itb(WeekDay weekday() const)
+        Returns the tt(WeekDay) value of the time stored in a
+tt(DateTime) object.
+
+    itb(size_t year() const)
+        Returns the year element of the time stored in a tt(DateTime)
+object.
+
+    itb(size_t yearDay() const)
+        Returns the day within the year of the time stored in a
+tt(DateTime) object. January 1 is returned as 0.
+
+    itb(size_t yearDayNr() const)
+        Returns the day within the year of the time stored in a
+tt(DateTime) object. January 1 is returned as 1.
+
     )
     Whenever a tt(set...()) member is used in such a way that the resulting
 date would be invalid the original tt(DateTime) object's value is unaltered.
