@@ -65,7 +65,11 @@ void install(string rss, string dev)
 #ifdef MANHTML
     printf("\n  installing the html versions of the manual pages\n");
     md(dev + DOCDEV + "/man");
-    rungzip9("tmp/manhtml/", dev + DOCDEV + "/man/");
+
+//  Don't zip as per man dh_compress:
+//    rungzip9("tmp/manhtml/", dev + DOCDEV + "/man/");
+    run("cp -r tmp/manhtml/* " + dev + DOCDEV + "/man/");
+
     run("ln -sf bobcat.7.html " + dev + DOCDEV + "/man/index.html");
     run("cp documentation/man/bobcat.jpg " + dev + DOCDEV + "/man");
 #endif
