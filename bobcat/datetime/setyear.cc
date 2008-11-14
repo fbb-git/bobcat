@@ -2,11 +2,16 @@
 
 bool DateTime::setYear(size_t year)
 {
-    if (!d_ok)
-        return false;
-
-    struct tm tmStruct = d_tm;
+    TimeStruct tmStruct = d_tm;
     tmStruct.tm_year = year - 1900;
 
-    return updateTime(&tmStruct);
+    d_ok = true;
+    time_t time = d_time;
+
+    d_time = timeStruct2utcSec(&tmStruct);
+    if (!d_ok)
+        d_time = time;
+
+    utcSec2timeStruct(&d_tm, d_time);
+    return d_ok;
 }

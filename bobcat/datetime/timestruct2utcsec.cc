@@ -8,5 +8,6 @@ time_t DateTime::timeStruct2utcSec(TimeStruct *ts)
         d_ok = false;
         return 0;
     }
+    d_ok = true;
     return time + s_zoneCorrection - d_displayZoneShift;
 }
