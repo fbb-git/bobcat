@@ -2,12 +2,13 @@
 
 bool DateTime::updateTime(struct tm *tmPtr)
 {
-    time_t time = mktime(tmPtr);
+    d_ok = true;
+    time_t time = d_time;
 
-    if (not breakDown(tmPtr, d_type, time))
-        return false;
+    d_time = timeStruct2utcSec(&tmStruct);
+    if (!d_ok)
+        d_time = time;
 
-    d_time = time;
-    d_tm = *tmPtr;
-    return true;
+    utcSec2timeStruct(&d_tm, d_time);
+    return d_ok;
 }
