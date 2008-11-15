@@ -10,19 +10,7 @@ bool DateTime::setHours(int hours)
 
     tm.tm_hour = hours;         // update the hour value  
 
-    // NEXT IN A SEPARATE FUNCTION
-
-    time_t time = timeStruct2utcSec(&tm);
-
-    bool ok = utcSec2timeStruct(&tm, time);
-    if (ok)
-    {
-        d_tm = tm;
-        d_time = time;
-        d_ok = true;
-    }
-
-    return ok;
+    return updateTime(&tmStruct);
 }
 
 

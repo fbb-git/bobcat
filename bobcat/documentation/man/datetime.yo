@@ -105,7 +105,7 @@ manpagesection(ENUMS defined in DateTime)
         It may be assumed that these values are ordered using the default
         bf(C++) tt(enum) values. 
 
-    itb(DateTime::RELATIVE)
+    itb(DateTime::Relative)
         This enumeration is used with the tt(setMonth()) member (see below).
         It has the following values:
         itemization(
@@ -114,19 +114,17 @@ manpagesection(ENUMS defined in DateTime)
         it() bf(LAST),
         it() bf(NEXT)
         )
-    itb(DateTime::WeekDay)
-        This enumeration has the following (ordered) values:
+    itb(DateTime::TimeFields)
+        This enumeration has the following values which can be tt(bit_or)-ed
+        when calling the member tt(setFields()):
         itemization(
-        it() bf(SUNDAY),
-        it() bf(MONDAY),
-        it() bf(TUESDAY),
-        it() bf(WEDNESDAY),
-        it() bf(THURSDAY),
-        it() bf(FRIDAY),
-        it() bf(SATURDAY).
+        it() bf(SECONDS)
+        it() bf(MINUTES)
+        it() bf(HOURS)
+        it() bf(MONTHDAY)
+        it() bf(MONTH)
+        it() bf(YEAR)
         )
-        It may be assumed that these values are ordered using the default
-        bf(C++) tt(enum) values. 
     itb(DateTime::TimeType)
         This enumeration has the following values:
         itemization(
@@ -142,6 +140,19 @@ Saving Time is available,
         it() bf(NO), returned when Daylight Saving Time is not active,
         it() bf(YES), returned when Daylight Saving Time is active.
         )
+    itb(DateTime::WeekDay)
+        This enumeration has the following (ordered) values:
+        itemization(
+        it() bf(SUNDAY),
+        it() bf(MONDAY),
+        it() bf(TUESDAY),
+        it() bf(WEDNESDAY),
+        it() bf(THURSDAY),
+        it() bf(FRIDAY),
+        it() bf(SATURDAY).
+        )
+        It may be assumed that these values are ordered using the default
+        bf(C++) tt(enum) values. 
     )
 
 manpagesection(STANDARD TEXTUAL TIME REPRESENTATIONS)    
@@ -468,6 +479,17 @@ earlier month. The object date is revalidated so that its tt(days())
 member returns a value fitting the object's month. If the assignment resulted
 in a new (valid) time tt(true) is returned. Otherwise tt(false) is returned.
 
+    itb(bool setFields(struct tm const &timeStruct, int fields))
+        Reassigns the time represented by the tt(DateTime) object to the time
+in which the fields specified by a tt(bit_or) combination of tt(TimeField)
+values will be given the values specified in tt(timeStruct). All other fields
+in tt(timeStruct) will be ignored and will be kept at their internal values.
+The values will be normalized, though. E.g., if the current month day number
+is 31 and month June is requested then the resulting month will be tt(July)
+and the day number will be 1. The tt(timeStruct) fields are expected as values
+in the time zone used by the tt(DateTime) object.  If the assignment resulted
+in a new (valid) time tt(true) is returned. Otherwise tt(false) is returned.
+
     itb(bool setHours(int hours))
         Reassigns the number of hours set in the tt(DateTime) object.
 Negative values are allowed to compute time in a previous day. The object date
@@ -481,6 +503,7 @@ object. Negative values are allowed to compute time in a previous hour. The
 object date is revalidated so that its tt(minutes()) member returns a value
 between 0 and 59.  If the assignment resulted in a new (valid) time tt(true)
 is returned. Otherwise tt(false) is returned.
+
     itb(bool setMonth(DateTime::Month month, DateTime::Relative where =
             THIS_YEAR)) 
         Reassigns the month set in the tt(DateTime) object. The object date is
@@ -494,23 +517,27 @@ the requested month will be following the current month. If another value for
 tt(where) is specified an bf(Errno) exception is thrown. If the assignment
 resulted in a new (valid) time tt(true) is returned. Otherwise tt(false) is
 returned.
+
     itb(bool setMonth(int month)) 
         Reassigns the month set in the tt(DateTime) object. Negative values
 are allowed to compute time in a previous year. The object date is revalidated
 so that its tt(month()) member returns a value between tt(JANUARY) and
 tt(DECEMBER).  If the assignment resulted in a new (valid) time tt(true) is
 returned. Otherwise tt(false) is returned.
+
     itb(bool setSeconds(int seconds))
         Reassigns the number of seconds set in the tt(DateTime)
 object. Negative values are allowed to compute time in a previous minute. The
 object date is revalidated so that its tt(seconds()) member returns a value
 between 0 and 59. If the assignment resulted in a new (valid) time tt(true) is
 returned. Otherwise tt(false) is returned.
+
     itb(bool setTime(time_t time))
         Reassigns the number of seconds set in the tt(DateTime) object. The
 object date is revalidated. Time value 0 represents Jan, 1, 1970, 0:00:00
 hours. If the assignment resulted in a new (valid) time tt(true) is
 returned. Otherwise tt(false) is returned.
+
     itb(bool setWeekday(Weekday day, Relative where = NEXT))
         Reassigns the number of seconds set in the tt(DateTime) object based
 on reassignment of the day in the week (at most 7 days from now, weeks
@@ -524,6 +551,7 @@ set to either one week ahead or one week in the past. The object date is
 revalidated. Time value 0 represents Jan, 1, 1970, 0:00:00 hours. If the
 assignment resulted in a new (valid) time tt(true) is returned. Otherwise
 tt(false) is returned.
+
     itb(bool setYear(size_t year))
         Reassigns the year set in the tt(DateTime) object. The date is
 revalidated so that its tt(year()) member returns a value of at least 1970. If

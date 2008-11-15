@@ -2,9 +2,6 @@
 
 bool DateTime::setWeekday(WeekDay weekday, Relative where)
 {
-    if (!d_ok)
-        return false;
-
     struct tm tmStruct = d_tm;
 
     int difference = static_cast<int>(weekday) - tmStruct.tm_wday;
@@ -30,4 +27,3 @@ bool DateTime::setWeekday(WeekDay weekday, Relative where)
     
     return updateTime(&tmStruct);
 }
-

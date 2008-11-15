@@ -77,6 +77,15 @@ class DateTime
             NO,
             YES
         };
+        enum TimeFields
+        {
+            SECONDS  = 1 << 0,
+            MINUTES  = 1 << 1,
+            HOURS    = 1 << 2,
+            MONTHDAY = 1 << 3,
+            MONTH    = 1 << 4,
+            YEAR     = 1 << 5
+        };
 
     private:
         TimeType    d_type; // current type of info in d_tm member
@@ -144,12 +153,13 @@ class DateTime
         bool setHours(int hours);       // postive. 0 
         bool setMinutes(int minutes);   
         bool setMonth(Month month, Relative where = THIS_YEAR);
-        bool setMonth(int month);       // set month, using 0: january
+        bool setMonth(int month);       // set month, using 0: january this yr
                                         // correct for overflows.
         bool setSeconds(int seconds);
-        bool setTime(time_t time);
+        bool setTime(time_t time);      // utc time
         bool setWeekday(WeekDay weekday, Relative where = NEXT);
         bool setYear(size_t year);
+        bool setFields(TimeStruct const &tmStruct, int fields);
 
         int displayZoneShift() const;
         TriVal dst() const;
@@ -168,13 +178,13 @@ class DateTime
         size_t year() const;
         size_t yearDay() const;             // starts counting at 0
         size_t yearDayNr() const;           // starts counting at 1
+        size_t weekNr() const;              // starts counting at 1
 
         
-
         DateTime utc() const;
         DateTime localTime() const;
-        DateTime localTime(int displayZoneShift) const;
         DateTime to(TimeType type) const;
+        DateTime timeZoneShift(int displayZoneShift) const;
 
     private:
         bool updateTime(struct tm *tmPtr);
@@ -279,6 +289,11 @@ inline DateTime DateTime::localTime() const
 inline DateTime DateTime::to(TimeType type) const
 {
     return DateTime(d_time, type);
+}
+
+inline DateTime DateTime::timeZoneShift(int displayZoneShift) const
+{
+    return DateTime(d_time, displayZoneShift);
 }
 
 inline struct tm const *DateTime::timeStruct() const
