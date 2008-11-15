@@ -61,7 +61,7 @@ class DateTime
             NEXT,
             THIS_WEEK,
         };
-        enum WeekDay
+        enum Weekday
         {
             SUNDAY,
             MONDAY,
@@ -157,7 +157,7 @@ class DateTime
                                         // correct for overflows.
         bool setSeconds(int seconds);
         bool setTime(time_t time);      // utc time
-        bool setWeekday(WeekDay weekday, Relative where = NEXT);
+        bool setWeekday(Weekday weekday, Relative where = NEXT);
         bool setYear(size_t year);
         bool setFields(TimeStruct const &tmStruct, int fields);
 
@@ -174,7 +174,7 @@ class DateTime
         time_t time() const;
         TimeStruct const *timeStruct() const;
         bool valid() const;
-        WeekDay weekday() const;
+        Weekday weekday() const;
         size_t year() const;
         size_t yearDay() const;             // starts counting at 0
         size_t yearDayNr() const;           // starts counting at 1
@@ -251,9 +251,9 @@ inline time_t DateTime::time() const
     return d_time;
 }
 
-inline DateTime::WeekDay DateTime::weekday() const
+inline DateTime::Weekday DateTime::weekday() const
 {
-    return static_cast<WeekDay>(d_tm.tm_wday);
+    return static_cast<Weekday>(d_tm.tm_wday);
 }
 
 inline size_t DateTime::year() const

@@ -140,7 +140,7 @@ Saving Time is available,
         it() bf(NO), returned when Daylight Saving Time is not active,
         it() bf(YES), returned when Daylight Saving Time is active.
         )
-    itb(DateTime::WeekDay)
+    itb(DateTime::Weekday)
         This enumeration has the following (ordered) values:
         itemization(
         it() bf(SUNDAY),
@@ -352,7 +352,7 @@ tt(DateTime) object.
     itb(DateTime &operator-=(struct tm const &fields))
        Subtracts the (UTC) time in seconds since the beginning of the era
 represented by tt(fields) from the tt(DateTime) object. E.g., the following
-code fragment will display midnight, Januari 1, 1970:
+code fragment will display midnight, January 1, 1970:
         verbinclude(../../datetime/driver/demos/erabody.cc)
     )
 
@@ -564,28 +564,28 @@ tt(DateTime) object.
 
     itb(struct tm const *timeStruct() const)
         Returns a pointer to the objects latest tt(struct tm) values,
-representing the time as displayed by, e.g., the insertion operator.
+        representing the time as displayed by, e.g., the insertion operator.
 
     itb(DateTime to(DateTime::TimeType type) const)
         Returns a copy of the tt(DateTime) object representing its time in
-tt(UTC) if tt(DateTime::UTC) was specified, and in local time if
-tt(DateTime::LOCALTIME) was specified.
+        tt(UTC) if tt(DateTime::UTC) was specified, and in local time if
+        tt(DateTime::LOCALTIME) was specified.
 
     itb(DateTime utc() const)
         Returns a copy of the tt(DateTime) object representing its time in
-tt(UTC).
+        tt(UTC).
 
     itb(bool valid() const)
         Returns tt(true) if no errors were detected during the object's
-construction (same semantics as tt(operator bool())).
+        construction (same semantics as tt(operator bool())).
 
-    itb(WeekDay weekday() const)
-        Returns the tt(WeekDay) value of the time stored in a
-tt(DateTime) object.
+    itb(Weekday weekday() const)
+        Returns the tt(Weekday) value of the time stored in a
+        tt(DateTime) object.
 
     itb(size_t year() const)
         Returns the year element of the time stored in a tt(DateTime)
-object.
+        object.
 
     itb(size_t yearDay() const)
         Returns the day within the year of the time stored in a
@@ -593,7 +593,7 @@ tt(DateTime) object. January 1 is returned as 0.
 
     itb(size_t yearDayNr() const)
         Returns the day within the year of the time stored in a
-tt(DateTime) object. January 1 is returned as 1.
+        tt(DateTime) object. January 1 is returned as 1.
 
     )
     Whenever a tt(set...()) member is used in such a way that the resulting
@@ -609,7 +609,7 @@ manpageseealso()
 
 manpagebugs()
     The class tt(DateTime) assumes that bf(time)(2) returns the time in
-UTC.nl()
-    Date and time specifications are expected in English.nl()
+    UTC.nl()
+    English is used / expected when specifying named date components.
 
 includefile(trailer.inc)
