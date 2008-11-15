@@ -1,8 +1,8 @@
 #include "datetime.ih"
 
-bool DateTime::setWeekday(WeekDay weekday, Relative where)
+bool DateTime::setWeekday(Weekday weekday, Relative where)
 {
-    struct tm tmStruct = d_tm;
+    TimeStruct tmStruct = d_tm;
 
     int difference = static_cast<int>(weekday) - tmStruct.tm_wday;
 

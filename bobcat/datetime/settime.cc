@@ -10,5 +10,5 @@ bool DateTime::setTime(time_t seconds)
         d_time = seconds;
         d_tm = tmStruct;
     }
-    return ret;
+    return ok;
 }
