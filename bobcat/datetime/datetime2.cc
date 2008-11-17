@@ -8,5 +8,5 @@ DateTime::DateTime(int displayZoneShift)
     zoneCorrection();
 
     setDisplayZone(displayZoneShift);
-    utcSec2timeStruct(&d_tm, d_time);
+    d_ok = utcSec2timeStruct(&d_tm, d_time);
 }

@@ -8,5 +8,5 @@ DateTime::DateTime(TimeType type)
     zoneCorrection();
 
     setDisplayZone(0);                  // displayZoneCorrection for `type'
-    utcSec2timeStruct(&d_tm, d_time);
+    d_ok = utcSec2timeStruct(&d_tm, d_time);
 }

@@ -8,7 +8,6 @@ bool DateTime::updateTime(struct tm *tmPtr)
 
     time_t time = timeStruct2utcSec(&tmStruct);
 
-
     if (d_ok)
     {
         d_time = time;

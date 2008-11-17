@@ -10,9 +10,10 @@ string DateTime::rfc2822() const
 
     timeStr(out) << ' ' <<
             showpos << 
-                setw(3) << internal << d_displayZoneShift / 3600 << 
+                setw(3) << internal << 
+                            (d_displayZoneShift + d_dstShift) / 3600 << 
             noshowpos << 
-                setw(2) << abs(d_displayZoneShift) % 3600 / 60;
+                setw(2) << abs(d_displayZoneShift + d_dstShift) % 3600 / 60;
 
     return out.str();
 }

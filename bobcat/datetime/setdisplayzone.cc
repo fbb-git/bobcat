@@ -9,7 +9,6 @@ void DateTime::setDisplayZone(int displayZoneShift)
     else
     {
         TimeStruct ts;
-
         d_displayZoneShift = d_time - mktime(gmtime_r(&d_time, &ts));
     }
 }

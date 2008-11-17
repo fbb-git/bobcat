@@ -2,21 +2,18 @@
 
 bool DateTime::utcSec2timeStruct(TimeStruct *ts, time_t time)
 {
-    time += d_displayZoneShift;     // add local time (if any)
-
-    bool ok = gmtime_r(&time, ts);
-    d_errno = errno;
-
-    if (ok)
-        d_dstShift = static_cast<TriVal>(ts->tm_isdst) == YES ? 3600 : 0;
-    else
+    if (localtime_r(&time, ts) == 0)            // 0: can't compute
+    {                                           // localtime returns dst info
         d_dstShift = 0;
-
-    if (d_dstShift)
-    {
-        time += 3600;
-        gmtime_r(&time, ts);
+        d_errno = errno;
+        return false;
     }
 
-    return ok;
+    d_dstShift = ts->tm_isdst == 1 ? 3600 : 0;
+
+    time += d_displayZoneShift + d_dstShift; // add local time shift (if any)
+
+    gmtime_r(&time, ts);
+
+    return true;
 }
