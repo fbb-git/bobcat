@@ -27,6 +27,6 @@ char const *DateTime::s_day[] =
     "Sat"
 };
 
-int DateTime::s_zoneCorrection = INT_MAX;      // no such zone -> initialize
+int DateTime::s_currentZoneCorrection = INT_MAX;      // no such zone -> initialize
                                                 // to the computer's zoneshift
                                                 // in seconds

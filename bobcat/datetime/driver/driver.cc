@@ -12,12 +12,19 @@ using namespace FBB;
 
 int main(int argc, char **argv, char **envp)
 {
-    DateTime dt;
+    DateTime dt(DateTime::LOCALTIME);
 
     if (dt)
         cout << dt << ", RFC 2822 format: " << dt.rfc2822() << "\n";
     else
         cout << "DateTime construction failed\n";
+
+    dt.setMonth(-4);
+    time_t sep = dt.time();
+    DateTime sepdt(sep, DateTime::LOCALTIME);
+
+    cout << dt.rfc2822() << endl;
+    cout << sepdt.rfc2822() << endl;
 
     DateTime utc(dt.time(), DateTime::UTC);
 

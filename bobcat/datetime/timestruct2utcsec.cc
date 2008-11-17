@@ -9,5 +9,5 @@ time_t DateTime::timeStruct2utcSec(TimeStruct *ts)
         return 0;
     }
     d_ok = true;
-    return time + s_zoneCorrection - d_displayZoneShift;
+    return time + s_currentZoneCorrection - d_displayZoneShift - d_dstShift;
 }

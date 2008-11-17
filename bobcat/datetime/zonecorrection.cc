@@ -2,11 +2,11 @@
 
 void DateTime::zoneCorrection()
 {
-    if (s_zoneCorrection == INT_MAX)
+    if (s_currentZoneCorrection == INT_MAX)
     {
         TimeStruct ts;
 
         time_t utc = ::time(0);
-        s_zoneCorrection = utc - mktime(gmtime_r(&utc, &ts));
+        s_currentZoneCorrection = utc - mktime(gmtime_r(&utc, &ts));
     }
 }

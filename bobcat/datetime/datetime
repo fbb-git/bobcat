@@ -96,6 +96,7 @@ class DateTime
         time_t      d_displayZoneShift; // correction to UTC when displaying
                                         // times
                                         // this takes care of dst as well.
+        size_t      d_dstShift;         // 3600 or 0: add to displayZoneShift
 
         TimeStruct  d_tm;               // time's elements 
 
@@ -105,7 +106,7 @@ class DateTime
         static char const *s_month[];
         static char const *s_day[];
 
-        static int s_zoneCorrection;
+        static int s_currentZoneCorrection;
 
     public:
         DateTime(TimeType type = UTC);          // 1. time displayed as 
