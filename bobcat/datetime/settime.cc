@@ -3,12 +3,11 @@
 bool DateTime::setTime(time_t seconds)
 {
     TimeStruct tmStruct;
-    bool ok = utcSec2timeStruct(&tmStruct, seconds);
-    if (ok)
+    utcSec2timeStruct(&tmStruct, seconds);
+    if (d_ok)
     {
-        d_ok = true;
         d_time = seconds;
         d_tm = tmStruct;
     }
-    return ok;
+    return d_ok;
 }

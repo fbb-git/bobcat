@@ -2,8 +2,6 @@
 
 bool DateTime::updateTime(struct tm *tmPtr)
 {
-    d_ok = true;
-
     TimeStruct tmStruct = *tmPtr;
 
     time_t time = timeStruct2utcSec(&tmStruct);
