@@ -325,15 +325,16 @@ objects.
 
     itb(DateTime const operator+(DateTime const &left, 
                                             struct tm const &fields))
-       Returns a copy of tt(left) to which the (UTC) time in seconds since the
-beginning of the era represented by tt(fields) has been added. 
+        Returns a copy of tt(left) displaying tt(left)'s time to which the
+tt(tm_sec, tm_min, tm_hour, tm_mday, tm_mon) and tt(tm_year) fields of
+tt(fields) have been added.
 
     itb(DateTime operator+=(time_t seconds))
        Adds the number of seconds to the tt(DateTime) object.
 
     itb(DateTime &operator+=(struct tm const &fields))
-        Adds the (UTC) time in seconds since the beginning of the era
-represented by tt(fields) to the tt(DateTime) object.
+        Adds the tt(tm_sec, tm_min, tm_hour, tm_mday, tm_mon) and tt(tm_year)
+fields of tt(fields)to the current object's display time.
 
     itb(DateTime const operator-(DateTime const &left, time_t seconds))
        Returns a copy of tt(left) from which time tt(seconds) have been
@@ -341,17 +342,18 @@ subtracted.
 
     itb(DateTime const operator-(DateTime const &left, 
                                 struct tm const &fields))
-       Returns a copy of tt(left) from which the (UTC) time in seconds since
-the beginning of the era represented by tt(fields) has been subtracted
-(cf. tt(operator-=) below).
+        Returns a copy of tt(left) displaying tt(left)'s time from which the
+tt(tm_sec, tm_min, tm_hour, tm_mday, tm_mon) and tt(tm_year) fields of
+tt(fields) have been subtracted.
 
     itb(DateTime operator-=(time_t seconds))
        Subtracts the number of seconds from the time stored in the
 tt(DateTime) object.
 
     itb(DateTime &operator-=(struct tm const &fields))
-       Subtracts the (UTC) time in seconds since the beginning of the era
-represented by tt(fields) from the tt(DateTime) object. E.g., the following
+        Subtracts the tt(tm_sec, tm_min, tm_hour, tm_mday, tm_mon) and
+tt(tm_year) fields of tt(fields) from the current object's display time.
+E.g., the following
 code fragment will display midnight, January 1, 1970:
         verbinclude(../../datetime/driver/demos/erabody.cc)
     )

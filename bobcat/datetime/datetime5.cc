@@ -8,7 +8,7 @@ DateTime::DateTime(TimeStruct const &ts, TimeType type)
     zoneCorrection();
 
     d_tm = ts;
-    setDisplayZone(0);
 
+    setDisplayZone();
     updateTime(&d_tm);
 }

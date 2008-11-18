@@ -32,7 +32,6 @@ int main(int argc, char **argv, char **envp)
 
     modify.setMinutes(00);              // 01:00.yy, 2nd of this month
     cout << " 7 " << modify << endl;
-
                                         // 01:00.yy, 2nd of Jan. next year
     modify.setMonth(DateTime::JANUARY, DateTime::NEXT); 
     cout << " 8 " << modify << endl;
@@ -65,105 +64,44 @@ int main(int argc, char **argv, char **envp)
 
     DateTime utcStr("Tue Nov 18 15:06:29 2008");
     cout << "17 " << utcStr << " " << utcStr.time() << endl;
-    DateTime utcX(1227020789, DateTime::UTC);
-    cout << "17 " << utcX << " " << utcX.time() << endl;
 
-    DateTime utcStr2("Tue Nov 18 15:06:29 2008", DateTime::LOCALTIME);
-    cout << "17 " << utcStr2 << " " << utcStr.time() << endl;
-    DateTime utcX2(1227020789, DateTime::LOCALTIME);
-    cout << "17 " << utcX2 << " " << utcX.time() << endl;
+    DateTime utcX(utcStr.time(), DateTime::UTC);
+    cout << "18 " << utcX << " " << utcX.time() << endl;
 
-//    DateTime localStr("Tue Nov 18 15:06:29 2008", DateTime::LOCALTIME, +60);
-//    cout << "18 " << localStr << endl;
-//
-    DateTime utcStr3("Tue Nov 18 15:06:29 2008", 0);
-    cout << "19 " << utcStr3 << endl;
+    DateTime localStr("Tue Nov 18 15:06:29 2008", DateTime::LOCALTIME);
+    cout << "19 " << localStr << endl;
 
-//    DateTime timeStr3("Tue Nov 18 15:06:29 2008", 60, -60);
-//    cout << "20 " << timeStr3 << endl;
+    DateTime localStr2("Tue Nov 18 15:06:29 2008", DateTime::LOCALTIME, +60);
+    cout << "20 " << localStr2 << endl;
 
+    DateTime timeStr3("Tue Nov 18 15:06:29 2008", 120, 60);
+    cout << "21 " << timeStr3 << endl;
 
-//    if (dt)
-//        cout << dt << ", RFC 2822 format: " << dt.rfc2822() << "\n";
-//    else
-//        cout << "DateTime construction failed\n";
-//
-//    dt.setMonth(-4);
-//    time_t sep = dt.time();
-//    DateTime sepdt(sep, 4 * 60);
-//
-//    cout << dt.rfc2822() << endl;
-//    cout << sepdt.rfc2822() << endl;
+    timeStr3 += 31;
+    cout << "22 " << timeStr3 << endl;
 
-//    DateTime utc(dt.time(), DateTime::UTC);
-//
-//    if (utc)
-//        cout << utc << "\n";
-//    else
-//        cout << "UTC DateTime construction failed\n";
-//
-//    cout << "Same: " << utc.utc() << endl;
-//
-//    DateTime loc(utc.time(), DateTime::LOCALTIME);
-//    cout << loc << endl;
+    timeStr3 -= 7 * 60 + 15 * 3600;
+    cout << "23 " << timeStr3 << endl;
 
-//    DateTime rept(dt);
-//    cout << dt << '\n' <<
-//            "Enter nr weeks ahead and -1 or\n"
-//            "nr and month (0: jan) in the next occurrence of nr month ";
-//    int nr;
-//    int month;
-//    cin >> nr >> month;
-//
-//    if (month == -1)        // nr repetitions
-//        rept.setDay(rept.monthDayNr() + nr * 7);
-//    else                    // last date is nr of month
-//    {   
-//        rept.setMonth(static_cast<DateTime::Month>(month), DateTime::NEXT);
-//        rept.setDay(nr);
-//    }
-//    cout << rept << "\n\n";
-//
-//
-//    cout << dt << '\n' <<
-//            "Enter new day (0 = sun, 6 = sat) and\n"
-//            "   relativity: < 0: previous week, 0: this week, > 0: next "
-//                                                                "week: ";
-//    int day;
-//    int rel;
-//    cin >> day >> rel;
-//
-//    DateTime newDay(dt);
-//    newDay.setWeekday(static_cast<DateTime::WeekDay>(day),
-//                rel < 0 ? DateTime::LAST :
-//                rel > 0 ? DateTime::NEXT :
-//                          DateTime::THIS_WEEK);
-//    cout << newDay << "\n\n";
-//
-//    cout << "Enter hours to add to the current (local) time: ";
-//    int hours;
-//    cin >> hours;
-//
-//    DateTime added(DateTime::LOCALTIME);
-//    added += hours * 3600;
-//    cout << added;
-//
-//    cout << "added hrs: " << added.hours() << endl;
-//    cout << "dt hrs: " << dt.hours() << endl;
-//
-//    DateTime diff = added - dt;
-//
-//    cout << "Difference between added and local time:\n";
-//    cout << diff.hours() << endl;
-//    cout << diff << endl;
-//
-//    cout << "Month to set in current time " << dt << ": ";
-//    int x;
-//    cin >> x;
-//    
-//    dt.setMonth(x);
-//    cout << dt << endl;
-//
+    timeStruct.tm_sec  = 30;
+    timeStruct.tm_min  = 30;
+    timeStruct.tm_hour = 4;
+    timeStruct.tm_mday = 1;
+    timeStruct.tm_mon  = 1;
+    timeStruct.tm_year = 0;
+
+    timeStr3 += timeStruct;
+    cout << "24 " << timeStr3 << endl;
+
+    timeStr3 -= timeStruct;
+    cout << "25 " << timeStr3 << endl;
+
+    timeStruct = *timeStr3.timeStruct();
+    --timeStruct.tm_mday;                 // days start at 1: subtract 1 less
+    timeStruct.tm_year -= (1970 - 1900);  // era starts at 1970
+    timeStr3 -= timeStruct;
+    cout << "26 " << timeStr3 << endl;
+
     return 0;
 }
 

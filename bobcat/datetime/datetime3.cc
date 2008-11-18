@@ -7,6 +7,6 @@ DateTime::DateTime(time_t time, TimeType type)
 {
     zoneCorrection();
 
-    setDisplayZone(0);
+    setDisplayZone();
     utcSec2timeStruct(&d_tm, d_time);
 }
