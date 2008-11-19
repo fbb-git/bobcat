@@ -77,82 +77,76 @@ manpagesection(INHERITS FROM)
     -
 
 manpagesection(ENUMS defined in DateTime)
-    itemization(
-    itb(DateTime::Combine)
-        This enumeration has the following values:
-        itemization(
-        it() bf(ALL): require all of the specified bf(Mode) or 
-                bf(SpecialMode) values to match;
-        it() bf(ANY): require any match of the specified bf(Mode) or 
-                bf(SpecialMode) values (one match suffices);
-        )
-     itb(DateTime::Month)
-        This enumeration has the following (ordered) values:
-        itemization(
-        it() bf(JANUARY),
-        it() bf(FEBRUARY),
-        it() bf(MARCH),
-        it() bf(APRIL),
-        it() bf(MAY),
-        it() bf(JUNE),
-        it() bf(JULY),
-        it() bf(AUGUST),
-        it() bf(SEPTEMBER),
-        it() bf(OCTOBER),
-        it() bf(NOVEMBER),
-        it() bf(DECEMBER).
-        )
-        It may be assumed that these values are ordered using the default
-        bf(C++) tt(enum) values. 
 
-    itb(DateTime::Relative)
-        This enumeration is used with the tt(setMonth()) member (see below).
-        It has the following values:
-        itemization(
-        it() bf(THIS_WEEK),
-        it() bf(THIS_YEAR),
-        it() bf(LAST),
-        it() bf(NEXT)
-        )
-    itb(DateTime::TimeFields)
-        This enumeration has the following values which can be tt(bit_or)-ed
-        when calling the member tt(setFields()):
-        itemization(
-        it() bf(SECONDS)
-        it() bf(MINUTES)
-        it() bf(HOURS)
-        it() bf(MONTHDAY)
-        it() bf(MONTH)
-        it() bf(YEAR)
-        )
-    itb(DateTime::TimeType)
-        This enumeration has the following values:
-        itemization(
-        it() bf(LOCALTIME): the time is broken down  as the local time,
-        it() bf(UTC): the time is broken down as Universal Time Coordinated.
-        )
-    itb(DateTime::TriVal)
-        This enumeration has the following values, returned by the bf(dst())
-member (see below): 
-        itemization(
-        it() bf(UNKNOWN), returned when no information about the Daylight
-Saving Time is available,
-        it() bf(NO), returned when Daylight Saving Time is not active,
-        it() bf(YES), returned when Daylight Saving Time is active.
-        )
-    itb(DateTime::Weekday)
-        This enumeration has the following (ordered) values:
-        itemization(
-        it() bf(SUNDAY),
-        it() bf(MONDAY),
-        it() bf(TUESDAY),
-        it() bf(WEDNESDAY),
-        it() bf(THURSDAY),
-        it() bf(FRIDAY),
-        it() bf(SATURDAY).
-        )
-        It may be assumed that these values are ordered using the default
-        bf(C++) tt(enum) values. 
+     bf(DateTime::Month)nl()
+    This enumeration has the following values which are ordered using the
+default bf(C++) tt(enum) values:
+    itemization(
+    it() bf(JANUARY),
+    it() bf(FEBRUARY),
+    it() bf(MARCH),
+    it() bf(APRIL),
+    it() bf(MAY),
+    it() bf(JUNE),
+    it() bf(JULY),
+    it() bf(AUGUST),
+    it() bf(SEPTEMBER),
+    it() bf(OCTOBER),
+    it() bf(NOVEMBER),
+    it() bf(DECEMBER).
+    )
+
+    bf(DateTime::Relative)nl()
+    This enumeration is used with the tt(setMonth()) member (see below).
+    It has the following values:
+    itemization(
+    it() bf(THIS_WEEK),
+    it() bf(THIS_YEAR),
+    it() bf(LAST),
+    it() bf(NEXT)
+    )
+
+    bf(DateTime::TimeFields)nl()
+    This enumeration has the following values which can be tt(bit_or)-ed
+    when calling the member tt(setFields()):
+    itemization(
+    it() bf(SECONDS)
+    it() bf(MINUTES)
+    it() bf(HOURS)
+    it() bf(MONTHDAY)
+    it() bf(MONTH)
+    it() bf(YEAR)
+    )
+
+    bf(DateTime::TimeType)nl()
+    This enumeration has the following values:
+    itemization(
+    it() bf(LOCALTIME): the time is broken down  as the local time,
+    it() bf(UTC): the time is broken down as Universal Time Coordinated.
+    )
+
+    bf(DateTime::TriVal)nl()
+    This enumeration has the following values, returned by the bf(dst())
+    member (see below): 
+    itemization(
+    it() bf(UNKNOWN), returned when no information about the Daylight
+        Saving Time is available,
+    it() bf(NO), returned when Daylight Saving Time is not active,
+    it() bf(YES), returned when Daylight Saving Time is active.
+    )
+
+    bf(DateTime::Weekday)nl()
+    This enumeration has the following values which are ordered using the
+default bf(C++) tt(enum) values:
+
+    itemization(
+    it() bf(SUNDAY),
+    it() bf(MONDAY),
+    it() bf(TUESDAY),
+    it() bf(WEDNESDAY),
+    it() bf(THURSDAY),
+    it() bf(FRIDAY),
+    it() bf(SATURDAY).
     )
 
 manpagesection(STANDARD TEXTUAL TIME REPRESENTATIONS)    
@@ -213,19 +207,19 @@ argument specifies the way the time is displayed by the object using either
 (by default) time in UTC or using local time. The bf(struct tm) is defined as
 follows:
         verb(
-    struct tm 
-    {
-        int tm_sec;     // seconds          0..59, or 60: leap second
-        int tm_min;     // minutes          0..59
-        int tm_hour;    // hours            0..23
-        int tm_mday;    // day of the month 1..31
-        int tm_mon;     // month            0..11
-        int tm_year;    // year             since 1900
-        int tm_wday;    // day of the week  0..6
-        int tm_yday;    // day in the year  0..365
-        int tm_isdst;   // daylight saving time
-                        // > 0: yes, 0: no, < 0: unknown
-    };
+struct tm 
+{
+    int tm_sec;     // seconds          0..59, or 60: leap second
+    int tm_min;     // minutes          0..59
+    int tm_hour;    // hours            0..23
+    int tm_mday;    // day of the month 1..31
+    int tm_mon;     // month            0..11
+    int tm_year;    // year             since 1900
+    int tm_wday;    // day of the week  0..6
+    int tm_yday;    // day in the year  0..365
+    int tm_isdst;   // daylight saving time
+                    // > 0: yes, 0: no, < 0: unknown
+};
         )
     Values outside of these ranges may sometimes be used (with various
 set..() members, see below) to compute a point in time in the future or in the
@@ -605,6 +599,12 @@ tt(DateTime) object. January 1 is returned as 0.
     )
     Whenever a tt(set...()) member is used in such a way that the resulting
 date would be invalid the original tt(DateTime) object's value is unaltered.
+
+manpagesection(EXAMPLE)
+    
+    An extensive example illustrating the use of all of tt(DateTime)'s members
+is provided in the file tt(bobcat/datetime/driver/driver.cc) found in the
+source archive.
 
 manpagefiles()
     em(bobcat/datetime) defines the class interface.
