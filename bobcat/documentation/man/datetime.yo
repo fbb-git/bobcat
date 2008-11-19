@@ -302,16 +302,16 @@ tt(displayZoneShift) or tt(TimeType) specification (tt(LOCALTIME) or tt(UTC)).
 
     itb(std::istream &std::operator>>(std::istream &str, FBB::DateTime &dt))
         Extracts a textual date/time representation into the tt(DateTime)
-object using the current tt(displayZoneShift) and tt(utcZoneShift) values.nl()
+object using the current tt(displayZoneShift) and tt(utcZoneShift) values and
+assuming the same zone shift values for the textual time representation.nl()
     The time to extract should be formatted as described in section
-bf(STANDARD TEXTUAL TIME REPRESENTATIONS). As documented in that section,
-time zone time shift specifications (+0100, +01:00) may be omitted. However,
-if the time zone specification is provided it is extracted  from the 
-tt(istream).nl()
+bf(STANDARD TEXTUAL TIME REPRESENTATIONS). As documented in that section, time
+zone time shift specifications (+0100, +01:00) are ignored and may be omitted.
+If a time zone specification is provided it is extracted but ignored.nl()
     If the time could not be determined from a textual string representing the
-time (cf. section bf(CONSTRUCTORS)) then  tt(errno()) returns 0 and
-tt(operator bool()) returns tt(false). 
-
+time (cf. section bf(CONSTRUCTORS)) then  tt(errno()) returns 0,
+tt(operator bool()) returns tt(false), and the time stored in the object 
+remains unchanged. 
     )
 
     The following overloaded operators modify the time as stored in UTC
@@ -539,6 +539,11 @@ returned. Otherwise tt(false) is returned.
 object date is revalidated. Time value 0 represents Jan, 1, 1970, 0:00:00
 hours. If the assignment resulted in a new (valid) time tt(true) is
 returned. Otherwise tt(false) is returned.
+
+    itb(void setValid())
+        Resets the object's internal state to valid. This member can be used
+following a failed action that did not modify the (valid) time stored 
+by the object.
 
     itb(bool setWeekday(Weekday day, Relative where = NEXT))
         Reassigns the number of seconds set in the tt(DateTime) object based

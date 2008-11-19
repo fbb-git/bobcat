@@ -109,58 +109,59 @@ class DateTime
         static int s_currentZoneCorrection;
 
     public:
-/**/    DateTime(TimeType type = UTC);          // 1. time displayed as 
+        DateTime(TimeType type = UTC);          // 1. time displayed as 
                                                 //    TimeType
 
-/**/    DateTime(int displayZoneShift);         // 2. time displayed wrt
+        DateTime(int displayZoneShift);         // 2. time displayed wrt
                                                 //    displayZoneShift
 
                                                 // 3. specify UTC time in 
                                                 //    seconds; display as 
-/**/    DateTime(time_t time, TimeType type);   //             specified
+        DateTime(time_t time, TimeType type);   //             specified
 
                                                 // 4. UTC = time 
                                                 //  display + displayZoneShift
-/**/    DateTime(time_t time, int displayZoneShift);
+        DateTime(time_t time, int displayZoneShift);
 
                                                 // 5. specify UTC tm fields
                                                 //    display as specified
-/**/    DateTime(TimeStruct const &tm, TimeType type = UTC);
+        DateTime(TimeStruct const &tm, TimeType type = UTC);
 
                                                 // 6. specify UTC tm fields
                                                 // display + displayZoneShift
-/**/    DateTime(TimeStruct const &tm, int displayZoneShift);
+        DateTime(TimeStruct const &tm, int displayZoneShift);
 
                                                 // 7. specify UTC text time
                                                 //    + zoneshift, display 
                                                 //    as specified
-/**/    DateTime(std::string const &timeStr, TimeType type = UTC, 
+        DateTime(std::string const &timeStr, TimeType type = UTC, 
             int utcZoneShift = 0);
                                                 // 8. specify UTC text time
                                                 //    + zoneshift, display 
                                                 //    + displayZoneShift
-/**/    DateTime(std::string const &timeStr, int displayZoneShift, 
+        DateTime(std::string const &timeStr, int displayZoneShift, 
                  int utcZoneShift = 0);
 
-/**/    DateTime &operator+=(time_t seconds);           // 1.
+        DateTime &operator+=(time_t seconds);           // 1.
         DateTime &operator+=(TimeStruct const &tm);     // 2. 
 
-/**/    DateTime &operator-=(time_t seconds);           // i.
-/**/    DateTime &operator-=(TimeStruct const &tm);
+        DateTime &operator-=(time_t seconds);           // i.
+        DateTime &operator-=(TimeStruct const &tm);
 
         operator bool() const;
 
-/**/    bool setDay(int day);           // 'int' values may be negative or 
-/**/    bool setHours(int hours);       // postive. 0 
-/**/    bool setMinutes(int minutes);   
-/**/    bool setMonth(Month month, Relative where = THIS_YEAR);
-/**/    bool setMonth(int month);       // set month, using 0: january this yr
+        bool setDay(int day);           // 'int' values may be negative or 
+        bool setHours(int hours);       // postive. 0 
+        bool setMinutes(int minutes);   
+        bool setMonth(Month month, Relative where = THIS_YEAR);
+        bool setMonth(int month);       // set month, using 0: january this yr
                                         // correct for overflows.
-/**/    bool setSeconds(int seconds);
-/**/    bool setTime(time_t time);      // utc time
-/**/    bool setWeekday(Weekday weekday, Relative where = NEXT);
-/**/    bool setYear(size_t year);
-/**/    bool setFields(TimeStruct const &tmStruct, int fields);
+        bool setSeconds(int seconds);
+        bool setTime(time_t time);      // utc time
+        bool setWeekday(Weekday weekday, Relative where = NEXT);
+        bool setYear(size_t year);
+        bool setFields(TimeStruct const &tmStruct, int fields);
+        void setValid();
 
         int displayZoneShift() const;
         TriVal dst() const;
@@ -172,8 +173,8 @@ class DateTime
         std::string rfc2822() const;
         std::string rfc3339() const;
         size_t seconds() const;
-/**/    time_t time() const;
-/**/    TimeStruct const *timeStruct() const;
+        time_t time() const;
+        TimeStruct const *timeStruct() const;
         bool valid() const;
         Weekday weekday() const;
         size_t year() const;
@@ -211,6 +212,11 @@ inline DateTime::operator bool() const
 inline bool DateTime::valid() const
 {
     return d_ok;
+}
+
+inline void DateTime::setValid() const
+{
+    d_ok = true;
 }
 
 inline size_t DateTime::error() const

@@ -9,7 +9,5 @@ size_t DateTime::weekNr() const
     DateTime jan1(*this);
     jan1.setFields(tmStruct, MONTH | MONTHDAY);
 
-    cout << jan1.d_tm.tm_wday  << " " << d_tm.tm_yday << endl;
-
     return 1 + (jan1.d_tm.tm_wday + d_tm.tm_yday) / 7;
 }

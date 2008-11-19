@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 
 #include "../datetime"
 
@@ -16,7 +17,19 @@ int main(int argc, char **argv, char **envp)
     cout << " 1 " << dt << endl;
 
     DateTime local(DateTime::LOCALTIME); // Current local time
-    cout << " 2 " << local << endl;
+
+    cout << " 2 " << local << "\n"
+            "    Y: " << local.year() <<
+                " M: " << local.month() << 
+                " D: " << local.monthDayNr() << "\n"
+            "    H: " << local.hours() << 
+                " M: " << local.minutes() <<
+                " S: " << local.seconds() << "\n"
+            "    zoneshift: " << local.displayZoneShift() << 
+                " weekday: " << local.weekday() << "\n"
+            "    yrDay: " << local.yearDay() <<
+                " yrDayNr: " << local.yearDayNr() <<
+                " weekNr: " << local.weekNr() << endl;
 
     DateTime pst(-8 * 60);              // Current PST
     cout << " 3 " << pst << endl;
@@ -97,10 +110,32 @@ int main(int argc, char **argv, char **envp)
     cout << "25 " << timeStr3 << endl;
 
     timeStruct = *timeStr3.timeStruct();
-    --timeStruct.tm_mday;                 // days start at 1: subtract 1 less
-    timeStruct.tm_year -= (1970 - 1900);  // era starts at 1970
+    --timeStruct.tm_mday; 
+    timeStruct.tm_year -= (1970 - 1900);
     timeStr3 -= timeStruct;
     cout << "26 " << timeStr3 << endl;
+
+    DateTime dst(DateTime::LOCALTIME);
+    dst.setMonth(DateTime::SEPTEMBER);
+    cout << "27 " << dst << ", DST: " << dst.dst() << endl;
+
+    cout << "28 " << dst.rfc2822() << endl;
+    cout << "29 " << dst.rfc3339() << endl;
+
+    DateTime utcDst(dst.utc());
+
+    cout << "30 " << utcDst << endl;
+
+    cout << "31 " << utcDst.localTime() << endl;
+
+    cout << "32 " << dst.timeZoneShift(3 * 60) << endl;
+
+    cout << "33 " << utcDst.timeZoneShift(3 * 60) << endl;
+
+    istringstream ins("Tue Nov 18 15:06:29 2008");
+    ins >> dst;
+
+    cout << "34 " << dst << endl;
 
     return 0;
 }
