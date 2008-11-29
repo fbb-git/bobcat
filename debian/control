@@ -8,10 +8,13 @@ Build-Depends: debhelper (>= 5.0.37.3), libmilter-dev (>= 8.14.3),
                 g++ (>= 4.3.2), icmake (>= 7.11)
 Standards-Version: 3.8.0
 
-Package: libbobcat1
+Package: libbobcat2
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Provides: libbobcat1
+Conflicts: libbobcat1
+Replaces: libbobcat1
 Description: run-time (shared) Bobcat library
  The (shared) Bobcat library contains classes and templates used by, e.g., the
  Stealth and Bisonc++ programs. 
@@ -26,7 +29,7 @@ Description: run-time (shared) Bobcat library
     Configuration Files
     Extended String Operations
     Hash-tables
-    File-descriptor baed streams, among which sockets
+    File-descriptor based streams (e.g. handle sockets using streams)
     Mail headers and mail filtering (milters)
     Pattern matching
     Reference Counting
@@ -34,10 +37,13 @@ Description: run-time (shared) Bobcat library
     Syslog- and other kinds of messages
     Universal Type Conversions (Templates)
 
-Package: libbobcat1-dev
+Package: libbobcat-dev
 Architecture: any
 Section: libdevel
-Depends: libbobcat1, ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Provides: libbobcat1-dev
+Conflicts: libbobcat1-dev
+Replaces: libbobcat1-dev
 Description: headers and documentation for the Bobcat library
  Headers and documentation of classes defined in the Bobcat library.
  .
@@ -51,7 +57,7 @@ Description: headers and documentation for the Bobcat library
     Configuration Files
     Extended String Operations
     Hash-tables
-    File-descriptor based streams, among which sockets
+    File-descriptor based streams (e.g. handle sockets using streams)
     Mail headers and mail filtering (milters)
     Pattern matching
     Reference Counting
@@ -59,5 +65,5 @@ Description: headers and documentation for the Bobcat library
     Syslog- and other kinds of messages
     Universal Type Conversions (Templates)
  .
- The libbobcat1-dev package contains the static library as well as header
+ The libbobcat-dev package contains the static library as well as header
  files and manual pages of the Bobcat classes and templates.

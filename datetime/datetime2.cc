@@ -1,9 +1,12 @@
 #include "datetime.ih"
 
-DateTime::DateTime(time_t time, TimeType type)
+DateTime::DateTime(int displayZoneShift)
 :
-    d_type(type),
-    d_time(time)
+    d_type(LOCALTIME),
+    d_time(::time(0))
 {
-    breakDown(type);
+    zoneCorrection();
+
+    setDisplayZone(displayZoneShift);
+    utcSec2timeStruct(&d_tm, d_time);
 }

@@ -61,7 +61,7 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/tmp
-	./build install debian/libbobcat1 debian/libbobcat1-dev
+	./build install debian/libbobcat2 debian/libbobcat-dev
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -96,8 +96,8 @@ binary-arch: build install
 
 # archive downloaded from https://www.icce.rug.nl/debian/bobcat
 #	(bobcat_x.y.z..tar.gz)
-#	1.20.0: bcc6618d6e6f48168facf73a1709dc97
-MD5TRUSTED := 4c7266579293951a5100cc8ab106575d
+#	previous: 4c7266579293951a5100cc8ab106575d
+MD5TRUSTED := 0e5673d38e4ef723d02b497a0a13791e
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
