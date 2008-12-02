@@ -42,6 +42,12 @@ the current line. It will em(not) cause the next line to begin with a
 time stamp (if applicable) and the current em(message level) cannot be
 modified using a bf(level)(3bobcat) manipulator. It is used to allow a single 
 log message to occupy multiple textual lines.
+    itb(endl)
+        This is the standard tt(ostream) manipulator. When inserted into a
+bf(Log) object the current buffer is flushed. Note that flushing does not
+happen immediately when a newline (tt(\n)) is inserted into the log
+stream. Alternatively, tt(std::flush) may be inserted into the bf(Log)
+object to flush its buffer.
     )
 
 manpagesection(CONSTRUCTORS)
@@ -55,7 +61,7 @@ bf(setTimestamp()) below). The parameter bf(delim) is inserted immediately
 beyond the time stamp. If a delimiter is inappropriate, an empty string or a
 0-pointer may be specified.
     itb(Log(std::ostream &out, char const *delim = " "))
-        This constructor creates a nbf(FBB::Log) object logging its messages
+        This constructor creates a bf(FBB::Log) object logging its messages
 to the provided tt(std::ostream) object. By default, all messages will have a
 time stamp prepended to them (see the description of the member
 bf(setTimestamp()) below).  The parameter bf(delim) is inserted immediately
