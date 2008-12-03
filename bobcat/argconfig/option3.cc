@@ -4,7 +4,8 @@
 
 size_t ArgConfig::option(string *value, int optChar) const
 {
-    size_t ret = Arg::option(0U, value, optChar);
+    static size_t const zero = 0;       // prevents amd64 ambiguities where 
+    size_t ret = Arg::option(zero, value, optChar);     // (size_t)0 != 0U
 
     if (ret != 0)
         return ret;
