@@ -43,6 +43,7 @@ class Log: private LogBuffer, public std::ostream
                 std::ios::openmode = std::ios::out | std::ios::app, 
                 char const *delim = " ");
 
+        size_t level() const;
         std::ostream &level(size_t useLevel);
         void  setLevel(size_t newLevel);
         void  setTimestamp(TimeStamps timeStamp, char const *delim = " ");
@@ -55,6 +56,11 @@ class Log: private LogBuffer, public std::ostream
 inline void  Log::off()
 {
     setActive(false);
+}
+
+inline size_t Log::level() const
+{
+    return d_level;
 }
 
 } // FBB
