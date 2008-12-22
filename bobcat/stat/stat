@@ -132,15 +132,15 @@ inline size_t Stat::inode() const
 }        
 inline DateTime Stat::lastAccess() const
 {
-    return DateTime(d_stat.st_atime);
+    return DateTime(d_stat.st_atime, DateTime::UTC);
 }
 inline DateTime Stat::lastChange() const
 {
-    return DateTime(d_stat.st_ctime);
+    return DateTime(d_stat.st_ctime, DateTime::UTC);
 }
 inline DateTime Stat::lastModification() const
 {
-    return DateTime(d_stat.st_mtime);
+    return DateTime(d_stat.st_mtime, DateTime::UTC);
 }
 inline size_t Stat::mode() const
 {
