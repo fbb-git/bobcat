@@ -28,7 +28,8 @@ class Log: private LogBuffer, public std::ostream
         size_t d_activeLevel;
 
     public:
-        static Log &getInstance();
+        static Log &instance();
+        static Log &getInstance();      // old-style interface: avoid
         static Log &initialize(std::string const &filename, 
                 std::ios::openmode = std::ios::out | std::ios::app, 
                 char const *delim = " ");
@@ -62,6 +63,12 @@ inline size_t Log::level() const
 {
     return d_level;
 }
+
+inline Log &instance()
+{
+    return getInstance();
+}
+
 
 } // FBB
 
