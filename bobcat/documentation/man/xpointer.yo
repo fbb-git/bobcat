@@ -52,7 +52,40 @@ any other bf(Xpointer) member (not required after using the copy constructor).
     )
 
 manpagesection(EXAMPLE)
-    To do
+    verb(
+#include <iostream>
+#include <string>
+
+#include <bobcat/xpointer>
+
+using namespace FBB;
+
+int main()
+try
+{
+    Xpointer xpointer;
+    xpointer.verify();
+
+    if (!xpointer.set(100, 200))
+        throw string("Set pointer failed");
+
+    int x;
+    int y;
+
+    if (!xpointer.get(&x, &y))
+        throw string("Get pointer failed");
+
+    cout << "Pointer now at " << x << ", " << y << endl;
+
+    return 0;
+}
+catch (string msg)
+{
+    cout << msg << endl;
+    return 1;
+}
+    )
+
 
 manpagefiles()
     em(bobcat/xpointer) - defines the class interface

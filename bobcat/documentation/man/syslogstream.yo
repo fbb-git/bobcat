@@ -175,22 +175,22 @@ bf(FBB::SyslogStream) object.
     )
 
 manpagesection(EXAMPLE)
-        verb(
-    #include <bobcat/syslogstream>
+    verb(
+#include <bobcat/syslogstream>
+
+using namespace std;
+using namespace FBB;
+
+int main(int argc, char **argv)
+{
+    SyslogStream sls(argv[0]);
+
+    sls << SyslogStream::debug << "Hello world" << endl;
+    sls << SyslogStream::strerrno << endl;
     
-    using namespace std;
-    using namespace FBB;
-    
-    int main(int argc, char **argv)
-    {
-        SyslogStream sls(argv[0]);
-    
-        sls << SyslogStream::debug << "Hello world" << endl;
-        sls << SyslogStream::strerrno << endl;
-        
-        return 0;
-    }
-        )
+    return 0;
+}
+    )
 
 manpagefiles()
     em(bobcat/syslogstream) - defines the class interface
