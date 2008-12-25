@@ -1,41 +1,28 @@
-#ifndef INCLUDED_HOSTNAME_H_
-#include "../hostname.h"
-#endif
-
-#ifndef INCLUDED_IOSTREAM_
 #include <iostream>
-#define INCLUDED_IOSTREAM_
-#endif
 
-#ifndef INCLUDED_INETADDRESS_H_
-#include <fbb/inetaddress.h>
-#endif
-
-#ifndef INCLUDED_ERRNO_H_
-#include <fbb/errno.h>
-#endif
+#include <bobcat/hostname>
+#include <bobcat/errno>
 
 using namespace std;
 using namespace FBB;
 
-
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
     while (true)
     {
         cout << "Enter name or address:\n";
 
-        string s;
+        string str;
 
-        if (!getline(cin, s))
+        if (!getline(cin, str))
             return 0;
 
-        if (s == "")
+        if (str == "")
             break;
 
         try
         {
-            Hostname h(s);
+            Hostname h(str);
 
             cout << "Official name:\n";
                 cout << h.hostname() << endl;
@@ -55,29 +42,8 @@ int main(int argc, char **argv, char **envp)
             cout << err.what() << endl;
         }
     }
-/*
-    cout << "Now using InetAddress for the local host\n";
-
-    try
-    {
-        Hostname h(InetAddress(2048));
-
-        cout << "Name: " << h.name() << endl;
-
-        cout << "Aliases:\n";
-        for (size_t idx = 0; idx < h.nNames(); idx++)
-            cout << h.name(idx) << " ";
-        cout << endl;
-
-        cout << "Adresses:\n";
-        for (size_t idx = 0; idx < h.nAddresses(); idx++)
-            cout << h.address(idx) << " ";
-        cout << endl;
-    }
-    catch (Errno const &err)
-    {
-        cout << err.which() << endl;
-    }
-*/
     return 0;
 }
+
+
+
