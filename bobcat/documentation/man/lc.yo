@@ -1,0 +1,97 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::LC)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Local Context Struct)
+
+manpagename(FBB::LC)(Geneneric Local Context Struct for context wrappers)
+
+manpagesynopsis()
+    bf(#include <bobcat/lc>)nl()
+
+manpagedescription()
+
+    The template struct tt(FBB::LC) can be used to declare and define a
+em(local context struct) as used with the Bobcat classes tt(FnWrap1c) and
+tt(FnWrap2c). 
+
+    These latter two classes are normally used in combination with generic
+(STL) algorithms to process data made available by the generic algorithms in
+combination with information that may be available locally, as in a
+function. Local information could consist of, e.g., local variables or
+parameters defined for a function.
+
+    The functions that are passed to the local context wrappers tt(FnWrap1c)
+and tt(FnWrap2c) therefore require the specification of the data types made
+available by the generic algorithms as well as the declaration and definition
+of a em(local context struct) that is passed to those functions by the local
+context wrappers. This in turn requires the definition of the local context
+structs as nested structs in classes declaring such functions. Although this
+is perfectly possible, it complicates those classes to some extent and
+requires the class designer to define struct type names for the local context
+structs, although those type names are irrelevant in practice.
+
+    The tt(LC) template struct can be used to declare and define local context
+structs `on the spot' without requiring the class designer to add struct
+definition to the class at hand. To use the tt(LC) template struct the types
+of the various fields of the local context structs are specified at the
+template's declaration and definition and its fields are accessed through
+standardized field names. The first field becomes tt(f1), the second field
+tt(f2), until the last field (e.g., tt(f12)).
+
+    Clearly there is a drawback in using standardized names: the association
+between field name and its semantics is lost. It is a matter of taste whether
+this is considered a severe enough drawback to avoid using the tt(LC) template
+struct. But then: it is still possible to add fully defined local context
+structs to a class if this is preferred over using the tt(LC) template
+structs. 
+
+    When using the tt(LC) local context struct generating template the types
+need to be specified in various locations: when the template is declared, when
+it is defined and when the context wrapper template is instantiated. This
+again could be considered a drawback reducing its usefulness. However, this
+latter drawback is easily overcome by using a tt(typedef) to associate a type
+name with a particular tt(LC) template configuration.
+
+    The distributed tt(LC) template struct allows for the definition of local
+context structs having at most 10 fields. Local context structs requiring more
+than 10 fields are seldom seen. Should the need for such a local context
+structs arise then a solution is readily available. With the bf(Bobcat)
+library a program bf(bobcatlcgen)(1) is distributed that can be used to
+recreate the bf(<bobcat/lc>) file (either locally or system-wide) allowing the
+use of a larger number of template type parameters than the default number of
+10.
+
+    The example section shows how a tt(LC) local context struct can be used
+em(in lieu of) an explicitly defined local context struct.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(LC<typelist>(initialization values))
+    )
+    The standard copy constructor is available.
+
+manpagesection(MEMBER FUNCTIONS)
+    There are no member functions defined. As the template generates a struct
+rather than a class all its members are immediately available to its users.
+
+manpagesection(EXAMPLE)
+    verbinclude(../../lc/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/lc) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), 
+    bf(bobcatlcgen)(1),
+    bf(bobcat/fnwrap1c)(3), bf(bobcat/fnwrap2c)(3)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

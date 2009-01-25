@@ -34,13 +34,15 @@ class LogBuffer: public std::streambuf
         void setStream(std::ostream &stream);
         bool empty() const;
 
-        virtual int overflow(int c);
         virtual int sync();
 
         void setActive(bool active);
         void settimestamp(TimeStamps timestamps, char const *delim = " ");
 
         void setEmpty(bool empty);
+
+    protected;
+        virtual int overflow(int c);
 
     private:
         void insertTimestamp();
