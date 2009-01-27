@@ -4,8 +4,7 @@
 #include <ostream>
 #include <fstream>
 
-//#include <bobcat/foldstreambuf>
-#include "../foldstreambuf/foldstreambuf"
+#include <bobcat/foldstreambuf>
 
 namespace FBB
 {
@@ -31,6 +30,9 @@ class FoldStream: public std::ostream, private FoldStreambuf
                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
 
         void close();
+
+        void setMargins(size_t leftMargin, size_t rightMargin);
+        void setTrailingBlanks(TrailingBlanks tb);
 };
 
 inline FoldStream::FoldStream()
@@ -44,20 +46,12 @@ inline FoldStream::FoldStream(char const *fname,
     rdbuf(this);
 }
 
-inline void FoldStream::open(char const *fname, 
+inline FoldStream::FoldStream(std::ostream &out, 
                     size_t leftIndent, size_t rightMargin, TrailingBlanks tb)
+:
+    FoldStreambuf(out, leftIndent, rightMargin, tb)
 {
-    FoldStreambuf::open(fname);
-    setMargins(leftIndent, rightMargin);
-    setTrailingBlanks(tb);
-}
-
-inline void FoldStream::open(std::ostream &out, 
-                    size_t leftIndent, size_t rightMargin, TrailingBlanks tb)
-{
-    FoldStreambuf::open(out);
-    setMargins(leftIndent, rightMargin);
-    setTrailingBlanks(tb);
+    rdbuf(this);
 }
 
 inline void FoldStream::close()
@@ -65,6 +59,16 @@ inline void FoldStream::close()
     FoldStreambuf::close();
 }
     
+inline void FoldStream::setMargins(size_t lm, size_t rm)
+{
+    FoldStreambuf::setMargins(lm, rm);
+}
+    
+inline void FoldStream::setTrailingBlanks(TrailingBlanks tb)
+{
+    FoldStreambuf::setTrailingBlanks(tb);
+}
+
 
 } // FBB
 

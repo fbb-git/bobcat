@@ -12,8 +12,7 @@ class OFilterStreambuf: public std::streambuf
     typedef std::ios::openmode openmode;
     std::ofstream d_dest;
 
-    protected:
-        std::ostream *d_out;
+    std::ostream *d_out;
 
     public:
         OFilterStreambuf();
@@ -25,15 +24,18 @@ class OFilterStreambuf: public std::streambuf
         void open(std::ostream &out);
 
         void close();
-
-    protected:
-        virtual int overflow(int ch);
+        std::ostream &out() const;
 };
 
 inline OFilterStreambuf::OFilterStreambuf()
 :
     d_out(&d_dest)
 {}
+
+inline std::ostream &OFilterStreambuf::out() const
+{
+    return *d_out;
+}
 
 inline OFilterStreambuf::OFilterStreambuf(char const *fname, openmode mode)
 :
@@ -51,13 +53,6 @@ inline OFilterStreambuf::~OFilterStreambuf()
     close();
 }
 
-inline void OFilterStreambuf::open(char const *fname, openmode mode)
-{
-    sync();
-    d_dest.open(fname, mode);
-    d_out = &d_dest;
-}
-
 inline void OFilterStreambuf::open(std::ostream &out)
 {
     close();
@@ -68,12 +63,6 @@ inline void OFilterStreambuf::close()
 {
     sync();
     d_dest.close();
-}
-
-inline int OFilterStreambuf::overflow(int ch)
-{
-    d_out->put(ch);
-    return ch;
 }
 
 } // FBB

@@ -9,32 +9,28 @@
 namespace FBB
 {
 
-enum TrailingBlanks
+class lm
 {
-    IGNORE_TRAILING_BLANKS,
-    HANDLE_TRAILING_BLANKS
-};
-    
-class lmargin
-{
-    int d_value;
-    bool d_set;
+    size_t d_value;
     
     public:
-        enum Mode
-        {
-            CHG = 1
-        };
+        lm(size_t value);
+        std::ostream &modify(std::ostream &out) const;
+};
 
-        lmargin(size_t value);
-        lmargin(int value, Mode mode);
-
+class chglm
+{
+    int d_value;
+    
+    public:
+        chglm(int value);
         std::ostream &modify(std::ostream &out) const;
 };
 
 class FoldStreambuf: public OFilterStreambuf
 {
-    friend std::ostream &lmargin::modify(std::ostream &) const;
+    friend std::ostream &lm::modify(std::ostream &) const;
+    friend std::ostream &chglm::modify(std::ostream &) const;
 
     enum Mode
     {
@@ -58,6 +54,12 @@ class FoldStreambuf: public OFilterStreambuf
     bool d_handleTrailingBlanks;
 
     public:
+        enum TrailingBlanks
+        {
+            IGNORE_TRAILING_BLANKS,
+            HANDLE_TRAILING_BLANKS
+        };
+    
         FoldStreambuf(
                    size_t leftIndent = 0, size_t rightMargin = 80,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
@@ -74,8 +76,6 @@ class FoldStreambuf: public OFilterStreambuf
 
         void setMargins(size_t leftMargin, size_t rightMargin);
         void setTrailingBlanks(TrailingBlanks tb);
-
-        void verify() const;        // TODO
 
     protected:
         virtual int sync();
@@ -115,37 +115,50 @@ inline void FoldStreambuf::setTrailingBlanks(TrailingBlanks tb)
 
 inline void FoldStreambuf::writeWs() const
 {
-    d_out->write(d_ws.data(), d_ws.length());
+    out().write(d_ws.data(), d_ws.length());
 }
 
 inline void FoldStreambuf::put(int ch) const
 {
-    d_out->put(ch);
+    out().put(ch);
 }
 
 inline void FoldStreambuf::writeNonWs() const
 {
-    d_out->write(d_nonWs.data(), d_nonWs.length());
+    out().write(d_nonWs.data(), d_nonWs.length());
 }
 
-inline lmargin::lmargin(size_t value)
+inline lm::lm(size_t value)
 :
-    d_value(value),
-    d_set(true)
+    d_value(value)
 {}
 
-inline lmargin::lmargin(int value, Mode mode)
+inline std::ostream &lm::modify(std::ostream &out) const
+{
+    dynamic_cast<FoldStreambuf &>(*out.rdbuf()).setIndent(d_value);
+    return out;
+}        
+
+inline chglm::chglm(int value)
 :
-    d_value(value),
-    d_set(false)
+    d_value(value)
 {}
 
+inline std::ostream &chglm::modify(std::ostream &out) const
+{
+    dynamic_cast<FoldStreambuf &>(*out.rdbuf()).chgIndent(d_value);
+    return out;
+}        
 
 } // FBB
 
 namespace std
 {
-    inline ostream &operator<<(ostream &out, FBB::lmargin const &idt)
+    inline ostream &operator<<(ostream &out, FBB::lm const &idt)
+    {
+        return idt.modify(out);
+    }
+    inline ostream &operator<<(ostream &out, FBB::chglm const &idt)
     {
         return idt.modify(out);
     }

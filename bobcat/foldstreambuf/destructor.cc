@@ -14,5 +14,5 @@ FoldStreambuf::~FoldStreambuf()
                 put('\n');
         }
     }
-    d_out->rdbuf()->pubsync();
+    out().rdbuf()->pubsync();
 }
