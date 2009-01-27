@@ -9,7 +9,7 @@ void lcBase(ostream &out, size_t nargs)
     {
         out << "template ";
         typeDefList(out, idx);
-        out << "\n"
+        out << "\n" << 
                "struct LCBase";
 
         if (idx < nargs)

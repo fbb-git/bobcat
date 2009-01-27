@@ -1,0 +1,81 @@
+#ifndef _INCLUDED_OFILTERSTREAMBUF_
+#define _INCLUDED_OFILTERSTREAMBUF_
+
+#include <streambuf>
+#include <fstream>
+
+namespace FBB
+{
+
+class OFilterStreambuf: public std::streambuf
+{
+    typedef std::ios::openmode openmode;
+    std::ofstream d_dest;
+
+    protected:
+        std::ostream *d_out;
+
+    public:
+        OFilterStreambuf();
+        OFilterStreambuf(char const *fname, openmode mode = std::ios::out);
+        OFilterStreambuf(std::ostream &out);
+        virtual ~OFilterStreambuf();
+
+        void open(char const *fname, openmode mode = std::ios::out);
+        void open(std::ostream &out);
+
+        void close();
+
+    protected:
+        virtual int overflow(int ch);
+};
+
+inline OFilterStreambuf::OFilterStreambuf()
+:
+    d_out(&d_dest)
+{}
+
+inline OFilterStreambuf::OFilterStreambuf(char const *fname, openmode mode)
+:
+    d_dest(fname, mode),
+    d_out(&d_dest)
+{}
+
+inline OFilterStreambuf::OFilterStreambuf(std::ostream &out)
+:
+    d_out(&out)
+{}
+
+inline OFilterStreambuf::~OFilterStreambuf()
+{
+    close();
+}
+
+inline void OFilterStreambuf::open(char const *fname, openmode mode)
+{
+    sync();
+    d_dest.open(fname, mode);
+    d_out = &d_dest;
+}
+
+inline void OFilterStreambuf::open(std::ostream &out)
+{
+    close();
+    d_out = &out;
+}
+
+inline void OFilterStreambuf::close()
+{
+    sync();
+    d_dest.close();
+}
+
+inline int OFilterStreambuf::overflow(int ch)
+{
+    d_out->put(ch);
+    return ch;
+}
+
+} // FBB
+        
+#endif

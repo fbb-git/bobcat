@@ -1,0 +1,155 @@
+#ifndef INCLUDED_BOBCAT_FOLDSTREAMBUF_
+#define INCLUDED_BOBCAT_FOLDSTREAMBUF_
+
+#include <iostream>
+#include <string>
+
+#include "../ofilterstreambuf/ofilterstreambuf"
+
+namespace FBB
+{
+
+enum TrailingBlanks
+{
+    IGNORE_TRAILING_BLANKS,
+    HANDLE_TRAILING_BLANKS
+};
+    
+class lmargin
+{
+    int d_value;
+    bool d_set;
+    
+    public:
+        enum Mode
+        {
+            CHG = 1
+        };
+
+        lmargin(size_t value);
+        lmargin(int value, Mode mode);
+
+        std::ostream &modify(std::ostream &out) const;
+};
+
+class FoldStreambuf: public OFilterStreambuf
+{
+    friend std::ostream &lmargin::modify(std::ostream &) const;
+
+    enum Mode
+    {
+        INDENT,
+        WS,
+        NON_WS
+    };
+
+    std::string d_nonWs;
+    std::string d_ws;
+
+    size_t d_rightMargin;
+    size_t d_indent;
+    bool d_reqIndent;
+
+    size_t d_wsLength;
+    size_t d_next;
+
+    Mode d_mode;
+
+    bool d_handleTrailingBlanks;
+
+    public:
+        FoldStreambuf(
+                   size_t leftIndent = 0, size_t rightMargin = 80,
+                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+
+        FoldStreambuf(char const *fname,
+                   size_t leftIndent = 0, size_t rightMargin = 80,
+                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+
+        FoldStreambuf(std::ostream &stream,
+                   size_t leftIndent = 0, size_t rightMargin = 80,
+                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+
+        ~FoldStreambuf();
+
+        void setMargins(size_t leftMargin, size_t rightMargin);
+        void setTrailingBlanks(TrailingBlanks tb);
+
+        void verify() const;        // TODO
+
+    protected:
+        virtual int sync();
+        virtual int overflow(int c);
+
+    private:
+        void indent(int c);
+        void ws(int c);
+        void nonWs(int c);
+
+        size_t length() const;
+
+        void newline();
+        void addNonWs(int c);
+        void addWs(int c);
+        void indent();
+        void flush();
+        void clearWs();
+
+        void chgIndent(int delta);
+        void setIndent(size_t value);
+
+        void writeWs() const;
+        void writeNonWs() const;
+        void put(int ch) const;
+};
+
+inline void FoldStreambuf::setIndent(size_t value)
+{
+    d_indent = value;
+}
+
+inline void FoldStreambuf::setTrailingBlanks(TrailingBlanks tb)
+{
+    d_handleTrailingBlanks =  tb ==  HANDLE_TRAILING_BLANKS;
+}
+
+inline void FoldStreambuf::writeWs() const
+{
+    d_out->write(d_ws.data(), d_ws.length());
+}
+
+inline void FoldStreambuf::put(int ch) const
+{
+    d_out->put(ch);
+}
+
+inline void FoldStreambuf::writeNonWs() const
+{
+    d_out->write(d_nonWs.data(), d_nonWs.length());
+}
+
+inline lmargin::lmargin(size_t value)
+:
+    d_value(value),
+    d_set(true)
+{}
+
+inline lmargin::lmargin(int value, Mode mode)
+:
+    d_value(value),
+    d_set(false)
+{}
+
+
+} // FBB
+
+namespace std
+{
+    inline ostream &operator<<(ostream &out, FBB::lmargin const &idt)
+    {
+        return idt.modify(out);
+    }
+}
+        
+#endif
+

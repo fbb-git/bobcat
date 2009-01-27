@@ -1,0 +1,75 @@
+#ifndef INCLUDED_BOBCAT_FOLDSTREAM_
+#define INCLUDED_BOBCAT_FOLDSTREAM_
+
+#include <ostream>
+#include <fstream>
+
+//#include <bobcat/foldstreambuf>
+#include "../foldstreambuf/foldstreambuf"
+
+namespace FBB
+{
+
+class FoldStream: public std::ostream, private FoldStreambuf
+{
+    public:
+        FoldStream();
+        FoldStream(char const *fname, 
+                    size_t leftIndent = 0, size_t rightMargin = 80,
+                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+
+        FoldStream(std::ostream &dest, 
+                    size_t leftIndent = 0, size_t rightMargin = 80,
+                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+
+        void open(char const *fname,
+                  size_t leftIndent = 0, size_t rightMargin = 80,
+                  TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+
+        void open(std::ostream &out,
+                  size_t leftIndent = 0, size_t rightMargin = 80,
+                  TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+
+        void close();
+};
+
+inline FoldStream::FoldStream()
+{}
+
+inline FoldStream::FoldStream(char const *fname, 
+                    size_t leftIndent, size_t rightMargin, TrailingBlanks tb)
+:
+    FoldStreambuf(fname, leftIndent, rightMargin, tb)
+{
+    rdbuf(this);
+}
+
+inline void FoldStream::open(char const *fname, 
+                    size_t leftIndent, size_t rightMargin, TrailingBlanks tb)
+{
+    FoldStreambuf::open(fname);
+    setMargins(leftIndent, rightMargin);
+    setTrailingBlanks(tb);
+}
+
+inline void FoldStream::open(std::ostream &out, 
+                    size_t leftIndent, size_t rightMargin, TrailingBlanks tb)
+{
+    FoldStreambuf::open(out);
+    setMargins(leftIndent, rightMargin);
+    setTrailingBlanks(tb);
+}
+
+inline void FoldStream::close()
+{
+    FoldStreambuf::close();
+}
+    
+
+} // FBB
+
+#endif
+
+
+
+
