@@ -2,13 +2,11 @@
 
 void parList(ostream &out, size_t nTs)
 {
-    out << '(' << lmargin(4, lmargin::CHG);
+    out << '(';
 
     for (size_t idx = 1; idx < nTs; ++idx)
         out << "T" << idx << " t" << idx << ", ";
 
-    out << "T"  << nTs << " t"  << nTs;
-
-    out << ")" << lmargin(-4, lmargin::CHG);
+    out << "T"  << nTs << " t"  << nTs << ")";
 }
 

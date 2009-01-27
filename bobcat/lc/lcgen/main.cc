@@ -6,24 +6,32 @@ try
     Arg &arg = Arg::initialize("hv", argc, argv);
     arg.versionHelp(usage, Icmbuild::version, 1);
 
-    FoldStream fold(0, 80);
+    size_t nTypes = A2x(argv[1]);
+
+    if (nTypes <= 2)
+    {
+        cerr << "bobcat/lc will accept max. 3 rather than " << nTypes <<
+                "types\n";
+        nTypes = 3;
+    }
 
     ofstream outf;
     if (arg.nArgs() > 1)
         Msg::open(outf, arg[1]);
 
     ostream out(arg.nArgs() == 1 ? cout.rdbuf() : outf.rdbuf());
+    FoldStream fold(out, 0, 79);
 
-    fold.open(out);
-     
-    size_t nTypes = A2x(argv[1]);
+    fileOut(fold, "header");        // copy `header', all up to/including 
+                                    // struct Unspecified
 
-    fileOut(fold, "header");
-    lcBase(fold, nTypes);
-    lc(fold, nTypes);
+    lcBase(fold, nTypes);           // define the LCBase struct and
+                                    // constructors 
 
-    fold <<  "} // FBB\n"
-            "\n"
+    lc(fold, nTypes);               // define the LC struct and constructors
+
+    fold <<  "} // FBB\n"           // end the header file (namespace and 
+            "\n"                    // and include guard)
             "#endif\n";
 
     return 0;

@@ -2,7 +2,7 @@
 
 void argList(ostream &out, size_t nTs)
 {
-    out << '(' << lmargin(+4, lmargin::CHG);
+    out << '(';
     list(out, nTs, "t");
     out << ')';
 }

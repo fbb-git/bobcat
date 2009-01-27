@@ -2,8 +2,8 @@
 
 void typeDefList(ostream &out, size_t nTs)
 {
-    out << '<' << lmargin(4, lmargin::CHG);
+    out << '<';
     list(out, nTs, "typename T");
-    out << '>' << lmargin(-4, lmargin::CHG);
+    out << '>';
 }
 

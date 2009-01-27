@@ -4,14 +4,15 @@
 #include <algorithm>
 
 #include <bobcat/fnwrap1c>
-#include <bobcat/lc>
+//#include <bobcat/lc>
+#include "../lc"
 
 using namespace std;
 using namespace FBB;
 
 class Strings
 {
-    typedef LC<size_t, ostream &> LC1;
+    typedef LC<size_t, ostream &> lc;
     vector<string> d_vs;
 
     public:
@@ -25,15 +26,15 @@ class Strings
 
         void display(ostream &out) const
         {
-            LC1 c(1, out);
+            lc c(1, out);
 
             find_if(d_vs.begin(), d_vs.end(),
-                FnWrap1c<string const &, LC1 &, bool>
+                FnWrap1c<string const &, lc &, bool>
                      (&Strings::untilEmpty, c));
         }
 
     private:
-        static bool untilEmpty(string const &str, LC1 &c)
+        static bool untilEmpty(string const &str, lc &c)
         {
             if (str.empty())
                 return true;        // stop
