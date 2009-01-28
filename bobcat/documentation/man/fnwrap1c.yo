@@ -68,6 +68,15 @@ When a em(non-const) reference or pointer is specified, the function may
 modify the bf(struct)'s value fields identically to the situation where the
 field's values are passed to the function as reference parameters.
 
+    Local context structs may also be generated using the bf(FBB::LC) local
+Context Struct generating template class. Using a template-generated local
+context struct reduces namespace and class-pollution: the software engineer
+does not have to put any effort in finding an appropriate struct name and
+doesn't even have to enter the struct's definition in, e.g., a class
+header. The template takes care of the definition an declaration of the proper
+type which will thus be available to classes, member functions and free
+functions. Cf. the bf(lc)(3bobcat) for details.
+
     itt(ReturnType): the bf(ReturnType) is by default defined as tt(void). By
 specifying another type, the bf(FBB::FnWrap1c) object's bf(operator()())
 function will return the called function's return value as a value of the
@@ -84,7 +93,7 @@ manpagesection(INHERITS FROM)
 manpagesection(CONSTRUCTOR)
     itemization(
     itb(FnWrap1c<Type, Context [, ReturnType = void]>
-            (ReturnType (*fun)(Type, Context), Context context)) nl()
+            (ReturnType (*fun)(Type, Context), Context context))
         This constructor expects two arguments: the address of a function to
 call from within its bf(operator()()) member, and a local
 context bf(struct) which is passed to the called function as its second
@@ -196,9 +205,17 @@ manpagefiles()
 
 manpageseealso()
     bf(bobcat)(7), bf(fnwrap1)(3bobcat), bf(fnwrap2)(3bobcat), 
-    bf(fnwrap2c)(3bobcat), bf(foreach)(3bobcat), bf(repeat)(3bobcat)
+    bf(fnwrap2c)(3bobcat), bf(foreach)(3bobcat), bf(lc)(3bobcat), 
+    bf(repeat)(3bobcat)
 
 manpagebugs()
-    None Reported.
+    em(Caveat): the template parameter specifying the type of the local
+context struct should probably not be specified as a value type as this will
+result in copying the local context struct for each call of the tt(FNWrap1c)
+object or of the function that it is provided with, making it impossible for
+the algorithms to modify value- or pointer-fields of the outermost local
+context struct. Instead, the template type specifying the type of the local
+context struct should be specified as a pointer or reference template type
+when instantiating the tt(FnWrap1c) object.
 
 includefile(trailer.inc)

@@ -9,7 +9,7 @@ void man()
 
     special(0, 0);
 
-    md("tmp/man/man3 tmp/man/man7 tmp/manhtml");
+    md("tmp/man/man1 tmp/man/man3 tmp/man/man7 tmp/manhtml");
 
     chdir("documentation/man");
 
@@ -23,7 +23,15 @@ void man()
         }
     }
 
-    yo = makelist("*.yo") - (list)"bobcat.yo";
+    if (forced || "bobcatlcgen.yo" younger "man-stamp")
+    {
+        run("yodl2man  --no-warnings -o ../../tmp/man/man1/bobcat.1 "
+                                                            "bobcatlcgen.yo");
+        run("yodl2html --no-warnings -o ../../tmp/manhtml/bobcat.1.html "
+                                                            "bobcatlcgen.yo");
+    }
+
+    yo = makelist("*.yo") - (list)"bobcat.yo" -  (list)"bobcatlcgen.yo";
 
     for (idx = sizeof(yo); idx--; )
     {
