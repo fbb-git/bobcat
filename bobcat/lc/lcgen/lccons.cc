@@ -12,17 +12,17 @@
 
 void lcCons(std::ostream &out, size_t nargs, size_t argsTot)
 {
-    out << lmargin(4) << "inline LC" << flush << lmargin(12);
+    out << lm(4) << "inline LC" << flush << lm(12);
 
     parList(out, nargs);
-    out << "\n" << lmargin(4) <<
-           ":\n" << lmargin(8) <<
-           "LCBase" << flush << lmargin(12);
+    out << "\n" << lm(4) <<
+           ":\n" << lm(8) <<
+           "LCBase" << flush << lm(12);
 
     typeList(out, nargs, argsTot - nargs);
     argList(out, nargs);
 
-    out << "\n" << lmargin(4) <<
+    out << "\n" << lm(4) <<
            "{}\n"
            "\n";
 }

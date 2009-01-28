@@ -12,14 +12,14 @@ void lcBase(ostream &out, size_t nargs)
                 //      {
                 //     0
 
-        out << "template " << lmargin(4);
+        out << "template " << lm(4);
         typeDefList(out, idx);
-        out << "\n" << lmargin(0) <<
+        out << "\n" << lm(0) <<
                "struct LCBase";
 
         if (idx > 2)                    // the specializations
         {
-            out << ": public LCBase" << lmargin(12);
+            out << ": public LCBase" << lm(12);
             typeList(out, idx - 1, nargs - (idx - 1));
         }
 
@@ -28,9 +28,9 @@ void lcBase(ostream &out, size_t nargs)
             typeList(out, idx, nargs - idx);
         }
     
-        out << lmargin(0) << "\n"
+        out << lm(0) << "\n"
                "{\n" <<
-                lmargin(4);
+                lm(4);
         
 
                 // Define variable(s): and constructor:
@@ -45,7 +45,7 @@ void lcBase(ostream &out, size_t nargs)
     
         lcBaseCons(out, idx, nargs);            // define the constructor
         
-        out << lmargin(0) << "};\n"             // end the LCBase class
+        out << lm(0) << "};\n"             // end the LCBase class
                 "\n";
     }
 }

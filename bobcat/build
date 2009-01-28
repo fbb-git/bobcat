@@ -16,7 +16,10 @@ string
     g_sources,          // sources to be used
     g_version,          // The library's version from the file VERSION
     g_tmplib,           // Library compilation target
-    g_tmphdr;           // Class header target
+    g_tmphdr,           // Class header target
+    g_tmpbin,           // Binary target
+    g_lcgen,            // bobcat lcgen program name
+    g_lcgendefault;     // default max size of the bobcat/lc structs
 int
     g_nClasses;         // number of classes/subdirectories
 list
@@ -29,6 +32,7 @@ list
 #include "icmake/man"
 #include "icmake/library"
 #include "icmake/libraries"
+#include "icmake/bobcatlcgen"
 #include "icmake/install"
 
 void main(int argc, list argv, list envp)
@@ -45,6 +49,9 @@ void main(int argc, list argv, list envp)
 
     g_tmplib = DESTINATION "/lib/";
     g_tmphdr = DESTINATION "/" LIBRARY "/";
+    g_tmpbin = DESTINATION "/bin/";
+    g_lcgen  = "bobcatlcgen";
+    g_lcgendefault = " 10 ";    // KEEP THE BLANKS
 
     setLocations();     // from INSTALL.im
 
@@ -52,6 +59,9 @@ void main(int argc, list argv, list envp)
     g_dryrun = g_envvar;
 
     option = element(1, argv);
+
+    if (option == "lcgen")
+        bobcatlcgen();
 
     if (option == "clean")
         clean();
@@ -76,6 +86,7 @@ void main(int argc, list argv, list envp)
 
     printf("Usage: build what\n"
         "Where `what' is one of:\n"
+        "   lcgen               - build the bobcatlcgen program\n"
         "   clean               - clean up remnants of previous compilations\n"
         "   install <rss dev>   - to install the software in the locations\n"
         "                         defined in the INSTALL.im file,\n"

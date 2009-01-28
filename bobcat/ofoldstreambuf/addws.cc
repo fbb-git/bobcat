@@ -1,6 +1,6 @@
-#include "foldstreambuf.ih"
+#include "ofoldstreambuf.ih"
 
-void FoldStreambuf::addWs(int c)
+void OFoldStreambuf::addWs(int c)
 {
     if (c != '\t')
         ++d_wsLength;

@@ -1,6 +1,6 @@
-#include "foldstreambuf.ih"
+#include "ofoldstreambuf.ih"
 
-int FoldStreambuf::sync()
+int OFoldStreambuf::sync()
 {
     if (d_mode == NON_WS)
         flush();

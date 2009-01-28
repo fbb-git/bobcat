@@ -1,6 +1,6 @@
-#include "foldstreambuf.ih"
+#include "ofoldstreambuf.ih"
 
-int FoldStreambuf::overflow(int c)
+int OFoldStreambuf::overflow(int c)
 {
     //cerr << c << ' ' << static_cast<char>(c) << endl;
 

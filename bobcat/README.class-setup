@@ -85,19 +85,20 @@ future relase:
              |         |       |          |
              |         |   ArgConfig      |
              |         |                  |
-          CmdFinder    +------------------+
-                                          |
-0                   OFdStreambuf          | IFdStreambuf
-                         |                |     |
-             +-----------+                |     +--------+
-             |           |                |     |        |
-          OFdStream      +-----------+----+-----+     IFdStream
-                                     |
-                                  Process
-
-
-0                     Align
-                        |  
+          CmdFinder    +----+-------------+
+                            |                                    
+                            |                                    
+0           OFdStreambuf    |   IFdStreambuf     OFilterStreambuf lm chglm
+                 |          |        |               |             |   |
+         +-------+          |        +-----+         +-------+-----+---+
+         |       |          |        |     |                 |        
+     OFdStream   +-------+--+--------+  IFdStream            |        
+                         |                             OFoldStreambuf 
+                      Process                                |        
+                                                             |        
+                                                        OFoldStream   
+0                     Align                         
+                        |                           
    String(cont)         |  
         |               |
         |          TableSupport     
@@ -113,5 +114,6 @@ future relase:
                                   |
                                   |
                                  CGI
+
 
 

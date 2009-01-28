@@ -17,27 +17,27 @@
 
 void lcBaseCons(std::ostream &out, size_t nargs, size_t argsTot)
 {
-    out << "inline LCBase" << lmargin(12);
+    out << "inline LCBase" << lm(12);
     parList(out, nargs);
     out << '\n' << 
-            lmargin(4);
+            lm(4);
     
     out << ":\n" <<
-            lmargin(8);
+            lm(8);
 
     if (nargs > 2)
     {
-        out << "LCBase" << flush << lmargin(12);
+        out << "LCBase" << flush << lm(12);
         typeList(out, nargs - 1, argsTot - (nargs - 1));
         out << '\n';
         argList(out, nargs - 1);
         out << ",\n" << 
-            lmargin(8);
+            lm(8);
     }
     else
         out << "f1(t1),\n";
 
     out << "f" << nargs << "(t" << nargs << ")\n" << 
-            lmargin(4) <<
+            lm(4) <<
         "{}\n";
 }

@@ -1,23 +1,23 @@
-#ifndef INCLUDED_BOBCAT_FOLDSTREAM_
-#define INCLUDED_BOBCAT_FOLDSTREAM_
+#ifndef INCLUDED_BOBCAT_OFOLDSTREAM_
+#define INCLUDED_BOBCAT_OFOLDSTREAM_
 
 #include <ostream>
 #include <fstream>
 
-#include <bobcat/foldstreambuf>
+#include <bobcat/ofoldstreambuf>
 
 namespace FBB
 {
 
-class FoldStream: public std::ostream, private FoldStreambuf
+class OFoldStream: public std::ostream, private OFoldStreambuf
 {
     public:
-        FoldStream();
-        FoldStream(char const *fname, 
+        OFoldStream();
+        OFoldStream(char const *fname, 
                     size_t leftIndent = 0, size_t rightMargin = 80,
                     TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
 
-        FoldStream(std::ostream &dest, 
+        OFoldStream(std::ostream &dest, 
                     size_t leftIndent = 0, size_t rightMargin = 80,
                     TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
 
@@ -35,38 +35,38 @@ class FoldStream: public std::ostream, private FoldStreambuf
         void setTrailingBlanks(TrailingBlanks tb);
 };
 
-inline FoldStream::FoldStream()
+inline OFoldStream::OFoldStream()
 {}
 
-inline FoldStream::FoldStream(char const *fname, 
+inline OFoldStream::OFoldStream(char const *fname, 
                     size_t leftIndent, size_t rightMargin, TrailingBlanks tb)
 :
-    FoldStreambuf(fname, leftIndent, rightMargin, tb)
+    OFoldStreambuf(fname, leftIndent, rightMargin, tb)
 {
     rdbuf(this);
 }
 
-inline FoldStream::FoldStream(std::ostream &out, 
+inline OFoldStream::OFoldStream(std::ostream &out, 
                     size_t leftIndent, size_t rightMargin, TrailingBlanks tb)
 :
-    FoldStreambuf(out, leftIndent, rightMargin, tb)
+    OFoldStreambuf(out, leftIndent, rightMargin, tb)
 {
     rdbuf(this);
 }
 
-inline void FoldStream::close()
+inline void OFoldStream::close()
 {
-    FoldStreambuf::close();
+    OFoldStreambuf::close();
 }
     
-inline void FoldStream::setMargins(size_t lm, size_t rm)
+inline void OFoldStream::setMargins(size_t lm, size_t rm)
 {
-    FoldStreambuf::setMargins(lm, rm);
+    OFoldStreambuf::setMargins(lm, rm);
 }
     
-inline void FoldStream::setTrailingBlanks(TrailingBlanks tb)
+inline void OFoldStream::setTrailingBlanks(TrailingBlanks tb)
 {
-    FoldStreambuf::setTrailingBlanks(tb);
+    OFoldStreambuf::setTrailingBlanks(tb);
 }
 
 

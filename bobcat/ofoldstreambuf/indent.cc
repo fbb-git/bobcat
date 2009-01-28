@@ -1,6 +1,6 @@
-#include "foldstreambuf.ih"
+#include "ofoldstreambuf.ih"
 
-void FoldStreambuf::indent(int c)
+void OFoldStreambuf::indent(int c)
 {
     if (c == '\n')
         newline();

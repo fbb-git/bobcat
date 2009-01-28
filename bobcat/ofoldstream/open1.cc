@@ -1,9 +1,9 @@
-#include "foldstream.ih"
+#include "ofoldstream.ih"
 
-void FoldStream::open(ostream &out, 
+void OFoldStream::open(char const *fname, 
                     size_t leftIndent, size_t rightMargin, TrailingBlanks tb)
 {
-    FoldStreambuf::open(out);
+    OFoldStreambuf::open(fname);
     setMargins(leftIndent, rightMargin);
     setTrailingBlanks(tb);
 }

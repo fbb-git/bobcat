@@ -1,0 +1,14 @@
+void bobcatlcgen()
+{
+    string dest;
+
+    dest = g_tmpbin + g_lcgen;
+
+    md(g_tmpbin);
+    chdir("lc/lcgen");
+    run("g++ -Wall -O2 "
+            "-I../../tmp -o ../../" + dest +
+            " *.cc -lbobcat " "-L../../" + g_tmplib + " -s");
+    chdir("../..");
+    exit(0);
+}

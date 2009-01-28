@@ -1,6 +1,6 @@
-#include "foldstreambuf.ih"
+#include "ofoldstreambuf.ih"
 
-void FoldStreambuf::indent()
+void OFoldStreambuf::indent()
 {
     for (size_t nr = 0; nr < d_indent; ++nr)
         put(' ');

@@ -17,20 +17,20 @@
 
 void lc(ostream &out, size_t nargs)
 {
-    out << "template " << lmargin(4);
+    out << "template " << lm(4);
 
     typeDefList(out, nargs, 2, " = Unspecified");
-    out << "\n" << lmargin(0) <<
-           "struct LC: public LCBase" << lmargin(12);
+    out << "\n" << lm(0) <<
+           "struct LC: public LCBase" << lm(12);
     typeList(out, nargs, 0);
 
-    out << "\n" << lmargin(0) <<
+    out << "\n" << lm(0) <<
         "{\n";
 
     for (size_t idx = nargs; idx >= 2; --idx)
         lcCons(out, idx, nargs);
 
-    out << lmargin(0) << "};\n"
+    out << lm(0) << "};\n"
             "\n";
 }
 

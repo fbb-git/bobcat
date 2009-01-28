@@ -1,6 +1,6 @@
-#include "foldstreambuf.ih"
+#include "ofoldstreambuf.ih"
 
-void FoldStreambuf::newline()
+void OFoldStreambuf::newline()
 {
     //cerr << "NEWLINE\n";
 

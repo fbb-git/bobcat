@@ -1,9 +1,10 @@
-#include "foldstreambuf.ih"
+#include "ofoldstreambuf.ih"
 
-FoldStreambuf::FoldStreambuf(
+OFoldStreambuf::OFoldStreambuf(char const *fname, 
                        size_t indent, size_t rightMargin,
                        TrailingBlanks tb)
 :
+    OFilterStreambuf(fname),
     d_rightMargin(rightMargin),
     d_indent(indent),
     d_reqIndent(false),

@@ -20,7 +20,7 @@ try
         Msg::open(outf, arg[1]);
 
     ostream out(arg.nArgs() == 1 ? cout.rdbuf() : outf.rdbuf());
-    FoldStream fold(out, 0, 79);
+    OFoldStream fold(out, 0, 79);
 
     fileOut(fold, "header");        // copy `header', all up to/including 
                                     // struct Unspecified

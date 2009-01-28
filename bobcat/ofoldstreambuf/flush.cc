@@ -1,6 +1,6 @@
-#include "foldstreambuf.ih"
+#include "ofoldstreambuf.ih"
 
-void FoldStreambuf::flush()
+void OFoldStreambuf::flush()
 {
     if (d_reqIndent)
     {

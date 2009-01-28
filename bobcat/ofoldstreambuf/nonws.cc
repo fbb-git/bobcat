@@ -1,18 +1,19 @@
-#include "foldstreambuf.ih"
+#include "ofoldstreambuf.ih"
 
-void FoldStreambuf::ws(int c)
+void OFoldStreambuf::nonWs(int c)
 {
     if (c == '\n')
     {
+        flush();
         newline();
-        clearWs();
         d_mode = INDENT;
     }
     else if (isspace(c))
-        addWs(c);
-    else if (c != EOF)
     {
-        addNonWs(c);
-        d_mode = NON_WS;
+        flush();
+        addWs(c);
+        d_mode = WS;
     }
+    else if (c != EOF)
+        addNonWs(c);
 }
