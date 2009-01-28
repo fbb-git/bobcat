@@ -4,9 +4,9 @@ manpagesection(DISTRIBUTION FILES)
     itt(bobcat__CurVers_-x.dsc): detached signature;
     itt(bobcat__CurVers_-x.tar.gz): source archive;
     itt(bobcat__CurVers_-x_i386.changes): change log;
-    itt(libbobcat1__CurVers_-x_i386.deb): debian package holding the
+    itt(libbobcat1__CurVers_-x_*.deb): debian package holding the
             libraries;
-    itt(libbobcat1-dev__CurVers_-x_i386.deb): debian package holding the
+    itt(libbobcat1-dev__CurVers_-x_*.deb): debian package holding the
             libraries, headers and manual pages;
     itt(http://sourceforge.net/projects/bobcat): public archive location;
     )

@@ -22,7 +22,7 @@ try
     ostream out(arg.nArgs() == 1 ? cout.rdbuf() : outf.rdbuf());
     OFoldStream fold(out, 0, 79);
 
-    fileOut(fold, "header");        // copy `header', all up to/including 
+    header(fold);                   // write the header up to/including 
                                     // struct Unspecified
 
     lcBase(fold, nTypes);           // define the LCBase struct and
