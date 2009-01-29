@@ -1,52 +1,109 @@
 includefile(header.inc)
 
 COMMENT(manpage, section, releasedate, archive, short name)
-manpage(FBB::Errno)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
-                    (Error handler)
+manpage(FBB::OFoldStreambuf)(3bobcat)(_CurYrs_)
+    (libbobcat1-dev__CurVers_-x.tar.gz)(Fold long lines)
 
-manpagename(FBB::Errno)(shortdesc)
+manpagename(FBB::OFoldStreambuf)(Folds long lines written to ostream)
 
 manpagesynopsis()
-    bf(#include <bobcat/errno>)nl()
-==================================
-REMOVE for plain template classes:    
+    bf(#include <bobcat/ofoldstreambuf>)nl()
     Linking option: tt(-lbobcat) 
-==================================
 
 manpagedescription()
+    bf(FBB::OFoldStreambuf) is a specialization of tt(FBB::OFilterStreambuf)
+folding long lines written to an tt(std::ostream) object. The
+tt(OFoldStreambuf) writes the (folded) lines to a second tt(ostream) which is
+either used by or opened by the tt(OFoldStreambuf) object.
+
+    Internally the tt(OFoldStreambuf) defines its actions using a little
+finite state automation distinguishing three states (INDENT, WS and NON_WS)
+and three character categories (tt(\n), other white space characters (space),
+and non-space characters). The nine combinations resulting from these two sets
+are discussed below.
+
+    tt(OFoldStreambuf) objects will never fold lines in the middle of series
+of non-blank characters (called a `word' below) but will always break a line
+at a white space character. The resulting lines will always appear to the
+right of a configurable left margin and to the left of a configurable right
+margin. There is a somewhat pathological exception to this: if a word is too
+long to fit in between the margins then the word will exceed the right hand
+margin. 
+
+    What follows is a description of what happens when various character types
+appear at the three states. The phrase `... is written' means that the
+described information is written to the tt(ostream) used or opened by the
+tt(OFoldStreambuf) object. tt(OFoldStreambuf)'s initial state is tt(INDENT):
+
+DEFINEMACRO(rw)(3)(row(cell(ARG1)cell(ARG2)cell(ARG3)))
+
+table(3)(lll)(
+rw(State)(char.)(description)
+rowline()
+rw(INDENT)  (\n)      (a new line character is written)
+rw()        (space)   (white space is set to the indentation)
+                rw()()(add the space character;)
+                rw()()(next state: WS)
+rw()        (non-ws)  (the character is added to the currently stored word;)
+                rw()()(next state: NON_WS)
+rowline()
+rw(WS)      (\n)      (a new line character is written;)
+                rw()()(stored white-space is erased;)
+                rw()()(next state: INDENT)
+rw()        (space)   (white space character is added to the currently stored)
+                rw()()(space characters;)
+rw()        (non-ws)  (the character is added to the currently stored word;)
+                rw()()(next state: NON_WS)
+rowline()
+rw(NON_WS)  (\n)      (stored white space and word are written;)
+                rw()()(a new line is written;)
+                rw()()(next state: INDENT)
+rw()        (space)   (stored white space and word are written;)
+                rw()()(white space character is added to the currently stored)
+                rw()()(space characters;)
+                rw()()(next state: WS)
+rw()        (non-ws)  (the character is added to the currently stored word;)
+rowline()
+)
 
 includefile(namespace.inc)
 
 manpagesection(INHERITS FROM)
-    -
+    FBB::OFilterStreambuf
+
+manpagesection(ENUMERATION)
+    The enumeration tt(TrailingBlanks) is used to configure the
+tt(OFoldStreambuf) object with respect to any trailing blanks that may appear
+on the final line. These trailing blanks can appear on the final line it it is 
+not properly terminated with a newline character but instead ends in white
+space. By default these white space characters are ignored, but they may be
+kept as well. The enumeration has two values:
+    itemization(
+    itb(IGNORE_TRAILING_BLANKS)
+        This indicates that trailing blanks should not be written to the
+destination tt(std::ostream)
+    itb(KEEP_TRAILING_BLANKS)
+        This indicates that trailing blanks should be written to the
+destination tt(std::ostream)
 
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(Errno())
-    itb(Errno(Errno const &other)) 
-    The standard copy constructor is available.
+    itb(OFoldStreambuf(size_t leftIndent = 0, size_t rightMargin = 80,
+                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS))
     )
 
 manpagesection(MEMBER FUNCTIONS)
-     All members of bf(std::ostringstream) and bf(  std::exception) are
-available, as bf(FBB::Errno) inherits from these classes.
+     All members of bf(FBB::OFilterStreambuf), in particular its tt(out())
+member  are available, as bf(FBB::OFoldStreambuf) inherits from this class.
     itemization(
     itb(virtual char const *what() const) 
-    )
-
-manpagesection(MANIPULATORS)
-    The following manipulators (which are em(not) part of the bf(FBB::Errno),
-class, but em(are) defined in the bf(FBB) namespace) can be inserted into the
-bf(FBB::Errno) object:
-    itemization(
-    itb(FBB::insertable) 
     )
 
 manpagesection(EXAMPLE)
     To do
 
 manpagefiles()
-    em(bobcat/errno) - defines the class interface
+    em(bobcat/ofoldstreambuf) - defines the class interface
 
 manpageseealso()
     bf(bobcat)(7)
