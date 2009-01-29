@@ -4,8 +4,7 @@
 #include <algorithm>
 
 #include <bobcat/fnwrap1c>
-//#include <bobcat/lc>
-#include "../lc"
+#include <bobcat/lc>
 
 using namespace std;
 using namespace FBB;
