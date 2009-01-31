@@ -101,12 +101,12 @@ constructor.
                    size_t leftIndent = 0, size_t rightMargin = 80,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS))
     This constructor initializes an tt(OFoldStreambuf) object and opens (using
-tt(std::ios::out) the destination stream using the name specified as its
+tt(std::ios::out)) the destination stream using the name specified as its
 tt(fname) argument. 
 
-        OFoldStreambuf(std::ostream &stream,
+    itb(OFoldStreambuf(std::ostream &stream,
                    size_t leftIndent = 0, size_t rightMargin = 80,
-                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS))
     This constructor initializes an tt(OFoldStreambuf) object and uses as its
 destination stream the tt(std::ostream stream).
     )
@@ -140,27 +140,27 @@ section.
 
 manpagesection(EXAMPLE)
         verb(
-	#include <iostream>
+    #include <iostream>
     #include <ostream>
     #include <string>
-	#include <bobcat/ofoldstreambuf>
-	
-	using namespace std;
-	using namespace FBB;
-	
-	int main()
-	{
-	    OFoldStreambuf fb(cout, 4, 40);
-	    ostream out(&fb);
+    #include <bobcat/ofoldstreambuf>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main()
+    {
+        OFoldStreambuf fb(cout, 4, 40);
+        ostream out(&fb);
 
-	    out << lm(4);
+        out << lm(4);
 
-	    string line;
-	    while (getline(cin, line))
-	        out << line << '\n';
-	
-	    return 0;
-	}
+        string line;
+        while (getline(cin, line))
+            out << line << '\n';
+    
+        return 0;
+    }
         )
 
 manpagefiles()

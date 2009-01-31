@@ -86,6 +86,13 @@ bf(FBB::OFilterStreambuf) inherits from that class. In particular, derived
 classes should provide their own implementation of tt(int underflow(int ch))
 to implement any non-trivial filtering.
     itemization(
+    itb(void close())
+        This member calls the tt(streambuf::sync()) member to flush any
+pending information to the destination (filtered) stream and then closes the
+destination stream. Note that the default tt(sync()) member performs no
+special actions but it can be overridden by derived classes to flush the
+destination stream just prior to its closing.
+
     itb(void open(char const *fname, openmode mode = std::ios::out))
         This member closes the current destination (filtered) tt(std::ostream)
 object and associates the tt(OFilterStreambuf) object with a private
@@ -96,13 +103,6 @@ subsequently filtered information.
         This member closes the current destination (filtered) tt(std::ostream)
 object and associates the tt(OFilterStreambuf) object with the provided
 tt(ostream) object.
-
-    itb(void close())
-        This member calls the tt(streambuf::sync()) member to flush any
-pending information to the destination (filtered) stream and then closes the
-destination stream. The default tt(sync()) member performs no special actions
-but it can be overridden by derived classes to flush the destination stream
-just prior to its closing.
     )
 
 manpagesection(PROTECTED MEMBER FUNCTION)

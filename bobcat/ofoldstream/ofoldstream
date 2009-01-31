@@ -9,7 +9,12 @@
 namespace FBB
 {
 
-class OFoldStream: public std::ostream, private OFoldStreambuf
+    // 'virtual public OFoldStreambufBlanks is used to avoid 'base class not
+    // accessible' warnings since OFoldStreambuf also inherits from
+    // OFoldStreambufBlanks and only one struct definition is needed in the
+    // final OFoldStream class.
+class OFoldStream: virtual public OFoldStreambufBlanks, 
+                   public std::ostream, private OFoldStreambuf
 {
     public:
         OFoldStream();

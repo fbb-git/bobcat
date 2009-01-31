@@ -27,7 +27,17 @@ class mlm
         std::ostream &modify(std::ostream &out) const;
 };
 
-class OFoldStreambuf: public OFilterStreambuf
+struct OFoldStreambufBlanks
+{
+    enum TrailingBlanks
+    {
+        IGNORE_TRAILING_BLANKS,
+        HANDLE_TRAILING_BLANKS
+    };
+};
+    
+class OFoldStreambuf: virtual public OFoldStreambufBlanks, 
+                      public OFilterStreambuf
 {
     friend std::ostream &lm::modify(std::ostream &) const;
     friend std::ostream &mlm::modify(std::ostream &) const;
@@ -54,12 +64,6 @@ class OFoldStreambuf: public OFilterStreambuf
     bool d_handleTrailingBlanks;
 
     public:
-        enum TrailingBlanks
-        {
-            IGNORE_TRAILING_BLANKS,
-            HANDLE_TRAILING_BLANKS
-        };
-    
         OFoldStreambuf(
                    size_t leftIndent = 0, size_t rightMargin = 80,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
