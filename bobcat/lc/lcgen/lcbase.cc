@@ -17,15 +17,22 @@ void lcBase(ostream &out, size_t nargs)
         out << "\n" << lm(0) <<
                "struct LCBase";
 
-        if (idx > 2)                    // the specializations
-        {
-            out << ": public LCBase" << lm(12);
-            typeList(out, idx - 1, nargs - (idx - 1));
-        }
-
-        if (idx < nargs)                // the final specialization
-        {
+        if (idx == 2)                    // the final specialization
             typeList(out, idx, nargs - idx);
+        else                            // the other specializations
+        {
+            if (idx == nargs)            // all but the first struct starts
+                out << ": ";            // on a new line.
+            else
+            {                           // the 2nd, 3rd: specializations
+                out << lm(12);
+                typeList(out, idx, nargs - idx);
+                out << ':' << lm(4) << '\n';
+            }
+
+                                        // inherit from the next special.
+            out << "public LCBase" << lm(12);
+            typeList(out, idx - 1, nargs - (idx - 1));
         }
     
         out << lm(0) << "\n"
