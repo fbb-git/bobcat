@@ -1,18 +1,20 @@
 #include <iostream>
 
-#include "../../foldstream/foldstream"
-//#include "../foldstreambuf"
+// #include "../ofoldstreambuf"
+// #include "../../ofoldstream/ofoldstream"
+
+#include <bobcat/ofoldstream>
 
 using namespace std;
 using namespace FBB;
 
 int main()
 {
-//    FoldStreambuf fb(cout, 4, 40);
-//    FoldStreambuf fb("fsb.out", 4, 40);
+//    OFoldStreambuf fb(cout, 4, 40);
+//    OFoldStreambuf fb("fsb.out", 4, 40);
 //    ostream out(&fb);
 
-    FoldStream out("foldstream.nam2", 4, 40);
+    OFoldStream out("foldstream.nam2", 4, 40, OFoldStream::TABS);
 
 //    int c;
 //    int linenr = 0;
@@ -26,9 +28,9 @@ int main()
 //        out << static_cast<char>(c);
 //    }
 
-    string line;
-    out << lmargin(+4);
+    out << mlm(-3);
 
+    string line;
     while (getline(cin, line))
         out << line << '\n';
 

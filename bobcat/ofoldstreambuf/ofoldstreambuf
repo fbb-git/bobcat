@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "../ofilterstreambuf/ofilterstreambuf"
+#include <bobcat/ofilterstreambuf>
 
 namespace FBB
 {
@@ -14,7 +14,7 @@ class lm
     size_t d_value;
     
     public:
-        lm(size_t value);
+        lm(int value);
         std::ostream &modify(std::ostream &out) const;
 };
 
@@ -116,14 +116,14 @@ class OFoldStreambuf: virtual public OFoldStreambufEnums,
         void clearWs();
 
         void modifyIndent(int delta);
-        void setIndent(size_t value);
+        void setIndent(int value);
 
         void writeWs() const;
         void writeNonWs() const;
         void put(int ch) const;
 };
 
-inline void OFoldStreambuf::setIndent(size_t value)
+inline void OFoldStreambuf::setIndent(int value)
 {
     d_indent = value;
 }
@@ -153,9 +153,9 @@ inline void OFoldStreambuf::addNonWs(int c)
     d_nonWs += c;
 }
 
-inline lm::lm(size_t value)
+inline lm::lm(int value)
 :
-    d_value(value)
+    d_value(value < 0 ? 0 : value)
 {}
 
 inline std::ostream &lm::modify(std::ostream &out) const
@@ -195,6 +195,7 @@ namespace std
     {
         return idt.modify(out);
     }
+
     inline ostream &operator<<(ostream &out, FBB::mlm const &idt)
     {
         return idt.modify(out);
