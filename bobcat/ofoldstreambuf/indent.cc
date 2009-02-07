@@ -6,8 +6,8 @@ void OFoldStreambuf::indent(int c)
         newline();
     else if (isspace(c))
     {
-        d_ws.assign(d_indent, ' ');
-        d_wsLength += d_indent;
+        d_ws.assign(d_indent, d_indentChar);
+        d_wsLength += d_indent * d_indentWidth;
         addWs(c);
         d_mode = WS;
     }

@@ -22,6 +22,10 @@ configurable left margin and to the left of a configurable right margin. There
 is a somewhat pathological exception to this: if a word is too long to fit in
 between the margins then the word will exceed the right hand margin.
 
+    The indentation used for the left margins is configurable to either blanks
+(the default) or tabs. When tabs are used the width of a tab character is
+configurable, using a default of 8 positions in the destination stream.
+
     tt(OFoldStream) is implemented as a wrapper class around tt(std::ostream)
 and tt(FBB::OFoldStreambuf) and a more complete description of the folding
 process can be found in the bf(ofoldstreambuf)(3bobcat) man page.
@@ -33,6 +37,19 @@ manpagesection(INHERITS FROM)
     (and privately from FBB::OFoldStreambuf)
 
 manpagesection(ENUMERATION)
+    The enumeration tt(TabsOrBlanks) is used to select tabs or blanks when
+writing the indentation. The default is blanks. When tabs are selected the
+display width of tabs characters can be configured as well (using the default
+of 8 positions for each tab-character. The enumeration has two values:
+    itemization(
+    itb(BLANKS)
+        The default, indicating that the left margin is specified and written
+as a number of blanks;
+    itb(TABS)
+        Indicating that the left margin is specified and written as a number
+of tab-characters.
+    )
+
     The enumeration tt(TrailingBlanks) is used to configure the
 tt(OFoldStream) object with respect to any trailing blanks that may appear
 on the final line. It is the same enumeration type as used with
@@ -51,12 +68,13 @@ manpagesection(CONSTRUCTORS)
     itemization(
     itb(OFoldStreambuf())
         This constructor initializes an tt(OFoldStream) object but does not
-associate it with a destination stream. It uses the values 0, 80 and
-tt(IGNORE_TRAILING_BLANKS)for, resp. its left margin, right margin and
-tt(TrailingBlanks) handling mode.
+associate it with a destination stream. It uses the values 0, 80, tt(BLANKS),
+and tt(IGNORE_TRAILING_BLANKS)for, resp. its left margin, right margin
+left-margin characters and tt(TrailingBlanks) handling mode.
 
     itb(OFoldStream(char const *fname,
                    size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS))
     This constructor initializes an tt(OFoldStream) object and opens (using
 tt(std::ios::out)) the destination stream using the name specified as its
@@ -64,6 +82,7 @@ tt(fname) argument.
 
     itb(OFoldStream(std::ostream &stream,
                    size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS))
     This constructor initializes an tt(OFoldStream) object and uses as its
 destination stream the tt(std::ostream stream).
@@ -98,6 +117,15 @@ and tt(FBB::mlm) manipulators.
     itb(void setTrailingBlanks(TrailingBlanks tb))
         This member can be used to modify the currently used
 tt(TrailingBlanks) parameter.
+
+    itb(void useBlanks())
+        This member can be used to select blanks  to be used when inserting
+left margins.
+
+    itb(void useTabs(size_t tabWidth = 8))
+        This member can be used to select tab-characters to be used when
+inserting left margins. The second parameter is used to specify the display
+width of a tab-character.
     )
 
 manpagesection(EXAMPLE)

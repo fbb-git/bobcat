@@ -2,7 +2,7 @@
 
 OFoldStreambuf::OFoldStreambuf(
                        size_t indent, size_t rightMargin,
-                       TrailingBlanks tb)
+                       TabsOrBlanks tob, TrailingBlanks tb)
 :
     d_rightMargin(rightMargin),
     d_indent(indent),
@@ -11,4 +11,6 @@ OFoldStreambuf::OFoldStreambuf(
     d_next(0),
     d_mode(INDENT),
     d_handleTrailingBlanks(tb == HANDLE_TRAILING_BLANKS)
-{}
+{
+    iniBlankTabs(tob);
+}

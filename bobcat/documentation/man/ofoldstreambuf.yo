@@ -13,8 +13,9 @@ manpagesynopsis()
 manpagedescription()
     bf(FBB::OFoldStreambuf) is a specialization of tt(FBB::OFilterStreambuf)
 folding long lines written to an tt(std::ostream) object. The
-tt(OFoldStreambuf) writes the (folded) lines to a second tt(ostream) which is
-either used by or opened by the tt(OFoldStreambuf) object.
+tt(OFoldStreambuf) writes the (folded) lines to a second tt(ostream) (the
+em(destination stream) which is either used by or opened by the
+tt(OFoldStreambuf) object.
 
     Internally the tt(OFoldStreambuf) defines its actions using a little
 finite state automation distinguishing three states (INDENT, WS and NON_WS)
@@ -30,6 +31,10 @@ margin. There is a somewhat pathological exception to this: if a word is too
 long to fit in between the margins then the word will exceed the right hand
 margin. 
 
+    The indentation used for the left margins is configurable to either blanks
+(the default) or tabs. When tabs are used the width of a tab character is
+configurable, using a default of 8 positions in the destination stream.
+
     What follows is a description of the em(Finite State Automaton) (FSA)
 defining what happens when various character types appear at its three
 states. The phrase `... is written' means that the described information is
@@ -42,8 +47,8 @@ table(3)(lll)(
 rw(State)(char.)(description)
 rowline()
 rw(INDENT)  (\n)      (a new line character is written)
-rw()        (space)   (white space is set to the indentation)
-                rw()()(add the space character;)
+rw()        (space)   (the indentation is set;)
+                rw()()(the space character is added to the indentation;)
                 rw()()(next state: WS)
 rw()        (non-ws)  (the character is added to the currently stored word;)
                 rw()()(next state: NON_WS)
@@ -73,6 +78,19 @@ manpagesection(INHERITS FROM)
     FBB::OFilterStreambuf
 
 manpagesection(ENUMERATION)
+    The enumeration tt(TabsOrBlanks) is used to select tabs or blanks when
+writing the indentation. The default is blanks. When tabs are selected the
+display width of tabs characters can be configured as well (using the default
+of 8 positions for each tab-character. The enumeration has two values:
+    itemization(
+    itb(BLANKS)
+        The default, indicating that the left margin is specified and written
+as a number of blanks;
+    itb(TABS)
+        Indicating that the left margin is specified and written as a number
+of tab-characters.
+    )
+
     The enumeration tt(TrailingBlanks) is used to configure the
 tt(OFoldStreambuf) object with respect to any trailing blanks that may appear
 on the final line. These trailing blanks can appear on the final line it it is 
@@ -92,13 +110,15 @@ terminated by a newline should be written to the destination tt(std::ostream)
 manpagesection(CONSTRUCTORS)
     itemization(
     itb(OFoldStreambuf(size_t leftIndent = 0, size_t rightMargin = 80,
-                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS))
+                    TabsOrBlanks tob = BLANKS,
+                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS))
         This constructor initializes an tt(OFoldStreambuf) object but does not
 associate it with a destination stream. It can also be used as the default
 constructor. 
 
     itb(OFoldStreambuf(char const *fname,
                    size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS))
     This constructor initializes an tt(OFoldStreambuf) object and opens (using
 tt(std::ios::out)) the destination stream using the name specified as its
@@ -106,6 +126,7 @@ tt(fname) argument.
 
     itb(OFoldStreambuf(std::ostream &stream,
                    size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS))
     This constructor initializes an tt(OFoldStreambuf) object and uses as its
 destination stream the tt(std::ostream stream).
@@ -123,9 +144,19 @@ this class.
         This member can be used to modify the left- and right folding
 margins. Note that the left margin may also be modified using the tt(FBB::lm)
 and tt(FBB::mlm) manipulators.
+
     itb(void setTrailingBlanks(TrailingBlanks tb))
         This member can be used to modify the currently used
 tt(TrailingBlanks) parameter.
+
+    itb(void useBlanks())
+        This member can be used to select blanks  to be used when inserting
+left margins.
+
+    itb(void useTabs(size_t tabWidth = 8))
+        This member can be used to select tab-characters to be used when
+inserting left margins. The second parameter is used to specify the display
+width of a tab-character.
     )
 
 manpagesection(PROTECTED MEMBER FUNCTIONS)

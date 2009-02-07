@@ -27,19 +27,24 @@ class mlm
         std::ostream &modify(std::ostream &out) const;
 };
 
-struct OFoldStreambufBlanks
+struct OFoldStreambufEnums
 {
     enum TrailingBlanks
     {
         IGNORE_TRAILING_BLANKS,
         HANDLE_TRAILING_BLANKS
     };
+    enum TabsOrBlanks
+    {
+        BLANKS,
+        TABS
+    };
 };
     
     // 'virtual public OFoldStreambufBlanks is used to avoid 'base class not
     // accessible' warnings when classes inherit from OFoldStreambuf like
     // OFoldStream. 
-class OFoldStreambuf: virtual public OFoldStreambufBlanks, 
+class OFoldStreambuf: virtual public OFoldStreambufEnums, 
                       public OFilterStreambuf
 {
     friend std::ostream &lm::modify(std::ostream &) const;
@@ -64,25 +69,32 @@ class OFoldStreambuf: virtual public OFoldStreambufBlanks,
 
     Mode d_mode;
 
+    char d_indentChar;
+    size_t d_indentWidth;
     bool d_handleTrailingBlanks;
 
     public:
         OFoldStreambuf(
                    size_t leftIndent = 0, size_t rightMargin = 80,
+                   TabsOrBlanks tob = BLANKS,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
 
         OFoldStreambuf(char const *fname,
                    size_t leftIndent = 0, size_t rightMargin = 80,
+                   TabsOrBlanks tob = BLANKS,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
 
         OFoldStreambuf(std::ostream &stream,
                    size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
 
         ~OFoldStreambuf();
 
         void setMargins(size_t leftMargin, size_t rightMargin);
         void setTrailingBlanks(TrailingBlanks tb);
+        void useBlanks();
+        void useTabs(size_t tabWidth = 8);
 
     protected:
         virtual int sync();
@@ -95,6 +107,7 @@ class OFoldStreambuf: virtual public OFoldStreambufBlanks,
 
         size_t length() const;
 
+        void iniBlankTabs(TabsOrBlanks tob);
         void newline();
         void addNonWs(int c);
         void addWs(int c);
@@ -161,6 +174,18 @@ inline std::ostream &mlm::modify(std::ostream &out) const
     dynamic_cast<OFoldStreambuf &>(*out.rdbuf()).modifyIndent(d_value);
     return out;
 }        
+
+inline void OFoldStreambuf::useBlanks()
+{
+    d_indentChar = ' ';
+    d_indentWidth = 1;
+}
+
+inline void OFoldStreambuf::useTabs(size_t tabWidth)
+{
+    d_indentChar = '\t';
+    d_indentWidth = tabWidth;
+}
 
 } // FBB
 

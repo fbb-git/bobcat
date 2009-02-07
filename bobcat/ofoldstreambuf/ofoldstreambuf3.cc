@@ -1,7 +1,8 @@
 #include "ofoldstreambuf.ih"
 
-OFoldStreambuf::OFoldStreambuf(ostream &stream, size_t indent, size_t rightMargin,
-                       TrailingBlanks tb)
+OFoldStreambuf::OFoldStreambuf(ostream &stream, size_t indent, 
+                        size_t rightMargin,
+                        TabsOrBlanks tob, TrailingBlanks tb)
 :
     OFilterStreambuf(stream),
     d_rightMargin(rightMargin),
@@ -11,4 +12,6 @@ OFoldStreambuf::OFoldStreambuf(ostream &stream, size_t indent, size_t rightMargi
     d_next(0),
     d_mode(INDENT),
     d_handleTrailingBlanks(tb == HANDLE_TRAILING_BLANKS)
-{}
+{
+    iniBlankTabs(tob);
+}
