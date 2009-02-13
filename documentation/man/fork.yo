@@ -80,7 +80,10 @@ manpagesection(PROTECTED MEMBER FUNCTIONS)
         This member em(must) be implemented by derived classes. It defines the
 actions that are performed by the child process, following the bf(fork)(2)
 system call. Just before bf(childProcess()) is called, bf(childRedirections())
-(see below) has been executed.
+(see below) has been executed. The tt(childProcess()) function should
+terminate the child process. A good way to do this is to throw an exeption
+which is caught by tt(main())'s function try block. Terminating a process 
+using bf(exit)(2) is deprecated in bf(C++).
     itb(virtual void childRedirections())
         This function em(may) be redefined in derived classes to set up the
 redirections that are necessary to communicate with the parent process. See
@@ -115,7 +118,7 @@ create a em(daemon) process.
     )
 
 manpagesection(EXAMPLE)
-    To do
+    verbinclude(../../fork/driver/driver.cc)
 
 manpagefiles()
     em(bobcat/fork) - defines the class interface

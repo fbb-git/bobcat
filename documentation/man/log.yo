@@ -86,6 +86,9 @@ manpagesection(MEMBER FUNCTIONS)
      All members of bf(std::ostream) are available, as bf(FBB::Log) inherits
 from this class.
     itemization(
+    itb(size_t level())
+        This member returns the currently set log level (i.e., the value set
+at the latest tt(setLevel()) call).
     itb(std::ostream &level(size_t useLevel))
         This member defines a log-level. Messages will be inserted into
 the stream when tt(useLevel) is equal to or exceeds the level set by
@@ -124,7 +127,7 @@ an empty string or a 0-pointer may be specified. When bf(stamps ==
 FBB::NOTIMESTAMPS delim) is ignored.
     )
 
-manpagesection(STATIC MEMBER)
+manpagesection(STATIC MEMBERS)
     itemization(
     itb(FBB::Log &initialize(std::string const &filename,
             std::ios::openmode mode = std::ios::out | std::ios::app, 
@@ -140,10 +143,16 @@ the stream.  By default, all messages will have a time stamp prepended to them
 (see the description of the member bf(setTimestamp()) below).  The parameter
 bf(delim) is inserted immediately beyond the time stamp. If a delimiter is
 inappropriate, an empty string or a 0-pointer may be specified.
-    itb(FBB::Log &getInstance())
+    itb(FBB::Log &instance())
         Returns a reference to a static bf(FBB::Log) object, available after
 calling bf(Log::initialize()). If called before tt(Log::initialize())
 an tt(FBB::Errno) exception is thrown. 
+    )
+
+    itemization(
+    itb(FBB::Log &getInstance())
+        Deprecated. Use tt(instance()). This member behaves identically to
+tt(instance()).
     )
 
 manpagesection(OVERLOADED OPERATOR)
@@ -159,7 +168,7 @@ not start with a time stamp (if applicable).
     )
 
 manpagesection(EXAMPLE)
-    To do
+    verbinclude(../../log/driver/driver.cc)
 
 manpagefiles()
     em(bobcat/log) - defines the class interface

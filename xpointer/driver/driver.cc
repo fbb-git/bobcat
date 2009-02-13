@@ -20,7 +20,7 @@ try
     xpointer.verify();
 
     if (!xpointer.set(A2x(argv[1]), A2x(argv[2])))
-        throw Errno() << insertable << "Pointer setting sailed" << throwable;
+        throw Errno() << insertable << "Pointer setting failed" << throwable;
 
     int x;
     int y;

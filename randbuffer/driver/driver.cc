@@ -1,21 +1,13 @@
-#ifndef INCLUDED_IOSTREAM_
 #include <iostream>
-#define INCLUDED_IOSTREAM_
-#endif
-
-#ifndef INCLUDED_ISTREAM_
 #include <istream>
-#define INCLUDED_ISTREAM_
-#endif
 
-#ifndef INCLUDED_RANDBUFFER_H_
-#include "../randbuffer.h"
-#endif
+#include <bobcat/randbuffer>
+#include <bobcat/a2x>
 
 using namespace std;
 using namespace FBB;
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
     if (argc == 1)
     {
@@ -23,12 +15,11 @@ int main(int argc, char **argv, char **envp)
         return 1;
     }
 
-    
-    Randbuffer rb(atoi(argv[2]), atoi(argv[3]), atoi(argv[4]));
+    Randbuffer rb(A2x(argv[2]), A2x(argv[3]), A2x(argv[4]).to<size_t>());
 
     istream istr(&rb);
 
-    for (int idx = atoi(argv[1]); idx--; )
+    for (int idx = A2x(argv[1]); idx--; )
     {
         int c;
         if (!(istr >> c))
@@ -50,4 +41,3 @@ int main(int argc, char **argv, char **envp)
     
     return 0;
 }
-

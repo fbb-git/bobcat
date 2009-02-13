@@ -1,11 +1,12 @@
-#ifndef INCLUDED_INETADDRESS_H_
-#include "../inetaddress.h"
-#endif
+#include <iostream>
+
+#include <bobcat/inetaddress>
+#include <bobcat/errno>
 
 using namespace std;
 using namespace FBB;
 
-InetAddress x()
+InetAddress X()
 {
     class A: public InetAddress
     {
@@ -19,22 +20,20 @@ InetAddress x()
     return A(2000);
 }
 
-
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
+try
 {
-    InetAddress ia = x();
+    InetAddress const &ia = X();
 
-    try
-    {
-        cout << "A InetAddress was constructed for port " << ia.port() <<
-                endl;
-        cout << "It has the generic `ANY' address: " << 
-                ia.dottedDecimalAddress() << endl;
-    }
-    catch (Errno const &e)
-    {
-        cout << "Exception: " << e.what() << endl;
-    }
+    cout << "A InetAddress was constructed for port " << ia.port() <<
+            endl;
+    cout << "It has the generic `ANY' address: " << 
+            ia.dottedDecimalAddress() << endl;
 
     return 0;
 }
+catch (Errno const &e)
+{
+    cout << "Exception: " << e.what() << endl;
+}
+

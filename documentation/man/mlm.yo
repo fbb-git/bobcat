@@ -1,0 +1,80 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::mlm)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (OFoldStream manipulator)
+
+manpagename(FBB::mlm)(Manipulator modifying left margins of OFoldStream
+                      objects) 
+
+manpagesynopsis()
+    bf(#include <bobcat/ofoldstream>) or nl()
+    bf(#include <bobcat/ofoldstreambuf>) nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+
+The tt(mlm) class implements a manipulator that can be inserted into
+tt(OFoldStream) objects to modify the stream's left margin by a requested
+amount. The request cannot result in a negative left margin value. If a
+negative left margin would be the arithmetic result of the request then left
+margin 0 will silently be used.
+
+Depending on the tab-setting of the tt(OFoldStream) the inserted value
+represents the number of blank space characters or the number of
+tab-characters that will be added to the left margin.
+
+The request will be processed at the next newline character or tt(std::flush)
+or tt(std::endl) manipulator that is inserted into the stream. If a line is
+still empty once an tt(mlm) object and a tt(flush) manipulator are inserted
+into the stream then the new left margin will be effective at the next word
+inserted into that line (cf., the example section below)
+
+A em(bad_cast) exception is thrown when the manipulator is inserted into an
+tt(ostream) that is not using a tt(OFoldStreambuf) buffer.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTOR)
+    itemization(
+    itb(mlm(int addValue))
+    )
+    The standard copy constructor is available.
+
+manpagesection(MEMBER FUNCTIONS)
+    There are no public or protected member functions in this class. 
+
+manpagesection(EXAMPLE)
+        verb(
+    #include <iostream>
+    #include <bobcat/ofoldstream>
+
+    using namespace std;
+    using namespace FBB;
+
+    int main()
+    {
+        OFoldStream out(cout, 0, 80);
+        out << "hello world (left margin is 0)" << mlm(4) << "\n"
+               "this uses a 4 character wide left margin\n" << 
+                mlm(-10) << flush <<
+                "left margin -6 changed to 0, active on this line\n";
+        return 0;
+    }
+        )
+
+manpagefiles()
+    em(bobcat/mlm) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(manipulators)(3bobcat), bf(lm)(3bobcat), 
+    bf(ofoldstream)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)
+

@@ -146,13 +146,30 @@ is done automatically by bf(syslogstream)(3bobcat) when a newline is inserted.
     )
 
 manpagesection(EXAMPLE)
-    To do (but see also bf(syslogstream)(3bobcat)
+    See also bf(syslogstream)(3bobcat)
+    verb(
+#include <iostream>
+#include <bobcat/syslogbuf>
+
+using namespace std;
+using namespace FBB;
+
+int main(int argc, char **argv)
+{
+    ostream sls(new SyslogBuf(argv[0]));
+
+    sls << SyslogStream::debug << "Hello world" << endl;
+    sls << SyslogStream::strerrno << endl;
+    
+    return 0;
+}
+    )
 
 manpagefiles()
     em(bobcat/syslogbuf) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(openlog)(3)), bf(syslog)(3), bf(syslogstream)(3bobcat)
+    bf(bobcat)(7), bf(openlog)(3), bf(syslog)(3), bf(syslogstream)(3bobcat)
 
 manpagebugs()
     The constructor's tt(option) parameter is an bf(int). Because of this,

@@ -13,7 +13,8 @@
     // Install the html-versions of the manpages, remove if not requested
 #define DOCOTHER
     // Install remaining docs (README, examples, etc), remove if not requested
-
+#define LCGEN
+    // Install the bobcatlcgen program
 
 
 string BASE;
@@ -24,6 +25,9 @@ string BASE;
     // `root', and BASE "/usr" or BASE "/usr/local" is suggested (see
     // below). `BASE' itself is not used outside of this file, so feel free to
     // define BIN, SKEL, MAN and DOC (below) in any which way you like.
+
+string BIN;
+    // The location of the binary program bobcatlcgen
 
 string GPP;
     // GPP specifies the compiler to use. stealth is coined as
@@ -80,6 +84,7 @@ void setLocations()
 {
     BASE  = "/usr";
 
+    BIN  =      BASE + "/bin";    
     DOC  =      BASE + "/share/doc/libbobcat2";
     DOCDEV  =   BASE + "/share/doc/libbobcat2-dev";
     INC  =      BASE + "/include/bobcat";
