@@ -37,13 +37,13 @@ void install(string rss, string dev)
 
 #ifndef STATIC
     md(rss + LIB);
-    run("cp -d tmp/lib/*so.* " + rss + LIB);
+    run("cp " CPOPTS " tmp/lib/*so.* " + rss + LIB);
 
     md(dev + LIB);
-    run("cp -d tmp/lib/*.a tmp/lib/*.so " + dev + LIB);
+    run("cp " CPOPTS " tmp/lib/*.a tmp/lib/*.so " + dev + LIB);
 #else
     md(dev + LIB);
-    run("cp -d tmp/lib/*.a " + dev + LIB);
+    run("cp " CPOPTS " tmp/lib/*.a " + dev + LIB);
 #endif
 #endif
 

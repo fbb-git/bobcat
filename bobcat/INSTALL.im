@@ -1,21 +1,58 @@
-//#define STATIC
+    // About compiling the bobcat library on BSD/MacOSX:
+    //
+    // According to Karel Kubat (karel at e dash tunity dot com) the bobcat
+    // library won't compile under BSD/MacOSX if the Linux options to create
+    // the dynamic library are used. Instead of 
+    //      -shared -Wl,-z,def,-soname,
+    // Karel suggests to use:
+    //      -dynamiclib -Wl,-single_module
+    //
+    // Also, he suggests to use the name libbobcat.dylib instead of
+    // libbobcat.so.1 
+    //
+    // In the directory ./contrib the script c-conf is found which is provided
+    // by Karel and which might be useful to construct the libraries under
+    // BSD/MacOSX systems. Don't contact me if you experience any problems
+    // with Karel's script. Instead, contact Karel directly.
+
+// #define STATIC
     // When compiling Bobcat for CYGWIN under Windows, activate the above
     // #define: it will prevent the construction of the shared library (until
     // somebody tells me how to do that under CYGWIN....)
 
 #define LIBRARIES
     // Install the libraries, remove if not requested
+
 #define HEADERS
     // Install the headers, remove if not requested
+
 #define MANPAGES
     // Install the manpages, remove if not requested
+
 #define MANHTML
     // Install the html-versions of the manpages, remove if not requested
+
 #define DOCOTHER
     // Install remaining docs (README, examples, etc), remove if not requested
+
 #define LCGEN
     // Install the bobcatlcgen program
 
+
+    // The following /bin/cp options are used to keep, rather than follow
+    // symbolic references. If your installation doesn't support these flags,
+    // then change them into available ones.
+    //   -P, --no-dereference
+    //            never follow symbolic links in SOURCE
+    //   --preserve[=ATTR_LIST]
+    //          preserve   the   specified   attributes   (default:  
+    //          mode,ownership,timestamps), if possible  additional  
+    //          attributes:  context, links, all
+    //   -d     same as --no-dereference --preserve=links
+#define CPOPTS  "-d"
+
+    // The following icmake string variables are given their values below, in
+    // the function `setLocations()'
 
 string BASE;
 
@@ -30,14 +67,10 @@ string BIN;
     // The location of the binary program bobcatlcgen
 
 string GPP;
-    // GPP specifies the compiler to use. stealth is coined as
-    // belonging to the Debian `unstable' distribution, which may use a
-    // different version of the compiler you currently have in your
-    // system. E.g., in july 2006 the Debian `testing' version of the compiler
-    // was 4.0.4, but the `unstable' version's compiler was 4.1.2. By defining
-    // GPP with a specific version (e.g., GPP=g++-4.1) that
-    // particular version can be used. The distributed definition uses the
-    // `default' compiler version.
+    // GPP specifies the compiler to use. By defining GPP with a specific 
+    // version (e.g., GPP=g++-4.1) that particular version can be used. The
+    // distributed definition uses the `default' compiler version and uses 
+    // `g++'. It is `gpp' in some installations. 
 
 string DOC;
     // DOC is the directory in which all standard documentation will be stored
@@ -61,21 +94,6 @@ string LIB;
 string MAN;
     // MAN is the directory in which the manual pages will be stored
     // They are stored below man3 and man7
-
-    // According to Karel Kubat (karel at e dash tunity dot com) the bobcat
-    // library won't compile under BSD/MacOSX if the Linux options to create
-    // the dynamic library are used. Instead of 
-    //      -shared -Wl,-z,def,-soname,
-    // Karel suggests to use:
-    //      -dynamiclib -Wl,-single_module
-    //
-    // Also, he suggests to use the name libbobcat.dylib instead of
-    // libbobcat.so.1 
-
-    // In the directory ./contrib the script c-conf is found which is provided
-    // by Karel and which might be useful to construct the libraries under
-    // BSD/MacOSX systems. Don't contact me if you experience any problems
-    // with Karel's script. Instead, contact Karel directly.
 
 string SHAREDOPT;
 string SHAREDLIB;

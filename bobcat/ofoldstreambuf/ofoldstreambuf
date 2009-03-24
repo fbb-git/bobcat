@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include <bobcat/ofilterstreambuf>
 
@@ -73,6 +74,9 @@ class OFoldStreambuf: virtual public OFoldStreambufEnums,
     size_t d_indentWidth;
     bool d_handleTrailingBlanks;
 
+    typedef std::vector<OFoldStreambuf const *>::iterator BufIt;
+    static std::vector<OFoldStreambuf const *> s_buffers;
+
     public:
         OFoldStreambuf(
                    size_t leftIndent = 0, size_t rightMargin = 80,
@@ -95,6 +99,9 @@ class OFoldStreambuf: virtual public OFoldStreambufEnums,
         void setTrailingBlanks(TrailingBlanks tb);
         void useBlanks();
         void useTabs(size_t tabWidth = 8);
+
+        static size_t leftMargin(std::streambuf const *buffer);
+        static size_t rightMargin(std::streambuf const *buffer);
 
     protected:
         virtual int sync();
@@ -121,6 +128,8 @@ class OFoldStreambuf: virtual public OFoldStreambufEnums,
         void writeWs() const;
         void writeNonWs() const;
         void put(int ch) const;
+
+        static BufIt findOFoldStreambuf(std::streambuf const *buffer);
 };
 
 inline void OFoldStreambuf::setIndent(int value)
@@ -187,6 +196,17 @@ inline void OFoldStreambuf::useTabs(size_t tabWidth)
     d_indentWidth = tabWidth;
 }
 
+inline size_t OFoldStreambuf::leftMargin(std::streambuf const *buffer)
+{
+    return (*findOFoldStreambuf(buffer))->d_indent;
+}
+
+inline size_t OFoldStreambuf::rightMargin(std::streambuf const *buffer)
+{
+    return (*findOFoldStreambuf(buffer))->d_rightMargin;
+}
+
+
 } // FBB
 
 namespace std
@@ -201,6 +221,6 @@ namespace std
         return idt.modify(out);
     }
 }
-        
+
 #endif
 
