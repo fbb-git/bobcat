@@ -14,7 +14,7 @@ namespace FBB
     // OFoldStreambufBlanks and only one struct definition is needed in the
     // final OFoldStream class.
 class OFoldStream: virtual public OFoldStreambufEnums, 
-                   public std::ostream, private OFoldStreambuf
+                   private OFoldStreambuf, public std::ostream
 {
     public:
         OFoldStream();
@@ -42,6 +42,9 @@ class OFoldStream: virtual public OFoldStreambufEnums,
         void setTrailingBlanks(TrailingBlanks tb);
         void useBlanks();
         void useTabs(size_t tabWidth = 8);
+
+        static size_t leftMargin(std::ostream const &os);
+        static size_t rightMargin(std::ostream const &os);
 };
 
 inline OFoldStream::OFoldStream()
@@ -51,19 +54,17 @@ inline OFoldStream::OFoldStream(char const *fname,
                     size_t leftIndent, size_t rightMargin, 
                     TabsOrBlanks tob, TrailingBlanks tb)
 :
-    OFoldStreambuf(fname, leftIndent, rightMargin, tob, tb)
-{
-    rdbuf(this);
-}
+    OFoldStreambuf(fname, leftIndent, rightMargin, tob, tb),
+    std::ostream(this)
+{}
 
 inline OFoldStream::OFoldStream(std::ostream &out, 
                     size_t leftIndent, size_t rightMargin, 
                     TabsOrBlanks tob, TrailingBlanks tb)
 :
-    OFoldStreambuf(out, leftIndent, rightMargin, tob, tb)
-{
-    rdbuf(this);
-}
+    OFoldStreambuf(out, leftIndent, rightMargin, tob, tb),
+    std::ostream(this)
+{}
 
 inline void OFoldStream::close()
 {
@@ -88,6 +89,16 @@ inline void OFoldStream::useBlanks()
 inline void OFoldStream::useTabs(size_t tabWidth)
 {
     OFoldStreambuf::useTabs(tabWidth);
+}
+
+inline size_t OFoldStream::leftMargin(std::ostream const &os)
+{
+    return OFoldStreambuf::leftMargin(os.rdbuf());
+}
+
+inline size_t OFoldStream::rightMargin(std::ostream const &os)
+{
+    return OFoldStreambuf::rightMargin(os.rdbuf());
 }
 
 } // FBB

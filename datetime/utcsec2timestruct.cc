@@ -25,5 +25,6 @@ void DateTime::utcSec2timeStruct(TimeStruct *ts, time_t time)
     time += d_displayZoneShift + d_dstShift; // add local time shift (if any)
 
     d_ok = gmtime_r(&time, ts);
+
     ts->tm_isdst = dst;
 }

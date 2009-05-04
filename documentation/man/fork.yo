@@ -106,6 +106,15 @@ bf(parentRedirections()) does nothing.
 bf(parent-)members below), and 0 in the child's code (i.e., in the
 bf(child-)members below). Note that the value of bf(pid()) is bf(undefined)
 when called em(before) the member bf(fork()) has been called.
+    itb(void prepareDaemon() const)
+        Prepares for a daemon childprocess. This function may (should) be
+called from bf(childProcess()) to ensure that the child process changes its
+current working directory to the root (/) directory, thus freeing up mount
+points; that the child process starts a new session/process group to allow the
+parent (group leader) to kill all its processes without terminating the
+daemon; and makes sure that the child process closes and reopens the standard
+streams by associating them with tt(/dev/null) to prevent ghost input and
+output actions from interfering with the daemon's actions.
     itb(int waitForChild()) 
         This memebr may be called by bf(parentProcess()) to wait for the
 completion of the child-process. The return value (exit-code) of the child
