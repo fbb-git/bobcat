@@ -1,0 +1,184 @@
+#ifndef INCLUDED_BOBCAT_PATTERN_
+#define INCLUDED_BOBCAT_PATTERN_
+
+#include <string>
+#include <utility>              // for pair<>
+#include <regex.h>
+#include <iostream>
+#include <bobcat/errno>
+
+//  match() throws an Errno when either the construction (i.e.,
+//  compilation of the pattern) or the match failed.
+//
+//  The 0-index for position() or operator[] indicates the matched text,
+//  other indices indicate subsequent subexpressions
+//
+//  Patterns may use:
+//      \b - indicating a word-boundary
+//      \d - indicating a digit
+//      \D - indicating no digit
+//      \s - indicating a white-space ([:space:]) char
+//      \S - indicating no white-space ([:space:]) char
+//
+//  Pattern strings:
+//
+//      ------------------------------------------------------------
+//      Required pattern        Provide Pattern()   Use as argument:
+//                              internally with:
+//      ------------------------------------------------------------
+//      \\                      \\\\                \\\\\\\\       |
+//      \d                      \d                  \\d            |
+//      ------------------------------------------------------------
+
+namespace FBB
+{
+
+class Pattern
+{
+    typedef std::pair<char const *, char const *> conversion;
+
+    static conversion       s_patmod[];
+    static size_t           s_sizeofPatmod;
+
+    struct Regex
+    {
+        size_t              d_referenceCount;
+        regex_t             d_regex;
+
+        static std::string  s_converted;
+
+        Regex(std::string pattern, int options);
+        ~Regex();
+
+        private:
+            Regex(Regex const &other);              // NI
+            Regex &operator=(Regex const &other);   // NI
+    };
+
+    Regex                  *d_regex;
+    regmatch_t             *d_subExpression;
+    size_t                  d_nSub;
+    size_t                  d_beyondLast;
+    std::string             d_text;
+    int                     d_matchOptions;
+
+    public:
+        typedef std::pair<std::string::size_type, std::string::size_type>
+            Position;
+
+        //  define a pattern using a case-flag and number of 
+        //  ()-subexpressions. Compilation flags:
+        //
+        //  REG_EXTENDED
+        //      Use POSIX Extended Regular Expression  syntax  when
+        //      interpreting  regex.  If not set, POSIX Basic Regu­
+        //      lar Expression syntax is used.
+        //
+        //  REG_NOSUB
+        //      Support for substring addressing of matches is  not
+        //      required.   The  nmatch  and  pmatch  parameters to
+        //      regexec are ignored if the pattern buffer  supplied
+        //      was compiled with this flag set.
+        //
+        //  REG_NEWLINE
+        //      Match-any-character  operators  don't  match a new­
+        //      line.
+        //
+        //      A non-matching list ([^...])  not containing a new­
+        //      line does not match a newline.
+        //
+        //      Match-beginning-of-line  operator  (^)  matches the
+        //      empty string immediately after a  newline,  regard­
+        //      less  of  whether  eflags,  the  execution flags of
+        //      regexec, contains REG_NOTBOL.
+        //
+        //      Match-end-of-line operator ($)  matches  the  empty
+        //      string  immediately before a newline, regardless of
+        //      whether eflags contains REG_NOTEOL.
+
+        Pattern();
+
+        Pattern(std::string const &pattern, 
+                        bool caseSensitive = true, 
+                        size_t nSub = 10,
+                        int options = REG_EXTENDED | REG_NEWLINE);
+        Pattern(Pattern const &other);
+        ~Pattern();
+
+        Pattern &operator=(Pattern const &other);
+        Pattern &operator<<(int matchOption);
+        bool operator<<(std::string const &text);
+
+        void setPattern(std::string const &pattern, 
+                        bool caseSensitive = true, 
+                        size_t nSub = 10,
+                        int options = REG_EXTENDED | REG_NEWLINE);
+
+        //  match a string with a pattern. true: string matched
+        //  options could be:
+        //
+        //  REG_NOTBOL
+        //      The  match-beginning-of-line  operator always fails
+        //      to match (but see the compilation flag  REG_NEWLINE
+        //      above)  This  flag  may be used when different por­
+        //      tions of a string are passed  to  regexec  and  the
+        //      beginning  of  the string should not be interpreted
+        //      as the beginning of the line.
+        //
+        //  REG_NOTEOL
+        //      The  match-end-of-line  operator  always  fails  to
+        //      match  (but  see  the  compilation flag REG_NEWLINE)
+
+        void match(std::string const &text, int options = 0);
+
+        std::string before() const;  // text before the matched text
+        std::string matched() const;   // the matched text
+        std::string beyond() const;  // text beyond the matched text
+
+            // (0) is complete matching part. Remaining are subexpressions.
+            // (npos, npos) is returned if index exceeds available indices
+            // (which may be 0)
+
+            // position of subexpression
+        Position position(size_t index) const; 
+
+            // subexpression itself
+        std::string operator[](size_t index) const; 
+        size_t end() const;           // index beyond the last available
+
+        std::string const &pattern() const; // compiled pattern
+
+    private:
+        void newRegex(std::string const &pattern, int options);
+        void destroy();
+        void copy(Pattern const &other);    
+};
+
+inline Pattern::Pattern(Pattern const &other)
+{
+    copy(other);
+}
+
+inline Pattern::~Pattern()
+{
+    destroy();
+}    
+
+inline std::string Pattern::matched() const 
+{
+    return (*this)[0];
+}
+
+inline std::string const &Pattern::pattern() const 
+{
+    return Regex::s_converted;
+}
+
+inline size_t Pattern::end() const
+{
+    return d_beyondLast;
+}
+
+} // FBB
+
+#endif

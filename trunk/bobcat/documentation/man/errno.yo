@@ -1,0 +1,92 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Errno)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Error handler)
+
+manpagename(FBB::Errno)(Throwable objects handling error conditions)
+
+manpagesynopsis()
+    bf(#include <bobcat/errno>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+       bf(FBB::Errno) objects may be thrown in exceptions.  As they are also
+bf(std::ostringstream) objects, information may be inserted into them.
+Facilitities are offered to insert information into, and to throw anonymous
+bf(FBB::Errno) objects.
+
+manpagesection(NAMESPACE)
+    bf(FBB)nl()
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace bf(FBB).
+
+manpagesection(INHERITS FROM)
+    bf(std::ostringstream, std::exception)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Errno())
+    This constructor stores the current system tt(errno) value and its textual
+interpretation. No textual tt(errno) conversion is stored if tt(errno) equals
+0.
+    itb(Errno(char const *prefix)) 
+    This constructor stores the current system tt(errno) value. To this, the
+textual interpretation of bf(errno) is added unless bf(errno) equals 0. If, in
+this situation, bf(prefix) is a non-empty string, the text tt(: ) is first
+appended to the prefix.
+    itb(Errno(int errnr, char const *text = 0)) 
+    This constructor stores the provided tt(errnr) value, and the tt(text)
+text. The tt(text) argument may be omitted or empty, in which case no text
+will be prefixed to any additionally inserted information. With this version
+of bf(FBB::Errno), no tt(: ) is added to a non-empty tt(text) argument.  
+    )
+    The copy constructor is available.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::ostringstream) and bf(  std::exception) are
+available, as bf(FBB::Errno) inherits from these classes.
+    itemization(
+    itb(virtual char const *what() const) 
+    Returns the initialized and inserted text. em(No) separators are inserted
+by the bf(FBB::Errno) object between the initializatin text and any text
+inserted later. If separators are required, the user of the bf(FBB::Errno)
+object must insert these explicitly.
+    itb(int which() const) 
+    Returns the internally stored bf(errno) value: either the system-bf(errno)
+value, or the value provided by the third constructor.
+    )
+
+manpagesection(MANIPULATORS)
+    The following manipulators (which are em(not) part of the bf(FBB::Errno),
+class, but em(are) defined in the bf(FBB) namespace) can be inserted into the
+bf(FBB::Errno) object:
+    itemization(
+    itb(FBB::insertable) 
+    If inserted immediately after the construction of an anonymous
+bf(FBB::Errno) object, information may be inserted into the anonymous object
+immediately thereafter. The manipulator is not required for named tt(Errno)
+objects into which information is inserted after their construction.
+     itb(FBB::throwable)
+    If placed at the end of a series of insertions into the bf(FBB::Errno)
+object, it allows the object to be thrown as an exception in one expression.
+    )
+
+manpagesection(EXAMPLE)
+    The following example shows the normal use of the manipulators:
+        verb(
+    if (exceptionalCondition)
+        throw FBB::Errno(1, "Failure") << FBB::insertable << 
+                ": Exceptional condition occurred" << FBB::throwable;
+        )
+
+manpagefiles()
+    em(bobcat/errno) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

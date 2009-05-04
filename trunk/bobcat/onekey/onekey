@@ -1,0 +1,46 @@
+#ifndef INCLUDED_BOBCAT_ONEKEY_
+#define INCLUDED_BOBCAT_ONEKEY_
+
+#include <termios.h>
+#include <bobcat/errno>
+
+namespace FBB
+{
+
+class OneKey
+{
+    termios     d_saved;
+    bool        d_useEcho;          // default false
+    int         d_err;
+    char const *d_msg;
+
+    public:
+        enum Mode
+        {
+            OFF,      
+            ON      
+        };
+
+        OneKey(Mode state = OFF);    
+        ~OneKey();
+        
+        int get() const;                // get the next char
+        void setEcho(Mode state);
+
+        void verify() const;
+
+    private:
+        OneKey(OneKey const &other);                    // NI
+        OneKey const &operator=(OneKey const &other);   // NI
+
+        void setErr(int nr, char const *txt);
+};
+
+inline void OneKey::setEcho(Mode state)
+{
+    d_useEcho = (state == ON);
+}
+
+} // FBB
+
+#endif

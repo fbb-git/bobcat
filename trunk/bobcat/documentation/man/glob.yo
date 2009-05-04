@@ -1,0 +1,127 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Glob)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Files matching a pattern)
+
+manpagename(FBB::Glob)
+        (Wrapper around bf(glob)(3) to find files matching a pattern)
+
+manpagesynopsis()
+    bf(#include <bobcat/glob>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    The bf(FBB::Glob) class is a wrapper around the bf(C) function
+bf(glob)(3). It returns a list of files matching a certain pattern provided to
+bf(FBB::Glob)'s constructors or members.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(ENUMERATIONS)
+
+    bf(Flags):
+    itemization(
+    itt(ERR): Return on read errors;
+    itt(MARK): Append a slash to each name.
+    itt(NOSORT): Don't sort the names.
+    itt(NOESCAPE): Backslashes don't quote metacharacters.
+    itt(PERIOD): Leading tt(.)-characters can be matched by metachars.
+    )
+
+    bf(Dots):
+    itemization(
+    itt(FIRST): Filenames starting with a dot will be listed first. Within
+    this set and in the leftover-set the relative ordering is maintained.
+    itt(DEFAULT): Return filenames as they appear in the globbing process.
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Glob(std::string const &pattern = "*", int flags = PERIOD,
+             Dots dots = FIRST)) 
+        This constructor (which can also be used as the default constructor)
+    determines all elements in the current directory. The tt(.) and tt(..)
+    relative filenames are not part of the listings. Used as default
+    constructor, other directory elements starting with a period will be the
+    first elements in the series of detected directory elements.
+
+    Multiple flags may be specified, separated by the tt(bitor) operator. 
+
+    This constructor properly completes its task if only defined bf(Flag)
+values were specified and if the bf(glob)(3) function returned without
+errors. 
+
+    The proper completion of this constructor should be checked by calling
+the tt(Glob::verify()) member (see below).
+    )
+    The copy constructor is available.
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(Glob &operator=(Glob const &other))
+        The assignment operator is available.
+    itb(char const *operator[](size_t idx) const)
+        The element at index position tt(idx) is returns as a bf(C) string. It
+    returns an empty string if tt(idx) is or exceeds bf(size()).
+    )
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(void verify() const)
+        This operator throws an tt(Errno) exception if the bf(Glob)
+constructor did not properly complete. It should be called before using any
+other bf(Glob) member (not required after using the copy constructor).
+    itb(size_t size() const)
+        Returns the number of elements that were detected.
+    itb(char const *const *begin() const)
+        Returns a pointer to the first element that was detected. This pointer
+    can be used in generic algorithms as an output-iterator supporting pointer
+    arithmetic. 
+    itb(char const *const *end() const)
+       Returns a pointer beyond the last element that was detected. This
+    pointer can be used in generic algorithms as an output-iterator supporting
+    pointer arithmetic. 
+    )
+
+manpagesection(EXAMPLES)
+        verb(
+    int main(int argc, char **argv)
+    {
+        if (argc == 1)
+        {
+            cout << "Provide glob-expression as 1st arg\n";
+            return 1;
+        }
+    
+        cout << "General:\n";
+    
+        Glob general;
+    
+        for (size_t idx = 0; idx < general.size(); idx++)
+            cout << idx << ": " << general[idx] << endl;
+    
+        cout << "Pattern: " << argv[1] << "\n";
+    
+        Glob pattern(argv[1], Glob::PERIOD, Glob::DEFAULT);
+    
+        for (size_t idx = 0; idx < pattern.size(); idx++)
+            cout << idx << ": " << pattern[idx] << endl;
+    
+        return 0;
+    }
+        )
+
+manpagefiles()
+    em(bobcat/glob) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(stat)(3bobcat), bf(glob)(3)
+
+manpagebugs()
+    No Reported Bugs.
+
+includefile(trailer.inc)

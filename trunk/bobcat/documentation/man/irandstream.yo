@@ -1,0 +1,68 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::IRandStream)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Random numbers istream)
+
+manpagename(FBB::IRandStream)(Istream producing random numbers)
+
+manpagesynopsis()
+    bf(#include <bobcat/irandstream>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB::IRandStream) objects may be used to extract random numbers in a
+given range from a stream.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(std::istream), nl()
+    bf(FBB::RandBuffer) (private) 
+    
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(IRandStream(int max))
+    This bf(FBB::IRandStream()) constructor initializes the random generator.
+The default seed (i.e., 1) for the bf(srand)(3) function is used, meaning that
+every new run of the program will generate the same sequence of random
+values. Another constructor (see below) is provided when this is not
+considered appropriate. Random values between 1 and tt(max) (inclusive) are
+returned.
+
+    itb(IRandStream(int min, int max))
+    This bf(FBB::IRandStream()) constructor initializes the random generator.
+The default seed (i.e., 1) for the bf(srand)(3) function is used, meaning that
+every new run of the program will generate the same sequence of random
+values. Another constructor (see below) is provided when this is not
+considered appropriate. Random values between tt(min) and tt(max) (inclusive)
+are returned.
+
+    itb(IRandStream(int min, int max, int seed))
+    This bf(FBB::IRandStream()) constructor initializes the random
+generator. The seed is used to initialze the random number generator. To start
+the random generator at some unpredictable point, tt(time(0)) could be used.
+Random values between tt(min) and tt(max) (inclusive) are returned.
+    )
+
+manpagesection(INHERITED MEMBERS)
+
+    Since the class uses public derivation from bf(std::istream), all members
+of this class can be used.
+
+manpagesection(EXAMPLE)
+    verbinclude(../../irandstream/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/irandstream) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(randbuffer)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)
+
+

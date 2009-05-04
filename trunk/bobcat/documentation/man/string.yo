@@ -1,0 +1,189 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::String)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Error handler)
+
+manpagename(FBB::String)(Several extensions to bf(std::string))
+
+manpagesynopsis()
+    bf(#include <bobcat/string>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    This class offers the same functionality as bf(std::string), adding
+facilities for often used transformations, currently missing in
+bf(std::string).  
+
+manpagesection(NAMESPACE)
+    bf(FBB)nl()
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace bf(FBB).
+
+manpagesection(INHERITS FROM)
+    --
+
+manpagesection(ENUMERATION)
+    itemization(
+    itb(Type)
+       This enumeration has the following values, which are used in the second
+        variant of the bf(split) member (see below): 
+
+            bf(DQUOTE), a series of characters surrounded by double quotes
+in the original string; 
+
+            bf(DQUOTE_UNTERMINATED), a series of characters beginning with
+a double quote in the original string, but lacking the matching terminating
+double quote;
+
+            bf(ESCAPED_END), a series of characters representing an
+otherwise normal string, but terminating in a plain backslash;
+
+            bf(NORMAL), a normal string; 
+
+            bf(SEPARATOR), a separator;
+
+            bf(SQUOTE), a series of characters surrounded by single quotes
+in the original string; 
+
+            bf(SQUOTE_UNTERMINATED), a series of characters beginning with
+a single quote in the original string, but lacking the matching terminating
+single quote.
+    )
+
+manpagesection(TYPEDEF)
+
+    The bf(typedef SplitPair) represents bf(std::pair<std::string,
+String::Type>) and is used in the second variant of the bf(split) member (see
+below).
+
+manpagesection(HISTORY)
+    Initially this class was derived from bf(std::string). Deriving from
+bf(std::string), however, is considerd bad design as tt(std::string) was
+not designed as a base-class. 
+
+    Currently bf(String) offers a series of em(static) member functions
+providing the facilities originally implemented in non-static members.
+
+manpagesection(STATIC MEMBER FUNCTIONS)
+    itemization(
+    itb(char const **argv(std::vector<std::string> const &words))
+        Returns a pointer to an allocated series of pointers to the bf(C)
+strings stored in the vector tt(words). The caller is responsible for
+returning the array of pointers to the common pool, but should em(not) delete
+the bf(C)-strings to which the pointers point. The last element of the
+returned array is guaranteed to be a 0-pointer. 
+    itb(int casecmp(std::string const &lhs, std::string const &rhs))
+        Performs a case-insensitive comparison between the two tt(std::string)
+objects. A negative value is returned if tt(lhs) should be ordered before
+tt(rhs); 0 is returned if the two strings have identical contents; a
+positive value is returned if the tt(lhs) object should be ordered beyond
+tt(rhs).
+    itb(std::string escape(std::string const &str, 
+            char const *series = "'\"\\"))
+        Returns a copy of the tt(str) object in which all characters in
+tt(series) are prefixed by a backslash character.
+    itb(std::string lc(std::string const &str) const)
+        Returns a copy of the tt(str) object in which all letters were
+transformed to lower case letters.
+    itb(std::string trim(std::string const &str))
+        Returns a copy of the tt(str) object from which the leading and
+trailing blanks have been removed.
+    itb(size_t split(std::vector<std::string> *words,
+                    std::string const &str,
+                    char const *separators = " \t", bool addEmpty = false))
+        Fills tt(words) with all elements of the tt(str) object, separated by
+any of the characters in tt(separators). If the parameter tt(addEmpty) is set
+to tt(true), the individual separators are stored as empty strings in
+tt(words). If a word starts with tt(") or tt(') all characters until a
+matching terminating tt(") or tt(') at the end of a word are considered as one
+word.  The surrounding quotes are not stored. The function returns the number
+of elements in the vector pointed to by tt(words). This vector is initially
+cleared.
+    itb(size_t  split(std::vector<SplitPair> *words,
+                    std::string const &str,
+                    char const *separators = " \t", bool addEmpty = false))
+        Same functionality as the former member, but the tt(words) vector is
+filled with pairs, of which the first elements are the recognized strings, and
+the second elements values of the tt(String::Type) enumeration. If
+bf(addEmpty) is requested, then the bf(string) elements contain the actual
+contents of the separator, while the bf(Type) elements are set to
+bf(SEPARATOR).
+    itb(std::string unescape(std::string const &str))
+        Returns a copy of the tt(str) object in which the escaped (i.e.,
+prefixed by a backslash) characters have been interpreted. All standard escape
+characters (tt(\a), tt(\b), tt(\f), tt(\n), tt(\r), tt(\t), tt(\v)) are
+recognized. If an escape character is followed by tt(x) or tt(X) the next two
+characters are interpreted as a hexadecimal number. If an escape character is
+followed by an octal digit, then the next three characters following the
+backslash are interpreted as an octal number. In all other cases, the
+backslash is removed and the character following the backslash is kept.
+    itb(std::string uc(std::string const &str))
+        Returns a copy of the tt(str) object in which all letters were
+capitalized. 
+    )
+
+manpagesection(EXAMPLE)
+    verb(
+#include <iostream>
+#include <vector>
+
+#include <bobcat/string>
+
+using namespace std;
+using namespace FBB;
+
+char const *type[] = 
+{
+    "DQUOTE_UNTERMINATED",
+    "SQUOTE_UNTERMINATED",
+    "ESCAPED_END",
+    "SEPARATOR",
+    "NORMAL",
+    "DQUOTE",
+    "SQUOTE",
+};
+
+int main(int argc, char **argv)
+{
+    cout << "Program's name in uppercase: " << String::uc(argv[0]) << endl;
+
+    if (argc == 1)
+        cout << "Provide any argument to suppress SEPARATOR fields\n";
+
+    while (true)
+    {
+        cout << "Enter a line, or empty line to stop:" << endl;
+
+        String line;
+        if (!getline(cin, line) || !line.length())
+            break;
+
+        vector<String::SplitPair> splitpair;
+        cout << "Split into " << line.split(&splitpair, " \t", argc == 1) << 
+                " fields\n"; 
+        for 
+        (
+            vector<String::SplitPair>::iterator it = splitpair.begin();
+                it != splitpair.end();
+                    ++it
+        )
+            cout << (it - splitpair.begin() + 1) << ": " <<
+                    type[it->second] << ": `" << it->first << 
+                    "', unescaped: `" << String(it->first).unescape() << 
+                    "'" << endl;
+    }
+    return 0;
+}
+    )
+
+manpagefiles()
+    em(bobcat/string) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

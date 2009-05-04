@@ -1,0 +1,36 @@
+#ifndef INCLUDED_BOBCAT_HOSTNAME_
+#define INCLUDED_BOBCAT_HOSTNAME_
+
+#include <bobcat/hostent>
+#include <bobcat/errno>
+
+namespace FBB
+{
+    class InetAddress;
+
+    class Hostname: public Hostent
+    {
+        public:
+            Hostname();
+                                    // may be name or dotted decimal address
+            Hostname(std::string const &host);      // 1
+
+            Hostname(InetAddress const &address);   // 2
+
+        private:
+            void init();
+    };
+
+inline Hostname::Hostname()
+:
+    Hostent()
+{}
+
+} // FBB
+
+#endif
+
+
+
+
+

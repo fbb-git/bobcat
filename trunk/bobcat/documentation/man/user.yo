@@ -1,0 +1,73 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::User)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (/etc/passwd user info)
+
+manpagename(FBB::User)(Provides the tt(/etc/passwd) info of the current user)
+
+manpagesynopsis()
+    bf(#include <bobcat/user>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    This class retrieves the information of the current user from the
+information in tt(/etc/passwd). The class is a simple wrapper class around the
+bf(getpwent)(3) function.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(User())
+        The default constructor determines the current user's data.  The
+proper completion of this constructor should be checked by calling the
+tt(User::verify()) member (see below).
+    )
+    The copy constructor is available.
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(size_t groupid() const)
+        Returns the user's group-id.
+    itb(std::string homedir() const)
+        Returns the user's home directory (including a trailing tt(/)).
+    itb(std::string name() const)
+        Returns the user's user-name.
+    itb(std::string password() const)
+        Returns the user's encrypted password. But see also the bf(BUGS) \
+        section. 
+    itb(std::string realname() const)
+        Returns the user's real name, as listed in the tt(/etc/passwd)'s \
+        em(gecos) field.
+    itb(std::string shell() const)
+        Returns the user's shell.
+    itb(size_t userid() const)
+        Returns the user's user-id.
+    itb(void verify() const)
+        This operator throws an tt(Errno) exception if the bf(User)
+constructor did not properly complete because the current user name could not
+be found in tt(/etc/passwd). It should be called before using any other
+bf(User) member (not required after using the copy constructor).
+    )
+
+manpagesection(EXAMPLE)
+    verbinclude(../../user/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/user) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(getpwent)(3)
+
+manpagebugs()
+    If the user is a member of multiple groups, only the group id listed in
+tt(/etc/passwd) is returned by bf(groupid()).
+
+    If shadow passwording is used, the string returned by bf(password()) will
+probably not contain the encrypted password.
+
+includefile(trailer.inc)

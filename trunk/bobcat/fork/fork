@@ -1,0 +1,59 @@
+#ifndef INCLUDED_BOBCAT_FORK_
+#define INCLUDED_BOBCAT_FORK_
+
+#include <sys/types.h>
+#include <bobcat/errno>
+
+namespace FBB
+{    
+
+class Fork
+{
+    pid_t d_pid;
+
+    public:
+        inline virtual ~Fork();     // g++ bug workaround
+
+        void fork();
+
+    protected:
+        pid_t pid() const;
+        pid_t getPid() const;                 // DEPRECATED. USE `pid()'
+
+        virtual void childRedirections();   // do child redirections
+        virtual void childProcess() = 0;    // must be implemented
+
+        virtual void parentRedirections();  // do parent redirections
+        virtual void parentProcess() = 0;   // must be implemented
+
+        void prepareDaemon() const;         // prepares for a daemon
+
+        int waitForChild();                 // returns the status
+};
+
+
+inline Fork::~Fork()
+{}
+
+inline pid_t Fork::pid() const
+{
+    return d_pid;
+}
+
+inline pid_t Fork::getPid() const
+{
+    return d_pid;
+}
+
+inline void Fork::childRedirections()    // do child redirections
+{}            
+
+inline void Fork::parentRedirections()   // do parent redirections
+{}            
+
+} // FBB
+
+#endif
+
+
+

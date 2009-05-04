@@ -1,0 +1,76 @@
+#ifndef INCLUDED_BOBCAT_REFCOUNT_
+#define INCLUDED_BOBCAT_REFCOUNT_
+
+#include <iostream>
+#include <typeinfo>
+
+namespace FBB
+{
+
+class RefCount
+{
+    mutable size_t d_refcount;
+
+    protected:
+        RefCount();
+        RefCount(RefCount const &other);           // used by clone()
+
+        inline virtual ~RefCount();         // g++ bug workaround
+        virtual RefCount *clone() const = 0;
+
+    public:
+        size_t refcount() const;
+        void release();
+
+        template <typename X>
+        static X *share(X const *x);
+
+        template <typename X>
+        static X &modifying(X **x);
+};
+
+inline RefCount::RefCount() 
+:
+    d_refcount(1)
+{}
+
+inline RefCount::RefCount(RefCount const &other)           // used by clone()
+:
+    d_refcount(1)
+{}
+
+inline RefCount::~RefCount() 
+{}
+
+inline size_t RefCount::refcount() const
+{
+    return d_refcount;
+}
+
+template <typename X>
+X *RefCount::share(X const *x)
+{
+    x->d_refcount++;
+    return const_cast<X *>(x);
+}
+
+template <typename X>
+X &RefCount::modifying(X **x)
+{
+    if ((*x)->d_refcount != 1)
+    {
+        (*x)->d_refcount--;
+        *x = dynamic_cast<X *>
+             (
+                reinterpret_cast<RefCount *>(*x)->clone()
+             );
+
+        if (!*x)
+            throw std::bad_cast();
+    }
+    return **x;
+}
+
+} // FBB
+        
+#endif

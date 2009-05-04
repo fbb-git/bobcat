@@ -1,0 +1,10 @@
+#!/bin/sh
+
+CWD=`pwd`
+cd ../bobcat
+    build man || exit 1
+cd $CWD
+
+yodl2html index || exit 1
+
+scp *html ../bobcat/tmp/manhtml/*html fbb,bobcat@web.sourceforge.net:htdocs/

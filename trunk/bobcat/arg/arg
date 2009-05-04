@@ -1,0 +1,191 @@
+#ifndef INCLUDED_BOBCAT_ARG_
+#define INCLUDED_BOBCAT_ARG_
+
+/*
+        Singleton Class built around getopt() and getopt_long() (3)
+*/
+
+
+#include <string>
+#include <getopt.h>
+#include <vector>
+#include <map>
+#include <unistd.h>
+#include <bobcat/errno>
+
+namespace FBB
+{
+
+class OptStructArray;
+class Arg
+{
+    typedef struct option                       OptStruct;
+    typedef std::vector<std::string>            StringVector;
+    typedef std::map<int, StringVector>         IntStringVectorMap;
+    typedef std::map<int, StringVector>::const_iterator ISVMapIterator;
+    typedef std::map<std::string, StringVector> StringStringVectorMap;
+    typedef std::map<std::string, StringVector>::const_iterator 
+                                                SSVMapIterator;
+
+    std::string                     d_base;
+    char const                      **d_argPointer;
+    
+    std::vector<std::string>        d_argv;     // remaining arguments
+                                                // after removing the 
+                                                // options
+
+    IntStringVectorMap d_optv;                  // short (and associated
+                                                // long options). 
+                                                // 1st value: option char;
+                                                // 2nd value: optionvalue
+                                                //      or empty string.
+    size_t           d_nOptv;                   // count of ALL of the
+                                                // previous options
+
+    StringStringVectorMap   d_longOptv;         // specified long options
+    size_t                  d_nLongOptions;     // count of ALL of the
+                                                // following options
+
+    char const          *d_msg;                 // info about erroneous opt.
+    int                  d_getOpt;              // value returned by getopt()
+
+    static Arg            *s_arg;               // points to Singleton Arg
+
+    static std::string    s_dirsep;
+    static char           s_optChar[];          // used by the constructors
+        
+    public:
+        enum Type
+        {
+            None        = 0,
+            Required    = 1,
+            Optional    = 2,
+            AsCharOption,
+        };
+
+        class LongOption
+        {
+            std::string d_name;
+            Arg::Type   d_type;
+            int         d_optionChar;
+            
+            friend class Arg;
+            friend class ArgConfig;
+
+            public:
+                LongOption(char const *name, Arg::Type type = None);
+                LongOption(char const *name, int optionChar);
+
+                std::string const &getName() const;
+        };
+
+        static Arg &initialize(char const *optstring, int argc, char **argv);
+        static Arg &initialize(char const *optstring,
+                                LongOption const * const begin,
+                                LongOption const * const end,
+                                int argc, char **argv);
+        static Arg &instance();        
+
+        std::string const &basename() const;
+        size_t nArgs() const;
+
+            // total number of specified short (and combined long) options
+        size_t nOptions() const;
+
+            // total numer of long-only options specified
+        size_t nLongOptions() const;
+
+        size_t option(int option) const;              // 1
+        size_t option(std::string const &optchars) const;     // 2
+        size_t option(size_t idx, 
+                        std::string *value, int option) const;  // 3
+        size_t option(std::string *value, int optChar) const;
+        size_t option(size_t *idx, 
+                        std::string *value, int option) const;  // 4
+        size_t option(size_t idx, std::string *value, 
+                        char const *longOption) const;         // 5
+        size_t option(std::string *value, char const *longOption) const;
+        size_t option(size_t *idx, std::string *value, 
+                char const *longOption) const;                  // 6
+
+        char const *operator[](size_t idx) const;
+
+        void versionHelp(void (*usage)(std::string const &progname), 
+            char const *version, size_t minArgs, int helpFlag = 'h', 
+            int versionFlag = 'v') const;
+
+        char const **argPointers();
+    private:
+        Arg(Arg const &other);                              // NI
+        Arg &operator=(Arg const &other);                   // NI
+
+        friend class ArgConfig;     // accesses the constructors and
+                                    // longOption()
+                                                            // 1
+        Arg(char const *optstring, int argc, char **argv);
+
+        Arg(char const *optstring,                          // 2
+            LongOption const * const begin,
+            LongOption const * const end,
+            int argc, char **argv);
+
+        void addCharOption();       // in d_getOpt
+        void addLongOption(std::string const &longName);    // 1
+        void addLongOption(OptStruct *optStructs,           // 2
+                        std::string const &optString,
+                        LongOption const &longOption);
+
+        void verify();          
+
+        size_t firstNonEmpty(size_t *idx, std::string *value, 
+                        StringVector const &sv) const;
+
+        void setBasename(std::string const &argv0);
+        void fillLongOptions(
+                        OptStruct *optStructs,
+                        std::string const &optString,
+                        LongOption const * const begin,
+                        LongOption const * const end);
+        bool plainLongOption(LongOption const &longOption);
+        int setOptionType(std::string const &optString,
+                        LongOption const &longOption);
+};
+
+inline std::string const &Arg::LongOption::getName() const
+{
+    return d_name;
+}
+
+inline std::string const &Arg::basename() const
+{
+    return d_base;
+}
+
+inline size_t Arg::nArgs() const
+{
+    return d_argv.size();
+}
+
+inline size_t Arg::nOptions() const
+{
+    return d_nOptv;
+}
+
+inline size_t Arg::nLongOptions() const
+{
+    return d_nLongOptions;
+}
+
+inline size_t Arg::option(std::string *value, int optChar) const
+{
+    return option(static_cast<size_t>(0), value, optChar);
+}
+
+inline size_t Arg::option(std::string *value, char const *longOption) const
+{
+    return option(static_cast<size_t>(0), value, longOption);
+}
+
+} // FBB
+
+#endif

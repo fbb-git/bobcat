@@ -1,0 +1,77 @@
+#ifndef INCLUDED_BOBCAT_CMDFINDERBASE_
+#define INCLUDED_BOBCAT_CMDFINDERBASE_
+
+#include <strings.h>
+#include <string>
+
+namespace FBB
+{
+
+// Key: the textual elements in the char */function * arrays (e.g., help)
+// Cmd: what is entered interactively (e.g., h, hel, or help)
+
+class CmdFinderBase
+{
+                                    // mask testing the Mode-validity
+    static size_t const s_all = (1 << 3) - 1;  
+
+    std::string d_cmd;
+    std::string d_beyond;
+
+    public:
+        // The default is:
+        //      Use the key as provided
+        //      Match case sensitively and exactly
+        //      The last function is the catch-all
+        enum Mode
+        {
+            USE_FIRST   =   1 << 0, // Use/rm the first word from the key
+            UNIQUE      =   1 << 1, // Unique cmd abbreviations are OK
+            INSENSITIVE =   1 << 2, // Key-cmd matched case insensitively
+        };
+
+        void setMode(size_t mode);    // to change the mode afterwards
+
+    protected:
+        CmdFinderBase(size_t mode = 0);
+        std::string const &beyond() const;  // info beyond the command
+        std::string const &cmd() const;     // the used command
+
+                                // returns true if the cmd represents the
+                                // key
+        bool (CmdFinderBase::*d_match)(std::string const &key) const;
+
+                                // stores the command to use
+        void (CmdFinderBase::*d_useCmd)(std::string const &cmd);
+
+    private:
+        void useCmd(std::string const &key);
+        void useFirstCmd(std::string const &key);
+
+        bool matchExact(std::string const &key) const;
+
+                                // the command is found in the key
+        bool matchUnique(std::string const &key) const;
+        bool matchInsensitive(std::string const &key) const;
+        bool matchUniqueInsensitive(std::string const &key) const;
+};
+
+inline CmdFinderBase::CmdFinderBase(size_t mode)
+{
+    setMode(mode);
+}
+                                                    
+inline std::string const &CmdFinderBase::beyond() const   
+{
+    return d_beyond;
+}
+
+inline std::string const &CmdFinderBase::cmd() const
+{
+    return d_cmd;
+}
+
+} // FBB
+
+        
+#endif
