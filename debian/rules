@@ -81,7 +81,7 @@ binary-arch: build install
 		dh_strip
 		dh_compress
 		dh_fixperms
-		dh_makeshlibs -V
+		dh_makeshlibs -V -- -c0
 		dh_installdeb
 		dh_shlibdeps
 		dh_gencontrol
@@ -98,7 +98,7 @@ binary-arch: build install
 # archive downloaded from https://www.icce.rug.nl/debian/bobcat
 #		(bobcat_x.y.z..tar.gz)
 
-MD5TRUSTED := b487c2d85fa225250dbd45836aba5fea
+MD5TRUSTED := a2b992c4eda3f95e3dda07a6b9242619
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
