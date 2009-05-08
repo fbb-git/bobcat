@@ -4,10 +4,6 @@
 
 #include "selector.ih"
 
-using namespace std;
-using namespace FBB;
-
-
 Selector::Selector()
 {
     FD_ZERO(&d_read);

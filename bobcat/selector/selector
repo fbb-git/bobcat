@@ -2,8 +2,6 @@
 #define INCLUDED_BOBCAT_SELECTOR_
 
 #include <sys/select.h>
-#include <limits.h>
-#include <bobcat/errno>
 
 namespace FBB
 {
@@ -33,9 +31,6 @@ class Selector
         int nReady();           // number of available fd's. 0: timeout
                                 // occurred, -1: select() failed.
 
-        int getReadFd();        // DEPRECATED: USE readFd()
-        int getWriteFd();       // DEPRECATED: USE writeFd()
-        int getExceptFd();      // DEPRECATED: USE exceptFd()
         int exceptFd();
         int readFd();               // -1 if no more available descriptors
                                     // otherwise the next available fd    
@@ -60,21 +55,6 @@ inline int Selector::nReady()
     return d_ret;
 }
 
-inline int Selector::getReadFd()
-{
-    return checkSet(&d_readidx, d_ret_read);
-}
-
-inline int Selector::getWriteFd()
-{               
-    return checkSet(&d_writeidx, d_ret_write);
-}
-
-inline int Selector::getExceptFd()
-{                
-    return checkSet(&d_exceptidx, d_ret_except);
-}
-
 inline int Selector::exceptFd()
 {                
     return checkSet(&d_exceptidx, d_ret_except);
@@ -90,15 +70,9 @@ inline int Selector::writeFd()
     return checkSet(&d_writeidx, d_ret_write);
 }
 
-inline void Selector::setAlarm(int sec, int usec)
-{
-    d_alarm.tv_sec  = sec;
-    d_alarm.tv_usec = usec;
-}
-
 inline void Selector::noAlarm()
 {
-    setAlarm(INT_MAX, INT_MAX);
+    d_alarm.tv_sec = d_alarm.tv_usec = -1;
 }
 
 inline void Selector::addReadFd(int fd)
