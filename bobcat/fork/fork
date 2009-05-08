@@ -18,7 +18,6 @@ class Fork
 
     protected:
         pid_t pid() const;
-        pid_t getPid() const;                 // DEPRECATED. USE `pid()'
 
         virtual void childRedirections();   // do child redirections
         virtual void childProcess() = 0;    // must be implemented
@@ -36,11 +35,6 @@ inline Fork::~Fork()
 {}
 
 inline pid_t Fork::pid() const
-{
-    return d_pid;
-}
-
-inline pid_t Fork::getPid() const
 {
     return d_pid;
 }

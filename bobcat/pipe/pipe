@@ -29,9 +29,6 @@ class Pipe
         int readFd() const;
         int writeFd() const;
 
-        int getReadFd() const;      // DEPRECATED: USE readFd()
-        int getWriteFd() const;     // DEPRECATED: USE writeFd()
-
         void readFrom(int filedescriptor);   
 
         // experimental:
@@ -62,17 +59,6 @@ inline int Pipe::writeFd() const
 {
     return d_fd[WRITE];
 }
-
-inline int Pipe::getReadFd() const
-{
-    return d_fd[READ];
-}
-
-inline int Pipe::getWriteFd() const
-{
-    return d_fd[WRITE];
-}
-
 
 } // FBB
 
