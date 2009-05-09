@@ -76,15 +76,20 @@ used in the program to access (read, write) another file.
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
-    itb(void accessVia(int alternateFd) const)
-        This member is deprecated. Instead bf(swallow()) should be used.
     itb(void swallow(int otherFd) const)
         This member function expects the file descriptor of the file that will
 be redirected. Redirection means that the descriptor provided to the
-constructor will access the file descriptor provided to the bf(swallow())
-member (see the example below).  If the redirection fails an bf(FBB::Errno)
-object is thrown, whose tt(which()) member shows the system's tt(errno) value
-set by the failing bf(dup2)(2) function.
+constructor will be used when referring to the file descriptor provided to the
+bf(swallow()) member (see the example below).  If the redirection fails an
+bf(FBB::Errno) object is thrown, whose tt(which()) member shows the system's
+tt(errno) value set by the failing bf(dup2)(2) function.
+    itb(void through(int otherFd) const)
+        This member function also redirects tt(otherFd) to the file descriptor
+provided to the constructor, but will also close the constructor's file
+descriptor. After calling tt(through) the file referred to by the
+constructor's file descriptor can only be accessed from tt(otherFd). The file
+originally referred to by tt(otherFd) is not accessible anymore from the
+current process.
     )
 
 manpagesection(EXAMPLE)

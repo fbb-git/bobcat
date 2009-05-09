@@ -2,28 +2,25 @@
 
 std::streamsize IFdStreambuf::xsgetn(char *dest, std::streamsize n)
 {
-    int nread = 0;
+    if (n == 0)
+        return 0;
 
-    while (n)
-    {
-        if (!in_avail())
-        {
-            if (underflow() == EOF)         
-                break;
-        }
+    // this function is called from istream's read() member. 
+    // it copies what's available in the IFdStreambuf's own buffer and
+    // will then try to read some more from the fd, adding it to the
+    // destination buffer. Unless the requested amount of information is
+    // available the stream's good() member will return false. Calling
+    // programs may have to clear the stream's flags when, e.g., 
+    // at least one byte was read
+    
+    int avail = egptr() - gptr();
 
-        int avail = in_avail();
+    if (avail > n)
+        avail = n;
 
-        if (avail > n)
-            avail = n;
+    memcpy(dest, gptr(), avail);
+    gbump(avail);                       
 
-        memcpy(dest + nread, gptr(), avail);
-        gbump(avail);                       
-
-        nread += avail;
-        n -= avail;
-    }
-
-    return nread;
+    return avail + read(d_fd, dest + avail, n - avail);
 }
 
