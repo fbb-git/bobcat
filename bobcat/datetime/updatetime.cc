@@ -1,15 +1,25 @@
 #include "datetime.ih"
 
-bool DateTime::updateTime(struct tm *tmPtr)
+bool DateTime::updateTime(TimeStruct &tm)
 {
-    TimeStruct tmStruct = *tmPtr;
+    if (!d_ok)
+        return false;
 
-    time_t time = timeStruct2utcSec(&tmStruct);
+    time_t utcSec = d_utcSec;
+    TimeStruct dtm = d_tm;
+    int dspShift = d_displayZoneShift;
 
-    if (d_ok)
+    d_tm = tm;
+
+    d_tm.tm_sec -= dspShift;        // tm back to UTC
+    d_tm2d_tm(dspShift / 60);       // add the display shift for loc. time
+
+    if (!d_ok)
     {
-        d_time = time;
-        utcSec2timeStruct(&d_tm, d_time);
+        d_utcSec = utcSec;
+        d_tm = dtm;
+        d_displayZoneShift = dspShift;
     }
+
     return d_ok;
 }

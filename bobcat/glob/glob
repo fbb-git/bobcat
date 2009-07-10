@@ -2,6 +2,8 @@
 #define INCLUDED_BOBCAT_GLOB_
 
 #include <string>
+#include <memory>
+
 #include <glob.h>
 
 namespace FBB
@@ -12,11 +14,10 @@ class Glob
     struct GlobShare
     {
         glob_t      globStruct;
-        size_t      users;
         int         err;
     };
 
-    GlobShare *d_share;
+    std::shared_ptr<GlobShare> d_share;
 
     public:
         enum Flags
@@ -39,34 +40,25 @@ class Glob
         Glob(std::string const &pattern = "*", int flags = PERIOD,
              Dots dots = FIRST);
 
-        Glob(Glob const &other);
-        ~Glob();
-
-        Glob &operator=(Glob const &other);
         size_t size() const;
         char const *operator[](size_t idx) const;
         char const *const *begin() const;
         char const *const *end() const;
 
-        void verify() const;        // throws exception if the constructor did
-                                    // not properly terminate
+        void verify() const;        // Superfluous: now empty function
     private:
         char const **mbegin() const;
         char const **mend() const;
         void copy(Glob const &other);
         void destroy();
 
+        static void globShareDeleter(GlobShare *globShare);
         static bool isDot(char const *cp);
 };
 
-inline Glob::Glob(Glob const &other)
+inline void Glob::globShareDeleter(GlobShare *globShare)
 {
-    copy(other);
-}
-
-inline Glob::~Glob()
-{
-    destroy();
+    globfree(&globShare->globStruct);
 }
 
 inline size_t Glob::size() const

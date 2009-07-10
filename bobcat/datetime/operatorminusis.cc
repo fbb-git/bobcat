@@ -11,7 +11,7 @@ DateTime &DateTime::operator-=(TimeStruct const &fields)
     ts.tm_mon -= fields.tm_mon;
     ts.tm_year -= fields.tm_year;
 
-    updateTime(&ts);
+    updateTime(ts);
 
     return *this;
 }

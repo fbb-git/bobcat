@@ -234,47 +234,55 @@ argument specifies the way the time is displayed by the object, adding
 tt(displayZoneShift) (in minutes) to the time in UTC.
 
     itb(DateTime(std::string const &timeStr, TimeType type = UTC, int
-            utcZoneShift = 0)) 
+            utcHourShift = 0)) 
     Initializes a tt(DateTime) object with information stored in the provided
-tt(std::string) which is interpreted as the time in the current (local) time
-zone. To obtain the time in UTC the tt(DateTime) object subtracts the current
-difference between the local time zone and UTC from the provided time and adds
-tt(utcZoneShift).nl() The second argument specifies the way the time is
-displayed by the tt(DateTime) object: either as time UTC or using the current
-display zone offset.  E.g., if the current time zone is UTC + 1 hour then the
-time displayed by
+tt(std::string) which is interpreted as a local time in the current time zone.
+The object first converts that time to UTC, then adds tt(utcHourShift) to the
+hour field of the object's UTC time. If tt(TimeType UTC) is specified then
+this will be the time used by the object.  If tt(TimeType LOCALTIME) is
+specified then the object will use the current time zone to obtain the
+object's local time. The tt(LOCALTIME, 0) arguments will result in the object
+using the time as specified in tt(timeStr). When computing UTC daylight saving
+time (DST) is taken into account as well. E.g., if the current time zone
+equals UTC + 2 hours, and DST is active then the time displayed by
         verb( 
-    DateTime dt("Sun Nov 2 13:29:11 2008", DateTime::LOCALTIME, 120);
-    cout << dt << endl; 
+    DateTime dt("Wed Jul 2 13:29:11 2008", DateTime::UTC, 4);
         ) 
-    is tt(Sun Nov 2 17:29:11 2008): the object computes the UTC hour value as
-13 - 1 (current zone offset) + 2 (utc Zone shift in hours) = 14. To this a
-current display zone shift of 1 hour will be added, resulting in a displayed
-hour value 15.nl()
+    will be tt(Wed Jul 2 14:29:11 2008): the object computes the UTC hour
+value as 13 - 2 - 1 = 10, taking the time zone and DST into account, then adds
+4 hours to obtain 14. If tt(DateTime::LOCALTIME) would have been specified
+then the object would return hour value 17: 14 hrs + 2 hr time zone + 1 hr DST
+= 17.nl()
     The time contained in the tt(timeStr) parameter should be formatted as
-described in section bf(STANDARD TEXTUAL TIME REPRESENTATIONS).
+described in section bf(STANDARD TEXTUAL TIME REPRESENTATIONS) (the day of the
+week specification is ignored by the time conversion).
 
     itb(DateTime(std::string const &timeStr, int displayZoneShift, 
-                 int utcZoneShift = 0))
+                 int utcHourShift = 0))
         Initializes a tt(DateTime) object with information stored in the
 provided tt(std::string) which is interpreted as the time in the current
-(local) time zone. To obtain the time in UTC the tt(DateTime) object subtracts
-the current difference between the local time zone and UTC from the provided
-time and adds tt(utcZoneShift).nl()
+(local) time zone. Using the local time zone and daylight savings time (if
+applicable) the local time is first converted to UTC. To this time the number
+of hours specified by tt(utcHourShift) is added to obtain the object's actual
+time in UTC.nl()
     The second argument specifies the way the time is displayed by the
 tt(DateTime) object, adding tt(displayZoneShift) (in minutes) to the time in
-UTC.  E.g., if the current time zone is UTC + 1 hour then the time displayed
-by
+UTC. When using this constructor the time type is always tt(LOCALTIME).
+E.g., if the current local time differs +1 hours from UTC
+then the time displayed by
         verb(
-    DateTime dt("Sun Nov 2 13:29:11 2008", 180, 120);
-    cout << dt << endl;
+    DateTime dt("Sun Nov 2 13:29:11 2008", 4, 90);
         )
-    is tt(Sun Nov 2 17:29:11 2008): the object computes the UTC hour
-value as 13 - 1 (current zone offset) + 2 (utc Zone shift in hours) =
-14. To this a display zone shift of 3 hours will be added, resulting
-in a displayed hour value 17.nl()
+    is 
+tt(Sun Nov 2 17:29:11 2008): first the UTC hour value is computed as 12; to
+this 4 hours are added to obtain 16 hrs. The local time used by the object
+will have 90 minutes added to the UTC time, to become 
+        verb(
+    Sun Nov 2 17:59:11 2008
+        )
     The time contained in the tt(timeStr) parameter should be formatted as
-described in section bf(STANDARD TEXTUAL TIME REPRESENTATIONS).
+described in section bf(STANDARD TEXTUAL TIME REPRESENTATIONS) (the day of the
+week specification is ignored by the time conversion).
 
     itb(DateTime(DateTime const &other))
         The copy constructor is available.

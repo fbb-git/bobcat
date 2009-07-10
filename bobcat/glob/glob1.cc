@@ -2,10 +2,8 @@
 
 Glob::Glob(string const &pattern, int flags, Dots dots)
 :
-    d_share(new GlobShare)
+    d_share(new GlobShare, globShareDeleter)
 {
-    d_share->users = 1;
-
     d_share->err = 
         (
             (flags & ~(ERR | MARK | NOSORT | NOESCAPE | PERIOD))
@@ -19,4 +17,10 @@ Glob::Glob(string const &pattern, int flags, Dots dots)
     if (dots == FIRST)
         stable_partition(mbegin(), mend(), 
                          FnWrap1<char const *, bool>(&isDot));
+
+    if (int x = d_share->err)
+    {
+        d_share->err = 0;
+        throw Errno(x, "Glob: glob() failed or illegal Flag specified");
+    }
 }
