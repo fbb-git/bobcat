@@ -3,8 +3,9 @@
 
 #include <string>
 #include <memory>
-
 #include <glob.h>
+
+#include <iostream>
 
 namespace FBB
 {
@@ -14,7 +15,7 @@ class Glob
     struct GlobShare
     {
         glob_t      globStruct;
-        int         err;
+        int         globErr;
     };
 
     std::shared_ptr<GlobShare> d_share;
@@ -24,7 +25,7 @@ class Glob
         {
             // These flags are those used by glob.h
 
-            ERR =       1 << 0, // Return on read errors.
+            ERR =       1 << 0, // Return on read globErrors.
             MARK =      1 << 1, // Append a slash to each name.
             NOSORT =    1 << 2, // Don't sort the names.
             NOESCAPE =  1 << 6, // Backslashes don't quote metacharacters.
@@ -49,8 +50,6 @@ class Glob
     private:
         char const **mbegin() const;
         char const **mend() const;
-        void copy(Glob const &other);
-        void destroy();
 
         static void globShareDeleter(GlobShare *globShare);
         static bool isDot(char const *cp);
@@ -58,8 +57,12 @@ class Glob
 
 inline void Glob::globShareDeleter(GlobShare *globShare)
 {
-    globfree(&globShare->globStruct);
+    if (!globShare->globErr)
+        globfree(&globShare->globStruct);
 }
+
+inline void Glob::verify() const
+{}
 
 inline size_t Glob::size() const
 {

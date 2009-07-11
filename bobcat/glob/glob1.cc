@@ -4,23 +4,25 @@ Glob::Glob(string const &pattern, int flags, Dots dots)
 :
     d_share(new GlobShare, globShareDeleter)
 {
-    d_share->err = 
-        (
-            (flags & ~(ERR | MARK | NOSORT | NOESCAPE | PERIOD))
-            ||
-            glob(pattern.c_str(), flags, 0, &d_share->globStruct)
-        );
+    d_share->globErr = flags;
 
-    if (!d_share->err)
-        return;
+    if (flags & ~(ERR | MARK | NOSORT | NOESCAPE | PERIOD))
+        throw Errno(flags, "Glob: unknown Flag specified");
+
+    int err = glob(pattern.c_str(), flags, 0, &d_share->globStruct);
+    d_share->globErr = err;
+
+    if (err)
+        throw Errno(err, "Glob: glob() failed");
 
     if (dots == FIRST)
         stable_partition(mbegin(), mend(), 
                          FnWrap1<char const *, bool>(&isDot));
-
-    if (int x = d_share->err)
-    {
-        d_share->err = 0;
-        throw Errno(x, "Glob: glob() failed or illegal Flag specified");
-    }
 }
+
+
+
+
+
+
+
