@@ -78,17 +78,17 @@ class OFoldStreambuf: virtual public OFoldStreambufEnums,
     static std::vector<OFoldStreambuf const *> s_buffers;
 
     public:
-        OFoldStreambuf(
+        explicit OFoldStreambuf(
                    size_t leftIndent = 0, size_t rightMargin = 80,
                    TabsOrBlanks tob = BLANKS,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
 
-        OFoldStreambuf(char const *fname,
+        explicit OFoldStreambuf(char const *fname,
                    size_t leftIndent = 0, size_t rightMargin = 80,
                    TabsOrBlanks tob = BLANKS,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
 
-        OFoldStreambuf(std::ostream &stream,
+        explicit OFoldStreambuf(std::ostream &stream,
                    size_t leftIndent = 0, size_t rightMargin = 80,
                     TabsOrBlanks tob = BLANKS,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
