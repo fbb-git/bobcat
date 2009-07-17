@@ -2,10 +2,14 @@
 
 Xpointer::Xpointer()
 {
-    if (s_counter++)
-        return;         // One more object
+    if (s_theDisplay)
+        return;
 
-    s_theDisplay = XOpenDisplay(0);
+    s_theDisplay = std::unique_ptr<Display, DeleterType>
+                                    (XOpenDisplay(0), deleter);
+
+    if (!s_theDisplay)
+        throw Errno(1, "Can't open the display");
 }
     
     

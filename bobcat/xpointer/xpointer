@@ -2,23 +2,39 @@
 #define INCLUDED_BOBCAT_XPOINTER_
 
 #include <X11/Xlib.h>
+#include <memory>
 
 namespace FBB
 {
-    class Xpointer
-    {
-        static size_t s_counter;
-        static Display *s_theDisplay;
 
-        public:
-            Xpointer();
-            ~Xpointer();
+class Xpointer
+{
+    typedef void (*DeleterType)(Display *);
 
-            void verify() const;
-    
-            bool set(int x, int y) const;
-            bool get(int *x, int *y) const;
-    };
+    static std::unique_ptr<Display, DeleterType> s_theDisplay;
+
+    public:
+        Xpointer();
+        ~Xpointer() = default;
+
+        void verify() const;
+
+        bool set(int x, int y) const;
+        bool get(int *x, int *y) const;
+    private:
+        static void deleter(Display *dsp);
+};
+
+inline void Xpointer::verify() const
+{}
+
+inline void Xpointer::deleter(Display *dsp)
+{
+    if (dsp)
+        XCloseDisplay(dsp);
+}
+
+
 }
 
 #endif

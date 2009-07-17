@@ -1,4 +1,4 @@
 #include "xpointer.ih"
 
-size_t Xpointer::s_counter = 0;
-Display *Xpointer::s_theDisplay;
+std::unique_ptr<Display, Xpointer::DeleterType> 
+                                        Xpointer::s_theDisplay(0, deleter);
