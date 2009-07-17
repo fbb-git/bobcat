@@ -7,16 +7,11 @@ OneKey::OneKey(Mode state)
     setEcho(state);
 
     if (!isatty(STDIN_FILENO))
-    {
-        setErr(2, "OneKey::OneKey(): STDIN is not a tty");
-        return;
-    }
+        throw Errno(2, "OneKey::OneKey(): STDIN is not a tty");
 
     if (tcgetattr(STDIN_FILENO, &d_saved))
-    {
-        setErr(2, "OneKey::OneKey(): can't save the current stdin state");
-        return;
-    }
+        throw Errno(2, 
+                "OneKey::OneKey(): can't save the current stdin state");
     
     termios tattr;
 
@@ -27,6 +22,9 @@ OneKey::OneKey(Mode state)
     tattr.c_cc[VTIME] = 0;
     
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &tattr))
-        setErr(1, "OneKey::OneKey(): can't change the stdin state to "
-                                                              "direct input");
+    {
+        tcsetattr(STDIN_FILENO, TCSANOW, &d_saved);
+        throw Errno(1, 
+            "OneKey::OneKey(): can't change the stdin state to direct input");
+    }
 }

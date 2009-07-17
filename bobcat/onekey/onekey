@@ -12,7 +12,7 @@ class OneKey
     termios     d_saved;
     bool        d_useEcho;          // default false
     int         d_err;
-    char const *d_msg;
+    // char const *d_msg;           // removed in V. 2.03.00
 
     public:
         enum Mode
@@ -21,7 +21,7 @@ class OneKey
             ON      
         };
 
-        OneKey(Mode state = OFF);    
+        explicit OneKey(Mode state = OFF);    
         ~OneKey();
         
         int get() const;                // get the next char
@@ -32,14 +32,15 @@ class OneKey
     private:
         OneKey(OneKey const &other);                    // NI
         OneKey const &operator=(OneKey const &other);   // NI
-
-        void setErr(int nr, char const *txt);
 };
 
 inline void OneKey::setEcho(Mode state)
 {
     d_useEcho = (state == ON);
 }
+XS
+inline void OneKey::verify() const
+{}
 
 } // FBB
 
