@@ -1,0 +1,317 @@
+#ifndef INCLUDED_BOBCAT_BIGINT_
+#define INCLUDED_BOBCAT_BIGINT_
+
+#include <iosfwd>
+#include <openssl/bn.h>
+
+namespace FBB
+{
+    class BigInt;
+}
+
+namespace std
+{
+    ostream &operator<<(ostream &out, FBB::BigInt const &bn);
+}
+
+namespace FBB
+{
+class PrimeBase;
+
+class BigInt
+{
+    friend std::ostream &std::operator<<(std::ostream &out, BigInt const &bn);
+
+    char const *d_msg;
+
+    BIGNUM d_bn;
+
+    public:
+        enum Msb
+        {
+            MSB_UNKNOWN = -1,
+            MSB_IS_ONE,
+            TOP_TWO_BITS_ONE
+        };
+
+        enum Lsb
+        {
+            EVEN,
+            ODD,
+        };
+
+        enum PrimeType
+        {
+            ANY = false,
+            SAFE = true
+        };
+
+        BigInt();
+        BigInt(BIGNUM const &bignum);
+        BigInt(BigInt const &other);
+
+        template<typename Type>
+        BigInt(Type const &value);
+
+        ~BigInt();
+
+        void verify() const;
+
+        BigInt &operator=(BigInt const &other);
+
+        BigInt &operator+=(BigInt const &rhs);
+        BigInt addMod(BigInt const &rhs, BigInt const &mod) const;
+
+        BigInt &operator-=(BigInt const &rhs);
+        BigInt subMod(BigInt const &rhs, BigInt const &mod) const;
+
+        BigInt &operator*=(BigInt const &rhs);
+        BigInt mulMod(BigInt const &rhs, BigInt const &mod) const;
+
+        BigInt &operator%=(BigInt const &rhs);
+
+        BigInt &operator/=(BigInt const &rhs);      // integer division,
+
+                                                    // integer division, also
+                                                    // returning remainder
+        BigInt div(BigInt *remainder, BigInt const &rhs) const;
+
+        BigInt gcd(BigInt const &rhs) const;
+
+        BigInt sqr() const;
+        BigInt sqrMod(BigInt const &mod) const;
+
+        bool isZero() const;
+        bool isOne() const;
+        bool isOdd() const;
+
+        unsigned long ulong() const;
+        BIGNUM const &bignum() const;
+
+        size_t size() const;
+        size_t sizeInBits() const;
+
+        int compare(BigInt const &other) const;
+        int uCompare(BigInt const &other) const;
+
+        BigInt exp(BigInt const &exponent) const;
+        BigInt expMod(BigInt const &exponent, BigInt const &mod) const;
+
+        static BigInt rand(size_t bitsSize, 
+                           Msb msb = MSB_IS_ONE, Lsb lsb = ODD);
+
+        static BigInt randRange(BigInt const &max);
+
+        static BigInt pseudoRand(size_t bitsSize, 
+                           Msb msb = MSB_IS_ONE, Lsb lsb = ODD);
+        static BigInt pseudoRandRange(BigInt const &max);
+
+        static BigInt prime(size_t nBits, 
+                            BigInt const *add = 0, BigInt const *rem = 0,
+                            PrimeType primeType = ANY);
+
+    private:
+        std::ostream &insertInto(std::ostream &out) const;
+
+        void copy(BigInt const &other);
+        void copy(BIGNUM *lhs, BIGNUM const &rhs);
+
+        void destroy();
+
+        BigInt &checked1(
+                int (*BN_op)(BIGNUM *, 
+                             BIGNUM const *, BIGNUM const *), 
+                BigInt const &rhs, char const *op);
+
+        BigInt checked2(int (*BN_op)(BIGNUM *, 
+                                     BIGNUM const *, BIGNUM const *, 
+                                     BIGNUM const *, 
+                                     BN_CTX *),
+                        BigInt const rhs, BigInt const &mod, 
+                                                    char const *op) const;
+        void checked3(BIGNUM *div, BIGNUM *rem, 
+                                   BigInt const &rhs, char const *op) const;
+
+        BigInt checked4(int (*BN_op)(BIGNUM *, 
+                                     BIGNUM const *, BIGNUM const *, 
+                                     BN_CTX *), 
+                        BigInt const &rhs, char const *op) const;
+
+//        BigInt &checked(int (*BN_op)(BIGNUM *, BIGNUM const *, BIGNUM const *), 
+//                        BigInt const &rhs, char const *op);
+//
+
+        static void primeCallback(int reason, int primeNr, void *primeBase);
+};
+
+template<typename Type>
+inline BigInt::BigInt(Type const &value)
+{
+    BN_init(&d_bn);
+    BN_set_word(&d_bn, static_cast<unsigned long const &>(value));
+}    
+
+inline BigInt const operator+(BigInt const &lhs, BigInt const &rhs)
+{
+    return BigInt(lhs) += rhs;
+}
+
+inline BigInt &BigInt::operator+=(BigInt const &rhs)
+{
+    return checked1(BN_add, rhs, "+");
+}
+
+inline BigInt BigInt::addMod(BigInt const &rhs, BigInt const &mod) const
+{
+    return checked2(BN_mod_add, rhs, mod, "addMod");
+}
+
+
+inline BigInt const operator-(BigInt const &lhs, BigInt const &rhs)
+{
+    return BigInt(lhs) -= rhs;
+}
+
+inline BigInt &BigInt::operator-=(BigInt const &rhs)
+{
+    return checked1(BN_sub, rhs, "-");
+}
+
+inline BigInt BigInt::subMod(BigInt const &rhs, BigInt const &mod) const
+{
+    return checked2(BN_mod_sub, rhs, mod, "subMod");
+}
+
+inline BigInt const operator*(BigInt const &lhs, BigInt const &rhs)
+{
+    return BigInt(lhs) *= rhs;
+}
+
+inline BigInt BigInt::mulMod(BigInt const &rhs, BigInt const &mod) const
+{
+    return checked2(BN_mod_mul, rhs, mod, "mulMod");
+}
+
+inline BigInt const operator%(BigInt const &lhs, BigInt const &rhs)
+{
+    return BigInt(lhs) %= rhs;
+}
+
+inline BigInt &BigInt::operator%=(BigInt const &rhs)
+{
+    checked3(&d_bn, 0, rhs, "%=");
+    return *this;
+}
+
+inline BigInt const operator/(BigInt const &lhs, BigInt const &rhs)
+{
+    return BigInt(lhs) /= rhs;
+}
+
+inline BigInt &BigInt::operator/=(BigInt const &rhs)
+{
+    checked3(&d_bn, 0, rhs, "/=");
+    return *this;
+}
+
+inline BigInt BigInt::gcd(BigInt const &rhs) const
+{
+    return checked4(BN_gcd, rhs, "gcd");
+}
+
+inline BigInt BigInt::sqrMod(BigInt const &mod) const
+{
+    return checked4(BN_mod_sqr, mod, "sqrMod");
+}
+
+inline size_t BigInt::size() const
+{
+    return BN_num_bytes(&d_bn);
+}
+
+inline size_t BigInt::sizeInBits() const
+{
+    return BN_num_bits(&d_bn);
+}
+
+inline int BigInt::uCompare(BigInt const &other) const
+{
+    return BN_ucmp(&d_bn, &other.d_bn);
+}
+
+inline int BigInt::compare(BigInt const &other) const
+{
+    return BN_cmp(&d_bn, &other.d_bn);
+}
+
+inline bool operator==(BigInt const &lhs, BigInt const &rhs) 
+{
+    return lhs.compare(rhs) == 0;
+}
+
+inline bool operator!=(BigInt const &lhs, BigInt const &rhs)
+{
+    return lhs.compare(rhs) != 0;
+}
+
+inline bool operator<(BigInt const &lhs, BigInt const &rhs) 
+{
+    return lhs.compare(rhs) < 0;
+}
+
+inline bool operator<=(BigInt const &lhs, BigInt const &rhs)
+{
+    return lhs.compare(rhs) <= 0;
+}
+
+inline bool operator>(BigInt const &lhs, BigInt const &rhs) 
+{
+    return lhs.compare(rhs) > 0;
+}
+
+inline bool operator>=(BigInt const &lhs, BigInt const &rhs)
+{
+    return lhs.compare(rhs) >= 0;
+}
+
+
+inline bool BigInt::isZero() const
+{
+    return BN_is_zero(&d_bn);
+}
+
+inline bool BigInt::isOne() const
+{
+    return BN_is_one(&d_bn);
+}
+
+inline bool BigInt::isOdd() const
+{
+    return BN_is_odd(&d_bn);
+}
+
+inline unsigned long BigInt::ulong() const
+{
+    return BN_get_word(&d_bn);
+}
+
+inline BIGNUM const &BigInt::bignum() const
+{
+    return d_bn;
+}
+
+}   // namespace FBB
+
+namespace std
+{
+    inline ostream &operator<<(ostream &out, FBB::BigInt const &bn)
+    {
+        return bn.insertInto(out);
+    }
+}
+
+#endif
+
+
+
+
