@@ -8,8 +8,6 @@ namespace FBB
 
 class Pipe
 {
-    int d_err;
-
     protected:
         enum  RW 
         {
@@ -20,11 +18,11 @@ class Pipe
 
     public:
         Pipe();
-        Pipe(int const *fd);
+        explicit Pipe(int const *fd);
 
         ~Pipe();
 
-        void verify() const;
+        void verify() const;        // empty
 
         int readFd() const;
         int writeFd() const;
@@ -39,11 +37,6 @@ class Pipe
         void writtenBy(int const *filedescriptor, size_t n = 2);
         int writeOnly();
 };
-
-inline Pipe::Pipe()
-{
-    d_err = pipe(d_fd);
-}
 
 inline Pipe::~Pipe()
 {
@@ -60,6 +53,10 @@ inline int Pipe::writeFd() const
     return d_fd[WRITE];
 }
 
+inline void Pipe::verify() const
+{}
+
 } // FBB
 
 #endif
+
