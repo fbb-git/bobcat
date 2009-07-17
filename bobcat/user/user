@@ -2,7 +2,6 @@
 #define INCLUDED_BOBCAT_USER
 
 #include <string>
-#include <bobcat/errno>
 
 namespace FBB
 {
@@ -15,13 +14,12 @@ class User
     std::string d_shell;
     size_t d_uid;
     size_t d_gid;
-    char const *d_msg;
 
     public:
         User();
-        ~User();
+        ~User() = default;
 
-        void verify() const;
+        void verify() const;        
 
         size_t groupid() const;
         size_t userid() const;
@@ -32,10 +30,8 @@ class User
         std::string const &shell() const;
 };
 
-inline User::~User()
-{
-    verify();
-}
+inline void User::verify() const
+{}
 
 inline size_t User::groupid() const
 {
