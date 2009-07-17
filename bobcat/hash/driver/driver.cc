@@ -1,12 +1,31 @@
 #include "../hash"
 
+#include <iostream>
+
 using namespace FBB;
 using namespace std;
 
-int main(int argc, char *const *const argv)
+int main(int argc, char **argv)
 {
-    pair<char const *, int> d[10];
+    HashStringCase<string> hsc;
 
-    HashCharPtr<int> hcp(d, d + 10);
-    return 0;
+    hsc["AAP"] = "noot";
+    hsc["Aap"] = "mies";
+
+    cout << hsc["aap"] << endl;
+
+    HashString<string> hs;
+
+    hs["AAP"] = "noot";
+    hs["Aap"] = "mies";
+
+    cout << hs["AAP"] << endl;
+
+    HashCharPtr<int> hcp;
+
+    hcp["jan"] = 31;
+    hcp["feb"] = 28;
+
+    cout << hcp["jan"] << endl;
+
 }
