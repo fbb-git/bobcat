@@ -1,6 +1,8 @@
-string askMilter()
+
+void askMilter(int all)
 {
-    printf(
+    if (!all)
+        printf(
     "    The class FBB::Milter can only be compiled if you have installed\n"
     "    the file libmilter/mfapi.h. To use the class Milter, programs using\n"
     "    Milter objects must also be linked against the milter library:\n"
@@ -15,17 +17,16 @@ string askMilter()
     "    Press Enter or any other line if you DON'T WANT to include the "
                                                             "class\n"
     "                                  FBB::Milter in the bobcat library.\n"
-    );
+        );
 
-    if (gets() == "y")
-        return "milter";
-    else 
-        return "";
+    if (all || gets() == "y")
+        g_classes += (list)"milter";
 }
 
-string askXpointer()
+void askXpointer(int all)
 {
-    printf(
+    if (!all)
+        printf(
     "    The class FBB::Xpointer can only be compiled if you have installed\n"
     "    the file X11/Xlib.h. To use the class Xpointer, programs using "
                                                             "Xpointer\n"
@@ -40,12 +41,32 @@ string askXpointer()
     "    Press Enter or any other line if you DON'T WANT to include the "
                                                             "class\n"
     "                                  FBB::Xpointer in the bobcat library.\n"
-    );
+        );
 
-    if (gets() == "y")
-        return "xpointer";
-    else 
-        return "";
+    if (all || gets() == "y")
+        g_classes += (list)"xpointer";
+}
+
+void askOpenSSL(int all)
+{
+    if (!all)
+        printf(
+    "    The SSL classes can only be compiled if you have installed\n"
+    "    the libssl-dev development library, containing files like\n"
+    "    /usr/include/openssl/bn.h. To use objects from openssl programs\n"
+    "     must also be linked against the openSSL library: -lssl -lbobcat\n"
+    "\n"
+    "    The SSL classes can safely be left out of the bobcat library if\n"
+    "    you're not planning to construct programs using them.\n"
+    "\n"
+    "    Press Enter y if you WANT to compile the files of the SSL classes\n"
+    "    Press Enter or any other line if you DON'T WANT to include the "
+                                                            "SSL classes\n"
+    "                                  in the bobcat library.\n"
+        );
+
+    if (all || gets() == "y")
+        addClasses("SSLCLASSES");    
 }
 
 void special(int expand, int all)
@@ -56,10 +77,10 @@ void special(int expand, int all)
 
     if (expand)
     {
-        if (!all)                                   // ask for optional classes
-            g_classes += strtok(askMilter() + " " + askXpointer(), " ");
-        else
-            g_classes += strtok("milter xpointer", " ");
+        askMilter(all);
+        askXpointer(all);
+        askOpenSSL(all);
+
         g_nClasses = sizeof(g_classes);
     }
 
