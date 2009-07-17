@@ -5,8 +5,6 @@
 #include <memory>
 #include <glob.h>
 
-#include <iostream>
-
 namespace FBB
 {
 
@@ -38,8 +36,9 @@ class Glob
             DEFAULT
         };
             
-        Glob(std::string const &pattern = "*", int flags = PERIOD,
-             Dots dots = FIRST);
+        explicit Glob(std::string const &pattern = "*", int flags = PERIOD,
+                      Dots dots = FIRST);
+        Glob(Glob &&tmp);
 
         size_t size() const;
         char const *operator[](size_t idx) const;
@@ -59,6 +58,11 @@ inline void Glob::globShareDeleter(GlobShare *globShare)
 {
     if (!globShare->globErr)
         globfree(&globShare->globStruct);
+}
+
+inline Glob::Glob(Glob &&tmp)
+{
+    d_share.swap(tmp.d_share);    
 }
 
 inline void Glob::verify() const

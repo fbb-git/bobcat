@@ -10,6 +10,11 @@
 using namespace std;
 using namespace FBB;
 
+Glob makeGlob(char const *pat)
+{
+    return Glob(pat, Glob::PERIOD, Glob::DEFAULT);
+}
+
 int main(int argc, char **argv)
 try
 {
@@ -28,10 +33,14 @@ try
 
     cout << "Pattern: " << argv[1] << "\n";
 
-    Glob pattern(argv[1], Glob::PERIOD, Glob::DEFAULT);
+    Glob pattern(makeGlob(argv[1]));
+    Glob copy(pattern);
+    copy = general;
 
     for (size_t idx = 0; idx < pattern.size(); idx++)
         cout << idx << ": " << pattern[idx] << endl;
+
+    Glob fails("*", 1023);
 
     return 0;
 }
