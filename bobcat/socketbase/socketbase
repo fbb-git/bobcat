@@ -15,12 +15,11 @@ namespace FBB
 class SocketBase: public InetAddress
 {
     int         d_sock;
-    char const *d_msg;
 
     public:
         ~SocketBase();
 
-        void verify() const;
+        void verify() const;        // empty
 
         bool debug() const;
         bool reuse() const;
@@ -29,7 +28,7 @@ class SocketBase: public InetAddress
         bool setReuse(bool trueIsOn);
 
     protected:
-        SocketBase(uint16_t port);
+        explicit SocketBase(uint16_t port);
         SocketBase(std::string const &host, uint16_t port);
         SocketBase(int socket, sockaddr_in const &address);
 
@@ -71,8 +70,10 @@ inline bool SocketBase::setReuse(bool trueIsOn)
 inline SocketBase::SocketBase(int socket, sockaddr_in const &address)
 :
     InetAddress(address),
-    d_sock(socket),
-    d_msg(0)
+    d_sock(socket)
+{}
+
+inline void SocketBase::verify() const
 {}
 
 } // FBB
