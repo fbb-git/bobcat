@@ -18,7 +18,8 @@ class FnWrap2c
         typedef typename TypeTrait<Type2>::Plain       second_argument_type;
         typedef typename TypeTrait<ReturnType>::Plain  result_type;
 
-        FnWrap2c(ReturnType (*fun)(Type1, Type2, Context), Context context);
+        explicit FnWrap2c(ReturnType (*fun)(Type1, Type2, Context), 
+                          Context context);
         ReturnType operator()(Type1 p1, Type2 p2) const;
 };
 
