@@ -12,13 +12,13 @@ namespace FBB
 
 class LocalSocketBase
 {
-    size_t            d_length;
+    size_t              d_length;
     int                 d_socket;
     struct sockaddr_un  d_address;
 
     protected:
         LocalSocketBase();                                      // 1
-        LocalSocketBase(std::string const &name);
+        explicit LocalSocketBase(std::string const &name);
 
         void open(std::string const &name);
         int socket() const;
