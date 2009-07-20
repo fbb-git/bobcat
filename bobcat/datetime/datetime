@@ -6,25 +6,14 @@
 
 namespace FBB
 {
-    class DateTime;
-}
-
-namespace std
-{
-    ostream &operator<<(ostream &str, FBB::DateTime const &dt);
-    istream &operator>>(istream &str, FBB::DateTime &dt);
-}
-
-namespace FBB
-{
 
 class DateTime
 {
     typedef struct tm TimeStruct;
 
-    friend  std::ostream &std::operator<<(std::ostream &str, 
+    friend  std::ostream &operator<<(std::ostream &str, 
                                           DateTime const &dt);
-    friend  std::istream &std::operator>>(std::istream &str, DateTime &dt);
+    friend  std::istream &operator>>(std::istream &str, DateTime &dt);
 
     friend bool operator==(DateTime const &left, DateTime const &right);
     friend bool operator!=(DateTime const &left, DateTime const &right);
@@ -138,8 +127,8 @@ class DateTime
         DateTime(TimeStruct const &tm, TimeType type = UTC);
 
                                                 // 6. specify UTC tm fields
-                                                // display + displayZoneShift
-        DateTime(TimeStruct const &tm, int displayZoneShift);
+                                                // display + tzShift
+        DateTime(TimeStruct const &tm, int tzShift);
 
                                                 // 7. specify UTC/LOCAL text 
                                                 //    time
@@ -151,7 +140,7 @@ class DateTime
                                                 // 8. specify UTC text time
                                                 //    display + 
                                                 //      displayZoneShift
-        DateTime(std::string const &timeStr, int displayZoneShift);
+        DateTime(std::string const &timeStr, int tzShift);
 
                                                 // 8dep.: Deprecated: avoid
         DateTime(std::string const &timeStr, int displayZoneShift, int);
@@ -395,6 +384,6 @@ inline bool operator>=(DateTime const &left, DateTime const &right)
     return left.d_utcSec >= right.d_utcSec;
 }   
 
-}
+}   // FBB
 
 #endif

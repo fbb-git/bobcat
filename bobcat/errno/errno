@@ -52,11 +52,12 @@ inline Errno *throwable()
     return 0;
 }
 
+inline Errno &operator<<(std::ostream &str, Errno *(*)())
+{
+    return *static_cast<Errno *>(&(str << std::flush));
+}
+
 } // FBB
 
-inline FBB::Errno &operator<<(std::ostream &str, FBB::Errno *(*)())
-{
-    return *static_cast<FBB::Errno *>(&(str << std::flush));
-}
    
 #endif

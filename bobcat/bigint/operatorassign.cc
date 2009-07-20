@@ -6,7 +6,6 @@ BigInt &BigInt::operator=(BigInt const &other)
     {
         destroy();
         copy(other);
-        verify();
     }
     return *this;
 }

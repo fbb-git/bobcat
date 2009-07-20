@@ -3,7 +3,8 @@
 void CGIFSA::accept()
 {
     for_each(d_buffer.rbegin() + 1, d_buffer.rend(), 
-            d_stack, &stack<char>::push);
+            d_stack, 
+        static_cast<void (stack<char>::*)(char const &)>(&stack<char>::push));
 
     acceptAll();
 

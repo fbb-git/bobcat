@@ -8,10 +8,7 @@ manpagename(FBB::BigInt)(Arithmetic on Integers of Unlimited Size)
 
 manpagesynopsis()
     bf(#include <bobcat/bigint>)nl()
-==================================
-REMOVE for plain template classes:    
     Linking option: tt(-lbobcat, -lopenssl) 
-==================================
 
 manpagedescription()
 
@@ -24,6 +21,9 @@ to characters and standard numerical value types are offered.
 Below, the phrase em(the object) may also refer to the object's value. The
 context in which this occurs will make clear that the object's value rather
 than the object as-is is referred to.
+
+Various constructors accept tt(BIGNUM) arguments. Type tt(BIGNUM) is the type
+containing an integer of unlimited precision as defined by OpenSSL.
 
 includefile(namespace.inc)
 
@@ -59,19 +59,25 @@ manpagesection(CONSTRUCTORS)
     itemization(
     itb(BigInt())
         The default constructor initializes a tt(BigInt) value to 0.
+    itb(BigInt(BIGNUM const &value))
+        This constructor initializes a tt(BigInt) from a tt(BIGNUM). 
+    itb(BigInt(BIGNUM const *value))
+        This constructor initializes a tt(BigInt) from a pointer to a 
+tt(BIGNUM).
     itb(BigInt(Type const &value))
         This constructor is defined as a member template. Any type that can be
 converted using a static cast to an tt(unsigned long) can be used as argument
 to this constructor. Promotion is allowed, so in many situations where
 tt(BigInt)s are expected a plain numerical value can be used as well.
     )
-    The standard copy constructor is available. It may fail. Following the
-use of the copy constructor tt(verify()) can be called to verify the
-success of the copy operation. 
+    The standard copy constructor is available. All but the default
+constructor may throw an tt(FBB::Errno) exception if the initialization of the
+tt(BigInt) object fails. 
+
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
-    itb(BigInt addMod(BigInt const &rhs, BigInt const &mod) const)) 
+    itb(BigInt const addMod(BigInt const &rhs, BigInt const &mod) const)) 
        The current object is added to tt(rhs) and this sum modulo tt(mod) is
         returned.
 
@@ -79,7 +85,11 @@ manpagesection(MEMBER FUNCTIONS)
        A reference to the tt(BIGNUM) value maintained by the current
         tt(BigInt) object is returned.
 
-    itb(BigInt div(BigInt *remainder, BigInt const &rhs) const)
+    itb(bool clearBit(size_t index))
+       The bit at index position tt(index) is cleared. tt(True) is returned if
+        the operation succeeded, tt(false) otherwise).
+
+    itb(BigInt const div(BigInt *remainder, BigInt const &rhs) const)
        The current object divided by  tt(rhs) is returned (integer division),
         and the division's remainder is returned in tt(*remainder).
 
@@ -88,17 +98,24 @@ manpagesection(MEMBER FUNCTIONS)
         is returned; if they are equal 0 is returned; if the current object is
         larger than tt(ths) 1 is returned (see also tt(uCompare)). 
 
-    itb(BigInt exp(BigInt const &exponent) const)
+    itb(BigInt const exp(BigInt const &exponent) const)
        The current object raised to the power tt(exponent) is returned. 
 
-    itb(BigInt expMod(BigInt const &exponent, BigInt const &mod) const)
+    itb(BigInt const expMod(BigInt const &exponent, BigInt const &mod) const)
        The current object raised to the power tt(exponent) modulo tt(mod) is
         returned.
 
-    itb(BigInt gcd(BigInt const &rhs) const)
+    itb(BigInt const gcd(BigInt const &rhs) const)
        The greates common divisor (gcd) of the current object and tt(rhs) is
         returned. To compute the least common multiple (lcm) the relationship
         tt(a * b = gcd(a, b) * lcm(a, b)) can be used.
+
+    itb(bool hasBit(size_t index))
+        tt(True) is returned if the bit at index position tt(index) has been
+        set, tt(false) otherwise).
+
+    itb(BigInt const inverseMod(BigInt const &mod) const)) 
+       The inverse of the current object modulo tt(mod) is returned.
 
     itb(bool isOdd() const)
        Returns tt(true) if the current object is an odd value.
@@ -109,9 +126,34 @@ manpagesection(MEMBER FUNCTIONS)
     itb(bool isZero() const)
        Returns tt(true) if the current object equals zero (0).
 
-    itb(BigInt mulMod(BigInt const &rhs, BigInt const &mod) const) 
+    itb(bool lshift()) The value stored in the current object is shifted one
+        bit to the left.  tt(True) is returned if the shift succeeded,
+        tt(false) otherwise).
+
+    itb(bool lshift(size_t nBits)) The value stored in the current object is
+        shifted tt(nBits) bits to the left.  tt(True) is returned if the shift
+        succeeded, tt(false) otherwise).
+
+    itb(bool maskBits(size_t lowerNBits))
+        The tt(lowerNBits) lower bits of the current object are kept, all
+        higher order bits are cleared. tt(True) is returned if the maksing
+        operation succeeded,  tt(false) otherwise).
+
+    itb(BigInt const mulMod(BigInt const &rhs, BigInt const &mod) const) 
        The current object is multiplied by tt(rhs) and this product modulo
         tt(mod) is returned.
+
+    itb(bool rshift()) The value stored in the current object is shifted one
+        bit to the right.  tt(True) is returned if the shift succeeded,
+        tt(false) otherwise).
+
+    itb(bool rshift(size_t nBits)) The value stored in the current object is
+        shifted tt(nBits) bits to the right.  tt(True) is returned if the
+        shift succeeded, tt(false) otherwise).
+
+    itb(bool setBit(size_t index))
+        The bit at index position tt(index) is set. tt(True) is returned if
+        the operation succeeded, tt(false) otherwise).
 
     itb(size_t size() const)
        The number of bytes required to store the current tt(BIGNUM) value is
@@ -123,16 +165,13 @@ manpagesection(MEMBER FUNCTIONS)
         functions like tt(RSA_size(), DH_size(),) or tt(DSA_size()) should be
         used.
 
-    itb(BigInt sqr() const)
+    itb(BigInt const sqr() const)
        The square of the current object is returned.
 
-    itb(BigInt sqr() const)
-       The square of the current object is returned.
-
-    itb(BigInt sqrMod(BigInt const &mod) const)
+    itb(BigInt const sqrMod(BigInt const &mod) const)
        The square of the current object modulo tt(mod) is returned.
 
-    itb(BigInt subMod(BigInt const &rhs, BigInt const &mod) const) 
+    itb(BigInt const subMod(BigInt const &rhs, BigInt const &mod) const) 
        tt(Rhs) is subtracted from the current object and this difference
         modulo tt(mod) is returned.
 
@@ -145,73 +184,82 @@ manpagesection(MEMBER FUNCTIONS)
        Using absolute values, if the current object is smaller than tt(rhs) -1
         is returned; if they are equal 0 is returned; if the current object is
         larger than tt(ths) 1 is returned (see also tt(uCompare)).
-
-    itb(void verify() const)
-        This member should be called following the use of the tt(BigInt) copy
-constructor. It throws an tt(Errno) exception if the copy construction failed.
-Members returning tt(BigInt) objects will have called tt(verify()) before
-returning from the function.
     )
 
 manpagesection(OVERLOADED OPERATORS)
 
-    All assignment operators (including the arithmetic assignments) throws
-an tt(Errno) exception if the assignment fails. 
+    All operators (including the arithmetic assignments operators, but except
+for the insertion operator) throw tt(Errno) exceptions on failure.
 
     itemization(
-    itb(BigInt const operator*(BigInt const &rhs))
-       This member returns the  current tt(BigInt) object multiplied by
-        tt(rhs). 
+    itb(BigInt const operator*(BigInt const &lhs, BigInt const &rhs))
+       This operator returns the product of the tt(lhs) object times the
+        tt(rhs) object.
 
-    itb(BigInt const operator/(BigInt const &rhs))
-       This member returns the current tt(BigInt) object (integer) divided by
-        tt(rhs). The remainder is lost. The member tt(div) divides and makes
-        the remainder available as well.
+    itb(BigInt const operator/(BigInt const &lhs, BigInt const &rhs))
+       This operator returns the quotient of the tt(lhs) object divided by the
+        tt(rhs) object. The remainder is lost (The member tt(div) performs the
+        division and makes the remainder available as well).
 
-    itb(BigInt const operator%(BigInt const &rhs))
-       This member returns the remainder of the (integer) division of the
-        current tt(BigInt) object by tt(rhs).
+    itb(BigInt const operator%(BigInt const &lhs, BigInt const &rhs))
+       This operator returns the remainder of the (integer) division of the
+        tt(lhs) object by the tt(rhs) object.
 
-    itb(BigInt const operator+(BigInt const &rhs))
-       This member returns the sum of the current tt(BigInt) object and
-        tt(rhs).
+    itb(BigInt const operator+(BigInt const &lhs, BigInt const &rhs))
+       This operator returns the sum of the tt(lhs) object and the tt(rhs)
+        object. 
 
-    itb(BigInt const operator-(BigInt const &rhs)) 
-       This member returns the difference of the current tt(BigInt) object and
-        tt(rhs).
+    itb(BigInt const operator-(BigInt const &lhs, BigInt const &rhs)) 
+       This operator returns the difference of the tt(lhs) object and the
+        tt(rhs) object.
 
-    itb(BigInt &operator=(BigInt const &rhs)) This member assigns tt(rhs) to
+    itb(BigInt &operator<<(BigInt const &lhs, size_t nBits)) This operator
+        returns the value stored in the tt(lhs) object shifted tt(nBits) bit
+        to the left (see also the tt(lshift) members).
+
+    itb(BigInt &operator>>=(BigInt const &lhs, size_t nBits))
+       This operator returns the value stored in the tt(lhs) object shifted
+        tt(nBits) bit to the right (see also the tt(lshift) members).
+
+    itb(BigInt &operator=(BigInt const &rhs)) This operator assigns tt(rhs) to
         the current tt(BigInt) valueobject. 
 
     itb(BigInt &operator*=(BigInt const &rhs))
-       This member multiplies the current tt(BigInt) object by tt(rhs).
+       This operator multiplies the current tt(BigInt) object by tt(rhs).
 
     itb(BigInt &operator/=(BigInt const &rhs))
-       This member assigns the result of the (integer) division of the current
+       This operator assigns the result of the (integer) division of the current
         tt(BigInt) object by tt(ths) to the current object. The remainder is
         lost. The member tt(div) divides and makes the remainder available as
         well.
 
     itb(BigInt &operator%=(BigInt const &rhs))
-       This member assigns the remainder of the (integer) division of the
+       This operator assigns the remainder of the (integer) division of the
         current tt(BigInt) object by tt(rhs) to the current object.
 
     itb(BigInt &operator+=(BigInt const &rhs))
-        This member adds tt(rhs) to the current tt(BigInt) object.
+        This operator adds tt(rhs) to the current tt(BigInt) object.
 
     itb(BigInt &operator-=(BigInt const &rhs))
-        This member subtracts tt(rhs) from the current tt(BigInt) object.
+        This operator subtracts tt(rhs) from the current tt(BigInt) object.
 
     itb(BigInt &operator-=(BigInt const &rhs))
-        This member subtracts tt(rhs) from the current tt(BigInt) object.
+        This operator subtracts tt(rhs) from the current tt(BigInt) object.
 
+    itb(BigInt &operator<<=(size_t nBits))
+        The value stored in the current object is shifted tt(nBits)
+        bit to the left (see also the tt(lshift) members).
+
+    itb(BigInt &operator>>=(size_t nBits))
+        The value stored in the current object is shifted tt(nBits)
+        bit to the right  (see also the tt(rshift) members).
 
 
     itb(std::ostream &operator<<(ostream &out, BigInt const &value))
-        Insert tt(value) into the provided tt(ostream). If the tt(hex) (or
+        Inserts tt(value) into the provided tt(ostream). If the tt(hex) (or
 tt(oct)!)  manipulator has been inserted into the stream before inserting the
 tt(BigInt) value the value will be displayed as hexadecimal (without a leading
-tt(0x). The value will be displayed as decimal value if the tt(dec)
+tt(0x)). The value will be displayed as decimal value if the tt(dec)
 manipulator is active.
     )
 
@@ -219,19 +267,19 @@ manipulator is active.
 manpagesection(STATIC MEMBERS)
 
     itemization(
-    itb(BigInt rand(size_t size, Msb msb = MSB_IS_ONE, Lsb lsb = ODD))
+    itb(BigInt const rand(size_t size, Msb msb = MSB_IS_ONE, Lsb lsb = ODD))
        This member returns a cryptographically strong pseudo-random number
         of tt(size) bits. The most significant bit(s) can be controlled by
         tt(msb) (by default bf(MSB_IS_ONE)), the least significant bit can be
         controlled by tt(lsb) (by default bf(ODD)). Before calling this
         member the random number generator must be seeded.
 
-    itb(BigInt randRange(BigInt const &max))
+    itb(BigInt const randRange(BigInt const &max))
        This member returns a cryptographically strong pseudo-random
        number in the range tt(0 <= number < max). Before calling this
         member the random number generator must be seeded.
 
-    itb(BigInt prime(size_t nBits, 
+    itb(BigInt const prime(size_t nBits, 
                             BigInt const *mod = 0, BigInt const *rem = 0,
                             PrimeType primeType = ANY))
        This member returns a prime number of tt(bBits) bits. If both tt(mod)
@@ -242,7 +290,8 @@ manpagesection(STATIC MEMBERS)
         / 2) will be a (so-called em(safe)) prime.
 
 
-    itb(BigInt pseudoRand(size_t size, Msb msb = MSB_IS_ONE, Lsb lsb = ODD))
+    itb(BigInt const pseudoRand(size_t size, Msb msb = MSB_IS_ONE, Lsb lsb =
+            ODD)) 
        This member returns a potentially predictable pseudo-random number of
         tt(size) bits. The most significant bit(s) can be controlled by
         tt(msb) (by default bf(MSB_IS_ONE)), the least significant bit can be
@@ -250,7 +299,7 @@ manpagesection(STATIC MEMBERS)
         non-cryptographic purposes and for certain purposes in cryptographic
         protocols, but usually not for key generation.
 
-    itb(BigInt pseudoRandRange(BigInt const &max))
+    itb(BigInt const pseudoRandRange(BigInt const &max))
        This member returns a potentially predictable  pseudo-random
        number in the range tt(0 <= number < max).
     )

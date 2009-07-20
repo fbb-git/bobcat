@@ -24,14 +24,19 @@ manpagesection(PROTECTED CONSTRUCTORS)
     itemization(
     itb(SocketBase(size_t port)) 
         This constructor creates a bf(SocketBase) to be used with
-bf(ServerSocket)-objects, listening on tt(port).  The proper completion of
-this constructor should be checked by calling the tt(SocketBase::verify())
-member (see below).
+bf(ServerSocket)-objects, listening on tt(port).  
+
+        This constructor throws an tt(Errno) exception if it did not properly
+complete.
+
     itb(SocketBase(std::string const &host, unit_16_t port)) 
         This constructor creates a bf(FBB::SocketBase) to be used with a
-bf(ClientSocket)-object, connecting to tt(hostname), at port `tt(port)'. The
-proper completion of this constructor should be checked by calling the
-tt(SocketBase::verify()) member (see below).
+bf(ClientSocket)-object, connecting to tt(hostname), at port `tt(port)'. 
+
+        This constructor throws an tt(Errno) exception if it did not properly
+complete.
+
+
     itb(SocketBase(int socket, sockaddr_in const &address))
         This constructor constructs a bf(FBB::SocketBase) object initializing
 its socket and bf(FBB::InetAddress) part from available external objects.
@@ -61,9 +66,7 @@ if the socket's reuse option could not be modified.
     itb(int socket() const)
         This accessor returns the bf(FBB::SocketBase)'s socket value.
     itb(void verify() const)
-        This operator throws an tt(Errno) exception if the first or second
-bf(SocketBase) constructor did not properly complete. It should be called
-before using any other bf(Glob) member.
+        Obsoleted, will be removed in a future Bobcat release.
     )
 
 manpagesection(EXAMPLE)

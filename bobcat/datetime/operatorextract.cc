@@ -1,9 +1,9 @@
 #include "datetime.ih"
 
-namespace std
+namespace FBB
 {
 
-istream &operator>>(istream &in, FBB::DateTime &dt)
+std::istream &operator>>(std::istream &in, DateTime &dt)
 {
     DateTime::TimeStruct timeStruct = dt.d_tm;
     time_t time = dt.d_utcSec;
@@ -20,7 +20,6 @@ istream &operator>>(istream &in, FBB::DateTime &dt)
     }
 
     return in;
-    
 }
 
 }

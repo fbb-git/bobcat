@@ -1,5 +1,9 @@
-bobcat (2.03.00) ISN
+bobcat (2.03.00)
 
+  * NOTE: BOBCAT 2.03.00 BREAKS THE PREVIOUS ABI. PROGRAMS USING THE BOBCAT 
+    SHARED LIBRARY WILL PROBABLY HAVE TO BE RECOMPILED.
+
+  * Bobcat is compiled by at least g++-4.4, using --std=c++0x
   * Stat::modeStr() bug repaired due to which it always showed rwxrwxrwx
   * Removed deprecated getPid() member from Fork
   * Removed deprecated get...Fd() members from Pipe
@@ -15,15 +19,19 @@ bobcat (2.03.00) ISN
     sockaddr_in data member.
   * Repaired bugs in DateTime constructors accepting strings, redefined many
     of DateTime's functionality, see its man page.
-  * All unary argument constructors now `explicit'
+  * (Almost) all unary argument constructors now `explicit'
   * Constructors that can safely throw exceptions, rather than using `verify'
-    do so from now on. 
+    do so from now on. The `verify' member remains, albeit obsoleted,
+    available in the class interfaces. 
     Affected classes: Glob, OneKey Pipe SocketBase, User, XPointer
   * Classes for which a move constructor is useful received a move
     constructor. Currently: AutoPtr, Glob, Pattern,
   * Added BigInt as the first (optionally added) class depending on openssl.
     The plan is to add more openssl-based classes in the (near) future. BigInt
-    wraps the various openssl BN_ functions.
+    wraps a large number of OpenSSL BN_ functions.
+  * insert and extraction operators (operator<<, operator>>) are now defined
+    within the namespace FBB and no longer in the std namespace (except for 
+    operator<< defined int msg/msg)
 
  -- ADD STAMP HERE
 

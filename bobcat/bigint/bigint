@@ -6,23 +6,11 @@
 
 namespace FBB
 {
-    class BigInt;
-}
-
-namespace std
-{
-    ostream &operator<<(ostream &out, FBB::BigInt const &bn);
-}
-
-namespace FBB
-{
 class PrimeBase;
 
 class BigInt
 {
-    friend std::ostream &std::operator<<(std::ostream &out, BigInt const &bn);
-
-    char const *d_msg;
+    friend std::ostream &operator<<(std::ostream &out, BigInt const &bn);
 
     BIGNUM d_bn;
 
@@ -46,27 +34,27 @@ class BigInt
             SAFE = true
         };
 
-        BigInt();
-        BigInt(BIGNUM const &bignum);
-        BigInt(BigInt const &other);
+        BigInt();                       // 1
+        BigInt(BIGNUM const &bignum);   // 2 
+        BigInt(BigInt const &other);    // 3
 
-        template<typename Type>
+        template<typename Type>         // 4
         BigInt(Type const &value);
 
-        ~BigInt();
+        BigInt(BIGNUM const *bignum);   // 5
 
-        void verify() const;
+        ~BigInt();
 
         BigInt &operator=(BigInt const &other);
 
         BigInt &operator+=(BigInt const &rhs);
-        BigInt addMod(BigInt const &rhs, BigInt const &mod) const;
+        BigInt const addMod(BigInt const &rhs, BigInt const &mod) const;
 
         BigInt &operator-=(BigInt const &rhs);
-        BigInt subMod(BigInt const &rhs, BigInt const &mod) const;
+        BigInt const subMod(BigInt const &rhs, BigInt const &mod) const;
 
         BigInt &operator*=(BigInt const &rhs);
-        BigInt mulMod(BigInt const &rhs, BigInt const &mod) const;
+        BigInt const mulMod(BigInt const &rhs, BigInt const &mod) const;
 
         BigInt &operator%=(BigInt const &rhs);
 
@@ -74,12 +62,12 @@ class BigInt
 
                                                     // integer division, also
                                                     // returning remainder
-        BigInt div(BigInt *remainder, BigInt const &rhs) const;
+        BigInt const div(BigInt *remainder, BigInt const &rhs) const;
 
-        BigInt gcd(BigInt const &rhs) const;
+        BigInt const gcd(BigInt const &rhs) const;
 
-        BigInt sqr() const;
-        BigInt sqrMod(BigInt const &mod) const;
+        BigInt const sqr() const;
+        BigInt const sqrMod(BigInt const &mod) const;
 
         bool isZero() const;
         bool isOne() const;
@@ -94,21 +82,35 @@ class BigInt
         int compare(BigInt const &other) const;
         int uCompare(BigInt const &other) const;
 
-        BigInt exp(BigInt const &exponent) const;
-        BigInt expMod(BigInt const &exponent, BigInt const &mod) const;
+        BigInt const exp(BigInt const &exponent) const;
+        BigInt const expMod(BigInt const &exponent, BigInt const &mod) const;
 
-        static BigInt rand(size_t bitsSize, 
+        BigInt const inverseMod(BigInt const &mod) const;
+
+        static BigInt const rand(size_t bitsSize, 
                            Msb msb = MSB_IS_ONE, Lsb lsb = ODD);
 
-        static BigInt randRange(BigInt const &max);
+        static BigInt const randRange(BigInt const &max);
 
-        static BigInt pseudoRand(size_t bitsSize, 
+        static BigInt const pseudoRand(size_t bitsSize, 
                            Msb msb = MSB_IS_ONE, Lsb lsb = ODD);
-        static BigInt pseudoRandRange(BigInt const &max);
+        static BigInt const pseudoRandRange(BigInt const &max);
 
-        static BigInt prime(size_t nBits, 
+        static BigInt const prime(size_t nBits, 
                             BigInt const *add = 0, BigInt const *rem = 0,
                             PrimeType primeType = ANY);
+
+        bool clearBit(size_t index);
+        bool hasBit(size_t index);
+        bool maskBits(size_t lowerNBits);
+        bool setBit(size_t index);
+
+        bool lshift();
+        bool lshift(size_t nBits);
+        BigInt &operator<<=(size_t nBits);
+        bool rshift();
+        bool rshift(size_t nBits);
+        BigInt &operator>>=(size_t nBits);
 
     private:
         std::ostream &insertInto(std::ostream &out) const;
@@ -123,7 +125,7 @@ class BigInt
                              BIGNUM const *, BIGNUM const *), 
                 BigInt const &rhs, char const *op);
 
-        BigInt checked2(int (*BN_op)(BIGNUM *, 
+        BigInt const checked2(int (*BN_op)(BIGNUM *, 
                                      BIGNUM const *, BIGNUM const *, 
                                      BIGNUM const *, 
                                      BN_CTX *),
@@ -132,14 +134,17 @@ class BigInt
         void checked3(BIGNUM *div, BIGNUM *rem, 
                                    BigInt const &rhs, char const *op) const;
 
-        BigInt checked4(int (*BN_op)(BIGNUM *, 
+        BigInt const checked4(int (*BN_op)(BIGNUM *, 
                                      BIGNUM const *, BIGNUM const *, 
                                      BN_CTX *), 
                         BigInt const &rhs, char const *op) const;
 
-//        BigInt &checked(int (*BN_op)(BIGNUM *, BIGNUM const *, BIGNUM const *), 
-//                        BigInt const &rhs, char const *op);
-//
+
+        BigInt const checked5(BIGNUM *(*BN_op)(BIGNUM *, 
+                                     BIGNUM const *, BIGNUM const *, 
+                                     BN_CTX *), 
+                        BigInt const &rhs, char const *op) const;
+
 
         static void primeCallback(int reason, int primeNr, void *primeBase);
 };
@@ -161,7 +166,7 @@ inline BigInt &BigInt::operator+=(BigInt const &rhs)
     return checked1(BN_add, rhs, "+");
 }
 
-inline BigInt BigInt::addMod(BigInt const &rhs, BigInt const &mod) const
+inline BigInt const BigInt::addMod(BigInt const &rhs, BigInt const &mod) const
 {
     return checked2(BN_mod_add, rhs, mod, "addMod");
 }
@@ -177,7 +182,7 @@ inline BigInt &BigInt::operator-=(BigInt const &rhs)
     return checked1(BN_sub, rhs, "-");
 }
 
-inline BigInt BigInt::subMod(BigInt const &rhs, BigInt const &mod) const
+inline BigInt const BigInt::subMod(BigInt const &rhs, BigInt const &mod) const
 {
     return checked2(BN_mod_sub, rhs, mod, "subMod");
 }
@@ -187,7 +192,7 @@ inline BigInt const operator*(BigInt const &lhs, BigInt const &rhs)
     return BigInt(lhs) *= rhs;
 }
 
-inline BigInt BigInt::mulMod(BigInt const &rhs, BigInt const &mod) const
+inline BigInt const BigInt::mulMod(BigInt const &rhs, BigInt const &mod) const
 {
     return checked2(BN_mod_mul, rhs, mod, "mulMod");
 }
@@ -214,12 +219,17 @@ inline BigInt &BigInt::operator/=(BigInt const &rhs)
     return *this;
 }
 
-inline BigInt BigInt::gcd(BigInt const &rhs) const
+inline BigInt const BigInt::inverseMod(BigInt const &mod) const
+{
+    return checked5(BN_mod_inverse, mod, "inverseMod");
+}
+
+inline BigInt const BigInt::gcd(BigInt const &rhs) const
 {
     return checked4(BN_gcd, rhs, "gcd");
 }
 
-inline BigInt BigInt::sqrMod(BigInt const &mod) const
+inline BigInt const BigInt::sqrMod(BigInt const &mod) const
 {
     return checked4(BN_mod_sqr, mod, "sqrMod");
 }
@@ -300,15 +310,64 @@ inline BIGNUM const &BigInt::bignum() const
     return d_bn;
 }
 
+inline std::ostream &operator<<(std::ostream &out, BigInt const &bn)
+{
+    return bn.insertInto(out);
+}
+
+inline bool BigInt::setBit(size_t index)
+{
+    return BN_set_bit(&this->d_bn, index);
+}
+
+inline bool BigInt::clearBit(size_t index)
+{
+    return BN_clear_bit(&this->d_bn, index);
+}
+
+inline bool BigInt::hasBit(size_t index)
+{
+    return BN_is_bit_set(&this->d_bn, index);
+}
+
+inline bool BigInt::maskBits(size_t lowerNBits)
+{
+    return BN_mask_bits(&this->d_bn, lowerNBits);
+}
+
+inline bool BigInt::lshift()
+{
+    return BN_lshift1(&this->d_bn, &this->d_bn);
+}
+
+inline bool BigInt::lshift(size_t nBits)
+{
+    return BN_lshift(&this->d_bn, &this->d_bn, nBits);
+}
+
+inline bool BigInt::rshift()
+{
+    return BN_rshift1(&this->d_bn, &this->d_bn);
+}
+
+inline bool BigInt::rshift(size_t nBits)
+{
+    return BN_rshift(&this->d_bn, &this->d_bn, nBits);
+}
+
+
+BigInt const operator<<(BigInt const &lhs, size_t nBits)
+{
+    return BigInt(lhs) <<= nBits;
+}
+
+BigInt const operator>>(BigInt const &lhs, size_t nBits)
+{
+    return BigInt(lhs) >>= nBits;
+}
+
 }   // namespace FBB
 
-namespace std
-{
-    inline ostream &operator<<(ostream &out, FBB::BigInt const &bn)
-    {
-        return bn.insertInto(out);
-    }
-}
 
 #endif
 

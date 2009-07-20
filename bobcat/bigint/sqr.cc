@@ -1,6 +1,6 @@
 #include "bigint.ih"
 
-BigInt BigInt::sqr() const
+BigInt const BigInt::sqr() const
 {
     BNCTX ctx;
     BigInt ret;

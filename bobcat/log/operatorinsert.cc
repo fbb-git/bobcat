@@ -1,6 +1,9 @@
 #include "log.ih"
 
-ostream &operator<<(ostream &str, LogManipulator manipulator)
+namespace FBB
+{
+
+std::ostream &operator<<(std::ostream &str, LogManipulator manipulator)
 {
     switch (manipulator)
     {
@@ -16,3 +19,4 @@ ostream &operator<<(ostream &str, LogManipulator manipulator)
     return str;
 }
         
+} // FBB

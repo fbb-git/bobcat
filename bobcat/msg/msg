@@ -18,6 +18,7 @@ void spool(std::ostream &out);
 void warning(std::ostream &out);
 void err(std::ostream &out);
 void fatal(std::ostream &out);
+
 std::ostringstream &msg();
 std::ostringstream &lineMsg();
 
@@ -110,7 +111,13 @@ inline std::ostringstream &msgstream()
 
 }   // namespace FBB
 
-void operator<<(std::ostream &ostrstream, void (*)(std::ostream &));
+namespace std
+{
+    void operator<<(ostream &ostrstream, void (*manip)(ostream &str))
+    {
+        (*manip)(ostrstream);
+    }
+}    
 
 #endif
 

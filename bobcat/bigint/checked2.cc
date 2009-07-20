@@ -1,6 +1,6 @@
 #include "bigint.ih"
 
-BigInt BigInt::checked2(int (*BN_op)(BIGNUM *, BIGNUM const *, BIGNUM const *, 
+BigInt const BigInt::checked2(int (*BN_op)(BIGNUM *, BIGNUM const *, BIGNUM const *, 
                                      BIGNUM const *, BN_CTX *),
                         BigInt rhs, BigInt const &mod, char const *op) const
 {

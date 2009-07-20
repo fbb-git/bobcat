@@ -1,6 +1,6 @@
 #include "bigint.ih"
 
-BigInt BigInt::expMod(BigInt const &exponent, BigInt const &mod) const
+BigInt const BigInt::expMod(BigInt const &exponent, BigInt const &mod) const
 {
     BNCTX ctx;
     BigInt ret;

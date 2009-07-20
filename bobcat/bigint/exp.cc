@@ -1,6 +1,6 @@
 #include "bigint.ih"
 
-BigInt BigInt::exp(BigInt const &exponent) const
+BigInt const BigInt::exp(BigInt const &exponent) const
 {
     BNCTX ctx;
     BigInt ret;
