@@ -20,7 +20,10 @@ void askMilter(int all)
         );
 
     if (all || gets() == "y")
+    {
+        g_sharedLibReq += " -lmilter -L/usr/lib/libmilter";
         g_classes += (list)"milter";
+    }
 }
 
 void askXpointer(int all)
@@ -44,7 +47,10 @@ void askXpointer(int all)
         );
 
     if (all || gets() == "y")
+    {
+        g_sharedLibReq += " -lX11";
         g_classes += (list)"xpointer";
+    }
 }
 
 void askOpenSSL(int all)
@@ -66,7 +72,10 @@ void askOpenSSL(int all)
         );
 
     if (all || gets() == "y")
-        addClasses("SSLCLASSES");    
+    {
+        g_sharedLibReq += " -lssl";
+        addClasses("SSLCLASSES");
+    }    
 }
 
 void special(int expand, int all)

@@ -34,7 +34,7 @@ void shared_library(string destDir, string libso, string libsoshared,
         libsomajor  = libso + "." + element(0, strtok(g_version, "."));
 
         run(GCC + " -shared -Wl,-z,def,-soname," + libsomajor +
-            " -o " + destDir + libsoshared + " */os/*.o");
+            g_sharedLibReq + " -o " + destDir + libsoshared + " */os/*.o");
     
         chdir(destDir);
     
