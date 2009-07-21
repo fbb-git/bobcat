@@ -15,18 +15,16 @@ class Xpointer
 
     public:
         Xpointer();
-        ~Xpointer() = default;
+        ~Xpointer();
 
-        void verify() const;
+        void verify() const;    // kept for backward compatibility
 
         bool set(int x, int y) const;
         bool get(int *x, int *y) const;
+
     private:
         static void deleter(Display *dsp);
 };
-
-inline void Xpointer::verify() const
-{}
 
 inline void Xpointer::deleter(Display *dsp)
 {
@@ -34,7 +32,9 @@ inline void Xpointer::deleter(Display *dsp)
         XCloseDisplay(dsp);
 }
 
-
-}
+}   // FBB
 
 #endif
+
+
+

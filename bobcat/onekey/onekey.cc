@@ -1,8 +1,6 @@
 #include "onekey.ih"
 
 OneKey::OneKey(Mode state)
-:
-    d_err(0)
 {
     setEcho(state);
 

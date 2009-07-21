@@ -23,7 +23,7 @@ class Glob
         {
             // These flags are those used by glob.h
 
-            ERR =       1 << 0, // Return on read globErrors.
+            ERR =       1 << 0, // Return on read errors.
             MARK =      1 << 1, // Append a slash to each name.
             NOSORT =    1 << 2, // Don't sort the names.
             NOESCAPE =  1 << 6, // Backslashes don't quote metacharacters.
@@ -38,17 +38,24 @@ class Glob
             
         explicit Glob(std::string const &pattern = "*", int flags = PERIOD,
                       Dots dots = FIRST);
+
         Glob(Glob &&tmp);
+
+        Glob(Glob const &other) = default;
+        ~Glob() = default;
+        Glob &operator=(Glob const &other) = default;
 
         size_t size() const;
         char const *operator[](size_t idx) const;
         char const *const *begin() const;
         char const *const *end() const;
 
-        void verify() const;        // Superfluous: now empty function
+        void verify() const;        // kept for backward compat.
+
     private:
         char const **mbegin() const;
         char const **mend() const;
+        void destroy();             // kept for backward compat.
 
         static void globShareDeleter(GlobShare *globShare);
         static bool isDot(char const *cp);
@@ -64,9 +71,6 @@ inline Glob::Glob(Glob &&tmp)
 {
     d_share.swap(tmp.d_share);    
 }
-
-inline void Glob::verify() const
-{}
 
 inline size_t Glob::size() const
 {

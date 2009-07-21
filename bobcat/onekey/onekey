@@ -11,8 +11,6 @@ class OneKey
 {
     termios     d_saved;
     bool        d_useEcho;          // default false
-    int         d_err;
-    // char const *d_msg;           // removed in V. 2.03.00
 
     public:
         enum Mode
@@ -22,25 +20,22 @@ class OneKey
         };
 
         explicit OneKey(Mode state = OFF);    
+        OneKey(OneKey const &other) = delete;
+
         ~OneKey();
+
+        OneKey const &operator=(OneKey const &other) = delete;
         
         int get() const;                // get the next char
         void setEcho(Mode state);
 
-        void verify() const;
-
-    private:
-        OneKey(OneKey const &other);                    // NI
-        OneKey const &operator=(OneKey const &other);   // NI
+        void verify() const;            // kept for backward compat.
 };
 
 inline void OneKey::setEcho(Mode state)
 {
     d_useEcho = (state == ON);
 }
-
-inline void OneKey::verify() const
-{}
 
 } // FBB
 

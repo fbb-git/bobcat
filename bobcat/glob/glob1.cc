@@ -19,10 +19,3 @@ Glob::Glob(string const &pattern, int flags, Dots dots)
         stable_partition(mbegin(), mend(), 
                          FnWrap1<char const *, bool>(&isDot));
 }
-
-
-
-
-
-
-

@@ -1,8 +1,5 @@
 bobcat (2.03.00)
 
-  * NOTE: BOBCAT 2.03.00 BREAKS THE PREVIOUS ABI. PROGRAMS USING THE BOBCAT 
-    SHARED LIBRARY WILL PROBABLY HAVE TO BE RECOMPILED.
-
   * Bobcat is compiled by at least g++-4.4, using --std=c++0x
   * Stat::modeStr() bug repaired due to which it always showed rwxrwxrwx
   * Removed deprecated getPid() member from Fork
@@ -21,14 +18,12 @@ bobcat (2.03.00)
     of DateTime's functionality, see its man page.
   * (Almost) all unary argument constructors now `explicit'
   * Constructors that can safely throw exceptions, rather than using `verify'
-    do so from now on. The `verify' member remains, albeit obsoleted,
-    available in the class interfaces. 
-    Affected classes: Glob, OneKey Pipe SocketBase, User, XPointer
+    do so from now on. The `verify' member remains, albeit empty,  available 
+    in the class interfaces. 
+    Affected classes: Glob, OneKey, User, XPointer
+                        Pipe, SocketBase, 
   * Classes for which a move constructor is useful received a move
     constructor. Currently: AutoPtr, Glob, Pattern,
-  * Added BigInt as the first (optionally added) class depending on openssl.
-    The plan is to add more openssl-based classes in the (near) future. BigInt
-    wraps a large number of OpenSSL BN_ functions.
   * insert and extraction operators (operator<<, operator>>) are now defined
     within the namespace FBB and no longer in the std namespace (except for 
     operator<< defined int msg/msg)

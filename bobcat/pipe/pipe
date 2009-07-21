@@ -20,9 +20,9 @@ class Pipe
         Pipe();
         explicit Pipe(int const *fd);
 
-        ~Pipe();
+        ~Pipe() = default;
 
-        void verify() const;        // empty
+        void verify() const;        // SF, now empty
 
         int readFd() const;
         int writeFd() const;
@@ -38,11 +38,6 @@ class Pipe
         int writeOnly();
 };
 
-inline Pipe::~Pipe()
-{
-    verify();
-}
-
 inline int Pipe::readFd() const
 {
     return d_fd[READ];
@@ -53,10 +48,7 @@ inline int Pipe::writeFd() const
     return d_fd[WRITE];
 }
 
-inline void Pipe::verify() const
-{}
 
 } // FBB
 
 #endif
-
