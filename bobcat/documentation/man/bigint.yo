@@ -55,7 +55,7 @@ manpagesection(ENUMERATIONS)
         The random value will be an odd value.
     )
 
-manpagesection(CONSTRUCTORS)
+manpagesection(CONSTRUCTOORS)
     itemization(
     itb(BigInt())
         The default constructor initializes a tt(BigInt) value to 0.
@@ -313,7 +313,23 @@ manpagesection(STATIC MEMBERS)
     )
 
 manpagesection(EXAMPLE)
-    To do
+        verb(
+#include <iostream>
+#include <bobcat/bigint>
+
+using namespace std;
+using namespace FBB;
+
+int main(int argc, char **argv)
+{
+    BigInt value(BigInt::prime(100));
+    BigInt mod(BigInt::rand(50));
+    BigInt inverse(value.inverseMod(mod));
+
+    cout << '(' << value << " * " << inverse << ") % " << mod << " = " <<
+             (    value       *      inverse     ) %      mod << endl;
+}
+        ) 
 
 manpagefiles()
     em(bobcat/bigint) - defines the class interface
