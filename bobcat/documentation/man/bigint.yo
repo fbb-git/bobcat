@@ -8,7 +8,7 @@ manpagename(FBB::BigInt)(Arithmetic on Integers of Unlimited Size)
 
 manpagesynopsis()
     bf(#include <bobcat/bigint>)nl()
-    Linking option: tt(-lbobcat, -lopenssl) 
+    Linking option: tt(-lbobcat, -lssl) 
 
 manpagedescription()
 
@@ -74,6 +74,7 @@ converted using a static cast to an tt(unsigned long) can be used as argument
 to this constructor. Promotion is allowed, so in many situations where
 tt(BigInt)s are expected a plain numerical value can be used as well.
     )
+
     The standard copy constructor is available. All but the default
 constructor may throw an tt(FBB::Errno) exception if the initialization of the
 tt(BigInt) object fails. 
@@ -81,17 +82,17 @@ tt(BigInt) object fails.
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
-    itb(BigInt const addMod(BigInt const &rhs, BigInt const &mod) const)) 
+    itb(BigInt const addMod(BigInt const &rhs, BigInt const &mod) const)
        The current object is added to tt(rhs) and this sum modulo tt(mod) is
         returned.
 
-    itb(BIGNUM const &bignum() const)) 
+    itb(BIGNUM const &bignum() const)
        A reference to the tt(BIGNUM) value maintained by the current
         tt(BigInt) object is returned.
 
     itb(bool clearBit(size_t index))
        The bit at index position tt(index) is cleared. tt(True) is returned if
-        the operation succeeded, tt(false) otherwise).
+        the operation succeeded, tt(false) otherwise.
 
     itb(BigInt const div(BigInt *remainder, BigInt const &rhs) const)
        The current object divided by  tt(rhs) is returned (integer division),
@@ -112,11 +113,14 @@ manpagesection(MEMBER FUNCTIONS)
     itb(BigInt const gcd(BigInt const &rhs) const)
        The greates common divisor (gcd) of the current object and tt(rhs) is
         returned. To compute the least common multiple (lcm) the relationship
-        tt(a * b = gcd(a, b) * lcm(a, b)) can be used.
+            verb(
+        a * b = gcd(a, b) * lcm(a, b))
+            )
+        can be used.
 
     itb(bool hasBit(size_t index))
         tt(True) is returned if the bit at index position tt(index) has been
-        set, tt(false) otherwise).
+        set, tt(false) otherwise.
 
     itb(BigInt const inverseMod(BigInt const &mod) const)
        The inverse of the current object modulo tt(mod) is returned. This is
@@ -136,16 +140,16 @@ manpagesection(MEMBER FUNCTIONS)
 
     itb(bool lshift()) The value stored in the current object is shifted one
         bit to the left.  tt(True) is returned if the shift succeeded,
-        tt(false) otherwise).
+        tt(false) otherwise.
 
     itb(bool lshift(size_t nBits)) The value stored in the current object is
         shifted tt(nBits) bits to the left.  tt(True) is returned if the shift
-        succeeded, tt(false) otherwise).
+        succeeded, tt(false) otherwise.
 
     itb(bool maskBits(size_t lowerNBits))
         The tt(lowerNBits) lower bits of the current object are kept, all
         higher order bits are cleared. tt(True) is returned if the maksing
-        operation succeeded,  tt(false) otherwise).
+        operation succeeded,  tt(false) otherwise.
 
     itb(BigInt const mulMod(BigInt const &rhs, BigInt const &mod) const) 
        The current object is multiplied by tt(rhs) and this product modulo
@@ -153,15 +157,15 @@ manpagesection(MEMBER FUNCTIONS)
 
     itb(bool rshift()) The value stored in the current object is shifted one
         bit to the right.  tt(True) is returned if the shift succeeded,
-        tt(false) otherwise).
+        tt(false) otherwise.
 
     itb(bool rshift(size_t nBits)) The value stored in the current object is
         shifted tt(nBits) bits to the right.  tt(True) is returned if the
-        shift succeeded, tt(false) otherwise).
+        shift succeeded, tt(false) otherwise.
 
     itb(bool setBit(size_t index))
         The bit at index position tt(index) is set. tt(True) is returned if
-        the operation succeeded, tt(false) otherwise).
+        the operation succeeded, tt(false) otherwise.
 
     itb(size_t size() const)
        The number of bytes required to store the current tt(BIGNUM) value is
@@ -261,7 +265,6 @@ for the insertion operator) throw tt(Errno) exceptions on failure.
     itb(BigInt &operator>>=(size_t nBits))
         The value stored in the current object is shifted tt(nBits)
         bit to the right  (see also the tt(rshift) members).
-
 
     itb(std::ostream &operator<<(ostream &out, BigInt const &value))
         Inserts tt(value) into the provided tt(ostream). If the tt(hex) (or
