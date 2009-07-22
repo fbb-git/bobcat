@@ -63,7 +63,11 @@ manpagesection(CONSTRUCTORS)
         This constructor initializes a tt(BigInt) from a tt(BIGNUM). 
     itb(BigInt(BIGNUM const *value))
         This constructor initializes a tt(BigInt) from a pointer to a 
-tt(BIGNUM).
+tt(const BIGNUM).
+    itb(BigInt(BIGNUM *value))
+        This constructor initializes a tt(BigInt) from a pointer to a
+tt(BIGNUM). The tt(BIGNUM) to which tt(value) points is not modified by the
+constructor.
     itb(BigInt(Type const &value))
         This constructor is defined as a member template. Any type that can be
 converted using a static cast to an tt(unsigned long) can be used as argument
@@ -114,8 +118,12 @@ manpagesection(MEMBER FUNCTIONS)
         tt(True) is returned if the bit at index position tt(index) has been
         set, tt(false) otherwise).
 
-    itb(BigInt const inverseMod(BigInt const &mod) const)) 
-       The inverse of the current object modulo tt(mod) is returned.
+    itb(BigInt const inverseMod(BigInt const &mod) const)
+       The inverse of the current object modulo tt(mod) is returned. This is
+        the value tt(ret) for which the following expressions holds true:
+            verb(
+        (current * ret) % mod = 1
+            )
 
     itb(bool isOdd() const)
        Returns tt(true) if the current object is an odd value.

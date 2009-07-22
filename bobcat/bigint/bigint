@@ -41,9 +41,10 @@ class BigInt
         BigInt(BigInt const &other);    		// 3
                                         		
         template<typename Type>         		// 4
-        BigInt(Type const &value);      		
+        explicit BigInt(Type const &value);      		
                                         		
         explicit BigInt(BIGNUM const *bignum);  // 5
+        explicit BigInt(BIGNUM *bignum);        // 6    won't change bignum
 
         ~BigInt();
 
@@ -151,7 +152,6 @@ class BigInt
         static void primeCallback(int reason, int primeNr, void *primeBase);
 };
 
-
 template<typename Type>
 inline BigInt::BigInt(Type const &value)
 {
@@ -207,7 +207,7 @@ inline BigInt const operator%(BigInt const &lhs, BigInt const &rhs)
 
 inline BigInt &BigInt::operator%=(BigInt const &rhs)
 {
-    checked3(&d_bn, 0, rhs, "%=");
+    checked3(0, &d_bn, rhs, "%=");
     return *this;
 }
 
