@@ -20,7 +20,7 @@ class Pipe
         Pipe();
         explicit Pipe(int const *fd);
 
-        ~Pipe() = default;
+        ~Pipe();
 
         void verify() const;        // SF, now empty
 
@@ -37,6 +37,9 @@ class Pipe
         void writtenBy(int const *filedescriptor, size_t n = 2);
         int writeOnly();
 };
+
+inline Pipe::~Pipe()
+{}
 
 inline int Pipe::readFd() const
 {

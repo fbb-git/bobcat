@@ -17,7 +17,7 @@ class SocketBase: public InetAddress
     int         d_sock;
 
     public:
-        ~SocketBase() = default;
+        ~SocketBase();
 
         void verify() const;
 
@@ -36,6 +36,9 @@ class SocketBase: public InetAddress
         bool boolOption(int optname) const;
         bool setBoolOption(int optname, bool newValue);
 };
+
+inline SocketBase::~SocketBase()
+{}
 
 inline bool SocketBase::debug() const
 {

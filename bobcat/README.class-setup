@@ -32,29 +32,29 @@ future relase:
        |               |                   |                           |
      Stat         SyslogStream         IRandStream                  AutoPtr
 
-0                       Errno                                    LogBuffer
-                          |                                          |
-             +-------+----+------+----------+-----+-------+-----+    |
-             |       |           |          |     |       |     |    |
-            Msg  Pattern       OneKey       |     |      User   +--+-+
-             |       |                      |     |                |
-    FnWrap1c +-------+                      |     |               Log
-     (cont)  |       |                      |     |   Hostent      |  
-       |     |       |                      |     |    (cont)    level
-       +--+--+       |                      |     |      |       
-          |          |                      |     +---+--+       
-      ConfigFile     |                      |         |          
-                     |                      |     Hostname       
-                 GetHostent                 |                    
-                     |               LocalSocketBase                 
-                 InetAddress                |                          
-                     |                      |                          
-                 SocketBase                 +-------------------+  
-                     |                      |                   |
-                     |              LocalClientSocket   LocalServerSocket
-              +------+---------+       
-              |                |       
-          ClientSocket   ServerSocket  
+0                        Errno                                    LogBuffer
+                           |                                          |
+      +-------+-------+----+------+----------+-----+-------+-----+    |
+      |       |       |           |          |     |       |     |    |
+    BigInt   Msg  Pattern       OneKey       |     |      User   +--+-+
+              |       |                      |     |                |
+     FnWrap1c +-------+                      |     |               Log
+      (cont)  |       |                      |     |   Hostent      |  
+        |     |       |                      |     |    (cont)    level
+        +--+--+       |                      |     |      |       
+           |          |                      |     +---+--+       
+       ConfigFile     |                      |         |          
+                      |                      |     Hostname       
+                  GetHostent                 |                    
+                      |               LocalSocketBase                 
+                  InetAddress                |                          
+                      |                      |                          
+                  SocketBase                 +-------------------+  
+                      |                      |                   |
+                      |              LocalClientSocket   LocalServerSocket
+               +------+---------+       
+               |                |       
+           ClientSocket   ServerSocket  
 
 
      Errno(cont)
