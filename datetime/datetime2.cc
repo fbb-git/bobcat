@@ -1,12 +1,16 @@
 #include "datetime.ih"
 
+// UTC + displayZoneShift = LOCALTIME
+
 DateTime::DateTime(int displayZoneShift)
 :
     d_type(LOCALTIME),
-    d_time(::time(0))
+    d_utcSec(::time(0)),
+    d_dstShift(0)
 {
-    zoneCorrection();
-
-    setDisplayZone(displayZoneShift);
-    utcSec2timeStruct(&d_tm, d_time);
+    setDisplayZone(zoneShiftSeconds(displayZoneShift));
+    utcSec2timeStruct(&d_tm, d_utcSec);
 }
+
+
+

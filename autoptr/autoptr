@@ -43,6 +43,7 @@ class AutoPtr
 
         AutoPtr(Data *data, size_t size);   // Array of n Data elements
         AutoPtr(AutoPtr &other);            // Copy constructor
+        AutoPtr(AutoPtr &&other);           // Move constructor
 
         ~AutoPtr();
 
@@ -200,10 +201,20 @@ inline AutoPtr<Data>::AutoPtr(AutoPtr &other)
     copy(other);
 }
 
+template<typename Data>         // Move constructor
+inline AutoPtr<Data>::AutoPtr(AutoPtr &&tmp)
+:
+    d_data(tmp.d_datao),
+    d_base(tmp.d_base)
+{
+    tmp.d_data = 0;
+}
+
 template<typename Data>         // destructor
 inline AutoPtr<Data>::~AutoPtr()
 {
-    destroy();
+    if (d_data)
+        destroy();
 }
 
 template<typename Data>         // Assignment operator

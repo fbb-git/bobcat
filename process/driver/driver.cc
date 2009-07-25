@@ -1,6 +1,7 @@
 #include "../process"
 #include <string>
 #include <iostream>
+#include <climits>
 
 using namespace std;
 using namespace FBB;

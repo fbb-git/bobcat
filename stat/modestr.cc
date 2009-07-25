@@ -8,7 +8,7 @@ string Stat::modeStr() const
 
     for (size_t idx = 9; idx--; mode >>= 1)
     {
-        if (!mode & 1)      // bit not set
+        if ((mode & 1) == 0)      // bit not set
             ret[idx] = '-';
     }
 

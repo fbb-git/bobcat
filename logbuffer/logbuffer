@@ -23,10 +23,11 @@ class LogBuffer: public std::streambuf
     std::string d_delim;    // delimiter following time stamps
 
     public:
-        LogBuffer(TimeStamps timestamps = TIMESTAMPS,  // output to cerr
+        explicit LogBuffer(         // output to cerr
+                TimeStamps timestamps = TIMESTAMPS,  
                 bool active = true,
                 char const *delim = " ");
-        LogBuffer(std::ostream &stream, 
+        explicit LogBuffer(std::ostream &stream, 
                 TimeStamps timestamps = TIMESTAMPS,
                 bool active = true,
                 char const *delim = " ");

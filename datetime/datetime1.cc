@@ -1,12 +1,19 @@
 #include "datetime.ih"
 
+// Determine current UTC or LOCALTIME
+
 DateTime::DateTime(TimeType type)
 :
     d_type(type),
-    d_time(::time(0))
+    d_utcSec(::time(0))
 {
-    zoneCorrection();
-
-    setDisplayZone();              // displayZoneCorrection for `type'
-    utcSec2timeStruct(&d_tm, d_time);
+    setDisplayZone(defaultDisplayZoneShift()
+                    + dstCorrection());         // displayZoneCorrection for 
+                                                // `type'
+    utcSec2timeStruct(&d_tm, d_utcSec);
 }
+
+
+
+
+

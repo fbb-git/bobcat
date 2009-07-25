@@ -46,8 +46,9 @@ class MultiStreambuf: public std::streambuf
 
     public:
         MultiStreambuf();
-        MultiStreambuf(std::ostream &os, Mode mode = ON);
-        MultiStreambuf(std::vector<stream> const &osvector);
+        explicit MultiStreambuf(std::ostream &os, Mode mode = ON);
+        explicit MultiStreambuf(std::vector<stream> const &osvector);
+
         void insert(std::ostream &os, Mode mode = ON);
         void insert(std::vector<stream> const &os);
         iterator begin();

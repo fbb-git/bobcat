@@ -18,10 +18,11 @@ class Redirector
             STDERR
         };
 
-        Redirector(int fd);
+        explicit Redirector(int fd);
 
         void accessVia(int alternateFd) const;
         void swallow(int alternateFd) const;
+        void through(int alternateFd) const;
 };            
 
 inline Redirector::Redirector(int fd)

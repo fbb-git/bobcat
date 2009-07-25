@@ -3,7 +3,6 @@
 
 #include <sstream>
 #include <string>
-#include <ostream>
 
 namespace FBB
 {
@@ -53,15 +52,11 @@ inline bool X2a::lastFail()
     return s_lastFail;
 }
 
-} // FBB
-
-
-namespace std
+inline std::ostream &operator<<(std::ostream &ostr, X2a const &x2a)
 {
-    inline ostream &operator<<(ostream &ostr, FBB::X2a const &x2a)
-    {
-        return ostr << x2a.str();
-    }
+    return ostr << x2a.str();
 }
+
+} // FBB
 
 #endif

@@ -26,7 +26,7 @@ void DateTime::parse(istream &in)
     if (d_ok)
     {
         d_tm.tm_year -= 1900;
-        d_time = mktime(&d_tm) + s_currentZoneCorrection - d_displayZoneShift; 
+        d_utcSec = timeStruct2utcSec(&d_tm);
     }
 }
 

@@ -5,12 +5,12 @@
 
 bool DateTime::setHours(int hours)
 {
-    TimeStruct tmStruct = d_tm; // d_tm represents the time as displayed
+    TimeStruct ts = d_tm; // d_tm represents the time as displayed
                                 // in the current display zone shift
 
-    tmStruct.tm_hour = hours;   // update the hour value  
+    ts.tm_hour = hours;   // update the hour value  
 
-    return updateTime(&tmStruct);
+    return updateTime(ts);
 }
 
 

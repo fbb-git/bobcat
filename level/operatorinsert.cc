@@ -1,6 +1,9 @@
 #include "level.ih"
 
-ostream &operator<<(ostream &str, level const &lv)
+namespace FBB
+{
+
+std::ostream &operator<<(std::ostream &str, level const &lv)
 {
     Log *lp = dynamic_cast<Log *>(&str);        // a Log object is required.
 
@@ -10,3 +13,4 @@ ostream &operator<<(ostream &str, level const &lv)
                 lv.insertInto(str, *lp);
 }
         
+}   // FBB

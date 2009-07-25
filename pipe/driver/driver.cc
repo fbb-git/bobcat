@@ -9,9 +9,9 @@ using namespace std;
 using namespace FBB;
 
 int main(int argc, char **argv, char **envp)
+try
 {
     Pipe p;                         // construct a pipe
-    p.verify();
 
     cout << "Read file descriptor: " << p.getReadFd() << endl;
     cout << "Write file descriptor: " << p.getWriteFd() << endl;
@@ -44,9 +44,11 @@ int main(int argc, char **argv, char **envp)
     cout << "second line" << endl;
 
     waitpid(pid, 0, 0);
-
-    return 0;
 }
-
+throw (Errno const &err)
+{
+    cout << err.what() << endl;
+    return 1;
+}
 
 

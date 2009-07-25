@@ -17,7 +17,6 @@ try
     }
 
     Xpointer xpointer;
-    xpointer.verify();
 
     if (!xpointer.set(A2x(argv[1]), A2x(argv[2])))
         throw Errno() << insertable << "Pointer setting failed" << throwable;

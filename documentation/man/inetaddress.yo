@@ -69,7 +69,8 @@ used when constructing, e.g. server sockets.
 initialized bf(sockaddr_in) object. It is primarily used to promote a
 bf(sockaddr_in) to an bf(FBB::InetAddresss).
     )
-    The copy constructor is not available.
+
+    The (public) copy constructor is available.
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
@@ -83,16 +84,25 @@ thrown.
         Accessor returning the size of the object's bf(sockaddr_in) (address)
 information. 
     itb(sockaddr const *sockaddrPtr() const)
-        Accessor returning the pointer to the object's bf(sockaddr). 
+        Accessor returning the pointer to the object's bf(sockaddr) data
+member. 
+    itb(sockaddr_in const *sockaddr_inPtr() const)
+        Accessor returning the pointer to the object's bf(sockaddr_in) data
+member. 
     )
 
 manpagesection(PROTECTED MEMBER FUNCTIONS)
     itemization(
     itb(sockaddr *sockaddrPtr())
-        This member returns the object's address information as a pointer to
-a modifiable bf(sockaddr). This allows (contrary to the public member having
-the same name) derived objects to manipulate the object's address information
-directly. 
+        This member returns the object's address information as a pointer to a
+modifiable bf(struct sockaddr). This allows (contrary to the public member
+having the same name) derived objects to manipulate the object's address
+information directly.
+    itb(sockaddr_in *sockaddr_inPtr())
+        This member returns the object's address information as a pointer to a
+modifiable bf(struct sockaddr_in). This allows (contrary to the public member
+having the same name) derived objects to manipulate the object's address
+information directly.
     )
 
 manpagesection(EXAMPLE)

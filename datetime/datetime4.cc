@@ -3,10 +3,9 @@
 DateTime::DateTime(time_t time, int displayZoneShift)
 :
     d_type(LOCALTIME),
-    d_time(time)
+    d_utcSec(time),
+    d_dstShift(0)
 {
-    zoneCorrection();
-
-    setDisplayZone(displayZoneShift);
-    utcSec2timeStruct(&d_tm, d_time);
+    setDisplayZone(zoneShiftSeconds(displayZoneShift));
+    utcSec2timeStruct(&d_tm, d_utcSec);
 }

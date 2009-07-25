@@ -1,0 +1,346 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::BigInt)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Big Integers)
+
+manpagename(FBB::BigInt)(Arithmetic on Integers of Unlimited Size)
+
+manpagesynopsis()
+    bf(#include <bobcat/bigint>)nl()
+    Linking option: tt(-lbobcat, -lssl) 
+
+manpagedescription()
+
+This class is defined as a wrapper class around the em(openSSL) tt(BN) series
+of functions, offering members to perform arithmetic on integral values of
+unlimited sizes. Members are offered to generate primes and to perform all
+kinds of common arithmetic operations on tt(BigInt) objects. Also, conversions
+to characters and standard numerical value types are offered.
+
+Below, the phrase em(the object) may also refer to the object's value. The
+context in which this occurs will make clear that the object's value rather
+than the object as-is is referred to.
+
+Various constructors accept tt(BIGNUM) arguments. Type tt(BIGNUM) is the type
+containing an integer of unlimited precision as defined by OpenSSL.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(ENUMERATIONS)
+    bf(Msb)nl()
+    This (most significant bit) enumeration is used when generating a
+        cryptographically strong random number. Its values are:
+    itemization(
+    itb(MSB_UNKNOWN)
+       The most significant bit may be 0 or 1.
+    itb(MSB_IS_ONE)
+        The most significant bit is guaranteed to be 1.
+    itb(TOP_TWO_BITS_ONE)
+        The two most significant bits are guaranteed to be 1, resulting in a
+        product of two values each containing tt(nBits) having tt(2 * nBits)
+        bits.
+    )
+
+    bf(Lsb)nl()
+    This (least significant bit) enumeration is used when generating random
+        numbers, ensuring that the resulting value is either odd or even.
+    itemization(
+    itb(EVEN)
+        The random value will be an even value;
+    itb(ODD)
+        The random value will be an odd value.
+    )
+
+manpagesection(CONSTRUCTOORS)
+    itemization(
+    itb(BigInt())
+        The default constructor initializes a tt(BigInt) value to 0.
+    itb(BigInt(BIGNUM const &value))
+        This constructor initializes a tt(BigInt) from a tt(BIGNUM). 
+    itb(BigInt(BIGNUM const *value))
+        This constructor initializes a tt(BigInt) from a pointer to a 
+tt(const BIGNUM).
+    itb(BigInt(BIGNUM *value))
+        This constructor initializes a tt(BigInt) from a pointer to a
+tt(BIGNUM). The tt(BIGNUM) to which tt(value) points is not modified by the
+constructor.
+    itb(BigInt(Type const &value))
+        This constructor is defined as a member template. Any type that can be
+converted using a static cast to an tt(unsigned long) can be used as argument
+to this constructor. Promotion is allowed, so in many situations where
+tt(BigInt)s are expected a plain numerical value can be used as well.
+    )
+
+    The standard copy constructor is available. All but the default
+constructor may throw an tt(FBB::Errno) exception if the initialization of the
+tt(BigInt) object fails. 
+
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(BigInt const addMod(BigInt const &rhs, BigInt const &mod) const)
+       The current object is added to tt(rhs) and this sum modulo tt(mod) is
+        returned.
+
+    itb(BIGNUM const &bignum() const)
+       A reference to the tt(BIGNUM) value maintained by the current
+        tt(BigInt) object is returned.
+
+    itb(bool clearBit(size_t index))
+       The bit at index position tt(index) is cleared. tt(True) is returned if
+        the operation succeeded, tt(false) otherwise.
+
+    itb(BigInt const div(BigInt *remainder, BigInt const &rhs) const)
+       The current object divided by  tt(rhs) is returned (integer division),
+        and the division's remainder is returned in tt(*remainder).
+
+    itb(int compare(BigInt const &rsh) const)
+       Using signed values, if the current object is smaller than tt(rhs) -1
+        is returned; if they are equal 0 is returned; if the current object is
+        larger than tt(ths) 1 is returned (see also tt(uCompare)). 
+
+    itb(BigInt const exp(BigInt const &exponent) const)
+       The current object raised to the power tt(exponent) is returned. 
+
+    itb(BigInt const expMod(BigInt const &exponent, BigInt const &mod) const)
+       The current object raised to the power tt(exponent) modulo tt(mod) is
+        returned.
+
+    itb(BigInt const gcd(BigInt const &rhs) const)
+       The greates common divisor (gcd) of the current object and tt(rhs) is
+        returned. To compute the least common multiple (lcm) the relationship
+            verb(
+        a * b = gcd(a, b) * lcm(a, b))
+            )
+        can be used.
+
+    itb(bool hasBit(size_t index))
+        tt(True) is returned if the bit at index position tt(index) has been
+        set, tt(false) otherwise.
+
+    itb(BigInt const inverseMod(BigInt const &mod) const)
+       The inverse of the current object modulo tt(mod) is returned. This is
+        the value tt(ret) for which the following expressions holds true:
+            verb(
+        (current * ret) % mod = 1
+            )
+
+    itb(bool isOdd() const)
+       Returns tt(true) if the current object is an odd value.
+
+    itb(bool isOne() const)
+       Returns tt(true) if the current object equals one (1).
+
+    itb(bool isZero() const)
+       Returns tt(true) if the current object equals zero (0).
+
+    itb(bool lshift()) The value stored in the current object is shifted one
+        bit to the left.  tt(True) is returned if the shift succeeded,
+        tt(false) otherwise.
+
+    itb(bool lshift(size_t nBits)) The value stored in the current object is
+        shifted tt(nBits) bits to the left.  tt(True) is returned if the shift
+        succeeded, tt(false) otherwise.
+
+    itb(bool maskBits(size_t lowerNBits))
+        The tt(lowerNBits) lower bits of the current object are kept, all
+        higher order bits are cleared. tt(True) is returned if the maksing
+        operation succeeded,  tt(false) otherwise.
+
+    itb(BigInt const mulMod(BigInt const &rhs, BigInt const &mod) const) 
+       The current object is multiplied by tt(rhs) and this product modulo
+        tt(mod) is returned.
+
+    itb(bool rshift()) The value stored in the current object is shifted one
+        bit to the right.  tt(True) is returned if the shift succeeded,
+        tt(false) otherwise.
+
+    itb(bool rshift(size_t nBits)) The value stored in the current object is
+        shifted tt(nBits) bits to the right.  tt(True) is returned if the
+        shift succeeded, tt(false) otherwise.
+
+    itb(bool setBit(size_t index))
+        The bit at index position tt(index) is set. tt(True) is returned if
+        the operation succeeded, tt(false) otherwise.
+
+    itb(size_t size() const)
+       The number of bytes required to store the current tt(BIGNUM) value is
+        returned. 
+
+    itb(size_t sizeInBits() const)
+       The number of bits required to represent the current tt(BIGNUM) value
+        is returned. If you want to know the key size of RSA, DH or DSA keys
+        functions like tt(RSA_size(), DH_size(),) or tt(DSA_size()) should be
+        used.
+
+    itb(BigInt const sqr() const)
+       The square of the current object is returned.
+
+    itb(BigInt const sqrMod(BigInt const &mod) const)
+       The square of the current object modulo tt(mod) is returned.
+
+    itb(BigInt const subMod(BigInt const &rhs, BigInt const &mod) const) 
+       tt(Rhs) is subtracted from the current object and this difference
+        modulo tt(mod) is returned.
+
+    itb(unsigned long ulong() const) 
+       The value stored in the current object is returned as an unsigned
+        long. If it cannot be represented by an unsigned long it returns
+        tt(0xffffffffL). 
+
+    itb(int uCompare(BigInt const &rsh) const)
+       Using absolute values, if the current object is smaller than tt(rhs) -1
+        is returned; if they are equal 0 is returned; if the current object is
+        larger than tt(ths) 1 is returned (see also tt(uCompare)).
+    )
+
+manpagesection(OVERLOADED OPERATORS)
+
+    All operators (including the arithmetic assignments operators, but except
+for the insertion operator) throw tt(Errno) exceptions on failure.
+
+    itemization(
+    itb(BigInt const operator*(BigInt const &lhs, BigInt const &rhs))
+       This operator returns the product of the tt(lhs) object times the
+        tt(rhs) object.
+
+    itb(BigInt const operator/(BigInt const &lhs, BigInt const &rhs))
+       This operator returns the quotient of the tt(lhs) object divided by the
+        tt(rhs) object. The remainder is lost (The member tt(div) performs the
+        division and makes the remainder available as well).
+
+    itb(BigInt const operator%(BigInt const &lhs, BigInt const &rhs))
+       This operator returns the remainder of the (integer) division of the
+        tt(lhs) object by the tt(rhs) object.
+
+    itb(BigInt const operator+(BigInt const &lhs, BigInt const &rhs))
+       This operator returns the sum of the tt(lhs) object and the tt(rhs)
+        object. 
+
+    itb(BigInt const operator-(BigInt const &lhs, BigInt const &rhs)) 
+       This operator returns the difference of the tt(lhs) object and the
+        tt(rhs) object.
+
+    itb(BigInt &operator<<(BigInt const &lhs, size_t nBits)) This operator
+        returns the value stored in the tt(lhs) object shifted tt(nBits) bit
+        to the left (see also the tt(lshift) members).
+
+    itb(BigInt &operator>>=(BigInt const &lhs, size_t nBits))
+       This operator returns the value stored in the tt(lhs) object shifted
+        tt(nBits) bit to the right (see also the tt(lshift) members).
+
+    itb(BigInt &operator=(BigInt const &rhs)) This operator assigns tt(rhs) to
+        the current tt(BigInt) valueobject. 
+
+    itb(BigInt &operator*=(BigInt const &rhs))
+       This operator multiplies the current tt(BigInt) object by tt(rhs).
+
+    itb(BigInt &operator/=(BigInt const &rhs))
+       This operator assigns the result of the (integer) division of the current
+        tt(BigInt) object by tt(ths) to the current object. The remainder is
+        lost. The member tt(div) divides and makes the remainder available as
+        well.
+
+    itb(BigInt &operator%=(BigInt const &rhs))
+       This operator assigns the remainder of the (integer) division of the
+        current tt(BigInt) object by tt(rhs) to the current object.
+
+    itb(BigInt &operator+=(BigInt const &rhs))
+        This operator adds tt(rhs) to the current tt(BigInt) object.
+
+    itb(BigInt &operator-=(BigInt const &rhs))
+        This operator subtracts tt(rhs) from the current tt(BigInt) object.
+
+    itb(BigInt &operator-=(BigInt const &rhs))
+        This operator subtracts tt(rhs) from the current tt(BigInt) object.
+
+    itb(BigInt &operator<<=(size_t nBits))
+        The value stored in the current object is shifted tt(nBits)
+        bit to the left (see also the tt(lshift) members).
+
+    itb(BigInt &operator>>=(size_t nBits))
+        The value stored in the current object is shifted tt(nBits)
+        bit to the right  (see also the tt(rshift) members).
+
+    itb(std::ostream &operator<<(ostream &out, BigInt const &value))
+        Inserts tt(value) into the provided tt(ostream). If the tt(hex) (or
+tt(oct)!)  manipulator has been inserted into the stream before inserting the
+tt(BigInt) value the value will be displayed as hexadecimal (without a leading
+tt(0x)). The value will be displayed as decimal value if the tt(dec)
+manipulator is active.
+    )
+
+
+manpagesection(STATIC MEMBERS)
+
+    itemization(
+    itb(BigInt const rand(size_t size, Msb msb = MSB_IS_ONE, Lsb lsb = ODD))
+       This member returns a cryptographically strong pseudo-random number
+        of tt(size) bits. The most significant bit(s) can be controlled by
+        tt(msb) (by default bf(MSB_IS_ONE)), the least significant bit can be
+        controlled by tt(lsb) (by default bf(ODD)). Before calling this
+        member the random number generator must be seeded.
+
+    itb(BigInt const randRange(BigInt const &max))
+       This member returns a cryptographically strong pseudo-random
+       number in the range tt(0 <= number < max). Before calling this
+        member the random number generator must be seeded.
+
+    itb(BigInt const prime(size_t nBits, 
+                            BigInt const *mod = 0, BigInt const *rem = 0,
+                            PrimeType primeType = ANY))
+       This member returns a prime number of tt(bBits) bits. If both tt(mod)
+        and tt(rem) are non-zero, the condition prime % mod == rem.
+        (E.g., use tt(prime % mod == 1) in order to suit a given
+        generator). The parameter tt(primeType) can be tt(ANY), tt((prime - 1)
+        / 2) may or may not be a prime. If it is tt(SAFE) then  tt((prime - 1)
+        / 2) will be a (so-called em(safe)) prime.
+
+
+    itb(BigInt const pseudoRand(size_t size, Msb msb = MSB_IS_ONE, Lsb lsb =
+            ODD)) 
+       This member returns a potentially predictable pseudo-random number of
+        tt(size) bits. The most significant bit(s) can be controlled by
+        tt(msb) (by default bf(MSB_IS_ONE)), the least significant bit can be
+        controlled by tt(lsb) (by default bf(ODD)). It can be used for
+        non-cryptographic purposes and for certain purposes in cryptographic
+        protocols, but usually not for key generation.
+
+    itb(BigInt const pseudoRandRange(BigInt const &max))
+       This member returns a potentially predictable  pseudo-random
+       number in the range tt(0 <= number < max).
+    )
+
+manpagesection(EXAMPLE)
+        verb(
+#include <iostream>
+#include <bobcat/bigint>
+
+using namespace std;
+using namespace FBB;
+
+int main(int argc, char **argv)
+{
+    BigInt value(BigInt::prime(100));
+    BigInt mod(BigInt::rand(50));
+    BigInt inverse(value.inverseMod(mod));
+
+    cout << '(' << value << " * " << inverse << ") % " << mod << " = " <<
+             (    value       *      inverse     ) %      mod << endl;
+}
+        ) 
+
+manpagefiles()
+    em(bobcat/bigint) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(RAND_seed)(3)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

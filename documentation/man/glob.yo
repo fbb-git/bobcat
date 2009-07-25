@@ -49,16 +49,16 @@ manpagesection(CONSTRUCTORS)
     constructor, other directory elements starting with a period will be the
     first elements in the series of detected directory elements.
 
+        This constructor throws an tt(Errno) exception if it did not properly
+complete it tasks.
+
     Multiple flags may be specified, separated by the tt(bitor) operator. 
 
     This constructor properly completes its task if only defined bf(Flag)
 values were specified and if the bf(glob)(3) function returned without
 errors. 
-
-    The proper completion of this constructor should be checked by calling
-the tt(Glob::verify()) member (see below).
     )
-    The copy constructor is available.
+    tt(Glob) offers copy and move constructors.
 
 manpagesection(OVERLOADED OPERATORS)
     itemization(
@@ -72,9 +72,7 @@ manpagesection(OVERLOADED OPERATORS)
 manpagesection(MEMBER FUNCTIONS)
     itemization(
     itb(void verify() const)
-        This operator throws an tt(Errno) exception if the bf(Glob)
-constructor did not properly complete. It should be called before using any
-other bf(Glob) member (not required after using the copy constructor).
+        Obsoleted, will be removed in a future Bobcat release.
     itb(size_t size() const)
         Returns the number of elements that were detected.
     itb(char const *const *begin() const)

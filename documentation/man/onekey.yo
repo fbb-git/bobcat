@@ -40,8 +40,16 @@ manpagesection(CONSTRUCTORS)
         with the bf(OneKey::ON) argument, entered characters are echoed to
         the standard output stream. 
 
-    The proper completion of this constructor should be checked by calling
-the tt(OneKey::verify()) member (see below).
+        This construct throws an tt(Errno) exception if it not properly
+        complete. The constructor may fail for the following reasons:
+            itemization(
+            it() the standard input stream is not a tty (e.g., when the
+             standard input stream is redirected to a file);
+            it() the current state of the standard input stream can't be
+             determined;
+            it() the standard input stream's state can't be changed to the
+             `direct keyboard input' mode.
+            )
     )
         The copy constructor (and the overloaded assignement operator) are not
         available. 
@@ -55,18 +63,7 @@ manpagesection(MEMBER FUNCTIONS)
         Changes the echo-state of the bf(OneKey) object. The argument may be
         either bf(OneKey::ON) or bf(OneKey::OFF).
     itb(void verify() const)
-        This operator throws an tt(Errno) exception if the bf(OneKey)
-constructor did not properly complete. It should be called before using any
-other bf(OneKey) member. The bf(OneKey) constructor may fail for the following
-reasons:
-            itemization(
-            it() the standard input stream is not a tty (e.g., when the
-             standard input stream is redirected to a file);
-            it() the current state of the standard input stream can't be
-             determined;
-            it() the standard input stream's state can't be changed to the
-             `direct keyboard input' mode.
-            )
+        Obsoleted, will be removed in a future Bobcat release.
     )
 
 manpagesection(EXAMPLE)
