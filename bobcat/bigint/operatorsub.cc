@@ -3,10 +3,10 @@
 namespace FBB
 {
 
-BigInt const operator>>(BigInt const &lhs, size_t nBits)
+BigInt const operator-(BigInt const &lhs, BigInt const &rhs)
 {
     BigInt tmp(lhs);
-    tmp <<= nBits;
+    tmp -= rhs;
     return tmp;
 }
 
