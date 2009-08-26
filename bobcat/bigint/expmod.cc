@@ -1,12 +1,11 @@
 #include "bigint.ih"
 
-BigInt const BigInt::expMod(BigInt const &exponent, BigInt const &mod) const
+BigInt &BigInt::expMod(BigInt const &exponent, BigInt const &mod)
 {
     BNCTX ctx;
-    BigInt ret;
 
-    if (BN_mod_exp(&ret.d_bn, &d_bn, &exponent.d_bn, &mod.d_bn, ctx) == 0)
+    if (BN_mod_exp(&d_bn, &d_bn, &exponent.d_bn, &mod.d_bn, ctx) == 0)
     throw Errno("BigInt sqr() failed");
 
-    return ret;
+    return *this;
 }

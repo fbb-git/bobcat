@@ -3,21 +3,20 @@
 // toggles all bits and sign
 
 
-BigInt const BigInt::tilde() const
+BigInt &BigInt::tildeBits()
 {
-    BigInt tmp(*this);
-
     size_t nBytes = sizeInBytes();
     unsigned char buf[nBytes];
+    bool sign = isNegative();
 
-    BN_bn2bin(&tmp.d_bn, buf);
+    BN_bn2bin(&d_bn, buf);
 
     for (size_t idx = nBytes; idx--; )
         buf[idx] = ~buf[idx];
 
-    BN_bin2bn(buf, nBytes, &tmp.d_bn);
-    tmp.setNegative(!isNegative());
+    BN_bin2bn(buf, nBytes, &d_bn);
+    setNegative(!sign);
 
-    return tmp;
+    return *this;
 }
 

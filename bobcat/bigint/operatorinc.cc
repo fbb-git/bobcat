@@ -1,9 +1,9 @@
 #include "bigint.ih"
 
-BigInt const BigInt::operator++(int) const
+BigInt const BigInt::operator++(int)
 {
     BigInt tmp(*this);
-    ++tmp;
+    ++*this;
     return tmp;
 }
 

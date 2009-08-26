@@ -1,12 +1,11 @@
 #include "bigint.ih"
 
-BigInt const BigInt::exp(BigInt const &exponent) const
+BigInt &BigInt::exp(BigInt const &exponent)
 {
     BNCTX ctx;
-    BigInt ret;
 
-    if (!BN_exp(&ret.d_bn, &d_bn, &exponent.d_bn, ctx))
+    if (!BN_exp(&d_bn, &d_bn, &exponent.d_bn, ctx))
         throw Errno("BigInt exp() failed");
 
-    return ret;
+    return *this;
 }
