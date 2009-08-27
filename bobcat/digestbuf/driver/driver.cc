@@ -1,9 +1,7 @@
-#include "../digestbuf"
 #include <iostream>
 #include <ostream>
-#include <cstring>
-#include <iomanip>
 #include <bobcat/errno>
+#include <bobcat/digestbuf>
 
 using namespace std;
 using namespace FBB;
@@ -24,8 +22,6 @@ try
     out.write(hw.c_str(), hw.length());
     digestbuf.close();
     cout << ">" << digestbuf << "<" << endl;
-
-
 }
 catch(Errno const &err)
 {
