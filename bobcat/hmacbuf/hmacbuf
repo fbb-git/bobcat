@@ -1,0 +1,41 @@
+#ifndef INCLUDED_HMACBUF_
+#define INCLUDED_HMACBUF_
+
+#include <iosfwd>
+#include <streambuf>
+
+namespace FBB
+{
+
+struct HMacBufImp;
+
+class HMacBuf: public std::streambuf
+{
+    friend std::ostream &operator<<(std::ostream &out, 
+                                    HMacBuf const &hmacbuf);
+
+    HMacBufImp *d_pimpl;
+
+    public:
+        HMacBuf(std::string const &key, 
+                char const *type, size_t bufsize = 1024);
+
+        virtual ~HMacBuf();
+
+        void open();
+        void close();
+
+        std::string const &hash() const;
+
+    private:
+        int overflow(int c);
+};
+
+std::ostream &operator<<(std::ostream &out, HMacBuf const &hmacbuf);
+
+}   // FBB
+        
+#endif
+
+
+

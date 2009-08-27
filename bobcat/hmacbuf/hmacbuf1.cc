@@ -1,8 +1,8 @@
-#include "digestbuf.ih"
+#include "hmacbuf.ih"
 
-DigestBuf::DigestBuf(char const *type, size_t bufsize)
+HMacBuf::HMacBuf(std::string const &key, char const *type, size_t bufsize)
 :
-    d_pimpl(new DigestBufImp(bufsize))
+    d_pimpl(new HMacBufImp(key, bufsize))
 {
     try
     {
@@ -12,9 +12,9 @@ DigestBuf::DigestBuf(char const *type, size_t bufsize)
         if (!d_pimpl->md)
         {
             if (type == 0)
-                type = "** unspecified digest type **";
+                type = "** unspecified hmac-digest type **";
     
-            throw Errno(1, "DigestBuf `") << insertable << type << 
+            throw Errno(1, "HMacBuf `") << insertable << type << 
                                             "' not available" << throwable;
         }
         d_pimpl->buffer = new char[bufsize];
