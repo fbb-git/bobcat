@@ -1,9 +1,9 @@
-#include <bobcat/hmacbuf>
 #include <iostream>
 #include <ostream>
 #include <cstring>
 #include <iomanip>
 #include <bobcat/errno>
+#include <bobcat/hmacbuf>
 
 using namespace std;
 using namespace FBB;
