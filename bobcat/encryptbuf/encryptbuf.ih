@@ -1,0 +1,43 @@
+#include "encryptbuf"
+
+#include <string>
+#include <iomanip>
+#include <ostream>
+#include <algorithm>
+#include <openssl/evp.h>
+#include <bobcat/errno>
+#include <bobcat/irandstream>
+#include <bobcat/fnwrap1c>
+
+namespace FBB
+{
+
+struct EncryptBufImp
+{
+    EVP_CIPHER_CTX      ctx;
+    EVP_CIPHER const   *md;
+    bool                active;
+    size_t              bufsize;
+    char               *buffer;
+    char               *out;
+    std::string         iv;
+    std::ostream       &outStream;
+
+    EncryptBufImp(std::ostream &outStream, std::string const &iv, 
+                  size_t bufsize);
+    ~EncryptBufImp();
+
+    static void setChar(char &ch, IRandStream &irs);
+
+};
+
+inline EncryptBufImp::~EncryptBufImp()
+{
+    delete [] buffer;
+    delete [] out;
+}
+
+} // FBB
+
+using namespace std;
+using namespace FBB;
