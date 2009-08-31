@@ -285,6 +285,7 @@ const EVP_CIPHER *EVP_seed_ofb();
 
 #include <iosfwd>
 #include <streambuf>
+#include <openssl/ossl_typ.h>
 
 namespace FBB
 {
@@ -299,6 +300,7 @@ class EncryptBuf: public std::streambuf
         EncryptBuf(std::ostream &outStream, char const *type, 
                             std::string const &key, std::string const &iv,
                             size_t bufsize = 1024);
+
         virtual ~EncryptBuf();
 
         void setKey(std::string const &key, size_t numberOfBits = 0);
@@ -308,7 +310,13 @@ class EncryptBuf: public std::streambuf
         size_t blockLength() const;                 // bytes
         size_t ivLength() const;                    // bytes
 
+        bool setRounds(size_t nRounds);             // RC5 8, 12 or 16
+        size_t rounds() const;                      // RC5
+
         std::string const &iv() const;
+
+    protected:
+        EVP_CIPHER_CTX *cipherCtx();
 
     private:
         void update();

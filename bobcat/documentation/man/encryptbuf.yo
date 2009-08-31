@@ -224,6 +224,10 @@ vector may contain non-displayable characters.
     itb(size_t keyLength() const)
         This member returns the size of the key (in bytes) that are used by
 the specified method.
+    itb(size_t rounds() const)
+        This member can only be used with the RC5 encryption method to query
+the number of rounds of the algorithm. It returns the currently used number of
+rounds or 0 if the member is called for another encryption method than RC5.
     itb(void setIv(std::string const &iv))
         This member can be used to specify the initialization vector to use
 after construction time but before any data has been encrypted. When called
@@ -236,8 +240,22 @@ the key is assumed to be the number of bits in the key's data (i.e., tt(8 *
 key.length())). If another key length is required the member function's second
 parameter can be used to specify the length of the key em(in bits) (note: not
 in bytes). 
+    itb(bool setRounds(size_t nRounds))
+        This member can only be used with the RC5 encryption method to set the
+number of rounds of the algorithm to 8, 12 or 16. When the number of rounds
+were updated successfully the member returns tt(true). It returns tt(false) in
+other cases (e.g., called for other encryption methods than RC5 or the
+requested number of rounds differ from 8, 12 or 16).
     )
 
+manpagesection(PROTECTED MEMBER)
+    itemization(
+    itb(EVP_CIPHER_CTX *cipherCtx())
+        Classes derived from tt(EncryptBuf) may use this member to gain direct
+access to the tt(EVP_CIPHER_CTX) pointer used by the tt(EncryptBuf)
+object. This pointer is a pointer to an opaque structure used by many OpenSSL
+functions to set or query parameters of an encryption method.
+    )
 manpagesection(EXAMPLE)
     verbinclude(../../encryptbuf/driver/driver.cc)
 
