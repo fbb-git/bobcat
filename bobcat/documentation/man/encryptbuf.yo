@@ -1,0 +1,258 @@
+includefile(header.inc)
+
+COMMENT(            method    type      keysize   blocksize identifier)
+def(ROW)(5)(row(cell(ARG1)cell(ARG2)cell(ARG3)cell(ARG4)cell("ARG5")))
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Encryptbuf)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Encrypt information)
+
+manpagename(FBB::Encryptbuf)
+           (Encrypts information using various methods into a std::ostream) 
+
+manpagesynopsis()
+    bf(#include <bobcat/encryptbuf>)nl()
+    Linking option: tt(-lbobcat -lssl) 
+
+manpagedescription()
+    bf(FBB::Encryptbuf) objects are bf(std::streambuf) objects that can be used
+to initialize tt(std::ostream) objects with.
+
+    All information inserted into such a tt(std::ostream) is encrypted and
+written into a tt(std::ostream) that is given as argument to tt(EncryptBuf)'s
+constructor.
+
+    All encryption methods defined by the OpenSSL library that can be
+selected by name may be used in combination with tt(EncryptBuf) objects. To
+select a particular encryption method an identifier is passed to the
+constructor. E.g., tt("aes-128-cbc") indicating the AES (Rijndael) method,
+using 128 bit sized keys and blocks using `cbc' mode (see below for an
+explanation). 
+
+    When providing shorter keys than expected by the method the provided key
+will be extended by adding the required number of 0-bytes. (zero valued bytes,
+not tt('0') characters). Most modes use an em(initialization vector). Unless
+provided at construction time or explicitly set thereafter an initialization
+vector containg randomly selected values will be used. The initialization
+vector that is actually used can be obtained from the tt(Encryptbuf)
+object. This is important, as the matching decrypting object needs to know the
+initialization vector that was used when encrypting the data. Initialization
+vectors are not security sensitive in the sense that they can be passed over
+in the clear to the decrypting method. What em(is) important, though, is that
+they contain random data when used `for real'. When an initialization vector
+is specified that is shorter than expected by the method it will be extended
+with the required number of 0-bytes.
+
+    Block ciphers use one of the following four encryption modes:
+    itemization(
+    itb(CBC (Cipher Block Chaining)) 
+        The first block is XOR-ed by the initialization vector and then
+encrypted using the specified method. Subsequent blocks are XOR-ed by the
+encrypted version of the preceding block. Due to the initialization vector
+dictionary attacks are infeasible, as long as the initialization vector is
+truly random.
+    itb(ECB (Electronic Code Book)) 
+        Each block is encrypted by itself, using the specified encryption
+method. Although an em(initialization vector) may be specified, it is not
+used. This method is susceptible to dictionary attacks and should therefore be
+avoided, unless you know what you're doing.
+    itb(CFB (Cipher Feednack))
+        This method allows a block cipher to be used as a stream cipher. It
+uses an initialization vector, which should be unique and random for each new
+stream of data that is encrypted using the method. Encryption can only start
+after the first data block has been received.
+    itb(OFB (Output Feednack))
+        This is an alternative way to use a block cipher as a stream
+cipher. It is somewhat more susceptible to traditional data manipulation
+attacks, which can usually be thwarted when a message authentication code is
+added to the information as well. Like CFB it uses an initialization vector,
+which should again be unique and random for each new stream of data that is
+encrypted.
+    )
+
+
+    The following table presents an overview of methods that are currently
+available. Methods for which the block size is specified as N.A. are stream
+ciphers; other methods are block ciphers: 
+    table(5)(lllll)(
+    rowline()
+    row(cell(method)cell(keysize)cell(blocksize)cell(mode)cell(identifier))
+    row(cell()cell((bits))cell((bits)))
+rowline()
+    ROW(AES)     (128) (64)(CBC)(aes-128-cbc)
+    ROW()         (  ) (  )(EBC)(aes-128-ecb)
+    ROW()         (  ) (  )(CFB)(aes-128-cfb)
+    ROW()         (  ) (  )(OFB)(aes-128-ofb)
+    ROW()         (192) (192)(CBC)(aes-192-cbc)
+    ROW()         (  ) (  )(EBC)(aes-192-ecb)
+    ROW()         (  ) (  )(CFB)(aes-192-cfb)
+    ROW()         (  ) (  )(OFB)(aes-192-ofb)
+    ROW()         (256) (256)(CBC)(aes-256-cbc)
+    ROW()         (  ) (  )(EBC)(aes-256-ecb)
+    ROW()         (  ) (  )(CFB)(aes-256-cfb)
+    ROW()         (  ) (  )(OFB)(aes-256-ofb)
+rowline()
+    ROW(BLOWFISH)(128) (64)(CBC)(bf-cbc)
+    ROW()         (  ) (  )(EBC)(bf-ecb)
+    ROW()         (  ) (  )(CFB)(bf-cfb)
+    ROW()         (  ) (  )(OFB)(bf-ofb)
+    row(setmanalign(lssss)cell(max key length is 448 bits, 128 generally used))
+rowline()
+    ROW(CAMELLIA) (128) (128)(CBC)(camellia-128-cbc)
+    ROW()         (  ) (  )(EBC)  (camellia-128-ecb)
+    ROW()         (  ) (  )(CFB)  (camellia-128-cfb)
+    ROW()         (  ) (  )(OFB)  (camellia-128-ofb)
+    ROW()         (192) ()(CBC)   (camellia-192-cbc)
+    ROW()         (  ) (  )(EBC)  (camellia-192-ecb)
+    ROW()         (  ) (  )(CFB)  (camellia-192-cfb)
+    ROW()         (  ) (  )(OFB)  (camellia-192-ofb)
+    ROW()         (256) ()(CBC)   (camellia-256-cbc)
+    ROW()         (  ) (  )(EBC)  (camellia-256-ecb)
+    ROW()         (  ) (  )(CFB)  (camellia-256-cfb)
+    ROW()         (  ) (  )(OFB)  (camellia-256-ofb)
+rowline()
+    ROW(CAST)(128)     (64)(CBC)(cast-cbc)
+    ROW()         (  ) (  )(EBC)(cast-ecb)
+    ROW()         (  ) (  )(CFB)(cast-cfb)
+    ROW()         (  ) (  )(OFB)(cast-ofb)
+    row(setmanalign(lssss)
+            cell(min key length is 40 bits, max is shown; keys must be))
+    row(setmanalign(lssss)cell(multiples of 8 bits))
+rowline()
+    ROW(DES)(64)(64)(CBC)(des-cbc)
+    ROW()   (  )(  )(EBC)(des-ebc)
+    ROW()   (  )(  )(CFB)(des-cfb)
+    ROW()   (  )(  )(OFB)(des-ofb)
+rowline()
+    ROW(DESX)(64)(64)(CBC)(desx-cbc)
+rowline()
+    ROW(3DES)(128)(64)(CBC)(des-ede-cbc)
+    ROW()    (  ) (  )(EBC)(des-ede)
+    ROW()    (  ) (  )(CFB)(des-ede-cfb)
+    ROW()    (  ) (  )(OFB)(des-ede-ofb)
+rowline()
+    ROW(3DES)(192)(64)(CBC)(des-ede3-cbc)
+    ROW()    (  ) (  )(EBC)(des-ede3)
+    ROW()    (  ) (  )(CFB)(des-ede3-cfb)
+    ROW()    (  ) (  )(OFB)(des-ede3-ofb)
+    row(setmanalign(lssss)
+        cell(Key bits 65-128 define the 2nd key, bits 129-192))
+    row(setmanalign(lssss)cell(define the 3rd key))
+rowline()
+    ROW(RC2) (128)(64)(CBC)(rc2-cbc)
+    ROW()    (  ) (  )(EBC)(rc2-ecb)
+    ROW()    (  ) (  )(CFB)(rc2-cfb)
+    ROW()    (  ) (  )(OFB)(rc2-ofb)
+    row(setmanalign(lssss)\
+        cell(Key length variable, max. 1024 bits, default length is shown))
+rowline()
+    ROW(RC2-40)(40)(64)()(rc2-40-cbc)
+    row(setmanalign(lssss)cell(obsolete: avoid))
+rowline()
+    ROW(RC2-64)(64)(64)()(rc2-64-cbc)
+    row(setmanalign(lssss)cell(obsolete: avoid))
+rowline()
+    ROW(RC4)(128)(N.A.)()(rc4)
+    row(setmanalign(lssss)\
+        cell(Key length is variable, max. 256 bits. default length is shown))
+rowline()
+    ROW(RC4-40)(40)(N.A.)()(rc4-40)
+    row(setmanalign(lssss)cell(obsolete: avoid))
+rowline()
+    ROW(RC5) (128)(64) (CBC)(rc5-cbc)
+    ROW()    (  ) (  ) (EBC)(rc5-ecb)
+    ROW()    (  ) (  ) (CFB)(rc5-cfb)
+    ROW()    (  ) (  ) (OFB)(rc5-ofb)
+    row(setmanalign(lssss)
+        cell(Key length variable, max. 2040 bits, rounds 8, 12 or 16,))
+    row(setmanalign(lssss)
+        cell(default # rounds is 12))
+rowline()
+    )
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(std::streambuf)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(EncryptBuf(std::ostream &outStream, char const *type, 
+                            std::string const &key, std::string const &iv,
+                            size_t bufsize = 1024))
+        This constructor initializes the tt(EncryptBuf) object preparing it
+for the message encrypt algorithm specified with tt(type). The encryption
+algorithms that can be used are listed in the table found in the
+bf(DESCRIPTION) section. E.g., to use the AES method on 192 bit keys and
+blocks in CBC mode specify tt("aes-192-cbc"). The tt(key) parameter refers to
+the key to be used, the iv parameter refers to the initialization vector to
+use. Both tt(key) and tt(iv) may contain non-displayable characters. When
+tt(iv.length()) is zero at the time encryption starts it will be filled by the
+tt(EncryptBuf) object with random data. When the key and/or the iv is too
+small for the requested method they will be expanded by adding the required
+number of  zero valued bytes. 
+
+    The first parameter refers to the tt(std::ostream) which will receive the
+encrypted information. Be aware of the fact that the encrypted information
+most likely contains non-displayable characters. 
+
+    The tt(bufsize) argument specifies the internal buffer used by
+tt(EncryptBuf) to store incoming characters temporarily. The provided default
+argument should be OK in all normal cases. 
+    )
+    There is no copy constructor, nor move constructor (as tt(std::streambuf)
+doesn't support either).
+
+manpagesection(MEMBER FUNCTIONS)
+
+     All members of bf(std::streambuf) are available, as bf(FBB::Encryptbuf)
+inherits from this class. Some of the bf(std::streambuf)'s member are
+overridden or are hidden by tt(Encryptbuf). In normal situations these
+inherited members will not be used by programs using tt(EncryptBuf) objects.
+
+    itemization(
+    itb(size_t blockLength() const)
+        This member returns the block size (in bytes) that are used by
+the specified method.
+    itb(size_t ivLength() const)
+        This member returns the size (in bytes) of the initialization vector
+that is used by the specified method.
+    itb(std::string iv() const)
+        This member returns a reference to the initialization vector
+that is used by the specified method. Be advised that the initialization
+vector may contain non-displayable characters. 
+    itb(size_t keyLength() const)
+        This member returns the size of the key (in bytes) that are used by
+the specified method.
+    itb(void setIv(std::string const &iv))
+        This member can be used to specify the initialization vector to use
+after construction time but before any data has been encrypted. When called
+after encryption has started an tt(FBB::Errno) exception will be thrown.
+    itb(void setKey(std::string const &key, size_t numberOfBits = 0))
+        This member can be used to specify the key and its length after
+construction time but before any data has been encrypted. When called after
+encryption has started an tt(FBB::Errno) exception will be thrown. The size of
+the key is assumed to be the number of bits in the key's data (i.e., tt(8 *
+key.length())). If another key length is required the member function's second
+parameter can be used to specify the length of the key em(in bits) (note: not
+in bytes). 
+    )
+
+manpagesection(EXAMPLE)
+    verbinclude(../../encryptbuf/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/encryptbuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(deryptbuf)(3bobcat), bf(digestbuf)(3bobcat), 
+    bf(hmacbuf)(3bobcat), bf(std::streambuf)
+
+manpagebugs()
+    None reported
+
+includefile(trailer.inc)
+
+
+
+

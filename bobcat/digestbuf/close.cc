@@ -8,7 +8,7 @@ void DigestBuf::close()
     if (pptr() > pbase())
        EVP_DigestUpdate(&d_pimpl->ctx, d_pimpl->buffer, pptr() - pbase());
          
-    EVP_DigestFinal(&d_pimpl->ctx, 
+    EVP_DigestFinal_ex(&d_pimpl->ctx, 
                     reinterpret_cast<unsigned char *>(digestbuf), 
                     &digestbufLen);
     d_pimpl->digest.assign(digestbuf, digestbufLen);

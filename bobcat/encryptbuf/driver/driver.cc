@@ -11,20 +11,20 @@ int main(int argc, char **argv)
 try
 {
     if (argc == 1)
-        throw Errno("1st arg: key, 2st arg: file to encrypt (to stdout), "
-                    "3rd char (opt): iv");
+        throw Errno("1st arg: method, 2nd arg: key, 3rd arg: file to "
+                    "encrypt (to stdout), 4rd char (opt): iv");
 
-    string key(argv[1]);
+    string key(argv[2]);
     string iv;
 
-    if (argc > 3)
-        iv = argv[3];
+    if (argc > 4)
+        iv = argv[4];
 
-    EncryptBuf encryptbuf(cout, "aes-128-cbc", key, iv);
+    EncryptBuf encryptbuf(cout, argv[1], key, iv);
 
     ostream out(&encryptbuf);
 
-    ifstream in(argv[2]);
+    ifstream in(argv[3]);
 
     OHexStreambuf ohsb(cerr);
     ostream ohs(&ohsb);
