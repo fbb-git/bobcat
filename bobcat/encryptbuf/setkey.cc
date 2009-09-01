@@ -1,12 +1,14 @@
 #include "encryptbuf.ih"
 
-void EncryptBuf::setKey(string const &key, size_t numberOfBits)
+void EncryptBuf::setKey(string key, size_t numberOfBits)
 {
     if (d_pimpl->active)
         throw Errno(1, "Can't change Key during encryption");
 
     if (numberOfBits == 0)
         numberOfBits = 8 * key.length();
+
+    key.resize(EVP_MAX_KEY_LENGTH);
 
     if 
     (

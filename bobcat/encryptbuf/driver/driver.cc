@@ -12,7 +12,7 @@ try
 {
     if (argc == 1)
         throw Errno("1st arg: method, 2nd arg: key, 3rd arg: file to "
-                    "encrypt (to stdout), 4rd char (opt): iv");
+                    "encrypt (to stdout), 4th arg (opt): iv");
 
     string key(argv[2]);
     string iv;
@@ -21,19 +21,18 @@ try
         iv = argv[4];
 
     EncryptBuf encryptbuf(cout, argv[1], key, iv);
-
     ostream out(&encryptbuf);
-
     ifstream in(argv[3]);
-
-    OHexStreambuf ohsb(cerr);
-    ostream ohs(&ohsb);
 
     cerr << "Block length: " << encryptbuf.blockLength() << '\n' <<
             "Key length: " << encryptbuf.keyLength() << '\n' <<
             "IV length: " << encryptbuf.ivLength() << endl;
             
     cerr << encryptbuf.iv().length() << ' ';
+
+    OHexStreambuf ohsb(cerr);
+
+    ostream ohs(&ohsb);
     ohs.write(encryptbuf.iv().data(), encryptbuf.iv().length()) << flush;
     cerr << endl;
 

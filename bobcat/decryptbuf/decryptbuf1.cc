@@ -1,9 +1,9 @@
-#include "encryptbuf.ih"
+#include "decryptbuf.ih"
 
-EncryptBuf::EncryptBuf(ostream &outStream, char const *type, 
+DecryptBuf::DecryptBuf(ostream &outStream, char const *type, 
                         string key, string iv, size_t bufsize)
 :
-    d_pimpl(new EncryptBufImp(outStream, iv, bufsize))
+    d_pimpl(new DecryptBufImp(outStream, bufsize))
 {
     try
     {
@@ -15,7 +15,7 @@ EncryptBuf::EncryptBuf(ostream &outStream, char const *type,
             if (type == 0)
                 type = "** unspecified cipher type **";
     
-            throw Errno(1, "EncryptBuf `") << insertable << type << 
+            throw Errno(1, "DecryptBuf `") << insertable << type << 
                                             "' not available" << throwable;
         }
     
@@ -23,19 +23,19 @@ EncryptBuf::EncryptBuf(ostream &outStream, char const *type,
         iv.resize(EVP_MAX_IV_LENGTH);
 
         EVP_CIPHER_CTX_init(&d_pimpl->ctx);
-
-        if 
+    
+        if
         (
-            !EVP_EncryptInit_ex(&d_pimpl->ctx, d_pimpl->md, 0,
+            !EVP_DecryptInit_ex(&d_pimpl->ctx, d_pimpl->md, 0,
                 reinterpret_cast<unsigned char const *>(key.data()), 
                 reinterpret_cast<unsigned char const *>(iv.data()))
         )
-            throw Errno(1, "EncryptBuf: initialization failed");
+            throw Errno(1, "DecryptBuf: initialization failed");
     
         d_pimpl->buffer = new char[bufsize];
         d_pimpl->out = new char[
-                bufsize + EVP_CIPHER_CTX_block_size(&d_pimpl->ctx)]; 
-        
+            bufsize + EVP_CIPHER_CTX_block_size(&d_pimpl->ctx)];
+
         open();
     }
     catch (...)
@@ -44,8 +44,4 @@ EncryptBuf::EncryptBuf(ostream &outStream, char const *type,
         throw;
     }
 }
-
-
-
-
 
