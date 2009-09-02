@@ -1,0 +1,144 @@
+includefile(header.inc)
+
+COMMENT(            method    type      keysize   blocksize identifier)
+def(ROW)(5)(row(cell(ARG1)cell(ARG2)cell(ARG3)cell(ARG4)cell("ARG5")))
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::DecryptBuf)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Decrypt information)
+
+manpagename(FBB::DecryptBuf)
+           (Decrypts information using various methods into a std::ostream) 
+
+manpagesynopsis()
+    bf(#include <bobcat/decryptbuf>)nl()
+    Linking option: tt(-lbobcat -lssl) 
+
+manpagedescription()
+    bf(FBB::DecryptBuf) objects are bf(std::streambuf) objects that can be used
+to initialize tt(std::ostream) objects with.
+
+    All information inserted into such a tt(std::ostream) is decrypted and
+written into a tt(std::ostream) that is given as argument to tt(DecryptBuf)'s
+constructor.
+
+    All encryption methods defined by the OpenSSL library that can be selected
+by name may be used in combination with tt(DecryptBuf) objects. Most likely
+the information will have been encrypted using an tt(EncryptBuf) object,
+selecting a particular encryption method. The encryption method used when
+encrypting information should also be specified when constructing a
+tt(DecryptBuf) object. Likewise, the constructor expects a em(key) and
+em(initialization vector). The key and initialization vector that was passed
+to the tt(EncryptBuf) object must be passed to tt(DecryptBuf)'s constructor as
+well. 
+
+    Information about the various encryption methods and cipher modes as well
+as information about how keys and initialization vectors are handled is found
+in the bf(EncryptBuf)(3bobcat) manual page and need not be repeated here.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(std::streambuf)
+
+manpagesection(CONSTRUCTOR/DESTRUCTOR)
+    itemization(
+    itb(DecryptBuf(std::ostream &outStream, char const *type, 
+                            std::string const &key, std::string const &iv,
+                            size_t bufsize = 1024))
+        This constructor initializes the tt(DecryptBuf) object preparing it
+for the message decrypt algorithm specified with tt(type). The decryption
+algorithms that can be used are listed in the table found in the
+bf(EncryptBuf)(3bobcat) manual page. As an example: to use the AES method on
+192 bit keys and blocks in CBC mode specify tt("aes-192-cbc"). The tt(key)
+parameter refers to the key to be used, the tt(iv) parameter refers to the
+initialization vector to use. The tt(iv)'s length cannot be zero. When using 
+ECB modes no initialization vector is used. In those cases any non-empty
+initialization vector may be provided.
+
+    The constructor throws an tt(FBB::Errno) exception if either an unknown
+encryption method or empty initialization vector was specified.
+
+    The constructor's first parameter refers to the tt(std::ostream) to
+receive the decrypted information.
+
+    The tt(bufsize) argument specifies the size in bytes of the internal
+buffer used by tt(DecryptBuf) to store incoming characters temporarily. The
+provided default argument should be OK in all normal cases.
+    itb(~DecryptBuf()) 
+        The destructor calls the tt(done()) member (see below), prevending any
+exception that function might throw from leaving the destructor. In this case
+only a non thread-safe way to determine whether the decryption was
+successfully completed is available through the static member function
+tt(lastOK()) (see below).
+    )
+    There is no copy constructor, nor move constructor (as tt(std::streambuf)
+doesn't support either).
+
+manpagesection(MEMBER FUNCTIONS)
+
+     All members of bf(std::streambuf) are available, as bf(FBB::DecryptBuf)
+inherits from this class. Some of the bf(std::streambuf)'s member are
+overridden or are hidden by tt(DecryptBuf). In normal situations these
+inherited members will not be used by programs using tt(DecryptBuf) objects.
+
+    itemization(
+    itb(void done())
+        This member can be called to indicate that all information to be
+decrypted has been received. It throws an tt(FBB::Errno) exception if
+decryption fails (resulting from providing the tt(DecryptBuf) object with
+incorrect (usually improperly padded) input). If not explicitly called it is
+called by tt(DecryptBuf)'s destructor, preventing its exception from leaving
+the destructor. 
+    itb(void setIv(std::string const &iv))
+        This member can be used to specify the initialization vector to use
+after construction time but before any data has been decrypted. When called
+after decryption has started or when specifying an empty intialization vector
+an tt(FBB::Errno) exception will be thrown.  When using ECB modes no
+initialization vector is used. In those cases any non-empty initialization
+vector may be provided.
+    itb(bool setRounds(size_t nRounds))
+        This member can only be used with the RC5 decryption method to set the
+number of rounds of the algorithm to 8, 12 or 16. When the number of rounds
+were updated successfully the member returns tt(true). It returns tt(false) in
+other cases (e.g., called for other decryption methods than RC5 or the
+requested number of rounds differ from 8, 12 or 16).
+    )
+
+manpagesection(STATIC MEMBER)
+    itemization(
+    itb(bool lastOK())
+        This member is a non thread-safe way to determine whether the
+decryption has succeeded when the  tt(DecryptBuf) object's tt(done) member has
+not been called and the object has been destroyed. In that case the object's
+destructor will call tt(done) to complete the decryption. The member
+tt(lastOK) returns tt(true) if the tt(DecryptBuf) object  destroyed last
+could complete its decryption successfully and returns tt(false) otherwise. 
+    )
+
+manpagesection(PROTECTED MEMBER)
+    itemization(
+    itb(EVP_CIPHER_CTX *cipherCtx())
+        Classes derived from tt(DecryptBuf) may use this member to gain direct
+access to the tt(EVP_CIPHER_CTX) pointer used by the tt(DecryptBuf)
+object. This pointer is a pointer to an opaque structure used by many OpenSSL
+functions to set or query parameters of an decryption method.
+    )
+
+manpagesection(EXAMPLE)
+    verbinclude(../../decryptbuf/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/decryptbuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(encryptbuf)(3bobcat), bf(std::streambuf)
+
+manpagebugs()
+    None reported
+
+includefile(trailer.inc)
+
+
+
+

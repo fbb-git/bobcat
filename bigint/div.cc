@@ -1,10 +1,8 @@
 #include "bigint.ih"
 
-BigInt const BigInt::div(BigInt *remainder, BigInt const &rhs) const
+BigInt &BigInt::div(BigInt *remainder, BigInt const &rhs)
 {
-    BigInt ret(*this);
-
-    checked3(&ret.d_bn, &remainder->d_bn, rhs, "div");
-    return ret;
+    checked3(&d_bn, &remainder->d_bn, rhs, "div");
+    return *this;
 }
 
