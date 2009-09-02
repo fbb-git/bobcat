@@ -18,7 +18,11 @@ DecryptBuf::DecryptBuf(ostream &outStream, char const *type,
             throw Errno(1, "DecryptBuf `") << insertable << type << 
                                             "' not available" << throwable;
         }
-    
+
+        if (iv.empty())
+            throw Errno(1, 
+                "Decryptbuf: initialization vector cannot be empty");
+
         key.resize(EVP_MAX_KEY_LENGTH);
         iv.resize(EVP_MAX_IV_LENGTH);
 

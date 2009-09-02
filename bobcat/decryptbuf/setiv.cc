@@ -5,6 +5,10 @@ void DecryptBuf::setIv(string iv)
     if (d_pimpl->active)
         throw Errno(1, "Can't change IV during encryption");
 
+    if (iv.empty())
+        throw Errno(1, 
+            "Decryptbuf::setIV: initialization vector cannot be empty");
+
     iv.resize(EVP_MAX_IV_LENGTH);
 
     if 

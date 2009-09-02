@@ -67,28 +67,28 @@ the binary values 0x73, 0x6d, 0x61, 0x6c, 0x6c, 0x20, 0x69, and 0x76.
 
     This function does em(not) verify whether its argument is properly
 formed. A properly formed argument consists of an even number of hexadecimal
-number characters ('0' until '9', 'a' until 'f' (or uppercase)). With
+number characters ('0' until '9', 'a' until 'f' (or uppercase)). For
 improperly formed arguments the return value is undefined.
 
     )
 
 manpagesection(EXAMPLE)
         verb(
-	#include <iostream>
-	#include <bobcat/ohexstreambuf>
-	
-	using namespace std;
-	using namespace FBB;
-	
-	int main()
-	{   
-	    OHexStreambuf ohex(cout, 40);
-	    ostream out(&ohex);
-	    out << cin.rdbuf();
-	    if (ohex.size())
-	        cout << '\n';
-	}
-	        )
+    #include <iostream>
+    #include <bobcat/ohexstreambuf>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main()
+    {   
+        OHexStreambuf ohex(cout, 40);
+        ostream out(&ohex);
+        out << cin.rdbuf();
+        if (ohex.size())
+            cout << '\n';
+    }
+            )
 
 manpagefiles()
     em(bobcat/ohexstreambuf) - defines the class interface
