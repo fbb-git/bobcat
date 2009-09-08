@@ -34,20 +34,26 @@ int main()
 
                                         // current local time
     DateTime modify(dt.time(), DateTime::LOCALTIME);
-    cout << " 4: " << modify << " (LT created from UTC)\n";
+    cout << " 4: " << modify << " (Local time now equal to earlier UTC)\n";
+    cout << "    " << modify.utc() << " (matching UTC time)\n";
 
     modify.setDay(1);                   // 1st of this month
     cout << " 5: " << modify << " (LT at 1st of month)\n";
+    cout << "    DST active: "  << modify.dst() << endl;
 
     modify.setHours(25);                // 01:xx.yy, 2nd of this month
     cout << " 6: " << modify << " (previous LT at 2nd of month 01:xx;yy)\n";
+    cout << "    DST active: "  << modify.dst() << endl;
 
     modify.setMinutes(00);              // 01:00.yy, 2nd of this month
     cout << " 7: " << modify << " (prev. LT at 00 min.)\n";
+    cout << "    DST active: "  << modify.dst() << endl;
 
                                         // 01:00.yy, 2nd of Jan. next year
     modify.setMonth(DateTime::JANUARY, DateTime::NEXT); 
     cout << " 8: " << modify << " (prev. LT at jan next yr)\n";
+    cout << "    DST active: "  << modify.dst() << endl;
+return 0;
 
     modify.setMonth(-12);               // 01:00.yy, 2nd of Jan. this year
     cout << " 9: " << modify << " (prev. LT at jan this yr\n";
