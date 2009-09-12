@@ -1,9 +1,15 @@
 #!/bin/sh
 
-ln -s .. bobcat
-ln -s ../ohexstreambuf/ohexstreambuf bobcat
+# ln -s .. bobcat
+# ln -s ../ohexstreambuf/ohexstreambuf bobcat
+# 
+# g++ -I. --std=c++0x -O2 -Wall -o driver driver.cc -lssl -lbobcat \
+#       -L../../ohexstreambuf/tmp -L../tmp -lencryptbuf -lohexstreambuf
+# 
+# rm bobcat/ohexstreambuf bobcat
 
-g++ -I. --std=c++0x -O2 -Wall -o driver driver.cc -lssl -lbobcat \
-	-L../../ohexstreambuf/tmp -L../tmp -lencryptbuf -lohexstreambuf
+echo g++ -I. --std=c++0x -O2 -Wall -o driver driver.cc -L../tmp -lencryptbuf \
+        -lssl -lbobcat
 
-rm bobcat/ohexstreambuf bobcat
+g++ -I. --std=c++0x -O2 -Wall -o driver driver.cc -L../tmp -lencryptbuf \
+        -lssl -lbobcat
