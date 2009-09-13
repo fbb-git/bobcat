@@ -22,7 +22,7 @@ class EncryptBuf: public std::streambuf
 
         virtual ~EncryptBuf();
 
-        void setKey(std::string key, size_t numberOfBits = 0);
+        void setKey(std::string key, size_t numberOfBytes = 0);
         void setIv(std::string iv);
 
         size_t keyLength() const;                   // bytes
@@ -40,6 +40,7 @@ class EncryptBuf: public std::streambuf
     private:
         void update();
         void open();
+        void installKey(std::string const &key, size_t length);
         virtual int overflow(int c);
 };
 
