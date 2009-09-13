@@ -71,7 +71,7 @@ string String::unescape(string const &str)
 
         int next = str[pos];                // determine next char
 
-        if (char *cp = strchr(escapeChars, next))// escape sequence ?
+        if (char const *cp = strchr(escapeChars, next))// escape sequence ?
         {
             ret += escapeValue[cp - escapeChars];// then assign escape char
             ++pos;                          // next character to handle
