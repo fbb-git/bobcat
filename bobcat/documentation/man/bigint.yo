@@ -399,10 +399,40 @@ tt(0x)). The value will be displayed as decimal value if the tt(dec)
 manipulator is active.
     )
 
+    Extraction operator:
+
+    itemization(
+    itb(std::istream &operator>>(istream &in, BigInt &value))
+       Extracts tt(value) from the provided tt(istream). Depending on the
+        currently set extraction mode (tt(dec, oct,) or tt(hex)) the matching
+        set of characters will be extracted from tt(in) and converted to a
+        which is stored in tt(value). Extraction stops at EOF or at the first
+        character not matching the range of characters matching the extraction
+        mode. 
+    )
+
 
 manpagesection(STATIC MEMBERS)
 
     itemization(
+    itb(BigInt const fromText(std::string text, int mode = 0))
+       This member converts a textual representation of a number to a
+        tt(BigInt) value. Conversion continues until the end of tt(text) or
+        until a character outside of an expected range is encountered.  
+
+       The expected range may be preset by specifying tt(mode) as tt(ios::dec,
+        ios::oct,) or tt(ios::hex) or (the default) the expected range is
+        determined by tt(fromText) itself by inspecting the characters in
+        tt(text).
+
+        By default if tt(text) contains hexadecimal characters then
+        tt(fromText) assumes that the number is represented as a hexadecimal
+        value (e.g., tt("abc") is converted to the (decimal) value 2748; if
+        tt(text) starts with 0 and contains only characters in the range 0
+        until (including) 7 then tt(fromText) assumes the number is
+        represented as an octal value (e.g., tt("01234") is converted to the
+        (decimal) value 668. Otherwise a decimal value is assumed. 
+
     itb(BigInt const rand(size_t size, Msb msb = MSB_IS_ONE, Lsb lsb = ODD))
        This member returns a cryptographically strong pseudo-random number
         of tt(size) bits. The most significant bit(s) can be controlled by

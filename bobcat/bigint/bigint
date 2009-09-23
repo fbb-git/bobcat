@@ -149,6 +149,8 @@ class BigInt
                             BigInt const *add = 0, BigInt const *rem = 0,
                             PrimeType primeType = ANY);
 
+        static BigInt const fromText(std::string const &text, int mode = 0);
+
         BigInt &clearBit(size_t index);
         bool hasBit(size_t index) const;
         BigInt &maskBits(size_t lowerNBits);
@@ -198,6 +200,14 @@ class BigInt
 
 
         static void primeCallback(int reason, int primeNr, void *primeBase);
+
+        struct Context
+        {
+            BigInt &ret;
+            BigInt const &radix;
+            int (*pConv)(int);
+        };
+        static bool addDigit(char ch, Context &ctx);
 };
 
 template<typename Type>
@@ -384,6 +394,8 @@ BigInt const operator^(BigInt const &lhs, BigInt const &rhs);
 BigInt const gcd(BigInt const &lhs, BigInt const &rhs);
 BigInt const inverseMod(BigInt const &lhs, BigInt const &mod);
 
+std::ostream &operator>>(std::ostream &out, BigInt &bn);
+int isoctdigit(int ch);
 
 }   // namespace FBB
 
