@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <string>
 
-#include <bigint>
+#include "../bigint"
 #include <bobcat/errno>
 
 using namespace std;
@@ -16,7 +16,7 @@ void binary(BigInt const &bi)
     cout << endl;
 }
 
-int main()
+int main(int argc, char **argv)
 try
 {   
     BigInt zero;        // default construction of a BigInt

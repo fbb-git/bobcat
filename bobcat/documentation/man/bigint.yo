@@ -392,11 +392,14 @@ the rhs operand.
 
     itemization(
     itb(std::ostream &operator<<(ostream &out, BigInt const &value))
-        Inserts tt(value) into the provided tt(ostream). If the tt(hex) (or
-tt(oct)!)  manipulator has been inserted into the stream before inserting the
-tt(BigInt) value the value will be displayed as hexadecimal (without a leading
-tt(0x)). The value will be displayed as decimal value if the tt(dec)
-manipulator is active.
+        Inserts tt(value) into the provided tt(ostream). If the tt(hex)
+manipulator has been inserted into the stream before inserting the tt(BigInt)
+value the value will be displayed as a hexadecimal value (without a leading
+tt(0x)); if the tt(oct) manipulator has been inserted the value will be
+represented as an octal value (starting with a 0). The value will be
+displayed as a decimal value if the tt(dec) manipulator is active. If the
+tt(BigInt) value is negative its value will be preceded by a minus
+character. 
     )
 
     Extraction operator:
@@ -406,11 +409,11 @@ manipulator is active.
        Extracts tt(value) from the provided tt(istream). Depending on the
         currently set extraction mode (tt(dec, oct,) or tt(hex)) the matching
         set of characters will be extracted from tt(in) and converted to a
-        which is stored in tt(value). Extraction stops at EOF or at the first
-        character not matching the range of characters matching the extraction
-        mode. 
+        number which is stored in tt(value). Extraction stops at EOF or at the
+        first character outside of the range of characters matching the
+        extraction mode. The extracted value may be preceded by a minus
+        character, resulting in an extracted negative value.
     )
-
 
 manpagesection(STATIC MEMBERS)
 

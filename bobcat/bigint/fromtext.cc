@@ -14,10 +14,12 @@ BigInt const BigInt::fromText(string const &text, int mode)
                                                text[0] == '0'  ? ios::oct :
                                                                  ios::dec;
 
+    BigInt radix(mode & ios::oct ?  8 : 
+                 mode & ios::hex ? 16 : 10);
+
+
     Context ctx = {ret,
-            mode & ios::oct ?  8 : 
-            mode & ios::hex ? 16 :
-                              10,
+            radix,
             mode & ios::oct ?   isoctdigit : 
             mode & ios::hex ? ::isxdigit   :
                               ::isdigit

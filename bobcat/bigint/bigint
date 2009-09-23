@@ -166,6 +166,7 @@ class BigInt
 
     private:
         std::ostream &insertInto(std::ostream &out) const;
+        static char *bn2oct(BIGNUM const *bn);
 
         void copy(BigInt const &other);
         void copy(BIGNUM *lhs, BIGNUM const &rhs);
@@ -394,7 +395,8 @@ BigInt const operator^(BigInt const &lhs, BigInt const &rhs);
 BigInt const gcd(BigInt const &lhs, BigInt const &rhs);
 BigInt const inverseMod(BigInt const &lhs, BigInt const &mod);
 
-std::ostream &operator>>(std::ostream &out, BigInt &bn);
+std::istream &operator>>(std::istream &out, BigInt &bn);
+
 int isoctdigit(int ch);
 
 }   // namespace FBB

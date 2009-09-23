@@ -3,7 +3,7 @@
 namespace FBB
 {
 
-istream &operator>>(istream &in, BigInt &bn)
+std::istream &operator>>(std::istream &in, BigInt &bn)
 {
     string value;
 
@@ -27,14 +27,15 @@ istream &operator>>(istream &in, BigInt &bn)
     while (true)
     {
         int ch = static_cast<unsigned char>(in.peek());
+
         if (not (*charType)(ch))
             break;
 
-        in.ignore(1);
+        in.get();
         value += ch;
     }
 
-    bn = BigInt::fromText(value);
+    bn = BigInt::fromText(value, flags);
     return in;
 }
 
