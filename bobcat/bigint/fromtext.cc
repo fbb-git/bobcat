@@ -13,10 +13,8 @@ BigInt const BigInt::fromText(string const &text, int mode)
             text.find_first_of("89") == string::npos && 
                                                text[0] == '0'  ? ios::oct :
                                                                  ios::dec;
-
     BigInt radix(mode & ios::oct ?  8 : 
                  mode & ios::hex ? 16 : 10);
-
 
     Context ctx = {ret,
             radix,
@@ -27,8 +25,12 @@ BigInt const BigInt::fromText(string const &text, int mode)
 
     bool negative = text[0] == '-';
     
-    find_if(text.begin() + negative, text.end(), 
+    string::const_iterator iter = 
+                    find_if(text.begin() + negative, text.end(), 
                           FnWrap1c<char, Context &, bool>(addDigit, ctx));
+
+    if (iter - text.begin() <= negative)
+        throw Errno("fromText: text does not represent a BigInt value");
 
     if (negative)
         ret.negate();

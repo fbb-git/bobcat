@@ -24,15 +24,24 @@ std::istream &operator>>(std::istream &in, BigInt &bn)
         value = '-';
     }
 
+    bool validInput = false;
     while (true)
     {
         int ch = static_cast<unsigned char>(in.peek());
 
         if (not (*charType)(ch))
+        {
+            if (!validInput)
+            {
+                in.setstate(ios::failbit);
+                return in;
+            }
             break;
+        }
 
         in.get();
         value += ch;
+        validInput = true;
     }
 
     bn = BigInt::fromText(value, flags);

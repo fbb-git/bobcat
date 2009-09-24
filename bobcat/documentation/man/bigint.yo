@@ -411,8 +411,9 @@ character.
         set of characters will be extracted from tt(in) and converted to a
         number which is stored in tt(value). Extraction stops at EOF or at the
         first character outside of the range of characters matching the
-        extraction mode. The extracted value may be preceded by a minus
-        character, resulting in an extracted negative value.
+        extraction mode. if no numerical characters were extracted the
+        stream's tt(failbit) is set. The extracted value may be preceded
+        by a minus character, resulting in an extracted negative value.
     )
 
 manpagesection(STATIC MEMBERS)
@@ -435,6 +436,10 @@ manpagesection(STATIC MEMBERS)
         until (including) 7 then tt(fromText) assumes the number is
         represented as an octal value (e.g., tt("01234") is converted to the
         (decimal) value 668). Otherwise a decimal value is assumed. 
+
+        If the text does not represent a valid numerical value (of the
+        given extraction mode) then a tt(FBB::Errno) exception is thrown
+        (tt(fromText: text does not represent a BigInt value)).
 
     itb(BigInt const rand(size_t size, Msb msb = MSB_IS_ONE, Lsb lsb = ODD))
        This member returns a cryptographically strong pseudo-random number

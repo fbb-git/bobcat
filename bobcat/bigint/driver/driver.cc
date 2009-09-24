@@ -19,6 +19,27 @@ void binary(BigInt const &bi)
 int main(int argc, char **argv)
 try
 {   
+    if (argc == 1)
+        throw Errno(1, "Provide at least one argument");
+
+//    BigInt value;
+//
+//    int mode = argv[1][0];
+//
+//    cin >>
+//        (mode == 'h' ? hex : mode == 'o' ? oct : dec) >>
+//        value;
+//
+//    if (cin.fail())
+//        cout << "Input failed\n";
+//    else
+//        cout << '\n' <<
+//                   value << '\n' <<
+//            oct << value << '\n' <<
+//            hex << value << '\n';
+
+return 1;
+
     BigInt zero;        // default construction of a BigInt
     cout << "Defaults to zero: " << zero << endl;
 
