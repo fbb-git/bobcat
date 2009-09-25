@@ -1,13 +1,8 @@
 #include "bigint.ih"
 
-namespace FBB
+BigInt const BigInt::gcd(BigInt const &rhs)
 {
-
-BigInt const gcd(BigInt const &lhs, BigInt const &rhs)
-{
-    BigInt tmp(lhs);
+    BigInt tmp(*this);
     tmp.checked4(BN_gcd, rhs, "gcd");
     return tmp;
 }
-
-} // FBB

@@ -130,23 +130,23 @@ manpagesection(MEMBER FUNCTIONS)
     itb(BigInt &expMod(BigInt const &exponent, BigInt const &mod))
        The current object is raised to the power tt(exponent) modulo tt(mod).
 
-    itb(BigInt const gcd(BigInt const &lhs, BigInt const &rhs))
-       This is not a member function, but a free function defined in the
-        tt(FBB) namespace.  It returns the greatest common divisor (gcd) of
-        tt(lhs) and tt(rhs). To compute the least common multiple (lcm) the
-        relationship verb( a * b = gcd(a, b) * lcm(a, b)) ) can be used.
+    itb(BigInt const gcd(BigInt const &rhs))
+       The greatest common divisor (gcd) of the current object and tt(rhs) is
+        returned. To compute the least common multiple (lcm) the following
+        relationship can be used: 
+       verb(
+    lcm(a, b) = a * b / a.gcd(b)
+        )
 
     itb(bool hasBit(size_t index))
         tt(True) is returned if the bit at index position tt(index) has been
         set, tt(false) otherwise.
 
-    itb(BigInt const inverseMod(BigInt const &lhs, BigInt const &mod))
-       This is not a member function, but a free function defined in the
-        tt(FBB) namespace.  It returns the inverse of tt(lhs) modulo
-        tt(mod). This is the value tt(ret) for which the following expression
-        holds true:
+    itb(BigInt const inverseMod(BigInt const &mod))
+       This function returns the inverse of tt(lhs) modulo tt(mod). This is
+        the value tt(ret) for which the following expression holds true:
        verb( 
-        (lhs * ret) % mod = 1 
+        (*this * ret) % mod = 1 
        )
 
     itb(bool isNegative() const)
@@ -183,14 +183,6 @@ manpagesection(MEMBER FUNCTIONS)
 
     itb(BigInt &rshift(size_t nBits)) The value stored in the current object
         is shifted tt(nBits) to the right. The value's sign remains unaltered.
-
-    itb(BigInt &setBigEndian(std::string const &bytes, bool negative = false)) 
-        The tt(bytes.length()) bytes of tt(bytes) are used to assign a new
-        value to the current object. The characters stored in tt(bytes) are
-        interpreted as a series values in big-endian order. See also the
-        member function tt(bigEndian()) above. The sign of the assigned value
-        may optionally be set to negative. By default the value will be stored
-        as a positive value.
 
     itb(BigInt &setBit(size_t index))
         The bit at index position tt(index) is set. 
@@ -240,9 +232,9 @@ manpagesection(MEMBER FUNCTIONS)
         tt(operator~()) below.
 
     itb(unsigned long ulong() const) 
-       The value stored in the current object is returned as an unsigned
-        long. If it cannot be represented by an unsigned long it returns
-        tt(0xffffffffL). 
+       The absolute value stored in the current object is returned as an
+        unsigned long. If it cannot be represented by an unsigned long it
+        returns tt(0xffffffffL).
 
     itb(int uCompare(BigInt const &rsh) const)
        Using absolute values, if the current object is smaller than tt(rhs) -1
@@ -252,16 +244,15 @@ manpagesection(MEMBER FUNCTIONS)
 
 manpagesection(OVERLOADED OPERATORS)
 
-Except for
-some operators all operators perform their intuitive operations. Where that
-isn't completely true an explanatory remark is provided. E.g., tt(operator*())
-multiplies two tt(BigInt)s, possibly promoting one of the operands;
-tt(operator*=()) multiplies the lhs by the rhs tt(BigInt), possibly promoting
-the rhs operand.
+Except for some operators all operators perform their intuitive
+operations. Where that isn't completely true an explanatory remark is
+provided. E.g., tt(operator*()) multiplies two tt(BigInt)s, possibly promoting
+one of the operands; tt(operator*=()) multiplies the lhs by the rhs
+tt(BigInt), possibly promoting the rhs operand.
 
     Here are the available operators:
 
-    Unary operators:
+    bf(Unary operators:)
 
     itemization(
     itb(BigInt &operator++())
@@ -328,7 +319,7 @@ the rhs operand.
        changes tt(b)'s value into -6).
     )
 
-    Binary operators:
+    bf(Binary operators:)
 
     itemization(
     itb(BigInt const operator*(BigInt const &lhs, BigInt const &rhs))
@@ -360,7 +351,7 @@ the rhs operand.
         will be negative. 
     )
 
-    (Arithmetic) assignment operator(s):
+    bf((Arithmetic) assignment operator(s):)
 
     itemization(
     itb(BigInt &operator=(BigInt const &rhs))
@@ -388,35 +379,10 @@ the rhs operand.
         object and the rhs operand.
     )
 
-    Insertion operator:
-
-    itemization(
-    itb(std::ostream &operator<<(ostream &out, BigInt const &value))
-        Inserts tt(value) into the provided tt(ostream). If the tt(hex)
-manipulator has been inserted into the stream before inserting the tt(BigInt)
-value the value will be displayed as a hexadecimal value (without a leading
-tt(0x)); if the tt(oct) manipulator has been inserted the value will be
-represented as an octal value (starting with a 0). The value will be
-displayed as a decimal value if the tt(dec) manipulator is active. If the
-tt(BigInt) value is negative its value will be preceded by a minus
-character. 
-    )
-
-    Extraction operator:
-
-    itemization(
-    itb(std::istream &operator>>(istream &in, BigInt &value))
-       Extracts tt(value) from the provided tt(istream). Depending on the
-        currently set extraction mode (tt(dec, oct,) or tt(hex)) the matching
-        set of characters will be extracted from tt(in) and converted to a
-        number which is stored in tt(value). Extraction stops at EOF or at the
-        first character outside of the range of characters matching the
-        extraction mode. if no numerical characters were extracted the
-        stream's tt(failbit) is set. The extracted value may be preceded
-        by a minus character, resulting in an extracted negative value.
-    )
-
 manpagesection(STATIC MEMBERS)
+
+    All members returning a tt(BigInt) computed from a set of arguments and
+not requiring an existing tt(BigInt) object are defined as static members.
 
     itemization(
     itb(BigInt const fromText(std::string text, int mode = 0))
@@ -453,6 +419,13 @@ manpagesection(STATIC MEMBERS)
        number in the range tt(0 <= number < max). Before calling this
         member the random number generator must have been seeded.
 
+    itb(BigInt const setBigEndian(std::string const &bytes)) The
+        tt(bytes.length()) bytes of tt(bytes) are used to compute a tt(BigInt)
+        object which is returned by this function. The characters in tt(bytes)
+        are interpreted as a series of bytes in big-endian order. See also the
+        member function tt(bigEndian()) above. The returned tt(BigInt) has a
+        positive value.
+
     itb(BigInt const prime(size_t nBits, 
                             BigInt const *mod = 0, BigInt const *rem = 0,
                             PrimeType primeType = ANY))
@@ -462,7 +435,6 @@ manpagesection(STATIC MEMBERS)
         generator). The parameter tt(primeType) can be tt(ANY), tt((prime - 1)
         / 2) may or may not be a prime. If it is tt(SAFE) then  tt((prime - 1)
         / 2) will be a (so-called em(safe)) prime.
-
 
     itb(BigInt const pseudoRand(size_t size, Msb msb = MSB_IS_ONE, Lsb lsb =
             ODD)) 
@@ -476,6 +448,29 @@ manpagesection(STATIC MEMBERS)
     itb(BigInt const pseudoRandRange(BigInt const &max))
        This member returns a potentially predictable  pseudo-random
        number in the range tt(0 <= number < max).
+    )
+
+manpagesection(FREE FUNCTIONS IN THE FBB NAMESPACE)
+
+    itemization(
+    itb(std::ostream &operator<<(ostream &out, BigInt const &value))
+        Inserts tt(value) into the provided tt(ostream). If the tt(hex)
+manipulator has been inserted into the stream before inserting the tt(BigInt)
+value the value will be displayed as a hexadecimal value (without a leading
+tt(0x)); if the tt(oct) manipulator has been inserted the value will be
+represented as an octal value (starting with a 0). The value will be
+displayed as a decimal value if the tt(dec) manipulator is active. If the
+tt(BigInt) value is negative its value will be preceded by a minus
+character. 
+    itb(std::istream &operator>>(istream &in, BigInt &value))
+       Extracts tt(value) from the provided tt(istream). Depending on the
+        currently set extraction mode (tt(dec, oct,) or tt(hex)) the matching
+        set of characters will be extracted from tt(in) and converted to a
+        number which is stored in tt(value). Extraction stops at EOF or at the
+        first character outside of the range of characters matching the
+        extraction mode. if no numerical characters were extracted the
+        stream's tt(failbit) is set. The extracted value may be preceded
+        by a minus character, resulting in an extracted negative value.
     )
 
 manpagesection(EXAMPLE)

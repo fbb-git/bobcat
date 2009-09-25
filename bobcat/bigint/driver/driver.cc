@@ -38,8 +38,6 @@ try
 //            oct << value << '\n' <<
 //            hex << value << '\n';
 
-return 1;
-
     BigInt zero;        // default construction of a BigInt
     cout << "Defaults to zero: " << zero << endl;
 
@@ -104,7 +102,7 @@ return 1;
     string newValue(bigEndian, bigEndian + large.sizeInBytes());
     delete[] bigEndian;
 
-    large.setBigEndian(newValue);
+    large = BigInt::setBigEndian(newValue);
     cout << "Swapped lowest and highest bytes: 0x" << large << dec << endl;
 
     cout << "large = five: " << (large = five) << endl;
@@ -122,7 +120,7 @@ return 1;
     large.div(&remainder, 1234);
     cout << "Remainder of the division: " << remainder << endl;
 
-    cout << "GCD of " << large << " and 123 is: " << gcd(large, 123) << endl;
+    cout << "GCD of " << large << " and 123 is: " << large.gcd(123) << endl;
 
     cout << "large.sqr(): " << large.sqr() << endl;
 
@@ -152,8 +150,8 @@ return 1;
     cout << large.expMod(123, 169) << endl;
 
     large = 123456789;
-    BigInt invmod(inverseMod(large, 169));
-    cout << "inverseMod(large, 169) = invmod = " << invmod << endl;
+    BigInt invmod(large.inverseMod(169));
+    cout << "large.inverseMod(169) = invmod = " << invmod << endl;
     cout << large << ".mulMod(invmod, 169): ";
     cout << large.mulMod(invmod, 169) << endl;
 
@@ -164,7 +162,7 @@ return 1;
     string orig("This is the secret message");
     cout << "original text:         " << orig << endl;
     BigInt origNr;
-    origNr.setBigEndian(orig);
+    origNr = BigInt::setBigEndian(orig);
     BigInt randnr(BigInt::rand(origNr.size()));
     
     cout << "orig text in hex:      " << hex << origNr << dec << endl;

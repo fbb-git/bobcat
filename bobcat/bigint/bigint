@@ -11,8 +11,6 @@ class PrimeBase;
 class BigInt
 {
     friend std::ostream &operator<<(std::ostream &out, BigInt const &bn);
-    friend BigInt const gcd(BigInt const &lhs, BigInt const &rhs);
-    friend BigInt const inverseMod(BigInt const &lhs, BigInt const &mod);
 
     BIGNUM d_bn;
  
@@ -94,7 +92,6 @@ class BigInt
         };
 
         char *bigEndian() const;
-        BigInt &setBigEndian(std::string const &bytes, bool negative = false);
 
         BigInt &operator+=(BigInt const &rhs);
         BigInt &addMod(BigInt const &rhs, BigInt const &mod);
@@ -135,11 +132,15 @@ class BigInt
         BigInt &exp(BigInt const &exponent);
         BigInt &expMod(BigInt const &exponent, BigInt const &mod);
 
+        BigInt const gcd(BigInt const &rhs);
+        BigInt const inverseMod(BigInt const &mod);
 
         static BigInt const rand(size_t bitsSize, 
                            Msb msb = MSB_IS_ONE, Lsb lsb = ODD);
 
         static BigInt const randRange(BigInt const &max);
+
+        static BigInt const setBigEndian(std::string const &bytes);
 
         static BigInt const pseudoRand(size_t bitsSize, 
                            Msb msb = MSB_IS_ONE, Lsb lsb = ODD);
