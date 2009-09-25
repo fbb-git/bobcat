@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <string>
 
-#include <bigint>
+#include "../bigint"
 #include <bobcat/errno>
 
 using namespace std;
@@ -16,9 +16,28 @@ void binary(BigInt const &bi)
     cout << endl;
 }
 
-int main()
+int main(int argc, char **argv)
 try
 {   
+    if (argc == 1)
+        throw Errno(1, "Provide at least one argument");
+
+//    BigInt value;
+//
+//    int mode = argv[1][0];
+//
+//    cin >>
+//        (mode == 'h' ? hex : mode == 'o' ? oct : dec) >>
+//        value;
+//
+//    if (cin.fail())
+//        cout << "Input failed\n";
+//    else
+//        cout << '\n' <<
+//                   value << '\n' <<
+//            oct << value << '\n' <<
+//            hex << value << '\n';
+
     BigInt zero;        // default construction of a BigInt
     cout << "Defaults to zero: " << zero << endl;
 
@@ -83,7 +102,7 @@ try
     string newValue(bigEndian, bigEndian + large.sizeInBytes());
     delete[] bigEndian;
 
-    large.setBigEndian(newValue);
+    large = BigInt::setBigEndian(newValue);
     cout << "Swapped lowest and highest bytes: 0x" << large << dec << endl;
 
     cout << "large = five: " << (large = five) << endl;
@@ -101,7 +120,7 @@ try
     large.div(&remainder, 1234);
     cout << "Remainder of the division: " << remainder << endl;
 
-    cout << "GCD of " << large << " and 123 is: " << gcd(large, 123) << endl;
+    cout << "GCD of " << large << " and 123 is: " << large.gcd(123) << endl;
 
     cout << "large.sqr(): " << large.sqr() << endl;
 
@@ -131,8 +150,8 @@ try
     cout << large.expMod(123, 169) << endl;
 
     large = 123456789;
-    BigInt invmod(inverseMod(large, 169));
-    cout << "inverseMod(large, 169) = invmod = " << invmod << endl;
+    BigInt invmod(large.inverseMod(169));
+    cout << "large.inverseMod(169) = invmod = " << invmod << endl;
     cout << large << ".mulMod(invmod, 169): ";
     cout << large.mulMod(invmod, 169) << endl;
 
@@ -143,7 +162,7 @@ try
     string orig("This is the secret message");
     cout << "original text:         " << orig << endl;
     BigInt origNr;
-    origNr.setBigEndian(orig);
+    origNr = BigInt::setBigEndian(orig);
     BigInt randnr(BigInt::rand(origNr.size()));
     
     cout << "orig text in hex:      " << hex << origNr << dec << endl;
