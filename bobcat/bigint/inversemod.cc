@@ -1,6 +1,6 @@
 #include "bigint.ih"
 
-BigInt const BigInt::inverseMod(BigInt const &mod)
+BigInt const BigInt::inverseMod(BigInt const &mod) const
 {
     BNCTX ctx;
     BigInt ret;
