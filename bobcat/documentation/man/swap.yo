@@ -1,0 +1,68 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Swap)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Error handler)
+
+manpagename(FBB::swap)(generic template swapping function)
+
+manpagesynopsis()
+    bf(#include <bobcat/swap>)nl()
+
+manpagedescription()
+
+    The information stored in objects frequently needs to be swapped. A
+well-known example is the swapping operation required when implementing an
+overloaded assignment operator. For example, the generic form of the operator
+assignment operator is:
+        verb(
+    Class &operator=(Class const &other)
+    {
+        Class tmp(other);
+        swap(tmp);
+        return *this;
+    }
+        )
+    The swap functionality merely swaps the contents of the current object and
+another object. It is well known that objects can be installed in a block of
+memory using em(placement new), requiring a block of memory the size of the
+object to be constructed. This is the foundation of the template function
+tt(FBB::swap). This swap function can be used with classes having const data
+members, reference data members, ponters to allocated memory etc, etc. The
+function first defines a block of memory the size of the object to be swapped,
+then uses bf(memcpy)(3) to swap the information contained in the two objects,
+using the extra block of memory as a placeholder. 
+
+    The function uses partial specializations to optimize the swapping
+operation for objects of sizes 1, 2, 4 or 8 bytes. It uses bf(memcpy)(3) for
+objects of other sizes.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(SWAP FUNCTION)
+
+    itemization(
+    itb(swap(Type &lhs, Type &rhs))nl()
+        This template function swaps the contents of the two objects. It can
+be used with classes having const data members, reference members, pointer
+members or standard value-typed data members.
+    )
+
+manpagesection(EXAMPLE)
+    verbinsert(swap/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/swap) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(memcpy)(3)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)
+
+

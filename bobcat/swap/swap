@@ -41,14 +41,6 @@ class Swap
     
     template <typename SwapType, typename Type>
     static void tswap(Type &lhs, Type &rhs);
-
-    public:
-        template <typename Type>
-        void swap(Type &other)
-        {
-            Xch<Type, sizeof(Type)>::swap(
-                            *reinterpret_cast<Type *>(this), other);
-        }
 };
 
 template <typename SwapType, typename Type>
@@ -90,6 +82,12 @@ template <typename Tp>
 inline void Swap::Xch<Tp, 8>::swap(Tp &lhs, Tp &rhs)
 {
     tswap<int64_t>(lhs, rhs);
+}
+
+template <typename Type>
+void swap(Type &lhs, Type &rhs)
+{
+    Swap::Xch<Type, sizeof(Type)>::swap(lhs, rhs);
 }
 
 } // FBB
