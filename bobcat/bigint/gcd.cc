@@ -1,8 +1,7 @@
 #include "bigint.ih"
 
-BigInt const BigInt::gcd(BigInt const &rhs) const
+BigInt &BigInt::gcd(BigInt const &rhs)
 {
-    BigInt tmp(*this);
-    tmp.checked4(BN_gcd, rhs, "gcd");
-    return tmp;
+    checked4(BN_gcd, rhs, "gcd");
+    return *this;
 }

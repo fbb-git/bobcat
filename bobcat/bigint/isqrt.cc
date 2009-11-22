@@ -8,21 +8,21 @@
     the returned value is the biggest int `ret' for which ret * ret <= value
 */
 
-BigInt const BigInt::isqrt() const
+BigInt &BigInt::isqrt()
 {
-    BigInt ret1(*this);
-    BigInt ret2;
+    BigInt org(*this);
+    BigInt tmp;
 
-    BigInt *step = &ret1;
-    BigInt *next = &ret2;
+    BigInt *step = this;
+    BigInt *next = &tmp;
 
-    while (ret1 != ret2)
+    while (*this != tmp)
     {
-        *next = *step + *this / *step;
+        *next = *step + org / *step;
         next->rshift();
-        swap(step, next);
+        fswap(step, next);
     }
 
-    return ret1;
+    return *this;
 }
 
