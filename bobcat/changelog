@@ -1,7 +1,21 @@
 bobcat (2.06.00)
 
-  * Added BigInt::isqrt (integral sqrt computation)
+  * Added BigInt::isqrt (integral sqrt computation) 
+  * Added BigInt::swap (swapping the current BigInt object's value with
+    another BigInt object's value
   * BigInt's members not modifying the current object are now const-correct.
+  * In addition to members modifying a BigInt object new members were added
+    not modifying the current object but returning a temporary BigInt const
+    object holding the result of the computation. All members returning a
+    BigInt const object have an additional c added to their names (e.g. `div'
+    modifies the current object, `divc' does not). 
+    As a result of this name standardization the names of several members were
+    modified: 
+        `gcd' now modifies the current object, `gcdc' returns a BigInt const.
+        `inverseMod' now modifies the current object, `inverseModc' returns 
+                                                               a BigInt const.
+        
+
   * Added class Swap, performing fast swapping operations.
 
  -- Frank B. Brokken <f.b.brokken@rug.nl>  Sat, 21 Nov 2009 21:22:35 +0100

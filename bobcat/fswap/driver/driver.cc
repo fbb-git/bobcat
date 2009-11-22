@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../swap"
+#include "../fswap"
 
 class Demo
 {
@@ -26,7 +26,7 @@ int main()
     Demo d1;
     Demo d2(cout, 12);
 
-    FBB::swap(d1, d2);
+    FBB::fswap(d1, d2);
 
     d1.show("This is d1");              // to cerr: 12
     d2.show("This is d2");              // to cout: 0

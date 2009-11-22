@@ -1,5 +1,5 @@
-#ifndef INCLUDED_SWAP_
-#define INCLUDED_SWAP_
+#ifndef INCLUDED_FSWAP_
+#define INCLUDED_FSWAP_
 
 #include <cstring>
 #include <cstdint>
@@ -7,36 +7,36 @@
 namespace FBB
 {
 
-class Swap
+class FSwap
 {
     template <typename Tp, size_t size>
     struct Xch
     {
-        static void swap(Tp &lhs, Tp &rhs);
+        static void fswap(Tp &lhs, Tp &rhs);
     };
     
     template <typename Tp>
     struct Xch<Tp, 1>
     {
-        static void swap(Tp &lhs, Tp &rhs);
+        static void fswap(Tp &lhs, Tp &rhs);
     };
 
     template <typename Tp>
     struct Xch<Tp, 2>
     {
-        static void swap(Tp &lhs, Tp &rhs);
+        static void fswap(Tp &lhs, Tp &rhs);
     };
 
     template <typename Tp>
     struct Xch<Tp, 4>
     {
-        static void swap(Tp &lhs, Tp &rhs);
+        static void fswap(Tp &lhs, Tp &rhs);
     };
 
     template <typename Tp>
     struct Xch<Tp, 8>
     {
-        static void swap(Tp &lhs, Tp &rhs);
+        static void fswap(Tp &lhs, Tp &rhs);
     };
     
     template <typename SwapType, typename Type>
@@ -44,7 +44,7 @@ class Swap
 };
 
 template <typename SwapType, typename Type>
-void Swap::tswap(Type &lhs, Type &rhs)
+void FSwap::tswap(Type &lhs, Type &rhs)
 {
     SwapType tmp = *reinterpret_cast<SwapType *>(&lhs);
     *reinterpret_cast<SwapType *>(&lhs) = *reinterpret_cast<SwapType *>(&rhs);
@@ -52,7 +52,7 @@ void Swap::tswap(Type &lhs, Type &rhs)
 }
 
 template <typename Tp, size_t size>
-void Swap::Xch<Tp, size>::swap(Tp &lhs, Tp &rhs)
+void FSwap::Xch<Tp, size>::fswap(Tp &lhs, Tp &rhs)
 {
     char buffer[size];
     memcpy(buffer,  &lhs,   size);
@@ -61,33 +61,33 @@ void Swap::Xch<Tp, size>::swap(Tp &lhs, Tp &rhs)
 }
     
 template <typename Tp>
-inline void Swap::Xch<Tp, 1>::swap(Tp &lhs, Tp &rhs)
+inline void FSwap::Xch<Tp, 1>::fswap(Tp &lhs, Tp &rhs)
 {
     tswap<int8_t>(lhs, rhs);
 }
 
 template <typename Tp>
-inline void Swap::Xch<Tp, 2>::swap(Tp &lhs, Tp &rhs)
+inline void FSwap::Xch<Tp, 2>::fswap(Tp &lhs, Tp &rhs)
 {
     tswap<int16_t>(lhs, rhs);
 }
 
 template <typename Tp>
-inline void Swap::Xch<Tp, 4>::swap(Tp &lhs, Tp &rhs)
+inline void FSwap::Xch<Tp, 4>::fswap(Tp &lhs, Tp &rhs)
 {
     tswap<int32_t>(lhs, rhs);
 }
 
 template <typename Tp>
-inline void Swap::Xch<Tp, 8>::swap(Tp &lhs, Tp &rhs)
+inline void FSwap::Xch<Tp, 8>::fswap(Tp &lhs, Tp &rhs)
 {
     tswap<int64_t>(lhs, rhs);
 }
 
 template <typename Type>
-void swap(Type &lhs, Type &rhs)
+void fswap(Type &lhs, Type &rhs)
 {
-    Swap::Xch<Type, sizeof(Type)>::swap(lhs, rhs);
+    FSwap::Xch<Type, sizeof(Type)>::fswap(lhs, rhs);
 }
 
 } // FBB
