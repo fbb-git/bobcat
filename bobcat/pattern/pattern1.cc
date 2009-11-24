@@ -1,6 +1,6 @@
 #include "pattern.ih"
 
-Pattern::Pattern(Pattern &&tmp)
+Pattern::Pattern(Pattern const &&tmp)
 :
     d_regex(tmp.d_regex),
     d_subExpression(tmp.d_subExpression),
@@ -9,6 +9,5 @@ Pattern::Pattern(Pattern &&tmp)
     d_text(tmp.d_text),
     d_matchOptions(tmp.d_matchOptions)
 {
-    tmp.d_regex = 0;
-    tmp.d_subExpression = 0;
+    const_cast<Pattern &>(tmp).d_regex = 0;
 }

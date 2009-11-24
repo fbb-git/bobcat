@@ -1,6 +1,7 @@
 #include "glob.ih"
 
 Glob::Glob(string const &pattern, int flags, Dots dots)
+try
 :
     d_share(new GlobShare)
 {
@@ -17,4 +18,9 @@ Glob::Glob(string const &pattern, int flags, Dots dots)
     if (dots == FIRST)
         stable_partition(mbegin(), mend(), 
                          FnWrap1<char const *, bool>(&isDot));
+}
+catch(...)
+{
+    delete d_share;
+    throw;
 }
