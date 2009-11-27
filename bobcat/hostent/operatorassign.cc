@@ -2,10 +2,7 @@
 
 Hostent &Hostent::operator=(Hostent const &other)
 {
-    if (this != &other)
-    {
-        destroy();        
-        copy(&other, other.d_nAliases, other.d_nAddresses);
-    }
+    Hostent tmp(other);
+    swap(tmp);
     return *this;
 }
