@@ -3,6 +3,7 @@
 
 #include <iosfwd>
 #include <openssl/bn.h>
+#include <bobcat/fswap>
 
 namespace FBB
 {
@@ -49,13 +50,19 @@ class BigInt
 
         BigInt const operator-() const;
         BigInt &negate();
+        BigInt const negatec() const;
+
         BigInt &setNegative(bool negative);
+        BigInt const setNegativec(bool negative) const;
 
         bool isNegative() const;
 
 
         BigInt &tildeBits();
+        BigInt const tildeBitsc() const;
+
         BigInt &tildeInt();
+        BigInt const tildeIntc() const;
 
         BigInt &operator--();
         BigInt const operator--(int);
@@ -95,12 +102,15 @@ class BigInt
 
         BigInt &operator+=(BigInt const &rhs);
         BigInt &addMod(BigInt const &rhs, BigInt const &mod);
+        BigInt const addModc(BigInt const &rhs, BigInt const &mod) const;
 
         BigInt &operator-=(BigInt const &rhs);
         BigInt &subMod(BigInt const &rhs, BigInt const &mod);
+        BigInt const subModc(BigInt const &rhs, BigInt const &mod) const;
 
         BigInt &operator*=(BigInt const &rhs);
         BigInt &mulMod(BigInt const &rhs, BigInt const &mod);
+        BigInt const mulModc(BigInt const &rhs, BigInt const &mod) const;
 
         BigInt &operator%=(BigInt const &rhs);
         BigInt &operator/=(BigInt const &rhs);      // integer division,
@@ -108,9 +118,13 @@ class BigInt
                                                     // integer division, also
                                                     // returning remainder
         BigInt &div(BigInt *remainder, BigInt const &rhs);
+        BigInt const divc(BigInt *remainder, BigInt const &rhs) const;
 
         BigInt &sqr();
+        BigInt const sqrc() const;
+
         BigInt &sqrMod(BigInt const &mod);
+        BigInt const sqrModc(BigInt const &mod) const;
 
         BigInt &operator&=(BigInt const &rhs);
         BigInt &operator|=(BigInt const &rhs);
@@ -130,10 +144,18 @@ class BigInt
         int uCompare(BigInt const &other) const;
 
         BigInt &exp(BigInt const &exponent);
+        BigInt const expc(BigInt const &exponent) const;
         BigInt &expMod(BigInt const &exponent, BigInt const &mod);
+        BigInt const expModc(BigInt const &exponent, BigInt const &mod) const;
 
-        BigInt const gcd(BigInt const &rhs);
-        BigInt const inverseMod(BigInt const &mod);
+        BigInt &gcd(BigInt const &rhs);
+        BigInt const gcdc(BigInt const &rhs) const;
+
+        BigInt &inverseMod(BigInt const &mod);
+        BigInt const inverseModc(BigInt const &mod) const;
+
+        BigInt &isqrt();
+        BigInt const isqrtc() const;
 
         static BigInt const rand(size_t bitsSize, 
                            Msb msb = MSB_IS_ONE, Lsb lsb = ODD);
@@ -153,26 +175,44 @@ class BigInt
         static BigInt const fromText(std::string const &text, int mode = 0);
 
         BigInt &clearBit(size_t index);
+        BigInt const clearBit(size_t index) const;
+
         bool hasBit(size_t index) const;
+
         BigInt &maskBits(size_t lowerNBits);
+        BigInt const maskBitsc(size_t lowerNBits) const;
+
         BigInt &setBit(size_t index);
+        BigInt const setBitc(size_t index) const;
+
         BigInt &setBit(size_t index, bool value);
+        BigInt const setBitc(size_t index, bool value) const;
 
         BigInt &lshift();
+        BigInt const lshiftc() const;
+
         BigInt &lshift(size_t nBits);
+        BigInt const lshiftc(size_t nBits) const;
+
         BigInt &operator<<=(size_t nBits);
+
         BigInt &rshift();
+        BigInt const rshiftc() const;
+
         BigInt &rshift(size_t nBits);
+        BigInt const rshiftc(size_t nBits) const;
+
         BigInt &operator>>=(size_t nBits);
 
+        void swap(BigInt &other);
+
     private:
+        void mod_inverse(BigInt *ret, BigInt const &mod) const;
+
         std::ostream &insertInto(std::ostream &out) const;
         static char *bn2oct(BIGNUM const *bn);
 
-        void copy(BigInt const &other);
         void copy(BIGNUM *lhs, BIGNUM const &rhs);
-
-        void destroy();
 
         BigInt &checked1(
                 int (*BN_op)(BIGNUM *, 
@@ -187,7 +227,7 @@ class BigInt
                               char const *op);
 
         void checked3(BIGNUM *div, BIGNUM *rem, 
-                                   BigInt const &rhs, char const *op);
+                                   BigInt const &rhs, char const *op) const;
 
         BigInt &checked4(int (*BN_op)(BIGNUM *, 
                                      BIGNUM const *, BIGNUM const *, 
@@ -380,6 +420,11 @@ inline BigInt::Bit BigInt::operator[](size_t idx)
 inline BigInt::Bit::operator bool() const
 {
     return d_bi.hasBit(d_idx);
+}
+
+inline void BigInt::swap(BigInt &other)
+{
+    fswap(*this, other);
 }
 
 BigInt const operator*(BigInt const &lhs, BigInt const &rhs);

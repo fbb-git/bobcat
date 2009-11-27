@@ -1,10 +1,14 @@
 #!/bin/bash
 
-CMD="g++ -o driver -Wall -I../ driver.cc -L../tmp -lbigint -lbobcat -s"
-# CMD="g++ -o driver -Wall -I../../tmp driver.cc -L../../tmp/lib -lbobcat -s"
-# CMD="g++ -o driver -Wall -I../ driver.cc -L../tmp -lbigint -lbobcat -s"
+tput clear
 
-# CMD="g++ -o driver -Wall *.cc -lbobcat -s"
+GPP="g++ --std=c++0x"
+
+CMD="$GPP -o driver -Wall -I../ driver.cc -L../tmp -lbigint -lbobcat -s"
+# CMD="$GPP -o driver -Wall -I../../tmp driver.cc -L../../tmp/lib -lbobcat -s"
+# CMD="$GPP -o driver -Wall -I../ driver.cc -L../tmp -lbigint -lbobcat -s"
+
+# CMD="$GPP -o driver -Wall *.cc -lbobcat -s"
 
 echo $CMD
 $CMD || exit 1

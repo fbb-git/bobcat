@@ -6,6 +6,7 @@
 #include <regex.h>
 #include <iostream>
 #include <bobcat/errno>
+#include <bobcat/fswap>
 
 //  match() throws an Errno when either the construction (i.e.,
 //  compilation of the pattern) or the match failed.
@@ -103,11 +104,11 @@ class Pattern
                         size_t nSub = 10,
                         int options = REG_EXTENDED | REG_NEWLINE);
         Pattern(Pattern const &other);
-        Pattern(Pattern &&tmp);                         // 1
+        Pattern(Pattern const &&tmp);                   // 1
         ~Pattern();
 
         Pattern &operator=(Pattern const &other);
-        Pattern &operator=(Pattern &&tmp);
+        Pattern &operator=(Pattern const &&tmp);
 
         Pattern &operator<<(int matchOption);
         bool operator<<(std::string const &text);
@@ -151,6 +152,8 @@ class Pattern
 
         std::string const &pattern() const; // compiled pattern
 
+        void swap(Pattern &other);
+
     private:
         void newRegex(std::string const &pattern, int options);
         void destroy();
@@ -160,6 +163,11 @@ class Pattern
 inline Pattern::Pattern(Pattern const &other)
 {
     copy(other);
+}
+
+inline void Pattern::swap(Pattern &other)
+{
+    fswap(*this, other);
 }
 
 inline Pattern::~Pattern()

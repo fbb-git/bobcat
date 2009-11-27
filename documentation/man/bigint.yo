@@ -37,7 +37,10 @@ tt(int) type values and variables. E.g., tt(operator+()) returns a tt(BigInt
 const) value whereas tt(operator+=()) returns a tt(BigInt &) reference.
 
 All members modifying their objects return a reference to the current
-(modified) object.
+(modified) object. All members not modifying the current object return a
+tt(BigInt const) object. If both members exists performing the same
+functionality the name of the member returning a tt(BigInt const) object ends
+in a tt(c) (const) (e.g., tt(addMod) and tt(addModc).
 
 Almost all operators, members and constructors (except for the default
 constructor) throw tt(Errno) exceptions on failure.
@@ -93,7 +96,10 @@ tt(BigInt)s are expected a plain numerical value can be used as well.
 manpagesection(MEMBER FUNCTIONS)
     itemization(
     itb(BigInt &addMod(BigInt const &rhs, BigInt const &mod) )
-       The sum (modulo tt(mod)) of the current object and tt(rhs) is computed.
+       tt(Rhs) is added (modulo tt(mod)) to the current object.
+
+    itb(BigInt const addModc(BigInt const &rhs, BigInt const &mod) )
+       The sum (modulo tt(mod)) of the current object and tt(rhs) is returned.
 
     itb(BIGNUM const &bignum() const)
        A reference to the tt(BIGNUM) value maintained by the current
@@ -113,11 +119,19 @@ manpagesection(MEMBER FUNCTIONS)
         cannot be inferred from the return value.
 
     itb(BigInt &clearBit(size_t index))
-       The bit at index position tt(index) is cleared.
+       The current object's bit at index position tt(index) is cleared.
+
+    itb(BigInt const clearBit(size_t index) const)
+       A copy of the current object having its bit at index position
+        tt(index) cleared.
 
     itb(BigInt &div(BigInt *remainder, BigInt const &rhs))
        The current object is divided by tt(rhs). The division's remainder
         is returned in tt(*remainder).
+
+    itb(BigInt const divc(BigInt *remainder, BigInt const &rhs) const)
+       The quotient of the current object and tt(rhs) is returned. The
+        division's remainder is returned in tt(*remainder).
 
     itb(int compare(BigInt const &rsh) const)
        Using signed values, if the current object is smaller than tt(rhs) -1
@@ -127,10 +141,25 @@ manpagesection(MEMBER FUNCTIONS)
     itb(BigInt &exp(BigInt const &exponent))
        The current object is raised to the power tt(exponent).
 
+    itb(BigInt const expc(BigInt const &exponent) const)
+       The current object raised to the power tt(exponent) is returned.
+
     itb(BigInt &expMod(BigInt const &exponent, BigInt const &mod))
        The current object is raised to the power tt(exponent) modulo tt(mod).
 
-    itb(BigInt const gcd(BigInt const &rhs))
+    itb(BigInt const expModc(BigInt const &exponent, BigInt const &mod) const)
+       The current object raised to the power tt(exponent) modulo tt(mod) is
+        returned.
+
+    itb(BigInt &gcd(BigInt const &rhs))
+       The greatest common divisor (gcd) of the current object and tt(rhs) is
+        assigned to the current object. To compute the least common multiple
+        (lcm) the following relationship can be used:
+       verb(
+    lcm(a, b) = a * b / a.gcd(b)
+        )
+
+    itb(BigInt const gcdc(BigInt const &rhs) const)
        The greatest common divisor (gcd) of the current object and tt(rhs) is
         returned. To compute the least common multiple (lcm) the following
         relationship can be used: 
@@ -142,12 +171,16 @@ manpagesection(MEMBER FUNCTIONS)
         tt(True) is returned if the bit at index position tt(index) has been
         set, tt(false) otherwise.
 
-    itb(BigInt const inverseMod(BigInt const &mod))
-       This function returns the inverse of tt(lhs) modulo tt(mod). This is
-        the value tt(ret) for which the following expression holds true:
+    itb(BigInt &inverseMod(BigInt const &mod))
+       The inverse of the current object modulo tt(mod) is assigned to the
+        current object. This is the value tt(ret) for which the following
+        expression holds true:
        verb( 
         (*this * ret) % mod = 1 
        )
+
+    itb(BigInt const inverseModc(BigInt const &mod) const)
+       This  inverse of the current object modulo tt(mod) is returned.
 
     itb(bool isNegative() const)
        Returns tt(true) if the current object contains a negative value.
@@ -158,41 +191,97 @@ manpagesection(MEMBER FUNCTIONS)
     itb(bool isOne() const)
        Returns tt(true) if the current object equals one (1).
 
+    itb(BigInt &isqrt())
+       The current object's integer square root value is assigned to the
+        current object. The integer square root of a value tt(x) is the
+        smallest integral value whose square does not exceed tt(x). E.g.,
+        tt(isqrt(17) == 4).
+
+    itb(BigInt const isqrtc() const)
+      The integer square root of the current object is returned.
+
     itb(bool isZero() const)
        Returns tt(true) if the current object equals zero (0).
 
-    itb(BigInt &lshift()) The value stored in the current object is shifted
-        one bit to the left. The value's sign remains unaltered.
+    itb(BigInt &lshift()) 
+       The current object's bits are shifted one bit to the left. The object's
+        sign remains unaltered.
 
-    itb(BigInt &lshift(size_t nBits)) The value stored in the current object
-        is shifted tt(nBits) to the left. The value's sign remains unaltered.
+    itb(BigInt const lshiftc()) 
+       The current object's bits shifted one bit to the left are returned. The
+        object's sign will be equal to the current object's sign.
+
+    itb(BigInt &lshift(size_t nBits)) 
+       The current object's bits are shifted tt(nBits) to the left. The
+        object's sign remains unaltered.
+
+    itb(BigInt const lshiftc(size_t nBits) const) 
+       The current object's bits shifted tt(nBits) bit to the left are
+        returned. The object's sign will be equal to the current object's
+        sign.
 
     itb(BigInt &maskBits(size_t lowerNBits))
-        The tt(lowerNBits) lower bits of the current object are kept, all
+        The  current object's tt(lowerNBits) lower bits are kept, its
         higher order bits are cleared. The object's sign is not affected.
+
+    itb(BigInt const maskBitsc(size_t lowerNBits) const)
+       A copy of the current object is returned having all but its
+        tt(lowerNBits) lower bits cleared. The sign of the returned object
+        will be equal to the current object's sign.
 
     itb(BigInt &mulMod(BigInt const &rhs, BigInt const &mod)) 
        The current object is multiplied  (modulo tt(mod)) by tt(rhs).
 
-    itb(BigInt &negate()) 
-       The current object's value is negated (i.e., the
-        value has changed its sign).
-        
-    itb(BigInt &rshift()) The value stored in the current object is
-        shifted one bit to the right. The value's sign remains unaltered.
+    itb(BigInt const mulModc(BigInt const &rhs, BigInt const &mod) const) 
+       The current object multiplied (modulo tt(mod)) by tt(rhs) is returned.
 
-    itb(BigInt &rshift(size_t nBits)) The value stored in the current object
-        is shifted tt(nBits) to the right. The value's sign remains unaltered.
+    itb(BigInt &negate()) 
+       The current object's value is negated (i.e., the value changes its
+        sign).
+        
+    itb(BigInt const negatec() const) 
+       The  negated value of the current object is returned.
+        
+    itb(BigInt &rshift()) 
+       The current object's bits are shifted one bit to the right. The object's
+        sign remains unaltered.
+
+    itb(BigInt const rshiftc()) 
+       The current object's bits shifted one bit to the right are returned. The
+        object's sign will be equal to the current object's sign.
+
+    itb(BigInt &rshift(size_t nBits)) 
+       The current object's bits are shifted tt(nBits) to the right. The
+        object's sign remains unaltered.
+
+    itb(BigInt const rshiftc(size_t nBits) const) 
+       The current object's bits shifted tt(nBits) bit to the right are
+        returned. The object's sign will be equal to the current object's
+        sign.
 
     itb(BigInt &setBit(size_t index))
-        The bit at index position tt(index) is set. 
+       The bit at index position tt(index) is set. 
+
+    itb(BigInt const setBitc(size_t index) const) 
+       A copy of the current object is returned having its bit at index
+        position tt(index) set.
 
     itb(BigInt &setBit(size_t index, bool value))
-        The bit at index position tt(index) is set to tt(value).
+       The bit at index position tt(index) is set to tt(value).
+
+    itb(BigInt const setBitc(size_t index, bool value) const)
+       A copy of the current object is returned having its bit at index
+        position tt(index) set to tt(value).
 
     itb(BigInt &setNegative(bool negative))
-        The current object's sign is set according to the function's argument:
-        when tt(true) the stored value will be negative. 
+       The current object's sign will be set to negative if the function's
+        argument is tt(true), it will be set to positive if the function's
+        argument is tt(false).
+
+    itb(BigInt const setNegativec(bool negative) const)
+       A copy of the current object is return having a negative sign if the
+        function's argument is tt(true) and a positive sign if the function's
+        argument is tt(false).
 
     itb(size_t size() const)
        The number of bytes required to store the current tt(BIGNUM) value is
@@ -205,13 +294,26 @@ manpagesection(MEMBER FUNCTIONS)
         used.
 
     itb(BigInt &sqr())
-       The current object's value is squared.
+      The current object's value is squared.
+
+    itb(BigInt const sqrc() const)
+      The square of the current object is returned.
 
     itb(BigInt &sqrMod(BigInt const &mod) const)
-       The current object's value is squared modulo tt(mod).
+      The current object's value is squared modulo tt(mod).
+
+    itb(BigInt const sqrModc(BigInt const &mod) const)
+      The square (modulo tt(mod)) of the current object is returned.
 
     itb(BigInt &subMod(BigInt const &rhs, BigInt const &mod)) 
        tt(Rhs) is subtracted modulo tt(mod) from the current object.
+
+    itb(BigInt const subModc(BigInt const &rhs, BigInt const &mod) const) 
+      The difference (modulo tt(mod)) of the current object and tt(rhs) is
+        returned.
+
+    itb(void swap(BigInt &other))
+       The current object swaps its value with tt(other).
 
     itb(BigInt &tildeBits())
        All the bits in
@@ -225,11 +327,17 @@ manpagesection(MEMBER FUNCTIONS)
        tt(b) contains the value -250. Also see the discussion with
         tt(operator~()) below.
 
+    itb(BigInt const tildeBitsc() const)
+       A copy of the current object whose bits are toggled is returned.
+
     itb(BigInt &tildeInt())
-       The current object gets the value computed from applying the `tilde'
-        operation to the current object using the standard tt(int)
-        semantics. E.g., ~5 results in -6.  Also see the discussion with
-        tt(operator~()) below.
+       The `tilde' operation is performed on the current object using the
+        standard tt(int) semantics. E.g., ~5 results in -6.  Also see the
+        discussion with tt(operator~()) below.
+
+    itb(BigInt const tildeIntc() const)
+       A copy of the current object is returned to which the `tilde' operation
+        has been performed using the standard tt(int) semantics.
 
     itb(unsigned long ulong() const) 
        The absolute value stored in the current object is returned as an
@@ -485,7 +593,7 @@ int main(int argc, char **argv)
 {
     BigInt value(BigInt::prime(100));
     BigInt mod(BigInt::rand(50));
-    BigInt inverse(value.inverseMod(mod));
+    BigInt inverse(value.inverseModc(mod));
 
     cout << '(' << value << " * " << inverse << ") % " << mod << " = " <<
              (    value       *      inverse     ) %      mod << endl;

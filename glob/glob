@@ -3,6 +3,7 @@
 
 #include <string>
 #include <glob.h>
+#include <bobcat/fswap>
 
 namespace FBB
 {
@@ -39,16 +40,22 @@ class Glob
              Dots dots = FIRST);
 
         Glob(Glob const &other);
+        Glob(Glob const &&tmp);
+
         ~Glob();
 
         Glob &operator=(Glob const &other);
+        Glob &operator=(Glob const &&tmp);
+
         size_t size() const;
         char const *operator[](size_t idx) const;
         char const *const *begin() const;
         char const *const *end() const;
 
-        void verify() const;        // throws exception if the constructor did
-                                    // not properly terminate
+        void verify() const;        // no-op
+
+        void swap(Glob &other);
+
     private:
         char const **mbegin() const;
         char const **mend() const;
@@ -57,6 +64,11 @@ class Glob
 
         static bool isDot(char const *cp);
 };
+
+inline void Glob::swap(Glob &other)
+{
+    fswap(*this, other);
+}
 
 inline Glob::Glob(Glob const &other)
 {

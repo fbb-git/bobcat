@@ -3,6 +3,10 @@
 
 #include <netdb.h>
 #include <string>
+#include <bobcat/fswap>
+
+namespace FBB
+{
 
 class Hostent: private hostent
 {
@@ -18,11 +22,13 @@ class Hostent: private hostent
     public:
         Hostent();
         Hostent(Hostent const &other);
+        Hostent(Hostent const &&other);
         explicit Hostent(hostent const *other);
 
         ~Hostent();
 
         Hostent &operator=(Hostent const &other);
+        Hostent &operator=(Hostent const &&tmp);
 
         char const *alias(size_t nr) const;
         char const *binaryAddress(size_t nr) const;         // length bytes!
@@ -37,6 +43,8 @@ class Hostent: private hostent
         size_t addressLength() const;
         size_t addressType() const;
 
+        void swap(Hostent &other);
+
     private:
         static char *xstrdup(char const *src);
 
@@ -50,11 +58,21 @@ class Hostent: private hostent
                                             size_t length) const;
 };
 
+inline void Hostent::swap(Hostent &other)
+{
+    fswap(*this, other);
+}
+
+inline Hostent &Hostent::operator=(Hostent const &&tmp)
+{
+    swap(const_cast<Hostent &>(tmp));
+    return *this;
+}
+
 inline Hostent::Hostent(Hostent const &other)
 {
     copy(&other, other.d_nAliases, other.d_nAddresses);
 }
-
 
 inline Hostent::~Hostent()
 {
@@ -105,5 +123,7 @@ inline size_t Hostent::addressType() const
 {
     return h_addrtype;
 }
+
+}   // FBB
 
 #endif

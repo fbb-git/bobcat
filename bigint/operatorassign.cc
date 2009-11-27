@@ -2,10 +2,8 @@
 
 BigInt &BigInt::operator=(BigInt const &other)
 {
-    if (this != &other)
-    {
-        destroy();
-        copy(other);
-    }
+    BigInt tmp(other);
+    swap(tmp);
+
     return *this;
 }

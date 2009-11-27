@@ -2,10 +2,7 @@
 
 Glob &Glob::operator=(Glob const &other)
 {
-    if (this != &other)
-    {
-        destroy();        
-        copy(other);
-    }
+    Glob tmp(other);
+    swap(tmp);
     return *this;
 }
