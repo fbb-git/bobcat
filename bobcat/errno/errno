@@ -24,11 +24,11 @@ class Errno: public std::ostringstream, public std::exception
     public:
         Errno();
         explicit Errno(char const *prefix); 
-        Errno(int errnr, char const *text = 0);
+        explicit Errno(int errnr, char const *text = 0);
         Errno(Errno const &other);
         virtual ~Errno() throw();
-        virtual const char *what() const throw();
         int which() const;
+        virtual const char *what() const throw();
 
     private:
         void initMsg();
@@ -42,6 +42,21 @@ inline int Errno::which() const
     return d_errno;
 }
 
+template <typename Type>
+inline Errno const &operator<<(Errno const &in, Type const &t)
+{
+    dynamic_cast<std::ostream &>(const_cast<Errno &>(in)) << t;
+    return in;
+}
+
+
+// OBSOLETED, NOT REQUIRED ANYMORE
+
+inline Errno &operator<<(std::ostream &str, Errno *(*)())
+{
+    return *static_cast<Errno *>(&(str << std::flush));
+}
+
 inline std::ostream &insertable(std::ostream &errnoObject)
 {
     return errnoObject;
@@ -50,11 +65,6 @@ inline std::ostream &insertable(std::ostream &errnoObject)
 inline Errno *throwable()
 {
     return 0;
-}
-
-inline Errno &operator<<(std::ostream &str, Errno *(*)())
-{
-    return *static_cast<Errno *>(&(str << std::flush));
 }
 
 } // FBB

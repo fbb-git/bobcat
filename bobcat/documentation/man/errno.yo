@@ -55,29 +55,45 @@ object must insert these explicitly.
     itb(int which() const) 
     Returns the internally stored bf(errno) value: either the system-bf(errno)
 value, or the value provided by the third constructor.
+    itb(int which() const) 
+    Returns the internally stored bf(errno) value: either the system-bf(errno)
+value, or the value provided by the third constructor.
     )
 
-manpagesection(MANIPULATORS)
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(Errno const &operator<<(Errno const &in, Type const &t))
+    This overloaded insertion operator can be used to insert values of any
+type that can also be inserted into an tt(ostringstream) object. It is
+implemented as a template, with the generic tt(Type) representing the type of
+the value to be inserted.
+    )
+    The overloaded assignment operator is not available.
+
+manpagesection(OBSOLETED MANIPULATORS)
+    The manipulators listed here are obsoleted and should no longer be
+    used. They will be removed from Bobcat in some future version.
+
     The following manipulators (which are em(not) part of the bf(FBB::Errno),
 class, but em(are) defined in the bf(FBB) namespace) can be inserted into the
 bf(FBB::Errno) object:
     itemization(
     itb(FBB::insertable) 
-    If inserted immediately after the construction of an anonymous
+    (OBSOLETED) If inserted immediately after the construction of an anonymous
 bf(FBB::Errno) object, information may be inserted into the anonymous object
 immediately thereafter. The manipulator is not required for named tt(Errno)
 objects into which information is inserted after their construction.
      itb(FBB::throwable)
-    If placed at the end of a series of insertions into the bf(FBB::Errno)
-object, it allows the object to be thrown as an exception in one expression.
+    (OBSOLETED) If placed at the end of a series of insertions into the
+bf(FBB::Errno) object, it allows the object to be thrown as an exception in
+one expression.
     )
 
 manpagesection(EXAMPLE)
     The following example shows the normal use of the manipulators:
         verb(
     if (exceptionalCondition)
-        throw FBB::Errno(1, "Failure") << FBB::insertable << 
-                ": Exceptional condition occurred" << FBB::throwable;
+        throw FBB::Errno(1, "Failure") << ": Exceptional condition occurred";
         )
 
 manpagefiles()

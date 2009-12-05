@@ -89,6 +89,10 @@ still benefit from fast swapping operations: by implementing their own swap
 member they could first use fast swapping to swap the objects, followed by 
 another fast swap to unswap their `next' pointers.
 
+    The tt(fswap) function should also not be used for objects defining
+pointers to their own data. All tt(stream) classes define such pointers and
+can therefore not be swapped using tt(fswap).
+
 includefile(trailer.inc)
 
 
