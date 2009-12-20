@@ -2,9 +2,6 @@
 
 int Randbuffer::underflow()
 {
-    if (gptr() < egptr())
-        return *gptr();
-
     ostringstream ostr;
 
     ostr << d_min + 
