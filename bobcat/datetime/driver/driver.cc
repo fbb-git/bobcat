@@ -1,7 +1,3 @@
-/*
-                              driver.cc
-*/
-
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -169,8 +165,6 @@ int main()
             "Extracting `" << ins.str() << "'\n";
     cout << "40: " << dst << " (extracted)\n";
     cout << "41: " << dst.utc() << " (same, UTC)\n";
-
-    return 0;
 }
 
 
