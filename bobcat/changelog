@@ -9,23 +9,21 @@ bobcat (2.07.00)
     streams.
   * Bobcat's main man-page received an entry referring to the TypeTrait class
     template.
-  * Functions  cgi/push.cc and cgi/accept.cc >>require<< g++ version >= 4.4. 
-    Conditional compilation could also be used, like so:
-        #if __GNUC__ > 4 && __GNUC_MINOR__ >= 4
-        #then
-            static_cast<void (stack<char>::*)(char &&)>(&stack<char>::push));
-        #else
-                static_cast<void (stack<char>::*)(char const &)>(
-                                                        &stack<char>::push));
-        #endif
+  * Repaired cgi/push.cc and cgi/accept.cc
   * New class: FBB::FnWrap, easier to use than and providing all the features
     of FnWrap[12]c?. See its man-page for details. 
   * Not-implemented constructors and functions, previously flagged with the
     // NI comment, are now using '= delete'. Likewise, implementaitions of 
     explicitly implemented empty default constructors were removed and
-    replaced by '= default'.
+    replaced by '= default'. Some con- and destructors were kept due to
+    non-public access. The added destructors were defined in source files, and
+    not in-line to localize the class's Vtables with the destructor's source
+    files. 
+  * Compilation of, e.g., Glob::operatorassign.cc produces a warning in
+    g++-4.4. This warning disappears with g++-4.5 and is therefore ignored.
+  * Sources also compile fine with g++-4.5
 
- -- Frank B. Brokken <f.b.brokken@rug.nl>  Sat, 13 Feb 2010 09:59:30 +0100
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Sat, 13 Feb 2010 13:52:01 +0100
 
 bobcat (2.06.00)
 

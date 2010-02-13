@@ -95,7 +95,6 @@ class BigInt
 
             private:
                 Bit(BigInt &bi, size_t idx);
-                Bit(Bit const &other) = delete;
         };
 
         char *bigEndian() const;
@@ -414,7 +413,8 @@ inline int BigInt::operator[](size_t idx) const
 
 inline BigInt::Bit BigInt::operator[](size_t idx)
 {
-    return Bit(*this, idx);
+    Bit bit(*this, idx);
+    return bit;
 }
 
 inline BigInt::Bit::operator bool() const
