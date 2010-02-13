@@ -47,6 +47,16 @@ class Strings
                 FnWrap::binary(cmpfun2, nr, out));
         }
 
+        void count()
+        {
+            size_t nLines = 0;
+            cout << "Number of counts: " <<
+                count_if(d_vs.begin(), d_vs.end(), 
+                         FnWrap::unary(counter, cout, nLines));
+            cout << '\n' << 
+                    nLines << " lines processed\n";
+        }
+
     private:
         static bool cmpfun2(string const &str1, string const &str2, 
                         size_t &nr, ostream &out)
@@ -72,6 +82,20 @@ class Strings
         {
             out << nr++ << " " << str << '\n';
         }
+        static bool counter(string const &str, ostream &out, size_t &nLines)
+        {
+            out << "Line nr " << ++nLines << ": " << str;
+            if (str.find('t') != string::npos)
+            {
+                out << ", contains 't'\n";
+                return true;
+            }
+            else
+            {
+                out << ", no 't'\n";
+                return false;
+            }
+        }
 };
 
 int main()
@@ -85,6 +109,8 @@ int main()
     s.show(cout);
     cout << "========\n";
     s.accu(cout);
+    cout << "========\n";
+    s.count();
 }
 
 

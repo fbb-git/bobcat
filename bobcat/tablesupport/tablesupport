@@ -39,7 +39,7 @@ class TableSupport
     public:
         TableSupport();
 
-        virtual ~TableSupport();
+        virtual ~TableSupport() = default;
 
         void setParam(std::ostream &ostr, size_t rows, size_t nColumns,
                         std::vector<Align> const &align);
@@ -113,9 +113,6 @@ class TableSupport
         friend TableSupport &operator<<(TableSupport &support, 
                                                     HLine const &hline);
 };
-
-inline TableSupport::~TableSupport()        // required: g++ bug workaround
-{}
 
 inline size_t TableSupport::colWidth(size_t col) const
 {

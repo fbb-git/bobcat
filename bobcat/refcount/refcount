@@ -15,7 +15,7 @@ class RefCount
         RefCount();
         RefCount(RefCount const &other);           // used by clone()
 
-        virtual ~RefCount();
+        virtual ~RefCount() = default;
         virtual RefCount *clone() const = 0;
 
     public:
@@ -37,9 +37,6 @@ inline RefCount::RefCount()
 inline RefCount::RefCount(RefCount const &other)           // used by clone()
 :
     d_refcount(1)
-{}
-
-inline RefCount::~RefCount() 
 {}
 
 inline size_t RefCount::refcount() const

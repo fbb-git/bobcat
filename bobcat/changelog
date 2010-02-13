@@ -1,9 +1,9 @@
-bobcat (2.07.00)    ISN
+bobcat (2.07.00)
 
+  * TypeTrait now supports tests for rvalue reference types.
   * FBB::insertable and FBB::throwable are no longer required when using Errno
   * The gptr() < egptr() checks in underflow() functions (IFdStreambuf and
     Randbuffer) are superfluous and have been removed.
-  * TypeTrait now supports tests for rvalue reference types.
   * DateTime's man-page contains a caveat for setMonth.
   * Fswap's man-page BUGS section is augmented with a warning against swapping
     streams.
@@ -18,8 +18,14 @@ bobcat (2.07.00)    ISN
                 static_cast<void (stack<char>::*)(char const &)>(
                                                         &stack<char>::push));
         #endif
-  * Added class FBB::FnWrap, providing all the features of FnWrap[12]c?. See
-    the man-page for details.
+  * New class: FBB::FnWrap, easier to use than and providing all the features
+    of FnWrap[12]c?. See its man-page for details. 
+  * Not-implemented constructors and functions, previously flagged with the
+    // NI comment, are now using '= delete'. Likewise, implementaitions of 
+    explicitly implemented empty default constructors were removed and
+    replaced by '= default'.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Sat, 13 Feb 2010 09:59:30 +0100
 
 bobcat (2.06.00)
 

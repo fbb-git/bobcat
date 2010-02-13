@@ -26,16 +26,13 @@ class Errno: public std::ostringstream, public std::exception
         explicit Errno(char const *prefix); 
         explicit Errno(int errnr, char const *text = 0);
         Errno(Errno const &other);
-        virtual ~Errno() throw();
+        virtual ~Errno() throw() = default;
         int which() const;
         virtual const char *what() const throw();
 
     private:
         void initMsg();
 };
-
-inline Errno::~Errno() throw()
-{}
 
 inline int Errno::which() const
 {
