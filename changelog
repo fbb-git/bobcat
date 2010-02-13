@@ -1,3 +1,30 @@
+bobcat (2.07.00)
+
+  * TypeTrait now supports tests for rvalue reference types.
+  * FBB::insertable and FBB::throwable are no longer required when using Errno
+  * The gptr() < egptr() checks in underflow() functions (IFdStreambuf and
+    Randbuffer) are superfluous and have been removed.
+  * DateTime's man-page contains a caveat for setMonth.
+  * Fswap's man-page BUGS section is augmented with a warning against swapping
+    streams.
+  * Bobcat's main man-page received an entry referring to the TypeTrait class
+    template.
+  * Repaired cgi/push.cc and cgi/accept.cc
+  * New class: FBB::FnWrap, easier to use than and providing all the features
+    of FnWrap[12]c?. See its man-page for details. 
+  * Not-implemented constructors and functions, previously flagged with the
+    // NI comment, are now using '= delete'. Likewise, implementaitions of 
+    explicitly implemented empty default constructors were removed and
+    replaced by '= default'. Some con- and destructors were kept due to
+    non-public access. The added destructors were defined in source files, and
+    not in-line to localize the class's Vtables with the destructor's source
+    files. 
+  * Compilation of, e.g., Glob::operatorassign.cc produces a warning in
+    g++-4.4. This warning disappears with g++-4.5 and is therefore ignored.
+  * Sources also compile fine with g++-4.5
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Sat, 13 Feb 2010 15:30:43 +0100
+
 bobcat (2.06.00)
 
   * Added BigInt::isqrt (integral sqrt computation) 

@@ -17,7 +17,7 @@ class OFoldStream: virtual public OFoldStreambufEnums,
                    private OFoldStreambuf, public std::ostream
 {
     public:
-        OFoldStream();
+        OFoldStream() = default;
         explicit OFoldStream(char const *fname, 
                     size_t leftIndent = 0, size_t rightMargin = 80,
                     TabsOrBlanks tob = BLANKS,
@@ -46,9 +46,6 @@ class OFoldStream: virtual public OFoldStreambufEnums,
         static size_t leftMargin(std::ostream const &os);
         static size_t rightMargin(std::ostream const &os);
 };
-
-inline OFoldStream::OFoldStream()
-{}
 
 inline OFoldStream::OFoldStream(char const *fname, 
                     size_t leftIndent, size_t rightMargin, 

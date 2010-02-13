@@ -493,7 +493,23 @@ LAST) won't). Analogously, tt(DateTime::NEXT) may be specified to ensure that
 the requested month will be following the current month. If another value for
 tt(where) is specified an bf(Errno) exception is thrown. If the assignment
 resulted in a new (valid) time tt(true) is returned. Otherwise tt(false) is
-returned.
+returned. 
+
+    Caveat: When setting the month the month may inadvertently be set to the
+next month. This happens when the current day number exceeds the number of
+days in the target month. Example: assume it is December 31st and the intent
+is to change the date to June 21st. The first example sets the date to
+bf(July) 21st since `June 31st' is converted to `July 1st'. The second example
+sets the date to June 21st, as intended.
+        verb(
+    DateTime dt;                    // assume set at December 31
+    dt.setMonth(DateTime::JUNE);    // becomes JULY
+    dt.setDay(21);                  // Now July 21st
+    
+    DateTime dt;                    // assume set at December 31
+    dt.setDay(21);                  // Now December 21st
+    dt.setMonth(DateTime::JUNE);    // OK: June 21st
+        )
 
     itb(bool setMonth(int month)) 
         Reassigns the month set in the tt(DateTime) object. Negative values

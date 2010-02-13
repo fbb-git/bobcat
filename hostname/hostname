@@ -11,7 +11,7 @@ namespace FBB
     class Hostname: public Hostent
     {
         public:
-            Hostname();
+            Hostname() = default;
                                     // may be name or dotted decimal address
             explicit Hostname(std::string const &host);      // 1
             explicit Hostname(InetAddress const &address);   // 2
@@ -19,11 +19,6 @@ namespace FBB
         private:
             void init();
     };
-
-inline Hostname::Hostname()
-:
-    Hostent()
-{}
 
 } // FBB
 

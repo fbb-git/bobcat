@@ -1,12 +1,14 @@
 #include <iostream>
-#include "../errno.h"
+#include "../errno"
 #include <errno.h>
+
+#include <fstream>
 
 using namespace std;
 using namespace FBB;
 
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
     string hello = "hello world";
 
@@ -48,8 +50,15 @@ int main(int argc, char **argv, char **envp)
     try
     {
         Errno e(12, "Prefix text");
-        e << ".\n\tThis is the result of 12 prefixed initialized";
-        throw e;
+        Errno e2(e);
+
+        cout << sizeof(Errno) << ' ' << sizeof(ostringstream) << ' ' <<
+                        sizeof(exception) << endl;
+
+        
+//        e2 = e;
+        e2 << ".\n\tThis is the result of 12 prefixed initialized";
+        throw e2;
     }
     catch(Errno const &e)
     {
@@ -60,35 +69,28 @@ int main(int argc, char **argv, char **envp)
 
     try
     {
-        throw Errno(99, "Special") << insertable << ". Hello world" << 
-                                                    throwable;
+        throw Errno(99, "Since Special") << ". Hello world " << 1234;
 
         cerr << "NOT REACHED\n";
     }
-    catch (exception &e)
+    catch (exception const &e)
     {
         cerr << e.what() << ".\n";
     }
 
-/*
-    This won't compile, as the result is an ostream, 
-    which can't be copied.
+    cerr << "================== fifth example ===============\n";
 
     try
     {
-        throw Errno(99, "Thrown: ") << unConst <<
-                " a Errno object into which something is inserted";
-    }
-    catch (Errno const &e)
-    {
-        cout << e.what() << " " << e.why() << endl;
-    }
+        throw Errno(99, "Obsoleted") << insertable << ". Hello world " << 
+                                            1234 << throwable;
 
-    catch (ostream const &str)
-    {
-        cout << "stream is thrown\n";
+        cerr << "NOT REACHED\n";
     }
-*/
+    catch (exception const &e)
+    {
+        cerr << e.what() << ".\n";
+    }
 }
 
 

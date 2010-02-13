@@ -20,7 +20,9 @@ class Pipe
         Pipe();
         explicit Pipe(int const *fd);
 
-        ~Pipe();
+        // ~Pipe(); removed from the interface as it's implementation was
+        //          empty and this class is not a Base class having virtual
+        //          members
 
         void verify() const;        // SF, now empty
 
@@ -37,9 +39,6 @@ class Pipe
         void writtenBy(int const *filedescriptor, size_t n = 2);
         int writeOnly();
 };
-
-inline Pipe::~Pipe()
-{}
 
 inline int Pipe::readFd() const
 {

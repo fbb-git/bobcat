@@ -1,0 +1,201 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::FnWrap)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Configurable Function Wrapper)
+
+manpagename(FnWrap)(Generic configurable context function wrapper class)
+
+manpagesynopsis()
+    bf(#include <bobcat/fnwrap>)nl()
+
+manpagedescription()
+    The bf(FBB::FnWrap) class contains two static members: tt(unary) and
+tt(binary). The tt(unary) function returns a unary functor that is ordinarily
+called from generic algorithms of the standard template libray expecting a
+unary functor or predicate.  The tt(binary) function returns a binary functor
+that is ordinarily called from generic algorithms of the standard template
+libray expecting a binary functor or predicate.
+
+The tt(unary) and tt(binary) functions expect the name of a (static or free)
+function that will be called from the functor's function operator. The
+arguments received by the functor's function operator are forwarded to the
+static or free function that is called by the functor's function operator.
+
+Any additional arguments that are passed to tt(unary) or tt(binary) will also
+be forwarded to the function that is called by the functor's function
+operator. This allows users of tt(FnWrap) to pass a em(local context) to the
+function that is indirectly called by a generic algorithm. 
+
+The number and types of arguments are determined by the parameter list of the
+function that is called by the functor's function operator. If that former 
+function, in addition to parameters matching the types of the arguments
+provided by the generic algorithm also defines, e.g., an tt(int) and
+tt(std::string &) parameter then the tt(FnWrap) member functions must be
+called with the address of the function to call, with an tt(int) argument and
+with a tt(std::string) em(lvalue).
+
+The type of the return value of the function whose address is passed to the
+tt(FnWrap) members will be the return type of the functor's function call
+operator. So if the generic algorithm expects a predicate function the
+function called by the functor's function call operator should return a
+tt(bool) value.
+
+The called function must be a static member or free function. Using a static
+member or free function has several advantages over calling a non-static 
+class member function:
+    itemization(
+    it() No object for which the member function will be called needs to be
+provided; 
+    it() There is no introduced uncertainty about the bf(const)-ness of the
+callled function, as static member functions and free functions do not support
+bf(const) modifiers;
+    it() The called function can be a static member function of the class
+using the generic algorithm to which the bf(FnWrap) object is passed. By
+specifying the calling object as one of the arguments of the tt(FnWrap)
+function, the called function will receive this object as well and may
+directly access the calling object's members;
+    it() The passed function can be a static member function of the class
+whose objects are passed to the function via the generic template function's
+iterator parameters. In that case the function may directly access the passed
+object's members.
+    it() Since no object is involved in calling the static function, no
+ambiguity can arise as to whether an object reference or an object pointer
+should be used in calling the function: static (member) functions may be
+called without using objects.
+    )
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(STATIC MEMBERS)
+    itemization(
+    itb(Functor unary(Function [, Arguments]))
+        tt(Functor) represents the (unary) functor that can be used by generic
+algorithms;nl()
+        tt(Function) is the name of a static member or free function that will
+be called from the tt(Functor)'s function operator. The type of its 
+first argument must match the type of the argument received by the functor's
+function call operator. Any additional types must match, in type and number,
+the additional arguments that are passed to tt(unary). tt(Function)'s return
+type will be the return type of tt(Functor)'s function call operator. If a
+value is returned by tt(Function) it will be returned by tt(Functor)'s
+function call operator.
+
+    itb(Functor binary(Function [, Arguments]))
+        tt(Functor) represents the (binary) functor that can be used by
+generic algorithms;nl()
+        tt(Function) is the name of a static member or free function that will
+be called from the tt(Functor)'s function operator. The types of its first two
+arguments must match the types of the first two arguments received by the
+functor's function call operator. Any additional types must match, in type and
+number, the additional arguments that are passed to tt(binary). tt(Function)'s
+return type will be the return type of tt(Functor)'s function call
+operator. If a value is returned by tt(Function) it will be returned by
+tt(Functor)'s function call operator.
+    )
+
+manpagesection(TYPEDEFS)
+
+   The functors defines types, that are used by generic algorithms:
+    itemization(
+    itb(first_argument_type), a synonym for the basic type of the argument
+received by the unary functor's function call operator and of the first
+argument received by the binary functor's function call operator. E.g., if
+the actual type is tt(std::string const *) then tt(argument_type) will
+be tt(std::string);
+    itb(second_argument_type), a synonym for the basic type of the second
+argument received by the binary functor's function call operator.
+    itb(result_type), a synonym for the basic type of the return type of the 
+functor's function call operator.
+    )
+
+
+manpagesection(EXAMPLES)
+        verb(
+    // accumulating strings from a vector to one big string, using
+    // `accumulate'
+    #include <iostream>
+    #include <numeric>
+    #include <string>
+    #include <vector>
+    #include <bobcat/fnwrap2c>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    class Strings
+    {
+        vector<string> d_vs;
+    
+        public:
+            Strings()
+            {
+                d_vs.push_back("one");
+                d_vs.push_back("two");
+                d_vs.push_back("three");
+            }
+    
+            void display(ostream &out) const
+            {
+                SContext c = {1, out};
+    
+                cout << "On Exit: " <<
+                    accumulate(
+                        d_vs.begin(), d_vs.end(),
+                        string("HI"),
+                        FnWrap<string const &, string const &, 
+                                 SContext &, string>(&show, c)
+                    ) <<
+                    endl;
+            }
+    
+        private:
+            struct SContext
+            {
+                size_t nr;
+                ostream &out;
+            };
+    
+            static string show(string const &str1,
+                                    string const &str2,
+                                    SContext &c)
+            {
+                c.out << c.nr++ << " " << str1 << " " << str2 <<
+                         endl;
+                return str1 + " " + str2;
+            }
+    };
+    
+    int main()
+    {
+        Strings s;
+    
+        s.display(cout);
+    }
+        )
+    After compilation and linking, simply call the program without any
+arguments. 
+
+manpagefiles()
+    em(bobcat/fnwrap2c) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(fnwrap1)(3bobcat), bf(fnwrap2)(3bobcat), 
+    bf(fnwrap2)(3bobcat), bf(foreach)(3bobcat), bf(lc)(3bobcat), 
+    bf(repeat)(3bobcat)
+
+manpagebugs()
+    em(Caveat): the template parameter specifying the type of the local
+context struct should probably not be specified as a value type as this will
+result in copying the local context struct for each call of the tt(FNWrap2c)
+object or of the function that it is provided with, making it impossible for
+the algorithms to modify value- or pointer-fields of the outermost local
+context struct. Instead, the template type specifying the type of the local
+context struct should be specified as a pointer or reference template type
+when instantiating the tt(FnWrap1c) object.
+
+
+includefile(trailer.inc)
