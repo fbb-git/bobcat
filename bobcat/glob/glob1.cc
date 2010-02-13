@@ -16,8 +16,7 @@ try
         throw Errno(err, "Glob: glob() failed");
 
     if (dots == FIRST)
-        stable_partition(mbegin(), mend(), 
-                         FnWrap1<char const *, bool>(&isDot));
+        stable_partition(mbegin(), mend(), isDot);
 }
 catch(...)
 {

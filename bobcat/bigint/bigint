@@ -241,14 +241,8 @@ class BigInt
 
 
         static void primeCallback(int reason, int primeNr, void *primeBase);
-
-        struct Context
-        {
-            BigInt &ret;
-            BigInt const &radix;
-            int (*pConv)(int);
-        };
-        static bool addDigit(char ch, Context &ctx);
+        static bool addDigit(char ch, BigInt &ret, BigInt const &radix, 
+                                                   int (*pConv)(int));
 };
 
 template<typename Type>
