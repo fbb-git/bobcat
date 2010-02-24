@@ -22,10 +22,10 @@ function that will be called from the functor's function operator. The
 arguments received by the functor's function operator are forwarded to the
 static or free function that is called by the functor's function operator.
 
-Any additional arguments that are passed to tt(unary) or tt(binary) will also
-be forwarded to the function that is called by the functor's function
+Any additional arguments that are passed to tt(unary) or tt(binary) are
+forwarded to the function that is called by the functor's function
 operator. This allows users of tt(FnWrap) to pass a em(local context) to the
-function that is indirectly called by a generic algorithm. 
+function that is indirectly called by a generic algorithm.
 
 The number and types of arguments are determined by the parameter list of the
 function that is called by the functor's function operator. If that former 
@@ -112,7 +112,6 @@ argument received by the binary functor's function call operator.
 functor's function call operator.
     )
 
-
 manpagesection(EXAMPLES)
         verb(
     // accumulating strings from a vector to one big string, using
@@ -121,7 +120,7 @@ manpagesection(EXAMPLES)
     #include <numeric>
     #include <string>
     #include <vector>
-    #include <bobcat/fnwrap2c>
+    #include <bobcat/fnwrap>
     
     using namespace std;
     using namespace FBB;
@@ -132,39 +131,29 @@ manpagesection(EXAMPLES)
     
         public:
             Strings()
-            {
-                d_vs.push_back("one");
-                d_vs.push_back("two");
-                d_vs.push_back("three");
-            }
+            :
+                d_vs({"one", "two", "three"})
+            {}
     
             void display(ostream &out) const
             {
-                SContext c = {1, out};
+                size_t count = 0;
     
                 cout << "On Exit: " <<
                     accumulate(
                         d_vs.begin(), d_vs.end(),
                         string("HI"),
-                        FnWrap<string const &, string const &, 
-                                 SContext &, string>(&show, c)
-                    ) <<
-                    endl;
+                        FnWrap::binary(show, count, out)) << '\n';
+                    
             }
     
         private:
-            struct SContext
-            {
-                size_t nr;
-                ostream &out;
-            };
-    
             static string show(string const &str1,
                                     string const &str2,
-                                    SContext &c)
+                                    size_t &nr, ostream &out)
             {
-                c.out << c.nr++ << " " << str1 << " " << str2 <<
-                         endl;
+                out << ++nr << " " << str1 << " " << str2 << '\n';
+
                 return str1 + " " + str2;
             }
     };
@@ -172,7 +161,6 @@ manpagesection(EXAMPLES)
     int main()
     {
         Strings s;
-    
         s.display(cout);
     }
         )
@@ -188,14 +176,6 @@ manpageseealso()
     bf(repeat)(3bobcat)
 
 manpagebugs()
-    em(Caveat): the template parameter specifying the type of the local
-context struct should probably not be specified as a value type as this will
-result in copying the local context struct for each call of the tt(FNWrap2c)
-object or of the function that it is provided with, making it impossible for
-the algorithms to modify value- or pointer-fields of the outermost local
-context struct. Instead, the template type specifying the type of the local
-context struct should be specified as a pointer or reference template type
-when instantiating the tt(FnWrap1c) object.
-
+    None Reported.
 
 includefile(trailer.inc)
