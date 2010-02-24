@@ -1,0 +1,35 @@
+When using the milter library in combination with Bobcat, make sure the milter
+library is passed to the linker before the bobcat library is specified.
+
+E.g., use -lmilter -lbobcat
+
+If the bobcat library is specified before the milter library the following 
+stand-in function defined in the bobcat library will be used:
+
+	`smfi_register'
+
+This symbol was included in the bobcat library to prevent an `undefined
+reference' linker error from being generated when shared libraries are used
+but the milter library is *not* used.
+
+What happens when milter is specified before bobcat is that although the
+bobcat library defines a stand-in function it is presented to the linker
+only after the linker has seen the similarly named symbols in the milter
+library. The linker uses the symbols first encountered, and will therefore
+properly use the symbol defined in the milter library.
+
+However, if the milter library is not used (e.g., Milter is not used) and if
+bobcat itself would not define the above symbol then that symbol would not be
+defined in the shared libraries inspected by the linker, producing a linker
+error.
+
+Although the error could be prevented by specifying the option
+
+    -Wl,--allow-shlib-undefined 
+
+requiring this option seems like a more complex instruction than requiring
+that when using the milter library it must be specified before the bobcat
+library.
+
+
+

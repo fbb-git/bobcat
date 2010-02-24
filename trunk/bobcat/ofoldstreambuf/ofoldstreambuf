@@ -1,0 +1,223 @@
+#ifndef INCLUDED_BOBCAT_OFOLDSTREAMBUF_
+#define INCLUDED_BOBCAT_OFOLDSTREAMBUF_
+
+#include <iostream>
+#include <string>
+#include <vector>
+
+#include <bobcat/ofilterstreambuf>
+
+namespace FBB
+{
+
+class lm
+{
+    size_t d_value;
+    
+    public:
+        lm(int value);
+        std::ostream &modify(std::ostream &out) const;
+};
+
+class mlm
+{
+    int d_value;
+    
+    public:
+        mlm(int value);
+        std::ostream &modify(std::ostream &out) const;
+};
+
+struct OFoldStreambufEnums
+{
+    enum TrailingBlanks
+    {
+        IGNORE_TRAILING_BLANKS,
+        HANDLE_TRAILING_BLANKS
+    };
+    enum TabsOrBlanks
+    {
+        BLANKS,
+        TABS
+    };
+};
+    
+    // 'virtual public OFoldStreambufBlanks is used to avoid 'base class not
+    // accessible' warnings when classes inherit from OFoldStreambuf like
+    // OFoldStream. 
+class OFoldStreambuf: virtual public OFoldStreambufEnums, 
+                      public OFilterStreambuf
+{
+    friend std::ostream &lm::modify(std::ostream &) const;
+    friend std::ostream &mlm::modify(std::ostream &) const;
+
+    enum Mode
+    {
+        INDENT,
+        WS,
+        NON_WS
+    };
+
+    std::string d_nonWs;
+    std::string d_ws;
+
+    size_t d_rightMargin;
+    size_t d_indent;
+    bool d_reqIndent;
+
+    size_t d_wsLength;
+    size_t d_next;
+
+    Mode d_mode;
+
+    char d_indentChar;
+    size_t d_indentWidth;
+    bool d_handleTrailingBlanks;
+
+    typedef std::vector<OFoldStreambuf const *>::iterator BufIt;
+    static std::vector<OFoldStreambuf const *> s_buffers;
+
+    public:
+        explicit OFoldStreambuf(
+                   size_t leftIndent = 0, size_t rightMargin = 80,
+                   TabsOrBlanks tob = BLANKS,
+                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+
+        explicit OFoldStreambuf(char const *fname,
+                   size_t leftIndent = 0, size_t rightMargin = 80,
+                   TabsOrBlanks tob = BLANKS,
+                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+
+        explicit OFoldStreambuf(std::ostream &stream,
+                   size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
+                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+
+        ~OFoldStreambuf();
+
+        void setMargins(size_t leftMargin, size_t rightMargin);
+        void setTrailingBlanks(TrailingBlanks tb);
+        void useBlanks();
+        void useTabs(size_t tabWidth = 8);
+
+        static size_t leftMargin(std::streambuf const *buffer);
+        static size_t rightMargin(std::streambuf const *buffer);
+
+    protected:
+        virtual int sync();
+        virtual int overflow(int c);
+
+    private:
+        void indent(int c);
+        void ws(int c);
+        void nonWs(int c);
+
+        size_t length() const;
+
+        void iniBlankTabs(TabsOrBlanks tob);
+        void newline();
+        void addNonWs(int c);
+        void addWs(int c);
+        void indent();
+        void flush();
+        void clearWs();
+
+        void modifyIndent(int delta);
+        void setIndent(int value);
+
+        void writeWs() const;
+        void writeNonWs() const;
+        void put(int ch) const;
+
+        static BufIt findOFoldStreambuf(std::streambuf const *buffer);
+};
+
+inline void OFoldStreambuf::setIndent(int value)
+{
+    d_indent = value;
+}
+
+inline void OFoldStreambuf::setTrailingBlanks(TrailingBlanks tb)
+{
+    d_handleTrailingBlanks =  tb ==  HANDLE_TRAILING_BLANKS;
+}
+
+inline void OFoldStreambuf::writeWs() const
+{
+    out().write(d_ws.data(), d_ws.length());
+}
+
+inline void OFoldStreambuf::put(int ch) const
+{
+    out().put(ch);
+}
+
+inline void OFoldStreambuf::writeNonWs() const
+{
+    out().write(d_nonWs.data(), d_nonWs.length());
+}
+
+inline void OFoldStreambuf::addNonWs(int c)
+{
+    d_nonWs += c;
+}
+
+inline lm::lm(int value)
+:
+    d_value(value < 0 ? 0 : value)
+{}
+
+inline std::ostream &lm::modify(std::ostream &out) const
+{
+    dynamic_cast<OFoldStreambuf &>(*out.rdbuf()).setIndent(d_value);
+    return out;
+}        
+
+inline mlm::mlm(int value)
+:
+    d_value(value)
+{}
+
+inline std::ostream &mlm::modify(std::ostream &out) const
+{
+    dynamic_cast<OFoldStreambuf &>(*out.rdbuf()).modifyIndent(d_value);
+    return out;
+}        
+
+inline void OFoldStreambuf::useBlanks()
+{
+    d_indentChar = ' ';
+    d_indentWidth = 1;
+}
+
+inline void OFoldStreambuf::useTabs(size_t tabWidth)
+{
+    d_indentChar = '\t';
+    d_indentWidth = tabWidth;
+}
+
+inline size_t OFoldStreambuf::leftMargin(std::streambuf const *buffer)
+{
+    return (*findOFoldStreambuf(buffer))->d_indent;
+}
+
+inline size_t OFoldStreambuf::rightMargin(std::streambuf const *buffer)
+{
+    return (*findOFoldStreambuf(buffer))->d_rightMargin;
+}
+
+inline std::ostream &operator<<(std::ostream &out, lm const &idt)
+{
+    return idt.modify(out);
+}
+
+inline std::ostream &operator<<(std::ostream &out, mlm const &idt)
+{
+    return idt.modify(out);
+}
+
+} // FBB
+
+
+#endif
+

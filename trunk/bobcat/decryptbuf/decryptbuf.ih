@@ -1,0 +1,33 @@
+#include "decryptbuf"
+
+#include <string>
+#include <openssl/evp.h>
+#include <bobcat/errno>
+
+namespace FBB
+{
+
+struct DecryptBufImp
+{
+    EVP_CIPHER_CTX      ctx;
+    EVP_CIPHER const   *md;
+    bool                active;
+    size_t              bufsize;
+    char               *buffer;
+    char               *out;
+    std::ostream       &outStream;
+
+    DecryptBufImp(std::ostream &outStream, size_t bufsize);
+    ~DecryptBufImp();
+};
+
+inline DecryptBufImp::~DecryptBufImp()
+{
+    delete [] buffer;
+    delete [] out;
+}
+
+} // FBB
+
+using namespace std;
+using namespace FBB;

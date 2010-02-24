@@ -1,0 +1,39 @@
+#include "table"
+
+#include <iomanip>
+#include <bobcat/string>
+
+using namespace std;
+using namespace FBB;
+
+inline size_t Table::Element::length() const
+{
+    return d_text.length();
+}
+
+inline size_t Table::columnWidth(size_t col) const
+{
+    return d_align[col];
+}
+
+inline Manipulator Table::columnManip(size_t col) const
+{
+    Manipulator manip = d_align[col].manip();
+    return manip ? manip : std::right;
+}
+
+inline Table::Element &Table::hIndex(size_t row, size_t col)
+{
+    return d_string[row * d_nColumns + col];
+}
+
+inline Table::Element &Table::vIndex(size_t row, size_t col)
+{
+    return d_string[col * d_nRows + row];
+}
+
+inline Table::Element &Table::elementAt(size_t row, size_t col)
+{
+    return (this->*d_indexFun)(row, col);
+}
+

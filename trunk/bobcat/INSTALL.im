@@ -1,0 +1,116 @@
+    // About compiling the bobcat library on BSD/MacOSX:
+    //
+    // According to Karel Kubat (karel at e dash tunity dot com) the bobcat
+    // library won't compile under BSD/MacOSX if the Linux options to create
+    // the dynamic library are used. Instead of 
+    //      -shared -Wl,-z,def,-soname,
+    // Karel suggests to use:
+    //      -dynamiclib -Wl,-single_module
+    //
+    // Also, he suggests to use the name libbobcat.dylib instead of
+    // libbobcat.so.1 
+    //
+    // In the directory ./contrib the script c-conf is found which is provided
+    // by Karel and which might be useful to construct the libraries under
+    // BSD/MacOSX systems. Don't contact me if you experience any problems
+    // with Karel's script. Instead, contact Karel directly.
+
+// #define STATIC
+    // When compiling Bobcat for CYGWIN under Windows, activate the above
+    // #define: it will prevent the construction of the shared library (until
+    // somebody tells me how to do that under CYGWIN....)
+
+#define LIBRARIES
+    // Install the libraries, remove if not requested
+
+#define HEADERS
+    // Install the headers, remove if not requested
+
+#define MANPAGES
+    // Install the manpages, remove if not requested
+
+#define MANHTML
+    // Install the html-versions of the manpages, remove if not requested
+
+#define DOCOTHER
+    // Install remaining docs (README, examples, etc), remove if not requested
+
+#define LCGEN
+    // Install the bobcatlcgen program
+
+
+    // The following /bin/cp options are used to keep, rather than follow
+    // symbolic references. If your installation doesn't support these flags,
+    // then change them into available ones.
+    //   -P, --no-dereference
+    //            never follow symbolic links in SOURCE
+    //   --preserve[=ATTR_LIST]
+    //          preserve   the   specified   attributes   (default:  
+    //          mode,ownership,timestamps), if possible  additional  
+    //          attributes:  context, links, all
+    //   -d     same as --no-dereference --preserve=links
+#define CPOPTS  "-d"
+
+    // The following icmake string variables are given their values below, in
+    // the function `setLocations()'
+
+string BASE;
+
+    // BASE=is the directory below which ALL bisonc++ files will be stored.
+
+    // For an operational non-Debian installation, you probably must be
+    // `root', and BASE "/usr" or BASE "/usr/local" is suggested (see
+    // below). `BASE' itself is not used outside of this file, so feel free to
+    // define BIN, SKEL, MAN and DOC (below) in any which way you like.
+
+string BIN;
+    // The location of the binary program bobcatlcgen
+
+string GPP;
+    // GPP specifies the compiler to use. By defining GPP with a specific 
+    // version (e.g., GPP=g++-4.1) that particular version can be used. The
+    // distributed definition uses the `default' compiler version and uses 
+    // `g++'. It is `gpp' in some installations. 
+
+string DOC;
+    // DOC is the directory in which all standard documentation will be stored
+    // in this directory the non-development related information is stored. It
+    // is not used if not defined (or defined empty)
+
+string DOCDEV;
+    // DOCDEV is the directory in which all other documentation will be stored
+    // In this directory the development related information is stored
+
+string INC;
+    // the directory in which the header files will be stored
+
+string GCC;
+    // The compiler to use for bobcat's C-sources. See GPP above for
+    // considerations
+
+string LIB;
+    // the directory in which the bobcat libraries will be stored
+
+string MAN;
+    // MAN is the directory in which the manual pages will be stored
+    // They are stored below man3 and man7
+
+string SHAREDOPT;
+string SHAREDLIB;
+
+void setLocations()
+{
+    BASE  = "/usr";
+
+    BIN  =      BASE + "/bin";    
+    DOC  =      BASE + "/share/doc/libbobcat2";
+    DOCDEV  =   BASE + "/share/doc/libbobcat2-dev";
+    INC  =      BASE + "/include/bobcat";
+    LIB  =      BASE + "/lib";
+    MAN  =      BASE + "/share/man";    
+
+    GPP = "g++ --std=c++0x";
+    GCC = "gcc";
+//    GPP = "g++-4.5 --std=c++0x";
+//    GCC = "gcc-4.5";
+}

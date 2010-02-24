@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]
+then
+    echo "
+Find from the current working directory all files containing the classes Arg
+Glob OneKey Pipe ServerSocket SocketBase User or Xpointer
+
+Run this script with any argument to obtain a list of filenames only.
+Press Enter to continue and search for files or ^C to abort"
+    read
+else
+    OPT=-l
+fi    
+
+/bin/grep -E $OPT \
+    '\b(Arg|Glob|OneKey|Pipe|ServerSocket|SocketBase|User|Xpointer)\b'\
+    `/usr/bin/find . -type f \
+                    -exec /usr/bin/perl -e 'print "{}\n" if -T "{}";' \;`

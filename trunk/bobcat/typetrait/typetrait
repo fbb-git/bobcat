@@ -1,0 +1,154 @@
+#ifndef INCLUDED_BOBCAT_TYPETRAIT_
+#define INCLUDED_BOBCAT_TYPETRAIT_
+
+namespace FBB
+{
+
+template <typename T>
+class TypeTrait
+{
+    template <typename U> struct Type
+    {
+        template <typename ClassType>
+        static double fun(void (ClassType::*)());
+    
+        template <typename NonClassType>
+        static char fun(...);
+
+        enum { isClass = sizeof(fun<U>(0)) == sizeof(double) };
+        enum { isDereferenceable = isClass};
+        enum { isPointer = false };
+        enum { isConst   = false };
+        enum { isRef     = false };
+        enum { isR_Ref   = false };
+
+        typedef U Plain;
+    };
+    template <typename U> struct Type<U const>
+    {
+        template <typename ClassType>
+        static double fun(void (ClassType::*)());
+    
+        template <typename NonClassType>
+        static char fun(...);
+
+        enum { isClass = sizeof(fun<U>(0)) == sizeof(double) };
+        enum { isDereferenceable = isClass};
+        enum { isPointer = false };
+        enum { isConst   = true };
+        enum { isRef     = false };
+        enum { isR_Ref   = false };
+
+        typedef U Plain;
+    };
+    template <typename U> struct Type<U *>
+    {
+        enum { isClass = false };
+        enum { isDereferenceable = true };
+        enum { isPointer = true };
+        enum { isConst   = false };
+        enum { isRef     = false };
+        enum { isR_Ref   = false };
+
+        typedef U Plain;
+    };
+    template <typename U> struct Type<U const *>
+    {
+        enum { isClass = false };
+        enum { isDereferenceable = true };
+        enum { isPointer = true };
+        enum { isConst   = true };
+        enum { isRef     = false };
+        enum { isR_Ref   = false };
+
+        typedef U Plain;
+    };
+    template <typename U> struct Type<U &>
+    {
+        template <typename ClassType>
+        static double fun(void (ClassType::*)());
+    
+        template <typename NonClassType>
+        static char fun(...);
+
+        enum { isClass = sizeof(fun<U>(0)) == sizeof(double) };
+        enum { isDereferenceable = isClass};
+        enum { isPointer = false };
+        enum { isConst   = false };
+        enum { isRef     = true };
+        enum { isR_Ref   = false };
+
+        typedef U Plain;
+    };
+    template <typename U> struct Type<U const &>
+    {
+        template <typename ClassType>
+        static double fun(void (ClassType::*)());
+    
+        template <typename NonClassType>
+        static char fun(...);
+
+        enum { isClass = sizeof(fun<U>(0)) == sizeof(double) };
+        enum { isDereferenceable = isClass};
+        enum { isPointer = false };
+        enum { isConst   = true };
+        enum { isRef     = true };
+        enum { isR_Ref   = false };
+
+        typedef U Plain;
+    };
+    template <typename U> struct Type<U &&>
+    {
+        template <typename ClassType>
+        static double fun(void (ClassType::*)());
+    
+        template <typename NonClassType>
+        static char fun(...);
+
+        enum { isClass = sizeof(fun<U>(0)) == sizeof(double) };
+        enum { isDereferenceable = isClass};
+        enum { isPointer = false };
+        enum { isConst   = false };
+        enum { isRef     = false };
+        enum { isR_Ref   = true  };
+
+        typedef U Plain;
+    };
+    template <typename U> struct Type<U const &&>
+    {
+        template <typename ClassType>
+        static double fun(void (ClassType::*)());
+    
+        template <typename NonClassType>
+        static char fun(...);
+
+        enum { isClass = sizeof(fun<U>(0)) == sizeof(double) };
+        enum { isDereferenceable = isClass};
+        enum { isPointer = false };
+        enum { isConst   = true };
+        enum { isRef     = false };
+        enum { isR_Ref   = true  };
+
+        typedef U Plain;
+    };
+
+    public:
+        template <typename ClassType>
+        static double fun(void (ClassType::*)());
+    
+        template <typename NonClassType>
+        static char fun(...);
+
+        enum { isClass = Type<T>::isClass };
+        enum { isDereferenceable = Type<T>::isDereferenceable };
+        enum { isPointer = Type<T>::isPointer };
+        enum { isConst   = Type<T>::isConst };
+        enum { isRef     = Type<T>::isRef };
+        enum { isR_Ref   = Type<T>::isR_Ref };
+        
+        typedef typename Type<T>::Plain Plain;
+};
+
+} // FBB
+
+#endif

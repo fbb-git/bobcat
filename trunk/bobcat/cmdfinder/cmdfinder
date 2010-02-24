@@ -1,0 +1,113 @@
+#ifndef INCLUDED_BOBCAT_CMDFINDER_
+#define INCLUDED_BOBCAT_CMDFINDER_
+
+#include <algorithm>
+#include <string>
+
+#include <bobcat/cmdfinderbase>
+
+namespace FBB
+{
+
+template <typename FP>
+class CmdFinder: public CmdFinderBase
+{
+    friend class MatchKey;
+
+    size_t d_count;
+
+    protected:
+        typedef FP FunctionPtr;                 // define template type 
+                                                // as a named type
+
+                                                // elements of the array
+                                                // of keys/f-ptrs
+        typedef std::pair<char const *, FP> Entry;
+
+    private:
+        Entry const *d_begin;
+        Entry const *d_end;
+
+    protected:
+        CmdFinder(Entry const *begin, Entry const *end, size_t mode = 0);
+        FP findCmd(std::string const &cmd);
+        size_t count() const;
+
+    private:
+        class MatchKey
+        {
+            FP *d_fp;
+            CmdFinder<FP> *d_cmdFinder;
+
+            public:
+                MatchKey(FunctionPtr *fp, CmdFinder<FP> *cmdFinder);
+                bool operator()(CmdFinder::Entry const &entry);
+        };
+
+        bool match(std::string const &key) const;
+};
+
+template <typename FP>
+CmdFinder<FP>::MatchKey::MatchKey(FunctionPtr *fp, CmdFinder<FP> *cmdFinder)
+:
+    d_fp(fp),
+    d_cmdFinder(cmdFinder)
+{}
+
+template <typename FP>
+bool CmdFinder<FP>::MatchKey::operator()(CmdFinder::Entry const &entry)
+{
+    if (!d_cmdFinder->match(entry.first))
+        return false;
+
+    *d_fp = entry.second;
+    return true;
+}
+
+template <typename FP>
+inline bool CmdFinder<FP>::match(std::string const &key) const
+{
+    return (this->*d_match)(key);
+}
+
+template <typename FP>
+CmdFinder<FP>::CmdFinder(Entry const *begin, Entry const *end, size_t mode)
+:
+    CmdFinderBase(mode),
+    d_count(0),
+    d_begin(begin),
+    d_end(end)
+{}
+
+template <typename FP>
+FP CmdFinder<FP>::findCmd(std::string const &cmd)
+{
+    (this->*d_useCmd)(cmd);     // store the cmd to use
+
+    FunctionPtr fp;
+    MatchKey matchKey(&fp, this);   // create an object matching 
+                                    // a cmd with a key
+
+                                // count the number of occurrences
+    d_count = std::count_if(d_begin, d_end, matchKey);
+
+                         
+    return d_count == 1 ?   
+                fp              // return fp if cmd found
+            :                   // otherwise return the last fptr
+                (d_end - 1)->second;
+}
+
+template <typename FP>
+inline size_t CmdFinder<FP>::count() const
+{
+    return d_count;
+}
+
+} // FBB
+        
+#endif
+
+
+
+

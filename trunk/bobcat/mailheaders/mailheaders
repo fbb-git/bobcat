@@ -1,0 +1,141 @@
+#ifndef INCLUDED_BOBCAT__MAILHEADERS_
+#define INCLUDED_BOBCAT_MAILHEADERS_
+
+#include <istream>
+#include <string>
+#include <vector>
+
+#include <bobcat/string>
+#include <bobcat/errno>
+
+namespace FBB
+{
+
+class MailHeaders: public std::vector<std::string>
+{
+    public:
+        enum Mode
+        {
+            DONT_READ,
+            READ
+        };
+        enum Match
+        {
+            FAIL,
+            INITIAL,
+            PARTIAL,
+            FULL,
+
+            caseInsensitive,
+            CASE_INITIAL = caseInsensitive,
+            CASE_PARTIAL,
+            CASE_FULL,
+            lastMatch = CASE_FULL
+        };
+
+    private:
+        enum Size
+        {
+            SIZEOFMATCH = lastMatch + 1,
+        };
+
+        std::istream            &d_in;
+        std::string             d_hdr;
+        Match                   d_match;
+
+        class const_hdr_iterator:
+            public std::iterator<std::input_iterator_tag, 
+                                std::string const>
+        {
+            friend class MailHeaders;
+            typedef bool(*Comparator)(std::string const &header, 
+                                      std::string const &key);
+
+            MailHeaders const  *d_mh;
+            std::string         d_key;
+            Comparator          d_comparator;
+            const_iterator      d_current;
+
+            static Comparator s_comparator[];
+
+            const_hdr_iterator(MailHeaders const *mailHeaders,
+                               const_iterator begin);
+
+            const_iterator lookup(const_iterator const &old) const;
+            const_iterator lookdown(const_iterator const &old) const;
+
+            static bool fail(std::string const &hdr, 
+                                std::string const &key);
+            static bool initial(std::string const &hdr, 
+                                std::string const &key);
+            static bool partial(std::string const &hdr, 
+                                std::string const &key);
+            static bool full(std::string const &hdr, 
+                                std::string const &key);
+            static bool caseInitial(std::string const &hdr, 
+                                std::string const &key);
+            static bool casePartial(std::string const &hdr, 
+                                std::string const &key);
+            static bool caseFull(std::string const &hdr, 
+                                std::string const &key);
+            public:
+                const_hdr_iterator &operator++();
+                const_hdr_iterator &operator--();
+                const_hdr_iterator const operator++(int);
+                const_hdr_iterator const operator--(int);
+                bool operator==(const_hdr_iterator const &other) const;
+                bool operator!=(const_hdr_iterator const &other) const;
+                std::string const &operator*() const;
+                std::string const *operator->() const;
+        };
+
+    public:
+        typedef std::reverse_iterator<const_hdr_iterator>
+                                            const_reverse_hdr_iterator; 
+
+        explicit MailHeaders(std::istream &in, Mode mode = READ);
+
+        void read();
+        void setHeaderIterator(char const *header, Match match = FULL);
+
+        const_hdr_iterator beginh() const;
+        const_hdr_iterator endh() const;
+
+        const_reverse_hdr_iterator rbeginh() const;
+        const_reverse_hdr_iterator rendh() const;
+};
+
+inline void MailHeaders::setHeaderIterator(char const *header, Match match)
+{
+    d_hdr = header;
+    d_match = match;
+}
+
+inline MailHeaders::const_hdr_iterator MailHeaders::beginh() const
+{
+    return const_hdr_iterator(this, begin()); 
+                                        // returns iterator over all headers
+                                        // matching d_hdr by the d_match type
+}
+
+inline MailHeaders::const_hdr_iterator MailHeaders::endh() const
+{
+                                        // returns address of the sentinel
+    return const_hdr_iterator(this, end()); 
+}
+
+inline MailHeaders::const_reverse_hdr_iterator MailHeaders::rbeginh() const
+{
+    return const_reverse_hdr_iterator(endh());
+}
+
+inline MailHeaders::const_reverse_hdr_iterator MailHeaders::rendh() const
+{
+    return const_reverse_hdr_iterator(beginh());
+}
+
+
+
+} // FBB
+        
+#endif

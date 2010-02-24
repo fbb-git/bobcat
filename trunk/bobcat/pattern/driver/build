@@ -1,0 +1,14 @@
+#!/bin/bash
+
+tput clear
+
+GPP="g++ --std=c++0x"
+
+CMD="$GPP -o driver -Wall -I../ driver.cc ../../errno/*.cc -L../tmp -lpattern -s"
+# CMD="$GPP -o driver -Wall *.cc -lbobcat -s"
+
+echo $CMD
+$CMD || exit 1
+
+echo Ready...
+driver

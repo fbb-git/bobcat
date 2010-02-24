@@ -1,0 +1,84 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::binary_search)(3bobcat)(_CurYrs_)
+                (libbobcat1-dev__CurVers_-x.tar.gz)
+                (Binary search function)
+
+manpagename(FBB::binary_search)(Extensions to the STL binary_search function
+template) 
+
+manpagesynopsis()
+    bf(#include <bobcat/binarysearch>)nl()
+
+manpagedescription()
+
+The bf(FBB::binary_search) function templates extend the STL tt(binary_search)
+function template returning an iterator to the element found, instead of a
+bf(bool) value informing the caller whether or not the searched for element is
+present in a provided iterator range.
+
+The bf(bool) value returned by the STL tt(binary_search) function template is
+often not the kind of information the caller of the function is interested
+in. Rather, the caller will often want to use tt(binary_search) in the way
+tt(find_if) is used: returning an iterator to the found element or returning
+the end-iterator if the element was not found. Whereas tt(find_if) does not
+require the elements in the iterator range to be sorted, and thus will use a
+linear search tt(binary_search) may use the sorted nature of the elements to
+its advantage, using a binary search algorithm requiring tt(2 log N)
+iterations to locate the searched for element rather than (on average) tt(N/2)
+iterations. The tt(FBB::binary_search) algorithm uses this binary searching
+process while at the same time allowing its use like tt(find_if).  
+
+Since the tt(FBB::binary_search) function templates use the same number and
+types of parameters as the tt(stl::binary_search) function templates the
+explicit use of the tt(FBB) namespace will often be required in situations
+where both function templates are made available to the compiler.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(OVERLOADED FUNCTIONS)
+    In the following description several template type parameters are
+used. They are:
+    itemization(
+    it() bf(Iterator) represents an iterator type; 
+    it() bf(Type) represents a value of the type to which tt(Iterator)
+points. 
+    it() bf(Comparator) represents a comparator function or class type object
+which was used to sort the elements to which the tt(Iterator) range refer;
+    )
+    itemization(
+    itb(Iterator binary_search(Iterator begin, Iterator end, Type const
+        &value)) 
+       Using a binary search algorithm tt(value) is searched for in the range
+of elements referred to by the provided iterator range. If the value is found
+an iterator pointing to this value is returned, otherwise tt(end) is
+returned. The elements in the range must have been sorted by the
+tt(Type::operator<()) function. 
+    itb(Iterator binary_search(Iterator begin, Iterator end, Type const
+        &value, Comparator comparator)) 
+       Using a binary search algorithm tt(value) is searched for in the range
+of elements referred to by the provided iterator range. If the value is found
+an iterator pointing to this value is returned, otherwise tt(end) is
+returned. The elements and the provided value are compared using
+tt(comparator(*iterator, value)) calls, where tt(*iterator) refers to an
+object in the provided iterator range. The elements in the range must have
+been sorted by the tt(Comparator) function or function object.
+    )
+
+manpagesection(EXAMPLES)
+        verbinclude(../../binarysearch/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/binarysearch) - defines the template functions
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None reported.
+
+includefile(trailer.inc)

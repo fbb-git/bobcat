@@ -1,0 +1,107 @@
+#ifndef INCLUDED_BOBCAT_OFOLDSTREAM_
+#define INCLUDED_BOBCAT_OFOLDSTREAM_
+
+#include <ostream>
+#include <fstream>
+
+#include <bobcat/ofoldstreambuf>
+
+namespace FBB
+{
+
+    // 'virtual public OFoldStreambufBlanks is used to avoid 'base class not
+    // accessible' warnings since OFoldStreambuf also inherits from
+    // OFoldStreambufBlanks and only one struct definition is needed in the
+    // final OFoldStream class.
+class OFoldStream: virtual public OFoldStreambufEnums, 
+                   private OFoldStreambuf, public std::ostream
+{
+    public:
+        OFoldStream() = default;
+        explicit OFoldStream(char const *fname, 
+                    size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
+                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+
+        explicit OFoldStream(std::ostream &dest, 
+                    size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
+                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+
+        void open(char const *fname,
+                  size_t leftIndent = 0, size_t rightMargin = 80,
+                  TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+
+        void open(std::ostream &out,
+                  size_t leftIndent = 0, size_t rightMargin = 80,
+                  TrailingBlanks tb = IGNORE_TRAILING_BLANKS);
+
+        void close();
+
+        void setMargins(size_t leftMargin, size_t rightMargin);
+        void setTrailingBlanks(TrailingBlanks tb);
+        void useBlanks();
+        void useTabs(size_t tabWidth = 8);
+
+        static size_t leftMargin(std::ostream const &os);
+        static size_t rightMargin(std::ostream const &os);
+};
+
+inline OFoldStream::OFoldStream(char const *fname, 
+                    size_t leftIndent, size_t rightMargin, 
+                    TabsOrBlanks tob, TrailingBlanks tb)
+:
+    OFoldStreambuf(fname, leftIndent, rightMargin, tob, tb),
+    std::ostream(this)
+{}
+
+inline OFoldStream::OFoldStream(std::ostream &out, 
+                    size_t leftIndent, size_t rightMargin, 
+                    TabsOrBlanks tob, TrailingBlanks tb)
+:
+    OFoldStreambuf(out, leftIndent, rightMargin, tob, tb),
+    std::ostream(this)
+{}
+
+inline void OFoldStream::close()
+{
+    OFoldStreambuf::close();
+}
+    
+inline void OFoldStream::setMargins(size_t lm, size_t rm)
+{
+    OFoldStreambuf::setMargins(lm, rm);
+}
+    
+inline void OFoldStream::setTrailingBlanks(TrailingBlanks tb)
+{
+    OFoldStreambuf::setTrailingBlanks(tb);
+}
+
+inline void OFoldStream::useBlanks()
+{
+    OFoldStreambuf::useBlanks();
+}
+
+inline void OFoldStream::useTabs(size_t tabWidth)
+{
+    OFoldStreambuf::useTabs(tabWidth);
+}
+
+inline size_t OFoldStream::leftMargin(std::ostream const &os)
+{
+    return OFoldStreambuf::leftMargin(os.rdbuf());
+}
+
+inline size_t OFoldStream::rightMargin(std::ostream const &os)
+{
+    return OFoldStreambuf::rightMargin(os.rdbuf());
+}
+
+} // FBB
+
+#endif
+
+
+
+
