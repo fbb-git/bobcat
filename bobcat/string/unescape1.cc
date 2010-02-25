@@ -32,12 +32,13 @@ namespace
 
         ++pos;                                  // skip the 'x'
         size_t pos2 = min(pos + nHex, 
-                            src.find_first_not_of("0123456789ABCDEF", pos));
+                            src.find_first_not_of(
+                                "0123456789abcdefABCDEF", pos));
 
-        if (pos2 != pos + nHex)
+        if (pos2 != pos + nHex)                 // found a hex character?
         {
-            *dest += src[pos - 1];              // add next char if not so
-            return pos;                         // next to handle
+            *dest += src[pos - 1];              // add next char if so
+            return pos;                         // next char to handle
         }
 
         A2x a2x(src.substr(pos, nHex));
