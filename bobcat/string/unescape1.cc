@@ -81,7 +81,7 @@ string String::unescape(string const &str)
         else if (strchr("01234567", next))  // handle octal values
             pos = handleOctal(&ret, str, pos);
 
-        else if (strchr("xX", next))        // handle hex values
+        else if (next == 'x')               // handle hex values
             pos = handleHex(&ret, str, pos);
         else                                // handle lone characters
             ret += str[pos++];     
@@ -90,31 +90,35 @@ string String::unescape(string const &str)
     }
 }
 
-// #include <string>
-// #include <iostream>
-// using namespace std;
-// using namespace FBB;
-// 
-// void out(char ch)
-// {
-//     cout << static_cast<size_t>(static_cast<unsigned char>(ch)) << ", ";
-// }
-// 
-// int main()
-// {
-//     while (true)
-//     {
-//         cout << "? ";
-//         string str;
-// 
-//         if (!getline(cin, str))
-//             return(0);
-// 
-//         cout << str << " -> ";
-//         str = String::unescape(str);
-//         cout << str << '\n';
-// 
-//         for_each(str.begin(), str.end(), out);
-//         cout << '\n';
-//     }
-// }
+//#include <string>
+//#include <iostream>
+//using namespace std;
+//using namespace FBB;
+//
+//void out(char ch)
+//{
+//    cout << static_cast<size_t>(static_cast<unsigned char>(ch)) << ", ";
+//}
+//
+//int main()
+//{
+//    while (true)
+//    {
+//        cout << "? ";
+//        string str;
+//
+//        if (!getline(cin, str))
+//            return(0);
+//
+//        cout << str << " -> ";
+//        str = String::unescape(str);
+//        cout << str << '\n';
+//
+//        for_each(str.begin(), str.end(), out);
+//        cout << '\n';
+//    }
+//}
+
+
+
+
