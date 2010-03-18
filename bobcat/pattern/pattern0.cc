@@ -6,5 +6,5 @@ Pattern::Pattern()
     d_nSub(0),
     d_beyondLast(0)
 {
-    newRegex("", 0);
-}    
+    newRegex("\\b", 0);     // for the benefit of MACs: \\b prevents
+}                           // the `empty subexpression' error.
