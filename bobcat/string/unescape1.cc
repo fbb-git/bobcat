@@ -7,16 +7,18 @@ namespace
 
     size_t handleOctal(string *dest, string const &src, size_t pos)
     {
-        size_t const nOct = 3;                // need exactly 3 octals
+        size_t pos2 = min(src.length(), 
+                          src.find_first_not_of("01234567", pos));
 
-        size_t pos2 = min(pos + nOct, 
-                            src.find_first_not_of("01234567", pos));
-
-        if (pos2 == pos + 1 && src[pos] == '0')
+        if (pos2 == pos + 1 && src[pos] == '0') // saw \0
         {
             *dest += static_cast<char>(0);
-            return pos + 1;
+            return pos2;
         }
+
+        size_t const nOct = 3;                // need exactly 3 octals
+
+        pos2 = min(pos + nOct, pos2);
 
         if (pos2 != pos + nOct)                 // need exactly nOct octals
         {
