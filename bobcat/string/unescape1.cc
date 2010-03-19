@@ -12,6 +12,12 @@ namespace
         size_t pos2 = min(pos + nOct, 
                             src.find_first_not_of("01234567", pos));
 
+        if (pos2 == pos + 1 && src[pos] == '0')
+        {
+            *dest += static_cast<char>(0);
+            return pos + 1;
+        }
+
         if (pos2 != pos + nOct)                 // need exactly nOct octals
         {
             *dest += src[pos];                  // add next char if not so
@@ -90,35 +96,31 @@ string String::unescape(string const &str)
     }
 }
 
-//#include <string>
-//#include <iostream>
-//using namespace std;
-//using namespace FBB;
-//
-//void out(char ch)
-//{
-//    cout << static_cast<size_t>(static_cast<unsigned char>(ch)) << ", ";
-//}
-//
-//int main()
-//{
-//    while (true)
-//    {
-//        cout << "? ";
-//        string str;
-//
-//        if (!getline(cin, str))
-//            return(0);
-//
-//        cout << str << " -> ";
-//        str = String::unescape(str);
-//        cout << str << '\n';
-//
-//        for_each(str.begin(), str.end(), out);
-//        cout << '\n';
-//    }
-//}
-
-
-
-
+// #include <string>
+// #include <iostream>
+// using namespace std;
+// using namespace FBB;
+// 
+// void out(char ch)
+// {
+//     cout << static_cast<size_t>(static_cast<unsigned char>(ch)) << ", ";
+// }
+// 
+// int main()
+// {
+//     while (true)
+//     {
+//         cout << "? ";
+//         string str;
+// 
+//         if (!getline(cin, str))
+//             return(0);
+// 
+//         cout << str << " -> ";
+//         str = String::unescape(str);
+//         cout << str << '\n';
+// 
+//         for_each(str.begin(), str.end(), out);
+//         cout << '\n';
+//     }
+// }
