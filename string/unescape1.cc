@@ -7,10 +7,18 @@ namespace
 
     size_t handleOctal(string *dest, string const &src, size_t pos)
     {
+        size_t pos2 = min(src.length(), 
+                          src.find_first_not_of("01234567", pos));
+
+        if (pos2 == pos + 1 && src[pos] == '0') // saw \0
+        {
+            *dest += static_cast<char>(0);
+            return pos2;
+        }
+
         size_t const nOct = 3;                // need exactly 3 octals
 
-        size_t pos2 = min(pos + nOct, 
-                            src.find_first_not_of("01234567", pos));
+        pos2 = min(pos + nOct, pos2);
 
         if (pos2 != pos + nOct)                 // need exactly nOct octals
         {
@@ -32,18 +40,20 @@ namespace
 
         ++pos;                                  // skip the 'x'
         size_t pos2 = min(pos + nHex, 
-                            src.find_first_not_of("0123456789ABCDEF", pos));
+                            src.find_first_not_of(
+                                "0123456789abcdefABCDEF", pos));
 
-        if (pos2 != pos + nHex)
+        if (pos2 != pos + nHex)                 // found a hex character?
         {
-            *dest += src[pos - 1];              // add next char if not so
-            return pos;                         // next to handle
+            *dest += src[pos - 1];              // add next char if so
+            return pos;                         // next char to handle
         }
 
         A2x a2x(src.substr(pos, nHex));
         size_t ch;
         a2x >> hex >> ch;                       // convert substr. to hex
         *dest += static_cast<char>(ch);         // append the hex value
+
         return pos2;                            // pos. of next to handle
     }
 }
@@ -79,7 +89,7 @@ string String::unescape(string const &str)
         else if (strchr("01234567", next))  // handle octal values
             pos = handleOctal(&ret, str, pos);
 
-        else if (strchr("xX", next))        // handle hex values
+        else if (next == 'x')               // handle hex values
             pos = handleHex(&ret, str, pos);
         else                                // handle lone characters
             ret += str[pos++];     
@@ -88,4 +98,31 @@ string String::unescape(string const &str)
     }
 }
 
-
+//#include <string>
+//#include <iostream>
+//using namespace std;
+//using namespace FBB;
+//
+//void out(char ch)
+//{
+//    cout << static_cast<size_t>(static_cast<unsigned char>(ch)) << ", ";
+//}
+//
+//int main()
+//{
+//    while (true)
+//    {
+//        cout << "? ";
+//        string str;
+//
+//        if (!getline(cin, str))
+//            return(0);
+//
+//        cout << str << " -> ";
+//        str = String::unescape(str);
+//        cout << str << '\n';
+//
+//        for_each(str.begin(), str.end(), out);
+//        cout << '\n';
+//    }
+//}
