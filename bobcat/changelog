@@ -1,19 +1,21 @@
-bobcat (2.08.00) (ISN)
+bobcat (2.07.03)
 
   * Repaired additional bugs in String::unescape; unescape only allows \x, \X
     is no longer accepted (and was not according to the standard), \0 not
     followed by octal numbers is now recognized as a 0-byte.
 
   * Multi-parameter constructors of Arg::LongOption no longer use default
-    arguments to allow the use of initializer lists, added
-    Arg::LongOption(char const *name)
+    arguments to allow the use of initializer lists, added the explicit
+    constructor Arg::LongOption(char const *name)
 
-  * Added missing #include <cstring> to localsocketbase/localsocketbase.ih
+  * Added missing #include<cstring> to localsocketbase/localsocketbase.ih
 
   * Pattern now defines the default end pattern (pattern/pattern0.cc) as 
     "\\b" for the benefit of MAC users who otherwise suffer from the `empty
     sub-expression' error. This affects ConfigFile and (by implication)
     programs like XD. It has no known effect on Debian systems.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Fri, 19 Mar 2010 15:37:02 +0100
 
 bobcat (2.07.02)
 
