@@ -3,8 +3,11 @@
 CWD=`pwd`
 cd ../bobcat
     build sourceforge || exit 1
+    build man || exit 1
 cd $CWD
 
 yodl2html index || exit 1
 
-scp index.html fbb,bobcat@web.sourceforge.net:htdocs/
+scp index.html ../bobcat/tmp/manhtml/*html \
+    fbb,bobcat@web.sourceforge.net:htdocs/
+
