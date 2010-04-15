@@ -172,6 +172,30 @@ inline std::vector<Align> const &TableSupport::align() const
     return *d_align;
 }
 
+inline bool TableSupport::const_iterator::operator==(
+        TableSupport::const_iterator const &other) const
+{
+    return d_sep == other.d_sep && d_col == other.d_col;
+}
+
+inline bool TableSupport::const_iterator::operator!=(
+    TableSupport::const_iterator const &other) const
+{
+    return not (*this == other);
+}
+
+inline TableSupport::Element const 
+    *TableSupport::const_iterator::operator->() const
+{
+    return &d_element;
+}
+
+inline TableSupport::Element const 
+    &TableSupport::const_iterator::operator*() const
+{
+    return *operator->();
+}
+
 TableSupport &operator<<(TableSupport &support, size_t);
 TableSupport &operator<<(TableSupport &support, std::string const &sep);
 TableSupport &operator<<(TableSupport &support, 
