@@ -1,0 +1,22 @@
+#ifndef INCLUDED_TABLELINES_
+#define INCLUDED_TABLELINES_
+
+#include <ostream>
+
+#include <bobcat/tablesupport>
+
+namespace FBB
+{
+
+class TableLines: public TableSupport
+{
+    private:
+        virtual void hline(size_t row) const;
+        virtual void vline(size_t col) const;
+        virtual void vline() const;
+
+        static void outLine(Element const &element, std::ostream &out);
+};
+
+} // FBB        
+#endif

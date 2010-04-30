@@ -3,17 +3,17 @@
 int TableBuf::overflow(int ch)
 {
     if (ch == d_fs)
-    {
-        d_tabulated = false;
-        d_string.push_back(d_str.str());
-        d_str.clear();
-        d_str = "";
-    }
+        nextField();
     else if (ch == d_rs)
     {
+        nextField();
+        endRow();
     }
     else
-        d_str << static_cast<char>(ch);
+    {
+        d_str += static_cast<char>(ch);
+        d_buffered = true;
+    }
 
     return ch;        
 }

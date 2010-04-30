@@ -3,6 +3,7 @@
 TableBuf::TableBuf(TableSupport &tableSupport, size_t nColumns, 
             FillDirection direction, WidthType widthType)
 : 
-    TableBase(tableSupport, nColumns, direction, widthType)
+    TableBase(tableSupport, nColumns, direction, widthType),
+    d_buffered(false)
 {}
 

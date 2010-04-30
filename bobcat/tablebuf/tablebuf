@@ -9,10 +9,14 @@ namespace FBB
 
 class TableBuf: public TableBase, public std::streambuf
 {
+    friend std::ostream &fs(std::ostream &out);
+    friend std::ostream &rs(std::ostream &out);
     friend std::ostream &operator<<(std::ostream &str, TableBuf &table); 
+
     int d_fs;
     int d_rs;
-    std::ostringstream d_str;
+    std::string d_str;
+    bool d_buffered;
 
     public:
         TableBuf(size_t nColumns, FillDirection direction,          // 0
@@ -22,14 +26,42 @@ class TableBuf: public TableBase, public std::streambuf
                 size_t nColumns, FillDirection direction,             
                 WidthType widthType = COLUMNWIDTH);
 
-        TableBuf &setAlign(Align const &align);    // set an alignment
         TableBuf &def();                    // fillup an incomplete table
-                                            // automatically at insertions
+        TableBuf &setAlign(Align const &align);    // set an alignment
+
         void setFieldSeparator(char fs);
         void setRowSeparator(char rs);
+        void setFieldSeparator();
+        void setRowSeparator();
+
+        virtual int sync();
+        virtual int overflow(int ch);
 
     private:
+        void nextField();
+        void endRow();
+
 };
+
+inline void TableBuf::setFieldSeparator()
+{
+    d_fs = -1;
+}
+
+inline void TableBuf::setFieldSeparator(char fs)
+{
+    d_fs = fs;
+}
+
+inline void TableBuf::setRowSeparator()
+{
+    d_rs = -1;
+}
+
+inline void TableBuf::setRowSeparator(char rs)
+{
+    d_rs = rs;
+}
 
 inline TableBuf &TableBuf::setAlign(Align const &align)
 {
