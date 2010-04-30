@@ -2,35 +2,46 @@ includefile(header.inc)
 
 COMMENT(manpage, section, releasedate, archive, short name)
 manpage(FBB::Table)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
-                    (Table-formatter)
+                    (Construct text tables)
 
-manpagename(FBB::Table)(Generates row- or column-wise filled tables)
+manpagename(FBB::Table)(Generates row- or column-wise filled tables from
+information inserted into a std::ostream)
 
 manpagesynopsis()
-    bf(#include <bobcat/table>)nl()
+    bf(#include <bobcat/tablebuf>)nl()
     Linking option: tt(-lbobcat) 
 
 manpagedescription()
 
-    bf(FBB::Table) objects may be used to create tables. The tables are filled
-either column-wise or row-wise. Many of the table's characteristics may be
-fine-tuned by a separate bf(FBB::TableSupport) object, described in a separate
-man-page (bf(TableSupport)(3bobcat)). When no bf(FBB::TableSupport) object is
-used, a plain row-wise or column-wise table will be constructed which can be
-inserted into a bf(std::ostream).
+    bf(FBB::Tablebuf) objects are bf(std::streambuf) objects that can be used
+to create tables. The tables are filled either column-wise or row-wise. Many
+of the table's characteristics may be fine-tuned by a separate
+bf(FBB::TableSupport) object, described in a separate man-page
+(bf(TableSupport)(3bobcat)). When no bf(FBB::TableSupport) object is used, a
+plain row-wise or column-wise table is constructed which can be inserted into
+a bf(std::ostream). Displaying a table (e.g., at the standard output stream)
+involves the following steps:
+    itemization(
+    it() Optionally, a  tt(TableSupport) object is created;
+    it() A tt(Tablebuf) object is created (maybe passing it a tt(TableSupport)
+object); 
+    it() The tt(Tablebuf) object is used to initialize a tt(std::ostream)
+    it() The elements of the table are filled by inserting information into
+that tt(std::ostream)
+    it() The tt(Tablebuf) itself contains the formatted table and may itself
+be inserted into a tt(std::ostream) like tt(std::cout).
+    )
 
 includefile(namespace.inc)
 
 manpagesection(INHERITS FROM)
-
-    bf(std::ostringstream) - bf(Table) inherits from bf(std::ostringstream),
-allowing insertions into a bf(Table) object. Each separate insertion adds
-another element to the bf(Table) object.
+    bf(std::streambuf)
 
 manpagesection(ENUMERATIONS)
-    The following enumerations are defined in the class bf(FBB::Table):
+    The following enumerations are defined in the class bf(FBB::Tablebuf).
+
     bf(enum FillDirection)nl()
-    This enumeration holds two values:
+    This enumeration has two values:
     itemization(
     itb(ROWWISE)
         When this value is specified at construction time, elements are added
@@ -56,7 +67,7 @@ equal width (i.e., equal to the width of the widest table element),
 
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(Table(size_t nColumns, Table::FillDirection direction,
+    itb(Tablebuf(size_t nColumns, Table::FillDirection direction,
             Table::WidthType widthType = Table::COLUMNWIDTH))
         This constructor expects the table's number of columns.  The number of
 rows are implied by the combination of this parameter and the number of
