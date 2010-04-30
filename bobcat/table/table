@@ -1,64 +1,20 @@
 #ifndef INCLUDED_BOBCAT_TABLE_
 #define INCLUDED_BOBCAT_TABLE_
 
-#include <ostream>
 #include <sstream>
-#include <string>
-#include <vector>
 
-#include <bobcat/align>
-#include <bobcat/tablesupport>
+#include <bobcat/tablebase>
 
 namespace FBB
 {
 
-class Table: public std::ostringstream
+class Table: public TableBase, public std::ostringstream
 {
-    friend std::ostream &operator<<(std::ostream &str, Table &table); 
-
     template <typename Type>
     friend Table &operator<<(Table &table, Type const &ref);
 
     public:
         typedef std::string value_type;     // for C++-0x
-
-        enum FillDirection
-        {
-            ROWWISE,
-            COLUMNWISE
-        };
-
-        enum WidthType
-        {
-            COLUMNWIDTH,
-            EQUALWIDTH,
-        };
-
-    private:
-        struct Element
-        {
-            std::string d_text;
-            std::ios_base &(*d_manip)(std::ios_base &);
-    
-            Element(std::string text = "", 
-                    std::ios_base &(*manip)(std::ios_base &) = 0);
-            size_t length() const;
-        };
-    
-        bool                    d_tabulated;
-
-        size_t                  d_nRows;
-        size_t                  d_nColumns;
-        WidthType               d_widthType;
-
-        std::vector<Align>      d_align;
-        std::vector<Element>    d_string;               // table contents
-        TableSupport           *d_ptr;
-        TableSupport           &d_tableSupport;
-    
-        Element                &(Table::*d_indexFun)(size_t row, size_t col);
-
-    public:
         typedef Element const &const_reference;  // required for push_back()
 
         Table(size_t nColumns, FillDirection direction,             // 0
@@ -68,12 +24,11 @@ class Table: public std::ostringstream
                 size_t nColumns, FillDirection direction,             
                 WidthType widthType = COLUMNWIDTH);
 
-        ~Table();
+        Table(Table const &other) = delete;
+        Table &operator=(Table const &other) = delete;
 
         Table &append(std::string const &str, char const *sep = " \t",
                             bool addEmpty = false);
-
-        void clear();                       // clear the table-elements
 
         template <typename InputIterator>
         void fill(InputIterator begin, InputIterator end);
@@ -86,38 +41,16 @@ class Table: public std::ostringstream
 
         Table &def();                       // fillup an incomplete table
                                             // automatically at insertions
-
-        size_t nRows() const;               // Number of rows currently
-                                            // in the table (following def)
     private:
-        Table(Table const &other) = delete;
-        Table &operator=(Table const &other) = delete;
-
-        std::ostream &insert(std::ostream &ostr);
-
-        size_t columnWidth(size_t col) const;
-        Manipulator columnManip(size_t col) const;
-
-                                    // returns element at particular location
-        Element &elementAt(size_t row, size_t col);
-
-        Element &hIndex(size_t row, size_t col);
-        Element &vIndex(size_t row, size_t col);
-
         Table &flush();                     // insert the text currently
                                             // inserted into the Table object
-                                            // into the table 
+                                            // as ostringstream into the table 
 };
-
-inline Table::~Table()
-{
-    delete d_ptr;
-}
 
 template <typename Iter>
 void Table::fill(Iter it, Iter end)
 {
-    clear();
+    TableBase::clear();
 
     while (it != end)
     {
@@ -133,22 +66,21 @@ inline void Table::push_back(Element const &element)
     d_string.push_back(element);
 }
 
-inline void Table::clear()
+inline Table &Table::setAlign(Align const &align)
 {
-    d_tabulated = false;
-    d_string.clear();
+    TableBase::setAlign(align);
+    return *this;
 }
-
-                        // display the table
-inline std::ostream &operator<<(std::ostream &str, Table &table)
-{
-    return table.insert(str);
-}
-            
                         // Insert column or element alignments
 inline Table &operator<<(Table &tab, Align const &align)
 {
     return tab.setAlign(align);
+}
+
+inline Table &Table::def()
+{
+    TableBase::def();
+    return *this;
 }
 
 inline Table &def(Table &table)
@@ -167,18 +99,6 @@ Table &operator<<(Table &table, Type const &ref)
     reinterpret_cast<std::ostringstream &>(table) << ref;
     return table.flush();
 }
-
-inline size_t Table::nRows() const
-{
-    return d_nRows;
-}
-
-inline Table::Element::Element(std::string text, 
-                    ios_base &(*manip)(ios_base &))
-:
-    d_text(text),
-    d_manip(manip)
-{}
 
 } // FBB
 

@@ -1,6 +1,6 @@
-#include "table.ih"
+#include "tablebase.ih"
 
-ostream &Table::insert(ostream &ostr)
+ostream &TableBase::insert(ostream &ostr)
 {
     def();
 
