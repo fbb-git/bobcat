@@ -17,7 +17,8 @@ int main()
 
                                 // hline over cols 1 and 2 of row 1
     tablelines << TableLines::HLine(
-            TableLines::LEFT_MID|TableLines::RIGHT_MID, 1, 1, 2); 
+                        TableLines::LEFT_MID | TableLines::RIGHT_MID,
+                        1, 1, 2); 
 
     TableBuf tab(tablelines, 3, TableBuf::ROWWISE, TableBuf::EQUALWIDTH);
 
@@ -26,7 +27,7 @@ int main()
     ostream out(&tab);
 
     out << "one" << fs << fs << "two" << rs <<
-            fs << "three";
+            '\b' << "three";
 
     cout << tab << '\n';            // complete the table and insert
 }

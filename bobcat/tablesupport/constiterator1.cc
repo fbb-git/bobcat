@@ -1,14 +1,10 @@
-// #include "tablesupport.ih"
-// 
-// TableSupport::const_iterator::const_iterator(
-//             TableSupport const &support, std::vector<BeginEnd> const &field)
-// :
-//     d_support(support),
-//     d_col(0),
-//     d_sep(true),
-//     d_begin(field.begin()),
-//     d_end(field.end())
-// {
-//     setElement();
-// }
-// 
+#include "tablesupport.ih"
+
+TableSupport::const_iterator::const_iterator(TableSupport const &support, 
+                size_t row, bool begin)
+:
+    d_support(support),
+    d_vector(support.d_elements.find(row)->second),
+    d_iter(begin ? d_vector.begin() : d_vector.end())
+{}
+

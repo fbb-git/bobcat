@@ -3,19 +3,24 @@
 TableSupport &FBB::operator<<(TableSupport &support, 
                          TableSupport::HLine const &hline)
 {
-    vector<size_t> &elements = support.d_elements[hline.d_row];
+    if (hline.d_begin >= hline.d_end)
+        return support;
 
-    elements.resize(TableSupport::leftSeparator(support.d_nColumns));
+    vector<size_t> &elements = support.d_elements[hline.d_row];
+    size_t nCols = max(hline.d_end, support.d_nColumns);
+
+    elements.resize(1 + TableSupport::rightSeparator(nCols));
 
     TableSupport::leftType(
         &elements[TableSupport::leftSeparator(hline.d_begin)], hline.d_type);
-    TableSupport::rightType(
-        &elements[TableSupport::leftSeparator(hline.d_end)], hline.d_type);
+
+    int end = TableSupport::leftSeparator(hline.d_end);
+
+    TableSupport::rightType(&elements[end], hline.d_type);
         
     for 
     (
-        size_t idx = TableSupport::element(hline.d_begin),
-                end = TableSupport::element(hline.d_end); 
+        int idx = TableSupport::element(hline.d_begin);
             idx != end; 
                 ++idx
     )

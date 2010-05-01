@@ -1,21 +1,18 @@
 #include "tablelines.ih"
 
-#include <iostream>
-
 void TableLines::hline(size_t row) const
 {
     if (row == 0 || row == nRows())
         out() << setfill('-') << setw(width()) << "-" << setfill(' ');
     else  
     {
-        const_iterator fieldIt = begin(row);
+        const_iterator iter = begin(row);
+        const_iterator beyond = end(row);
 
-        if (fieldIt == end())
+        if (iter == beyond)
             return;
 
-        int type = 0;
-
-        for_each(fieldIt, end(), FnWrap::unary(outLine, &type, out()));
+        for_each(iter, beyond, FnWrap::unary(outLine, out()));
     }
     out() << '\n';
 }
