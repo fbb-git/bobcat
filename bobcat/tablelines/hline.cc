@@ -1,5 +1,7 @@
 #include "tablelines.ih"
 
+#include <iostream>
+
 void TableLines::hline(size_t row) const
 {
     if (row == 0 || row == nRows())
@@ -11,7 +13,9 @@ void TableLines::hline(size_t row) const
         if (fieldIt == end())
             return;
 
-        for_each(fieldIt, end(), FnWrap::unary(outLine, out()));
+        int type = 0;
+
+        for_each(fieldIt, end(), FnWrap::unary(outLine, &type, out()));
     }
     out() << '\n';
 }

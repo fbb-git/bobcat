@@ -13,6 +13,7 @@ int TableBuf::overflow(int ch)
     {
         d_str += static_cast<char>(ch);
         d_buffered = true;
+        d_insertEmptyRow = false;
     }
 
     return ch;        
