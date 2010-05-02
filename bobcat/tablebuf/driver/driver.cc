@@ -1,7 +1,8 @@
 #include <iostream>
-#include <iomanip>
+#include <ostream>
 #include <string>
 #include <algorithm>
+#include <iterator>
 
 #include <bobcat/tablebuf>
 #include <bobcat/tablelines>
@@ -12,22 +13,18 @@ using namespace FBB;
 int main()
 {
     TableLines tablelines;
-                                // width/separators of cols 0, 1 and 2
-    tablelines << 0 << " | " << " | ";
+                        
+    tablelines << 0;            // set separator widths
+    for (size_t sep = 0; sep != 8; ++sep)
+        tablelines << 3;
 
-                                // hline over cols 1 and 2 of row 1
-    tablelines << TableLines::HLine(
-                        TableLines::LEFT_MID | TableLines::RIGHT_MID,
-                        1, 1, 2); 
 
-    TableBuf tab(tablelines, 3, TableBuf::ROWWISE, TableBuf::EQUALWIDTH);
-
-    tab << Align(0, std::left);     // set column non-default alignment
+    TableBuf tab(tablelines, 8, TableBuf::ROWWISE);
 
     ostream out(&tab);
 
-    out << "one" << fs << fs << "two" << rs <<
-            '\b' << "three";
+    copy(istream_iterator<string>(cin), istream_iterator<string>(),
+            ostream_iterator<string>(out, "\b"));
 
     cout << tab << '\n';            // complete the table and insert
 }

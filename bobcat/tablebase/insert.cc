@@ -41,7 +41,7 @@ ostream &TableBase::insert(ostream &ostr)
                     ostr << setw(skip) << " ";
             }
         }
-        
+
         d_tableSupport.vline();
     }
     d_tableSupport.hline();

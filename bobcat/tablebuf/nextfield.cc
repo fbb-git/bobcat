@@ -6,4 +6,5 @@ void TableBuf::nextField()
     d_string.push_back(d_str);
     d_str.erase();
     d_buffered = false;
+
 }

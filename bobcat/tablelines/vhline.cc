@@ -12,7 +12,7 @@ void TableLines::hline(size_t row) const
         if (iter == beyond)
             return;
 
-        for_each(iter, beyond, FnWrap::unary(outLine, out()));
+//        for_each(iter, beyond, FnWrap::unary(outLine, out()));
     }
     out() << '\n';
 }

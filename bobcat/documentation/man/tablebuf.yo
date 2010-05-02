@@ -32,10 +32,44 @@ that tt(std::ostream)
 be inserted into a tt(std::ostream) like tt(std::cout).
     )
 
+    Tables defined by tt(TableBuf) consist of a (number of element dependent)
+number of rows and a fixed number of columns, the latter value is specified at
+construction time. Columns and rows are normally addressed using index values
+(starting at 0). Before the leftmost column, between the columns and beyond
+the last column em(separators) are defined. By default the separators are
+empty, but each separator may be given a (fixed) width or content. The
+separator before column tt(col) is addressed as separator tt(col), the
+rightmost separator is addressed as separator tt(nColummns).
+
+Likewise, rows can be separated from each other using separators. These
+separating rows are also empty by default. The row-separator before row
+tt(row) is addressed as row-separator tt(row). The row-separator following the
+final row is addressed as row-separator tt(nRows), where tt(nRows) is the
+value returned by the tt(nRows) member function.
+
+Non-default (i.e., non-empty) separators are defined using
+tt(FBB::TableSupport) objects (cf. bf(tablesupport)(3bobcat)).
+
+tt(TableBuf)'s sister-class tt(Table) can be used to insert elements into a
+table in a more direct way. With tt(TableBuf) em(field separators) are used to
+switch to the next table-element, and (with row-wise filled tables) a em(row
+separator) can be used to switch to the next row when it's only partially
+defined. Instead, with tt(Table) objects each new insertion defines another
+table element, and no wrapping tt(std::ostream) object is required.
+
 includefile(namespace.inc)
 
 manpagesection(INHERITS FROM)
-    bf(std::streambuf)
+
+    bf(std::streambuf) - allowing tt(TableBuf) objects to be wrapped in
+tt(std::ostream) objects.
+
+    bf(FBB::TableBase) - This class implements common elements of the
+table implementation (the tt(FBB::TableBuf) class is also derived from
+tt(TableBase). The tt(TableBase) class is not intended to be used otherwise,
+and no separate man-page is provided. All facilities provided by tt(Table)
+inherited from tt(TableBase) are described in this man-page.
+
 
 manpagesection(ENUMERATIONS)
     The following enumerations are defined in the class bf(FBB::Tablebuf).
@@ -69,84 +103,92 @@ manpagesection(CONSTRUCTORS)
     itemization(
     itb(Tablebuf(size_t nColumns, Table::FillDirection direction,
             Table::WidthType widthType = Table::COLUMNWIDTH))
-        This constructor expects the table's number of columns.  The number of
-rows result from the combination of this parameter and the number of
-elements that are inserted into the bf(TableBuf) object.  The bf(direction)
-parameter specifies the way new elements will be added to the bf(TableBuf)
-object: row-wise or column-wise. The tt(widthType) parameter is used
-to specify the way the width of the table's columns is determined: each column
-may either have its own width or all columns have equal widths.
-    itb(Table(TableSupport &tableSupport, Table::FillDirection direction,
+        The table's number of columns, the fill directions and the column
+width-type must be provided.  The number of rows is implied by the combination
+of this parameter and the number of elements that is actually inserted into
+the bf(Table) object.  The bf(direction) parameter specifies the way new
+elements are added to the bf(Table) object: row-wise or column-wise. Finally,
+the tt(widthType) parameter is used to specify the way the width of the
+table's columns is determined. Each column either defines its own width or all
+columns have equal widths.
+    itb(TableBuf(TableSupport &tableSupport, Table::FillDirection direction,
             Table::WidthType widthType = Table::COLUMNWIDTH))
         This constructor operates identically to the previous constructor, but
 expects an additional reference to a bf(TableSupport) object. A
 bf(TableSupport) object offers additional formatting features used by the
-table to define elements like horizontal lines between rows, additional
-separators between elements etc. Note that the bf(TableSupport) object is
-passed as a non-const reference as the bf(TableBuf) object must be able to
-manipulate its data.
+table defining elements like horizontal lines between rows, additional
+separators, etc, etc. The bf(TableSupport) object is passed as a non-const
+reference as the bf(Table) object must be able to manipulate its data. See
+bf(tablesuppport)(3bobcat) for more information about tt(TableSupport).
     )
-    The copy constructor is not available.
 
 manpagesection(OVERLOADED OPERATORS)
 
     itemization(
-    itb(std::ostream &operator<<(std::ostream &str, TableBuf &tablebuf))
-        This operator inserts a bf(Table) into a tt(std::ostream) object. Note
-that the tt(TableBuf) object inserted into tt(str) is a non-const object, as
-the table may have to be completed by adding empty elements for missing ones.
+    itb(std::ostream &operator<<(std::ostream &out, TableBuf &tablebuf))
+        This operator inserts a bf(TableBuf) into a tt(std::ostream)
+object. Note that the tt(TableBuf) object inserted into tt(out) is a non-const
+object, as the table may have to be completed by adding empty elements for
+missing ones. The tt(out) stream should not be equal to the tt(std::ostream)
+object that is used to wrap in a tt(TableBuf) object. 
+    itb(TableBuf &operator<<(TableBuf &obj, Align const &align))
+        This operator is used to change the default alignment of either a
+column or an element. It is a wrapper around the member tt(setAlign()) (see
+below for its description). By default, all elements are right-aligned. See
+bf(align)(3bobcat) for more information about the tt(Align) class. Unlike the
+insertion operators available for tt(Table) type objects, the insertion
+operator for tt(TableBuf) objects is only used to define column or
+cell-alignment.
     )
     The overloaded assignment operator is not available.
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
     itb(void clear())
-        This member clears the table. All existing elements are removed, and
-the table is empty after this call.
+        The contents of the table are erased. All existing elements are
+removed, and the table will be empty.
     itb(size_t nRows())
-        This member returns the currently available number of rows in the
-table. Its value is only defined after calling bf(CHAR(d)ef()).
-    itb(Table &setAlign(Align const &align))
-        This member is used to specify the alignment of either a column or an
-element of the bf(Table) object. The standard alignments tt(std::left,
+        The currently available number of rows in the table is returned. Its
+value is only defined after calling bf(CHAR(d)ef()).
+    itb(TableBuf &setAlign(Align const &align))
+        The alignment type of either a column or an element of the bf(TableBuf)
+object is defined using tt(setAlign). The standard alignments tt(std::left,
 std::right) and tt(std::internal) may be specified, but in addition the
 alignment tt(FBB::center) may be used if elements should be centered into
 their column. A construction like
-        verb(tab.setAlign(Align(2, FBB::center)))
-    requests centering of all elements in table column having index value 2
-(i.e., the table's 3rd column), whereas a construction like
-        verb(tab.setAlign(Align(2, 3, FBB::center)))
+        verb(tab << Align(2, FBB::center))
+    requests centering of all elements in the table's column having index
+value 2 (i.e., the table's 3rd column), whereas a construction like
+        verb(tab << Align(2, 3, FBB::center))
     requests centering of element [2][3]. It is the responsibility of the
 programmer to ensure that such elements exist. By default, all elements are
 right-aligned.
-    itb(Table &CHAR(d)ef())
-        This member may be used to `complete' a bf(Table) object to a full
+    itb(TableBuf &CHAR(d)ef())
+        After inserting elements into a tt(TableBuf) object its number of
+elements may or may not be an integral multiple of the number of columns
+specified at construction time. To `complete' a bf(TableBuf) object to a
 rectangular object, for which all column widths and alignments have been
-determined. It is implied by tt(operator<<(ostream, Table)). In
-other situations it may be called explicitly to force the insertion of another
-row in a table using tt(ROWWISE) insertions. With tt(COLUMNWISE) insertions
-its working is complex, since new elements added to a tt(COLUMNWISE) filled
-table will reshuffle its elements over the table's columns. 
+determined tt(def) may be called. It is automatically called by
+tt(operator<<(ostream, TableBuf)). In other situations it may be called
+explicitly to force the insertion of another row in a table using tt(ROWWISE)
+insertions. With tt(COLUMNWISE) insertions its working is complex, since new
+elements added to a tt(COLUMNWISE) filled table will reshuffle its elements
+over the table's columns.
     itb(setFieldSeparator(char fs))
         The default field separator is the `backspace' (tt(\b))
 character. After inserting a field separator the next table element will be
 defined. Inserting two field separators inserts an table empty element and
 starts the definition of the next element. This field separator character can
-be redefined by this function. The tt(setfs) manipulator (see below) can be
-used to redefine the field separator character while inserting elements into
-the tt(ostream) initialized with the tt(TableBuf). Calling
-tt(setFieldSeparator) without argument disables the use of a field separator
-character, and only leaves the use of the tt(fs) manipulator to switch to the
-next field.
+be redefined by this function.  Calling tt(setFieldSeparator) without argument
+disables the use of a field separator character, and only leaves the use of
+the tt(fs) manipulator to switch to the next field.
     itb(setRowSeparator(char rs))
         The default row separator is the newline character (tt(\n)).  After
 inserting a row separator the next element to enter into the table will be the
 leftmost element of the next row.  Inserting two row separators adds an empty
-row to the table. The tt(setrs) manipulator (see below) can be used to
-redefine the row separator character while inserting elements into the
-tt(ostream) initialized with the tt(TableBuf).  Calling tt(setRowSeparator)
-without argument disables the use of a row separator character, and only
-leaves the use of the tt(rs) manipulator to switch to the next field.
+row to the table.  Calling tt(setRowSeparator) without argument disables the
+use of a row separator character, and only leaves the use of the tt(rs)
+manipulator to switch to the next field.
     )
 
 manpagesection(MANPULATORS)
@@ -162,24 +204,6 @@ using the field separator character.
         This manipulator can be inserted into a tt(TableBuf)'s wrapping 
 tt(ostream) to switch to the next row of the table. It is an alternative to
 using the row separator character.
-    itb(FBB::setfs)
-        This manipulator can be inserted into a tt(TableBuf)'s wrapping
-tt(ostream) to disable the use of the field separator character. The tt(fs)
-manipulator remains active. This manipulator does itself not perform a field
-switch.
-    itb(FBB::setfs(char ch))
-        This manipulator can be inserted into a tt(TableBuf)'s wrapping
-tt(ostream) to redefine the field separator character to tt(ch). This
-manipulator does itself not perform a field switch.
-    itb(FBB::setrs)
-        This manipulator can be inserted into a tt(TableBuf)'s wrapping
-tt(ostream) to disable the use of the row separator character. The tt(fs)
-manipulator remains active. This manipulator does itself not perform a row
-switch.
-    itb(FBB::setrs(char ch))
-        This manipulator can be inserted into a tt(TableBuf)'s wrapping
-tt(ostream) to redefine the row separator character to tt(ch). This
-manipulator does itself not perform a row switch.
     )
 
 manpagesection(EXAMPLE)
@@ -187,11 +211,11 @@ manpagesection(EXAMPLE)
     verbinclude(../../tablebuf/driver/driver.cc)
 
 manpagefiles()
-    em(bobcat/table) - defines the class interface;nl()
+    em(bobcat/tablebuf) - defines the class interface;nl()
 
 manpageseealso()
     bf(bobcat)(7), bf(align)(3bobcat), bf(manipulator)(3bobcat),
-    bf(tablesupport)(3bobcat), bf(table)(3bobcat)
+    bf(tablelines)(3bobcat), bf(tablesupport)(3bobcat), bf(table)(3bobcat)
     
 manpagebugs()
     Note that tt(CHAR(d)ef()) will reshuffle elements over the table's

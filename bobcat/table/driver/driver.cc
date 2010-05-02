@@ -1,7 +1,4 @@
 #include <iostream>
-#include <iomanip>
-#include <string>
-#include <algorithm>
 
 #include <bobcat/table>
 #include <bobcat/tablelines>

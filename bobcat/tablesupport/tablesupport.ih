@@ -1,10 +1,15 @@
 #include "tablesupport"
 
 #include <algorithm>
-#include <bobcat/fnwrap1c>
+#include <bobcat/fnwrap>
 
 using namespace std;
 using namespace FBB;
+
+inline void TableSupport::setCols(UMValue &elements, size_t nCols)
+{
+    elements.second.resize(nCols + 1);
+}
 
 inline size_t TableSupport::leftSeparator(size_t column)
 {

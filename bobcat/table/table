@@ -41,6 +41,10 @@ class Table: public TableBase, public std::ostringstream
 
         Table &def();                       // fillup an incomplete table
                                             // automatically at insertions
+
+        using TableBase::clear;
+        void clearStr();                    // clear the ostringstream part
+
     private:
         Table &flush();                     // insert the text currently
                                             // inserted into the Table object
@@ -91,6 +95,11 @@ inline Table &def(Table &table)
 inline Table &operator<<(Table &table, Table &(*fun)(Table &))
 {
     return (*fun)(table);
+}
+
+inline void Table::clearStr()
+{
+    std::ostringstream::clear();
 }
 
 template <typename Type>    // Insert any other insertable type into a Table
