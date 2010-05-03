@@ -1,6 +1,6 @@
 #include "tablelines.ih"
 
-void TableLines::hline(size_t row) const
+void TableLines::v_hline(size_t row) const
 {
     if (row == 0 || row == nRows())
         out() << setfill('-') << setw(width()) << "-" << setfill(' ');
@@ -12,7 +12,7 @@ void TableLines::hline(size_t row) const
         if (iter == beyond)
             return;
 
-//        for_each(iter, beyond, FnWrap::unary(outLine, out()));
+        for_each(iter, beyond, FnWrap::unary(outLine, out()));
     }
     out() << '\n';
 }
