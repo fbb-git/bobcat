@@ -1,9 +1,9 @@
-#include "table.ih"
+#include "tablebase.ih"
 
-Table &Table::def()
+void TableBase::def()
 {
     if (d_tabulated || !d_string.size())    // no elements or already 
-        return *this;                       // tabulated then do nothing
+        return;                             // tabulated then do nothing
 
     d_nRows = (d_string.size() + d_nColumns - 1) / d_nColumns;
     d_string.resize(d_nRows * d_nColumns);  // enforce complete table
@@ -37,7 +37,6 @@ Table &Table::def()
     }
 
     d_tabulated = true;
-    return *this;
 }
 
 

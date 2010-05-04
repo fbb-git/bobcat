@@ -1,6 +1,6 @@
-#include "table.ih"
+#include "tablebase.ih"
 
-Table &Table::setAlign(Align const &align)
+void TableBase::setAlign(Align const &align)
 {
     d_tabulated = false;
     
@@ -8,8 +8,6 @@ Table &Table::setAlign(Align const &align)
         elementAt(align.row(), align.col()).d_manip = align.manip();
     else
         d_align[align.col()].setManip(align.manip());
-
-    return *this;
 }
 
 

@@ -1,37 +1,49 @@
 #include "tablesupport"
 
 #include <algorithm>
-#include <bobcat/fnwrap1c>
+#include <bobcat/fnwrap>
 
 using namespace std;
 using namespace FBB;
 
+inline void TableSupport::setCols(UMValue &elements, size_t nCols)
+{
+    elements.second.resize(nCols + 1);
+}
+
+inline size_t TableSupport::leftSeparator(size_t column)
+{
+    return column * 2;
+}
+
+inline size_t TableSupport::element(size_t column)
+{
+    return column * 2 + 1;
+}
+
+inline size_t TableSupport::rightSeparator(size_t column)
+{
+    return column * 2 + 2;
+}
+
+inline void TableSupport::leftType(size_t *target, size_t type)
+{
+    *target =   *target != SKIP || (type & (USE | LEFT_FULL)) ? 
+                    USE 
+                : 
+                    LEFT_MID;
+}
+
+inline void TableSupport::rightType(size_t *target, size_t type)
+{
+    *target =   *target != SKIP || (type & (USE | RIGHT_FULL)) ? 
+                    USE 
+                : 
+                    RIGHT_MID;
+}
+
 inline void TableSupport::add(string const &src, size_t &dest)
 {
     dest += src.length();
-}
-
-inline bool TableSupport::const_iterator::operator==(
-        TableSupport::const_iterator const &other) const
-{
-    return d_sep == other.d_sep && d_col == other.d_col;
-}
-
-inline bool TableSupport::const_iterator::operator!=(
-    TableSupport::const_iterator const &other) const
-{
-    return not (*this == other);
-}
-
-inline TableSupport::Element const 
-    *TableSupport::const_iterator::operator->() const
-{
-    return &d_element;
-}
-
-inline TableSupport::Element const 
-    &TableSupport::const_iterator::operator*() const
-{
-    return *operator->();
 }
 
