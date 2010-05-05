@@ -12,9 +12,9 @@
 CFLAGS = -Wall -g
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-				CFLAGS += -O0
+                                CFLAGS += -O0
 else
-				CFLAGS += -O2
+                                CFLAGS += -O2
 endif
 
 # shared library versions, option 1
@@ -75,7 +75,7 @@ binary-arch: build install
 				dh_testroot
 				dh_installchangelogs -A changelog
 				dh_installdocs
-#				dh_installdocs -A CLASSES README.class-setup README.optimization README.milter README.X11
+#                               dh_installdocs -A CLASSES README.class-setup README.optimization README.milter README.X11
 				dh_installexamples
 				#dh_installman
 				dh_link
@@ -97,16 +97,16 @@ binary-arch: build install
 # catches silent file content forges at the upstream server side
 
 # archive downloaded from https://www.icce.rug.nl/debian/bobcat
-#				(bobcat_x.y.z..tar.gz)
+#                               (bobcat_x.y.z..tar.gz)
 
-MD5TRUSTED := 49e7286b0aeb6338c233b45787ae5209
+MD5TRUSTED := 769a373b20a6d1aaa4f268e018af96d7
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
 UPNAME := bobcat
 UPFILE := $(UPNAME)_$(UPVERSION).tar.gz
 DEFILE := $(UPNAME)_$(UPVERSION).orig.tar.gz
-URL				   := https://www.icce.rug.nl/debian/bobcat
+URL                                := https://www.icce.rug.nl/debian/bobcat
 MD5CURRENT := `md5sum ../tarballs/$(DEFILE) | sed -e 's/ .*//'`
 SVNTRUNK   := https://svn.sourceforge.net/svnroot/bobcat/trunk/bobcat
 
@@ -116,19 +116,19 @@ get-orig-source:
 
 				-@if [ ! -f ../tarballs/$(DEFILE) ] ; then \
 				echo "Downloading $(URL)/$(UPFILE) from $(URL)/$(UPFILE) ..." ; \
-				wget --no-check-certificate --quiet -nv -T20 -t3 -O \
-				 ../tarballs/$(DEFILE) $(URL)/$(UPFILE) ; \
-				else \
-				echo "Upstream source tarball has already been downloaded" ; \
-				fi
+                                wget --no-check-certificate --quiet -nv -T20 -t3 -O \
+                                 ../tarballs/$(DEFILE) $(URL)/$(UPFILE) ; \
+                                else \
+                                echo "Upstream source tarball has already been downloaded" ; \
+                                fi
 
-				-@if [ "$(MD5CURRENT)" != "$(MD5TRUSTED)" ] ; then \
-				echo "Expecting upstream filename md5sum $(MD5TRUSTED), but $(MD5CURRENT) found" ; \
-				echo "Upstream filename md5sum is NOT trusted! Possible upstream filename forge!" ; \
-				false ; \
-				else \
-				echo "Upstream filename md5sum is trusted!" ; \
-				fi
+                                -@if [ "$(MD5CURRENT)" != "$(MD5TRUSTED)" ] ; then \
+                                echo "Expecting upstream filename md5sum $(MD5TRUSTED), but $(MD5CURRENT) found" ; \
+                                echo "Upstream filename md5sum is NOT trusted! Possible upstream filename forge!" ; \
+                                false ; \
+                                else \
+                                echo "Upstream filename md5sum is trusted!" ; \
+                                fi
 
 
 get-svn-trunk:
@@ -143,8 +143,8 @@ get-svn-trunk:
 
 
 print-version:
-				@@echo "Debian version:  $(DEBVERSION)"
-				@@echo "Upstream version:				 $(UPVERSION)"
+				@@echo "Debian version:   $(DEBVERSION)"
+				@@echo "Upstream version: $(UPVERSION)"
 
 
 binary: binary-indep binary-arch
