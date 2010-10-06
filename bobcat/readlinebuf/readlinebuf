@@ -1,0 +1,41 @@
+#ifndef INCLUDED_BOBCAT_READLINEBUF_
+#define INCLUDED_BOBCAT_READLINEBUF_
+
+#include <string>
+#include <streambuf>
+#include <readline/history.h>
+
+namespace FBB
+{
+
+class ReadLineBuf: public std::streambuf
+{
+    std::string d_prompt;
+    bool d_history;
+    char *d_buffer;
+
+    public:
+        explicit ReadLineBuf(std::string const &prompt = "", 
+                             size_t historySize = 0);
+        virtual ~ReadLineBuf();
+
+        void setPrompt(std::string const &prompt = "");
+
+        // see man history for details, but the essential elements of 
+        // the struct HIST_ENTRY are:
+        //      char const *line;
+        //      char const *timestamp;
+        
+        HIST_ENTRY const *const *history() const;   // 0-terminated
+
+    private:
+        virtual int underflow();
+};
+
+inline HIST_ENTRY const *const *ReadLineBuf::history() const
+{
+    return history_list();
+}
+
+} // FBB        
+#endif

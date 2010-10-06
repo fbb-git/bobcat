@@ -24,7 +24,7 @@ namespace FBB
         private:
             Mode        d_mode;
             int         d_fd;
-            size_t    d_n;
+            size_t      d_n;
             char*       d_buffer;
 
         public:
@@ -37,10 +37,11 @@ namespace FBB
 
             void open(int xfd, Mode mode, size_t n = 1);
             void open(int xfd, size_t n = 1);
+
+        private:
             virtual int underflow();
             virtual std::streamsize xsgetn(char *dest, std::streamsize n);
 
-        private:
             IFdStreambuf(IFdStreambuf const &other) = delete;
             IFdStreambuf &operator=(IFdStreambuf const &other) = delete;
 

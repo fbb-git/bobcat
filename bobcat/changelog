@@ -1,3 +1,16 @@
+bobcat (2.09.01) ISN
+
+  * Added new classes ReadLineBuf and ReadLineStream reading the standard
+    input using the Gnu readline library, wrapped inside, respectively, a 
+    streambuf and an istream. These classes require linkage to libreadline.
+
+  * Virtual members of classes derived from std::streambuf now placed inside
+    the private section of the classes: IFdStreambuf
+
+  * NOTE: Errno's virtual member what() will be moved to Errno's private
+          section in a future release. New public member 'why' should be used
+          instead, or std::exception::what() should be used
+
 bobcat (2.08.01)
 
   * Checked in overlooked repairs of hostent/destroy.cc and

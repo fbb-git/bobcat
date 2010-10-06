@@ -27,9 +27,13 @@ class Errno: public std::ostringstream, public std::exception
         explicit Errno(int errnr, char const *text = 0);
         Errno(Errno const &other);
         virtual ~Errno() throw();
-        int which() const;
-        virtual const char *what() const throw();
 
+        int which() const;
+        char const *why() const;
+
+                                                // moves to private in a 
+                                                // future release
+        virtual char const *what() const throw();   
     private:
         void initMsg();
 };
@@ -37,6 +41,11 @@ class Errno: public std::ostringstream, public std::exception
 inline int Errno::which() const
 {
     return d_errno;
+}
+
+inline char const *Errno::why() const
+{
+    return what();
 }
 
 template <typename Type>

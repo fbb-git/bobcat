@@ -22,6 +22,9 @@ class IOStreambuf: public std::streambuf
         void open(std::istream &in, std::ostream &out);
 
     protected:
+        std::streamsize xsputn(char const *buffer, std::streamsize n);
+
+    private:
         virtual int underflow();
         virtual pos_type seekoff(off_type offset, std::ios::seekdir way,
                                  std::ios::openmode mode = 
@@ -31,7 +34,6 @@ class IOStreambuf: public std::streambuf
                                                 std::ios::in | std::ios::out);
         virtual int sync();
         virtual int overflow(int c);
-        std::streamsize xsputn(char const *buffer, std::streamsize n);
 };
 
 inline IOStreambuf::IOStreambuf(std::istream &in, std::ostream &out)
