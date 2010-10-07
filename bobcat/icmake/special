@@ -78,6 +78,33 @@ void askOpenSSL(int all)
     }    
 }
 
+void askReadLine(int all)
+{
+    if (!all)
+        printf(
+    "    The classes using the readline library can only be compiled if you\n"
+    "    have installed the libreadline-dev development library, containing\n"
+    "    files like /usr/include/readline.h. To use objects of these\n"
+    "    classes in your programs, your programs must also be linked\n"
+    "    against the readline library: -lreadline -lbobcat\n"
+    "\n"
+    "    The classes depending on the readline library can safely be left\n"
+    "    out of the bobcat library if you're not planning to construct\n"
+    "    programs using them.\n"
+    "\n"
+    "    Press Enter y if you WANT to compile the classes using the\n"
+    "    readline library\n"
+    "    Press Enter or any other line if you DON'T WANT to include these "
+    "    classes in the bobcat library.\n"
+        );
+
+    if (all || gets() == "y")
+    {
+        g_sharedLibReq += " -lreadline";
+        addClasses("READLINE");
+    }    
+}
+
 void special(int expand, int all)
 {
     list cut;
@@ -89,6 +116,7 @@ void special(int expand, int all)
         askMilter(all);
         askXpointer(all);
         askOpenSSL(all);
+        askReadLine(all);
 
         g_nClasses = sizeof(g_classes);
     }

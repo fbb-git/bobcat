@@ -1,0 +1,40 @@
+#ifndef INCLUDED_BOBCAT_READLINESTREAM_
+#define INCLUDED_BOBCAT_READLINESTREAM_
+
+#include <istream>
+#include <bobcat/readlinestreambuf>
+
+namespace FBB
+{
+
+class ReadLineStream: private ReadLineStreamBuf, public std::istream
+{
+    public:
+        explicit ReadLineStream(std::string const &prompt = "");
+        explicit ReadLineStream(size_t historySize,
+                             std::string const &prompt = "");
+        virtual ~ReadLineStream() = default;
+
+        void setPrompt(std::string const &prompt = "");
+};
+
+inline ReadLineStream::ReadLineStream(std::string const &prompt)
+:
+    ReadLineBuf(prompt),
+    std::istream(this)
+{}
+
+inline ReadLineStream::ReadLineStream(size_t historySize,
+                               std::string const &prompt)
+:
+    ReadLineBuf(historySize, prompt),
+    std::istream(this)
+{}
+
+inline ReadLineStream::setPrompt(std::string const &prompt)
+{
+    ReadLineBuf::setPrompt(prompt);
+}
+
+} // FBB        
+#endif

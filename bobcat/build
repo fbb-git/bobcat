@@ -1,4 +1,4 @@
-#!/usr/bin/icmake -qt/tmp/bisonc++
+#!/usr/bin/icmake -qt/tmp/bobcat
 
 #include "INSTALL.im"
 
@@ -63,13 +63,18 @@ void main(int argc, list argv, list envp)
     option = element(1, argv);
 
     if (option == "lcgen")
+    {
+        system("tput clear");
         bobcatlcgen();
+    }
 
     if (option == "clean")
         clean();
 
     if (option == "libraries")
     {
+        system("tput clear");
+
         all = element(2, argv);
 
         if (all == "all")

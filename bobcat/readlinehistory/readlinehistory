@@ -1,0 +1,135 @@
+#ifndef INCLUDED_BOBCAT_READLINEHISTORY_
+#define INCLUDED_BOBCAT_READLINEHISTORY_
+
+#include <iterator>
+#include <readline/history.h>
+
+namespace FBB
+{
+
+class ReadLineHistory
+{
+    public:
+        class HistoryElement
+        {
+            char const *d_line;
+            char const *d_timestamp;
+
+            public:
+                HistoryElement();
+                HistoryElement const &set(HIST_ENTRY const *element);
+
+                char const *line() const;
+                char const *timestamp() const;
+        };
+
+        class const_iterator: public std::iterator<std::output_iterator_tag, 
+                                                   HistoryElement>
+        {
+            friend class ReadLineHistory;
+
+            size_t d_idx;
+            mutable HistoryElement d_element;
+
+            public:
+                const_iterator &operator++();
+                const_iterator operator++(int);
+                bool operator==(const_iterator const &rhs) const;
+                bool operator!=(const_iterator const &rhs) const;
+                HistoryElement const &operator*() const;
+                HistoryElement const *operator->() const;
+
+            private:
+                const_iterator();                   // inline
+                const_iterator(size_t idx);         // 2
+        };
+
+        typedef std::reverse_iterator<const_iterator> 
+                const_reverse_iterator;
+
+        ReadLineHistory();
+
+        const_iterator begin();                     // begin of the history
+        const_iterator end();                       // end of the history
+        const_reverse_iterator rbegin();
+        const_reverse_iterator rend();
+
+        size_t size() const;
+        size_t maxSize() const;
+
+    private:
+};
+
+inline size_t ReadLineHistory::size() const
+{
+    return history_length;
+}
+
+inline size_t ReadLineHistory::maxSize() const
+{
+    return history_max_entries;
+}
+
+//  ======= HistoryElement members ============
+
+inline ReadLineHistory::HistoryElement::HistoryElement()
+:
+    d_line(0),
+    d_timestamp(0)
+{}
+
+inline char const *ReadLineHistory::HistoryElement::line() const
+{
+    return d_line;
+}
+
+inline char const *ReadLineHistory::HistoryElement::timestamp() const
+{
+    return d_timestamp;
+}
+
+// ======== const_iterator members
+
+inline ReadLineHistory::const_iterator::const_iterator()
+:
+    d_idx(history_length)
+{}
+
+ReadLineHistory::const_iterator::const_iterator(size_t idx)
+:
+    d_idx(idx)
+{}
+
+inline ReadLineHistory::const_iterator 
+    &ReadLineHistory::const_iterator::operator++()
+{
+    ++d_idx;
+    return *this;
+}
+
+inline ReadLineHistory::const_iterator 
+    ReadLineHistory::const_iterator::operator++(int)
+{
+    return const_iterator(d_idx++);
+}
+
+inline bool ReadLineHistory::const_iterator::operator==(
+                                            const_iterator const &rhs) const
+{
+    return d_idx == rhs.d_idx;
+}
+
+inline bool ReadLineHistory::const_iterator::operator!=(
+                                            const_iterator const &rhs) const
+{
+    return not (*this == rhs);
+}
+
+inline ReadLineHistory::HistoryElement const 
+    *ReadLineHistory::const_iterator::operator->() const
+{
+    return &operator*();
+}
+
+} // FBB        
+#endif
