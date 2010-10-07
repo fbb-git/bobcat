@@ -57,12 +57,11 @@ class MultiStreambuf: public std::streambuf
         const_iterator end() const;
         void setOnce();             // reset all `RESET' modes to `ONCE'
         
-    protected:
+    private:
         virtual int overflow(int c);
         virtual std::streamsize xsputn(char const *buffer, std::streamsize n);
         virtual int sync();
 
-    private:
         struct Insert
         {
             std::string &buffer;
