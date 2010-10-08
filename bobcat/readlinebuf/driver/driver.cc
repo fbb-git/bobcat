@@ -1,30 +1,30 @@
 #include <iostream>
 #include <istream>
 #include <cstdio>
+#include <sstream>
+#include <iomanip>
 
-#include "../readlinebuf"
+#include <bobcat/readlinebuf>
 
 using namespace std;
 using namespace FBB;
 
 int main()
 {
-    ReadLineBuf readlineBuf("? ", 10);
-
+    ReadLineBuf readlineBuf(10);
     istream in(&readlineBuf);
 
+    size_t count = 0;
     string line;
     while (true)
     {
-        int ch1;
-        cout << "Char1: " << static_cast<char>(ch1 = in.get()) << "\n";
+        ostringstream prompt;
+        prompt << setw(2) << ++count << ": ";
+        readlineBuf.setPrompt(prompt.str());
 
-        if (ch1 == 'q' || ch1 == EOF)
+        if (!getline(in, line))          // uses the last-set prompt
             break;
 
-        cout << "Char2: " << static_cast<char>(in.get()) << '\n';
-
-        if (getline(in, line))
-            cout << "Rest: " << line << endl;
+        cout << "Retrieved: " << line << '\n';
     }
 }
