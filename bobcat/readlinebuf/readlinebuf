@@ -15,6 +15,13 @@ struct HistoryExpansion
         NO_EXPANSION,
         EXPAND_HISTORY
     };
+    enum class Expansion
+    {
+        ERROR,
+        NO_EXPANSION,
+        EXPANDED,
+        DONT_EXEC,
+    };
 };
         
 
@@ -24,17 +31,29 @@ class ReadLineBuf: virtual public HistoryExpansion, public std::streambuf
     std::string d_prompt;
     char *d_buffer;
 
+    void (*d_readline)();       // calls readLine() or expandLine()
+    Expansion d_expansion;
+    std::string d_expansionError;
+
     public:
-        explicit ReadLineBuf(std::string const &prompt = "",
+        explicit ReadLineBuf(std::string const &prompt,
                              Type type = NO_EXPANSION);
-        explicit ReadLineBuf(size_t historySize,
-                             std::string const &prompt = "");
+        explicit ReadLineBuf(std::string const &prompt, 
+                             size_t historySize, 
+                             Type type = NO_EXPANSION);
         virtual ~ReadLineBuf();
 
         void setPrompt(std::string const &prompt = "");
+        void setExpansion(HistoryExpansion::Type type);
+
+        Expansion expansion() const;
+        std::string const &expansionError() const;
 
     private:
         virtual int underflow();
+        void readLine();            // reads a line, adds it to the history
+        void expandLine();          // reads a line, expands it if necessary,
+                                    // then adds it to the history
 };
 
 inline void ReadLineBuf::setPrompt(std::string const &prompt)

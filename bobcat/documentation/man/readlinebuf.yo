@@ -38,6 +38,102 @@ file. Programs using tt(ReadLineBuf) should normally not extract information
 from tt(std::cin). However, as the standard input file has a file descriptor
 (0), redirection should be possible (e.g., using tt(FBB::Redirector)).
 
+When the command line is kept, history expansion is offered as an option.
+History expansion introduces words from the history list into the input
+stream, making it easy to repeat commands, to insert elements of a 
+previous input line into the current input line, or to fix errors in previous
+command lines.
+
+History expansion is usually performed  immediately  after  a  complete
+line  is read.
+
+The line selected from the history is called the tt(event), and the portions
+of that line that are processed are called tt(words).  Various modifiers are
+available to manipulate selected words. This is comparable to the way a
+program like bf(bash)(1) breaks up its input line into `words'.
+
+History expansion is introduced by the use of the history expansion character,
+by default equal to the tt(!)-character.  Only backslash (tt(\)) and single
+quotes can change the history expansion character into a normal character.
+
+The remainder of this section is copied almost verbatim from the
+bf(history)(3) man-page. The reader is referred to that man-page or to the Gnu
+History Library documentation for further details.
+
+The following bf(event designators) are supported:
+    itemization(
+    itt(!):  starts a  history substitution, except when followed by a blank,
+              newline, tt(=) or tt(CHAR(40)).
+    itt(!n): refers to command line n.
+    itt(!-n): refers to the current command line minus n.
+    itt(!!)  refers to the previous command.  This is a synonym for `!-1'.
+    itt(!string) refers to the most recent command starting with string.
+    itt(!?string[?])  refers to the most recent command containing string.
+        The trailing tt(?) may be omitted if string is followed immediately by
+        a newline.
+    itt(^string1^string2^) (quick substitution) repeats the last command,
+            replacing tt(string1) with tt(string2).  
+            Equivalent to tt(!!:s/string1/string2/).
+    itt(!#) the entire command line typed so far.
+    )
+
+bf(Word Designators)
+
+Word designators are used to select desired words from the event.  A tt(:)
+separates the event specification from the word designator.  It may be omitted
+if the word designator begins with a tt(^, $, *, -), or tt(%).  Words are
+numbered from the beginning of the line, with the first word being denoted by
+0 (zero).  Words are inserted into the current line sepa- rated by single
+spaces.
+    itemization(
+    itt(0) (zero) The zeroth word.  For the shell, this is the command word.
+    itt(n)      The nth word.
+    itt(^)      The first argument.  That is, word 1.
+    itt($)      The last argument.
+    itt(%)      The word matched by the most recent tt(?string?) search.
+    itt(x-y)    A range of words; `-y' abbreviates `0-y'.
+    itt(*)      All  of  the words but the zeroth.  This is a synonym for 
+                tt(1-$). It is not an error to use * if there is just one word
+                in the event; the empty string is returned in that case.
+    itt(x*)     Abbreviates tt(x-$).
+    itt(x-)     Abbreviates tt(x-$) like tt(x*), but omits the last word.
+    )
+  If  a  word  designator is supplied without an event specification, the
+       previous command is used as the event.
+
+bf(Modifiers)
+
+After the optional word designator, there may appear a sequence of  one
+or more of the following modifiers, each preceded by a tt(:).
+    itemization(
+    itt(h) removes a trailing file name component, leaving only the head.
+    itt(t) removes all leading file name components, leaving the tail.
+    itt(r) removes a trailing suffix of the form tt(.xxx), leaving the
+           basename. 
+    itt(e) removes all but the trailing suffix.
+    itt(p) prints the new command but does not execute it.
+    itt(q) quotes the substituted words, escaping further substitutions.
+    itt(x) quotes the substituted words as with q, but break into words at
+           blanks and newlines.
+    itt(s/old/new/) substitutes new for the first occurrence of old in the
+           event line.  Any delimiter can be used in place of tt(/).  The
+           final delimiter is optional if it is the last character of the
+           event line.  The delimiter may be quoted in old and new with a
+           single backslash.  If tt(&) appears in new, it is replaced by old.
+           A single backslash will quote the tt(&).  If tt(old) is null, it is
+           set to the last old substituted, or, if no previous history
+           substitutions took place, the last string in a tt(!?string[?])
+           search.
+    itt(&)      repeats the previous substitution.
+    itt(g) Causes changes to be applied over the entire event line.  This is
+           used in conjunction with tt:s) (e.g., tt(:gs/old/new/)) or tt(:&).
+           If used with tt(:s), any delimiter can be used in place of tt(/),
+           and the final delimiter is optional if it is the last character of
+           the event line.  An a may be used as a synonym for tt(g).
+    itt(G) Apply the following tt(s) modifier once to each word in the event
+           line.
+    )
+
 includefile(namespace.inc)
 
 manpagesection(INHERITS FROM)

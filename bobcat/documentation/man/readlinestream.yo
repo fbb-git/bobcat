@@ -1,0 +1,85 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::ReadLineStream)(3bobcat)(_CurYrs_)
+            (libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Editing input lines)
+
+manpagename(FBB::ReadLineStream)
+            (std::istream offering line-editing and history)
+
+manpagesynopsis()
+    bf(#include <bobcat/readlinestream>)nl()
+    Linking option: -lreadline -lbobcat
+
+manpagedescription()
+    bf(FBB::ReadLineStream) objects are tt(std::istream) objects, allowing
+line-editing and history manipulation.
+
+The bf(ReadLineStream) class uses Gnu's readline library to allow editing of
+input lines. A tt(ReadLineStream) can be used to construct a tt(std::istream)
+allowing in-line editing of lines read from the terminal. All lines may be
+preceded by a configurable prompt. 
+
+bf(ReadLineStream) offers editing capabilities while the user is entering
+lines. Like Gnu's bf(readline)(3) function, the line editing commands are
+by default similar to those of bf(emacs)(1), but can easily be reconfigured,
+e.g. to offer bf(vi)(1)-like characteristics. 
+
+History manipulation is provided as an option. The collected history may be
+accessed for reading using an bf(FBB::ReadLineHistory) object. 
+
+Specific information about the facilities offered by the Gnu software used by
+bf(ReadLineStream) is provided in the GNU Readline Library documentation
+(tt(http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html)).
+
+Gnu's tt(readline) function reads its information from the standard input
+file. Programs using tt(ReadLineStream) should normally not extract information
+from tt(std::cin). However, as the standard input file has a file descriptor
+(0), redirection should be possible (e.g., using tt(FBB::Redirector)).
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    tt(FBB::ReadLineBuf) (privately), tt(std::istream) (publicly)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(ReadLineStream(std::string const &prompt = ""))
+        This constructor initializes a tt(ReadLineStream) with an initial
+        prompt, using a history of at most tt(INT_MAX) lines.
+    itb(ReadLineStream(size_t historySize, std::string const &prompt = ""))
+        This constructor initializes a tt(ReadLineStream) with an initial
+        prompt, and an initial history of a predefined maximum
+        size. Specifying a history size 0 results in no history being kept,
+        any value equal to or exceeding the predefined constant tt(INT_MAX)
+        results in a history of at most tt(INT_MAX) lines.
+    )
+    The standard copy constructor is not available.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::streambuf) are
+available, as bf(FBB::ReadLineStream) inherits publicly from this class.
+    itemization(
+    itb(void setPrompt(std::string const &prompt = "")) 
+        This member can be used to alter the prompt that is displayed in
+front of the next line read from the terminal. When called without arguments
+no prompt will be displayed. tt(setPrompt) can be called while input lines are
+being received. The new prompt will be active after the current line has been
+read from the terminal.
+    )
+
+manpagesection(EXAMPLE)
+    verbinclude(../../readlinestream/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/readlinebuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(readline)(3), bf(readlinebuf)(3), 
+    bf(readlinehistory)(3), 
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

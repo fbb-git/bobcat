@@ -27,7 +27,7 @@ int main()
 
         char linech[line.length() + 1];
         linech[line.copy(linech, string::npos)] = 0;
-        char *output;
+        char *output = 0;
         int result = history_expand(linech, &output);
 
         cout << (line == linech) << '\n';
@@ -35,5 +35,9 @@ int main()
         cout << "Retrieved: " << line << '\n';
         cout << "History expansion: " << result << ": " << 
             (result > 0 ? output : "<none>") << '\n';
+
+        cout << "Output = " << reinterpret_cast<void *>(output) << '\n';
+        free(output);       // ???
+
     }
 }
