@@ -5,13 +5,14 @@
 #include <iomanip>
 
 #include <bobcat/readlinestream>
+#include <readline/history.h>
 
 using namespace std;
 using namespace FBB;
 
 int main()
 {
-    ReadLineStream terminal(10);
+    ReadLineStream terminal("", ReadLineStream::EXPAND_HISTORY);
 
     size_t count = 0;
     string line;
@@ -24,6 +25,15 @@ int main()
         if (!getline(terminal, line))       // uses the last-set prompt
             break;
 
+        char linech[line.length() + 1];
+        linech[line.copy(linech, string::npos)] = 0;
+        char *output;
+        int result = history_expand(linech, &output);
+
+        cout << (line == linech) << '\n';
+
         cout << "Retrieved: " << line << '\n';
+        cout << "History expansion: " << result << ": " << 
+            (result > 0 ? output : "<none>") << '\n';
     }
 }

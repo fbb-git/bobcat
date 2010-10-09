@@ -1,6 +1,6 @@
 #include "readlinebuf.ih"
 
-ReadLineBuf::ReadLineBuf(string const &prompt)
+ReadLineBuf::ReadLineBuf(string const &prompt, Type type)
 :
      d_history(true),
      d_prompt(prompt),

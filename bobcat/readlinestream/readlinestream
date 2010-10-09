@@ -7,10 +7,12 @@
 namespace FBB
 {
 
-class ReadLineStream: private ReadLineBuf, public std::istream
+class ReadLineStream: virtual public HistoryExpansion, 
+                      private ReadLineBuf, public std::istream
 {
     public:
-        explicit ReadLineStream(std::string const &prompt = "");
+        explicit ReadLineStream(std::string const &prompt = "",
+                                Type type = NO_EXPANSION);
         explicit ReadLineStream(size_t historySize,
                              std::string const &prompt = "");
         virtual ~ReadLineStream() = default;
@@ -18,9 +20,9 @@ class ReadLineStream: private ReadLineBuf, public std::istream
         void setPrompt(std::string const &prompt = "");
 };
 
-inline ReadLineStream::ReadLineStream(std::string const &prompt)
+inline ReadLineStream::ReadLineStream(std::string const &prompt, Type type)
 :
-    ReadLineBuf(prompt),
+    ReadLineBuf(prompt, type),
     std::istream(this)
 {}
 

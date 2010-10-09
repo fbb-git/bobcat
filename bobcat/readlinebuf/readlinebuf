@@ -8,14 +8,25 @@
 namespace FBB
 {
 
-class ReadLineBuf: public std::streambuf
+struct HistoryExpansion
+{
+    enum Type
+    {
+        NO_EXPANSION,
+        EXPAND_HISTORY
+    };
+};
+        
+
+class ReadLineBuf: virtual public HistoryExpansion, public std::streambuf
 {
     bool d_history;
     std::string d_prompt;
     char *d_buffer;
 
     public:
-        explicit ReadLineBuf(std::string const &prompt = "");
+        explicit ReadLineBuf(std::string const &prompt = "",
+                             Type type = NO_EXPANSION);
         explicit ReadLineBuf(size_t historySize,
                              std::string const &prompt = "");
         virtual ~ReadLineBuf();
