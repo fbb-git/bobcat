@@ -23,7 +23,11 @@ lines may be preceded by a configurable prompt.
 
 Since Gnu's readline library operates on global data there can only be one
 bf(ReadLineBuf) object. Therefore bf(ReadLineBuf) is a singleton class: in any
-program there can only be one bf(ReadLineBuf) object.
+program there can only be one bf(ReadLineBuf) object (Gnu's readline library
+does, however, offer functions allowing programs to use multiple histories. So
+it would in principle be possible to design a non-singleton tt(ReadLineBuf)
+class. Since programs normally only interact with a single terminal, there is
+probably little use for non-singleton bf(ReadLineBuf) class).
 
 bf(ReadLineBuf) offers editing capabilities while the user is entering
 lines. Like Gnu's bf(readline)(3) function, the line editing commands are

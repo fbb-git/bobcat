@@ -14,21 +14,26 @@ class ReadLineHistory
     public:
         class HistoryElement
         {
+            friend class ReadLineHistory;
+
             char const *d_line;
             char const *d_timestamp;
 
             public:
-                HistoryElement();
-                HistoryElement const &set(HIST_ENTRY const *element);
-
                 char const *line() const;
                 char const *timestamp() const;
+
+            private:
+                HistoryElement();
+                HistoryElement const &set(HIST_ENTRY const *element);
         };
 
-        class const_iterator: public std::iterator<std::forward_iterator_tag, 
-                                                   HistoryElement const>
+        class const_iterator: public 
+                                std::iterator<std::input_iterator_tag, 
+                                              HistoryElement const>
         {
             friend class ReadLineHistory;
+            friend class std::reverse_iterator<const_iterator>;
 
             size_t d_idx;
             mutable HistoryElement d_element;
@@ -36,8 +41,6 @@ class ReadLineHistory
             public:
                 const_iterator &operator++();
                 const_iterator operator++(int);
-                const_iterator &operator--();
-                const_iterator operator--(int);
                 bool operator==(const_iterator const &rhs) const;
                 bool operator!=(const_iterator const &rhs) const;
                 HistoryElement const &operator*() const;
@@ -46,6 +49,9 @@ class ReadLineHistory
             private:
                 const_iterator();                   // inline, last element
                 const_iterator(size_t idx);         // 2
+
+                const_iterator &operator--();       // for the reverse iter.
+                const_iterator operator--(int);
         };
 
         typedef std::reverse_iterator<const_iterator> 
