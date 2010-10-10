@@ -15,7 +15,7 @@ ReadLineBuf::ReadLineBuf(string const &prompt, size_t historySize, Type type)
     else
     {
         if (type == EXPAND_HISTORY)
-            d_readline(type = &ReadLineBuf::expandLine;
+            d_readline = &ReadLineBuf::expandLine;
         using_history();
         stifle_history(historySize > INT_MAX ? INT_MAX : historySize);
     }

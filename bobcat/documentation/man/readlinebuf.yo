@@ -13,13 +13,17 @@ manpagesynopsis()
     Linking option: -lreadline -lbobcat
 
 manpagedescription()
-    bf(FBB::ReadLineBuf) objects may be used as a tt(std::streambuf) 
+    The bf(FBB::ReadLineBuf) object may be used as a tt(std::streambuf) 
 of tt(std::istream) objects, allowing line-editing and history manipulation.
 
 The bf(ReadLineBuf) class uses Gnu's readline library to allow editing of
-input lines. A tt(ReadLineBuf) can be used to construct a tt(std::istream)
-allowing in-line editing of lines read from the terminal. All lines may be
-preceded by a configurable prompt. 
+input lines. The tt(ReadLineBuf) object can be used to construct a
+tt(std::istream) allowing in-line editing of lines read from the terminal. All
+lines may be preceded by a configurable prompt.
+
+Since Gnu's readline library operates on global data there can only be one
+bf(ReadLineBuf) object. Therefore bf(ReadLineBuf) is a singleton class: in any
+program there can only be one bf(ReadLineBuf) object.
 
 bf(ReadLineBuf) offers editing capabilities while the user is entering
 lines. Like Gnu's bf(readline)(3) function, the line editing commands are
@@ -83,7 +87,7 @@ Word designators are used to select desired words from the event.  A tt(:)
 separates the event specification from the word designator.  It may be omitted
 if the word designator begins with a tt(^, $, *, -), or tt(%).  Words are
 numbered from the beginning of the line, with the first word being denoted by
-0 (zero).  Words are inserted into the current line sepa- rated by single
+0 (zero).  Words are inserted into the current line separated by single
 spaces.
     itemization(
     itt(0) (zero) The zeroth word.  For the shell, this is the command word.
@@ -139,30 +143,96 @@ includefile(namespace.inc)
 manpagesection(INHERITS FROM)
     tt(std::streambuf)
 
-manpagesection(CONSTRUCTORS)
+manpagesection(ENUMERATIONS)
+
+    The tt(enum Type) defines the following value:
     itemization(
-    itb(ReadLineBuf(std::string const &prompt = ""))
-        This constructor initializes a tt(ReadLineBuf) with an initial prompt,
-using a history of at most tt(INT_MAX) lines.
-    itb(ReadLineBuf(size_t historySize, std::string const &prompt = ""))
-        This constructor initializes a tt(ReadLineBuf) with an initial prompt,
-and an initial history of a predefined maximum size. Specifying a history size
-0 results in no history being kept, any value equal to or exceeding the
-predefined constant tt(INT_MAX) results in a history of at most tt(INT_MAX)
-lines. 
+    itt(DONT_EXPAND_HISTORY): history expansion is not requested;
+    itt(EXPAND_HISTORY):  history expansion is requested.
     )
-    The standard copy constructor is not available.
+
+    The tt(enum Expansion) provides meaningful return
+values for the history expansion process. Its values are:
+    itemization(
+    itt(DONT_EXEC): history expansion succeeded, but the expanded line should
+not be executed. E.g., after entering the line
+        verb(
+    ls *
+        )
+    the line
+        verb(
+    !!:p
+        )
+    should cause the using program to em(display), rather than exectute tt(ls
+*). Note that interpretation of this expansion return value is not the task of
+the bf(ReadLineBuf) object, but of the program using the bf(ReadLineBuf)
+object.
+    itt(ERROR): the history expansion failed. See also the member
+tt(expansionError) below;
+    itt(EXPANDED): the history expansion succeeded;
+    itt(NO_EXPANSION): no history expansion took place.
+    )
+
+manpagesection(STATIC MEMBERS)
+    itemization(
+    itb(ReadLineBuf &initialize(std::string const &prompt = "", Type type =
+        NO_EXPANSION))
+        This static member returns the tt(ReadLineBuf) using an initial
+prompt, using a history of at most tt(INT_MAX) lines, and by default not using
+history expansion.  If the object has already been initialized a
+tt(logic_error) exception is thrown.
+    itb(ReadLineBuf &initialize(std::string const &prompt, size_t historySize,
+                    Type type = NO_EXPANSION))
+        This static member initializes the tt(ReadLineBuf) using an initial
+prompt, an initial history of a predefined maximum size, and by default not
+using history expansion. Specifying a history size 0 results in no history
+being kept, any value equal to or exceeding the predefined constant
+tt(INT_MAX) results in a history of at most tt(INT_MAX) lines. If no history
+is requested but tt(type) is specified as tt(EXPAND_HISTORY) a tt(logic_error)
+exception is thrown. A tt(logic_error) is also thrown if the object has
+already been initialized.
+    itb(ReadLineBuf &instance())
+        This static member returns the already initialized tt(ReadLineBuf)
+object. If the object has not yet been initialized a tt(logic_error)
+exception is thrown.
+    )
+
+
+manpagesection(CONSTRUCTORS)
+    As the class bf(ReadLineBuf) is a singleton class it offers no public
+constructors.
 
 manpagesection(MEMBER FUNCTIONS)
      All members of bf(std::streambuf) are
 available, as bf(FBB::ReadLineBuf) inherits from this class.
     itemization(
+    itb(ReadLineBuf::Expansion expansion() const)
+        The status of the history expansion after retrieving a line from the
+terminal is returned. Its value is determined after each line retrieved from
+the terminal. If no history expansion is requested it returns
+tt(Expansion::ERROR).
+    itb(std::string const &expansionError() const)
+        A short textual description of the nature of the error when
+tt(expansion) returns tt(Expansion::ERROR) is returned. If no history
+expansion is requested an empty string is returned.
+    itb(bool setExpansion(Type type)) 
+        History expansion can be activated or stopped using this member. When
+history expansion is requested but the bf(ReadLineBuf) object maintains no
+history the function returns tt(false). Otherwise it returns tt(true).
     itb(void setPrompt(std::string const &prompt = "")) 
-        This member can be used to alter the prompt that is displayed in
-front of the next line read from the terminal. When called without arguments
-no prompt will be displayed. tt(setPrompt) can be called while input lines are
+        The prompt that is displayed in front of the next line read from the
+terminal can be modified by this member. When called without arguments no
+prompt will be displayed. tt(setPrompt) can be called while input lines are
 being received. The new prompt will be active after the current line has been
 read from the terminal.
+    itb(bool useTimestamps(std::string (*timestamp)() = 0))
+        When initialized with the address of a function returning a
+tt(std::string) the entered commands will be given a timestamp equal to the
+text returned by the function pointed to by tt(timestamp). The timestamps can
+be retrieved using the bf(ReadLineHistory)(3) object. By default or after
+passing an explicit 0-pointer to tt(useTimestamps) no timestamps are stored.
+The value tt(false) is returned when no history is kept, otherwise tt(true) is
+returned. 
     )
 
 manpagesection(EXAMPLE)

@@ -5,14 +5,13 @@
 #include <iomanip>
 
 #include <bobcat/readlinestream>
-#include <readline/history.h>
 
 using namespace std;
 using namespace FBB;
 
 int main()
 {
-    ReadLineStream terminal("", ReadLineStream::EXPAND_HISTORY);
+    ReadLineStream in("", 10, ReadLineBuf::EXPAND_HISTORY);
 
     size_t count = 0;
     string line;
@@ -20,24 +19,31 @@ int main()
     {
         ostringstream prompt;
         prompt << setw(2) << ++count << ": ";
-        terminal.setPrompt(prompt.str());
+        in.setPrompt(prompt.str());
 
-        if (!getline(terminal, line))       // uses the last-set prompt
+        if (!getline(in, line))          // uses the last-set prompt
             break;
 
-        char linech[line.length() + 1];
-        linech[line.copy(linech, string::npos)] = 0;
-        char *output = 0;
-        int result = history_expand(linech, &output);
+        cout << "Retrieved: " << line << "\n"
+                "Expansion status: ";
 
-        cout << (line == linech) << '\n';
+        switch (in.expansion())
+        {
+            case ReadLineBuf::ERROR:
+                cout << "ERROR: " << in.expansionError() << '\n';
+            break;
 
-        cout << "Retrieved: " << line << '\n';
-        cout << "History expansion: " << result << ": " << 
-            (result > 0 ? output : "<none>") << '\n';
+            case ReadLineBuf::NO_EXPANSION:
+                cout << "no expansion performed\n";
+            break;
 
-        cout << "Output = " << reinterpret_cast<void *>(output) << '\n';
-        free(output);       // ???
+            case ReadLineBuf::DONT_EXEC:
+                cout << "don't execute the expanded line\n";
+            break;
 
+            case ReadLineBuf::EXPANDED:
+                cout << "expansion successfully performed\n";
+            break;
+        }
     }
 }

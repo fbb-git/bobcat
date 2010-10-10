@@ -4,6 +4,7 @@
 #include <string>
 #include <streambuf>
 #include <climits>
+#include <memory>
 
 namespace FBB
 {
@@ -12,10 +13,10 @@ struct HistoryExpansion
 {
     enum Type
     {
-        NO_EXPANSION,
+        DONT_EXPAND_HISTORY,
         EXPAND_HISTORY
     };
-    enum class Expansion
+    enum Expansion
     {
         ERROR,
         NO_EXPANSION,
@@ -31,29 +32,45 @@ class ReadLineBuf: virtual public HistoryExpansion, public std::streambuf
     std::string d_prompt;
     char *d_buffer;
 
-    void (*d_readline)();       // calls readLine() or expandLine()
+    char *(ReadLineBuf::*d_readline)(); // calls readLine() or expandLine()
+    std::string (*d_timestamp)();       // return a timestamp
+
     Expansion d_expansion;
     std::string d_expansionError;
 
+    static std::unique_ptr<ReadLineBuf> s_readLineBuf;
+
     public:
-        explicit ReadLineBuf(std::string const &prompt,
-                             Type type = NO_EXPANSION);
-        explicit ReadLineBuf(std::string const &prompt, 
+        static ReadLineBuf &initialize(std::string const &prompt,
+                                       Type type = DONT_EXPAND_HISTORY);
+        static ReadLineBuf &initialize(std::string const &prompt, 
                              size_t historySize, 
-                             Type type = NO_EXPANSION);
+                             Type type = DONT_EXPAND_HISTORY);
+        static ReadLineBuf &instance();
+        
+
         virtual ~ReadLineBuf();
 
         void setPrompt(std::string const &prompt = "");
-        void setExpansion(HistoryExpansion::Type type);
+        bool setExpansion(Type type);
 
         Expansion expansion() const;
         std::string const &expansionError() const;
 
+        bool useTimestamps(std::string (*timestamp)() = 0);
+
     private:
+        explicit ReadLineBuf(std::string const &prompt,
+                             Type type = DONT_EXPAND_HISTORY);
+        explicit ReadLineBuf(std::string const &prompt, 
+                             size_t historySize, 
+                             Type type = DONT_EXPAND_HISTORY);
+
         virtual int underflow();
-        void readLine();            // reads a line, adds it to the history
-        void expandLine();          // reads a line, expands it if necessary,
+        char *readLine();           // reads a line, adds it to the history
+        char *expandLine();         // reads a line, expands it if necessary,
                                     // then adds it to the history
+        char *nextLine(char *buf);
 };
 
 inline void ReadLineBuf::setPrompt(std::string const &prompt)
@@ -61,5 +78,21 @@ inline void ReadLineBuf::setPrompt(std::string const &prompt)
     d_prompt = prompt;
 }
 
+inline ReadLineBuf::Expansion ReadLineBuf::expansion() const
+{
+    return d_expansion;
+}
+        
+inline std::string const &ReadLineBuf::expansionError() const
+{
+    return d_expansionError;
+}
+
+
 } // FBB        
 #endif
+
+
+
+
+

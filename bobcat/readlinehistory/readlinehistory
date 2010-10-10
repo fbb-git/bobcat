@@ -9,6 +9,8 @@ namespace FBB
 
 class ReadLineHistory
 {
+    static ReadLineHistory s_readLineHistory;
+
     public:
         class HistoryElement
         {
@@ -23,8 +25,8 @@ class ReadLineHistory
                 char const *timestamp() const;
         };
 
-        class const_iterator: public std::iterator<std::output_iterator_tag, 
-                                                   HistoryElement>
+        class const_iterator: public std::iterator<std::forward_iterator_tag, 
+                                                   HistoryElement const>
         {
             friend class ReadLineHistory;
 
@@ -34,31 +36,62 @@ class ReadLineHistory
             public:
                 const_iterator &operator++();
                 const_iterator operator++(int);
+                const_iterator &operator--();
+                const_iterator operator--(int);
                 bool operator==(const_iterator const &rhs) const;
                 bool operator!=(const_iterator const &rhs) const;
                 HistoryElement const &operator*() const;
                 HistoryElement const *operator->() const;
 
             private:
-                const_iterator();                   // inline
+                const_iterator();                   // inline, last element
                 const_iterator(size_t idx);         // 2
         };
 
         typedef std::reverse_iterator<const_iterator> 
                 const_reverse_iterator;
 
-        ReadLineHistory();
+        static ReadLineHistory &instance();
 
-        const_iterator begin();                     // begin of the history
-        const_iterator end();                       // end of the history
-        const_reverse_iterator rbegin();
-        const_reverse_iterator rend();
+        ReadLineHistory(ReadLineHistory const &other)           = delete;
+        ReadLineHistory &operator=(ReadLineHistory const &rhs)  = delete;
+
+        const_iterator begin() const;               // begin of the history
+        const_iterator end() const;                 // end of the history
+        const_reverse_iterator rbegin() const;
+        const_reverse_iterator rend() const;
 
         size_t size() const;
         size_t maxSize() const;
 
     private:
+        ReadLineHistory()   = default;
 };
+
+inline ReadLineHistory::const_iterator ReadLineHistory::begin() const
+{
+    return const_iterator(0);
+}
+
+inline ReadLineHistory::const_iterator ReadLineHistory::end() const
+{
+    return const_iterator();
+}
+
+inline ReadLineHistory::const_reverse_iterator ReadLineHistory::rbegin() const
+{
+    return const_reverse_iterator(end());
+}
+
+inline ReadLineHistory::const_reverse_iterator ReadLineHistory::rend() const
+{
+    return const_reverse_iterator(begin());
+}
+
+inline ReadLineHistory &ReadLineHistory::instance()
+{
+    return s_readLineHistory;
+}
 
 inline size_t ReadLineHistory::size() const
 {
@@ -95,7 +128,7 @@ inline ReadLineHistory::const_iterator::const_iterator()
     d_idx(history_length)
 {}
 
-ReadLineHistory::const_iterator::const_iterator(size_t idx)
+inline ReadLineHistory::const_iterator::const_iterator(size_t idx)
 :
     d_idx(idx)
 {}
@@ -111,6 +144,19 @@ inline ReadLineHistory::const_iterator
     ReadLineHistory::const_iterator::operator++(int)
 {
     return const_iterator(d_idx++);
+}
+
+inline ReadLineHistory::const_iterator 
+    &ReadLineHistory::const_iterator::operator--()
+{
+    --d_idx;
+    return *this;
+}
+
+inline ReadLineHistory::const_iterator 
+    ReadLineHistory::const_iterator::operator--(int)
+{
+    return const_iterator(d_idx--);
 }
 
 inline bool ReadLineHistory::const_iterator::operator==(
