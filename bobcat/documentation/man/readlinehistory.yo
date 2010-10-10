@@ -1,0 +1,88 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::ReadLineHistory)(3bobcat)(_CurYrs_)
+            (libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Editing input lines)
+
+manpagename(FBB::ReadLineHistory)
+            (std::streambuf offering line-editing and history)
+
+manpagesynopsis()
+    bf(#include <bobcat/readlinebuf>)nl()
+    Linking option: -lreadline -lbobcat
+
+manpagedescription()
+    bf(FBB::ReadLineHistory) objects offer access to the history maintained by
+bf(FBB::ReadLineBuf) and bf(ReadLineStream) objects.
+
+The latter two classes use Gnu's readline library to allow editing of
+input lines. The accumulated history of these objects can be accessed 
+from the bf(ReadLineHistory) object.
+
+Since Gnu's readline library maintains global data there can only be one
+history. The bf(ReadLineHistory) class is therefore, like bf(ReadLineBuf)
+bf(ReadLineStream), a singleton.
+
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(ReadLineHistory())
+        This constructor initializes a tt(ReadLineHistory) with an initial prompt,
+using a history of at most tt(INT_MAX) lines, by default not using history
+expansion. 
+    itb(ReadLineHistory(std::string const &prompt, size_t historySize, Type type =
+                    NO_EXPANSION))
+        This constructor initializes a tt(ReadLineHistory) with an initial prompt,
+an initial history of a predefined maximum size, by default not using history
+expansion. Specifying a history size 0 results in no history being kept, any
+value equal to or exceeding the predefined constant tt(INT_MAX) results in a
+history of at most tt(INT_MAX) lines. If no history is requested but tt(type)
+is specified as tt(EXPAND_HISTORY) a tt(logic_error) exception is thrown.
+    )
+    The standard copy constructor is not available.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::streambuf) are
+available, as bf(FBB::ReadLineHistory) inherits from this class.
+    itemization(
+    itb(ReadLineHistory::Expansion expansion() const)
+        The status of the history expansion after retrieving a line from the
+terminal is returned. Its value is determined after each line retrieved from
+the terminal. If no history expansion is requested it returns
+tt(Expansion::ERROR).
+    itb(std::string const &expansionError() const)
+        A short textual description of the nature of the error when
+tt(expansion) returns tt(Expansion::ERROR) is returned. If no history
+expansion is requested an empty string is returned.
+    itb(bool setExpansion(Type type)) 
+        History expansion can be activated or stopped using this member. When
+history expansion is requested but the bf(ReadLineHistory) object maintains no
+history the function returns tt(false). Otherwise it returns tt(true).
+    itb(void setPrompt(std::string const &prompt = "")) 
+        The prompt that is displayed in front of the next line read from the
+terminal can be modified by this member. When called without arguments no
+prompt will be displayed. tt(setPrompt) can be called while input lines are
+being received. The new prompt will be active after the current line has been
+read from the terminal.
+    )
+
+manpagesection(EXAMPLE)
+    verbinclude(../../readlinebuf/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/readlinebuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(readline)(3), bf(readlinehistory)(3), 
+    bf(readlinestream)(3)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)
