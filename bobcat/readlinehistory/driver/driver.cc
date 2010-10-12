@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <fstream>
 
 #include <bobcat/datetime>
 #include <bobcat/readlinestream>
@@ -18,7 +19,7 @@ string timestamp()
     return DateTime().rfc2822();
 };
 
-int main()
+int main(int argc, char **argv)
 {
     ReadLineStream in("? ", ReadLineBuf::EXPAND_HISTORY);
     in.useTimestamps(&timestamp);
@@ -28,7 +29,8 @@ int main()
     while (getline(in, line))
         ;
 
-    ReadLineHistory &history = ReadLineHistory::instance();
+                                            // argument means: history IO
+    ReadLineHistory &history = ReadLineHistory::instance(argc > 1);
 
     cout << "All lines, from the first to the last:\n";
     for_each(history.begin(), history.end(), showHis);
@@ -36,6 +38,23 @@ int main()
     cout << "\n"
             "All lines, from the last to the first:\n";
     for_each(history.rbegin(), history.rend(), showHis);
+
+    cout << "\n"
+            "History out and in:\n"
+            "\n";
+
+    ofstream hisout("history.out");
+
+    hisout << history;
+
+    hisout.close();
+
+    ifstream hisin("history.out");
+    hisin >> history;
+
+    cout << "All lines, from the first to the last:\n";
+    for_each(history.begin(), history.end(), showHis);
+
 }
 
 
