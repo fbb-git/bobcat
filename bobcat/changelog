@@ -1,15 +1,23 @@
-bobcat (2.09.01) ISN
+bobcat (2.09.01)
 
   * Added new classes ReadLineBuf and ReadLineStream reading the standard
-    input using the Gnu readline library, wrapped inside, respectively, a 
+    input using the Gnu readline library, wrapped inside, respectively, a
     streambuf and an istream. These classes require linkage to libreadline.
+    The class ReadLineBuf is a singleton class.
 
-  * Virtual members of classes derived from std::streambuf now placed inside
-    the private section of the classes: IFdStreambuf
+  * Added new class ReadLineHistory allowing easy handling of the history
+    accumulated by the ReadLineBuf class.  The class ReadLineHistory is a
+    singleton class.
+
+  * Virtual members of classes derived from std::streambuf were move to the
+    the private section of the classes, making these classes more compliant
+    with Liskow's Substitution Principle.
 
   * NOTE: Errno's virtual member what() will be moved to Errno's private
-          section in a future release. New public member 'why' should be used
-          instead, or std::exception::what() should be used
+          section in a future release. The new public member 'why' should be
+          used instead, or std::exception::what() should be used.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Thu, 14 Oct 2010 21:35:00 +0200
 
 bobcat (2.08.01)
 
