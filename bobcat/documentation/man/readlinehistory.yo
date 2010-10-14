@@ -29,9 +29,10 @@ interact with a single terminal, there is probably little use for
 non-singleton bf(ReadLineHistory) class).
 
 The bf(ReadLineHistory) class encapsulates history access. It offers limited
-facilities: either forward or backward iterations over the history are
-offered. The contents of the history lines and --if defined-- the timestamps
-of the lines in the history can be obtained from the iterators.
+facilities: either forward or backward iterations over the history are offered
+as well as reading and writing the history from/to streams. The contents of
+the history lines and --if defined-- the timestamps of the lines in the
+history can be obtained using iterators defined by bf(ReadLineHistory).
 
 includefile(namespace.inc)
 
@@ -60,7 +61,7 @@ the history line to which a bf(ReadLineHistory) iterator refers;
 bf(const_iterator) and bf(const_reverse_iterator)
 
 The iterators returned by members of the class bf(ReadLineHistory) are input
-iterators, pointing to bf(HistoryElement) objectss. As they are input
+iterators, pointing to bf(HistoryElement) objects. As they are input
 iterators modification of the history elements to which they refer is not
 allowed. 
 
@@ -74,11 +75,81 @@ bf(HistoryElement) objects and their addresses.
 
 manpagesection(CONSTRUCTORS)
 
-    The default and copy constructors are available
+    As the class bf(ReadLineBuf) is a singleton class, there are no publicly
+available constructors.
+
+manpagesection(STATIC MEMBER FUNCTIONS)
+
+    itemization(
+    itb(ReadLineHistory &instance()) 
+        A reference to the bf(ReadLineHistory) object is returned. If any
+history has been accumulated it can immediately be retrieved. Using this
+static member will not affect the way the bf(ReadLineHistory) object handles
+timestamps when saving or retrieving history lines. When initially constructed
+the tt(ReadLineHistory) object assumes that timestamps are not used.
+    itb(ReadLineHistory &instance(bool useTimestamps)) 
+        A reference to the bf(ReadLineHistory) object is returned. If any
+history has been accumulated it can immediately be retrieved. The
+tt(useTimestamps) parameter defines the way history lines are read from or
+written to a stream. When specifying tt(true) the history inserted into a
+stream will include timestamps (which may be empty if no timestamps were
+recorded). Likewise, when extracting the history timestamps are extracted too
+(which may also be empty). When specifying tt(false) no timestamps are read
+or written. A mismatch between the actual contents of the stream from which
+the history is extracted and the tt(useTimestamps) parameter will 
+results in unexpected behavior.
+    )
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
-    itb(ReadLineHistory::Expansion expansion() const)
+    itb(ReadLineHistory::const_iterator begin() const)
+        An input iterator pointing to the first history line is returned.
+    itb(ReadLineHistory::const_iterator end() const)
+        An input iterator pointing beyond the last history line is returned.
+    itb(size_t maxSize() const) 
+        The maximum number of lines that can be stored in the history is
+        returned. After collecting a history of tt(maxSize) lines, the next
+        line entered will cause the initial history line to be removed from
+        the history, making room for the next line to be added at the end of
+        the history.
+    itb(ReadLineHistory::const_reverse_iterator rbegin() const)
+        An input iterator pointing to the last history line is
+        returned. Incrementing this iterator will access the previous line in
+        the history.
+    itb(ReadLineHistory::const_reverse_iterator rend() const)
+        An input iterator pointing before the first history line is returned.
+    itb(ReadLineHistory &setTimestamps(bool useTimestamps)) 
+       xThe current status of the timestamps usage is set according to the
+        value of its parameter. When tt(true) inserting and extracting history
+        will include the timestamps. No timestamps are inserted or extracted
+        when tt(false). It returns a reference to the updated 
+        bf(ReadLineHistory) object, allowing constructions like (assuming
+        the availability of tt(ReadLineHistory &history)):
+        verb(
+    cout << history.setTimestamps(true);
+        )
+    itb(size_t size() const)
+        The number of lines currently stored in the history is returned.
+    itb(bool timestamps() const)
+        The current status of the timestamps usage is returned. When returning
+        tt(true) inserting and extracting history will include the
+        timestamps. No timestamps are inserted or extracted when this member
+        returns tt(false)
+    )
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(std::istream &FBB::operator>>(std::istream &in, ReadLineHistory &his))
+        The history available at the tt(in) stream is extracted as the current
+        history. The existing history is removed first. The tt(useTimestamp) 
+        status determines whether timestams are extracted (if tt(true)) or not
+        (if tt(false)). A mismatch between the actual contents of the stream
+        and the tt(useTimestamp) status will result in unexpected behavior.
+    itb(std::ostream &FBB::operator<<(std::ostream &out, 
+            ReadLineHistory &his))
+        The current history is inserted into tt(out) stream. The
+        tt(useTimestamp) status determines whether timestams are inserted (if
+        tt(true)) or not (if tt(false)).
     )
 
 manpagesection(EXAMPLE)
@@ -88,7 +159,7 @@ manpagefiles()
     em(bobcat/readlinehistory) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(readline)(3), bf(readlinehistory)(3), 
+    bf(bobcat)(7), bf(readline)(3), bf(readlinebuf)(3), 
     bf(readlinestream)(3)
 
 manpagebugs()
