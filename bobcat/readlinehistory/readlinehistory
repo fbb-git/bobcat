@@ -81,6 +81,7 @@ class ReadLineHistory
         ReadLineHistory &setTimestampsIO(bool useTimestamps);
         size_t size() const;
         size_t maxSize() const;
+        bool timestamps() const;
 
         static ReadLineHistory &instance();
         static ReadLineHistory &instance(bool useTimestamps);
@@ -135,6 +136,11 @@ inline ReadLineHistory &ReadLineHistory::instance(bool useTimestamps)
 inline size_t ReadLineHistory::size() const
 {
     return history_length;
+}
+
+inline bool ReadLineHistory::timestamps() const
+{
+    return d_timestamps;
 }
 
 inline size_t ReadLineHistory::maxSize() const
