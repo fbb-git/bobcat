@@ -1,6 +1,6 @@
 #include "ofoldstreambuf.ih"
 
-int OFoldStreambuf::sync()
+int OFoldStreambuf::pSync()
 {
     if (d_mode == NON_WS)
         flush();

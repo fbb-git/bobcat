@@ -98,7 +98,7 @@ the bf(MultiStreambuf::stream) elements of the specified vector.
     The copy constructor is available.
 
 manpagesection(MEMBER FUNCTIONS)
-     All members of bf(std::ostringstream) and bf(  std::exception) are
+     All members of bf(std::ostringstream) and bf(std::exception) are
 available, as bf(FBB::MultiStreambuf) inherits from these classes.
     itemization(
     itb(iterator begin())
@@ -125,6 +125,22 @@ the current set of bf(stream) objects.
 bf(stream) objects to tt(ONCE).
     )
 
+manpagesection(PROTECTED MEMBER FUNCTION)
+
+    The member listed in this section implements the tasks of the comparably
+named virtual function in the class's private interface. This separates the
+redefinable interface from the user-interface. The class bf(MultiStreamBuf)
+can, in accordance with Liskov's Substitution Principle, be used as a
+tt(std:streambuf); but it also offers a facility for classes deriving from
+bf(MultiStreamBuf). This facility is listed here.
+    itemization(
+    itb(int pSync())
+        The contents of the bf(MultiStreamBuf)'s internal buffer is written to
+each of the tt(std::ostream) objects to which the bf(MultiStreamBuf) object
+has access.
+    )
+
+    
 
 manpagesection(EXAMPLE)
     verb(

@@ -1,6 +1,6 @@
 #include "multistreambuf.ih"
 
-int MultiStreambuf::sync()
+int MultiStreambuf::pSync()
 {
     if (!d_buffer.length())
         return 0;

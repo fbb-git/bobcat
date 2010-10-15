@@ -1,6 +1,6 @@
 #include "ohexstreambuf.ih"
 
-int OHexStreambuf::sync()
+int OHexStreambuf::pSync()
 {
     out() << flush;
     return 0;

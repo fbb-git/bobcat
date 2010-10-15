@@ -11,7 +11,13 @@ bobcat (2.09.01)
 
   * Virtual members of classes derived from std::streambuf were move to the
     the private section of the classes, making these classes more compliant
-    with Liskow's Substitution Principle.
+    with Liskov's Substitution Principle.
+
+  * The 'sync' members of classes derived from std::streambuf can be called
+    from derived classes using a protected 'pSync' member. The IOStreambuf
+    class offers comparable protected 'pSeekoff' and 'pSeekpos' and 'pXsputn',
+    allowing the seek and put operations to be performed on request 
+    by classes derived from IOStreambuf.
 
   * NOTE: Errno's virtual member what() will be moved to Errno's private
           section in a future release. The new public member 'why' should be

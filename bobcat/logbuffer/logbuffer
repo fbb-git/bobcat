@@ -40,6 +40,9 @@ class LogBuffer: public std::streambuf
 
         void setEmpty(bool empty);
 
+    protected:
+        virtual int pSync();
+
     private:
         virtual int sync();
         virtual int overflow(int c);
@@ -58,7 +61,7 @@ inline bool LogBuffer::empty() const
     return d_empty;
 }
 
-inline int LogBuffer::sync()
+inline int LogBuffer::pSync()
 {
     d_stream->flush();
     return 0;

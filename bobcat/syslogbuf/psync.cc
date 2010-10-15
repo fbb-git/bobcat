@@ -1,6 +1,6 @@
 #include "syslogbuf.ih"
 
-int Syslogbuf::sync()
+int Syslogbuf::pSync()
 {
     if (d_buffer.length())
     {
