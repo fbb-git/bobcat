@@ -28,8 +28,8 @@ int main(int argc, char **argv)
     string line;
     while (getline(in, line))
         ;
-
-                                            // argument means: history IO
+                                            // argument means: write/read
+                                            // history timestamps
     ReadLineHistory &history = ReadLineHistory::instance(argc > 1);
 
     cout << "All lines, from the first to the last:\n";
@@ -54,7 +54,6 @@ int main(int argc, char **argv)
 
     cout << "All lines, from the first to the last:\n";
     for_each(history.begin(), history.end(), showHis);
-
 }
 
 
