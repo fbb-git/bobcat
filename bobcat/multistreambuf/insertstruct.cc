@@ -1,6 +1,6 @@
 #include "multistreambuf.ih"
 
-void MultiStreambuf::insert(stream &os, Insert &insert)
+void MultiStreambuf::insertStruct(stream &os, Insert &insert)
 {
     switch (os.d_mode)
     {

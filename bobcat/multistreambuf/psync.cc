@@ -7,8 +7,7 @@ int MultiStreambuf::pSync()
 
     Insert istruct = {d_buffer, true};
 
-    for_each(d_os.begin(), d_os.end(), 
-             FnWrap1c<stream &, Insert &>(&insert, istruct));
+    for_each(d_os.begin(), d_os.end(), FnWrap::unary(insertStruct, istruct));
 
     d_buffer.erase();
     return istruct.ok ? 0 : 1;
