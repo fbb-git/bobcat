@@ -2,7 +2,8 @@
 
 bool Msg::setDisplay(bool mode) 
 {
-    bool old = s_display;
-    s_display = mode;
-    return old;
+    for_each(s_streams, s_streams + s_nStreams, 
+                FnWrap::unary(setActive, mode));
+
+    return display();
 }

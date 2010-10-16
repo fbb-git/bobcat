@@ -6,6 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 #include <bobcat/errno>
 
@@ -44,29 +45,99 @@ class Msg
     static std::ofstream s_fout;
     static bool s_display;
 
+    struct StreamInfo
+    {
+        std::ostream out;
+        std::ofstream fout;
+        StreamInfo()
+        :
+            out(std::cout.rdbuf())
+        {}
+    };
+
+    static StreamInfo s_streams[];
+    static size_t const s_nStreams;
+
+    public:
+        enum Type
+        {
+            INFO,
+            WARNING,
+            ERROR,
+            FATAL
+        };
+    private:
+        static size_t const s_sizeofType = FATAL + 1;
+
     public:
         static bool display();
-        static void open(std::ifstream &in, std::string const &name);
-        static void open(std::ofstream &out, std::string const &name);
-        static void open(std::ofstream &out, std::string const &name, 
-                                            size_t protection);
+        static bool display(Type type);
+
         static bool setDisplay(bool mode);
-        static void setOstream(std::string const &name);
+        static bool setDisplay(Type type, bool mode);
+
+        static void setDisplay(Type type, std::string const &name);
+        static void setDisplay(Type type, std::streambuf *buffer);
+        static void setDisplay(Type type, std::ostream &stream);
+        static std::streambuf *sbuf(Type type);
+
+        static void open(std::ifstream &in, std::string const &name);
+        static void open(std::ifstream &in, std::string const &name, 
+                                                std::ios::openmode mode);
+        static void open(std::ofstream &out, std::string const &name);
+        static void open(std::ofstream &out, std::string const &name,
+                                                std::ios::openmode mode);
+        static void open(std::ofstream &out, std::string const &name, 
+                                                size_t protection);
+
+        static void setOstream(std::string const &name);    // DEPRECATED
+        static std::streambuf *setInfoBuf(                  // DEPRECATED
+                        std::streambuf *newBuffer, bool display = true);
+
         static void setLine(size_t linenr);
         static void setWarning(char const *pre = "[Warning] ");
         static void setMaxCount(size_t maxCount);
+
         static size_t count();
         static bool errors();
         static size_t warnings();
-        static std::streambuf *setInfoBuf(std::streambuf *newBuffer,
-                                          bool display = true);
-        static std::streambuf *infoToWarning();
+
+
+        static std::streambuf *infoToWarning();             // DEPRECATED
+
+    private:
+        static void prepareStream(StreamInfo &si);
+        static bool setActive(StreamInfo &si, bool active);
+        static void activateStream(StreamInfo &si);
+        static void suppressStream(StreamInfo &si);
+        static bool isActive(StreamInfo const &si);
+
 };
 
 
+inline bool Msg::isActive(StreamInfo const &si)
+{
+    return si.out.good();
+}
+
 inline bool Msg::display()
 {
-    return s_display;
+    return std::count_if(s_streams, s_streams + s_sizeofType, isActive);
+}
+
+inline bool Msg::display(Type type)
+{
+    return s_streams[type].out.good();
+}
+
+inline bool Msg::setDisplay(Type type, bool mode)
+{
+    return setActive(s_streams[type], mode);
+}
+
+inline std::streambuf *Msg::sbuf(Type type)
+{
+    return s_streams[type].out.rdbuf();
 }
 
 inline void Msg::setLine(size_t linenr)
@@ -108,15 +179,12 @@ inline std::ostringstream &msgstream()
     return Msg::s_msg;
 }
 
-}   // namespace FBB
-
-namespace std
+inline void operator<<(std::ostream &ostr, void (*manip)(std::ostream &))
 {
-    inline void operator<<(ostream &ostrstream, void (*manip)(ostream &str))
-    {
-        (*manip)(ostrstream);
-    }
-}    
+    (*manip)(ostr);
+}
+
+}   // namespace FBB
 
 #endif
 

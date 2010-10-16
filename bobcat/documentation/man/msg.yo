@@ -11,47 +11,64 @@ manpagesynopsis()
     Linking option: tt(-lbobcat) 
 
 manpagedescription()
+    This class may be used to handle messages and to perform verfied stream
+opening. The class bf(Msg) only has static members.
+
+    The following types of messages are distinguished:
+    itemization(
+    it() informational messages
+    it() warning messages
+    it() error messages
+    it() fatal messages
+    )
+    Each type of message can be written to its own file (given the file's
+name) or stream (given the stream object). By default, all messages are
+inserted into the standard output stream (tt(std::cout)).
 
 manpagesection(NAMESPACE)
     bf(FBB)nl()
-    All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace bf(FBB).
+    All elements mentioned in this man-page, are defined in the namespace
+bf(FBB).
 
 manpagesection(INHERITS FROM)
     -
 
 manpagesection(CONSTRUCTORS)
-    The class bf(Msg) only has static members. There are no constructors.
+    There are no constructors. All members are static.
 
-
-manpagesection(MEMBER FUNCTIONS)
-    The class bf(Msg) only has static members. The member functions listed
-below are not frequently used. They exist primarily to control the output
+manpagesection(STATIC MEMBER FUNCTIONS)
+    The member functions listed below are primarily used to control the output
 streams and to fine-tune the inner workings of the class' data members.
-Instead, the class-less members bf(msg()) and bf(lineMsg()) (see below) and
+
+The class-less members bf(msg) and bf(lineMsg) (see below) and associated
 the manipulators (see below) are used to create messages.
 
     itemization(
     itb(static size_t count())
         Returns the number of error messages generated so far.
     itb(static bool display())
-        Returns tt(true) if the currently accumulated message will be
-inserted into the message stream. This is the default case.
+        Returns tt(true) if some messages will actually be
+inserted into the message stream. As the messages are by default inserted into
+the standard output stream this member returns tt(true) by default.
     itb(static size_t errors())
         Returns the number of error messages generated so far. Synonym of
-bf(count()). 
+bf(count).
+
+DEPRECATE:
     itb(static std::streambuf *infoToWarning())
-        Following this call all `info'-messages will be written to the same
-stream as warning messages. The function returns the bf(streambuf) used so
-far. 
-    itb(static void open(std::ifstream &in, std::string const &name))
-        Convenience function opening the object tt(ifstream in) refers to. If
-opening the stream fails, a fatal error message is generated.
-    itb(static void open(std::ofstream &out, std::string const &name))
+        DEPRECATED. Use tt(setDisplay(Msg::INFO, streambuf(Msg::WARNING)))
+
+    itb(static void open(std::ifstream &in, std::string const &name,
+                                        std::ios::openmode mode = ios::in))
+        Convenience function opening the object tt(ifstream in) refers to for
+reading. If opening the stream fails, a fatal error message is generated.
+    itb(static void open(std::ofstream &out, std::string const &name,
+                                        std::ios::openmode mode = ios::out))
         Convenience function opening (creating) the object tt(ofstream out)
 refers to. If opening the stream fails, a fatal error message is generated.
-    itb(static void open(std::ofstream &out, std::string const &name, size_t
-protection)) 
+    itb(static void open(std::ofstream &out, std::string const &name, 
+                                        size_t protection,
+                                        std::ios::openmode mode = ios::out)) 
         Convenience function opening (creating) the object tt(ofstream out)
 refers to. The protection value is normally specified as an octal value. From
 the bf(chmod)(1) manpage:
@@ -66,10 +83,12 @@ the bf(chmod)(1) manpage:
        for other users not in the file's group, with the same values.
 
 If opening the stream fails, a fatal error message is generated.
+
     itb(static bool setDisplay(bool mode))
         Changes the setting of the `display' variable. At bf(true) (Note that
 the default is bf(false)) accumulated messages will be inserted into the
 message stream.
+
     itb(static std::streambuf *setInfoBuf(std::streambuf *newBuffer,
                                           bool display = true))
         Define a new bf(streambuf) into which info-messages will be
@@ -165,28 +184,7 @@ manipulators to be inserted into an bf(ostrstream):
     )
 
 manpagesection(EXAMPLE)
-        verb(
-    #include <bobcat/msg>
-
-    using namespace FBB;
-
-    int main(int argc)
-    try
-    {
-        if (argc == 1)
-            msg() << "Need some arguments" << fatal;
-        else
-        {
-            Msg::setDisplay(true);
-            msg() << "Thanks for providing " << argc << 
-                                    " arguments " << info;
-        }
-    }            
-    catch(...)
-    {
-        msg() << "Got an Errno object, but ignoring it" << err;
-    }
-        )
+    verbinclude(../../msg/driver/driver.cc)
 
 manpagefiles()
     em(bobcat/msg) - defines the class interface

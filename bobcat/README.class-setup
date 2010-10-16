@@ -24,8 +24,8 @@ future relase:
 0   X2a     Hash   Hostent  TypeTrait   Swap
                                 |
                 +--------+------+-------+------------+-----------+--------+
-                |        |              |            |           |        |
-            FnWrap1  FnWrap1c         FnWrap2     FnWrap2c    foreach  repeat
+                |        |      |       |            |           |        |
+            FnWrap1  FnWrap1c FnWrap  FnWrap2     FnWrap2c    foreach  repeat
 
 
 0   DateTime       SyslogBuf          RandBuffer        Indent      RefCount
@@ -34,27 +34,31 @@ future relase:
 
 0                        Errno                                    LogBuffer
                            |                                          |
-      +-------+-------+----+------+----------+-----+-------+-----+    |
-      |       |       |           |          |     |       |     |    |
-    BigInt   Msg  Pattern       OneKey       |     |      User   +--+-+
-              |       |                      |     |                |
-     FnWrap1c +-------+                      |     |               Log
-      (cont)  |       |                      |     |   Hostent      |  
-        |     |       |                      |     |    (cont)    level
-        +--+--+       |                      |     |      |       
-           |          |                      |     +---+--+       
-       ConfigFile     |                      |         |          
-                      |                      |     Hostname       
-                  GetHostent                 |                    
-                      |               LocalSocketBase                 
-                  InetAddress                |                          
-                      |                      |                          
-                  SocketBase                 +-------------------+  
-                      |                      |                   |
-                      |              LocalClientSocket   LocalServerSocket
-               +------+---------+       
-               |                |       
-           ClientSocket   ServerSocket  
+      +-------+--------+---+------+----------+-----+-------+-----+    |
+      |       |        |          |          |     |       |     |    |
+      |       | FnWrap |          |          |     |       |     |    |
+      |       |   |    |          |          |     |       |     |    |
+      |       +---+    |          |          |     |       |     |    |
+      |       |        |          |          |     |       |     |    |
+    BigInt   Msg    Pattern     OneKey       |     |      User   +--+-+
+              |        |                     |     |                |
+              +--------+                     |     |               Log
+              |        |                     |     |   Hostent      |  
+              |        |                     |     |    (cont)    level
+          ConfigFile   |                     |     |      |       
+                       |                     |     +---+--+       
+                       |                     |         |          
+                       |                     |     Hostname       
+                   GetHostent                |                    
+                       |              LocalSocketBase                 
+                   InetAddress               |                          
+                       |                     |                          
+                   SocketBase                +-------------------+  
+                       |                     |                   |
+                       |             LocalClientSocket   LocalServerSocket
+                +------+---------+       
+                |                |       
+            ClientSocket   ServerSocket  
 
 
      Errno(cont)

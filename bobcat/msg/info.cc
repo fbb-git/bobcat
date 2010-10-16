@@ -2,11 +2,13 @@
 
 void FBB::info(ostream &out)
 {
-    if (!Msg::s_display)
+    Msg::StreamInfo &si = Msg::s_streams[Msg::INFO];
+
+    if (!si.out.good())
         return;
 
     ostringstream &os = dynamic_cast<ostringstream &>(out);
 
-    Msg::s_info << os.str() << endl;
+    si.out << os.str() << endl;
 }
 

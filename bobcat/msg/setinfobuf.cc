@@ -1,8 +1,11 @@
 #include "msg.ih"
 
-streambuf *Msg::setInfoBuf(streambuf *newBuffer, bool display)
+streambuf *Msg::setInfoBuf(streambuf *newBuffer, bool onOff)
 {
-    s_display = display;
+    if (newBuffer)
+        setDisplay(INFO, newBuffer);
 
-    return s_info.rdbuf(newBuffer ? newBuffer : s_info.rdbuf());
+    setDisplay(onOff);
+
+    return sbuf(INFO);
 }
