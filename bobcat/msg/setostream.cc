@@ -2,8 +2,13 @@
 
 void Msg::setOstream(string const &name) 
 {
-    setDisplay(INFO, name);
-    setDisplay(WARNING, sbuf(INFO));
-    setDisplay(ERROR,   sbuf(INFO));
-    setDisplay(FATAL,   sbuf(INFO));
+    static bool shown = false;
+
+    if (!shown)
+    {
+        shown = true;
+        cerr << "FBB::Msg::setOstream is deprecated. Use\n"
+                "setDisplay(name) instead\n";
+    }
+    setDisplay(name);
 }
