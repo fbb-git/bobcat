@@ -31,8 +31,8 @@ class MsgStreambuf: public std::streambuf
         void preamble();
         void reset(std::ostream *ostr, bool throwing = false);
         bool throwing() const;
-        std::streambuf *rdbuf();
-        void rdbuf(std::streambuf *buf);
+        std::streambuf *msgbuf();
+        void msgbuf(std::streambuf *buf);
         void setLineNr(size_t lineNr);
         void showLineNrs(bool ifTrue);
         void setTag(std::string const &tag);
@@ -90,6 +90,12 @@ inline void MsgStreambuf::setMaxCount(size_t maxCount)
 inline size_t MsgStreambuf::count() const
 {
     return d_count;
+}
+
+inline void MsgStreambuf::setLineNr(size_t lineNr, bool ifTrue)
+{
+    setLineNr(lineNr);
+    showLineNrs(ifTrue);
 }
 
 } // BOBCAT

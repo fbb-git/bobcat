@@ -29,143 +29,78 @@ namespace FBB
     // true then MsgStream throws the exception. The ostream itself is cleared
     // at a not good() anyway.
     //
-    // Insertion operations are handled by a member accepting the standard
-    // manipulator and by a template accepting all other arguments.
-    //
-class MsgStream
+class MsgStream: private BOBCAT::MsgStreambuf, public std::ostream
 {
-    template <typename Type>
-    friend MsgStream &operator<<(MsgStream &msg, Type const &type);
-    
-    friend MsgStream &operator<< 
-                    (MsgStream &msg, std::ostream &(*manip)(std::ostream &));
+    friend std::ostream &endm(std::ostream &os);
 
-    typedef BOBCAT::MsgStreambuf MsgStreambuf;
+    typedef MsgStreambuf;
 
-    MsgStreambuf d_msgStreambuf;
-    std::ostream d_os;
     std::ofstream d_ofstream;
 
     public:
         MsgStream(std::ostream *ostr, size_t maxCount, 
                      std::string const &tag = "", bool throwing = false);
+
+        // The state-modifying members should not be used as they target
+        // MsgStreambuf 
+        
+        // rdbuf members are still available but will usually result in 
+        // unexpected behavior as they return/change MsgStreambuf
+        // Instead, use the sbuf members
+
         int asInt() const;
-        bool good() const;
-        void clear();
-        void suppress();
-        void close();
-        void open(std::string const &name);
-        void rdbuf(std::streambuf *buf);
-        std::streambuf *rdbuf();
-        MsgStream &setLineNr(size_t lineNr);
-        MsgStream &setLineNr(size_t lineNr, bool ifTrue);
-        MsgStream &showLineNrs(bool ifTrue);
-        void setTag(std::string const &tag);
-        size_t count() const;
-        void setMaxCount(size_t maxCount = UINT_MAX);
-        bool partialMsg() const;
-        void msgContinues();
+
+        void open(std::string const &name);     // opens the ofstream
+                                                // and uses that stream for
+                                                // MsgStream's output
+        using MsgStreambuf::setLineNr;
+        using MsgStreambuf::showLineNrs;
+        using MsgStreambuf::count;
+        using MsgStreambuf::setMaxCount;
+        using MsgStreambuf::setTag;
+        using MsgStreambuf::msgbuf;
+
+//        using MsgStreambuf::msgContinues;
 };
-
-inline void MsgStream::msgContinues()
-{
-    d_msgStreambuf.msgContinues();
-}
-
-
-inline bool MsgStream::partialMsg() const
-{
-    return !d_msgStreambuf.newMsg();
-}
-
-inline bool MsgStream::good() const
-{
-    return d_os.good();
-}
-
-inline void MsgStream::clear()
-{
-    d_os.clear();
-}
-
-inline void MsgStream::suppress()
-{
-    d_os.setstate(std::ios::failbit);
-}
 
 inline int MsgStream::asInt() const
 {
     return reinterpret_cast<int>(this);
 }
 
-inline void MsgStream::close()
-{
-    d_ofstream.close();
-}
-
-inline void MsgStream::rdbuf(std::streambuf *buf)
+inline void MsgStream::sbuf(std::streambuf *buf)
 {
     d_msgStreambuf.rdbuf(buf);
 }
 
-inline std::streambuf *MsgStream::rdbuf()
+inline std::streambuf *MsgStream::sbuf()
 {
     return d_msgStreambuf.rdbuf();
 }
 
-inline MsgStream &MsgStream::setLineNr(size_t lineNr)
-{
-    d_msgStreambuf.setLineNr(lineNr);
-    return *this;
-}
-
-inline MsgStream &MsgStream::setLineNr(size_t lineNr, bool ifTrue)
+inline void MsgStream::setLineNr(size_t lineNr, bool ifTrue)
 {
     setLineNr(lineNr);
     showLineNrs(ifTrue);
     return *this;
 }
 
-inline MsgStream &MsgStream::showLineNrs(bool ifTrue)
-{
-    d_msgStreambuf.showLineNrs(ifTrue);
-    return *this;
-}
-
-inline void MsgStream::setTag(std::string const &tag)
-{
-    d_msgStreambuf.setTag(tag);
-}
-
-inline void MsgStream::setMaxCount(size_t maxCount)
-{
-    d_msgStreambuf.setMaxCount(maxCount);
-}
-
-inline size_t MsgStream::count() const
-{
-    return d_msgStreambuf.count();
-}
-
-template <typename Type>
-inline MsgStream &operator<<(MsgStream &msg, Type const &type)
-{
-    msg.d_msgStreambuf.preamble();
-    msg.d_os << type;
-    return msg;
-}
-
 inline MsgStream::MsgStream(std::ostream *ostr, size_t maxCount, 
                              std::string const &tag, bool throwing)
 :
-    d_msgStreambuf(ostr, maxCount, tag, throwing),
-    d_os(&d_msgStreambuf)
+    MsgStreambuf(ostr, maxCount, tag, throwing),
+    std::ostream(this)
 {}
 
-extern MsgStream emsg;
-extern MsgStream imsg;
-extern MsgStream fmsg;
-extern MsgStream wmsg;
+std::ostream &endm(std::ostream &os)
+{
+    os.put('\n').flush();
+    if (MsgStream *mp = dynamic_cast<MsgStream *>(&os))
+    {
+        if (mp->throwing())
+            throw 1;
+    }
+}
 
 } // FBB        
 #endif
