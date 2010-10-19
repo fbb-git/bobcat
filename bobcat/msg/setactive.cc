@@ -1,10 +1,10 @@
 #include "msg.ih"
 
-void Msg::setActive(StreamInfo &si, bool active)
+void Msg::setActive(MsgStream *ms, bool active)
 {
     if (active)
-        activateStream(si);
+        activateStream(ms);
     else
-        suppressStream(si);
+        suppressStream(ms);
 }
 

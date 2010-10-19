@@ -1,15 +1,16 @@
 #include "msg.ih"
 
-char const *Msg::s_warning = "[Warning] ";
-bool Msg::s_display = true;
-size_t Msg::s_line;
-size_t Msg::s_warnCount;
-size_t Msg::s_count;
-size_t Msg::s_maxCount = UINT_MAX;
-
 ostringstream Msg::s_msg;
 
-Msg::StreamInfo Msg::s_streams[Msg::s_sizeofType];
+MsgStream FBB::emsg(&std::cout, UINT_MAX - 1,   "Error");
+MsgStream FBB::fmsg(&std::cout, UINT_MAX,       "Fatal", true);
+MsgStream FBB::imsg(&std::cout, UINT_MAX);
+MsgStream FBB::wmsg(&std::cout, UINT_MAX,       "Warning");
 
-size_t const Msg::s_nStreams = 
-                        sizeof(Msg::s_streams) / sizeof(Msg::StreamInfo);
+MsgStream *Msg::s_msgStream[] = 
+    {
+        &emsg,
+        &fmsg,
+        &imsg,
+        &wmsg
+    };

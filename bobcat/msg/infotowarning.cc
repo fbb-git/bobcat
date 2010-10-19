@@ -12,8 +12,8 @@ std::streambuf *Msg::infoToWarning()
                                                                 "instead\n";
     }
 
-    streambuf *old = s_streams[INFO].out.rdbuf();
-    setDisplay(INFO, sbuf(WARNING));
+    streambuf *old = s_msgStream[INFO]->rdbuf();
+    setDisplay(INFO, rdbuf(WARNING));
     return old;
 }
 

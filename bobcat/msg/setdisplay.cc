@@ -4,7 +4,7 @@ bool Msg::setDisplay(bool mode)
 {
     bool old = display();
 
-    for_each(s_streams, s_streams + s_nStreams, 
+    for_each(s_msgStream, s_msgStream + s_sizeofType, 
                 FnWrap::unary(setActive, mode));
 
     return old;

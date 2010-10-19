@@ -1,10 +1,10 @@
 #include "msg.ih"
 
-void Msg::activateStream(StreamInfo &si)
+void Msg::activateStream(MsgStream *ms)
 {
-    if (si.out.good())
+    if (ms->good())
         return;
 
-    si.out.clear();
+    ms->clear();
 }
 

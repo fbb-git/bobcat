@@ -1,11 +1,11 @@
 #include "msg.ih"
 
-void Msg::suppressStream(StreamInfo &si)
+void Msg::suppressStream(MsgStream *ms)
 {
-    if (not si.out.good())
+    if (not ms->good())
         return;
 
-    si.out << flush;
-    si.out.setstate(ios::failbit);
+    *ms << flush;
+    ms->suppress();
 }
 

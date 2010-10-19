@@ -16,5 +16,5 @@ streambuf *Msg::setInfoBuf(streambuf *newBuffer, bool onOff)
 
     setDisplay(onOff);
 
-    return sbuf(INFO);
+    return rdbuf(INFO);
 }

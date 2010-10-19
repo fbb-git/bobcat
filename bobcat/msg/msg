@@ -9,58 +9,33 @@
 #include <algorithm>
 
 #include <bobcat/errno>
+#include <bobcat/msgstreambuf>
 
 namespace FBB
 {
 
-void info(std::ostream &out);
-void spool(std::ostream &out);
-void warning(std::ostream &out);
-void err(std::ostream &out);
-void fatal(std::ostream &out);
-
-std::ostringstream &msg();
-std::ostringstream &lineMsg();
+void info(std::ostream &out);               // DEPRECATED
+void spool(std::ostream &out);              // DEPRECATED
+void warning(std::ostream &out);            // DEPRECATED
+void err(std::ostream &out);                // DEPRECATED
+void fatal(std::ostream &out);              // DEPRECATED
+std::ostringstream &msg();                  // DEPRECATED
+std::ostringstream &lineMsg();              // DEPRECATED
 
 class Msg
 {
-    friend void err(std::ostream &out);
-    friend void spool(std::ostream &out);
-    friend void info(std::ostream &out);
-    friend void warning(std::ostream &out);
-    friend void fatal(std::ostream &out);
-
-    friend std::ostringstream &msg();
-    friend std::ostringstream &msgstream();
-    friend std::ostringstream &lineMsg();
-
-    static size_t s_line;    
-    static char const *s_warning;
-    static size_t s_warnCount;
-    static size_t s_count;
-    static size_t s_maxCount;
-    static std::ostringstream s_msg;
-    static bool s_display;
-
-    struct StreamInfo
-    {
-        std::ostream out;
-        std::ofstream fout;
-
-        StreamInfo();
-    };
-
-    static StreamInfo s_streams[];
-    static size_t const s_nStreams;
+    friend class MsgStream;
+    static MsgStream *s_msgStream[];
 
     public:
         enum Type
         {
-            INFO,
-            WARNING,
             ERROR,
-            FATAL
+            FATAL,
+            INFO,
+            WARNING
         };
+
     private:
         static size_t const s_sizeofType = FATAL + 1;
 
@@ -78,13 +53,11 @@ class Msg
         static void setDisplay(Type type, std::string const &name); // 3
         static void setDisplay(Type type, std::streambuf *buffer);  // 4
         static void setDisplay(Type type, std::ostream &stream);    // 5
+                                                
+        template <typename Device>              // all types use the same
+        static void setDisplay(Device &device); // output device
 
-                                                // all types use the same
-                                                // output device
-        template <typename Device>
-        static void setDisplay(Device &device);
-
-        static std::streambuf *sbuf(Type type);
+        static std::streambuf *rdbuf(Type type);
 
         static void open(std::ifstream &in, std::string const &name);
         static void open(std::ifstream &in, std::string const &name, 
@@ -100,83 +73,97 @@ class Msg
         static void open(std::fstream &out, std::string const &name,
                                                 std::ios::openmode mode);
 
-        static void setOstream(std::string const &name);    // DEPRECATED
-        static std::streambuf *setInfoBuf(                  // DEPRECATED
-                        std::streambuf *newBuffer, bool display = true);
+    private:
+        static void prepareStream(MsgStream *ms);
+        static bool isActive(MsgStream const *ms);
+        static void setActive(MsgStream *ms, bool active);
+        static void activateStream(MsgStream *si);
+        static void suppressStream(MsgStream *si);
 
+
+     // ALL MEMBERS AND FUNCTIONS DECLARED AS FRIEND BELOW THIS LINE 
+     // ARE DEPRECATED
+
+    public: 
+        static void setOstream(std::string const &name);
+        static std::streambuf *setInfoBuf(
+                        std::streambuf *newBuffer, bool display = true);
         static void setLine(size_t linenr);
         static void setWarning(char const *pre = "[Warning] ");
         static void setMaxCount(size_t maxCount);
-
         static size_t count();
         static bool errors();
         static size_t warnings();
-
-
-        static std::streambuf *infoToWarning();             // DEPRECATED
+        static std::streambuf *infoToWarning();
 
     private:
-        static void prepareStream(StreamInfo &si);
-        static void setActive(StreamInfo &si, bool active);
-        static void activateStream(StreamInfo &si);
-        static void suppressStream(StreamInfo &si);
-        static bool isActive(StreamInfo const &si);
-
+        friend void err(std::ostream &out);
+        friend void spool(std::ostream &out);
+        friend void info(std::ostream &out);
+        friend void warning(std::ostream &out);
+        friend void fatal(std::ostream &out);
+    
+        friend std::ostringstream &msg();
+        friend std::ostringstream &msgstream();
+        friend std::ostringstream &lineMsg();
+    
+        static std::ostringstream s_msg;
 };
 
 
-inline bool Msg::isActive(StreamInfo const &si)
+inline bool Msg::isActive(MsgStream const *ms)
 {
-    return si.out.good();
+    return ms->good();
 }
 
 inline bool Msg::display()
 {
-    return std::count_if(s_streams, s_streams + s_sizeofType, isActive);
+    return std::count_if(s_msgStream, s_msgStream + s_sizeofType, isActive);
 }
 
 inline bool Msg::display(Type type)
 {
-    return s_streams[type].out.good();
+    return s_msgStream[type]->good();
 }
-
+ 
 inline void Msg::setDisplay(Type type, bool mode)
 {
-    setActive(s_streams[type], mode);
+    setActive(s_msgStream[type], mode);
 }
-
-inline std::streambuf *Msg::sbuf(Type type)
+ 
+inline std::streambuf *Msg::rdbuf(Type type)
 {
-    return s_streams[type].out.good() ? s_streams[type].out.rdbuf() : 0;
+    return s_msgStream[type]->rdbuf();
 }
 
 inline void Msg::setLine(size_t linenr)
 {
-    s_line = linenr;
+    imsg.setLineNr(linenr);
 }            
 
 inline void Msg::setWarning(char const *pre)
 {
-    s_warning = pre;
+    wmsg.setTag(pre);
 }
 
 inline void Msg::setMaxCount(size_t maxCount)
 {
-    s_maxCount = maxCount;
+    emsg.setMaxCount(maxCount);
 }
+
 inline size_t Msg::count()
 {
-    return s_count;
+    return emsg.count();
 }
 
 inline bool Msg::errors()
 {
-    return s_count;
+    return emsg.count();
 }
 
 inline size_t Msg::warnings()
 {
-    return s_warnCount;
+    return wmsg.count();
 }
 
 inline std::ostringstream &msgstream()
@@ -184,17 +171,12 @@ inline std::ostringstream &msgstream()
     return Msg::s_msg;
 }
 
-inline Msg::StreamInfo::StreamInfo()
-:
-    out(std::cout.rdbuf())
-{}
-
 template <typename Device>
 void Msg::setDisplay(Device &device)
 {
     setDisplay(INFO, device);
     for (size_t idx = WARNING; idx != s_sizeofType; ++idx)
-        setDisplay(static_cast<Type>(idx), sbuf(INFO));
+        setDisplay(static_cast<Type>(idx), rdbuf(INFO));
 }
 
 inline void operator<<(std::ostream &ostr, void (*manip)(std::ostream &))

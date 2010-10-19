@@ -2,8 +2,8 @@
 
 void Msg::setDisplay(Type type, ostream &stream)
 {
-    StreamInfo &si = s_streams[type];
+    MsgStream *ms = s_msgStream[type];
 
-    prepareStream(si);
-    si.out.rdbuf(stream.rdbuf());
+    prepareStream(ms);
+    ms->rdbuf(stream.rdbuf());
 }

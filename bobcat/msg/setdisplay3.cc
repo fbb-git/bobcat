@@ -2,10 +2,9 @@
 
 void Msg::setDisplay(Type type, std::string const &name)
 {
-    StreamInfo &si = s_streams[type];
+    MsgStream *ms = s_msgStream[type];
 
-    prepareStream(si);
+    prepareStream(ms);
 
-    open(si.fout, name);
-    si.out.rdbuf(si.fout.rdbuf());
+    ms->open(name);
 }

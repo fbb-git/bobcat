@@ -1,0 +1,265 @@
+#ifndef INCLUDED_BOBCAT_MSGSTREAMBUF_
+#define INCLUDED_BOBCAT_MSGSTREAMBUF_
+
+#include <streambuf>
+#include <ostream>
+#include <fstream>
+#include <string>
+#include <climits>
+
+#include <bobcat/errno>
+
+namespace FBB
+{
+
+namespace BOBCAT
+{
+
+class MsgStreambuf: public std::streambuf
+{
+    std::ostream *d_ostr;
+    bool d_throwing;
+    size_t d_lineNr;
+    bool d_showLineNrs;
+    std::string d_tag;
+    size_t d_count;
+    size_t d_maxCount;
+    bool d_newMsg;
+    
+    public:
+        MsgStreambuf(std::ostream *ostr, size_t maxCount, 
+                     std::string const &tag = "", bool throwing = false);
+
+        virtual ~MsgStreambuf() = default;
+
+        void preamble();
+        void reset(std::ostream *ostr, bool throwing = false);
+        bool throwing() const;
+        std::streambuf *rdbuf();
+        void rdbuf(std::streambuf *buf);
+        void setLineNr(size_t lineNr);
+        void showLineNrs(bool ifTrue);
+        void setTag(std::string const &tag);
+        void setMaxCount(size_t maxCount);
+        size_t count() const;
+        void msgContinues();
+        bool newMsg() const;
+
+    private:
+        virtual int overflow(int c);
+        virtual std::streamsize xsputn(char const *buf, std::streamsize n);
+        virtual int sync();
+};
+
+inline bool MsgStreambuf::newMsg() const
+{
+    return d_newMsg;
+}
+
+inline void MsgStreambuf::msgContinues()
+{
+    d_newMsg = false;
+}
+
+inline void MsgStreambuf::setLineNr(size_t lineNr)
+{
+    d_lineNr = lineNr;
+}
+
+inline void MsgStreambuf::showLineNrs(bool ifTrue)
+{
+    d_showLineNrs = ifTrue;
+}
+
+inline bool MsgStreambuf::throwing() const
+{
+    return d_throwing;
+}
+
+inline std::streambuf *MsgStreambuf::rdbuf() 
+{
+    return this;
+}
+
+inline void MsgStreambuf::rdbuf(std::streambuf *buf) 
+{
+    d_ostr->rdbuf(buf);
+}
+
+inline void MsgStreambuf::setMaxCount(size_t maxCount)
+{
+    d_maxCount = maxCount;
+}
+
+inline size_t MsgStreambuf::count() const
+{
+    return d_count;
+}
+
+} // BOBCAT
+
+
+    // MsgStream cannot be an ostream as ostreams catch exceptions thrown from
+    // them and transform them into an error state Cf.:
+    // http://www.drdobbs.com/184401357:  
+    //      A slightly more serious concern is that the virtual functions in a
+    //      class that’s derived from streambuf might throw exceptions;
+    //      perhaps, for example, a user-defined class for network I/O might
+    //      throw an exception when the underlying connection has been
+    //      lost. High-level istream and ostream functions will catch those
+    //      exceptions and translate them into an error state within the
+    //      stream (that’s one of the reasons that seemingly innocent
+    //      functions like istream::get are so complicated), but if you’re
+    //      working with stream buffers directly there’s nobody to catch
+    //      exceptions for you. If you work with stream buffers, you should
+    //      make sure that your code is exception safe.
+    // So MsgStream uses its own ostream to handle the outgoing messages and
+    // after that tests the stream's state. If not good() and if d_throwing is
+    // true then MsgStream throws the exception. The ostream itself is cleared
+    // at a not good() anyway.
+    //
+    // Insertion operations are handled by a member accepting the standard
+    // manipulator and by a template accepting all other arguments.
+    //
+class MsgStream
+{
+    template <typename Type>
+    friend MsgStream &operator<<(MsgStream &msg, Type const &type);
+    
+    friend MsgStream &operator<< 
+                    (MsgStream &msg, std::ostream &(*manip)(std::ostream &));
+
+    typedef BOBCAT::MsgStreambuf MsgStreambuf;
+
+    MsgStreambuf d_msgStreambuf;
+    std::ostream d_os;
+    std::ofstream d_ofstream;
+
+    public:
+        MsgStream(std::ostream *ostr, size_t maxCount, 
+                     std::string const &tag = "", bool throwing = false);
+        int asInt() const;
+        bool good() const;
+        void clear();
+        void suppress();
+        void close();
+        void open(std::string const &name);
+        void rdbuf(std::streambuf *buf);
+        std::streambuf *rdbuf();
+        MsgStream &setLineNr(size_t lineNr);
+        MsgStream &setLineNr(size_t lineNr, bool ifTrue);
+        MsgStream &showLineNrs(bool ifTrue);
+        void setTag(std::string const &tag);
+        size_t count() const;
+        void setMaxCount(size_t maxCount = UINT_MAX);
+        bool partialMsg() const;
+        void msgContinues();
+};
+
+inline void MsgStream::msgContinues()
+{
+    d_msgStreambuf.msgContinues();
+}
+
+
+inline bool MsgStream::partialMsg() const
+{
+    return !d_msgStreambuf.newMsg();
+}
+
+inline bool MsgStream::good() const
+{
+    return d_os.good();
+}
+
+inline void MsgStream::clear()
+{
+    d_os.clear();
+}
+
+inline void MsgStream::suppress()
+{
+    d_os.setstate(std::ios::failbit);
+}
+
+inline int MsgStream::asInt() const
+{
+    return reinterpret_cast<int>(this);
+}
+
+inline void MsgStream::close()
+{
+    d_ofstream.close();
+}
+
+inline void MsgStream::rdbuf(std::streambuf *buf)
+{
+    d_msgStreambuf.rdbuf(buf);
+}
+
+inline std::streambuf *MsgStream::rdbuf()
+{
+    return d_msgStreambuf.rdbuf();
+}
+
+inline MsgStream &MsgStream::setLineNr(size_t lineNr)
+{
+    d_msgStreambuf.setLineNr(lineNr);
+    return *this;
+}
+
+inline MsgStream &MsgStream::setLineNr(size_t lineNr, bool ifTrue)
+{
+    setLineNr(lineNr);
+    showLineNrs(ifTrue);
+    return *this;
+}
+
+inline MsgStream &MsgStream::showLineNrs(bool ifTrue)
+{
+    d_msgStreambuf.showLineNrs(ifTrue);
+    return *this;
+}
+
+inline void MsgStream::setTag(std::string const &tag)
+{
+    d_msgStreambuf.setTag(tag);
+}
+
+inline void MsgStream::setMaxCount(size_t maxCount)
+{
+    d_msgStreambuf.setMaxCount(maxCount);
+}
+
+inline size_t MsgStream::count() const
+{
+    return d_msgStreambuf.count();
+}
+
+template <typename Type>
+inline MsgStream &operator<<(MsgStream &msg, Type const &type)
+{
+    msg.d_msgStreambuf.preamble();
+    msg.d_os << type;
+    return msg;
+}
+
+inline MsgStream::MsgStream(std::ostream *ostr, size_t maxCount, 
+                             std::string const &tag, bool throwing)
+:
+    d_msgStreambuf(ostr, maxCount, tag, throwing),
+    d_os(&d_msgStreambuf)
+{}
+
+extern MsgStream emsg;
+extern MsgStream imsg;
+extern MsgStream fmsg;
+extern MsgStream wmsg;
+
+} // FBB
+
+#endif
+
+
+
+

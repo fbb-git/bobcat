@@ -1,8 +1,8 @@
 #include "msg.ih"
 
-void Msg::prepareStream(StreamInfo &si)
+void Msg::prepareStream(MsgStream *ms)
 {
-    si.out << flush;
-    si.fout.close();
-    si.out.clear();
+    *ms << flush;
+    ms->close();
+    ms->clear();
 }

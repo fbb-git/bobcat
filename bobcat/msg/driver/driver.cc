@@ -17,6 +17,11 @@ try
         msg() << "Thanks for providing " << argc << 
                                 " arguments " << info;
     }
+
+    imsg << "This is an informational message" << endl;
+    emsg << "This is an error message" << endl;
+    wmsg << "This is a warning message" << endl;
+    fmsg << "This is a fatal message" << endl;
 }            
 catch(...)
 {
