@@ -1,4 +1,4 @@
-#include "msgstreambuf.ih"
+#include "msgstream.ih"
 
 // manipulators except endl and ends are not supposed to insert information
 // into the stream. So if only if the manipulator is endl or ends preamble
