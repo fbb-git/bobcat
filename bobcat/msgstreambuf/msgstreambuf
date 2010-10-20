@@ -17,7 +17,7 @@ class MsgStreambuf: public std::streambuf
 
     bool d_newMsg;
     bool d_showLineNrs;
-    bool d_throwing;
+    bool d_throw;
     size_t d_count;
     size_t d_lineNr;
     size_t d_maxCount;
@@ -33,6 +33,7 @@ class MsgStreambuf: public std::streambuf
         void reset(std::ostream *ostr);
 
         bool throwing() const;
+        void noThrow();
         void msgContinues();
 
             // these members are publicly accessible fm MsgStream
@@ -58,10 +59,15 @@ inline bool MsgStreambuf::newMsg() const
     return d_newMsg;
 }
 
-inline void MsgStreambuf::msgContinues()
+void MsgStreambuf::noThrow()
 {
-    d_newMsg = false;
+    d_throw = false;
 }
+
+// inline void MsgStreambuf::msgContinues()
+// {
+//     d_newMsg = false;
+// }
 
 inline void MsgStreambuf::setLineNr(size_t lineNr)
 {

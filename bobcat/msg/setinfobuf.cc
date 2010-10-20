@@ -7,8 +7,10 @@ streambuf *Msg::setInfoBuf(streambuf *newBuffer, bool onOff)
     if (!shown)
     {
         shown = true;
-        cerr << "FBB::Msg::setInfoBuf is deprecated. Use\n"
-                "setDisplay(FBB::Msg::INFO, newBuffer) instead\n";
+        cerr << "\n"
+                "FBB::Msg::setInfoBuf is DEPRECATED. Use\n"
+                "setDisplay(FBB::Msg::INFO, newBuffer) instead\n"
+                "\n";
     }
 
     if (newBuffer)

@@ -7,8 +7,10 @@ void Msg::setOstream(string const &name)
     if (!shown)
     {
         shown = true;
-        cerr << "FBB::Msg::setOstream is deprecated. Use\n"
-                "setDisplay(name) instead\n";
+        cerr << "\n"
+                "FBB::Msg::setOstream is DEPRECATED. Use\n"
+                "setDisplay(name) instead\n"
+                "\n";
     }
     setDisplay(name);
 }

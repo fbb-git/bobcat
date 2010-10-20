@@ -7,9 +7,11 @@ std::streambuf *Msg::infoToWarning()
     if (!shown)
     {
         shown = true;
-        cerr << "FBB::Msg::infoToWarning is deprecated. Use\n"
+        cerr << "\n"
+                "FBB::Msg::infoToWarning is DEPRECATED. Use\n"
                 "setDisplay(FBB::Msg::INFO, streambuf(FBB::Msg::WARNING)) "
-                                                                "instead\n";
+                                                                "instead\n"
+                "\n";
     }
 
     streambuf *old = s_msgStream[INFO]->rdbuf();
