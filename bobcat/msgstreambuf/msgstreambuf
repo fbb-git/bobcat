@@ -13,14 +13,15 @@ namespace BOBCAT
 
 class MsgStreambuf: public std::streambuf
 {
-    std::ostream *d_ostr;
-    bool d_throwing;
-    size_t d_lineNr;
-    bool d_showLineNrs;
-    std::string d_tag;
-    size_t d_count;
-    size_t d_maxCount;
+    std::ostream *d_ostr;       // this is the receiving ostream
+
     bool d_newMsg;
+    bool d_showLineNrs;
+    bool d_throwing;
+    size_t d_count;
+    size_t d_lineNr;
+    size_t d_maxCount;
+    std::string d_tag;
     
     public:
         MsgStreambuf(std::ostream *ostr, size_t maxCount, 
@@ -28,9 +29,13 @@ class MsgStreambuf: public std::streambuf
 
         virtual ~MsgStreambuf() = default;
 
-        void preamble();
-        void reset(std::ostream *ostr, bool throwing = false);
+        void atNewline();
+        void reset(std::ostream *ostr);
+
         bool throwing() const;
+        void msgContinues();
+
+            // these members are publicly accessible fm MsgStream
         std::streambuf *msgbuf();
         void msgbuf(std::streambuf *buf);
         void setLineNr(size_t lineNr);
@@ -38,10 +43,11 @@ class MsgStreambuf: public std::streambuf
         void setTag(std::string const &tag);
         void setMaxCount(size_t maxCount);
         size_t count() const;
-        void msgContinues();
         bool newMsg() const;
 
     private:
+        void showTag();
+
         virtual int overflow(int c);
         virtual std::streamsize xsputn(char const *buf, std::streamsize n);
         virtual int sync();
@@ -72,12 +78,12 @@ inline bool MsgStreambuf::throwing() const
     return d_throwing;
 }
 
-inline std::streambuf *MsgStreambuf::rdbuf() 
+inline std::streambuf *MsgStreambuf::msgbuf() 
 {
     return this;
 }
 
-inline void MsgStreambuf::rdbuf(std::streambuf *buf) 
+inline void MsgStreambuf::msgbuf(std::streambuf *buf) 
 {
     d_ostr->rdbuf(buf);
 }

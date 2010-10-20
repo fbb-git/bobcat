@@ -60,29 +60,35 @@ class MsgStream: private BOBCAT::MsgStreambuf, public std::ostream
         using MsgStreambuf::setTag;
         using MsgStreambuf::msgbuf;
 
+        void setDisplay(bool ifTrue);
+        bool display() const;
+
 //        using MsgStreambuf::msgContinues;
 };
+
+inline bool MsgStream::display() const
+{
+    return good();
+}
+
+inline void MsgStream::setDisplay(bool ifTrue)
+{
+    if (ifTrue)
+        clear();
+    else
+        setstate(std::ios::badbit);
+}
+
+inline void MsgStream::msgbuf(std::streambuf *buf) 
+{
+    if (good())
+        d_ostr->rdbuf(buf);
+}
+
 
 inline int MsgStream::asInt() const
 {
     return reinterpret_cast<int>(this);
-}
-
-inline void MsgStream::sbuf(std::streambuf *buf)
-{
-    d_msgStreambuf.rdbuf(buf);
-}
-
-inline std::streambuf *MsgStream::sbuf()
-{
-    return d_msgStreambuf.rdbuf();
-}
-
-inline void MsgStream::setLineNr(size_t lineNr, bool ifTrue)
-{
-    setLineNr(lineNr);
-    showLineNrs(ifTrue);
-    return *this;
 }
 
 inline MsgStream::MsgStream(std::ostream *ostr, size_t maxCount, 
@@ -92,15 +98,6 @@ inline MsgStream::MsgStream(std::ostream *ostr, size_t maxCount,
     std::ostream(this)
 {}
 
-std::ostream &endm(std::ostream &os)
-{
-    os.put('\n').flush();
-    if (MsgStream *mp = dynamic_cast<MsgStream *>(&os))
-    {
-        if (mp->throwing())
-            throw 1;
-    }
-}
 
 } // FBB        
 #endif

@@ -1,6 +1,6 @@
 #include "msgstreambuf.ih"
 
-void MsgStreambuf::reset(std::ostream *ostr, bool throwing)
+void MsgStreambuf::reset(std::ostream *ostr)
 {
     if (ostr == 0)
         throw Errno(1, "Can't reset a MsgStreambuf to a 0-ptr");
@@ -8,6 +8,5 @@ void MsgStreambuf::reset(std::ostream *ostr, bool throwing)
     d_ostr->flush();
 
     d_ostr = ostr;
-    d_throwing = throwing;
     d_newMsg = true;
 }
