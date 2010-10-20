@@ -40,7 +40,8 @@ message is to end the running program.
 
 manpagesection(NAMESPACE)
     bf(FBB)nl()
-    All members in this man-page, are defined in the namespace bf(FBB).
+    All elements mentioned in this man-page, are defined in the namespace
+bf(FBB).
 
 manpagesection(INHERITS FROM)
     -
@@ -62,35 +63,30 @@ manpagesection(STATIC MEMBER FUNCTIONS)
     The member functions listed below are primarily used to control the output
 streams and to fine-tune the inner workings of the class' data members.
 
+The free functions tt(FBB::msg), tt(FBB::msgstream) and tt(FBB::lineMsg) (see
+below) and associated manipulators (see below) are used to create messages.
+
     itemization(
-    itb(static size_t count())
-        Returns the number of error messages generated so far. It calls
-tt(emsg.count()), cf. bf(msgstream)(3bobcat);
-
-    itb(static bool display())
-        Returns tt(true) if some messages will actually be inserted into the
-message stream. Its default return value is tt(true) as by default messages
-are inserted into the standard output stream;
-
     itb(static bool display(Type type))
         Returns tt(true) if messages of category tt(Type) will actually be
-inserted into a message stream;
+inserted into a message stream.
 
     itb(static size_t errors())
-        Returns the number of error messages generated so far. Same as calling 
-tt(Msg::count());
+        Returns the number of error messages generated so far. Synonym of
+bf(count).
+
+    itb(static std::streambuf *infoToWarning())
+        DEPRECATED. Use tt(setDisplay(Msg::INFO, streambuf(Msg::WARNING)))
 
     itb(static void open(std::ifstream &in, std::string const &name,
                                     std::ios::openmode mode = std::ios::in))
         Convenience function opening the object tt(ifstream in) refers to for
-reading. If opening the stream fails, an tt(FBB::Errno(1)) exception is thrown
-containing a short message stating which file could not be opened.
+reading. If opening the stream fails, an tt(FBB::Errno) exception is thrown.
 
     itb(static void open(std::ofstream &out, std::string const &name,
                                     std::ios::openmode mode = std::ios::out))
         Convenience function opening (creating) the object tt(ofstream out)
-refers to.  If opening the stream fails, an tt(FBB::Errno(1)) exception is
-thrown containing a short message stating which file could not be opened.
+refers to. If opening the stream fails, an tt(FBB::Errno) exception is thrown.
 
     itb(static void open(std::ofstream &out, std::string const &name, 
                                         size_t protection,
@@ -108,28 +104,18 @@ the bf(chmod)(1) manpage:
        other users in the file's group, with the same values; and  the  fourth
        for other users not in the file's group, with the same values.
 
-If opening the stream fails, an tt(FBB::Errno(1)) exception is thrown
-containing a short message stating which file could not be opened.
+If opening the stream fails, an tt(FBB::Errno) exception is thrown, holding
+the system's tt(errno) value and its textual interpretation.
 
     itb(static void open(std::fstream &out, std::string const &name, 
                                         std::ios::openmode mode)) 
         Convenience function opening (creating) the object tt(fstream out)
 refers to using a specified tt(ios::openmode). If opening the stream fails, an
-tt(FBB::Errno(1)) exception is thrown containing a short message stating which
-file could not be opened.
+tt(FBB::Errno) exception is thrown.
 
-    itb(static std::streambuf *msgbuf(Type type))
+    itb(static std::streambuf *sbuf(Type type))
         A pointer to the tt(std::streambuf) to which messages of tt(Type type)
-are written is returned.
-
-
-manpagesection(DEPRECATED MEMBERS)
-    Members listed in this section are deprecated and will at some point 
-be removed from this class. They should no longer be used, but instead members
-from the class tt(MsgStream) should be used.
-
-    itemization(
-    itb(infoToWarning): use tt(imsg.msgbuf(wmsg.msgbuf()));
+are written is returned. 0 is returned if these messages are suppressed.
 
     itb(static bool setDisplay(bool mode))
         Suppresses (argument tt(false)) or activates (argument tt(true))

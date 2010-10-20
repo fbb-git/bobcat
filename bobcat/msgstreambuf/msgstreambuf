@@ -59,7 +59,7 @@ inline bool MsgStreambuf::newMsg() const
     return d_newMsg;
 }
 
-void MsgStreambuf::noThrow()
+inline void MsgStreambuf::noThrow()
 {
     d_throw = false;
 }
@@ -81,12 +81,12 @@ inline void MsgStreambuf::showLineNrs(bool ifTrue)
 
 inline bool MsgStreambuf::throwing() const
 {
-    return d_throwing;
+    return d_throw;
 }
 
 inline std::streambuf *MsgStreambuf::msgbuf() 
 {
-    return this;
+    return d_ostr->rdbuf();
 }
 
 inline void MsgStreambuf::msgbuf(std::streambuf *buf) 
@@ -102,12 +102,6 @@ inline void MsgStreambuf::setMaxCount(size_t maxCount)
 inline size_t MsgStreambuf::count() const
 {
     return d_count;
-}
-
-inline void MsgStreambuf::setLineNr(size_t lineNr, bool ifTrue)
-{
-    setLineNr(lineNr);
-    showLineNrs(ifTrue);
 }
 
 } // BOBCAT

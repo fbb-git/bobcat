@@ -2,7 +2,7 @@
 
 int MsgStreambuf::overflow(int c)
 {
-    atNewLine();
+    atNewline();
     d_ostr->put(c);
     return c;
 }

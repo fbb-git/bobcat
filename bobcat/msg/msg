@@ -62,7 +62,7 @@ class Msg
         template <typename Device>              // all types use the same
         static void setDisplay(Device &device); // output device
 
-        static std::streambuf *rdbuf(Type type);
+        static std::streambuf *msgbuf(Type type);
 
         static void open(std::ifstream &in, std::string const &name);
         static void open(std::ifstream &in, std::string const &name, 
@@ -136,9 +136,9 @@ inline void Msg::setDisplay(Type type, bool mode)
     setActive(s_msgStream[type], mode);
 }
  
-inline std::streambuf *Msg::rdbuf(Type type)
+inline std::streambuf *Msg::msgbuf(Type type)
 {
-    return s_msgStream[type]->rdbuf();
+    return s_msgStream[type]->msgbuf();
 }
 
 inline void Msg::setLine(size_t linenr)

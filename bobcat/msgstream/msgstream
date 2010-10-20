@@ -9,6 +9,7 @@
 
 namespace FBB
 {
+    std::ostream &endm(std::ostream &os);
 
     // MsgStream cannot be an ostream as ostreams catch exceptions thrown from
     // them and transform them into an error state Cf.:
@@ -33,7 +34,7 @@ class MsgStream: private BOBCAT::MsgStreambuf, public std::ostream
 {
     friend std::ostream &endm(std::ostream &os);
 
-    typedef MsgStreambuf;
+    typedef BOBCAT::MsgStreambuf MsgStreambuf;
 
     std::ofstream d_ofstream;
 
@@ -50,9 +51,13 @@ class MsgStream: private BOBCAT::MsgStreambuf, public std::ostream
 
         int asInt() const;
 
+        void close();
         void open(std::string const &name);     // opens the ofstream
                                                 // and uses that stream for
                                                 // MsgStream's output
+
+        void msgbuf(std::streambuf *buf);
+
         using MsgStreambuf::setLineNr;
         using MsgStreambuf::showLineNrs;
         using MsgStreambuf::count;
@@ -65,6 +70,11 @@ class MsgStream: private BOBCAT::MsgStreambuf, public std::ostream
 
 //        using MsgStreambuf::msgContinues;
 };
+
+inline void MsgStream::close()
+{
+    d_ofstream.close();
+}
 
 inline bool MsgStream::display() const
 {
@@ -82,7 +92,7 @@ inline void MsgStream::setDisplay(bool ifTrue)
 inline void MsgStream::msgbuf(std::streambuf *buf) 
 {
     if (good())
-        d_ostr->rdbuf(buf);
+        MsgStreambuf::msgbuf(buf);
 }
 
 

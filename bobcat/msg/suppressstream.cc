@@ -6,6 +6,6 @@ void Msg::suppressStream(MsgStream *ms)
         return;
 
     *ms << flush;
-    ms->suppress();
+    ms->setstate(ios::badbit);
 }
 
