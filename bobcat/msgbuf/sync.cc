@@ -1,6 +1,6 @@
-#include "msgstreambuf.ih"
+#include "msgbuf.ih"
 
-int MsgStreambuf::sync()
+int Msgbuf::sync()
 {
     d_ostr->flush();
     d_newMsg = true;

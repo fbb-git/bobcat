@@ -1,6 +1,6 @@
-#include "msgstreambuf.ih"
+#include "msgbuf.ih"
 
-void MsgStreambuf::atNewline()
+void Msgbuf::atNewline()
 {
     if (not d_newMsg or not d_ostr->good())
         return;

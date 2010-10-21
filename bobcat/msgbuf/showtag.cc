@@ -1,6 +1,6 @@
-#include "msgstreambuf.ih"
+#include "msgbuf.ih"
 
-void MsgStreambuf::showTag()
+void Msgbuf::showTag()
 {
     if (d_tag.empty())
         return;

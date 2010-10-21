@@ -1,4 +1,4 @@
-#include "../msgstreambuf"
+#include "../msgbuf"
 
 #include <iostream>
 #include <bobcat/errno>
@@ -11,9 +11,9 @@ int main()
 {
     ostream os(cout.rdbuf());
 
-    MsgStreambuf msb(&os);
+    Msgbuf msb(&os);
 
-    MsgStream ms(msb);
+    Msg ms(msb);
 
     string s;
 

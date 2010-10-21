@@ -1,5 +1,5 @@
-#ifndef INCLUDED_BOBCAT_MSGSTREAMBUF_
-#define INCLUDED_BOBCAT_MSGSTREAMBUF_
+#ifndef INCLUDED_BOBCAT_MSGBUF_
+#define INCLUDED_BOBCAT_MSGBUF_
 
 #include <streambuf>
 #include <ostream>
@@ -11,7 +11,7 @@ namespace FBB
 namespace BOBCAT
 {
 
-class MsgStreambuf: public std::streambuf
+class Msgbuf: public std::streambuf
 {
     std::ostream *d_ostr;       // this is the receiving ostream
 
@@ -24,10 +24,10 @@ class MsgStreambuf: public std::streambuf
     std::string d_tag;
     
     public:
-        MsgStreambuf(std::ostream *ostr, size_t maxCount, 
+        Msgbuf(std::ostream *ostr, size_t maxCount, 
                      std::string const &tag = "", bool throwing = false);
 
-        virtual ~MsgStreambuf() = default;
+        virtual ~Msgbuf() = default;
 
         void atNewline();
         void reset(std::ostream *ostr);
@@ -54,52 +54,52 @@ class MsgStreambuf: public std::streambuf
         virtual int sync();
 };
 
-inline bool MsgStreambuf::newMsg() const
+inline bool Msgbuf::newMsg() const
 {
     return d_newMsg;
 }
 
-inline void MsgStreambuf::noThrow()
+inline void Msgbuf::noThrow()
 {
     d_throw = false;
 }
 
-// inline void MsgStreambuf::msgContinues()
+// inline void Msgbuf::msgContinues()
 // {
 //     d_newMsg = false;
 // }
 
-inline void MsgStreambuf::setLineNr(size_t lineNr)
+inline void Msgbuf::setLineNr(size_t lineNr)
 {
     d_lineNr = lineNr;
 }
 
-inline void MsgStreambuf::showLineNrs(bool ifTrue)
+inline void Msgbuf::showLineNrs(bool ifTrue)
 {
     d_showLineNrs = ifTrue;
 }
 
-inline bool MsgStreambuf::throwing() const
+inline bool Msgbuf::throwing() const
 {
     return d_throw;
 }
 
-inline std::streambuf *MsgStreambuf::msgbuf() 
+inline std::streambuf *Msgbuf::msgbuf() 
 {
     return d_ostr->rdbuf();
 }
 
-inline void MsgStreambuf::msgbuf(std::streambuf *buf) 
+inline void Msgbuf::msgbuf(std::streambuf *buf) 
 {
     d_ostr->rdbuf(buf);
 }
 
-inline void MsgStreambuf::setMaxCount(size_t maxCount)
+inline void Msgbuf::setMaxCount(size_t maxCount)
 {
     d_maxCount = maxCount;
 }
 
-inline size_t MsgStreambuf::count() const
+inline size_t Msgbuf::count() const
 {
     return d_count;
 }

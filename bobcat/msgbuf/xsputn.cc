@@ -1,6 +1,6 @@
-#include "msgstreambuf.ih"
+#include "msgbuf.ih"
 
-std::streamsize MsgStreambuf::xsputn(char const *buf, std::streamsize n)
+std::streamsize Msgbuf::xsputn(char const *buf, std::streamsize n)
 {
     atNewline();
     d_ostr->write(buf, n);
