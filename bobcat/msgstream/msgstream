@@ -57,13 +57,13 @@ class MsgStream: private BOBCAT::Msgbuf, public std::ostream
                                                 // MsgStream's output
 
         void msgbuf(std::streambuf *buf);
+        std::streambuf *msgbuf();
 
         using Msgbuf::setLineNr;
         using Msgbuf::showLineNrs;
         using Msgbuf::count;
         using Msgbuf::setMaxCount;
         using Msgbuf::setTag;
-        using Msgbuf::msgbuf;
 
         void setDisplay(bool ifTrue);
         bool display() const;
@@ -93,6 +93,10 @@ inline void MsgStream::msgbuf(std::streambuf *buf)
         Msgbuf::msgbuf(buf);
 }
 
+inline std::streambuf *MsgStream::msgbuf() 
+{
+    return Msgbuf::msgbuf();
+}
 
 inline int MsgStream::asInt() const
 {

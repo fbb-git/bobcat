@@ -14,7 +14,7 @@ std::streambuf *Msg::infoToWarning()
     }
 
     streambuf *old = imsg.msgbuf();
-    imsg.msgbuf(wmsg.msgbuf());
+//    imsg.msgbuf(wmsg.msgbuf());
 
     return old;
 }

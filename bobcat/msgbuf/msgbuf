@@ -1,6 +1,8 @@
 #ifndef INCLUDED_BOBCAT_MSGBUF_
 #define INCLUDED_BOBCAT_MSGBUF_
 
+#include <iostream>     // TMP
+
 #include <streambuf>
 #include <ostream>
 #include <string>
@@ -64,11 +66,6 @@ inline void Msgbuf::noThrow()
     d_throw = false;
 }
 
-// inline void Msgbuf::msgContinues()
-// {
-//     d_newMsg = false;
-// }
-
 inline void Msgbuf::setLineNr(size_t lineNr)
 {
     d_lineNr = lineNr;
@@ -86,7 +83,8 @@ inline bool Msgbuf::throwing() const
 
 inline std::streambuf *Msgbuf::msgbuf() 
 {
-    return d_ostr->rdbuf();
+    std::cerr << (void *)d_ostr << '\n';
+    return 0;//d_ostr->rdbuf();
 }
 
 inline void Msgbuf::msgbuf(std::streambuf *buf) 

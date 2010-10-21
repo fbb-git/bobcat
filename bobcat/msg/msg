@@ -33,7 +33,7 @@ class Msg
     static MsgStream *s_msgStream[];
 
     public:
-        enum Type
+        enum Type       // update s_sizofType below if this changes
         {
             ERROR,
             FATAL,
@@ -42,17 +42,18 @@ class Msg
         };
 
     private:
-        static size_t const s_sizeofType = FATAL + 1;
+        static size_t const s_sizeofType = WARNING + 1;
 
     public:
         static bool display();                  // true if >= 1 type is active
         static bool display(Type type);         // true if type is active
 
-        static bool setDisplay(bool mode);      // all types on/off
+        static bool setDisplay(bool mode);      // 1, all types on/off 
 
                                                 // a particular type on/off
         static void setDisplay(Type type, bool mode);   // inline
 
+//=============
                                                 // a particular type uses
                                                 // a particular output dev.
         static void setDisplay(Type type, std::string const &name); // 3

@@ -10,30 +10,27 @@ using namespace std;
 int main(int argc, char **argv)
 try
 {
-    cout << "Displaying? " << boolalpha << Msg::display() << "\n"
-          << "Displaying fatal messages: " << Msg::display(Msg::FATAL) << 
-          endl;
-
     Msg::setDisplay(Msg::FATAL, cerr.rdbuf());
-    Msg::infoToWarning();
 
-    if (argc == 1)
-        msg() << "Non-redirectable: need some arguments" << fatal;
-    else
-    {
-        Msg::setDisplay(true);
-        msg() << "Thanks for providing " << argc << 
-                                " arguments " << info;
-    }
+    Msg::setDisplay(Msg::INFO, false);
 
-    string str[] = {"one", "two", "three"};
-    copy(str, str + sizeof(str) / sizeof(string), 
-            ostream_iterator<string>(imsg, " "));
+//    if (argc == 1)
+//        msg() << "Non-redirectable: need some arguments" << fatal;
+//    else
+//    {
+//        Msg::setDisplay(true);
+//        msg() << "Thanks for providing " << argc << 
+//                                " arguments " << info;
+//    }
 
+//    string str[] = {"one", "two", "three"};
+//    copy(str, str + sizeof(str) / sizeof(string), 
+//            ostream_iterator<string>(imsg, " "));
+//
     emsg << "This is an error message" << endm;
     imsg << "This is an informational message" << endm;
-    wmsg << "This is a warning message" << endm;
-    fmsg << "This is a fatal message" << endm;
+//    wmsg << "This is a warning message" << endm;
+//    fmsg << "This is a fatal message" << endm;
 }            
 catch(Errno const &e)
 {
