@@ -5,7 +5,7 @@
 #include <ostream>
 #include <fstream>
 
-#include <bobcat/msgstreambuf>
+#include <bobcat/msgbuf>
 
 namespace FBB
 {
@@ -15,7 +15,7 @@ namespace FBB
     // them and transform them into an error state Cf.:
     // http://www.drdobbs.com/184401357:  
     //      A slightly more serious concern is that the virtual functions in a
-    //      class that’s derived from streambuf might throw exceptions;
+    //      class that's derived from streambuf might throw exceptions;
     //      perhaps, for example, a user-defined class for network I/O might
     //      throw an exception when the underlying connection has been
     //      lost. High-level istream and ostream functions will catch those
@@ -30,11 +30,11 @@ namespace FBB
     // true then MsgStream throws the exception. The ostream itself is cleared
     // at a not good() anyway.
     //
-class MsgStream: private BOBCAT::MsgStreambuf, public std::ostream
+class MsgStream: private BOBCAT::Msgbuf, public std::ostream
 {
     friend std::ostream &endm(std::ostream &os);
 
-    typedef BOBCAT::MsgStreambuf MsgStreambuf;
+    typedef BOBCAT::Msgbuf Msgbuf;
 
     std::ofstream d_ofstream;
 
@@ -43,10 +43,10 @@ class MsgStream: private BOBCAT::MsgStreambuf, public std::ostream
                      std::string const &tag = "", bool throwing = false);
 
         // The state-modifying members should not be used as they target
-        // MsgStreambuf 
+        // Msgbuf 
         
         // rdbuf members are still available but will usually result in 
-        // unexpected behavior as they return/change MsgStreambuf
+        // unexpected behavior as they return/change Msgbuf
         // Instead, use the sbuf members
 
         int asInt() const;
@@ -58,17 +58,15 @@ class MsgStream: private BOBCAT::MsgStreambuf, public std::ostream
 
         void msgbuf(std::streambuf *buf);
 
-        using MsgStreambuf::setLineNr;
-        using MsgStreambuf::showLineNrs;
-        using MsgStreambuf::count;
-        using MsgStreambuf::setMaxCount;
-        using MsgStreambuf::setTag;
-        using MsgStreambuf::msgbuf;
+        using Msgbuf::setLineNr;
+        using Msgbuf::showLineNrs;
+        using Msgbuf::count;
+        using Msgbuf::setMaxCount;
+        using Msgbuf::setTag;
+        using Msgbuf::msgbuf;
 
         void setDisplay(bool ifTrue);
         bool display() const;
-
-//        using MsgStreambuf::msgContinues;
 };
 
 inline void MsgStream::close()
@@ -92,7 +90,7 @@ inline void MsgStream::setDisplay(bool ifTrue)
 inline void MsgStream::msgbuf(std::streambuf *buf) 
 {
     if (good())
-        MsgStreambuf::msgbuf(buf);
+        Msgbuf::msgbuf(buf);
 }
 
 
@@ -104,7 +102,7 @@ inline int MsgStream::asInt() const
 inline MsgStream::MsgStream(std::ostream *ostr, size_t maxCount, 
                              std::string const &tag, bool throwing)
 :
-    MsgStreambuf(ostr, maxCount, tag, throwing),
+    Msgbuf(ostr, maxCount, tag, throwing),
     std::ostream(this)
 {}
 
