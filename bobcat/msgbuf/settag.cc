@@ -2,6 +2,5 @@
 
 void Msgbuf::setTag(string const &tag)
 {
-    if (tag.length())
-        d_tag = '[' + tag;
+    d_tag = tag.length() ? '[' + tag : tag;
 }

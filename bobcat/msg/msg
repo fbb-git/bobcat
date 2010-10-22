@@ -33,16 +33,19 @@ class Msg
     static MsgStream *s_msgStream[];
 
     public:
-        enum Type       // update s_sizofType below if this changes
-        {
-            ERROR,
+        enum Type           // change the initialization of s_msgStream      
+        {                   // when this changes (data.cc)
+            FIRST,
+            ERROR = FIRST,
             FATAL,
             INFO,
-            WARNING
+            WARNING,
+            LAST = WARNING
         };
 
     private:
-        static size_t const s_sizeofType = WARNING + 1;
+        static size_t const s_firstType = FIRST;
+        static size_t const s_sizeofType = LAST + 1;
 
     public:
         static bool display();                  // true if >= 1 type is active
@@ -54,16 +57,18 @@ class Msg
         static void setDisplay(Type type, bool mode);   // inline
 
 //=============
-                                                // a particular type uses
-                                                // a particular output dev.
+                                                // receiving stream gets the
+                                                // same state as mstream
+        static void setDisplay(Type type, MsgStream &mstream);      // 2
         static void setDisplay(Type type, std::string const &name); // 3
-        static void setDisplay(Type type, std::streambuf *buffer);  // 4
-        static void setDisplay(Type type, std::ostream &stream);    // 5
-                                                
+                                                                    // 4
+        static void setDisplay(Type type, std::ostream &ostr, size_t maxCount,
+                     std::string const &tag = "", bool throwing = false);
+
         template <typename Device>              // all types use the same
         static void setDisplay(Device &device); // output device
 
-        static std::streambuf *msgbuf(Type type);
+//        static std::streambuf *msgbuf(Type type);
 
         static void open(std::ifstream &in, std::string const &name);
         static void open(std::ifstream &in, std::string const &name, 
@@ -80,12 +85,8 @@ class Msg
                                                 std::ios::openmode mode);
 
     private:
-        static void prepareStream(MsgStream *ms);
         static bool isActive(MsgStream const *ms);
         static void setActive(MsgStream *ms, bool active);
-        static void activateStream(MsgStream *si);
-        static void suppressStream(MsgStream *si);
-
 
      // ALL MEMBERS AND FUNCTIONS DECLARED AS FRIEND BELOW THIS LINE 
      // ARE DEPRECATED
@@ -137,10 +138,10 @@ inline void Msg::setDisplay(Type type, bool mode)
     setActive(s_msgStream[type], mode);
 }
  
-inline std::streambuf *Msg::msgbuf(Type type)
-{
-    return s_msgStream[type]->msgbuf();
-}
+//inline std::streambuf *Msg::msgbuf(Type type)
+//{
+//    return s_msgStream[type]->msgbuf();
+//}
 
 inline void Msg::setLine(size_t linenr)
 {
@@ -180,11 +181,13 @@ inline std::ostringstream &msgstream()
 template <typename Device>
 void Msg::setDisplay(Device &device)
 {
-    setDisplay(INFO, device);
-    for (size_t idx = WARNING; idx != s_sizeofType; ++idx)
-        setDisplay(static_cast<Type>(idx), msgbuf(INFO));
+    setDisplay(FIRST, device);
+    for (size_t idx = s_firstType + 1; idx != s_sizeofType; ++idx)
+        setDisplay(static_cast<Type>(idx), *s_msgStream[INFO]);
 }
 
+    // THIS FUNCTION CAN BE REMOVED TOGETHER WITH THE DEPRECATED ELEMENTS
+    // OF THIS CLASS
 inline void operator<<(std::ostream &ostr, void (*manip)(std::ostream &))
 {
     (*manip)(ostr);

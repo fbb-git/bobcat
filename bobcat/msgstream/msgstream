@@ -10,6 +10,7 @@
 namespace FBB
 {
     std::ostream &endm(std::ostream &os);
+    std::ostream &flushm(std::ostream &os);
 
     // MsgStream cannot be an ostream as ostreams catch exceptions thrown from
     // them and transform them into an error state Cf.:
@@ -29,18 +30,24 @@ namespace FBB
     // after that tests the stream's state. If not good() and if d_throwing is
     // true then MsgStream throws the exception. The ostream itself is cleared
     // at a not good() anyway.
-    //
+
+class Msg;
+
 class MsgStream: private BOBCAT::Msgbuf, public std::ostream
 {
-    friend std::ostream &endm(std::ostream &os);
-
+    friend std::ostream &flushm(std::ostream &os);
+    friend class Msg;
+    
     typedef BOBCAT::Msgbuf Msgbuf;
 
     std::ofstream d_ofstream;
+    Msgbuf *d_msgBuf;
 
     public:
-        MsgStream(std::ostream *ostr, size_t maxCount, 
+        MsgStream(std::ostream &ostr, size_t maxCount, 
                      std::string const &tag = "", bool throwing = false);
+
+        virtual ~MsgStream();
 
         // The state-modifying members should not be used as they target
         // Msgbuf 
@@ -51,28 +58,24 @@ class MsgStream: private BOBCAT::Msgbuf, public std::ostream
 
         int asInt() const;
 
-        void close();
-        void open(std::string const &name);     // opens the ofstream
-                                                // and uses that stream for
-                                                // MsgStream's output
-
-        void msgbuf(std::streambuf *buf);
-        std::streambuf *msgbuf();
-
         using Msgbuf::setLineNr;
         using Msgbuf::showLineNrs;
         using Msgbuf::count;
         using Msgbuf::setMaxCount;
         using Msgbuf::setTag;
 
+    private:            // accessible to Msg
+        void open(std::string const &name);     // opens the ofstream
+                                                // and uses that stream for
+                                                // MsgStream's output
+
         void setDisplay(bool ifTrue);
         bool display() const;
-};
 
-inline void MsgStream::close()
-{
-    d_ofstream.close();
-}
+        void reset();
+        void reset(std::ostream &ostr, size_t maxCount,
+                     std::string const &tag, bool throwing);
+};
 
 inline bool MsgStream::display() const
 {
@@ -87,28 +90,11 @@ inline void MsgStream::setDisplay(bool ifTrue)
         setstate(std::ios::badbit);
 }
 
-inline void MsgStream::msgbuf(std::streambuf *buf) 
-{
-    if (good())
-        Msgbuf::msgbuf(buf);
-}
-
-inline std::streambuf *MsgStream::msgbuf() 
-{
-    return Msgbuf::msgbuf();
-}
-
 inline int MsgStream::asInt() const
 {
     return reinterpret_cast<int>(this);
 }
 
-inline MsgStream::MsgStream(std::ostream *ostr, size_t maxCount, 
-                             std::string const &tag, bool throwing)
-:
-    Msgbuf(ostr, maxCount, tag, throwing),
-    std::ostream(this)
-{}
 
 
 } // FBB        

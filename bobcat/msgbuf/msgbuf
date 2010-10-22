@@ -1,8 +1,6 @@
 #ifndef INCLUDED_BOBCAT_MSGBUF_
 #define INCLUDED_BOBCAT_MSGBUF_
 
-#include <iostream>     // TMP
-
 #include <streambuf>
 #include <ostream>
 #include <string>
@@ -26,21 +24,28 @@ class Msgbuf: public std::streambuf
     std::string d_tag;
     
     public:
-        Msgbuf(std::ostream *ostr, size_t maxCount, 
+        Msgbuf(std::ostream &ostr, size_t maxCount, 
                      std::string const &tag = "", bool throwing = false);
 
         virtual ~Msgbuf() = default;
 
+    protected:
+
         void atNewline();
+        void reset();
+
         void reset(std::ostream *ostr);
+//        void reset(std::ostream &ostr, size_t maxCount,       // 3
+//                     std::string const &tag, bool throwing);
 
         bool throwing() const;
         void noThrow();
-        void msgContinues();
+
+//        std::streambuf *msgbuf();
+//        void msgbuf(std::streambuf *buf);
 
             // these members are publicly accessible fm MsgStream
-        std::streambuf *msgbuf();
-        void msgbuf(std::streambuf *buf);
+
         void setLineNr(size_t lineNr);
         void showLineNrs(bool ifTrue);
         void setTag(std::string const &tag);
@@ -50,7 +55,7 @@ class Msgbuf: public std::streambuf
 
     private:
         void showTag();
-
+        
         virtual int overflow(int c);
         virtual std::streamsize xsputn(char const *buf, std::streamsize n);
         virtual int sync();
@@ -81,16 +86,16 @@ inline bool Msgbuf::throwing() const
     return d_throw;
 }
 
-inline std::streambuf *Msgbuf::msgbuf() 
-{
-    std::cerr << (void *)d_ostr << '\n';
-    return 0;//d_ostr->rdbuf();
-}
-
-inline void Msgbuf::msgbuf(std::streambuf *buf) 
-{
-    d_ostr->rdbuf(buf);
-}
+// inline std::streambuf *Msgbuf::msgbuf() 
+// {
+//     std::cerr << (void *)d_ostr << '\n';
+//     return 0;//d_ostr->rdbuf();
+// }
+// 
+// inline void Msgbuf::msgbuf(std::streambuf *buf) 
+// {
+//     d_ostr->rdbuf(buf);
+// }
 
 inline void Msgbuf::setMaxCount(size_t maxCount)
 {

@@ -8,15 +8,15 @@ streambuf *Msg::setInfoBuf(streambuf *newBuffer, bool onOff)
     {
         shown = true;
         cerr << "\n"
-                "FBB::Msg::setInfoBuf is DEPRECATED. Use\n"
-                "setDisplay(FBB::Msg::INFO, newBuffer) instead\n"
+                "FBB::Msg::setInfoBuf is DEPRECATED. Instead use "
+                                                            "`setDisplay'\n"
                 "\n";
     }
 
     if (newBuffer)
-        setDisplay(INFO, newBuffer);
+        imsg.rdbuf(newBuffer);
 
     setDisplay(onOff);
 
-    return msgbuf(INFO);
+    return imsg.rdbuf();
 }

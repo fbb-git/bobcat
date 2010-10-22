@@ -9,12 +9,12 @@ std::streambuf *Msg::infoToWarning()
         shown = true;
         cerr << "\n"
                 "FBB::Msg::infoToWarning is DEPRECATED. Use "
-                "imsg.msgbuf(wmsg.msgbuf())\n"
+                                                "setDisplay(INFO, wmsg)\n"
                 "\n";
     }
 
-    streambuf *old = imsg.msgbuf();
-//    imsg.msgbuf(wmsg.msgbuf());
+    streambuf *old = imsg.rdbuf();
+    setDisplay(INFO, wmsg);
 
     return old;
 }

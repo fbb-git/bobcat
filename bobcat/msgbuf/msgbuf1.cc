@@ -1,9 +1,9 @@
 #include "msgbuf.ih"
 
-Msgbuf::Msgbuf(ostream *ostr, size_t maxCount, string const &tag, 
+Msgbuf::Msgbuf(ostream &ostr, size_t maxCount, string const &tag, 
                             bool throwing)
 :
-    d_ostr(ostr),
+    d_ostr(&ostr),
     d_newMsg(true),
     d_showLineNrs(false),
     d_throw(throwing),
@@ -11,8 +11,5 @@ Msgbuf::Msgbuf(ostream *ostr, size_t maxCount, string const &tag,
     d_lineNr(0),
     d_maxCount(maxCount)
 {
-    if (ostr == 0)
-        throw Errno(1, "Can't construct a Msgbuf from a 0-ptr");
-
     setTag(tag);
 }

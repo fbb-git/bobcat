@@ -3,8 +3,8 @@
 void Msg::setActive(MsgStream *ms, bool active)
 {
     if (active)
-        activateStream(ms);
+        ms->clear();
     else
-        suppressStream(ms);
+        ms->setstate(ios::badbit);
 }
 
