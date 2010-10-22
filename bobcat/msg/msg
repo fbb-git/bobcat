@@ -56,18 +56,9 @@ class Msg
                                                 // a particular type on/off
         static void setDisplay(Type type, bool mode);   // inline
 
-                                                // receiving stream gets the
-                                                // same state as mstream
-        static void setDisplay(Type type, MsgStream &mstream);      // 2
-        static void setDisplay(Type type, std::string const &name, // 3
-                     size_t maxCount, std::string const &tag = "", 
-                     bool throwing = false); 
-                                                                    // 4
-        static void setDisplay(Type type, std::ostream &ostr, size_t maxCount,
-                     std::string const &tag = "", bool throwing = false);
 
-        template <typename Device>              // all types use the same
-        static void setDisplay(Device &device); // output device
+//        template <typename Device>              // all types use the same
+//        static void setDisplay(Device &device); // output device
 
 
         static void open(std::ifstream &in, std::string const &name);
@@ -178,13 +169,13 @@ inline std::ostringstream &msgstream()
     return Msg::s_msg;
 }
 
-template <typename Device>
-void Msg::setDisplay(Device &device)
-{
-    setDisplay(FIRST, device);
-    for (size_t idx = s_firstType + 1; idx != s_sizeofType; ++idx)
-        setDisplay(static_cast<Type>(idx), *s_msgStream[INFO]);
-}
+//template <typename Device>
+//void Msg::setDisplay(Device &device)
+//{
+//    setDisplay(FIRST, device);
+//    for (size_t idx = s_firstType + 1; idx != s_sizeofType; ++idx)
+//        setDisplay(static_cast<Type>(idx), *s_msgStream[INFO]);
+//}
 
     // THIS FUNCTION CAN BE REMOVED TOGETHER WITH THE DEPRECATED ELEMENTS
     // OF THIS CLASS

@@ -22,26 +22,25 @@ try
     wmsg << "A warning msg" << endm;
     emsg << "An error msg" << endm;
 
-    Msg::setDisplay(Msg::INFO, wmsg);           // info becomes warning
+    imsg.reset(wmsg);                           // info becomes warning
     imsg << "Info msg as a warning msg" << endm;
 
-    Msg::setDisplay(Msg::INFO, "info.txt", UINT_MAX);     // info to info.txt
+    imsg.reset("info.txt");                     // info to info.txt
     imsg << "Info to info.txt" << endm;
 
-    Msg::setDisplay(Msg::INFO, cout, UINT_MAX); // reset to the original form
+    imsg.reset(cout);                           // reset to the original form
     imsg << "Info msg as an info msg" << endm;
 
-    Msg::setDisplay(Msg::FATAL, cerr);
+    fmsg.reset(cerr);
 
     Msg::setDisplay(Msg::INFO, false);
 
     if (argc == 1)
-        msg() << "Non-redirectable: need some arguments" << fatal;
+        fmsg << "Non-redirectable: need some arguments" << endm;
     else
     {
         Msg::setDisplay(true);
-        msg() << "Thanks for providing " << argc << 
-                                " arguments " << info;
+        imsg << "Thanks for providing " << argc << " arguments " << endm;
     }
 
     string str[] = {"one", "two", "three"};
@@ -70,7 +69,7 @@ try
 catch(Errno const &e)
 {
     cerr << "Exception: " << 
-        (e.which() == fmsg.asInt() ? "fmsg" : "unknown") << ": " <<
+        (e.which() == fmsg.id() ? "fmsg" : "unknown") << ": " <<
         e.why() << "\n";
 
     msg() << "Got an Errno object, but ignoring it" << err;

@@ -8,9 +8,9 @@ void Msg::setOstream(string const &name)
     {
         shown = true;
         cerr << "\n"
-                "FBB::Msg::setOstream is DEPRECATED. Use\n"
-                "setDisplay(name) instead\n"
+                "FBB::Msg::setOstream is DEPRECATED. Use "
+                                                "imsg.reset(name) instead\n"
                 "\n";
     }
-    setDisplay(name);
+    imsg.reset(name);
 }
