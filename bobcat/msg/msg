@@ -56,11 +56,12 @@ class Msg
                                                 // a particular type on/off
         static void setDisplay(Type type, bool mode);   // inline
 
-//=============
                                                 // receiving stream gets the
                                                 // same state as mstream
         static void setDisplay(Type type, MsgStream &mstream);      // 2
-        static void setDisplay(Type type, std::string const &name); // 3
+        static void setDisplay(Type type, std::string const &name, // 3
+                     size_t maxCount, std::string const &tag = "", 
+                     bool throwing = false); 
                                                                     // 4
         static void setDisplay(Type type, std::ostream &ostr, size_t maxCount,
                      std::string const &tag = "", bool throwing = false);
@@ -68,7 +69,6 @@ class Msg
         template <typename Device>              // all types use the same
         static void setDisplay(Device &device); // output device
 
-//        static std::streambuf *msgbuf(Type type);
 
         static void open(std::ifstream &in, std::string const &name);
         static void open(std::ifstream &in, std::string const &name, 

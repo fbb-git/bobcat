@@ -65,7 +65,9 @@ class MsgStream: private BOBCAT::Msgbuf, public std::ostream
         using Msgbuf::setTag;
 
     private:            // accessible to Msg
-        void open(std::string const &name);     // opens the ofstream
+        void open(std::string const &name,
+                     size_t maxCount, std::string const &tag, 
+                     bool throwing);            // opens the ofstream
                                                 // and uses that stream for
                                                 // MsgStream's output
 
@@ -73,7 +75,7 @@ class MsgStream: private BOBCAT::Msgbuf, public std::ostream
         bool display() const;
 
         void reset();
-        void reset(std::ostream &ostr, size_t maxCount,
+        void reset(std::ostream &ostr, size_t maxCount,         // 2
                      std::string const &tag, bool throwing);
 };
 

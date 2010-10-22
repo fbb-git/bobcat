@@ -1,6 +1,7 @@
 #include "msgstream.ih"
 
-void MsgStream::open(std::string const &name)
+void MsgStream::open(std::string const &name, size_t maxCount,
+                     string const &tag, bool throwing)
 {
     d_ofstream.close();                     // switch streams
     d_ofstream.open(name.c_str());
@@ -8,6 +9,7 @@ void MsgStream::open(std::string const &name)
     if (!d_ofstream)
         throw Errno(1) << "Can't write `" << name << '\'';
 
-    Msgbuf::reset(&d_ofstream);             // reset the output operations to
+    reset(d_ofstream, maxCount, tag, throwing);
+                                            // reset the output operations to
                                             // use this stream.
 }

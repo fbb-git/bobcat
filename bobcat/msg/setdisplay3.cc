@@ -1,9 +1,7 @@
 #include "msg.ih"
 
-void Msg::setDisplay(Type type, std::string const &name)
+void Msg::setDisplay(Type type, std::string const &name, size_t maxCount,
+                     string const &tag, bool throwing)
 {
-    MsgStream *ms = s_msgStream[type];
-
-    ms->reset();
-    ms->open(name);
+    s_msgStream[type]->open(name, maxCount, tag, throwing);
 }

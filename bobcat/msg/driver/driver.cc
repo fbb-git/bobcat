@@ -13,10 +13,10 @@ try
     cerr << "Any msg stream operational? " << boolalpha << Msg::display() <<
                                                                     '\n';
 
-//    Msg::setDisplay(Msg::INFO, false);          // no info msg
+    Msg::setDisplay(Msg::INFO, false);          // no info msg
     imsg << "Msg not shown" << endm;
 
-//    Msg::setDisplay(true);                      // all are shown again
+    Msg::setDisplay(true);                      // all are shown again
     imsg << "Info msg" << endm;
 
     wmsg << "A warning msg" << endm;
@@ -24,6 +24,9 @@ try
 
     Msg::setDisplay(Msg::INFO, wmsg);           // info becomes warning
     imsg << "Info msg as a warning msg" << endm;
+
+    Msg::setDisplay(Msg::INFO, "info.txt", UINT_MAX);     // info to info.txt
+    imsg << "Info to info.txt" << endm;
 
     Msg::setDisplay(Msg::INFO, cout, UINT_MAX); // reset to the original form
     imsg << "Info msg as an info msg" << endm;
