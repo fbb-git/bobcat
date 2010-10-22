@@ -10,7 +10,7 @@ std::ostream &flushm(std::ostream &os)
     {
         mp->reset();
         if (mp->throwing())
-            throw Errno(mp->asInt(), "FBB::MsgStream");
+            throw Errno(mp->id(), "FBB::MsgStream");
     }
     return os;
 }

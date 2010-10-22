@@ -31,29 +31,41 @@ try
     Msg::setDisplay(Msg::INFO, cout, UINT_MAX); // reset to the original form
     imsg << "Info msg as an info msg" << endm;
 
-//    Msg::setDisplay(Msg::FATAL, cerr.rdbuf());
-//
-//    Msg::setDisplay(Msg::INFO, false);
+    Msg::setDisplay(Msg::FATAL, cerr);
 
-//    if (argc == 1)
-//        msg() << "Non-redirectable: need some arguments" << fatal;
-//    else
-//    {
-//        Msg::setDisplay(true);
-//        msg() << "Thanks for providing " << argc << 
-//                                " arguments " << info;
-//    }
+    Msg::setDisplay(Msg::INFO, false);
 
-//    string str[] = {"one", "two", "three"};
-//    copy(str, str + sizeof(str) / sizeof(string), 
-//            ostream_iterator<string>(imsg, " "));
-//
+    if (argc == 1)
+        msg() << "Non-redirectable: need some arguments" << fatal;
+    else
+    {
+        Msg::setDisplay(true);
+        msg() << "Thanks for providing " << argc << 
+                                " arguments " << info;
+    }
+
+    string str[] = {"one", "two", "three"};
+    copy(str, str + sizeof(str) / sizeof(string), 
+            ostream_iterator<string>(imsg, " "));
 
     emsg << "This is an error message" << endm;
     imsg << "This is an informational message" << endm;
 
-//    wmsg << "This is a warning message" << endm;
-//    fmsg << "This is a fatal message" << endm;
+    wmsg << "This is a warning message" << endm;
+
+    cout << "Enter the name of a non-existing (unreadable) file: ";
+    string fname;
+    getline(cin, fname);
+    try
+    {
+        ifstream in;
+        Msg::open(in, fname);
+    }
+    catch(...)
+    {
+        emsg << fname << " indeed couldn't be read" << endm;
+    }
+
 }            
 catch(Errno const &e)
 {

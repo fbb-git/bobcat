@@ -29,20 +29,18 @@ class Msgbuf: public std::streambuf
 
         virtual ~Msgbuf() = default;
 
-    protected:
+        size_t maxCount() const;
+        std::string const &tag() const;
 
+    protected:
         void atNewline();
         void reset();
 
         void reset(std::ostream *ostr);
-//        void reset(std::ostream &ostr, size_t maxCount,       // 3
-//                     std::string const &tag, bool throwing);
 
         bool throwing() const;
         void noThrow();
-
-//        std::streambuf *msgbuf();
-//        void msgbuf(std::streambuf *buf);
+        std::ostream &ostr() const;
 
             // these members are publicly accessible fm MsgStream
 
@@ -60,6 +58,21 @@ class Msgbuf: public std::streambuf
         virtual std::streamsize xsputn(char const *buf, std::streamsize n);
         virtual int sync();
 };
+
+inline std::ostream &Msgbuf::ostr() const
+{
+    return *d_ostr;
+}
+        
+inline size_t Msgbuf::maxCount() const
+{
+    return d_maxCount;
+}
+        
+inline std::string const &Msgbuf::tag() const
+{
+    return d_tag;
+}
 
 inline bool Msgbuf::newMsg() const
 {

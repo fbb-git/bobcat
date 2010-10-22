@@ -1,6 +1,6 @@
 #include "msgstream.ih"
 
-void MsgStream::open(std::string const &name, size_t maxCount,
+void MsgStream::reset(std::string const &name, size_t maxCount,
                      string const &tag, bool throwing)
 {
     d_ofstream.close();                     // switch streams

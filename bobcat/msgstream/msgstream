@@ -56,7 +56,7 @@ class MsgStream: private BOBCAT::Msgbuf, public std::ostream
         // unexpected behavior as they return/change Msgbuf
         // Instead, use the sbuf members
 
-        int asInt() const;
+        int id() const;
 
         using Msgbuf::setLineNr;
         using Msgbuf::showLineNrs;
@@ -64,19 +64,24 @@ class MsgStream: private BOBCAT::Msgbuf, public std::ostream
         using Msgbuf::setMaxCount;
         using Msgbuf::setTag;
 
-    private:            // accessible to Msg
-        void open(std::string const &name,
-                     size_t maxCount, std::string const &tag, 
-                     bool throwing);            // opens the ofstream
+        void reset(std::ostream &ostr, size_t maxCount = UINT_MAX,  // 2
+                     std::string const &tag = "", bool throwing = false);
+
+        void reset(std::string const &name,                     // 3
+                     size_t maxCount = UINT_MAX, 
+                     std::string const &tag = "",
+                     bool throwing = false);    // opens the ofstream
                                                 // and uses that stream for
                                                 // MsgStream's output
+
+        void reset(MsgStream const &msgStream);                 // 4
 
         void setDisplay(bool ifTrue);
         bool display() const;
 
-        void reset();
-        void reset(std::ostream &ostr, size_t maxCount,         // 2
-                     std::string const &tag, bool throwing);
+    private:            // accessible to Msg
+
+        void reset();                                           // 1
 };
 
 inline bool MsgStream::display() const
@@ -92,7 +97,7 @@ inline void MsgStream::setDisplay(bool ifTrue)
         setstate(std::ios::badbit);
 }
 
-inline int MsgStream::asInt() const
+inline int MsgStream::id() const
 {
     return reinterpret_cast<int>(this);
 }
