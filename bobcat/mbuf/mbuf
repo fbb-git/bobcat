@@ -1,0 +1,118 @@
+#ifndef INCLUDED_BOBCAT_MBUF_
+#define INCLUDED_BOBCAT_MBUF_
+
+#include <streambuf>
+#include <memory>
+#include <ostream>
+#include <string>
+#include <iosfwd>
+#include <climits>
+
+namespace FBB
+{
+
+class Mbuf: public std::streambuf
+{
+    std::shared_ptr<std::ofstream> d_ofstr;
+
+    std::ostream d_ostr;        // this is the receiving ostream
+    bool d_newMsg;
+    bool d_showLineNrs;
+    bool d_throw;
+    size_t d_count;
+    size_t d_lineNr;
+    size_t d_maxCount;
+    std::string d_tag;
+
+    public:
+        Mbuf();                                               // 1
+
+        explicit Mbuf(std::streambuf *strbuf,                 // 2
+                        size_t maxCount = UINT_MAX,
+                        std::string const &tag = "", bool throwing = false);
+
+                                                                // 3
+        explicit Mbuf(std::string const &name, size_t maxCount = UINT_MAX, 
+                     std::string const &tag = "", bool throwing = false);
+
+        virtual ~Mbuf() = default;
+
+
+        void reset(Mbuf const &mbuf);               // 1: initialize from 
+                                                        // mbuf. Shares 
+                                                        // d_ofstr and uses
+                                                        // d_ostr's rdbuf
+                                                    
+        void reset(std::streambuf *strbuf,              //  2 
+                    size_t maxCount = UINT_MAX,
+                    std::string const &tag = "", bool throwing = false);
+
+        void reset(std::string const &name,             // 3
+                    size_t maxCount = UINT_MAX, 
+                    std::string const &tag = "", bool throwing = false);
+
+        bool throwing() const;
+        size_t count() const;
+        size_t maxCount() const;
+        std::string const &tag() const;
+        void setLineNr(size_t lineNr);
+        void setMaxCount(size_t maxCount);
+        void setTag(std::string const &tag);
+        void showLineNrs(bool ifTrue);
+
+    private:
+        void atNewline();
+
+        bool newMsg() const;
+
+    private:
+        void showTag();
+        void inspectOfstr(std::string const &name) const;
+        
+        virtual int overflow(int c);
+        virtual std::streamsize xsputn(char const *buf, std::streamsize n);
+        virtual int sync();
+};
+
+inline size_t Mbuf::maxCount() const
+{
+    return d_maxCount;
+}
+        
+inline std::string const &Mbuf::tag() const
+{
+    return d_tag;
+}
+
+inline void Mbuf::setLineNr(size_t lineNr)
+{
+    d_lineNr = lineNr;
+}
+
+inline void Mbuf::showLineNrs(bool ifTrue)
+{
+    d_showLineNrs = ifTrue;
+}
+
+inline bool Mbuf::throwing() const
+{
+    return d_throw;
+}
+
+inline void Mbuf::setMaxCount(size_t maxCount)
+{
+    d_maxCount = maxCount;
+}
+
+inline size_t Mbuf::count() const
+{
+    return d_count;
+}
+
+} // FBB
+
+#endif
+
+
+
+
