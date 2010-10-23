@@ -2,6 +2,10 @@
 
 void FBB::fatal(ostream &out)
 {
-    fmsg << dynamic_cast<ostringstream &>(out).str() << endl;
+    ostringstream &os = dynamic_cast<ostringstream &>(out);
+
+    Msg::s_out << "[Fatal] " << os.str() << endl;
+
+    throw Errno(1);
 }
 

@@ -2,5 +2,8 @@
 
 void Msg::open(std::ofstream &out, std::string const &name)
 {
-    open(out, name, ios::out);
+    out.open(name.c_str());
+
+    if (!out)
+        msg() << "Can't write `" << name << "'" << fatal;
 }

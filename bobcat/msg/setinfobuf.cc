@@ -1,22 +1,8 @@
 #include "msg.ih"
 
-streambuf *Msg::setInfoBuf(streambuf *newBuffer, bool onOff)
+streambuf *Msg::setInfoBuf(streambuf *newBuffer, bool display)
 {
-    static bool shown = false;
+    s_display = display;
 
-    if (!shown)
-    {
-        shown = true;
-        cerr << "\n"
-                "FBB::Msg::setInfoBuf is DEPRECATED. Instead use "
-                                                            "`setDisplay'\n"
-                "\n";
-    }
-
-    if (newBuffer)
-        imsg.rdbuf(newBuffer);
-
-    setDisplay(onOff);
-
-    return imsg.rdbuf();
+    return s_info.rdbuf(newBuffer ? newBuffer : s_info.rdbuf());
 }

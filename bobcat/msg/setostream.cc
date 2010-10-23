@@ -2,15 +2,7 @@
 
 void Msg::setOstream(string const &name) 
 {
-    static bool shown = false;
+    open(s_fout, name);
 
-    if (!shown)
-    {
-        shown = true;
-        cerr << "\n"
-                "FBB::Msg::setOstream is DEPRECATED. Use "
-                                                "imsg.reset(name) instead\n"
-                "\n";
-    }
-    imsg.reset(name);
+    s_out.rdbuf(s_fout.rdbuf());
 }

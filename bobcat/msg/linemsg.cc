@@ -2,6 +2,6 @@
 
 ostringstream &FBB::lineMsg()
 {
-    imsg.showLineNrs(true);
+    msg() << "Line " << Msg::s_line << ": ";
     return Msg::s_msg;
 }
