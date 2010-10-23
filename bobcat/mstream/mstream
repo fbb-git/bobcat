@@ -1,0 +1,148 @@
+#ifndef INCLUDED_BOBCAT_MSTREAM_
+#define INCLUDED_BOBCAT_MSTREAM_
+
+#include <climits>
+#include <ostream>
+#include <fstream>
+
+#include <bobcat/mbuf>
+
+namespace FBB
+{
+    std::ostream &endm(std::ostream &os);
+    std::ostream &flushm(std::ostream &os);
+
+    // http://www.drdobbs.com/184401357:  
+    //      A slightly more serious concern is that the virtual functions in a
+    //      class that's derived from streambuf might throw exceptions;
+    //      perhaps, for example, a user-defined class for network I/O might
+    //      throw an exception when the underlying connection has been
+    //      lost. High-level istream and ostream functions will catch those
+    //      exceptions and translate them into an error state within the
+    //      stream (that’s one of the reasons that seemingly innocent
+    //      functions like istream::get are so complicated), but if you’re
+    //      working with stream buffers directly there’s nobody to catch
+    //      exceptions for you. If you work with stream buffers, you should
+    //      make sure that your code is exception safe.
+
+class Mstream: private Mbuf, public std::ostream
+{
+    friend std::ostream &flushm(std::ostream &os);
+    
+    public:
+        Mstream();                            // initializes to cout
+
+        explicit Mstream(std::ostream &ostr,  // writes to ostr
+                            size_t maxCount = UINT_MAX, 
+                            std::string const &tag = "", 
+                            bool throwing = false);
+
+        explicit Mstream(std::streambuf *buf, // writes to buf
+                            size_t maxCount = UINT_MAX, 
+                            std::string const &tag = "", 
+                            bool throwing = false);
+
+                                                // uses a named ofstream,
+        explicit Mstream(std::string const &name,
+                            size_t maxCount = UINT_MAX, 
+                            std::string const &tag = "", 
+                            bool throwing = false);
+
+        // rdbuf members are still available but will turn a Mstream into
+        // the kind of stream the streambuf handles. Except for one if the
+        // reset members below Mstream assumes an Mbuf 
+
+        int id() const;
+
+        void reset(std::ostream &ostr, size_t maxCount = UINT_MAX,      // inl
+                     std::string const &tag = "", bool throwing = false);
+
+        void reset(std::string const &name,                             // inl
+                     size_t maxCount = UINT_MAX, 
+                     std::string const &tag = "",
+                     bool throwing = false);    // opens the ofstream
+                                                // and uses that stream for
+                                                // Mstream's output
+
+        // ONLY if mbuf is a MsgBuf, otherwise exception
+        void reset(std::streambuf const *mbuf,                          // 4
+                        size_t maxCount = UINT_MAX,
+                        std::string const &tag = "", bool throwing = false);
+
+
+        void reset(Mstream const &msgStream);                 // 4
+
+        void on();
+        void off();
+        bool isActive() const;
+
+        using Mbuf::setLineNr;
+        using Mbuf::showLineNrs;
+        using Mbuf::count;
+        using Mbuf::setMaxCount;
+        using Mbuf::setTag;
+        using Mbuf::throwing;
+};
+
+inline Mstream::Mstream()
+:
+    std::ostream(this)
+{}
+
+inline Mstream::Mstream(std::ostream &ostr, size_t maxCount, 
+                             std::string const &tag, bool throwing)
+:
+    Mbuf(ostr.rdbuf(), maxCount, tag, throwing),
+    std::ostream(this)
+{}
+
+Mstream::Mstream(std::streambuf *buf, size_t maxCount, 
+                             std::string const &tag, bool throwing)
+:
+    Mbuf(buf, maxCount, tag, throwing),
+    std::ostream(this)
+{}
+
+Mstream::Mstream(std::string const &name, size_t maxCount, 
+                             std::string const &tag, bool throwing)
+:
+    Mbuf(name, maxCount, tag, throwing),
+    std::ostream(this)
+{}
+
+inline void Mstream::reset(std::string const &name, size_t maxCount,
+                           std::string const &tag, bool throwing)
+{
+    Mbuf::reset(name, maxCount, tag, throwing);
+}
+
+inline void Mstream::reset(std::ostream &ostr, size_t maxCount,
+                           std::string const &tag, bool throwing)
+{
+    Mbuf::reset(ostr.rdbuf(), maxCount, tag, throwing);
+}
+
+inline bool Mstream::isActive() const
+{
+    return good();
+}
+
+inline void Mstream::on()
+{
+    clear();
+}
+
+inline void Mstream::off()
+{
+    setstate(std::ios::badbit);
+}
+
+inline int Mstream::id() const
+{
+    return reinterpret_cast<int>(this);
+}
+
+
+
+} // FBB        
+#endif
