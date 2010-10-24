@@ -9,7 +9,13 @@ std::ostream &flushm(std::ostream &os)
     if (Mstream *mp = dynamic_cast<Mstream *>(&os))
     {
         if (mp->throwing())
-            throw Errno(mp->id(), "FBB::Mstream");
+        {
+            if (mp->count() >= mp->maxCount())
+                throw Errno(mp->id()) << "Exceeding max. # of " << 
+                            mp->maxCount() << " messages";
+            else
+                throw Errno(mp->id(), "FBB::Mstream");
+        }
     }
     return os;
 }

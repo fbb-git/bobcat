@@ -2,8 +2,14 @@
 
 void Mbuf::atNewline()
 {
-    if (not d_newMsg or not d_ostr.good())
+    if (not d_newMsg)
         return;
+
+    if (d_count >= d_maxCount)
+    {
+        d_throw = true;
+        return;
+    }
 
     d_newMsg = false;
 

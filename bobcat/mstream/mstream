@@ -96,14 +96,14 @@ inline Mstream::Mstream(std::ostream &ostr, size_t maxCount,
     std::ostream(this)
 {}
 
-Mstream::Mstream(std::streambuf *buf, size_t maxCount, 
+inline Mstream::Mstream(std::streambuf *buf, size_t maxCount, 
                              std::string const &tag, bool throwing)
 :
     Mbuf(buf, maxCount, tag, throwing),
     std::ostream(this)
 {}
 
-Mstream::Mstream(std::string const &name, size_t maxCount, 
+inline Mstream::Mstream(std::string const &name, size_t maxCount, 
                              std::string const &tag, bool throwing)
 :
     Mbuf(name, maxCount, tag, throwing),
@@ -142,7 +142,10 @@ inline int Mstream::id() const
     return reinterpret_cast<int>(this);
 }
 
-
+extern Mstream emsg;
+extern Mstream fmsg;
+extern Mstream imsg;
+extern Mstream wmsg;
 
 } // FBB        
 #endif

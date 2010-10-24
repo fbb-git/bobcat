@@ -11,7 +11,4 @@ void Mbuf::showTag()
         d_ostr << ' ' << ++d_count;
 
     d_ostr << "] ";
-    if (d_count > d_maxCount)
-        throw Errno(1) << "Exceeded " << d_maxCount << ' ' << 
-                          d_tag << " messages";
 }
