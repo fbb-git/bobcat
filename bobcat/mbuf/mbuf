@@ -23,6 +23,7 @@ class Mbuf: public std::streambuf
     size_t d_lineNr;
     size_t d_maxCount;
     std::string d_tag;
+    bool d_lineExcess;
 
     public:
         Mbuf();                                               // 1
@@ -51,7 +52,7 @@ class Mbuf: public std::streambuf
                     size_t maxCount = UINT_MAX, 
                     std::string const &tag = "", bool throwing = false);
 
-        bool throwing() const;
+        bool throws() const;
         size_t count() const;
         size_t maxCount() const;
         std::string const &tag() const;
@@ -59,13 +60,11 @@ class Mbuf: public std::streambuf
         void setMaxCount(size_t maxCount);
         void setTag(std::string const &tag);
         void showLineNrs(bool ifTrue);
+        bool lineExcess() const;
 
     private:
         void atNewline();
-
         bool newMsg() const;
-
-    private:
         void showTag();
         void inspectOfstr(std::string const &name) const;
         
@@ -77,6 +76,11 @@ class Mbuf: public std::streambuf
 inline size_t Mbuf::maxCount() const
 {
     return d_maxCount;
+}
+        
+inline bool Mbuf::lineExcess() const
+{
+    return d_lineExcess;
 }
         
 inline std::string const &Mbuf::tag() const
@@ -94,7 +98,7 @@ inline void Mbuf::showLineNrs(bool ifTrue)
     d_showLineNrs = ifTrue;
 }
 
-inline bool Mbuf::throwing() const
+inline bool Mbuf::throws() const
 {
     return d_throw;
 }

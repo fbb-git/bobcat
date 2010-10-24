@@ -13,5 +13,6 @@ void Mbuf::reset(streambuf *buf, size_t maxCount, string const &tag,
     d_newMsg = true;
     d_throw = throwing;
     d_maxCount = maxCount;
+    d_lineExcess = d_count >= maxCount;
     setTag(tag);
 }

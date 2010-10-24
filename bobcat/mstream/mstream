@@ -76,12 +76,15 @@ class Mstream: private Mbuf, public std::ostream
         void off();
         bool isActive() const;
 
-        using Mbuf::setLineNr;
-        using Mbuf::showLineNrs;
-        using Mbuf::count;
-        using Mbuf::setMaxCount;
-        using Mbuf::setTag;
-        using Mbuf::throwing;
+        using Mbuf::count;          // size_t count() const;
+        using Mbuf::lineExcess;     // bool lineExcess() const;
+        using Mbuf::maxCount;       // size_t maxCount() const;
+        using Mbuf::setLineNr;      // void setLineNr(size_t lineNr);
+        using Mbuf::setMaxCount;    // void setMaxCount(size_t maxCount);
+        using Mbuf::setTag;         // void setTag(std::string const &tag);
+        using Mbuf::tag;            // std::string const &tag() const;
+        using Mbuf::showLineNrs;    // void showLineNrs(bool ifTrue);
+        using Mbuf::throws;         // bool throws() const;
 };
 
 inline Mstream::Mstream()

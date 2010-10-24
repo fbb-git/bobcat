@@ -10,7 +10,8 @@ Mbuf::Mbuf(string const &name, size_t maxCount, string const &tag,
     d_throw(throwing),
     d_count(0),
     d_lineNr(0),
-    d_maxCount(maxCount)
+    d_maxCount(maxCount),
+    d_lineExcess(maxCount == 0)
 {
     setTag(tag);
     inspectOfstr(name);

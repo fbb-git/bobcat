@@ -14,5 +14,5 @@ void Mbuf::reset(Mbuf const &other)
     d_lineNr = other.d_lineNr;
     d_maxCount = other.d_maxCount;
     d_tag = other.d_tag;
-
+    d_lineExcess = other.d_lineExcess;
 }

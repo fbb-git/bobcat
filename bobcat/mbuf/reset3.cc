@@ -14,6 +14,7 @@ void Mbuf::reset(string const &name, size_t maxCount, string const &tag,
     d_newMsg = true;
     d_throw = throwing;
     d_maxCount = maxCount;
+    d_lineExcess = d_count >= maxCount;
     setTag(tag);
 
     inspectOfstr(name);

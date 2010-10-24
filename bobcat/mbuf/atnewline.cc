@@ -5,9 +5,9 @@ void Mbuf::atNewline()
     if (not d_newMsg)
         return;
 
-    if (d_count >= d_maxCount)
+    if (d_lineExcess)
     {
-        d_throw = true;
+        d_ostr.setstate(ios::badbit);
         return;
     }
 

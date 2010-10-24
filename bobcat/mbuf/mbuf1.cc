@@ -8,5 +8,6 @@ Mbuf::Mbuf()
     d_throw(false),
     d_count(0),
     d_lineNr(0),
-    d_maxCount(UINT_MAX)
+    d_maxCount(UINT_MAX),
+    d_lineExcess(false)
 {}
