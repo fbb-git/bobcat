@@ -5,13 +5,17 @@ Mbuf::Mbuf(string const &name, size_t maxCount, string const &tag,
 :
     d_ofstr(new ofstream(name)),
     d_ostr(d_ofstr->rdbuf()),
-    d_newMsg(true),
-    d_showLineNrs(false),
+
+    d_firstChar(true),
     d_throw(throwing),
+
     d_count(0),
-    d_lineNr(0),
     d_maxCount(maxCount),
-    d_lineExcess(maxCount == 0)
+    d_lineExcess(maxCount == 0),
+
+    d_showLineNrs(false),
+    d_lineNr(0),
+    d_lineTag("Line")
 {
     setTag(tag);
     inspectOfstr(name);

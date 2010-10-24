@@ -14,16 +14,19 @@ namespace FBB
 class Mbuf: public std::streambuf
 {
     std::shared_ptr<std::ofstream> d_ofstr;
-
     std::ostream d_ostr;        // this is the receiving ostream
-    bool d_newMsg;
-    bool d_showLineNrs;
+
+    bool d_firstChar;
     bool d_throw;
-    size_t d_count;
-    size_t d_lineNr;
-    size_t d_maxCount;
+
     std::string d_tag;
+    size_t d_count;             // counts # messages
+    size_t d_maxCount;
     bool d_lineExcess;
+
+    bool d_showLineNrs;
+    size_t d_lineNr;
+    std::string d_lineTag;
 
     public:
         Mbuf();                                               // 1
@@ -53,18 +56,21 @@ class Mbuf: public std::streambuf
                     std::string const &tag = "", bool throwing = false);
 
         bool throws() const;
+        void throwing(bool ifTrue);
         size_t count() const;
         size_t maxCount() const;
         std::string const &tag() const;
         void setLineNr(size_t lineNr);
+        void setCount(size_t count);
         void setMaxCount(size_t maxCount);
         void setTag(std::string const &tag);
         void showLineNrs(bool ifTrue);
+        void setLineTag(std::string const &lineTag);
         bool lineExcess() const;
 
     private:
-        void atNewline();
-        bool newMsg() const;
+        void atFirstChar();
+        bool firstChar() const;
         void showTag();
         void inspectOfstr(std::string const &name) const;
         
@@ -98,6 +104,11 @@ inline void Mbuf::showLineNrs(bool ifTrue)
     d_showLineNrs = ifTrue;
 }
 
+inline void Mbuf::throwing(bool ifTrue)
+{
+    d_throw = ifTrue;
+}
+
 inline bool Mbuf::throws() const
 {
     return d_throw;
@@ -106,6 +117,16 @@ inline bool Mbuf::throws() const
 inline void Mbuf::setMaxCount(size_t maxCount)
 {
     d_maxCount = maxCount;
+}
+
+inline void Mbuf::setLineTag(std::string const &lineTag)
+{
+    d_lineTag = lineTag;
+}
+
+inline void Mbuf::setCount(size_t count)
+{
+    d_count = count;
 }
 
 inline size_t Mbuf::count() const

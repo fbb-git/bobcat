@@ -3,9 +3,10 @@
 namespace FBB
 {
 
-std::ostream &flushm(std::ostream &os)
+std::ostream &flush(std::ostream &os)
 {
     os.flush();
+
     if (Mstream *mp = dynamic_cast<Mstream *>(&os))
     {
         os.clear();

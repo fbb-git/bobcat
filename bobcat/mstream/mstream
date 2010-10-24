@@ -9,8 +9,8 @@
 
 namespace FBB
 {
-    std::ostream &endm(std::ostream &os);
-    std::ostream &flushm(std::ostream &os);
+    std::ostream &endl(std::ostream &os);
+    std::ostream &flush(std::ostream &os);
 
     // http://www.drdobbs.com/184401357:  
     //      A slightly more serious concern is that the virtual functions in a
@@ -27,8 +27,6 @@ namespace FBB
 
 class Mstream: private Mbuf, public std::ostream
 {
-    friend std::ostream &flushm(std::ostream &os);
-    
     public:
         Mstream();                            // initializes to cout
 
@@ -79,12 +77,15 @@ class Mstream: private Mbuf, public std::ostream
         using Mbuf::count;          // size_t count() const;
         using Mbuf::lineExcess;     // bool lineExcess() const;
         using Mbuf::maxCount;       // size_t maxCount() const;
+        using Mbuf::setCount;       // void setCount(size_t count);
         using Mbuf::setLineNr;      // void setLineNr(size_t lineNr);
         using Mbuf::setMaxCount;    // void setMaxCount(size_t maxCount);
-        using Mbuf::setTag;         // void setTag(std::string const &tag);
-        using Mbuf::tag;            // std::string const &tag() const;
+        using Mbuf::setTag;         // void setTag(string const &tag);
+        using Mbuf::tag;            // string const &tag() const;
         using Mbuf::showLineNrs;    // void showLineNrs(bool ifTrue);
         using Mbuf::throws;         // bool throws() const;
+        using Mbuf::throwing;       // bool throwing(bool ifTrue);
+        using Mbuf::setLineTag;     // void setLineTag(string const &lineTag);
 };
 
 inline Mstream::Mstream()

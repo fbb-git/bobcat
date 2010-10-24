@@ -3,7 +3,7 @@
 int Mbuf::sync()
 {
     d_ostr.flush();
-    d_newMsg = true;
+    d_firstChar = true;
 
     return 0;
 }

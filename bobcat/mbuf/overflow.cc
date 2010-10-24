@@ -2,7 +2,7 @@
 
 int Mbuf::overflow(int c)
 {
-    atNewline();
+    atFirstChar();
     d_ostr.put(c);
     return c;
 }

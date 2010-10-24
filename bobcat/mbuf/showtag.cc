@@ -7,11 +7,8 @@ void Mbuf::showTag()
 
     d_ostr << d_tag;                    // starts with [
 
-    if (d_showLineNrs)
-    {
-        d_ostr << ' ' << ++d_count;
-        d_lineExcess = d_count >= d_maxCount;
-    }
+    if (d_maxCount != UINT_MAX)
+        d_ostr << ' ' << d_count;
 
     d_ostr << "] ";
 }
