@@ -62,13 +62,12 @@ class Mstream: private Mbuf, public std::ostream
                                                 // and uses that stream for
                                                 // Mstream's output
 
-        // ONLY if mbuf is a MsgBuf, otherwise exception
-        void reset(std::streambuf const *mbuf,                          // 4
+        void reset(std::streambuf const *mbuf,                          // inl
                         size_t maxCount = UINT_MAX,
                         std::string const &tag = "", bool throwing = false);
 
 
-        void reset(Mstream const &msgStream);                 // 4
+        void reset(Mstream const &mstream);
 
         void on();
         void off();
@@ -76,16 +75,17 @@ class Mstream: private Mbuf, public std::ostream
 
         using Mbuf::count;          // size_t count() const;
         using Mbuf::lineExcess;     // bool lineExcess() const;
+        using Mbuf::lineTag;        // string const &lineTag() const;
         using Mbuf::maxCount;       // size_t maxCount() const;
         using Mbuf::setCount;       // void setCount(size_t count);
         using Mbuf::setLineNr;      // void setLineNr(size_t lineNr);
+        using Mbuf::setLineTag;     // void setLineTag(string const &lineTag);
         using Mbuf::setMaxCount;    // void setMaxCount(size_t maxCount);
         using Mbuf::setTag;         // void setTag(string const &tag);
         using Mbuf::tag;            // string const &tag() const;
         using Mbuf::showLineNrs;    // void showLineNrs(bool ifTrue);
         using Mbuf::throws;         // bool throws() const;
         using Mbuf::throwing;       // bool throwing(bool ifTrue);
-        using Mbuf::setLineTag;     // void setLineTag(string const &lineTag);
 };
 
 inline Mstream::Mstream()
@@ -114,18 +114,6 @@ inline Mstream::Mstream(std::string const &name, size_t maxCount,
     std::ostream(this)
 {}
 
-inline void Mstream::reset(std::string const &name, size_t maxCount,
-                           std::string const &tag, bool throwing)
-{
-    Mbuf::reset(name, maxCount, tag, throwing);
-}
-
-inline void Mstream::reset(std::ostream &ostr, size_t maxCount,
-                           std::string const &tag, bool throwing)
-{
-    Mbuf::reset(ostr.rdbuf(), maxCount, tag, throwing);
-}
-
 inline bool Mstream::isActive() const
 {
     return good();
@@ -145,6 +133,25 @@ inline int Mstream::id() const
 {
     return reinterpret_cast<int>(this);
 }
+
+inline void Mstream::reset(std::string const &name, size_t maxCount,
+                           std::string const &tag, bool throwing)
+{
+    Mbuf::reset(name, maxCount, tag, throwing);
+}
+
+inline void Mstream::reset(std::ostream &ostr, size_t maxCount,
+                           std::string const &tag, bool throwing)
+{
+    Mbuf::reset(ostr.rdbuf(), maxCount, tag, throwing);
+}
+
+inline void Mstream::reset(std::streambuf *buf, size_t maxCount,
+                           std::string const &tag, bool throwing)
+{
+    Mbuf::reset(buf, maxCount, tag, throwing);
+}
+
 
 extern Mstream emsg;
 extern Mstream fmsg;

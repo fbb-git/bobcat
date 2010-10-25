@@ -60,6 +60,7 @@ class Mbuf: public std::streambuf
         size_t count() const;
         size_t maxCount() const;
         std::string const &tag() const;
+        std::string const &lineTag() const;
         void setLineNr(size_t lineNr);
         void setCount(size_t count);
         void setMaxCount(size_t maxCount);
@@ -92,6 +93,11 @@ inline bool Mbuf::lineExcess() const
 inline std::string const &Mbuf::tag() const
 {
     return d_tag;
+}
+
+inline std::string const &Mbuf::lineTag() const
+{
+    return d_lineTag;
 }
 
 inline void Mbuf::setLineNr(size_t lineNr)

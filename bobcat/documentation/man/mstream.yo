@@ -49,11 +49,11 @@ arguments. Messages inserted into bf(FBB::Mstream) objects are buffered until
 the buffer is flushed by their tt(std::ostream) parts or when either the
 tt(FBB::endl) or tt(FBB::flush) is inserted into the message stream. Since
 these manipulators act like tt(std::endl) and tt(std::flush) when inserted
-into other types of tt(std::ostream) objects, tt(using FBB::endl) and tt(using
+into another kind of tt(std::ostream) object, tt(using FBB::endl) and tt(using
 FBB::flush) might be worth considering. Also, when tt(using namespace std)
 em(and) tt(using namespace FBB) is specified the tt(FBB::endl) and
 tt(FBB::flush) manipulator will automatically be used with bf(FBB::Mstream)
-objects. 
+objects.
 
     Messages inserted into bf(FBB::Mstream) objects are considered completed
 at the insertion of the tt(FBB::endl) or tt(FBB::flush) manipulators. Message
@@ -85,7 +85,7 @@ numbers are shown, no exception are thrown when inserting messages. Specifying
 any other value than tt(UINT_MAX) will set the maximum number of messages that
 can be inserted to that value. The tt(tag) defines the text of the message
 label (e.g., tt(Error)). When tt(throwing) is specified as tt(true) an
-bf(FBB::Errno) exception is thrown after completing a message. The generated
+tt(FBB::Errno) exception is thrown after completing a message. The generated
 exception holds the id (see below for the member tt(id)) of the
 bf(FBB::Mstream) object from which the exception was thrown as well as the
 text tt(FBB::Mstream).
@@ -111,134 +111,138 @@ manpagesection(MEMBER FUNCTIONS)
         returns the number of inserted messages (if tt(setCount) has been
 called: the value set by the last tt(setCount) call plus the number of
 inserted messages since that call).
+
     itb(bool  isActive() const)
         returns tt(true) if messages can  actually be inserted into the
 bf(FBB::MStream) object, and tt(false) if inserted messages are ignored. When
 ignoring messages the message count is not updated.
+
+    itb(int  id() const)
+        returns the unique em(id) of the bf(FBB::Mstream) object. 
+
+    itb(bool lineExcess() const)
+        returns bf(true) after attempting to insert an additional message
+after tt(maxCount()) number of messages have been inserted.
+
+    itb(std::string const &lineTag() const)
+        returns the currently used line-tag (by default `tt(Line)').
+
     itb(size_t maxCount() const)
         returns the maximum number of messages that can be inserted. If the
 returned value equals tt(UINT_MAX) then there is no limit to the number of
 messages that can be inserted.
+
+    itb(void off())
+        after calling tt(off) messages inserted into the bf(FBB::Mstream)
+object are silently ignored. After calling tt(off) the internal message
+counter is not incremented when messages are inserted.
+
+    itb(void on())
+        by default and after calling tt(on) messages inserted into the
+bf(FBB::Mstream) object are sent to their destination stream.
+
+    itb(void reset(std::ostream &ostr, size_t maxCount = UINT_MAX, 
+                std::string const &tag = "", bool throwing = false))
+        messages inserted into bf(FBB::Mstream) objects are handled by the
+tt(std::streambuf) also used by tt(ostr).  By default (using the default
+argument values) there is no limit to the number of messages that may be
+handled by this tt(std::streambuf). Handling line numbers is not affected by
+this member. The tt(tag) defines the text of the message label (e.g.,
+tt(Error)). When tt(throwing) is specified as tt(true) an tt(FBB::Errno)
+exception is thrown after completing a message. 
+
+    itb(void reset(std::streambuf *buf, size_t maxCount = UINT_MAX, 
+                std::string const &tag = "", bool throwing = false))
+        messages inserted into bf(FBB::Mstream) objects are handled by
+tt(std::streambuf buf). The remaining parameters are identical to those of the
+previous tt(reset) member.
+
+    itb(void reset(std::string const &name, size_t maxCount = UINT_MAX, 
+                std::string const &tag = "", bool throwing = false))
+        messages inserted into bf(FBB::Mstream) objects are handled by a
+tt(std::ofstream) created using the provided tt(name) parameter. It throws an
+tt(FBB::Errno) exception if the stream cannot be opened for writing. If a file
+by that name already exists it is rewritten.  The remaining parameters are
+identical to those of the previous two tt(reset) members.
+
+    itb(void reset(FBB::Mstream const &mstream))
+        the current object is reset using the parameters of the tt(mstream)
+parameter. Following the reset all of the current object's parameters can
+independently be modified from those used by tt(mstream).
+
     itb(void setCount(size_t count))
-        Assigns the value tt(count) to the object's message counter.
+        assigns the value tt(count) to the object's message counter.
+
     itb(void setLineNr(size_t lineNr))
-        Specifies the value tt(lineNr) as the message's line number when line
+        specifies the value tt(lineNr) as the message's line number when line
 numbers are requested (see below at tt(showLineNrs). This value is em(not)
 changed by the bf(FBB::Mstream) object. To display another line number the
 member will have to be called again. 
+
     itb(void setLineTag(std::string const &tag))
-        Specifies the tag prefixing line numbers. By default the line tag
+        specifies the tag prefixing line numbers. By default the line tag
 equals `tt(Line)'.
+
     itb(void setMaxCount(size_t maxCount))
-        Defines tt(maxCount) as the maximum number of messages that can be
+        defines tt(maxCount) as the maximum number of messages that can be
 inserted into the bf(FBB::Mstream) object.
+
     itb(void setTag(std::string const &tag))
-        Specifies the tag prefixing messages. By default the tag is empty. If
+        specifies the tag prefixing messages. By default the tag is empty. If
 not empty the tag is enclosed by square brackets. E.g., specifying the tag
 `tt(Error)' will prefix messages with tt([Error]).
+
+    itb(std::string const &tag() const)
+        returns the currently used message tag (by default an empty string).
+
     itb(void showLineNrs(bool ifTrue))
-        When specifying tt(true) line numbers will be displayed using the last
+        when specifying tt(true) line numbers will be displayed using the last
 used tt(lineNr) value specified with tt(setLineNr). Assuming tt(Line) as the
 line tag, the line number message will be, e.g., like this: `tt(Line 12: )'.
 
+    itb(bool throws())
+        returns tt(true) when the bf(FBB::Mstream) object will throw an
+tt(FBB::Errno) exception at the next completed message. The generated
+exception holds the id (see earlier for the member tt(id)) of the
+bf(FBB::Mstream) object from which the exception was thrown as well as the
+text tt(FBB::Mstream).
 
-
-
-    
-
-
-    itb(static void setLine(size_t linenr))
-        Set the value of the line-counter used by the bf(FBB::lineMstream)
-function (see below).
-
-    itb(static void setMaxCount(size_t maxCount))
-        Define the maximum number of error messages (using the bf(err)
-manipulator, see below), before a fatal em(maximum number of error messsages
-reached) message is generated. The default value is the maximum size_t
-value; not reached in any practical situation.
-
-    itb(static void setOstream(std::string const &name))
-        DEPRECATED.  Use tt(setDisplay(name)) instead.
-
-    itb(static void setWarning(char const *pre = "[Warning] "))
-        Define the text printed ahead of warning messages. The default value
-is shown as this member function's default argument value.
-
-    itb(static size_t warnings())
-        Returns the number of warning messages generated so far.
-    )
-
-manpagesection(FREE FUNCTIONS)
-    Note that the following two functions are not members of the class
-bf(Mstream), but em(are) defined in the namespace bf(FBB).
-    itemization(
-    itb(std::ostringstream &lineMstream())
-        Information inserted into this function is used to compose a
-message. Messages must be completed, using an appropriate manipulator, before
-another message can be constructed. The final message is prefixed by
-the text `tt(Line <nr>: )', where tt(<nr>) is the value last set by the member
-function bf(setLine()). Note the blank trailing the colon.
-    itb(std::ostringstream &mstream())
-        Information inserted into this function is used to compose a
-message. Messages must be completed, using an appropriate manipulator, before
-another message can be constructed. 
-    itb(std::ostringstream &mstreamstream())
-        Contrary to the function bf(mstream), which will first clear the current
-contents of the message buffer, bf(mstreamstream) returns the current stream `as
-is'. This allows the use of certain Template Library algorithms, like
-tt(copy). E.g., assuming that tt(std::vector<std::string> d_words) has been
-defined, and using directives were specificied for the tt(std) and tt(FBB)
-namespaces, then
-        verb(
-    copy(d_words.begin(), d_words.end(), ostream_iterator<string>(mstream, " "));
-    mstreamstream() << info;
-        )
-    can be used to insert the contents of tt(d_words), separated by a blank
-space, into the tt(Mstream) stream.
+    itb(void throwing(bool ifTrue))
+        modifies the behaviro of bf(FBB::Mstream) objects at completed
+messages. After passing tt(true) bf(FBB::Mstream) objects will throw an
+tt(FBB::Errno) exception at the next completed message, otherwise this
+exception is not thrown. The generated exception holds the id (see earlier for
+the member tt(id)) of the bf(FBB::Mstream) object from which the exception was
+thrown as well as the text tt(FBB::Mstream).
     )
 
 manpagesection(MANIPULATORS)
-    The manipulators presented in this section are em(not) part of the
-bf(FBB::Mstream), class. However, they em(are) defined in the bf(FBB) namespace.
-These manipulators should be used to end a message, routing it to its intended
-message type. By default all messages are inserted into the standard output
-stream (tt(cout)).
+    Note that the following two manipulators are not members of the class
+bf(Mstream), but are free functions defined in the namespace bf(FBB).
+
     itemization(
-    itb(FBB::err)
-        An error message is generated. Error messages are prefixed by the text
-`tt([Error <count>] )', where tt(<count>) counts the number of error messages
-generated so far. If the maximum error count is exceeded (see
-bf(setMaxCount) above) a fatal message is generated as well. A newline is
-added to the message by the manipulator.
-    itb(FBB::fatal) 
-        A fatal message is generated. Fatal messages are prefixed by the text
-`tt([Fatal] )'. Following a fatal message an bf(Errno(1)) exception is
-thrown.  A newline is added to the message by the manipulator.
-    itb(FBB::info) 
-        This manipulator generates an informational message. Informational
-messages have no further characteristics.  A newline is added to the message
-by the manipulator.
-    itb(FBB::spool) 
-        This manipulator generates a (partial) informational message. 
-bf(spool) does not add a newline message, but merrely flushes the stream's
-buffer.
-    itb(FBB::warning) 
-        This manipulator generates a warning message. By default the text
-`tt([Warning] )' is prefixed to the message, but this message is configurable.
-A newline is added to the message by the manipulator.
+    itb(std::ostream &endl(std::ostream &out))
+        This manipulator inserts a newline character in the bf(FBB::Mstream)'s
+stream and then calls tt(FBB::flush). This manipulator acts like tt(std::endl)
+and tt(std::flush) when inserted into another kind of tt(std::ostream) object.
+    itb(std::ostream &flush(std::ostream &out))
+    This manipulator completes the message that is currently being inserted
+into an bf(FBB::Mstream) object. It flushes the object's destination stream
+and prepares the object for the next message.  When the object's tt(throws)
+member returns tt(true) it will throw an tt(FBB:::Errno) exception which holds
+the id (see earlier for the member tt(id)) of the bf(FBB::Mstream) object from
+which the exception was thrown as well as the text tt(FBB::Mstream).  When
+used in combination with another kind of tt(std::ostream) object it acts like
+tt(std::flush).
     )
 
-manpagesection(OVERLOADED OPERATOR)
-    The following insertion operator is also defined in the namespace
-bf(FBB). It is provided to allow insertion of the manipulators into
-an bf(ostream):
-    itemization(
-    itb(void FBB::operator<<(std::ostream &ostr, 
-                            void (*FBB::manip)(std::ostream &)))
-        The second argument should be one of the abovementioned manipulators.
-        Note that this insertion operator returns tt(void) as inserting one of
-        the above manipulators automatically completes the inserted message.
-    )
+As the manipulators tt(FBB::endl) and tt(FBB::flush) act like, respectively,
+tt(std::endl) and tt(std::flush) when inserted into another kind of
+tt(std::ostream) object, using the declarations `tt(using FBB::endl)' and
+`tt(using FBB::flush)' might be worth considering. Also, when tt(using
+namespace std) em(and) tt(using namespace FBB) is specified the tt(FBB::endl)
+and tt(FBB::flush) manipulator will automatically be called when inserting
+tt(endl) or tt(flush) into bf(FBB::Mstream) objects.
 
 manpagesection(EXAMPLE)
     verbinclude(../../mstream/driver/driver.cc)
@@ -247,7 +251,7 @@ manpagefiles()
     em(bobcat/mstream) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(errno)(3bobcat), bf(indent)(3bobcat)
+    bf(bobcat)(7), bf(errno)(3bobcat), bf(mbuf)(3bobcat)
 
 manpagebugs()
     None Reported.
