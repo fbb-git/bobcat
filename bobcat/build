@@ -85,6 +85,12 @@ void main(int argc, list argv, list envp)
         libraries("bobcat", all == "all", strip == "strip");
     }
 
+    if (option == "l")
+    {
+        system("tput clear");
+        libraries("bobcat", 1, 0);
+    }
+
     if (option == "man")
         man();
 
@@ -111,6 +117,7 @@ void main(int argc, list argv, list envp)
         "   libraries [all] [strip] - build the bobcat(-dev) libraries\n"
         "                         (optionally add optional classes,\n"
         "                         optionally strip the libraries)\n"
+        "   l                   - same as 'libraries all\n"
         "   sourceforge         - preliminaries required for SourceForge\n"
         "\n"
         "If the environment variable DRYRUN is defined, no commands are\n"
