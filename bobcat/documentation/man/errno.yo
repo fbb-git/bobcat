@@ -95,45 +95,19 @@ manpagesection(STATIC MEMBERS)
                                     std::ios::openmode mode = std::ios::in))
         Convenience function opening the object tt(ifstream in) refers to for
 reading. If opening the stream fails, an tt(FBB::Errno(1)) exception is thrown
-containing a short message stating which file could not be opened.
+containing a short message stating which file could not be opened for reading.
 
     itb(static void open(std::ofstream &out, std::string const &name,
                                     std::ios::openmode mode = std::ios::out))
         Convenience function opening (creating) the object tt(ofstream out)
 refers to.  If opening the stream fails, an tt(FBB::Errno(1)) exception is
-thrown containing a short message stating which file could not be opened.
-
-    itb(static void open(std::ofstream &out, std::string const &name, 
-                                        size_t protection,
-                                    std::ios::openmode mode = std::ios::out))
-        Convenience function opening (creating) the object tt(ofstream out)
-refers to. The protection value is normally specified as an octal value. From
-the bf(chmod)(1) manpage:
-
-       The  mode is from one to  four  octal  digits  (0-7),  derived  by
-       adding up the bits with values 4, 2, and 1.  Omitted digits are assumed
-       to be leading zeros.  The first digit selects the set user ID  (4)  and
-       set group ID (2) and restricted deletion or sticky (1) attributes.  The
-       second digit selects permissions for the user who owns the  file:  read
-       (4),  write  (2),  and  execute  (1); the third selects permissions for
-       other users in the file's group, with the same values; and  the  fourth
-       for other users not in the file's group, with the same values.
-
-If opening the stream fails, an tt(FBB::Errno(1)) exception is thrown
-containing a short message stating which file could not be opened.
+thrown containing a short message stating which file could not be opened for
+writing.
 
     itb(static void open(std::fstream &out, std::string const &name, 
                          std::ios::openmode mode)) 
         Convenience function opening (creating) the object tt(fstream out)
 refers to using a specified tt(ios::openmode). If opening the stream fails, an
-tt(FBB::Errno(1)) exception is thrown containing a short message stating which
-file could not be opened.
-
-    itb(static void open(std::fstream &out, std::string const &name, 
-                         size_t protection, std::ios::openmode mode)) 
-        Convenience function opening (creating) the object tt(fstream out)
-refers to using a specified tt(ios::openmode). The protection value is
-normally specified as an octal value. If opening the stream fails, an
 tt(FBB::Errno(1)) exception is thrown containing a short message stating which
 file could not be opened.
     )

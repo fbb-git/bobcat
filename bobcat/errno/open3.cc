@@ -1,8 +1,13 @@
 #include "errno.ih"
 
-void Errno::open(std::ofstream &out, std::string const &name, 
-                                                size_t protection)
+void Errno::open(std::fstream &stream, std::string const &name, 
+                                    ios::openmode mode)
 {
-    close(creat(name.c_str(), protection));
-    open(out, name);
+    if (stream.is_open())
+        stream.close();
+
+    stream.open(name.c_str(), mode);
+
+    if (!stream)
+        throw Errno(1) << "Can't open `" << name << "'\'';
 }

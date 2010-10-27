@@ -31,21 +31,14 @@ class Errno: public std::ostringstream, public std::exception
         int which() const;
         char const *why() const;
 
+
         static void open(std::ifstream &in, std::string const &name,    // 1
                                 std::ios::openmode mode = std::ios::in);
 
         static void open(std::ofstream &out, std::string const &name,   // 2
                                 std::ios::openmode mode = std::ios::out);
 
-        static void open(std::ofstream &out, std::string const &name,   // 2p
-                                size_t protection,
-                                std::ios::openmode mode = std::ios::in);
-
         static void open(std::fstream &out, std::string const &name,    // 3
-                                std::ios::openmode mode);
-
-        static void open(std::ofstream &out, std::string const &name,   // 3p
-                                size_t protection,
                                 std::ios::openmode mode);
 
                                                 // moves to private in a 
