@@ -68,48 +68,26 @@ the value to be inserted.
     )
     The overloaded assignment operator is not available.
 
-COMMENT(
-manpagesection(OBSOLETED MANIPULATORS)
-    The manipulators listed here are obsoleted and should no longer be
-    used. They will be removed from Bobcat in some future version.
-
-    The following manipulators (which are em(not) part of the bf(FBB::Errno),
-class, but em(are) defined in the bf(FBB) namespace) can be inserted into the
-bf(FBB::Errno) object:
-    itemization(
-    itb(FBB::insertable) 
-    (OBSOLETED) If inserted immediately after the construction of an anonymous
-bf(FBB::Errno) object, information may be inserted into the anonymous object
-immediately thereafter. The manipulator is not required for named tt(Errno)
-objects into which information is inserted after their construction.
-     itb(FBB::throwable)
-    (OBSOLETED) If placed at the end of a series of insertions into the
-bf(FBB::Errno) object, it allows the object to be thrown as an exception in
-one expression.
-    )
-END)
-
 manpagesection(STATIC MEMBERS)
+
+    The following convenience functions can be used for controlled opening of
+tt(std::istream, std::ostream) and tt(std::fstream) objects. If opening fails
+an tt(FBB::Errno(1)) exception is thrown containing a short message stating
+that the named stream could not be opened. If the stream was already open it
+is closed first.
+
     itemization(
     itb(static void open(std::ifstream &in, std::string const &name,
                                     std::ios::openmode mode = std::ios::in))
-        Convenience function opening the object tt(ifstream in) refers to for
-reading. If opening the stream fails, an tt(FBB::Errno(1)) exception is thrown
-containing a short message stating which file could not be opened for reading.
-
+        Convenience function opening the object tt(ifstream in) refers to.
     itb(static void open(std::ofstream &out, std::string const &name,
                                     std::ios::openmode mode = std::ios::out))
         Convenience function opening (creating) the object tt(ofstream out)
-refers to.  If opening the stream fails, an tt(FBB::Errno(1)) exception is
-thrown containing a short message stating which file could not be opened for
-writing.
-
+refers to.
     itb(static void open(std::fstream &out, std::string const &name, 
                          std::ios::openmode mode)) 
-        Convenience function opening (creating) the object tt(fstream out)
-refers to using a specified tt(ios::openmode). If opening the stream fails, an
-tt(FBB::Errno(1)) exception is thrown containing a short message stating which
-file could not be opened.
+        Convenience function opening the object tt(fstream out)
+refers to.
     )
 
 manpagesection(EXAMPLE)

@@ -62,7 +62,7 @@ class Mstream: private Mbuf, public std::ostream
                                                 // and uses that stream for
                                                 // Mstream's output
 
-        void reset(std::streambuf const *mbuf,                          // inl
+        void reset(std::streambuf *mbuf,                                // inl
                         size_t maxCount = UINT_MAX,
                         std::string const &tag = "", bool throwing = false);
 
@@ -151,7 +151,6 @@ inline void Mstream::reset(std::streambuf *buf, size_t maxCount,
 {
     Mbuf::reset(buf, maxCount, tag, throwing);
 }
-
 
 extern Mstream emsg;
 extern Mstream fmsg;

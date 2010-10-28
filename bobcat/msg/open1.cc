@@ -2,6 +2,8 @@
 
 void Msg::open(std::ifstream &in, std::string const &name)
 {
+    showOpen();
+
     if (access(name.c_str(), R_OK) != 0)
         msg() << "Can't read `" << name << "'" << fatal;
 

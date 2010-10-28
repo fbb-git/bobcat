@@ -1,6 +1,7 @@
 #include "errno.ih"
 
-void Errno::open(std::ifstream &in, std::string const &name)
+void Errno::open(std::ifstream &in, std::string const &name,
+                                        std::ios::openmode mode)
 {
     if (in.is_open())
         in.close();

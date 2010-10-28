@@ -9,5 +9,5 @@ void Errno::open(std::fstream &stream, std::string const &name,
     stream.open(name.c_str(), mode);
 
     if (!stream)
-        throw Errno(1) << "Can't open `" << name << "'\'';
+        throw Errno(1) << "Can't open `" << name << '\'';
 }
