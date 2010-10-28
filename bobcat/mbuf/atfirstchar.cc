@@ -21,5 +21,8 @@ void Mbuf::atFirstChar()
         showTag();
 
     if (d_showLineNrs)
+    {
+        d_showLineNrs = false;
         d_ostr << d_lineTag << ' ' << d_count << ": ";
+    }
 }

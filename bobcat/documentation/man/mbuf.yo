@@ -82,6 +82,11 @@ after tt(maxCount()) number of messages have been inserted.
 returned value equals tt(UINT_MAX) then there is no limit to the number of
 messages that can be inserted.
 
+    itb(void noLineNrs())
+        calling this member will suppress the display of a line number if it
+is called after calling tt(setLineNr) (see below) but before a message is
+being (or has been) inserted.
+
     itb(void reset(std::streambuf *buf, size_t maxCount = UINT_MAX, 
                 std::string const &tag = "", bool throwing = false))
         messages inserted into bf(FBB::Mbuf) objects are handled by
@@ -109,10 +114,11 @@ independently be modified from those used by tt(mbuf).
         assigns the value tt(count) to the object's message counter.
 
     itb(void setLineNr(size_t lineNr))
-        specifies the value tt(lineNr) as the message's line number when line
-numbers are requested (see below at tt(showLineNrs)). This value is em(not)
-changed by the bf(FBB::Mbuf) object. To display another line number the
-member will have to be called again. 
+        specifies the value tt(lineNr) as the message's line number when the
+next line is displayed (see also tt(noLineNrs)). This value is em(not) changed
+by the bf(FBB::Mbuf) object. To display another line number the member will
+have to be called again (i.e., the line number is not displayed automatically
+again at every new line).
 
     itb(void setLineTag(std::string const &tag))
         specifies the tag prefixing line numbers. By default the line tag
@@ -129,11 +135,6 @@ not empty the tag is enclosed by square brackets. E.g., specifying the tag
 
     itb(std::string const &tag() const)
         returns the currently used message tag (by default an empty string).
-
-    itb(void showLineNrs(bool ifTrue))
-        when specifying tt(true) line numbers will be displayed using the last
-used tt(lineNr) value specified with tt(setLineNr). Assuming tt(Line) as the
-line tag, the line number message will be, e.g., like this: `tt(Line 12: )'.
 
     itb(bool throws())
         returns tt(true) when the bf(FBB::Mbuf) object will throw an
