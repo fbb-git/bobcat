@@ -9,8 +9,6 @@ std::ostream &flush(std::ostream &os)
 
     if (Mstream *mp = dynamic_cast<Mstream *>(&os))
     {
-        os.clear();
-
         if (mp->throws())
             throw Errno(mp->id(), "FBB::Mstream");
 
