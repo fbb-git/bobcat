@@ -146,24 +146,47 @@ counter is not incremented when messages are inserted.
         by default and after calling tt(on) messages inserted into the
 bf(FBB::Mstream) object are sent to their destination stream.
 
-    itb(void reset(std::ostream &ostr, size_t maxCount = UINT_MAX, 
-                std::string const &tag = "", bool throwing = false))
+    itb(void reset(std::ostream &ostr))
         messages inserted into bf(FBB::Mstream) objects are handled by the
-tt(std::streambuf) also used by tt(ostr).  By default (using the default
-argument values) there is no limit to the number of messages that may be
-handled by this tt(std::streambuf). Handling line numbers is not affected by
-this member. The tt(tag) defines the text of the message label (e.g.,
-tt(Error)). When tt(throwing) is specified as tt(true) an tt(FBB::Errno)
-exception is thrown after completing a message. 
+tt(std::streambuf) also used by tt(ostr). Other parameters (e.g.,
+tt(maxCount), the message label are kept as-is.
 
-    itb(void reset(std::streambuf *buf, size_t maxCount = UINT_MAX, 
+    itb(void reset(std::streambuf *buf))
                 std::string const &tag = "", bool throwing = false))
+        messages inserted into bf(FBB::Mstream) objects are handled by
+tt(std::streambuf buf). Other parameters (e.g., tt(maxCount), the message
+label are kept as-is.
+
+    itb(void reset(FBB::Mstream const &mstream))
+        the current object is reset using the parameters of the tt(mstream)
+parameter. 
+
+    itb(void reset(std::string const &name, size_t maxCount, 
+                std::string const &tag, bool throwing))
+        messages inserted into bf(FBB::Mstream) objects are handled by a
+tt(std::ofstream) created using the provided tt(name) parameter.
+tt(FBB::Errno) exception if the stream cannot be opened for writing. If a file
+by that name already exists it is rewritten. Other parameters (e.g.,
+tt(maxCount), the message label are kept as-is.
+
+    itb(void reset(std::ostream &ostr, size_t maxCount, 
+                std::string const &tag, bool throwing))
+        messages inserted into bf(FBB::Mstream) objects are handled by the
+tt(std::streambuf) also used by tt(ostr).  By specifying tt(UINT_MAX) for
+tt(maxCount) there is no limit to the number of messages that may be handled
+by this tt(std::streambuf). The tt(tag) defines the text of the message label
+(e.g., tt(Error) or the empty string for no message label). When tt(throwing)
+is specified as tt(true) an tt(FBB::Errno) exception is thrown after
+completing a message.
+
+    itb(void reset(std::streambuf *buf, size_t maxCount, 
+                std::string const &tag, bool throwing))
         messages inserted into bf(FBB::Mstream) objects are handled by
 tt(std::streambuf buf). The remaining parameters are identical to those of the
 previous tt(reset) member.
 
-    itb(void reset(std::string const &name, size_t maxCount = UINT_MAX, 
-                std::string const &tag = "", bool throwing = false))
+    itb(void reset(std::string const &name, size_t maxCount,
+                std::string const &tag, bool throwing))
         messages inserted into bf(FBB::Mstream) objects are handled by a
 tt(std::ofstream) created using the provided tt(name) parameter. It throws an
 tt(FBB::Errno) exception if the stream cannot be opened for writing. If a file

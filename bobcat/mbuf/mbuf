@@ -47,13 +47,11 @@ class Mbuf: public std::streambuf
                                                         // d_ofstr and uses
                                                         // d_ostr's rdbuf
                                                     
-        void reset(std::streambuf *strbuf,              //  2 
-                    size_t maxCount = UINT_MAX,
-                    std::string const &tag = "", bool throwing = false);
+        void reset(std::streambuf *strbuf, size_t maxCount,     // 2
+                    std::string const &tag, bool throwing);
 
-        void reset(std::string const &name,             // 3
-                    size_t maxCount = UINT_MAX, 
-                    std::string const &tag = "", bool throwing = false);
+        void reset(std::string const &name, size_t maxCount,    // 3
+                    std::string const &tag, bool throwing);
 
         bool throws() const;
         void throwing(bool ifTrue);

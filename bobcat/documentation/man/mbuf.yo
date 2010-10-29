@@ -87,18 +87,18 @@ messages that can be inserted.
 is called after calling tt(setLineNr) (see below) but before a message is
 being (or has been) inserted.
 
-    itb(void reset(std::streambuf *buf, size_t maxCount = UINT_MAX, 
-                std::string const &tag = "", bool throwing = false))
+    itb(void reset(std::streambuf *buf, size_t maxCount, 
+                std::string const &tag, bool throwing))
         messages inserted into bf(FBB::Mbuf) objects are handled by
-tt(std::streambuf buf).  By default (using the default argument values) there
-is no limit to the number of messages that may be handled by this
-tt(std::streambuf). Handling line numbers is not affected by this member. The
-tt(tag) defines the text of the message label (e.g., tt(Error)). When
-tt(throwing) is specified as tt(true) an tt(FBB::Errno) exception is thrown
-after completing a message.
+tt(std::streambuf buf).  By specifying tt(UINT_MAX) for tt(maxCount) there is
+no limit to the number of messages that may be handled by this
+tt(std::streambuf). The tt(tag) defines the text of the message label (e.g.,
+tt(Error) or the empty string for no message label). When tt(throwing) is
+specified as tt(true) an tt(FBB::Errno) exception is thrown after completing a
+message.
 
-    itb(void reset(std::string const &name, size_t maxCount = UINT_MAX, 
-                std::string const &tag = "", bool throwing = false))
+    itb(void reset(std::string const &name, size_t maxCount, 
+                std::string const &tag, bool throwing))
         messages inserted into bf(FBB::Mbuf) objects are handled by a
 tt(std::ofstream) created using the provided tt(name) parameter. It throws an
 tt(FBB::Errno) exception if the stream cannot be opened for writing. If a file
