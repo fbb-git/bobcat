@@ -12,13 +12,18 @@ int main(int argc, char **argv)
 try
 {
     imsg << "Informational: " << endl;
+    imsg.off();
+    cout << "The i-msg stream is now off. This message should appear once" <<
+                                                                        endl;
+    imsg << "The i-msg stream is now off. This message should appear once" <<
+                                                                        endl;
+    imsg << "The i-msg stream is now off. This message should appear once" <<
+                                                                        endl;
+    cout << "But this message is shown" << endl;
 
     wmsg << "Warning message" << endl;
-    emsg << "Oops, this goes wrong" << endl;
+    emsg << "Oops, this this is an error (not really)" << endl;
     emsg << "Oops, this goes wrong, too" << endl;
-
-    imsg.off();
-    imsg << "Not shown" << endl;
 
     imsg.on();
     imsg << "And another informational msg: " << emsg.count() << 
