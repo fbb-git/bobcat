@@ -11,7 +11,7 @@ Mbuf::Mbuf()
     d_maxCount(UINT_MAX),
     d_lineExcess(false),
 
-    d_showLineNrs(false),
+    d_showLineNr(false),
     d_lineNr(0),
     d_lineTag("Line")
 {}

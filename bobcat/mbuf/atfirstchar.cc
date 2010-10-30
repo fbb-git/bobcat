@@ -20,9 +20,9 @@ void Mbuf::atFirstChar()
     if (d_tag.length())
         showTag();
 
-    if (d_showLineNrs)
+    if (d_showLineNr)
     {
-        d_showLineNrs = false;
+        d_showLineNr = false;
         d_ostr << d_lineTag << ' ' << d_count << ": ";
     }
 }

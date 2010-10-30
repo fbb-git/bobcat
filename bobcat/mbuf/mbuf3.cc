@@ -13,7 +13,7 @@ Mbuf::Mbuf(string const &name, size_t maxCount, string const &tag,
     d_maxCount(maxCount),
     d_lineExcess(maxCount == 0),
 
-    d_showLineNrs(false),
+    d_showLineNr(false),
     d_lineNr(0),
     d_lineTag("Line")
 {
