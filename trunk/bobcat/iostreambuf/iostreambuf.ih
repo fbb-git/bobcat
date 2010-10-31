@@ -1,0 +1,36 @@
+#include "iostreambuf"
+
+#include <cstdio>
+
+using namespace std;
+using namespace FBB;
+
+inline int IOStreambuf::sync()
+{        
+    return pSync();
+}
+
+inline IOStreambuf::pos_type IOStreambuf::seekpos(pos_type offset, 
+                         ios::openmode mode)
+{
+    return pSeekpos(offset, mode);
+}
+
+inline std::streamsize IOStreambuf::xsputn(char const *buffer, 
+                                           streamsize n)
+{
+    return pXsputn(buffer, n);
+}
+
+inline streambuf::pos_type IOStreambuf::seekoff(off_type offset, 
+                                    ios::seekdir way, ios::openmode mode)
+{
+    return pSeekoff(offset, way, mode);
+}
+
+
+
+
+
+
+

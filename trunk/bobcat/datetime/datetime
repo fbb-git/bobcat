@@ -1,0 +1,389 @@
+#ifndef INCLUDED_BOBCAT_DATETIME_
+#define INCLUDED_BOBCAT_DATETIME_
+
+#include <ctime>
+#include <iosfwd>
+
+namespace FBB
+{
+
+class DateTime
+{
+    typedef struct tm TimeStruct;
+
+    friend  std::ostream &operator<<(std::ostream &str, 
+                                          DateTime const &dt);
+    friend  std::istream &operator>>(std::istream &str, DateTime &dt);
+
+    friend bool operator==(DateTime const &left, DateTime const &right);
+    friend bool operator!=(DateTime const &left, DateTime const &right);
+    friend bool operator<(DateTime const &left, DateTime const &right);
+    friend bool operator<=(DateTime const &left, DateTime const &right);
+    friend bool operator>(DateTime const &left, DateTime const &right);
+    friend bool operator>=(DateTime const &left, DateTime const &right);
+
+    public:
+        enum TimeType
+        {
+            LOCALTIME,
+            UTC
+        };
+        enum Month
+        {
+            JANUARY,
+            FEBRUARY,
+            MARCH,
+            APRIL,
+            MAY,
+            JUNE,
+            JULY,
+            AUGUST,
+            SEPTEMBER,
+            OCTOBER,
+            NOVEMBER,
+            DECEMBER,
+        };
+        enum Relative
+        {
+            THIS_YEAR,
+            LAST,
+            NEXT,
+            THIS_WEEK,
+        };
+        enum Weekday
+        {
+            SUNDAY,
+            MONDAY,
+            TUESDAY,
+            WEDNESDAY,
+            THURSDAY,
+            FRIDAY,
+            SATURDAY,
+        };
+        enum TriVal
+        {
+            UNKNOWN = -1,
+            NO,
+            YES
+        };
+        enum TimeFields
+        {
+            SECONDS  = 1 << 0,
+            MINUTES  = 1 << 1,
+            HOURS    = 1 << 2,
+            MONTHDAY = 1 << 3,
+            MONTH    = 1 << 4,
+            YEAR     = 1 << 5
+        };
+
+    private:
+    
+        TimeType    d_type; // current type of info in d_tm member
+                            // (LOCALTIME (implied when using displayZone) 
+                            // or UTC)
+    
+        time_t      d_utcSec;           // time in seconds (UTC) 
+        time_t      d_displayZoneShift; // correction to UTC when displaying
+                                        // times
+                                        // this takes care of dst as well.
+
+        int         d_dstShift;         // 3600 or 0: add to displayZoneShift
+
+
+
+        TimeStruct  d_tm;               // time's elements 
+
+
+        bool        d_ok;
+        size_t      d_errno;
+
+        static char const *s_month[];
+        static char const *s_day[];
+
+    public:
+        explicit DateTime(TimeType type = UTC); // 1. time displayed as 
+                                                //    TimeType
+
+        // shifts in minutes
+
+        explicit DateTime(int tzShift);         // 2. LOCALTIME: 
+                                                //    UTC + 
+                                                //      tzShift (= TZ + DST)
+
+                                                // 3. specify UTC/LOCAL time in 
+        DateTime(time_t time, TimeType type);   //    seconds
+
+                                                // 4. LOCALTIME: time (UTC) +
+        DateTime(time_t time, int tzShift);     //      tzShift (= TZ + DST)
+
+
+        // with TimeStruct tm constructor arguments dst, day of the year,
+        //  day of the week are ignored:
+
+                                                // 5. specify tm fields as
+                                                //    either UTC or LOCALTIME
+                                                //    using the default 
+                                                //    tzShift
+        DateTime(TimeStruct const &tm, TimeType type = UTC);
+
+                                                // 6. specify UTC tm fields
+                                                // display + tzShift
+        DateTime(TimeStruct const &tm, int tzShift);
+
+                                                // 7. specify UTC/LOCAL text 
+                                                //    time
+        explicit DateTime(std::string const &timeStr, TimeType type = UTC);
+
+                                                // 7dep. Deprecated. Avoid
+        DateTime(std::string const &timeStr, TimeType type, int);
+
+                                                // 8. specify UTC text time
+                                                //    display + 
+                                                //      displayZoneShift
+        DateTime(std::string const &timeStr, int tzShift);
+
+                                                // 8dep.: Deprecated: avoid
+        DateTime(std::string const &timeStr, int displayZoneShift, int);
+
+        DateTime &operator+=(time_t seconds);           // 1.
+        DateTime &operator+=(TimeStruct const &tm);     // 2. 
+
+        DateTime &operator-=(time_t seconds);           // i.
+        DateTime &operator-=(TimeStruct const &tm);
+
+        operator bool() const;
+
+        bool setDay(int day);           // 'int' values may be negative or 
+        bool setHours(int hours);       // postive.
+        bool setMinutes(int minutes);   
+        bool setMonth(Month month, Relative where = THIS_YEAR);
+        bool setMonth(int month);       // set month, using 0: january this yr
+                                        // correct for overflows.
+        bool setSeconds(int seconds);
+        bool setTime(time_t time);      // utc time
+        bool setWeekday(Weekday weekday, Relative where = NEXT);
+        bool setYear(size_t year);
+        bool setFields(TimeStruct const &tmStruct, int fields);
+        void setValid();
+
+        int displayZoneShift() const;
+        TriVal dst() const;
+        size_t error() const;
+        size_t hours() const;
+        size_t minutes() const;
+        Month month() const;
+        size_t monthDayNr() const;
+        std::string rfc2822() const;
+        std::string rfc3339() const;
+        size_t seconds() const;
+        time_t time() const;
+        TimeStruct const *timeStruct() const;
+        bool valid() const;
+        Weekday weekday() const;
+        size_t year() const;
+        size_t yearDay() const;             // starts counting at 0
+        size_t yearDayNr() const;           // starts counting at 1
+        size_t weekNr() const;              // starts counting at 1
+
+        
+        DateTime utc() const;
+        DateTime localTime() const;
+        DateTime to(TimeType type) const;
+
+        DateTime timeZoneShift(int displayZoneShift) const;
+
+    private:
+            // used by constructors
+        void d_tm2d_tm(int displayZoneShift);   // cons 6, 8
+        void d_tm2timeType();                   // cons 5, 7
+
+        void d_tm2utcSec();
+        void displayShift2d_tm();
+
+        bool updateTime(TimeStruct &tm);
+
+        void setDisplayZone(time_t displayZoneShift);
+        void parse(std::istream &in);
+        void parseFromDayName(std::istream &in);
+        std::ostream &timeStr(std::ostream &out) const;
+
+        time_t timeStruct2utcSec(TimeStruct *ts);               // sets d_ok
+        void utcSec2timeStruct(TimeStruct *ts, time_t time);    // sets d_ok
+        
+        int dstCorrection(bool *ok) const;
+        int dstCorrection();
+
+        time_t defaultDisplayZoneShift() const;     // seconds
+
+        static int zoneShiftSeconds(int shiftMinutes);   
+                                                // shifts multiples of 30'
+                                                // at most +/-12 hours away
+};
+
+inline int DateTime::zoneShiftSeconds(int shiftMinutes)
+{
+    return  shiftMinutes / 30 * 30 % (12 * 60) * 60;
+}
+
+inline DateTime::operator bool() const
+{
+    return d_ok;
+}
+
+inline bool DateTime::valid() const
+{
+    return d_ok;
+}
+
+inline void DateTime::setValid()
+{
+    d_ok = true;
+}
+
+inline size_t DateTime::error() const
+{
+    return d_errno;
+}
+
+inline size_t DateTime::hours() const
+{
+    return d_tm.tm_hour;
+}
+
+inline size_t DateTime::minutes() const
+{
+    return d_tm.tm_min;
+}
+
+inline DateTime::Month DateTime::month() const
+{
+    return static_cast<Month>(d_tm.tm_mon);
+}
+
+inline size_t DateTime::monthDayNr() const
+{
+    return d_tm.tm_mday;
+}
+
+inline size_t DateTime::seconds() const
+{
+    return d_tm.tm_sec;
+}
+
+inline int DateTime::displayZoneShift() const
+{
+    return d_displayZoneShift;
+}
+
+inline time_t DateTime::time() const
+{
+    return d_utcSec;
+}
+
+inline DateTime::Weekday DateTime::weekday() const
+{
+    return static_cast<Weekday>(d_tm.tm_wday);
+}
+
+inline size_t DateTime::year() const
+{
+    return d_tm.tm_year + 1900;
+}
+
+inline size_t DateTime::yearDay() const
+{
+    return d_tm.tm_yday;
+}
+
+inline size_t DateTime::yearDayNr() const
+{
+    return d_tm.tm_yday + 1;
+}
+
+inline DateTime::TriVal DateTime::dst() const
+{
+    return static_cast<TriVal>(d_tm.tm_isdst);  
+}
+
+inline DateTime DateTime::utc() const
+{
+    return to(UTC);
+}   
+
+inline DateTime DateTime::localTime() const
+{
+    return to(LOCALTIME);
+}   
+
+inline DateTime DateTime::timeZoneShift(int displayZoneShift) const
+{
+    return DateTime(d_utcSec, displayZoneShift);
+}
+
+inline struct tm const *DateTime::timeStruct() const
+{
+    return &d_tm;
+}
+
+inline DateTime &DateTime::operator-=(time_t seconds)
+{
+    return operator+=(-seconds);
+}
+
+inline DateTime const operator-(DateTime const &left,   // d_type
+                               time_t right)
+{
+    return DateTime(left) -= right;
+}   
+
+inline DateTime const operator-(DateTime const &left,   // d_type
+                               tm const &right)
+{
+    return DateTime(left) -= right;
+}   
+
+inline DateTime const operator+(DateTime const &left,   // d_type
+                               time_t right)
+{
+    return DateTime(left) += right;
+}   
+
+inline DateTime const operator+(DateTime const &left,   // d_type
+                               tm const &right)
+{
+    return DateTime(left) += right;
+}   
+
+inline bool operator==(DateTime const &left, DateTime const &right)
+{
+    return left.d_utcSec == right.d_utcSec;
+}   
+
+inline bool operator!=(DateTime const &left, DateTime const &right)
+{
+    return left.d_utcSec != right.d_utcSec;
+}   
+
+inline bool operator<(DateTime const &left, DateTime const &right)
+{
+    return left.d_utcSec < right.d_utcSec;
+}   
+
+inline bool operator<=(DateTime const &left, DateTime const &right)
+{
+    return left.d_utcSec <= right.d_utcSec;
+}   
+
+inline bool operator>(DateTime const &left, DateTime const &right)
+{
+    return left.d_utcSec > right.d_utcSec;
+}   
+
+inline bool operator>=(DateTime const &left, DateTime const &right)
+{
+    return left.d_utcSec >= right.d_utcSec;
+}   
+
+}   // FBB
+
+#endif

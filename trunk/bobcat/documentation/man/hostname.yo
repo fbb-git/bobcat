@@ -1,0 +1,56 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Hostname)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Host Info)
+
+manpagename(FBB::Hostname)(Contains name/address info about a host)
+
+manpagesynopsis()
+    bf(#include <bobcat/hostname>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB::Hostname) objects inherit from tt(Hostent), and offers information
+about a host, like bf(Hostent). Apart from being initialized by a hostname or
+host address, they can also be initialized by a bf(FBB::InetAddress)
+object. Most of the functionality of an bf(FBB::Hostname) object is available
+through its parent-class bf(FBB::Hostent).
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::Hostent)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Hostname())
+        The default constructor initializes an empty bf(FBB::Hostname) object.
+    itb(Hostname((std::string const &host)))
+        This constructor initializes an bf(FBB::Hostname) object from a string
+representing the name or dotted decimal address of a host. An bf(FBB::Errno)
+object is thrown if the hostname information could not be retrieved.
+    itb(Hostname(InetAddress const &inetAddress))
+        This constructor initializes an bf(FBB::Hostname) object from an
+bf(InetAddress) object. An bf(FBB::Errno)
+object is thrown if the hostname information could not be retrieved.
+    )
+        The copy constructor is available.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(FBB::Hostent) are available, as bf(FBB::Hostname)
+inherits from this class. There are no additional members.
+
+manpagesection(EXAMPLE)
+    verbinclude(../../hostname/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/hostname) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(hostent)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

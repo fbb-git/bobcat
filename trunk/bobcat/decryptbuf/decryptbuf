@@ -1,0 +1,50 @@
+#ifndef INCLUDED_DECRYPTBUF_
+#define INCLUDED_DECRYPTBUF_
+
+#include <iosfwd>
+#include <streambuf>
+#include <openssl/ossl_typ.h>
+
+namespace FBB
+{
+
+struct DecryptBufImp;
+
+class DecryptBuf: public std::streambuf
+{
+    DecryptBufImp *d_pimpl;
+    static bool s_completed;
+
+    public:
+        DecryptBuf(std::ostream &outStream, char const *type, 
+                            std::string key, std::string iv,
+                            size_t bufsize = 1024);
+        virtual ~DecryptBuf();
+
+        void setIv(std::string iv);
+        bool setRounds(size_t nRounds);             // RC5 8, 12 or 16
+
+        void done();
+        static bool lastOK();
+
+    protected:
+        EVP_CIPHER_CTX *cipherCtx();
+
+    private:
+        void update();
+        void open();
+        void installKey(std::string const &key, size_t length);
+        virtual int overflow(int c);
+};
+
+inline bool DecryptBuf::lastOK()
+{
+    return s_completed;
+}
+
+}   // FBB
+        
+#endif
+
+
+

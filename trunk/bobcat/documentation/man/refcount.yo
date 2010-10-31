@@ -1,0 +1,163 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::RefCount)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Reference Counting)
+
+manpagename(FBB::RefCount)(Base class implementing reference counting.)
+
+manpagesynopsis()
+    bf(#include <bobcat/refcount>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(RefCount) implements a virtual base class implementing reference
+counting. When reference counting is used, objects share the memory of a
+(usually big or complex) data structure, until objects need to modify their
+data, in which case they obtain a copy of the data of their own. This approach
+is most useful with classes that seldomly alter their data, but consult their
+data most of the time. 
+
+    As an example, consider hidden structures as found in the bf(regcomp)(3)
+function: there is no documented way to copy an existing compiled regular
+expression, so if multiple objects must refer to the same regular expression,
+the expression should be compiled once. Thereafter, a reference count monitors
+the number of objects using the compiled expression. Only when the last object
+is destroyed the compiled expression is freed.
+
+    In general, objects using reference counting should obtain their own data
+if they need to alter their data. This situation is also called
+`copy-on-write'. Copy-on-write is implemented by obtaining a copy of the data
+before any modification of the data takes place. So, each non-const member
+function should first copy the data, and should only then modify its own
+data. Constant members may simply refer to the data, without the need to copy
+them first.
+
+    The class bf(RefCount) should be embedded in programs as follows:
+    itemization(
+    it() bf(RefCount) defines a em(virtual base class), defining all members
+that are required to implement reference counting. The class is a virtual base
+class since it defines a member bf(virtual RefCount *clone() const = 0), which
+must return a real copy of the derived class object (cf. Gamma et al.'s (1995)
+em(proxy) Design Pattern).
+    it() From bf(RefCount) a class (named bf(Data) in this man page) is derived
+defining the functionality that is required to manipulate the data:
+this class may contain constructors, overloaded operators, accessors,
+modifiers, etc.
+    it() A third class (called bf(Client) in this man page) defines the actual
+interface to the program in which reference counting is required. In its
+purest form, bf(Client) only has a bf(Data *) data member referring to the
+(possibly shared) data. The functionality offered to the users of bf(Client)
+objects is normally defined by shadowing the functionality defined by
+bf(Data), using simple one-line in-line functions.
+    )
+
+    Except for bf(clone()), there are several issues to bear in mind when
+using reference counting as defined by bf(RefCount):
+    itemization(
+    it() When bf(Client) share data (e.g., when using a copy constructor or an
+overloaded assignment operator), bf(RefCount::share()) should be called rather
+than bf(operator new). Since at this point the data are shared with other
+objects, no copy is required, and the use of bf(operator new) should be
+avoided.
+    it() When bf(Client) objects go out of scope, the destructor should call
+bf(RefCount::release()) rather than bf(operator delete) to disassociate itself
+from the object's data. The bf(operator delete) should not be called directly,
+since this might prematurely destroy data shared with other objects.
+    it() All members modifying data (i.e., all non-const member functions)
+should call bf(RefCount::modifying()) prior to performing the
+modification. This ensures that the object operates on its own data, rather
+than modifying shared data.
+    )
+    Except for the abovementioned items, all members of bf(Client) should be
+implemented as usual: constructors use bf(new Data(argument list)),
+bf(clone()) returns a pointer to a clone of itself, etc.. Refer to the code 
+example for an actual implementation.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(PROTECTED CONSTRUCTORS)
+    itemization(
+    itb(RefCount())
+        This constructor implements the default constructor. 
+    itb(RefCount(RefCount const &other))
+        This constructor implements the copy constructor, which is a
+convenience function for bf(Data)'s copy constructor, but otherwise acting
+identically as bf(RefCount()) itself.
+    )
+
+manpagesection(PROTECTED DESTRUCTOR)
+    itemization(
+    itb(virtual ~RefCount())
+        The destructor is an empty virtual member, thus allowing bf(RefCount *)
+variables to destroy any derived class objects they point to.
+    )
+
+manpagesection(PUBLIC MEMBER FUNCTIONS)
+    itemization(
+    itb(size_t refcount() const)
+        This member returns the current number of objects sharing the data.
+    itb(void release())
+        This member must be called by bf(Client) objects that must
+disassociate themselves from the (possibly shared) data. In practice it is
+called by the bf(Client)'s destructor and overloaded assignment operator. It
+will actually call bf(Data)'s destructor when the object was the only object
+still referring to the data.
+    )
+
+manpagesection(PUBLIC STATIC MEMBER FUNCTIONS)
+    itemization(
+    itb(Data *RefCount::share(Data const *ptr))
+        This member should be called by the constructor of bf(Client) objects
+sharing another client's data. In practice it is called by the client's copy
+constructor and overloaded assignment operator. It receives the actual pointer
+to the data as its argument, and returns the new value of the pointer.
+
+    Note that bf(Data) is not a hard-coded class: the function is implemented
+as a template member, and so it can be used by every class derived from
+bf(RefCount).
+
+    itb(Data &RefCount::modifying(Data **ptr))
+        This member should be called by bf(Client) objects' non-const members,
+just before modifying data. The function may alter the value of the client's
+bf(Data *) data member. It returns a em(reference) to the data, allowing the
+client's member function to call the required bf(Data) modifier in one single
+statement, using the member selection operator (dot).
+
+    Note that bf(Data) is not a hard-coded class: the function is implemented
+as a template member, and so it can be used by every class derived from
+bf(RefCount).
+
+    This function performs a bf(dynamic_cast), which will always succeed if
+bf(Data) was indeed derived from bf(RefCount). A bf(bad_cast) is thrown if the
+cast fails.
+    )
+
+manpagesection(EXAMPLE)
+    The following example illustrates the use the class bf(RefCount). A class
+bf(Data) is derived from bf(RefCount), defining bf(clone()), several standard
+members (copy constructor, overloaded assignment operator) as em(private)
+members, and a default constructor, destructor, accessor and modifier member
+as public members.     
+
+    The class that is used directly by the program is bf(Client), given
+next. It defines all standard constructors and members, and it shadows the
+accessor and modifier members of bf(Data):
+
+    Finally, a small program using bf(Client) is shown.
+
+    verbinclude(../../refcount/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/refcount) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

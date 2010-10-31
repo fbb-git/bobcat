@@ -1,0 +1,112 @@
+#include "mailheaders"
+
+#include <algorithm>
+
+#include <bobcat/fnwrap>
+
+using namespace std;
+using namespace FBB;
+
+inline bool MailHeaders::const_hdr_iterator::fail
+(
+    string const &hdr, string const &key
+)
+{
+    throw Errno(1, "MailHeaders: setHeaderIterator() not called");
+    return false;       // not reached
+}
+
+inline bool MailHeaders::const_hdr_iterator::initial
+(
+    string const &hdr, string const &key
+)
+{
+    return hdr.substr(0, hdr.find(':')).find(key) == 0;
+}
+
+inline bool MailHeaders::const_hdr_iterator::partial
+(
+    string const &hdr, string const &key
+)
+{
+    return hdr.substr(0, hdr.find(':')).find(key) != string::npos;
+}
+
+inline bool MailHeaders::const_hdr_iterator::full
+(
+    string const &hdr, string const &key
+)
+{
+    return hdr.substr(0, hdr.find(':')) == key;
+}
+
+inline bool MailHeaders::const_hdr_iterator::caseInitial
+(
+    string const &hdr, string const &key
+)
+{
+  return String::lc(hdr.substr(0, hdr.find(':'))).find(key) == 0;
+}
+
+inline bool MailHeaders::const_hdr_iterator::casePartial
+(
+    string const &hdr, string const &key
+)
+{
+    return String::lc(hdr.substr(0, hdr.find(':'))).find(key) 
+           != string::npos;
+}
+
+inline bool MailHeaders::const_hdr_iterator::caseFull
+(
+    string const &hdr, string const &key
+)
+{
+    return String::lc(hdr.substr(0, hdr.find(':'))) == key;
+}
+
+inline MailHeaders::const_hdr_iterator 
+&MailHeaders::const_hdr_iterator::operator++()
+{
+    d_current = lookup(++d_current);
+    return *this;
+}
+
+inline MailHeaders::const_hdr_iterator 
+&MailHeaders::const_hdr_iterator::operator--()
+{
+    d_current = lookdown(d_current);
+    return *this;
+}
+
+inline MailHeaders::const_hdr_iterator const
+MailHeaders::const_hdr_iterator::operator++(int)
+{
+    return const_hdr_iterator(d_mh, d_current++);
+}
+
+inline bool MailHeaders::const_hdr_iterator::operator==
+(
+    const_hdr_iterator const &other
+) const
+{
+    return d_current == other.d_current;
+}
+
+inline bool MailHeaders::const_hdr_iterator::operator!=
+(
+    const_hdr_iterator const &other
+) const
+{
+    return d_current != other.d_current;
+}
+
+inline string const &MailHeaders::const_hdr_iterator::operator*() const
+{
+    return *d_current;
+}
+
+inline string const *MailHeaders::const_hdr_iterator::operator->() const
+{
+    return &*d_current;
+}

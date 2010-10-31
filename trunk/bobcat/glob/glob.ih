@@ -1,0 +1,21 @@
+#include "glob"
+
+#include <cstdlib>
+#include <algorithm>
+#include <bobcat/errno>
+
+using namespace std;
+using namespace FBB;
+
+inline char const **Glob::mbegin() const
+{
+    return const_cast<char const **>
+            (d_share->globStruct.gl_pathv);
+}
+
+inline char const **Glob::mend() const
+{
+    return const_cast<char const **>
+            (d_share->globStruct.gl_pathv + size());
+}
+

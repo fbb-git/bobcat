@@ -1,0 +1,78 @@
+
+list inspect(string dstDir, int prefix, list srcList, string library)
+{
+    int idx;
+    string ofile;
+    string oprefix;
+
+    oprefix = "./" + dstDir + "/" + (string)prefix;
+
+    for (idx = sizeof(srcList); idx--; )
+    {
+        g_file  = element(idx, srcList);   
+        ofile   = oprefix + change_ext(g_file, "o"); // make o-filename
+
+        // A file s must be recompiled if it's newer than its object
+        // file o or (with static libraries) newer than its target library l, 
+        // or if neither o nor (with static libraries) l exist. 
+        // Since `a newer b' is true if a is newer than b, or if a exists and
+        // b doesn't exist s must be compiled if s newer o and (with static
+        // libraries) s newer l.
+        // So, it doesn't have to be compiled if s older o or (with static
+        // libraries) s older l.
+                                            // redo if file has changed
+        if 
+        (
+            g_file older ofile || 
+                dstDir == "oa" && g_file older library
+        )
+            srcList -= (list)g_file;
+    }
+    return srcList;
+}
+
+// c_compile: compile all sources in `{srcDir}/{cfiles}', storing the object
+// files in  {srcDir}/o/{prefix}filename.o
+//
+//  uses: g_compiler, g_opt, md, run
+//
+void c_compile(string dstDir, int prefix, string srcDir, list cfiles)
+{
+    int idx;
+    string compdest;
+
+    compdest = g_compiler + " -c -o " + srcDir + "/" + dstDir + 
+                                                "/" + (string)prefix;
+    md(srcDir + "/" + dstDir);
+
+    for (idx = sizeof(cfiles); idx--; )
+    {
+        g_file = element(idx, cfiles);
+        
+        run(compdest + change_ext(g_file, "o") + " " + 
+                g_copt + " " + srcDir + "/" + g_file);
+    }
+}
+
+void std_cpp(string dstDir, int prefix, string srcDir, string library)
+{
+    list files;
+
+    chdir(srcDir);
+                                                      // make list of all files
+    files = inspect(dstDir, prefix, makelist(g_sources), library);  
+    chdir(g_cwd);
+
+    if (sizeof(files))
+        c_compile(dstDir, prefix, srcDir, files);       // compile files
+}
+
+void library(string dstDir, string libname)
+{
+    int idx;
+
+    g_sources = "*.cc";
+    g_compiler = GPP;
+    for (idx = g_nClasses; idx--; )
+        std_cpp(dstDir, idx, element(idx, g_classes), "../" + libname);
+}

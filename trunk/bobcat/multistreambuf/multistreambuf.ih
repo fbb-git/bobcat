@@ -1,0 +1,34 @@
+#include "multistreambuf"
+
+#include <algorithm>
+#include <bobcat/fnwrap>
+
+
+using namespace FBB;
+
+inline int MultiStreambuf::overflow(int c)
+{
+    if (c == EOF)
+        pSync();
+    else 
+        d_buffer += c;
+
+    return c;
+}
+
+inline int MultiStreambuf::sync()
+{
+    return pSync();
+}
+
+inline std::streamsize 
+    MultiStreambuf::xsputn(char const *buffer, std::streamsize n)
+{
+    d_buffer.append(buffer, n);
+    return n;
+}
+
+
+
+
+

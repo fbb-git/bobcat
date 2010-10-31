@@ -1,0 +1,99 @@
+#ifndef INCLUDED_FSWAP_
+#define INCLUDED_FSWAP_
+
+#include <cstring>
+#include <cstdint>
+
+namespace FBB
+{
+
+class FSwap
+{
+    template <typename Tp, size_t size>
+    struct Xch
+    {
+        static void fswap(Tp &lhs, Tp &rhs);
+    };
+    
+    template <typename Tp>
+    struct Xch<Tp, 1>
+    {
+        static void fswap(Tp &lhs, Tp &rhs);
+    };
+
+    template <typename Tp>
+    struct Xch<Tp, 2>
+    {
+        static void fswap(Tp &lhs, Tp &rhs);
+    };
+
+    template <typename Tp>
+    struct Xch<Tp, 4>
+    {
+        static void fswap(Tp &lhs, Tp &rhs);
+    };
+
+    template <typename Tp>
+    struct Xch<Tp, 8>
+    {
+        static void fswap(Tp &lhs, Tp &rhs);
+    };
+    
+    template <typename SwapType, typename Type>
+    static void tswap(Type &lhs, Type &rhs);
+};
+
+template <typename SwapType, typename Type>
+void FSwap::tswap(Type &lhs, Type &rhs)
+{
+    static_assert(sizeof(SwapType) == sizeof(Type),
+                "BOBCAT DESIGN ERROR: "
+                "FSwap::tswap(): sizeof(SwapType) != sizeof(Type)");
+
+    SwapType tmp = *reinterpret_cast<SwapType *>(&lhs);
+    *reinterpret_cast<SwapType *>(&lhs) = *reinterpret_cast<SwapType *>(&rhs);
+    *reinterpret_cast<SwapType *>(&rhs) = tmp;
+}
+
+template <typename Tp, size_t size>
+void FSwap::Xch<Tp, size>::fswap(Tp &lhs, Tp &rhs)
+{
+    char buffer[size];
+    memcpy(buffer,  &lhs,   size);
+    memcpy(&lhs,    &rhs,   size);
+    memcpy(&rhs,    buffer, size);
+}
+    
+template <typename Tp>
+inline void FSwap::Xch<Tp, 1>::fswap(Tp &lhs, Tp &rhs)
+{
+    tswap<int8_t>(lhs, rhs);
+}
+
+template <typename Tp>
+inline void FSwap::Xch<Tp, 2>::fswap(Tp &lhs, Tp &rhs)
+{
+    tswap<int16_t>(lhs, rhs);
+}
+
+template <typename Tp>
+inline void FSwap::Xch<Tp, 4>::fswap(Tp &lhs, Tp &rhs)
+{
+    tswap<int32_t>(lhs, rhs);
+}
+
+template <typename Tp>
+inline void FSwap::Xch<Tp, 8>::fswap(Tp &lhs, Tp &rhs)
+{
+    tswap<int64_t>(lhs, rhs);
+}
+
+template <typename Type>
+void fswap(Type &lhs, Type &rhs)
+{
+    FSwap::Xch<Type, sizeof(Type)>::fswap(lhs, rhs);
+}
+
+} // FBB
+
+#endif

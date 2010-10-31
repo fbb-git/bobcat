@@ -1,0 +1,85 @@
+The directories below this one contain various programs illustrating the
+CLientSocket and ServerSocket classes. 
+
+To compile the programs, descend into the directories and run the `build'
+script. Icmake must be available to run `build'. 
+
+The following programs are available:
+
+    - server    - simple server program, serving one client at the time.
+
+                  Start the server as
+
+                        server <portnr>
+
+                  where <portnr> is the port at which the server will listen
+                  for incoming connections. E.g.,
+
+                        server 12345
+
+                  The communication protocol is extremely simple: the server
+                  expects a single line from the client, echoes the line and
+                  terminates the connection. If the line holds a single `q'
+                  the server itself will terminate.
+
+    - client    - simple client program, matching the abovementioned server.
+
+                  Start the client as
+
+                        client <host> <portnr>
+
+                  where <host> is the name of the computer running the server,
+                  and <portnr> is the port at which the server will listen
+                  for incoming connections. E.g.,
+
+                        client localhost 12345
+
+    - forkserver - simple server program, serving multiple clients, each
+                  running as its own independent process. It implements the
+                  same protocol as `server', mentioned above.
+
+                  Start the server as
+
+                        forkserver <portnr>
+
+                  where <portnr> is the port at which the server will listen
+                  for incoming connections. E.g.,
+
+                        forkserver 12345
+            
+                  Use the client defined in the `client' subdirectory.
+
+    - forkserver2 - server program, serving multiple clients, each
+                  running as its own independent process. It implements a more
+                  complex protocol than `forkserver'
+
+                  Start the server as
+
+                        forkserver2 <portnr>
+
+                  where <portnr> is the port at which the server will listen
+                  for incoming connections. E.g.,
+
+                        forkserver2 12345
+            
+                  The protocol allows for 2-way communication between
+                  client(s) and server. The server will start an independent
+                  process for each new client, and these processes will echo
+                  lines received from clients back to the clients. If a client
+                  sends a line holding a single `q', the server process
+                  terminates. 
+
+                  Use the `client2' program (see below) with this server.
+
+    - client2   - client program, matching the abovementioned server.
+
+                  Start the client as
+
+                        client2 <host> <portnr>
+
+                  where <host> is the name of the computer running the server,
+                  and <portnr> is the port at which the server will listen
+                  for incoming connections. E.g.,
+
+                        client2 localhost 12345
+
