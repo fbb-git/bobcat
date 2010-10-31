@@ -23,6 +23,6 @@ void Mbuf::atFirstChar()
     if (d_showLineNr)
     {
         d_showLineNr = false;
-        d_ostr << d_lineTag << ' ' << d_count << ": ";
+        d_ostr << d_lineTag << ' ' << d_lineNr << ": ";
     }
 }
