@@ -16,7 +16,6 @@ EncryptBufImp::EncryptBufImp(ostream &outStream, string const &ivv,
 
         IRandStream irs(0, 255, time(0));
 
-        for_each(iv.begin(), iv.end(), 
-            FnWrap1c<char &, IRandStream &>(setChar, irs));
+        for_each(iv.begin(), iv.end(), FnWrap::unary(setChar, irs));
     }
 }

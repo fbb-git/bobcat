@@ -1,0 +1,178 @@
+#ifndef INCLUDED_BOBCAT_MSTREAM_
+#define INCLUDED_BOBCAT_MSTREAM_
+
+#include <climits>
+#include <ostream>
+#include <fstream>
+
+#include <bobcat/mbuf>
+
+namespace FBB
+{
+    std::ostream &endl(std::ostream &os);
+    std::ostream &flush(std::ostream &os);
+
+    // http://www.drdobbs.com/184401357:  
+    //      A slightly more serious concern is that the virtual functions in a
+    //      class that's derived from streambuf might throw exceptions;
+    //      perhaps, for example, a user-defined class for network I/O might
+    //      throw an exception when the underlying connection has been
+    //      lost. High-level istream and ostream functions will catch those
+    //      exceptions and translate them into an error state within the
+    //      stream (that’s one of the reasons that seemingly innocent
+    //      functions like istream::get are so complicated), but if you’re
+    //      working with stream buffers directly there’s nobody to catch
+    //      exceptions for you. If you work with stream buffers, you should
+    //      make sure that your code is exception safe.
+
+class Mstream: private Mbuf, public std::ostream
+{
+    public:
+        Mstream();                            // initializes to cout
+
+        explicit Mstream(std::ostream &ostr,  // writes to ostr
+                            size_t maxCount = UINT_MAX, 
+                            std::string const &tag = "", 
+                            bool throwing = false);
+
+        explicit Mstream(std::streambuf *buf, // writes to buf
+                            size_t maxCount = UINT_MAX, 
+                            std::string const &tag = "", 
+                            bool throwing = false);
+
+                                                // uses a named ofstream,
+        explicit Mstream(std::string const &name,
+                            size_t maxCount = UINT_MAX, 
+                            std::string const &tag = "", 
+                            bool throwing = false);
+
+        // rdbuf members are still available but will turn a Mstream into
+        // the kind of stream the streambuf handles. Except for one if the
+        // reset members below Mstream assumes an Mbuf 
+
+        int id() const;
+
+        void reset(std::ostream &ostr);                                 // inl
+        void reset(std::string const &name);                            // inl
+        void reset(std::streambuf *mbuf);                               // inl
+
+        void reset(Mstream const &mstream);
+
+        void reset(std::ostream &ostr, size_t maxCount,                 // inl
+                     std::string const &tag, bool throwing);
+
+        void reset(std::string const &name, size_t maxCount,            // inl
+                     std::string const &tag,
+                     bool throwing);            // opens the ofstream
+                                                // and uses that stream for
+                                                // Mstream's output
+
+        void reset(std::streambuf *mbuf, size_t maxCount,              // inl
+                        std::string const &tag, bool throwing);
+
+        void on();
+        void off();
+        bool isActive() const;
+        bool setActive(bool ifTrue);
+
+        using Mbuf::count;          // size_t count() const;
+        using Mbuf::lineExcess;     // bool lineExcess() const;
+        using Mbuf::lineTag;        // string const &lineTag() const;
+        using Mbuf::maxCount;       // size_t maxCount() const;
+        using Mbuf::setCount;       // void setCount(size_t count);
+        using Mbuf::setLineNr;      // void setLineNr(size_t lineNr);
+        using Mbuf::setLineTag;     // void setLineTag(string const &lineTag);
+        using Mbuf::setMaxCount;    // void setMaxCount(size_t maxCount);
+        using Mbuf::setTag;         // void setTag(string const &tag);
+        using Mbuf::tag;            // string const &tag() const;
+        using Mbuf::noLineNr;       // void noLineNr();
+        using Mbuf::throws;         // bool throws() const;
+        using Mbuf::throwing;       // bool throwing(bool ifTrue);
+};
+
+inline Mstream::Mstream()
+:
+    std::ostream(this)
+{}
+
+inline Mstream::Mstream(std::ostream &ostr, size_t maxCount, 
+                             std::string const &tag, bool throwing)
+:
+    Mbuf(ostr.rdbuf(), maxCount, tag, throwing),
+    std::ostream(this)
+{}
+
+inline Mstream::Mstream(std::streambuf *buf, size_t maxCount, 
+                             std::string const &tag, bool throwing)
+:
+    Mbuf(buf, maxCount, tag, throwing),
+    std::ostream(this)
+{}
+
+inline Mstream::Mstream(std::string const &name, size_t maxCount, 
+                             std::string const &tag, bool throwing)
+:
+    Mbuf(name, maxCount, tag, throwing),
+    std::ostream(this)
+{}
+
+inline bool Mstream::isActive() const
+{
+    return good();
+}
+
+inline void Mstream::on()
+{
+    clear();
+}
+
+inline void Mstream::off()
+{
+    setstate(std::ios::badbit);
+}
+
+inline int Mstream::id() const
+{
+    return reinterpret_cast<int>(this);
+}
+
+inline void Mstream::reset(std::string const &name, size_t maxCount,
+                           std::string const &tag, bool throwing)
+{
+    Mbuf::reset(name, maxCount, tag, throwing);
+}
+
+inline void Mstream::reset(std::string const &name)
+{
+    Mbuf::reset(name, maxCount(), tag(), throws());
+}
+
+inline void Mstream::reset(std::ostream &ostr, size_t maxCount,
+                           std::string const &tag, bool throwing)
+{
+    Mbuf::reset(ostr.rdbuf(), maxCount, tag, throwing);
+}
+
+inline void Mstream::reset(std::ostream &ostr)
+{
+    Mbuf::reset(ostr.rdbuf(), maxCount(), tag(), throws());
+}
+
+inline void Mstream::reset(std::streambuf *buf, size_t maxCount,
+                           std::string const &tag, bool throwing)
+{
+    Mbuf::reset(buf, maxCount, tag, throwing);
+}
+
+inline void Mstream::reset(std::streambuf *buf)
+{
+    Mbuf::reset(buf, maxCount(), tag(), throws());
+}
+
+extern Mstream emsg;
+extern Mstream fmsg;
+extern Mstream imsg;
+extern Mstream wmsg;
+
+} // FBB        
+#endif

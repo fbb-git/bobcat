@@ -31,6 +31,6 @@ int main(int argc, char **argv, char **envp)
     }
     catch (Errno const &e)
     {
-        cout << e.what() << endl;
+        cout << e.why() << endl;
     }
 }

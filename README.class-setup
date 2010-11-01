@@ -2,7 +2,7 @@ The following diagram shows the class dependencies. Classes listed on the same
 line have no mutual dependencies. Classes listed on lines starting with the
 digit 0 are not depenent on other bobcat classes. Then, diagrams showing
 dependencies of other classes. Dependencies should be read upwards, e.g.,
-String depends on FnWrap1 and A2x, Hostname depends on Hostent and Errno.
+String depends on A2x, Hostname depends on Hostent and Errno.
 
 Dependencies refer to the construction of the class members as well as the use
 of the class headers. So, when compiling the class Msg the class Errno must be
@@ -24,8 +24,8 @@ future relase:
 0   X2a     Hash   Hostent  TypeTrait   Swap
                                 |
                 +--------+------+-------+------------+-----------+--------+
-                |        |              |            |           |        |
-            FnWrap1  FnWrap1c         FnWrap2     FnWrap2c    foreach  repeat
+                |        |      |       |            |           |        |
+            FnWrap1  FnWrap1c FnWrap  FnWrap2     FnWrap2c    foreach  repeat
 
 
 0   DateTime       SyslogBuf          RandBuffer        Indent      RefCount
@@ -34,27 +34,31 @@ future relase:
 
 0                        Errno                                    LogBuffer
                            |                                          |
-      +-------+-------+----+------+----------+-----+-------+-----+    |
-      |       |       |           |          |     |       |     |    |
-    BigInt   Msg  Pattern       OneKey       |     |      User   +--+-+
-              |       |                      |     |                |
-     FnWrap1c +-------+                      |     |               Log
-      (cont)  |       |                      |     |   Hostent      |  
-        |     |       |                      |     |    (cont)    level
-        +--+--+       |                      |     |      |       
-           |          |                      |     +---+--+       
-       ConfigFile     |                      |         |          
-                      |                      |     Hostname       
-                  GetHostent                 |                    
-                      |               LocalSocketBase                 
-                  InetAddress                |                          
-                      |                      |                          
-                  SocketBase                 +-------------------+  
-                      |                      |                   |
-                      |              LocalClientSocket   LocalServerSocket
-               +------+---------+       
-               |                |       
-           ClientSocket   ServerSocket  
+      +-------+--------+---+------+----------+-----+-------+-----+    |
+      |       |        |          |          |     |       |     |    |
+      |       | FnWrap |          |          |     |       |     |    |
+      |       |   |    |          |          |     |       |     |    |
+      |       +---+    |          |          |     |       |     |    |
+      |       |        |          |          |     |       |     |    |
+    BigInt   Msg    Pattern     OneKey       |     |      User   +--+-+
+              |        |                     |     |                |
+              +--------+                     |     |               Log
+              |        |                     |     |   Hostent      |  
+              |        |                     |     |    (cont)    level
+          ConfigFile   |                     |     |      |       
+                       |                     |     +---+--+       
+                       |                     |         |          
+                       |                     |     Hostname       
+                   GetHostent                |                    
+                       |              LocalSocketBase                 
+                   InetAddress               |                          
+                       |                     |                          
+                   SocketBase                +-------------------+  
+                       |                     |                   |
+                       |             LocalClientSocket   LocalServerSocket
+                +------+---------+       
+                |                |       
+            ClientSocket   ServerSocket  
 
 
      Errno(cont)
@@ -65,12 +69,12 @@ future relase:
                                 |    |     |      |          |         |
                                 |    +-----+------+----------+---------+
                                 |    |
-0                      A2x      |    |                                     
-       FnWrap1(cont)    |       |    |      FnWrap1c(cont)   Errno(cont)
-             |          |       |    |            |               |
-             +----+-----+       |    |    +-------+-----------+   |  IUO
-                  |             |    |    |       |           |   |   |
-                  |             |    |    |       |           +---+---+
+                                |    |
+                                |    |        FnWrap(cont)   Errno(cont)
+                                |    |            |               |
+                                |    |    +-------+-----------+   |  IUO
+                                |    |    |       |           |   |   |
+0                A2x            |    |    |       |           +---+---+
                   |             |    |    |       |           | 
                String           |    +----+  MultiStreambuf  Glob
                   |             |         |
@@ -85,7 +89,7 @@ future relase:
              |         |       |          |
              |         |   ArgConfig      |
              |         |                  |
-          CmdFinder    +----+-------------+
+         CmdFinder     +----+-------------+
                             |                                    
                             |                                    
 0           OFdStreambuf    |   IFdStreambuf     OFilterStreambuf  lm  mlm

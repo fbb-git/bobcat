@@ -34,6 +34,6 @@ try
 }
 catch (Errno const &e)
 {
-    cout << "Exception: " << e.what() << endl;
+    cout << "Exception: " << e.why() << endl;
 }
 

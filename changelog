@@ -1,3 +1,36 @@
+bobcat (2.09.00)
+
+  * Added new classes ReadLineBuf and ReadLineStream reading the standard
+    input using the Gnu readline library, wrapped inside, respectively, a
+    streambuf and an istream. These classes require linkage to libreadline.
+    The class ReadLineBuf is a singleton class.
+
+  * Added new class ReadLineHistory allowing easy handling of the history
+    accumulated by the ReadLineBuf class.  The class ReadLineHistory is a
+    singleton class.
+
+  * Virtual members of classes derived from std::streambuf were move to the
+    the private section of the classes, making these classes more compliant
+    with Liskov's Substitution Principle.
+
+  * The 'sync' members of classes derived from std::streambuf can be called
+    from derived classes using a protected 'pSync' member. The IOStreambuf
+    class offers comparable protected 'pSeekoff' and 'pSeekpos' and 'pXsputn',
+    allowing the seek and put operations to be performed on request 
+    by classes derived from IOStreambuf.
+
+  * NOTE: Errno's virtual member what() will be moved to Errno's private
+          section in a future release. The new public member 'why' should be
+          used instead, or std::exception::what() should be used.
+
+  * The class Msg is now deprecated. Classes Mstream (Message stream) and Mbuf
+    (Message buf) have replaced Msg, and Msg's open members have moved to
+    Errno. Msg will remain in Bobcat for a while, but will eventualy be
+    removed. An error message is displayed (once) if Msg::msg() and 
+    Msg::open() are used.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Thu, 28 Oct 2010 20:17:50 +0200
+
 bobcat (2.08.01)
 
   * Checked in overlooked repairs of hostent/destroy.cc and

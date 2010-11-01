@@ -38,10 +38,14 @@ class OFdStreambuf: public std::streambuf
 
         void open(int fd, Mode mode, size_t n = 1);
         void open(int fd, size_t n = 1);
-        int sync();
-        int overflow(int c);
+
+    protected:
+        int pSync();
 
     private:
+        virtual int sync();
+        virtual int overflow(int c);
+
         OFdStreambuf(OFdStreambuf const &other) = delete;
         OFdStreambuf &operator=(OFdStreambuf const &other) = delete;
 

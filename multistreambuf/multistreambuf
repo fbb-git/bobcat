@@ -58,17 +58,19 @@ class MultiStreambuf: public std::streambuf
         void setOnce();             // reset all `RESET' modes to `ONCE'
         
     protected:
+        int pSync();
+
+    private:
         virtual int overflow(int c);
         virtual std::streamsize xsputn(char const *buffer, std::streamsize n);
         virtual int sync();
 
-    private:
         struct Insert
         {
             std::string &buffer;
             bool ok;
         };
-        static void insert(stream &os, Insert &insert); 
+        static void insertStruct(stream &os, Insert &insert); 
 };
 
 inline MultiStreambuf::stream::stream(std::ostream &os, Mode mode)
@@ -136,23 +138,6 @@ inline MultiStreambuf::const_iterator MultiStreambuf::begin() const
 inline MultiStreambuf::const_iterator MultiStreambuf::end() const
 {
     return d_os.end();
-}
-
-inline int MultiStreambuf::overflow(int c)
-{
-    if (c == EOF)
-        sync();
-    else 
-        d_buffer += c;
-
-    return c;
-}
-
-inline std::streamsize 
-    MultiStreambuf::xsputn(char const *buffer, std::streamsize n)
-{
-    d_buffer.append(buffer, n);
-    return n;
 }
 
 } // namespace FBB

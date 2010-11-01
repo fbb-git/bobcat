@@ -6,8 +6,7 @@ size_t CGIFSA::tokenIdx()
 
     vector<Transition>::iterator ret =              // look it up
         find_if(s_fsa[d_state].begin(), s_fsa[d_state].end(), 
-            FnWrap1c<Transition const &, size_t, bool>
-                    (&hasToken, token));
+            FnWrap::unary(&hasToken, token));
 
     d_tokenIdx = ret - s_fsa[d_state].begin();      // determine the index
     if (d_tokenIdx == s_fsa[d_state].size())

@@ -37,7 +37,7 @@ try
 }
 catch (Errno const &err)
 {
-    cout << err.what() << endl;
+    cout << err.why() << endl;
     return 1;
 }
 catch (...)

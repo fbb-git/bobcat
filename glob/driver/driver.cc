@@ -48,6 +48,6 @@ try
 }
 catch (Errno const &err)
 {
-    cout << err.what() << '\n';
+    cout << err.why() << '\n';
     return err.which();
 }

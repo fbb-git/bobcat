@@ -4,197 +4,20 @@ COMMENT(manpage, section, releasedate, archive, short name)
 manpage(FBB::Msg)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
                     (Message handler)
 
-manpagename(FBB::Msg)(Generic message handler)
+manpagename(FBB::Msg)(Message handler (DEPRECATED))
 
 manpagesynopsis()
     bf(#include <bobcat/msg>)nl()
     Linking option: tt(-lbobcat) 
 
 manpagedescription()
+    This class is now deprecated. For inserting messages use tt(FBB::Mstream)
+objects (cf. bf(mstream)(3bobcat)), for verified stream opening use the
+static tt(FBB::Errno::open) functions.
 
-manpagesection(NAMESPACE)
-    bf(FBB)nl()
-    All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace bf(FBB).
-
-manpagesection(INHERITS FROM)
-    -
-
-manpagesection(CONSTRUCTORS)
-    The class bf(Msg) only has static members. There are no constructors.
-
-
-manpagesection(MEMBER FUNCTIONS)
-    The class bf(Msg) only has static members. The member functions listed
-below are not frequently used. They exist primarily to control the output
-streams and to fine-tune the inner workings of the class' data members.
-Instead, the class-less members bf(msg()) and bf(lineMsg()) (see below) and
-the manipulators (see below) are used to create messages.
-
-    itemization(
-    itb(static size_t count())
-        Returns the number of error messages generated so far.
-    itb(static bool display())
-        Returns tt(true) if the currently accumulated message will be
-inserted into the message stream. This is the default case.
-    itb(static size_t errors())
-        Returns the number of error messages generated so far. Synonym of
-bf(count()). 
-    itb(static std::streambuf *infoToWarning())
-        Following this call all `info'-messages will be written to the same
-stream as warning messages. The function returns the bf(streambuf) used so
-far. 
-    itb(static void open(std::ifstream &in, std::string const &name))
-        Convenience function opening the object tt(ifstream in) refers to. If
-opening the stream fails, a fatal error message is generated.
-    itb(static void open(std::ofstream &out, std::string const &name))
-        Convenience function opening (creating) the object tt(ofstream out)
-refers to. If opening the stream fails, a fatal error message is generated.
-    itb(static void open(std::ofstream &out, std::string const &name, size_t
-protection)) 
-        Convenience function opening (creating) the object tt(ofstream out)
-refers to. The protection value is normally specified as an octal value. From
-the bf(chmod)(1) manpage:
-
-       The  mode is from one to  four  octal  digits  (0-7),  derived  by
-       adding up the bits with values 4, 2, and 1.  Omitted digits are assumed
-       to be leading zeros.  The first digit selects the set user ID  (4)  and
-       set group ID (2) and restricted deletion or sticky (1) attributes.  The
-       second digit selects permissions for the user who owns the  file:  read
-       (4),  write  (2),  and  execute  (1); the third selects permissions for
-       other users in the file's group, with the same values; and  the  fourth
-       for other users not in the file's group, with the same values.
-
-If opening the stream fails, a fatal error message is generated.
-    itb(static bool setDisplay(bool mode))
-        Changes the setting of the `display' variable. At bf(true) (Note that
-the default is bf(false)) accumulated messages will be inserted into the
-message stream.
-    itb(static std::streambuf *setInfoBuf(std::streambuf *newBuffer,
-                                          bool display = true))
-        Define a new bf(streambuf) into which info-messages will be
-inserted. The passed bf(streambuf) must remain in existence after the call. If
-bf(newBuffer) is 0, the currently used bf(streambuf) is not altered.
-The function returns the bf(streambuf) used so far.
-    itb(static void setLine(size_t linenr))
-        Set the value of the line-counter used with the bf(lineMsg)
-manipulator (see below).
-    itb(static void setMaxCount(size_t maxCount))
-        Define the maximum number of error messages (using the bf(err)
-manipulator, see below), before a fatal em(maximum number of error messsages
-reached) message is generated. The default value is the maximum size_t
-value; not reached in any practical situation.
-    itb(static void setOstream(std::string const &name))
-        Define the name of the stream to which messages will be written.
-    itb(static void setWarning(char const *pre = "[Warning] "))
-        Define the text printed ahead of warning messages. The default value
-is equal to this member function's default argument value.
-    itb(static size_t warnings())
-        Returns the number of warning messages generated so far.
-    )
-
-manpagesection(FREE FUNCTIONS)
-    Note that the following two functions are not members of the class
-bf(Msg), but em(are) defined in the namespace bf(FBB).
-    itemization(
-    itb(std::ostringstream &linMsg())
-        Information inserted into this function is used to compose a
-message. Messages must be completed, using an appropriate manipulator, before
-another message can be constructed. The final message is prefixed by
-the text `tt(Line <nr>: )', where tt(<nr>) is the value last set by the member
-function bf(setLine()). Note the blank trailing the colon.
-    itb(std::ostringstream &msg())
-        Information inserted into this function is used to compose a
-message. Messages must be completed, using an appropriate manipulator, before
-another message can be constructed. 
-    itb(std::ostringstream &msgstream())
-        Contrary to the function bf(msg), which will first clear the current
-contents of the message buffer, bf(msgstream) returns the current stream `as
-is'. This allows the use of certain Template Library algorithms, like
-tt(copy). E.g., assuming that tt(std::vector<std::string> d_words) has been
-defined, and using directives were specificied for the tt(std) and tt(FBB)
-namespaces, then
-        verb(
-    copy(d_words.begin(), d_words.end(), ostream_iterator<string>(msg, " "));
-    msgstream() << info;
-        )
-    can be used to insert the contents of tt(d_words), separated by a blank
-space, into the tt(Msg) stream.
-    )
-
-manpagesection(MANIPULATORS)
-    The following manipulators (which are em(not) part of the bf(FBB::Msg),
-class, but em(are) defined in the bf(FBB) namespace) can be inserted into the
-bf(FBB::Msg) object. All messages are by default inserted into the standard
-output stream (tt(cout)).
-    itemization(
-    itb(FBB::err)
-        An error message is generated. Error messages are prefixed by the text
-`tt([Error <count>] )', where tt(<count>) counts the number of error messages
-generated so far. If the maximum error count is exceeded (see
-bf(setMaxCount()) above) a fatal message is generated as well. A newline is
-added to the message by the manipulator.
-    itb(FBB::fatal) 
-        A fatal message is generated. Fatal messages are prefixed by the text
-`tt([Fatal] )'. Following a fatal message an bf(Errno(1)) exception is
-thrown.  A newline is added to the message by the manipulator.
-    itb(FBB::info) 
-        This manipulator generates an informational message. Information
-messages may be controlled by the bf(setDisplay()) member (see above), and
-have no further characteristics.  A newline is added to the message by the
-manipulator.
-    itb(FBB::spool) 
-        This manipulator generates a (partial) informational message. 
-bf(spool) does not add a newline message, but merrely flushes the stream's
-buffer.
-    itb(FBB::warning) 
-        This manipulator generates a warning message. Warning
-messages may be controlled by the bf(setDisplay()) member (see above). By
-default the text `tt([Warning] )' is prefixed to the message, but the prefixed
-message is configurable.  A newline is added to the message by the
-manipulator.
-    )
-
-manpagesection(OVERLOADED OPERATOR)
-    The following insertion operator is em(not) defined in the namespace
-bf(FBB) but in tt(std). It is part of the distribution to allow the
-manipulators to be inserted into an bf(ostrstream):
-    itemization(
-    itb(void operator<<(ostream &ostrstream, void (*)(ostream &)))
-        The second argument normally is one of the manipulators defined above. 
-    )
-
-manpagesection(EXAMPLE)
-        verb(
-    #include <bobcat/msg>
-
-    using namespace FBB;
-
-    int main(int argc)
-    try
-    {
-        if (argc == 1)
-            msg() << "Need some arguments" << fatal;
-        else
-        {
-            Msg::setDisplay(true);
-            msg() << "Thanks for providing " << argc << 
-                                    " arguments " << info;
-        }
-    }            
-    catch(...)
-    {
-        msg() << "Got an Errno object, but ignoring it" << err;
-    }
-        )
-
-manpagefiles()
-    em(bobcat/msg) - defines the class interface
+    This class will eventually completely be removed from BOBCAT.
 
 manpageseealso()
-    bf(bobcat)(7), bf(errno)(3bobcat), bf(indent)(3bobcat)
-
-manpagebugs()
-    None Reported.
+    bf(bobcat)(7), bf(errno)(3bobcat), bf(mstream)(3bobcat)
 
 includefile(trailer.inc)

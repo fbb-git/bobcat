@@ -1,9 +1,9 @@
-#!/usr/bin/icmake -qt/tmp/bisonc++
+#!/usr/bin/icmake -qt/tmp/bobcat
 
 #include "INSTALL.im"
 
 #define ECHO_COMMANDS       1
-#define COPT                "-Itmp -Wall -O3"
+#define COPT                "-isystem tmp -Wall -O3"
 #define PROJECT             "BOBCAT"
 #define DESTINATION         "tmp"
 #define LIBRARY             "bobcat"
@@ -63,13 +63,18 @@ void main(int argc, list argv, list envp)
     option = element(1, argv);
 
     if (option == "lcgen")
+    {
+        system("tput clear");
         bobcatlcgen();
+    }
 
     if (option == "clean")
         clean();
 
     if (option == "libraries")
     {
+        system("tput clear");
+
         all = element(2, argv);
 
         if (all == "all")
@@ -78,6 +83,12 @@ void main(int argc, list argv, list envp)
             strip = all;
 
         libraries("bobcat", all == "all", strip == "strip");
+    }
+
+    if (option == "l")
+    {
+        system("tput clear");
+        libraries("bobcat", 1, 0);
     }
 
     if (option == "man")
@@ -106,6 +117,7 @@ void main(int argc, list argv, list envp)
         "   libraries [all] [strip] - build the bobcat(-dev) libraries\n"
         "                         (optionally add optional classes,\n"
         "                         optionally strip the libraries)\n"
+        "   l                   - same as 'libraries all\n"
         "   sourceforge         - preliminaries required for SourceForge\n"
         "\n"
         "If the environment variable DRYRUN is defined, no commands are\n"
