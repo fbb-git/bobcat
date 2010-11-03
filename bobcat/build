@@ -63,18 +63,13 @@ void main(int argc, list argv, list envp)
     option = element(1, argv);
 
     if (option == "lcgen")
-    {
-        system("tput clear");
         bobcatlcgen();
-    }
 
     if (option == "clean")
         clean();
 
     if (option == "libraries")
     {
-        system("tput clear");
-
         all = element(2, argv);
 
         if (all == "all")
@@ -87,8 +82,10 @@ void main(int argc, list argv, list envp)
 
     if (option == "l")
     {
-        system("tput clear");
+        system(P_NOCHECK, "tput clear");
         libraries("bobcat", 1, 0);
+        system(P_NOCHECK, "tput clear");
+        bobcatlcgen();
     }
 
     if (option == "man")
@@ -117,7 +114,9 @@ void main(int argc, list argv, list envp)
         "   libraries [all] [strip] - build the bobcat(-dev) libraries\n"
         "                         (optionally add optional classes,\n"
         "                         optionally strip the libraries)\n"
-        "   l                   - same as 'libraries all\n"
+        "   l                   - same as 'libraries all', and `lcgen', but\n"
+        "                         clearing the screen before starting the\n"
+        "                         compilation
         "   sourceforge         - preliminaries required for SourceForge\n"
         "\n"
         "If the environment variable DRYRUN is defined, no commands are\n"

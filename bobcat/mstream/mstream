@@ -50,7 +50,7 @@ class Mstream: private Mbuf, public std::ostream
         // the kind of stream the streambuf handles. Except for one if the
         // reset members below Mstream assumes an Mbuf 
 
-        int id() const;
+        long id() const;
 
         void reset(std::ostream &ostr);                                 // inl
         void reset(std::string const &name);                            // inl
@@ -131,9 +131,9 @@ inline void Mstream::off()
     setstate(std::ios::badbit);
 }
 
-inline int Mstream::id() const
+inline long Mstream::id() const
 {
-    return reinterpret_cast<int>(this);
+    return reinterpret_cast<long>(this);
 }
 
 inline void Mstream::reset(std::string const &name, size_t maxCount,
