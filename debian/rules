@@ -58,7 +58,8 @@ clean:
 install: build
 				dh_testdir
 				dh_testroot
-				dh_clean -k
+				# dh_clean -k deprecated according to lintian
+				dh_clean
 				dh_installdirs
 
 				# Add here commands to install the package into debian/tmp
@@ -99,7 +100,7 @@ binary-arch: build install
 # archive downloaded from https://www.icce.rug.nl/debian/bobcat
 #                               (bobcat_x.y.z..tar.gz)
 
-MD5TRUSTED := 8fbdcf7e11e03275e87f8eb0ad46127e
+MD5TRUSTED := 4bb1fded8bf95c109b7b9331e9e0da13
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
