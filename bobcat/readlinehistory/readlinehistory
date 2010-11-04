@@ -87,7 +87,7 @@ class ReadLineHistory
         static ReadLineHistory &instance(bool useTimestamps);
 
     private:
-        ReadLineHistory() = default;
+        ReadLineHistory();
         static void insertHistoryElement(HistoryElement const &he,
                                          std::ostream &out);
         static void insertLine(HistoryElement const &he, std::ostream &out);
@@ -96,6 +96,8 @@ class ReadLineHistory
         static std::istream &extractLines(std::istream &in);
 };
 
+inline ReadLineHistory::ReadLineHistory()
+{}
 
 inline ReadLineHistory &ReadLineHistory::setTimestampsIO(bool useTimestamps)
 {
