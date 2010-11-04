@@ -1,0 +1,128 @@
+The following diagram shows the class dependencies. Classes listed on the same
+line have no mutual dependencies. Classes listed on lines starting with the
+digit 0 are not depenent on other bobcat classes. Then, diagrams showing
+dependencies of other classes. Dependencies should be read upwards, e.g.,
+String depends on A2x, Hostname depends on Hostent and Errno.
+
+Dependencies refer to the construction of the class members as well as the use
+of the class headers. So, when compiling the class Msg the class Errno must be
+available (if not compile-time then most likely run-time). The dependencies
+are not necessarily related to inheritance.
+
+The file CLASSES lists all classes, in something resembling the order of
+addition of the classes to the Bobcat library. The classes `Milter' and
+`Xpointer' are optionally compiled, and are therefore not listed in the
+CLASSES file.
+
+The label IUO does not refer to a class but to functions defined in the FBB
+namespace for internal use only. They are declared in the bobcat/iuo header.
+
+Entries below, tagged with `(cont)' were mentioned earlier in the next
+hierarchy. Entries tagged with (Obs) are obsolete, and will be removed in a
+future relase: 
+
+0   X2a     Hash   Hostent  TypeTrait   Swap
+                                |
+                +--------+------+-------+------------+-----------+--------+
+                |        |      |       |            |           |        |
+            FnWrap1  FnWrap1c FnWrap  FnWrap2     FnWrap2c    foreach  repeat
+
+
+0   DateTime       SyslogBuf          RandBuffer        Indent      RefCount
+       |               |                   |                           |
+     Stat         SyslogStream         IRandStream                  AutoPtr
+
+0                        Errno                                    LogBuffer
+                           |                                          |
+      +-------+--------+---+------+----------+-----+-------+-----+    |
+      |       |        |          |          |     |       |     |    |
+      |       | FnWrap |          |          |     |       |     |    |
+      |       |   |    |          |          |     |       |     |    |
+      |       +---+    |          |          |     |       |     |    |
+      |       |        |          |          |     |       |     |    |
+    BigInt   Msg    Pattern     OneKey       |     |      User   +--+-+
+              |        |                     |     |                |
+              +--------+                     |     |               Log
+              |        |                     |     |   Hostent      |  
+              |        |                     |     |    (cont)    level
+          ConfigFile   |                     |     |      |       
+                       |                     |     +---+--+       
+                       |                     |         |          
+                       |                     |     Hostname       
+                   GetHostent                |                    
+                       |              LocalSocketBase                 
+                   InetAddress               |                          
+                       |                     |                          
+                   SocketBase                +-------------------+  
+                       |                     |                   |
+                       |             LocalClientSocket   LocalServerSocket
+                +------+---------+       
+                |                |       
+            ClientSocket   ServerSocket  
+
+
+     Errno(cont)
+        |
+0       +---------+--------+----+----+-----+------+----------+    IOStreambuf
+        |         |        |    |    |     |      |          |         |
+    Xpointer MailHeaders Milter |   Pipe  Fork  Selector Redirector  IOStream
+                                |    |     |      |          |         |
+                                |    +-----+------+----------+---------+
+                                |    |
+                                |    |
+                                |    |        FnWrap(cont)   Errno(cont)
+                                |    |            |               |
+                                |    |    +-------+-----------+   |  IUO
+                                |    |    |       |           |   |   |
+0                A2x            |    |    |       |           +---+---+
+                  |             |    |    |       |           | 
+               String           |    +----+  MultiStreambuf  Glob
+                  |             |         |
+             +----+----+        |         |
+             |         |        |         |
+             |         +---+----+         |
+             |         |   |              |
+             |         |  Arg  ConfigFile |
+             |         |   |     (cont)   |
+             |         |   |       |      |
+       CmdFinderBase   |   +---+---+      |
+             |         |       |          |
+             |         |   ArgConfig      |
+             |         |                  |
+         CmdFinder     +----+-------------+
+                            |                                    
+                            |                                    
+0           OFdStreambuf    |   IFdStreambuf     OFilterStreambuf  lm  mlm
+                 |          |        |               |              |   |
+         +-------+          |        +-----+         +-------+------+---+
+         |       |          |        |     |                 |        
+     OFdStream   +-------+--+--------+  IFdStream            |        
+                         |                             OFoldStreambuf 
+                      Process                                |        
+                                                             |        
+                                                        OFoldStream   
+0                     Align                         
+                        |                           
+                        |
+                   TableSupport     
+                        |
+                        +----------+
+                        |          |
+   String (cont)    TableBase  TableLines
+        |               |
+        +----+     +----+----+
+        |    |     |         |
+        |    +-----+         |
+        |          |         |
+        |        Table    TableBuf
+        |
+        |
+        |   Stat(cont) Pattern(cont)  X2a(cont)  foreach(cont)
+        |       |           |            |           |
+        +-------+-----------+-----+------+-----------+ 
+                                  |
+                                  |
+                                 CGI
+
+
+

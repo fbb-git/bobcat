@@ -1,0 +1,61 @@
+void man()
+{
+    list yo;
+    list inc;
+    string base;
+    string yodl;
+    int idx;
+    int forced;
+
+    special(0, 0);
+
+    md("tmp/man/man1 tmp/man/man3 tmp/man/man7 tmp/manhtml");
+
+    chdir("documentation/man");
+
+    inc = makelist("*.inc");
+    for (idx = sizeof(inc); idx--; )
+    {
+        if (element(idx, inc) younger "man-stamp")
+        {
+            forced = 1;
+            break;
+        }
+    }
+
+    if (forced || "bobcatlcgen.yo" younger "man-stamp")
+    {
+        run("yodl2man  --no-warnings -o ../../tmp/man/man1/bobcatlcgen.1 "
+                                                            "bobcatlcgen.yo");
+        run("yodl2html --no-warnings -o ../../tmp/manhtml/bobcatlcgen.1.html "
+                                                            "bobcatlcgen.yo");
+    }
+
+    yo = makelist("*.yo") - (list)"bobcat.yo" -  (list)"bobcatlcgen.yo";
+
+    for (idx = sizeof(yo); idx--; )
+    {
+        yodl = element(idx, yo);
+    
+        if (forced || yodl younger "man-stamp")
+        {
+            base = get_base(yodl);
+    
+            run("yodl2man  --no-warnings -r 15000 -o ../../tmp/man/man3/" + 
+                                                    base + ".3bobcat " + yodl);
+            run("yodl2html --no-warnings -r 15000 -o ../../tmp/manhtml/" + 
+                                                    base + ".3.html " + yodl);
+        }
+    }
+
+    if (forced || "bobcat.yo" younger "man-stamp")
+    {
+        run("yodl2man  --no-warnings  -r 15000 -o ../../tmp/man/man7/bobcat.7 "
+                                                                "bobcat.yo");
+        run("yodl2html --no-warnings  -r 15000 "
+                        "-o ../../tmp/manhtml/bobcat.7.html bobcat.yo");
+    }
+
+    run("touch man-stamp");
+    exit(0);
+}

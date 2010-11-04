@@ -1,0 +1,61 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::level)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Log-manipulator)
+
+manpagename(FBB::level)
+            (Manipulator setting the log-level of bf(FBB::Log) objects)
+
+manpagesynopsis()
+    bf(#include <bobcat/level>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    An bf(FBB::level) object is used to change the log-level of bf(FBB::Log)
+objects. It may be inserted into an empty bf(FBB::Log) object (i.e.,
+immediately before a time stamp might be inserted by the bf(FBB::Log) object
+itself). This is the case after terminating a log message using a
+tt(std::endl) or tt(\n) character.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(level(size_t nextLevel))
+        The constructor is normally used in a insertion statement where it is
+inserted into an bf(FBB::Log) object.
+    )
+    The copy constructor is available, but normally not used.
+
+manpagesection(OVERLOADED OPERATOR)
+    itemization(
+    itb(std::ostream &::operator<<(std::ostream &str, FBB::level const &)) 
+        The bf(std::ostream &str) object should be an empty bf(FBB::Log)
+object. In that case the value stored in the bf(FBB::level) object is used to
+set the bf(FBB::Log) object's next message level. If the bf(std::ostream)
+object is not an bf(FBB::Log) object or if the object is not empty, the
+function returns bf(str) without further action. 
+    )
+
+manpagesection(EXAMPLE)
+        verb(
+    FBB::Log log;
+    
+    log << FBB::level(3) << "Message at level 3\n";
+        )
+
+
+manpagefiles()
+    em(bobcat/level) - defines the class interface.
+
+manpageseealso()
+    bf(bobcat)(7), bf(log)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

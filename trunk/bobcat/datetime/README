@@ -1,0 +1,23 @@
+setDisplayZone  -   sets the seconds d_displayZoneShift wrt UTC.
+                    Argument must allow for TZ and DST shifts.
+
+utcSec2timeStruct - receives a *TimeStruct and a time in UTC
+                    sets the TimeStruct's tm_isdst flag if the current
+                    object's d_dstShift is unequal to zero.
+
+dstCorrection   - returns 3600 if the current time has DST, based on the
+                    computer's locattime computation given UTC sec.
+                    returns 0 otherwise.
+
+updateTime      - called when a time field (day, seconds, year, fields, etc)
+                    is updated. Sanitizes the fields (day 32 -> next month,
+                    etc) 
+
+d_tm2d_tm       - receives (TZ + DST) shift in minutes,
+
+d_tm2utcsec     - assigns UTC seconds matching d_tm to d_utcSec
+
+zoneShiftSeconds    - receives zone shift in minutes, returns shift in
+                      seconds, based on TZ shifts being multiples of 
+                      30 minutes.
+

@@ -1,0 +1,175 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::FnWrap2)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Binary FnWrapper)
+
+manpagename(FBB::FnWrap2)(STL binary argument wrapper template class)
+
+manpagesynopsis()
+    bf(#include <bobcat/fnwrap2>)nl()
+
+manpagedescription()
+    The bf(FBB::FnWrap2) class is a configurable binary argument wrapper
+template class. Its primary use is in combination with the generic algorithms
+of the standard template libray.
+
+    The callled function itself may be specified as one of the constructor's
+arguments. It must be a (static member) function. Using a (static member)
+function has various advantages, especially with the bf(FnWrap?c) classes to
+which a em(local context) can be passed:
+    itemization(
+    it() There is no introduced uncertainty about the bf(const)-ness of the
+callled function, as static member functions do not support 
+a bf(const) modifier;
+    it() The passed function can also be a free (global) function to which a
+local context is passed;
+    it() The passed function can be a static member function of the class
+using the generic algorithm to which the bf(FBB::FnWrap2) object is passed. By
+passing the calling object in the function's local context, the function may
+directly access the calling object's members.
+    it() The passed function can be a static member function of the class
+whose objects are passed to the function via the generic template function s
+iterator parameters. In that case the function may directly access the passed
+object's members.
+    it() Since no object is involved in calling the static function, no
+ambiguity can arise as to whether an object reference or an object pointer
+should be used in calling the function: static (member) functions may be
+called without using objects.
+    )
+
+    The bf(FBB::FnWrap2) template class has the following template parameters:
+    itemization(
+    itt(Type1): the type of the first argument passed to bf(FBB::FnWrap2)'s
+bf(operator()()) function. Specify the type as the type of the first parameter
+of the function whose address is passed to the constructor (i.e., specify a
+plain value or a (const) pointer or reference).
+    itt(Type2): the type of the second argument passed to bf(FBB::FnWrap2)'s
+bf(operator()()) function. Specify the type as the type of the second parameter
+of the function whose address is passed to the constructor (i.e., specify a
+plain value or a (const) pointer or reference).
+    itt(ReturnType): the bf(ReturnType) is by default defined as tt(void). By
+specifying another type, the bf(FBB::FnWrap2) object's bf(operator()())
+function will return the called function's return value as a value of the
+specified type. E.g, by specifying a tt(bool) bf(ReturnType), the
+bf(FBB::FnWrap2) object may be used as a em(Unary Predicate). Alternatively,
+pointers or references may be specified as return values.
+    )
+
+manpagesection(NAMESPACE)
+    FBB
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTOR)
+    itemization(
+    itb(FnWrap2<Type1, Type2 [, Returntype = \
+                            void]>(ReturnType (*fun)(Type1, Type2))) nl()
+       This constructor expects one argument: the address of a function to
+        call from within its bf(operator()()) member. The function receives
+        bf(FBB::FnWrap2)bf(::operator()())'s arguments as its arguments. When
+        using (STL) generic algorithms, the template parameter types tt(Type1)
+        and tt(Type2) are the types to which iterators eventually point.
+    )
+
+manpagesection(OVERLOADED OPERATOR)
+
+    In normal situations the following member function will call the function
+that is passed to bf(FBB::FnWrap2)'s constructor. See the example below.
+
+    itemization(
+    itb(ReturnType operator()(Type1 param, Type2 param) const)
+        This function is called by the generic algorithms, receiving the
+dereferenced iterators that are managed  by generic algorithms as its
+arguments (e.g., the iterator points to modifiable tt(Type1) and tt(Type2)
+objects). 
+    )
+
+
+manpagesection(TYPEDEFS)
+
+    The class defines three types, which are used by generic algorithms:
+    itemization(
+    itb(first_argument_type), a synonym for the basic type specified with the
+tt(Type1) template parameter. E.g., if tt(Type1) is specified as
+tt(std::string const *) then tt(first_argument_type) will be tt(std::string);
+    itb(second_argument_type), a synonym for the basic type specified with the
+tt(Type2) template parameter.
+    itb(result_type), a synonym for the basic type specified with the 
+bf(ReturnType) template parameter.
+    )
+
+manpagesection(EXAMPLES)
+        verb(
+    #include <algorithm>
+    #include <iostream>
+    #include <vector>
+    #include <string>
+    #include <functional>
+    
+    #include <bobcat/fnwrap2>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    bool cmp(string &actual, string const &target)
+    {
+        cout << "Saw " << actual << endl;
+    
+        bool ret = actual == target;
+        actual += ".";
+        return ret;
+    }
+    
+    class X
+    {
+        public:
+            static bool cmp(string const &actual, string const &target)
+            {
+                cout << "Saw " << actual << endl;
+                return actual == target;
+            }
+    };
+    
+    int main(int argc, char **argv)
+    {
+        vector<string> vs(argv, argv + argc);
+    
+        find_if(
+            vs.begin(), vs.end(),
+            bind2nd(
+                FnWrap2<string &, string const &, bool>(&cmp), 
+                string("hello")
+            )
+        );
+    
+        cout << endl;
+    
+        find_if(
+            vs.begin(), vs.end(),
+            bind2nd(
+                FnWrap2<string const &, string const &, bool>(&X::cmp), 
+                string("hello")
+            )
+        );
+    }
+        )
+    After compilation and linking, the program could be called as follows:
+        verb(
+    a.out one two hello three hello four
+        )
+
+manpagefiles()
+    em(bobcat/fnwrap2) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7),  bf(fnwrap)(3bobcat), 
+    bf(fnwrap1)(3bobcat), bf(fnwrap1c)(3bobcat), 
+    bf(fnwrap2c)(3bobcat), bf(foreach)(3bobcat), bf(repeat)(3bobcat)
+
+manpagebugs()
+    The bf(fnwrap)(3bobcat) function wrapper is easier to use an provides this
+    class's functionality. 
+
+includefile(trailer.inc)

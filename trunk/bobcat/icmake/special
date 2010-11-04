@@ -1,0 +1,144 @@
+
+void askMilter(int all)
+{
+    if (!all)
+        printf(
+    "    The class FBB::Milter can only be compiled if you have installed\n"
+    "    the file libmilter/mfapi.h. To use the class Milter, programs using\n"
+    "    Milter objects must also be linked against the milter library:\n"
+    "    -lmilter -lbobcat\n"
+    "\n"
+    "    The class FBB::Milter can safely be left out of the bobcat "
+                                                            "library if\n"
+    "    you're not planning to construct mail filters using FBB::Milter.\n"
+    "\n"
+    "    Press Enter y if you WANT to compile the files of the class "
+                                                            "FBB::Milter.\n"
+    "    Press Enter or any other line if you DON'T WANT to include the "
+                                                            "class\n"
+    "                                  FBB::Milter in the bobcat library.\n"
+        );
+
+    if (all || gets() == "y")
+    {
+        g_sharedLibReq += " -lmilter -L/usr/lib/libmilter";
+        g_classes += (list)"milter";
+    }
+}
+
+void askXpointer(int all)
+{
+    if (!all)
+        printf(
+    "    The class FBB::Xpointer can only be compiled if you have installed\n"
+    "    the file X11/Xlib.h. To use the class Xpointer, programs using "
+                                                            "Xpointer\n"
+    "    objects must also be linked against the X11 library: -lX11 -lbobcat\n"
+    "\n"
+    "    The class FBB::Xpointer can safely be left out of the bobcat "
+                                                            "library if\n"
+    "    you're not planning to construct programs using Xpointer.\n"
+    "\n"
+    "    Press Enter y if you WANT to compile the files of the class "
+                                                            "FBB::Xpointer.\n"
+    "    Press Enter or any other line if you DON'T WANT to include the "
+                                                            "class\n"
+    "                                  FBB::Xpointer in the bobcat library.\n"
+        );
+
+    if (all || gets() == "y")
+    {
+        g_sharedLibReq += " -lX11";
+        g_classes += (list)"xpointer";
+    }
+}
+
+void askOpenSSL(int all)
+{
+    if (!all)
+        printf(
+    "    The SSL classes can only be compiled if you have installed\n"
+    "    the libssl-dev development library, containing files like\n"
+    "    /usr/include/openssl/bn.h. To use objects from openssl programs\n"
+    "     must also be linked against the openSSL library: -lssl -lbobcat\n"
+    "\n"
+    "    The SSL classes can safely be left out of the bobcat library if\n"
+    "    you're not planning to construct programs using them.\n"
+    "\n"
+    "    Press Enter y if you WANT to compile the files of the SSL classes\n"
+    "    Press Enter or any other line if you DON'T WANT to include the "
+                                                            "SSL classes\n"
+    "                                  in the bobcat library.\n"
+        );
+
+    if (all || gets() == "y")
+    {
+        g_sharedLibReq += " -lssl";
+        addClasses("SSLCLASSES");
+    }    
+}
+
+void askReadLine(int all)
+{
+    if (!all)
+        printf(
+    "    The classes using the readline library can only be compiled if you\n"
+    "    have installed the libreadline-dev development library, containing\n"
+    "    files like /usr/include/readline.h. To use objects of these\n"
+    "    classes in your programs, your programs must also be linked\n"
+    "    against the readline library: -lreadline -lbobcat\n"
+    "\n"
+    "    The classes depending on the readline library can safely be left\n"
+    "    out of the bobcat library if you're not planning to construct\n"
+    "    programs using them.\n"
+    "\n"
+    "    Press Enter y if you WANT to compile the classes using the\n"
+    "    readline library\n"
+    "    Press Enter or any other line if you DON'T WANT to include these "
+    "    classes in the bobcat library.\n"
+        );
+
+    if (all || gets() == "y")
+    {
+        g_sharedLibReq += " -lreadline";
+        addClasses("READLINE");
+    }    
+}
+
+void special(int expand, int all)
+{
+    list cut;
+    list line;
+    int refresh;
+
+    if (expand)
+    {
+        askMilter(all);
+        askXpointer(all);
+        askOpenSSL(all);
+        askReadLine(all);
+
+        g_nClasses = sizeof(g_classes);
+    }
+
+    refresh = "VERSION" newer "release.yo";
+
+    if (refresh)
+        run("rm -f release.yo");
+
+    while (sizeof(line = fgets("VERSION", (int)element(1, line))))
+    {
+        cut = strtok(element(0, line), "= \t\n");
+
+        if (element(0, cut) == "VERSION")
+        {
+            g_version = element(1, cut);
+
+            if (refresh)
+                fprintf("release.yo", "SUBST(_CurVers_)(", g_version, ")\n");
+        }
+        else if (refresh && element(0, cut) == "YEARS")
+            fprintf("release.yo", "SUBST(_CurYrs_)(", element(1, cut), ")\n");
+    }
+}
+

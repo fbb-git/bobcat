@@ -1,0 +1,116 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Digestbuf)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Compute Message Digests)
+
+manpagename(FBB::Digestbuf)
+           (Computes Message Digests from information inserted into a
+std::ostream) 
+
+manpagesynopsis()
+    bf(#include <bobcat/digestbuf>)nl()
+    Linking option: tt(-lssl -lbobcat) 
+
+manpagedescription()
+    bf(FBB::Digestbuf) objects are bf(std::streambuf) objects that can be used
+to initialize tt(std::ostream) objects with.
+
+    All information inserted into such a tt(std::ostream) is used to compute a
+message digest from. 
+
+    All the message digests defined by the OpenSSL library that can be
+selected by name may be used in combination with tt(DigestBuf) objects.
+
+    The following message digest algorithms are currently supported: mull,
+md2, md5, sha, sha1, sha224, sha256, sha384, sha512, dss, dss1, ecdsa, mdc2,
+ripemd160. These very names are the ones to use to select the particular
+digest algorithms for the class's constructor, below. It is quite possible that
+future releases of the openssl library will support additional message digest
+algorithms. The header file tt(openssl/evp.h) lists all available digest
+algorithms (in that file look for tt(EVP_MD *EVP_): a message digest algorithm
+immediately follows the 2nd underscore. E.g., tt(const EVP_MD *EVP_md4(void))
+which refers to the md4 message digest algorithm).
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(std::streambuf)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Digestbuf(char const *type, size_t bufsize = 1024))
+        This constructor initializes the streambuf, setting it up for the
+message digest algorithm specified with tt(type). The message digest
+algorithms specified in the bf(DESCRIPTION) section may be used here. E.g., to
+use the sha256 algorithm specify tt("sha256"). 
+
+    The tt(bufsize) argument specifies the internal buffer used by
+tt(Digestbuf) to store incoming characters temporarily. The provided default
+argument should be OK in all normal cases. 
+    )
+    There is no copy constructor.
+
+manpagesection(OVERLOADED OPERATOR)
+
+    itemization(
+    itb(std::ostream &operator<<(std::ostream &out, 
+                                 DigestBuf const &digestbuf))
+        The insertion operator is a free function defined in the namespace
+tt(FBB). It inserts a hash value as a series of hexadecimally displayed values
+into the provided tt(ostream). See the example below for an illustration.
+    )
+    The overloaded assignment operator is not available.
+
+manpagesection(MEMBER FUNCTIONS)
+
+     All members of bf(std::streambuf) are available, as bf(FBB::Digestbuf)
+inherits from this class. Some of the bf(std::streambuf)'s member are
+overridden or are hidden by tt(Digestbuf). In normal situations these
+inherited members will not be used by programs using tt(DigestBuf) objects.
+
+    itemization(
+    itb(void close())
+        This member finishes the computation of the  message digest
+computation. It is needed as the tt(DigestBuf) object has no external means
+for deciding whether all information to compute the digest for has yet been
+received or not. The general approach to follow when computing a message
+digest is therefore:
+        verb(
+    create a DigestBuf object
+    use it to create a std::ostream object
+    insert information into the ostream object
+    call the DigestBuf object's close() member
+    obtain/process the hash value from the DigestBuf object.
+        )
+    itb(std::string const &hash() const)
+        This member returns the hash value computed by the tt(DigestBuf)
+object. Its value is only defined after having called tt(close()). The hash
+value is returned in a tt(std::string) object. This string's tt(length())
+member contains the number of characters used by the hash value, and its
+tt(data()) member refers to the hash value's characters. Note that a hash
+value's character value may be 0 (not to be confused with tt('0')).
+    itb(void open())
+        This member reinitializes the message digest computation. One a
+message digest has been computed for, say a stream tt(streamA) this member can
+be called after which the digest for a stream tt(streamB) can be computed
+using the same tt(DigestBuf) object.
+    )
+
+manpagesection(EXAMPLE)
+    verbinclude(../../digestbuf/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/digestbuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(hmacbuf)(3bobcat), bf(std::streambuf)
+
+manpagebugs()
+    None reported
+
+includefile(trailer.inc)
+
+
+
+

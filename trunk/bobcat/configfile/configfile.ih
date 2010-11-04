@@ -1,0 +1,22 @@
+#include "configfile"
+
+#include <bobcat/fnwrap>
+#include <bobcat/errno>
+
+#include <algorithm>
+
+
+using namespace std;
+using namespace FBB;
+
+inline bool ConfigFile::contains(string const &str, 
+                     string &target)
+{
+    return str.find(target) != string::npos;
+}
+
+inline bool ConfigFile::match(string const &str, Pattern &pat)
+{
+    return pat << str;
+}
+

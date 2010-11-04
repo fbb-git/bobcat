@@ -1,0 +1,182 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::MultiStreambuf)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Writing multiple streams)
+
+manpagename(FBB::MultiStreambuf)(Selectively writes multiple streams)
+
+manpagesynopsis()
+    bf(#include <bobcat/multistreambuf>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    The bf(FBB::MultiStreambuf) class is a specialization of
+bf(std::streambuf). It can be used to write selectvely to multiple
+bf(std::ostreams). Each bf(std::ostream) that is associated with an
+bf(FBB::MultiStreambuf) is given a mode-tag indicating whether the stream
+should always be used when information is inserted into the
+bf(FBB::MultiStreambuf), just once, or not at all. Each of the stream's 
+mode-tags may be set to any of the defined tag-values. 
+
+    When the address of a bf(FBB::MultiStreambuf) is used to initialize a
+bf(std::ostream) the constructed bf(std::ostream) becomes an
+output-multiplexer: by inserting information into the bf(std::ostream) object,
+all bf(std::ostream) objects added to its bf(FBB::MultiStreambuf) buffer which
+have an active mode will receive that information.
+
+An bf(FBB::MultiStreambuf) object should be outlived by all active streams
+that are associated with it.
+
+No assumptions should be made about the order in which the bf(std::ostream)
+objects that are associated with the bf(FBB::MultiStreambuf) objects are
+visited when information is inserted.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+        bf(std::streambuf)
+
+manpagesection(ENUMERATION)
+    In the bf(Mode) enumeration the following values are defined:
+    itemization(
+    itb(OFF)
+        A bf(std::ostream) having this mode will not be used when information
+is inserted into an bf(FBB::MultiStreambuf)
+    itb(ON)
+        A bf(std::ostream) having this mode will be used when information
+is inserted into an bf(FBB::MultiStreambuf)
+    itb(ONCE)
+        A bf(std::ostream) having this mode will be used once, until the next
+flushing operation, when information is inserted into an
+bf(FBB::MultiStreambuf)
+    itb(RESET)
+        A bf(std::ostream) having this mode will not be used when information
+is inserted into an bf(FBB::MultiStreambuf). At a flush operation all bf(ONCE)
+modes will be set to bf(RESET)
+    )
+
+manpagesection(TYPES)
+    The following subtypes are defined in the class bf(FBB:MultiStreambuf):
+    itemization(
+    itb(iterator)
+        This is a synonym of bf(std::vector<stream>::iterator)
+    itb(const_iterator)
+        This is a synonym of bf(std::vector<stream>::const_iterator)
+    )
+
+manpagesection(NESTED CLASS)
+    The class bf(FBB::MultiStreambuf::stream) is defined as a nested class of
+bf(FBB::MultiStreambuf). It offers the following constructor and public
+members: 
+    itemization(
+    itb(stream(std::ostream &os, Mode mode = ON))
+        The constructor stores a bf(std::ostream) object, and associates a
+bf(Mode) value with it.
+    itb(void setMode(Mode mode))
+        This member is used to redefine the bf(stream)'s  bf(Mode) value.
+    itb(void mode() const)
+        This member returns the  bf(stream)'s  bf(Mode) value.
+    itb(operator std::ostream &())
+        This member returns the  bf(stream)'s  bf(std::ostream).
+    )    
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(MultiStreambuf())
+        The default constructor creates a bf(FBB::MultiStreambuf) object which
+contains no associated bf(std::ostream) objects.
+    itb(MultiStreambuf(std::ostream &os, Mode mode = ON))
+        This constructor creates a bf(FBB::MultiStreambuf) object which
+is immediately associated with the bf(std::ostream) specified as its first
+argument. 
+    itb(MultiStreambuf(std::vector<MultiStreambuf::stream> const &osvector))
+        This constructor creates a bf(FBB::MultiStreambuf) object which is
+immediately associated with all bf(std::ostream) objects that are stored in
+the bf(MultiStreambuf::stream) elements of the specified vector.
+    )
+    The copy constructor is available.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::ostringstream) and bf(std::exception) are
+available, as bf(FBB::MultiStreambuf) inherits from these classes.
+    itemization(
+    itb(iterator begin())
+        This member returns an iterator to the first bf(stream) element that
+is stored in a bf(FBB::MultiStreambuf) object.
+    itb(const_iterator begin())
+        This member returns an iterator to the first (unmodifiable) bf(stream)
+element that is stored in a bf(FBB::MultiStreambuf) object.
+    itb(iterator end())
+        This member returns an iterator pointing beyond the last bf(stream)
+element that is stored in a bf(FBB::MultiStreambuf) object.
+    itb(iterator end())
+        This member returns an iterator pointing beyond the last
+(unmodifiable) bf(stream) element that is stored in a bf(FBB::MultiStreambuf)
+object.
+    itb(void insert(std::ostream &os, Mode mode = ON))
+        This member adds the specified bf(std::ostream) using the specified
+bf(Mode) to the current set of bf(stream) objects.
+    itb(void insert(std::vector<stream> const &os))
+        This member adds all bf(stream) objects stored in the bf(os) vector to
+the current set of bf(stream) objects.
+    itb(void void setOnce())
+        This member will reset all the tt(RESET) bf(Mode) values of the stored
+bf(stream) objects to tt(ONCE).
+    )
+
+manpagesection(PROTECTED MEMBER FUNCTION)
+
+    The member listed in this section implements the tasks of the comparably
+named virtual function in the class's private interface. This separates the
+redefinable interface from the user-interface. The class bf(MultiStreamBuf)
+can, in accordance with Liskov's Substitution Principle, be used as a
+tt(std:streambuf); but it also offers a facility for classes deriving from
+bf(MultiStreamBuf). This facility is listed here.
+    itemization(
+    itb(int pSync())
+        The contents of the bf(MultiStreamBuf)'s internal buffer is written to
+each of the tt(std::ostream) objects to which the bf(MultiStreamBuf) object
+has access.
+    )
+
+    
+
+manpagesection(EXAMPLE)
+    verb(
+#include <iostream>
+#include <fstream>
+#include <bobcat/multistreambuf>
+
+using namespace std;
+using namespace FBB;
+
+int main()
+{
+    MultiStreambuf  msb(cout);
+    ostream         os(&msb);
+    ofstream        out("out");
+
+    msb.insert(out, MultiStreambuf::ONCE);
+
+    os << "This is on cout and out" << endl;
+    os << "This is on cout only" << endl;
+
+    msb.setOnce();
+    os << "This is on cout and out" << endl;
+    os << "This is on cout only" << endl;
+
+    return 0;
+}
+    )
+
+manpagefiles()
+    em(bobcat/multistreambuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

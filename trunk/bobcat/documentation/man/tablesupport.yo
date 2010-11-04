@@ -1,0 +1,264 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::TableSupport)(3bobcat)(_CurYrs_)
+    (libbobcat1-dev__CurVers_-x.tar.gz)(Table Support Base class)
+
+manpagename(FBB::TableSupport)(Defines protocols for Table-support classes)
+
+manpagesynopsis()
+    bf(#include <bobcat/tableSupport>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    This class is designed as a (non-pure) base class for objects handling
+some of the functionality of tt(FBB::Table) and tt(FBB::TableBuf) objects. By
+overriding its virtual functions users have control over the way the actual
+layout of tables is defined. By default the virtual members of this class
+do not separate the columns of the table from each other
+
+The Bobcat library offers the specialized class tt(TableLines) extending the
+basic facilities of tt(TableSupport) by allowing rows to be separated from
+each other by (partial) horizontal lines (see the bf(tablelines)(3bobcat)
+man-page for a description).
+
+    When more specialized handling is required a class should be derived from
+bf(FBB::TableSupport) overriding those members that violate the programmer's
+current intentions. An object of this derived class may be presented to a
+tt(FBB::Table) or tt(FBB::TableBuf) constructor, to activate the special
+handling. 
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(ENUMERATION)
+
+    The enum tt(ColumnType) defines the following values (see also the
+description of the tt(struct HLine), below):
+    itemization(
+    itb(SKIP)   a section of a row-separating line should remain empty. This
+                value is normally not used by applications;
+    itb(USE)    a section of a row-separating line should be used (e.g., by
+                  writing a (horizontal) line);
+    itb(LEFT_FULL) a (horizontal) line should be written over the total width
+                of the separator to the left of a series of columns
+    itb(RIGHT_FULL) a (horizontal) line should be written over the total width
+                of the separator to the right of a series of columns;
+    itb(LEFT_MID) a (horizontal) line should be written over the right-half
+                part of the width of the separator to the left of a series of
+                columns; the left-hand part remains blank;
+    itb(RIGHT_MID) a (horizontal) line should be written over the left-half
+                part of the width of the separator to the right of a series of
+                columns; the right-hand part remains blank;
+    )
+    The value tt(SKIP) should always be used by itself; remaining values of
+the enum may be combined using the binary or (tt(|)) operator.
+
+manpagesection(PUBLIC TYPE)
+
+    itemization(
+    itb(struct HLine)
+        This struct has the following fields:
+        verb(
+    size_t d_row;
+    size_t d_begin;
+    size_t d_end;
+    size_t d_type;
+        )
+    It offers two constructors:
+        itemization(
+        itb(HLine(size_t row, size_t begin, size_t end))
+        itb(HLine(ColumnType type, size_t row, size_t begin, size_t end))
+        )
+    Objects of type bf(TableSupport::HLine) may be inserted into a
+bf(TableSupport) object to indicate section(s) of a horizontal separator
+between table rows that should be displayed or skipped. E.g., to specify that
+a separator should be written in row 1 between columns 2 up to (not including)
+5, extending the separator to the left by half the width of the separator
+between columns 1 and 2 and to the right by the full width of the separator
+between columns 4 and 5 the following tt(HLine) object should be inserted into
+the tt(TableSupport ts) object:
+        verb(ts << HLine(LEFT_MID | RIGHT_FULL, 1, 2, 5);)
+    Multiple tt(HLine) objects may be inserted into a tt(TableSupport) object,
+their ordering is irrelevant. When colum ranges overlap then their
+tt(ColumType)s are merged. 
+    )
+
+manpagesection(PROTECTED TYPES)
+
+    itemization(
+    itb(const_iterator)
+        This type is defined in the class's protected
+section. bf(TableSupport::const_iterator) is an input-iterator returning
+pointers to bf(struct Field) (see below) objects for table columns and column
+separators (see below at the tt(begin) and tt(end) members)
+    itb(struct Field)
+        This type has two data members: tt(width) and tt(type), representing,
+respectively, the width and tt(ColumnType) of a column or
+separating column. Although column types can be combined when inserting them
+using tt(HLine) objects, tt(type) values of tt(Field) objects returned by
+tt(TableSupport) members only contain single values (like tt(SKIP) or
+tt(LEFT_MID)). 
+    )
+
+manpagesection(CONSTRUCTORS)
+
+    The default and copy constructors are available.
+
+manpagesection(OVERLOADED OPERATORS)
+
+    itemization(
+    itb(TableSupport &operator<<(TableSupport &support, size_t width))
+        This operator defines a column-separator of tt(width) space
+characters. The argument tt(width) may be zero, in which case no visible
+separator is used. The first separator inserted refers to the separator to the
+left of the table's leftmost column. Subsequent separators separate subsequent
+columns. At most tt(nColumns + 1) separators can sensibly be inserted. 
+Additional separators are ignored when a table is inserted into an
+tt(ostream). 
+    itb(TableSupport &operator<<(TableSupport &support, 
+                                                std::string const &sep))
+        This operator defines a separator as a piece of text. The string may
+be empty, in which case no visible separator is inserted into the table. The
+first separator inserted refers to the separator to the left of the table's
+leftmost column. Subsequent separators separate subsequent columns. Textual
+and numeric separator may be intermixed. At most tt(nColumns + 1) separators
+can sensibly be inserted.  Additional separators are ignored when a table is
+inserted into an tt(ostream).
+    itb(TableSupport &operator<<(TableSupport &support, HLine const &hsep))
+        This operator defines how a section of a horizontal separator of a
+specified row should be displayed (see the description of tt(ColumnType) in
+the tt(ENUMERATION) section).
+    )
+    The overloaded assignment operator is available.
+
+manpagesection(PUBLIC MEMBER FUNCTIONS)
+    itemization(
+    itb(void hline(size_t row) const)
+        When inserting a table into a tt(std::ostream) tt(Table) and
+tt(TableBuf) objects call this member just before the indicated row (offset)
+is inserted into a tt(std::ostream). It calls tt(v_hline), passing it tt(row).
+    itb(void hline() const)
+        When inserting a table into a tt(std::ostream) tt(Table) and
+tt(TableBuf) objects call this member just after inserting the table's final
+row. It calls tt(v_hline) without arguments.
+    itb(void setParam(std::ostream &ostr, size_t nRows, size_t nColumns,
+                        std::vector<Align> const &align))
+        This member provides the bf(TableSupport) object with values that are
+essential for its proper functioning.  It is called from the tt(Table) and
+tt(TableBuf)'s tt(def) member or manipulator.  A tt(TableSupport) object can
+be used before that to specify widths and types of separators, though. This
+member's parameters are initialized by the tt(Table) and tt(TableBuf) class
+objects as follows:nl()
+        bf(ostr) is a reference to the bf(std::ostream) into which the table
+            will be inserted; nl()
+        bf(nRows) specifies  the number of rows used by the table;nl()
+        bf(nColumns) specifies  the number of columns if the table;nl()
+        bf(align) is a reference to a constant vector of (column) alignment
+specifications.
+    itb(void vline(size_t col) const)
+        When inserting the data elements of the rows of a table into a
+tt(std::ostream) tt(Table) and tt(TableBuf) objects call this member just
+before inserting the data elements of column tt(col).  Its intended task is to
+write a column separator just before the data elements themselves. It calls
+tt(v_vline) passing it its tt(col) parameter.
+    itb(virtual void vline() const)
+        When inserting a table into a tt(std::ostream) tt(Table) and
+tt(TableBuf) objects call this member after inserting the data elements of the
+rows of the table. It is called at the end of each row. It calls tt(v_vline)
+without arguments.
+    itb(size_t width() const)
+        Returns the total width of the table.
+    )
+
+manpagesection(PROTECTED MEMBER FUNCTIONS)
+    
+    The following members are available to classes derived from
+bf(TableSupport). Except for tt(sep) and tt(sepWidth) their values are only
+defined after tt(setParam) has been called. This latter function is called
+from the tt(def) member or manipulator of tt(Table) or tt(TableBuf) objects. 
+
+    itemization(
+    itb(std::vector<Align> const &align() const)
+        A reference to a vector of tt(Align) objects, defining the alignments
+and widths of the table's columns is returned.
+    itb(const_iterator begin(size_t row) const) 
+        An iterator returning information about the first column element when
+displaying the horizontal separator preceding line tt(row) is returned.  To
+obtain the information about the separator beyond the last row tt(nRows())
+should be used as its argument.  The `column elements' of the table are its
+separators and data columns.
+
+    Dereferencing the returned tt(const_iterator) provides access to a
+tt(Field) struct defining the type and width of a column
+element. Dereferencing the iterator returned by tt(begin) provides information
+about the leftmost column separator. By incrementing the iterator all
+subsequent column elements are visited. The iterator's value becomes undefined
+once it reaches the value returned by tt(end) (see below).
+    itb(size_t colWidth(size_t col) const)
+        The width of the indicated column is returned.
+    itb(const_iterator end(size_t row) const) 
+        An iterator indicating the end of the iterator range starting at
+tt(begin(row)) is returned.
+    itb(size_t nColumns() const)
+        The number of columns of the table is returned.
+    itb(size_t nRows() const)
+        The number of rows of the table is returned.
+    itb(std::ostream &out() const)
+        A reference to the stream into which the table is inserted is
+returned.
+    itb(std::vector<std::string> const &sep())
+        A reference to the separators that are defined for the table's columns
+is returned. Element tt(col) refers to the separator to the left of the
+table column tt(col), element tt(nColumns()) refers to the separator to the
+right of the rightmost table column.
+    itb(size_t sepWidth(size_t col) const)
+        The width of the indicated separator is returned. Element tt(col)
+refers to the separator to the left of the table column tt(col), element
+tt(nColumns()) refers to the separator to the right of the rightmost table
+column.
+    )    
+
+manpagesection(VIRTUAL MEMBER FUNCTIONS)
+
+    The following member functions can be overridden by derived classes to
+redefine the way horizontal and vertical separators are displayed.
+    itemization(
+    itb(virtual void v_hline(size_t row) const)
+        This member is called from tt(hline(size_t row)), receiving its tt(row)
+parameter. Its task is to write a horizonal separator for row tt(row).  By
+default nothing is inserted. It may do so by iterating over the range defined
+by the tt(begin) and tt(end) members, deciding what to do on the basis of the
+tt(Field) objects referred to by the iterators.
+    itb(virtual void v_hline() const)
+        This member is called from tt(hline()).  Its intended task is to write
+a (partial) horizontal line beyond the table's last line of data elements. By
+default it calls tt(hline(nRows)).
+    itb(virtual void v_vline(size_t col) const)
+        This member is called from tt(vline(size_t col)), receiving its
+tt(col) parameter. Its task is to write a separator  before data column
+tt(col). By default it inserts tt(separator[col]) if if is available. If that
+separator is not defined, no action is performed.
+    itb(virtual void v_vline() const)
+        This member is called from tt(vline()).  Its intended task is to write
+a column separator, terminating a line of the table. By default it inserts a
+new-line (tt(\n)) character.
+    )
+
+manpagesection(EXAMPLE)
+    See the example in the bf(table)(3bobcat) man-page.
+
+manpagefiles()
+    em(bobcat/tableSupport) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(align)(3bobcat), bf(table)(3bobcat), 
+    bf(tablebuf)(3bobcat), bf(tablelines)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)
+

@@ -1,0 +1,159 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::OFilterStreambuf)(3bobcat)(_CurYrs_)
+    (libbobcat1-dev__CurVers_-x.tar.gz)(ostream filtering)
+
+manpagename(FBB::OFilterStreambuf)(Base class for std::ostream filtering)
+
+manpagesynopsis()
+    bf(#include <bobcat/ofilterstreambuf>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+
+The bf(FBB::OFilterStreambuf) class is a specialization of the
+tt(std::streambuf) class and can be used as a base class for classes
+implementing em(ostream)-filtering. 
+
+Ostream filtering is defined here as the process by which inserted characters
+are subject to processing before they are passed on to another (filtered)
+tt(ostream) object (or they may be rejected). The filtering may also result in
+inserting additional information into the filtered tt(ostream).
+
+em(Chaining) of filters is also possible: the filtered tt(ostream) may itself
+use an tt(OFilterStreambuf) to filter its received information before passing
+it on to yet another tt(ostream). 
+
+As tt(OFilterStreambuf) inherits from tt(std::streambuf) an
+tt(OFilterStreambuf) object can be used to provide an tt(ostream) object
+with a tt(std::streambuf). Information inserted into such a stream travels the
+following route:
+    itemization(
+    it() The information is converted to characters using the standard
+conversion facilities implemented by tt(std::ostream) objects. E.g., when
+inserting the value tt(123) this value is converted to 
+the characters tt('1', '2') and tt('3'), respectively.
+    it() Each of the characters is then offered (in turn) to the
+tt(std::streambuf) that is associated with the tt(ostream) object. In
+particular, the tt(std::streambuf)'s tt(overflow()) member is called. 
+    it() tt(OFstreamBuf)'s default tt(overflow()) function ignores characters,
+but specializations can override tt(overflow()) to process the received
+characters em(ad lib). 
+    it() A overriding tt(overflow()) function has access to the member
+tt(OFstreambuf::out()) which is a reference to the tt(std::ostream) receiving
+the filtered information.
+    )
+    To implement a simple copy-filter (i.e., all characters are accepted
+as-is) a class must be derived from tt(OFilterStreambuf) providing an
+overriding implementation of tt(overflow()), e.g., as follows:
+        verb(
+    int DerivedClass::overflow(int ch)
+    {
+        out().put(ch);
+    }
+        )
+    Next this tt(std::streambuf) specialization can be associated with an
+tt(ostream) into which information to be `copy filtered' can be inserted
+(cf. the EXAMPLE section below).
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    std::streambuf
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(OFilterStreambuf())
+        This constructor creates a tt(OFilterStreambuf) object without
+associating it with a destination (filtered) tt(ostream).
+
+    itb(OFilterStreambuf(char const *fname, openmode mode = std::ios::out))
+        This constructor creates a tt(OFilterStreambuf) object and opens a
+private tt(std::ofstream) object whose filename is provided and that should 
+receive the filtered information.
+        
+    itb(OFilterStreambuf(std::ostream &out))
+        This constructor creates a tt(OFilterStreambuf) object and will insert
+any filtered information into the provided  tt(ostream) object.
+    )
+    The class's destructor closes the destination (filtered) stream (cf. the
+description of tt(close()) below).
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::ostreambuf) are available, as
+bf(FBB::OFilterStreambuf) inherits from that class. In particular, derived
+classes should provide their own implementation of tt(int underflow(int ch))
+to implement any non-trivial filtering.
+    itemization(
+    itb(void close())
+        This member calls the tt(streambuf::sync()) member to flush any
+pending information to the destination (filtered) stream and then closes the
+destination stream. Note that the default tt(sync()) member performs no
+special actions but it can be overridden by derived classes to flush the
+destination stream just prior to its closing.
+
+    itb(void open(char const *fname, openmode mode = std::ios::out))
+        This member closes the current destination (filtered) tt(std::ostream)
+object and associates the tt(OFilterStreambuf) object with a private
+tt(std::ofstream) object whose filename is provided and that should receive
+subsequently filtered information.
+        
+    itb(void open(std::ostream &out))
+        This member closes the current destination (filtered) tt(std::ostream)
+object and associates the tt(OFilterStreambuf) object with the provided
+tt(ostream) object.
+    )
+
+manpagesection(PROTECTED MEMBER FUNCTION)
+    itemization(
+    itb(std::ostream &out() const)
+        This member is available to derived classes to insert information into
+the destination (filtered) stream. 
+    )
+
+manpagesection(EXAMPLE)
+        verb(
+    #include <iostream>
+    #include <cctype>
+    #include <bobcat/ofilterstreambuf>
+    
+    class NoDigits: public FBB::OFilterStreambuf
+    {
+        public:
+            int overflow(int ch)
+            {
+                if (not isdigit(ch))
+                    out().put(ch);
+                return ch;
+            }
+            int sync()
+            {
+                out() << flush;
+                return 0;
+            }
+    };
+    
+    using namespace FBB;
+    using namespace std;
+    
+    int main()
+    {
+        NoDigits nod(cout);     // no digits to cout
+        ostream out(&nod);
+    
+        out << in.rdbuf();      // rm digits from cin
+        return 0;
+    }
+        )
+
+manpagefiles()
+    em(bobcat/ofilterstreambuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

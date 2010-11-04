@@ -1,0 +1,143 @@
+#ifndef INCLUDED_BOBCAT_TABLEBASE_
+#define INCLUDED_BOBCAT_TABLEBASE_
+
+#include <ostream>
+#include <string>
+#include <vector>
+
+#include <bobcat/align>
+#include <bobcat/tablesupport>
+
+
+namespace FBB
+{
+
+class TableBase
+{
+    friend std::ostream &operator<<(std::ostream &str, TableBase &table); 
+
+    public:
+        enum FillDirection
+        {
+            ROWWISE,
+            COLUMNWISE
+        };
+
+        enum WidthType
+        {
+            COLUMNWIDTH,
+            EQUALWIDTH,
+        };
+
+        void clear();                       // clear the table-elements
+
+        size_t nRows() const;               // Number of rows currently
+                                            // in the table (following def)
+    protected:
+        struct Element
+        {
+            std::string d_text;
+            std::ios_base &(*d_manip)(std::ios_base &);
+    
+            Element(std::string text = "", 
+                    std::ios_base &(*manip)(std::ios_base &) = 0);
+            size_t length() const;
+        };
+        bool                    d_tabulated;
+
+        size_t                  d_nRows;
+        size_t                  d_nColumns;
+        WidthType               d_widthType;
+
+        std::vector<Align>      d_align;
+        std::vector<Element>    d_string;               // table contents
+        TableSupport           *d_ptr;
+        TableSupport           &d_tableSupport;
+    
+        Element                &(TableBase::*d_indexFun)(size_t row, 
+                                                                size_t col);
+
+            
+        TableBase(size_t nColumns, FillDirection direction,
+                                                        WidthType widthType);
+
+        TableBase(TableSupport &tableSupport,                       // 1
+              size_t nColumns, FillDirection direction, WidthType widthType);
+
+        ~TableBase();
+
+        void setAlign(Align const &align);    // set an alignment
+
+        void def();                         // fillup an incomplete table
+                                            // automatically called at 
+                                            // insertions into ostreams
+        size_t columnWidth(size_t col) const;
+        Manipulator columnManip(size_t col) const;
+        Element &hIndex(size_t row, size_t col);
+        Element &vIndex(size_t row, size_t col);
+
+    private:
+        std::ostream &insert(std::ostream &ostr);
+
+                                    // returns element at particular location
+        Element &elementAt(size_t row, size_t col);
+
+};
+
+inline void TableBase::clear()
+{
+    d_tabulated = false;
+    d_string.clear();
+}
+
+inline size_t TableBase::nRows() const
+{
+    return d_nRows;
+}
+
+inline TableBase::Element::Element(std::string text, 
+                                   std::ios_base &(*manip)(std::ios_base &))
+:
+    d_text(text),
+    d_manip(manip)
+{}
+
+                        // display the table
+inline std::ostream &operator<<(std::ostream &str, TableBase &table)
+{
+    return table.insert(str);
+}
+            
+inline size_t TableBase::Element::length() const
+{
+    return d_text.length();
+}
+
+inline size_t TableBase::columnWidth(size_t col) const
+{
+    return d_align[col];
+}
+
+inline Manipulator TableBase::columnManip(size_t col) const
+{
+    Manipulator manip = d_align[col].manip();
+    return manip ? manip : std::right;
+}
+
+inline TableBase::Element &TableBase::hIndex(size_t row, size_t col)
+{
+    return d_string[row * d_nColumns + col];
+}
+
+inline TableBase::Element &TableBase::vIndex(size_t row, size_t col)
+{
+    return d_string[col * d_nRows + row];
+}
+
+inline TableBase::Element &TableBase::elementAt(size_t row, size_t col)
+{
+    return (this->*d_indexFun)(row, col);
+}
+
+} // FBB        
+#endif

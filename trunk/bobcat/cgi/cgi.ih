@@ -1,0 +1,141 @@
+#include "cgi"
+
+#include <vector>
+#include <stack>
+#include <string.h>
+#include <istream>
+#include <iostream>
+#include <sstream>
+#include <algorithm>
+#include <memory>
+
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#include <bobcat/fnwrap>
+#include <bobcat/a2x>
+#include <bobcat/errno>
+#include <bobcat/string>
+#include <bobcat/x2a>
+#include <bobcat/stat>
+#include <bobcat/foreach>
+
+using namespace std;
+using namespace FBB;
+
+namespace FBB
+{
+
+typedef pair<char const *const, int (*const)(int)> PairCPPFunP;
+
+class CGIFSA
+{
+    enum Token
+    {
+        DEFAULT = 256,
+        SET,
+        END,
+    };            
+    enum State         // change data.cc s_stateName when this changes
+    {   
+        START,
+        CHECKSET,
+        DEFINESET,
+        OPENBRACKET,
+        LEFTCOLON,
+        SETNAME,
+        RIGHTCOLON,
+
+        N_STATES_,
+        STOP = N_STATES_,
+    };
+
+    struct Record
+    {
+        State   current;
+        size_t  token;
+        void    (CGIFSA::*action)();
+        State   next;
+        size_t  (CGIFSA::*tokenizer)();
+    };
+
+    stack<char> d_stack;
+    bool *d_escape;
+    bool d_setEscape;
+    State d_state;
+    size_t  d_tokenIdx;
+    string d_buffer;
+    size_t  d_setIdx;
+    istream &d_in;
+           
+    struct Transition
+    {
+        size_t  token;
+        void (CGIFSA::*action)();
+        State   next;
+    };
+
+    static vector<Transition> s_fsa[];
+    static size_t (CGIFSA::*s_tokenizer[])();
+    static Record const s_fsaRawData[];
+    static Record const *const s_fsaRawDataEnd;
+    static PairCPPFunP const s_charClass[];
+    static PairCPPFunP const *const s_charClassEnd;
+    static bool s_installed;
+    static char const *s_stateName[];
+    static string s_cgi;
+
+    public:
+        CGIFSA(bool *escape, istream &in = cin, bool setEscape = false);
+        void run();
+
+    private:
+        void push();
+        void accept();
+        void charRange();
+        void charClass();
+
+        void acceptAll();           // all elements on the stack
+
+        size_t tokenIdx();
+
+        void setEscape(size_t idx);
+    
+        size_t charToken();
+        size_t wordToken();
+
+        static void setFsa(Record const &record);
+        static bool isFirst(PairCPPFunP const &cClass, string const &key);
+        static bool hasToken(Transition const &transition, size_t token);
+
+        static int iscgi(int ch);
+};
+
+inline bool CGIFSA::isFirst(pair<char const *const, int (*const )(int)> 
+                     const &cClass, string const &key)
+{
+    return key == cClass.first;
+}
+
+inline bool CGIFSA::hasToken(Transition const &transition, size_t token)
+{
+    return token == transition.token;
+}
+
+inline int CGIFSA::iscgi(int ch)
+{
+    return s_cgi.find(ch) != string::npos;
+}
+
+inline void CGIFSA::setEscape(size_t idx)
+{
+    d_escape[idx] = d_setEscape;
+}
+
+inline void CGI::init(bool &target)
+{
+    target = d_escapeValue;
+}
+
+
+}   // namespace

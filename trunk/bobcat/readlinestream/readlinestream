@@ -1,0 +1,71 @@
+#ifndef INCLUDED_BOBCAT_READLINESTREAM_
+#define INCLUDED_BOBCAT_READLINESTREAM_
+
+#include <istream>
+#include <bobcat/readlinebuf>
+
+namespace FBB
+{
+
+class ReadLineStream: public HistoryExpansion, 
+                      public std::istream
+{
+    ReadLineBuf &d_readLineBuf;
+
+    public:
+        explicit ReadLineStream(std::string const &prompt,
+                                Type type = DONT_EXPAND_HISTORY);
+        explicit ReadLineStream(std::string const &prompt, 
+                                size_t historySize, 
+                                Type type = DONT_EXPAND_HISTORY);
+
+        void setPrompt(std::string const &prompt = "");
+        bool setExpansion(Type type);
+
+        Expansion expansion() const;
+        std::string const &expansionError() const;
+
+        bool useTimestamps(std::string (*timestamp)());
+};
+
+inline ReadLineStream::ReadLineStream(std::string const &prompt, Type type)
+:
+    std::istream(&ReadLineBuf::initialize(prompt, type)),
+    d_readLineBuf(ReadLineBuf::instance())
+{}
+
+inline ReadLineStream::ReadLineStream(std::string const &prompt, 
+                                      size_t historySize, Type type)
+:
+    std::istream(&ReadLineBuf::initialize(prompt, historySize, type)),
+    d_readLineBuf(ReadLineBuf::instance())
+{}
+
+inline void ReadLineStream::setPrompt(std::string const &prompt)
+{
+    d_readLineBuf.setPrompt(prompt);
+}
+
+inline bool ReadLineStream::setExpansion(Type type)
+{
+    return d_readLineBuf.setExpansion(type);
+}
+
+inline ReadLineStream::Expansion ReadLineStream::expansion() const
+{
+    return d_readLineBuf.expansion();
+}
+        
+inline std::string const &ReadLineStream::expansionError() const
+{
+    return d_readLineBuf.expansionError();
+}
+
+inline bool ReadLineStream::useTimestamps(std::string (*timestamp)())
+{
+    return d_readLineBuf.useTimestamps(timestamp);
+}
+
+} // FBB        
+#endif
+

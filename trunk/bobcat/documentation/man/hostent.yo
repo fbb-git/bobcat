@@ -1,0 +1,128 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Hostent)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (struct hostent wrapper)
+
+manpagename(FBB::Hostent)(Wrapper around a bf(struct hostent))
+
+manpagesynopsis()
+    bf(#include <bobcat/hostent>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(@CLASS) objects are wrappers around bf(hostent) structs which may be
+used by other objects. A bf(struct hostent) is defined as follows:
+        verb(
+    struct hostent 
+    {
+        char    *h_name;        // official name of host 
+        char    **h_aliases;    // alias list 
+        int     h_addrtype;     // host address type (always AF_INET)
+        int     h_length;       // length of address 
+        char    **h_addr_list;  // list of addresses 
+    }
+        )
+
+    The tt(address) fields are binary values of the addresses, each address
+requiring tt(h_length) bytes, the last address being equal to 0. The
+bf(@CLASS) objects offer a bf(C++)-like interface to this struct.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Hostent(hostent const *hostentPtr)) 
+        This constructor initializes an bf(@CLASS) object from an existing
+bf(hostent) struct. Functions like bf(gethostbyname)(3) and
+bf(gethostbyaddress)(3) return pointers to bf(hostent) structs.
+    )
+
+    The default, copy and move constructors are available.
+
+manpagesection(MEMBER FUNCTIONS)
+
+    itemization(
+    itb(size_t addressLength() const)
+        This member returns the length of the binary addresses in bytes.
+    itb(size_t addressType() const)
+        This member returns the type of the address. Currently this is always
+bf(AF_INET).
+    itb(char const *alias(size_t index) const)
+        This member returns alias `tt(index)' of the host. The first alias has
+tt(index 0). If alias `tt(index)' does not exist, 0 is returned.
+    itb(char const * const *beginAlias() const)
+        This member returns an iterator to the first alias. The hostname
+itself is not included in the list of aliases.
+    itb(char const *binaryAddress(size_t index) const)
+        This member returns the binary address `tt(index)' of the host.  The
+first address has tt(index 0). If address `tt(index)' does not exist, 0 is
+returned. The pointer to the binary address points to a series of
+bf(addressLength()) bytes. Note that the returned address is in em(network
+byte order). It can be converted to host byte order by the functions described
+in bf(byteorder)(3).
+    itb(std::string dottedDecimalAddress(size_t index) const)
+        This member returns address `tt(index)' as a dotted decimal address in
+a string. The first address has tt(index 0). If address `tt(index)' does not
+exist, an empty string is returned.
+    itb(char const * const *endAlias() const)
+        This member returns an iterator pointing beyond the last alias.
+    itb(char const *hostname() const)
+        This member returns the standard (first) name of the host.
+    itb(size_t nAddresses() const)
+        This member returns the number of addresses that are available. When
+requesting a particular address, the requested index should be less than
+the value returned by this member.
+    itb(size_t nAliases() const)
+        This member returns the number of aliases that are available. When
+requesting a particular alias, the requested index should be less than the
+value returned by this member.
+    itb(void swap(Hostent &other))
+        The current tt(Hostent) object's contents are swapped with the other
+    object's contents.
+    )
+
+    The overloaded assignment operator and the move-aware overloaded
+assignment operators are available.
+
+manpagesection(EXAMPLE)
+        verb(
+    #include <iostream>
+    #include <algorithm>
+    #include <iterator>
+    #include <bobcat/hostent>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main(int argc, char **argv)
+    {
+        Hostent he(gethostbyname("localhost"));
+
+        cout << "The local hostname = " << he.hostname() << endl;
+
+        cout << "All aliases: " << endl;
+        copy(he.beginAlias(), he.endAlias(), 
+                    ostream_iterator<char const *>(cout, "\n"));
+
+        cout << "Addresses:\n";
+        for (size_t idx = 0; idx < he.nAddresses(); idx++)
+            cout << he.dottedDecimalAddress(idx) << endl;
+
+        return 0;
+    }
+        )
+
+manpagefiles()
+    em(bobcat/hostent) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)
