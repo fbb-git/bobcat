@@ -10,7 +10,8 @@ size_t Arg::firstNonEmpty(size_t *idx, string *value,
     else
     {
         *idx = sit - sv.begin();
-        *value = *sit;
+        if (value != 0)
+            *value = *sit;
     }
         
     return sv.size();
