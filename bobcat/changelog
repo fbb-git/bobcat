@@ -1,3 +1,15 @@
+bobcat (2.09.05)
+
+  * Repaired ArgConfig::longConfigOpt(string const &longOpt). It checked for
+    the longOpt\b pattern, but \b matches also the - character as word
+    delimiter. Therefore, pattern xyz-pqr is matched when looking for pattern
+    xyz.
+
+  * The -O3 compilation optimization flag is changed to -O2. G++ for the armel
+    architecture produces an incomplete symbol table when -O3 is used. 
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Mon, 13 Dec 2010 09:31:05 +0100
+
 bobcat (2.09.04)
 
   * Repaired ArgConfig::option(string *value, ...) members which didn't check
