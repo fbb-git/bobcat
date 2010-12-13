@@ -8,11 +8,10 @@
 //    if the rmComment flag is set to true
 //    Then, lines containing only blanks and tabs are not stored
 
-#include <climits>
-#include <fstream>
 #include <vector>
 #include <string>
 #include <iterator>
+
 #include <bobcat/errno>
 #include <bobcat/pattern>
 
@@ -148,8 +147,8 @@ inline void ConfigFile::setSearchCasing(SearchCasing type)
     d_caseSensitive = type == SearchCaseSensitive;
 }
 
-inline ConfigFile::const_RE_iterator 
-ConfigFile::beginRE(std::string const &re) const
+inline ConfigFile::const_RE_iterator ConfigFile::beginRE(
+                                                std::string const &re) const
 {
     return RE_iterator(
         const_cast<ConfigFile *>(this)->begin(), 

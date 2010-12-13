@@ -1,3 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 
-g++ -Wall -o driver driver.cc -L../../tmp/lib -lbobcat -s
+ln -sf ../configfile .
+ln -sf ../configfile.ih .
+
+case $1 in
+    (o)
+        g++ --std=c++0x -o driver *.cc -L../tmp -lconfigfile -lbobcat -s
+    ;;
+    (c)
+        g++ --std=c++0x -o driver *.cc -lbobcat -s
+    ;;
+    (*)
+    echo $0 o links to the files in ../tmp/o
+    echo $0 c links to the files in the current dir only
+    ;;
+esac

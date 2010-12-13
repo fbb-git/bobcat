@@ -2,7 +2,7 @@
 
 vector<string>::const_iterator ConfigFile::find(string const &target) const
 {
-    return !d_caseSensitive ?
+    return !d_caseSensitive ?       // case insensitve search? then findRE
         findRE(target)
     :
         find_if(begin(), end(), FnWrap::unary
