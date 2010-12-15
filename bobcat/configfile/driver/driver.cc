@@ -71,7 +71,9 @@ int main(int argc, char **argv)
     if (!getline(cin, param) || !param.length())
         return 0;
 
-    ConfigFile::const_RE_iterator begin = cf.beginRE(param);
+    ConfigFile::const_RE_iterator begin2 = cf.beginRE(param);
+    ConfigFile::const_RE_iterator begin(begin2);
+
     ConfigFile::const_RE_iterator end = cf.endRE();
 
     cout << "Counting: " << (end - begin) << " matches\n";
@@ -80,6 +82,5 @@ int main(int argc, char **argv)
         cout << *begin << endl;
         ++begin;
     }
-    
-    return 0;
 }
+

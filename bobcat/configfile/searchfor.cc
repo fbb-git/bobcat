@@ -1,17 +1,13 @@
 #include "configfile.ih"
 
-string ConfigFile::searchFor(string const &key, Pattern &pattern, 
-                                                            size_t idx) const
+string const &ConfigFile::searchFor(string const &keyPat, size_t count)
 {
-    const_RE_iterator iter = beginRE("^\\s*" + key);
+    static string const empty;
 
-    while (idx--)
-    {
-        if (iter == endRE())
-            return "";
-        ++iter;
-    }
+    if (count == 0)
+        throw Errno("findKey/-Tail: count must be > 0");
 
-    pattern << *iter;
-    return pattern[1];
+    beginRE(keyPat);
+
+    return d_vsIter.size() <= count ? *d_vsIter[count - 1] : empty;
 }
