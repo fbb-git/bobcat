@@ -6,11 +6,11 @@ void ConfigFile::resetVsIter(string const &re)
 
     d_re = re;
     
-    Pattern pattern(re, d_caseSensitive);
+    d_pattern.setPattern(re, d_caseSensitive);
 
     for(auto start = begin(), stop = end(); start != stop; ++start)
     {
-        if (pattern << *start)
+        if (d_pattern << *start)
             d_vsIter.push_back(start);
     }
 }

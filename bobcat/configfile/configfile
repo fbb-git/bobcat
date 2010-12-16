@@ -11,10 +11,10 @@
 #include <vector>
 #include <string>
 #include <iterator>
+#include <bobcat/pattern>
 
 namespace FBB
 {
-    class Pattern;
 
 class RE_iterator: public std::iterator<std::input_iterator_tag, std::string>
 {
@@ -57,6 +57,8 @@ class ConfigFile
     typedef std::vector<VsIterator> VsIterVector;
     VsIterVector d_vsIter;
     std::string d_re;
+
+    mutable Pattern d_pattern;
 
     public:
         typedef RE_iterator const_RE_iterator;
@@ -103,10 +105,12 @@ class ConfigFile
 
         const_RE_iterator beginRE(std::string const &re);
         const_RE_iterator endRE() const;
+
         const_iterator find(std::string const &target) const;
         const_iterator findRE(std::string const &re) const;
-        std::string findKey(std::string const &key, size_t count);
-        std::string findKeyTail(std::string const &key, size_t count);
+
+        std::string findKey(std::string const &key, size_t count = 1);
+        std::string findKeyTail(std::string const &key, size_t count = 1);
 
         size_t index(size_t lineNr);
         size_t index(const_iterator const &iterator);
@@ -120,8 +124,8 @@ class ConfigFile
         void removeComment(std::string &line);
         void removeTrailingBlanks(std::string &line);
         void resetVsIter(std::string const &re);
-        std::string const &searchFor(std::string const &keyPattern, 
-                                                            size_t count);
+        std::string searchFor(std::string const &keyPattern, size_t count);
+
         static bool match(std::string const &str, Pattern &pat);
         static bool finder(std::string const &haystack, 
                            std::string const &needle);

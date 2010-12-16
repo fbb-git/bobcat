@@ -12,5 +12,6 @@ ConfigFile::ConfigFile(ConfigFile const &&tmp)
 
     d_index( move(tmp.d_index) ),
     d_vsIter( move(tmp.d_vsIter) ),
-    d_re( move(tmp.d_re) )
+    d_re( move(tmp.d_re) ),
+    d_pattern( move(tmp.d_pattern) )
 {}
