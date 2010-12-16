@@ -88,6 +88,12 @@ class ConfigFile
                     SearchCasing sType = SearchCaseSensitive,
                     Indices iType = IgnoreIndices);
 
+        ConfigFile(ConfigFile const &&tmp);
+
+        ConfigFile &operator=(ConfigFile &rhs) = default;
+
+        ConfigFile &operator=(ConfigFile const &&tmp);
+
         void setCommentHandling(Comment type);
         void setSearchCasing(SearchCasing type);
         void open(std::string const &fname);
@@ -104,6 +110,8 @@ class ConfigFile
 
         size_t index(size_t lineNr);
         size_t index(const_iterator const &iterator);
+
+        std::string const &operator[](size_t idx) const;
 
     private:
         size_t append_next(std::istream &istr, std::string &line);
@@ -134,6 +142,11 @@ inline std::string const *RE_iterator::operator->() const
 inline void ConfigFile::setCommentHandling(Comment type)
 {
     d_rmComment = type == RemoveComment;
+}
+
+inline std::string const &ConfigFile::operator[](size_t idx) const
+{
+    return d_line[idx];
 }
 
 inline void ConfigFile::setSearchCasing(SearchCasing type)

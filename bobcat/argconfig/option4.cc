@@ -1,6 +1,6 @@
 #include "argconfig.ih"
 
-size_t ArgConfig::option(string *value, char const *longOption) const
+size_t ArgConfig::option(string *value, char const *longOption)
 {
     size_t ret = Arg::option(value, longOption);
 

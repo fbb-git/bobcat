@@ -42,13 +42,6 @@ class Process: private Fork, public IOStream
 
         std::string     d_command;
 
-// With g++4-4:
-//        std::unique_ptr<Pipe> d_child_inp;    // cin read by the CHILD
-//        std::unique_ptr<Pipe> d_child_outp;   // cout written by the CHILD
-//        std::unique_ptr<Pipe> d_child_errp;   // cerr written by the CHILD    
-
-// Defining 1 auto_ptr here is no problem, but using multiple auto_ptrs 
-// generates a deprecated warning...
         std::shared_ptr<Pipe> d_child_inp;    // cin read by the CHILD
         std::shared_ptr<Pipe> d_child_outp;   // cout written by the CHILD
         std::shared_ptr<Pipe> d_child_errp;   // cerr written by the CHILD    

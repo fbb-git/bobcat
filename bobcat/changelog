@@ -1,14 +1,24 @@
-bobcat (2.09.05)
+bobcat (2.10.00)
+
+  * Reorganized the class ConfigFile. It used inheritance the wrong way (it
+    inherited to reuse its base class rather than to the base class being
+    reused (cf. Herb Sutter's Exceptional C++)) and it suffered from several
+    other flaws. ConfigFile now also supports a move constructor and move
+    overloaded assignment operator.
 
   * Repaired ArgConfig::longConfigOpt(string const &longOpt). It checked for
-    the longOpt\b pattern, but \b matches also the - character as word
+    the longOpt\b pattern, but \b matches also the - character as a word
     delimiter. Therefore, pattern xyz-pqr is matched when looking for pattern
-    xyz.
+    xyz. It's now using (\s|$) instead of \b.
+
+  * The class CGI is now move-aware. Still to do (See also README.immovable):
+    CmdFinderBase CmdFinder Hash Hostname MailHeaders Stat TableBase
+    TableSupport TableLines User and possibly Milter
 
   * The -O3 compilation optimization flag is changed to -O2. G++ for the armel
     architecture produces an incomplete symbol table when -O3 is used. 
 
- -- Frank B. Brokken <f.b.brokken@rug.nl>  Mon, 13 Dec 2010 09:31:05 +0100
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Thu, 16 Dec 2010 14:58:39 +0100
 
 bobcat (2.09.04)
 
