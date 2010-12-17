@@ -12,84 +12,62 @@ manpagesynopsis()
 manpagedescription()
     The bf(FBB:Hash) group of template classes offer hashing-based
 mapping. Various variants are availabe, all based on the facilities offered by
-the GNU bf(g++)(1) bf(ext/hash_map) header file. Hashing containers are not
-(yet) part of the ANSI-ISO bf(C++) standard, and an extension to the standard
-is offered by GNU's bf(g++)(1) compiler. GNU's hash map is defined in the
-bf(__gnu_cxx) namespace, indicating that this container is not one that is
-offered in the bf(C++) standard. 
+the bf(unordered_map).
 
-    Unfortunately, the hash-map offered in the bf(ext/hash_map) header file
-has a fairly complex interface, and bf(FBB::Hash) is an attempt to simplify
-this interface. In practice, hashing uses a textual key, which may be 
+    The hash-map offered in the bf(unordered_map) container has a fairly
+complex construction interface, and tt(Hash) is an attempt to simplify this
+part of its interface. In practice, hashing uses a textual key, which may be
 bf(std::string) or tt(char *) based, and the keys may be used either case
-sensitively or case insensitively. bf(FBB::Hash) simplifies the use of the
-hash map offered in bf(ext/hash_map) by requiring its users to specify only
-the map's value type. 
+sensitively or case insensitively. tt(Hash) merely requires its users to
+specify the map's value type, while the key may be a tt(char const *) or
+tt(std::string), used case sensitively or case insensitively.
 
 includefile(include/namespace)
 
 manpagesection(INHERITS FROM)
-    bf(__gnu_cxx::hash_map), using various instantiations.
+    bf(std::unordered_map), using various instantiations.
+
+manpagesection(TYPE)
+
+    All variants define tt(value_type) as the corresponding tt(unordered_map
+value_type). In practice a tt(value_type) defines a tt(std::pair<Key, Value>),
+where tt(Key) represents the hash's key-type and tt(Value) represents the
+hash's value type.
 
 manpagesection(CONSTRUCTORS)
-    Using em(case sensitive) bf(char const *) keys:
-    itemization(
-    itb(HashCharPtr<Value>())
-        The default constructor creates an empty hash-map container, in which
-the keys are tt(char const *)s. The map contains value of template type
-tt(Value). 
-    itb(HashCharPtr<Value>(InputIterator begin, InputIterator end))
-        This constructor creates a hash-map container, using elements pointed
-to by a pair of iterators in the hash-map. The iterators must point to 
-tt(std::pair<char const *, Value>) objects.
-    )
 
-    Using em(case insensitive) bf(char const *) keys:
-    itemization(
-    itb(HashCharCasePtr<Value>())
-        The default constructor creates an empty hash-map container, in which
-the keys are tt(char const *)s. The map contains value of template type
-tt(Value). 
-    itb(HashCharCasePtr<Value>(InputIterator begin, InputIterator end))
-        This constructor creates a hash-map container, using elements pointed
-to by a pair of iterators in the hash-map. The iterators must point to 
-tt(std::pair<char const *, Value>) objects.
-    )
+    Variants of the tt(FBB::Hash) container are available for tt(char const *)
+or tt(std::string) keys, used case sensitively or case insensitively. All
+variants support default, copy, and move construction, support 
+construction from initializer
+lists and support construction from iterators defining a half-open range of
+tt(value_type) values.
 
-    Using em(case sensitive) bf(std::string) keys:
+    The following variants are available (showing their default
+constructors). tt(Value) refers to the value type stored in the hash table.
+    
     itemization(
-    itb(HashString<Value>())
-        The default constructor creates an empty hash-map container, in which
-the keys are tt(std::string)s. The map contains value of template type
-tt(Value). 
-    itb(HashString<Value>(InputIterator begin, InputIterator end))
-        This constructor creates a hash-map container, using elements pointed
-to by a pair of iterators in the hash-map. The iterators must point to 
-tt(std::pair<std::string, Value>) objects.
-    )
+    itb(HashCharPtr<Value>()) this hash table uses em(case sensitive) bf(char
+const *) keys;
 
-    Using em(case insensitive) bf(std::string) keys:
-    itemization(
-    itb(HashStringCase<Value>())
-        The default constructor creates an empty hash-map container, in which
-the keys are tt(std::string)s. The map contains value of template type
-tt(Value). 
-    itb(HashStringCase<Value>(InputIterator begin, InputIterator end))
-        This constructor creates a hash-map container, using elements pointed
-to by a pair of iterators in the hash-map. The iterators must point to 
-tt(std::pair<std::string, Value>) objects.
+    itb(HashCharCasePtr<Value>()) this hash table uses em(case insensitive)
+bf(char const *) keys;
+
+    itb(HashString<Value>()) this hash table uses em(case sensitive)
+bf(std::string) keys;
+
+    itb(HashStringCase<Value>())  this hash table uses em(case insensitive)
+bf(std::string) keys;
     )
-    The copy constructor is available for all bf(FBB:Hash...) hash-map 
-containers.
 
 manpagesection(OVERLOADED OPERATOR)
-     The overloaded assignment operator is available for all bf(FBB:Hash)
-hash-map containers.
+     In addition to the index operator inherited from tt(unordered_map) the
+overloaded copy and move assignment operators are available for all tt(Hash)
+containers.
 
 manpagesection(MEMBER FUNCTIONS)
-     All members of bf(__gnu_cxx::hash_map) are available, as bf(FBB::Hash)
-inherits from this template class. These members are (expected to be) the same
-members as available for the bf(std::map) container.
+     All members of the tt(unordered_map) container are available, as tt(Hash)
+inherits from this template class.
 
 manpagesection(EXAMPLE)
         verb(
@@ -121,7 +99,7 @@ manpagefiles()
     em(bobcat/hash) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(g++)(1), bf(ext/hash_map)
+    bf(bobcat)(7)
 
 manpagebugs()
     None Reported.

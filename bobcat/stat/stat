@@ -63,6 +63,10 @@ class Stat
         Stat();
         explicit Stat(std::string const &name);
         Stat(std::string const &name, std::string const &pathlist);
+        Stat(Stat const &&tmp);
+
+        Stat &operator=(Stat const &&tmp);
+
         DateTime lastAccess() const;
         DateTime lastChange() const;
         DateTime lastModification() const;
@@ -174,7 +178,7 @@ inline size_t Stat::uid() const
 {
     return d_stat.st_uid;
 }      
-  
+
 } // FBB
         
 #endif

@@ -8,7 +8,6 @@ ConfigFile::ConfigFile(ConfigFile const &&tmp)
     d_caseSensitive(tmp.d_caseSensitive),
     d_indices(tmp.d_indices),
     d_rawIndex(tmp.d_rawIndex),
-    d_nextIndex(tmp.d_nextIndex),
 
     d_index( move(tmp.d_index) ),
     d_vsIter( move(tmp.d_vsIter) ),
