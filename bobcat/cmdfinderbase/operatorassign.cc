@@ -1,7 +1,8 @@
 #include "cmdfinderbase.ih"
 
-CmdFinderBase& CmdFinderBase::operator=(CmdFinderBase const &&tmp)
+CmdFinderBase& CmdFinderBase::operator=(CmdFinderBase const &rhs)
 {
-    fswap(*this, const_cast<CmdFinderBase &>(tmp));
+    CmdFinderBase tmp(rhs);
+    fswap(*this, tmp);
     return *this;
 }
