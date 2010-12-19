@@ -1,4 +1,56 @@
-bobcat (2.09.03) WIP
+bobcat (2.10.01)
+
+  * TableLines' default and move constructor and move assignment operator
+    were accidentally put in the private section of their class. Now public.
+
+  * Configfile's overloaded assignment operator used non const &
+    argument. Repaired. 
+
+  * CmdFinderBase's overloaded assignment operator cannot be defaulted as it
+    lives in the class's protected section. Added explicit implementation of
+    the overloaded assignment operator.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Sun, 19 Dec 2010 21:29:26 +0100
+
+bobcat (2.10.00)
+
+  * Reorganized the class ConfigFile. It used inheritance the wrong way (it
+    inherited to reuse its base class rather than the base class being reused
+    (cf. Herb Sutter's Exceptional C++)) and it suffered from several other
+    flaws. ConfigFile now also supports a move constructor and move overloaded
+    assignment operator.
+
+  * Repaired ArgConfig::longConfigOpt(string const &longOpt). It checked for
+    the longOpt\b pattern, but \b matches also the - character as a word
+    delimiter. Therefore, pattern xyz-pqr is matched when looking for pattern
+    xyz. It's now using (\s|$) rather than \b.
+
+  * Reorganized the class MailHeaders. It used inheritance the wrong way (see
+    ConfigFile above).
+
+  * In addition to the classes that have already been made move-aware, the
+    following classes are now also move-aware: CmdFinderBase, CmdFinder,
+    CGI. Hash, MailHeaders, Stat, TableSupport, TableLines, User (see also
+    README.immovable).
+
+  * The hash-containers (defined in bobcat/hash) now also support
+    initialization by initializer lists.
+
+  * The class Milter now uses an unordered_map instead of a map.
+
+  * The -O3 compilation optimization flag is changed to -O2. G++ for the armel
+    architecture produces an incomplete symbol table when -O3 is used. 
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Fri, 17 Dec 2010 14:18:33 +0100
+
+bobcat (2.09.04)
+
+  * Repaired ArgConfig::option(string *value, ...) members which didn't check
+    for 0-pointers to the string receiving the option's value. 
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Mon, 06 Dec 2010 23:38:44 +0100
+
+bobcat (2.09.03)
 
   * Repaired Arg::firstNonEmpty which didn't check for 0-pointers to the
     string receiving the option's value. 

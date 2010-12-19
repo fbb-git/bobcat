@@ -2,8 +2,6 @@
 
 RE_iterator &RE_iterator::operator++()
 {
-    ++d_current;
-    d_current = find();
-
+    ++d_idx;
     return *this;
 }

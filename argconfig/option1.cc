@@ -1,6 +1,7 @@
 #include "argconfig.ih"
 
-size_t ArgConfig::option(int optChar) const
+size_t ArgConfig::option(int optChar)
 {
-    return Arg::option(optChar) + (endRE() - findLongOption(optChar));
+    auto begin = findLongOption(optChar);
+    return Arg::option(optChar) + (endRE() - begin);
 }

@@ -98,16 +98,16 @@ binary-arch: build install
 # catches silent file content forges at the upstream server side
 
 # archive downloaded from https://www.icce.rug.nl/debian/bobcat
-#								(bobcat_x.y.z..tar.gz)
+# (bobcat_x.y.z..tar.gz)
 
-MD5TRUSTED := f3d3751869c322ffed47b2a5f7781cd0
+MD5TRUSTED := c0c194dfb333584279ad97a9a6654d50
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
 UPNAME := bobcat
 UPFILE := $(UPNAME)_$(UPVERSION).tar.gz
 DEFILE := $(UPNAME)_$(UPVERSION).orig.tar.gz
-URL								   := https://www.icce.rug.nl/debian/bobcat
+URL    := https://www.icce.rug.nl/debian/bobcat
 MD5CURRENT := `md5sum ../tarballs/$(DEFILE) | sed -e 's/ .*//'`
 SVNTRUNK   := https://svn.sourceforge.net/svnroot/bobcat/trunk/bobcat
 

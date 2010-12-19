@@ -18,15 +18,15 @@ of the bf(FBB::MailHeaders) object, interpreted as a bf(vector). The actual
 e-mail content is therefore left unread on the file containing the e-mail.
 
     Each line stored in a bf(MailHeaders) object represents a complete header
-line. Headers continuing over multiple input lines are concatenated at a
-single element of bf(MailHeaders) objects. They are separated from each other
-by newline (tt(\n)) characters. The last line to join a multi-line header is
-not terminated by a newline character.
+line. Headers continuing over multiple input lines are concatenated to a
+single line retrievable from bf(MailHeaders) objects, separated from each
+other by tt('\n') (newline) characters. The last line to join a multi-line
+header is not terminated by a newline character.
 
 includefile(include/namespace)
 
 manpagesection(INHERITS FROM)
-    bf(std::vector<std::string>)
+    -
 
 manpagesection(ENUMERATIONS)
     The following enumerations and enumeration values can be used with the
@@ -73,17 +73,24 @@ manpagesection(NESTED TYPES)
 
     The class tt(MailHeaders) defines the following types:
     itemization(
+    itb(const_iterator)
+    An input iterator returned by tt(begin) and tt(end) (see
+below)
+    itb(const_reverse_iterator)
+    An reverse input iterator returned by the members tt(rbegin) and
+tt(rend) (see below)
+    )
     itb(const_hdr_iterator)
-    An input iterator iterating over the headers selected by the member
-tt(setHeaderIterator()) (see below)
+    An input iterator returned by the members tt(beginh) and tt(endh) (see
+below)
     itb(const_reverse_hdr_iterator)
-    An input iterator reversely iterating over the headers selected by the
-member tt(setHeaderIterator()) (see below)
+    An reverse input iterator returned by the members tt(rbeginh) and
+tt(rendh) (see below)
     )
     Objects of these two iterator types point to header lines. Their
-derefenced types are tt(std::string const).
+derefenced type is tt(std::string).
 
-manpagesection(CONSTRUCTOR)
+manpagesection(CONSTRUCTORS)
     itemization(
     itb(MailHeaders(std::istream &in, Mode mode = READ)) 
     This constructor defines the file containing the e-mail to be
@@ -92,18 +99,53 @@ the object to start reading the e-mail immediately. If set to
 bf(MailHeaders::DONT_READ), the e-mail is not read. In that case the member
 tt(read()) can be called to process the e-mail later.
     )
-    The copy constructor is available.
+    The copy and move constructors are available.
 
-manpagesection(MEMBER FUNCTIONS)
-     All members of bf(std::vector<std::string>) are available, as
-bf(FBB::MailHeaders) inherts from this class.
+manpagesection(OVERLOADED OPERATORS)
 
     itemization(
+    itb(std::string const &operator[](size_t idx) const)
+    Returns the tt(idx)-th header line
+    )
+    The move assignment operator is available
+
+manpagesection(MEMBER FUNCTIONS)
+
+    itemization(
+    itb(const_iterator begin() const)
+    Returns an iterator to the first line of the mail headers.
+
+    itb(const_hdr_iterator beginh() const)
+    Returns the begin-iterator corresponding to the first header selected by
+the tt(setHeaderIterator()) member. 
+
+    itb(const_iterator end() const)
+    Returns an iterator beyond the last line of the mail headers.
+
+    itb(const_hdr_iterator endh() const)
+    Returns the end-iterator matching tt(beginh()).  Note that the member
+function's name ends in tt(h), to distinguish it from the
+tt(vector<string>::end()) member.
+
+    itb(const_reverse_iterator rbegin() const)
+    Returns an iterator to the last line of the mail headers.
+
+    itb(const_reverse_hdr_iterator rbeginh() const)
+    Returns the reversed begin-iterator corresponding to the last header
+selected by the tt(setHeaderIterator()) member.  
+
     itb(void read()) 
     Reads the mail-headers from the file passed to the bf(FBB::MailHeaders)
 object's constructor. An bf(FBB::Errno) object is thrown if the mailheaders
 were already read or if the file is incomplete (i.e., the (obligatory) blank
 line wasn't found).
+
+    itb(const_iterator rend() const)
+    Returns an iterator before the first line of the mail headers.
+
+    itb(const_reverse_hdr_iterator rendh() const)
+    Returns the reversed end-iterator matching tt(rbeginh()). 
+
      itb(void setHeaderIterator(std::string const &header, Match match = FULL))
     Sets the header-iterators to the specified tt(header). The parameter
 tt(match) defines the match-type to use when selecting headers. The default
@@ -118,26 +160,9 @@ the enumeration bf(FBB::Match) are specified.nl()
 or the members tt(beginh()) and tt(rendh()) will throw an bf(FBB::Errno)
 exception. An bf(FBB::Errno) exception is also thrown if
 tt(setHeaderIterator()) is called when no mail headers are available.
-    itb(const_hdr_iterator beginh() const)
-    Returns the begin-iterator 
-corresponding to the first header selected by the 
-tt(setHeaderIterator()) member.
-Note that the member function's name ends in tt(h), to
-distinguish it from the tt(vector<string>::begin()) member. 
-    itb(const_hdr_iterator endh() const)
-    Returns the end-iterator matching tt(beginh()).
-Note that the member function's name ends in tt(h), to
-distinguish it from the tt(vector<string>::end()) member. 
-    itb(const_reverse_hdr_iterator rbeginh() const)
-    Returns the reversed begin-iterator 
-corresponding to the last header selected by the 
-tt(setHeaderIterator()) member.
-Note that the member function's name ends in tt(h), to
-distinguish it from the tt(vector<string>::rbegin()) member. 
-    itb(const_reverse_hdr_iterator endh() const)
-    Returns the reversed end-iterator matching tt(rbeginh()).
-Note that the member function's name ends in tt(h), to
-distinguish it from the tt(vector<string>::rend()) member. 
+
+    itb(size_t size() const)
+    Returns the number of header lines
     )
 
 manpagesection(EXAMPLE)

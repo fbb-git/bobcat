@@ -5,6 +5,7 @@
 #include <string>
 
 #include <bobcat/cmdfinderbase>
+#include <bobcat/fswap>
 
 namespace FBB
 {
@@ -30,6 +31,11 @@ class CmdFinder: public CmdFinderBase
 
     protected:
         CmdFinder(Entry const *begin, Entry const *end, size_t mode = 0);
+        CmdFinder(CmdFinder const &&tmp);
+
+        CmdFinder &operator=(CmdFinder const &rhs) = default;
+        CmdFinder &operator=(CmdFinder const &&tmp);
+
         FP findCmd(std::string const &cmd);
         size_t count() const;
 
@@ -46,6 +52,22 @@ class CmdFinder: public CmdFinderBase
 
         bool match(std::string const &key) const;
 };
+
+template <typename FP>
+CmdFinder<FP>::CmdFinder(CmdFinder const &&tmp)
+:
+    CmdFinderBase(move(tmp)),
+    d_count(tmp.d_count),
+    d_begin(tmp.d_begin),
+    d_end(tmp.d_end)
+{}
+
+template <typename FP>
+inline CmdFinder<FP> &CmdFinder<FP>::operator=(CmdFinder const &&tmp)
+{
+    FBB::fswap(*this, const_cast<CmdFinder &>(tmp));
+    return *this;
+}
 
 template <typename FP>
 CmdFinder<FP>::MatchKey::MatchKey(FunctionPtr *fp, CmdFinder<FP> *cmdFinder)

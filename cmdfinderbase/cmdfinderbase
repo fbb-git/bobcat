@@ -34,6 +34,11 @@ class CmdFinderBase
 
     protected:
         explicit CmdFinderBase(size_t mode = 0);
+        CmdFinderBase(CmdFinderBase const &&tmp);
+
+        CmdFinderBase &operator=(CmdFinderBase const &rhs);
+        CmdFinderBase &operator=(CmdFinderBase const &&tmp);
+
         std::string const &beyond() const;  // info beyond the command
         std::string const &cmd() const;     // the used command
 

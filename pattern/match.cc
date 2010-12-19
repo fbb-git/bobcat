@@ -19,3 +19,4 @@ void Pattern::match(string const &text, int options)
         }            
     }
 }
+

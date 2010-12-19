@@ -45,10 +45,10 @@ class ArgConfig: public Arg, public ConfigFile
 
         static ArgConfig &instance();        
 
-        size_t option(int option) const;                                 // 1
-        size_t option(std::string const &optchars) const;                // 2
-        size_t option(std::string *value, int optChar) const;            // 3
-        size_t option(std::string *value, char const *longOption) const; // 4
+        size_t option(int option);                                       // 1
+        size_t option(std::string const &optchars);                      // 2
+        size_t option(std::string *value, int optChar);                  // 3
+        size_t option(std::string *value, char const *longOption);       // 4
 
         size_t option(size_t idx,                               
                         std::string *value, int option) const;  
@@ -96,9 +96,9 @@ class ArgConfig: public Arg, public ConfigFile
         void storeLongOptions(LongOption const *begin, 
                               LongOption const *const end);
 
-        const_RE_iterator findLongOption(int optChar) const;
+        const_RE_iterator findLongOption(int optChar);
 
-        const_RE_iterator longConfigOpt(std::string const &longOpt) const;
+        const_RE_iterator longConfigOpt(std::string const &longOpt);
 };
 
 inline size_t ArgConfig::option(size_t idx, std::string *value, 

@@ -74,6 +74,11 @@ class CGI
             char const *header = "Content-type: text/html", 
             std::ostream &out = std::cout);
 
+        CGI(CGI const &&tmp);
+
+        CGI &operator=(CGI const &rhs) = default;
+        CGI &operator=(CGI const &&tmp);
+
         CGI &operator<<(std::string const &set);
         CGI &operator<<(std::pair<char, char> range);
         CGI &operator<<(int ch);

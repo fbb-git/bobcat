@@ -1,6 +1,6 @@
 #include "argconfig.ih"
 
-size_t ArgConfig::option(std::string const &optchars) const
+size_t ArgConfig::option(std::string const &optchars)
 {
     size_t count = 0;
     char const *cp = optchars.c_str(); 

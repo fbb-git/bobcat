@@ -1,6 +1,6 @@
 #include "argconfig.ih"
 
-size_t ArgConfig::option(string *value, char const *longOption) const
+size_t ArgConfig::option(string *value, char const *longOption)
 {
     size_t ret = Arg::option(value, longOption);
 
@@ -10,8 +10,8 @@ size_t ArgConfig::option(string *value, char const *longOption) const
     const_RE_iterator optIt = longConfigOpt(longOption);
 
     ret = endRE() - optIt;
-    if (ret != 0)
-        *value = findKeyTail(longOption, 0);
+    if (value && ret != 0)
+        *value = findKeyTail(longOption, 1);
 
     return ret;
 }

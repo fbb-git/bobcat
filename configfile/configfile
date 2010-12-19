@@ -8,12 +8,9 @@
 //    if the rmComment flag is set to true
 //    Then, lines containing only blanks and tabs are not stored
 
-#include <climits>
-#include <fstream>
 #include <vector>
 #include <string>
 #include <iterator>
-#include <bobcat/errno>
 #include <bobcat/pattern>
 
 namespace FBB
@@ -23,33 +20,31 @@ class RE_iterator: public std::iterator<std::input_iterator_tag, std::string>
 {
     friend class ConfigFile;
 
-    typedef std::vector<std::string>::iterator iterator;
-    iterator d_current;
-    iterator d_end;
-    Pattern  d_pattern;
+    friend int operator-(RE_iterator const &lhs, RE_iterator const &rhs);
+    friend bool operator==(RE_iterator const &lhs, RE_iterator const &rhs);
+
+                            // contains iterators to lines matching REs
+    typedef std::vector<std::string>::const_iterator VsIterator;
+    typedef std::vector<VsIterator> VsIterVector;
+
+    VsIterVector const &d_vsIter;
+    size_t d_idx;
 
     public:
         RE_iterator &operator++();
-        size_t operator-(RE_iterator const &other) const;
 
-        bool operator==(RE_iterator const &other) const;
-        bool operator!=(RE_iterator const &other) const;
         std::string const &operator*() const;
         std::string const *operator->() const;
 
     private:
-        RE_iterator(iterator const &begin, iterator const &end, 
-                    std::string const &re, bool caseSensitive);
-
-        RE_iterator(iterator const &end);
-        RE_iterator::iterator find();
-
-        static bool reMatch(std::string &str, RE_iterator &re_iter);
+        RE_iterator(VsIterVector const &vsIter, size_t idx);
 };
 
 
-class ConfigFile: public std::vector<std::string>
+class ConfigFile
 {
+    std::vector<std::string> d_line;
+
     bool d_rmComment;
     bool d_caseSensitive;
     bool d_indices;
@@ -57,8 +52,17 @@ class ConfigFile: public std::vector<std::string>
     size_t d_nextIndex;        
     std::vector<size_t> d_index;
 
+                            // contains iterators to lines matching REs
+    typedef std::vector<std::string>::const_iterator VsIterator;
+    typedef std::vector<VsIterator> VsIterVector;
+    VsIterVector d_vsIter;
+    std::string d_re;
+
+    mutable Pattern d_pattern;
+
     public:
         typedef RE_iterator const_RE_iterator;
+        typedef std::vector<std::string>::const_iterator const_iterator;
 
         enum Comment
         {
@@ -86,61 +90,67 @@ class ConfigFile: public std::vector<std::string>
                     SearchCasing sType = SearchCaseSensitive,
                     Indices iType = IgnoreIndices);
 
+        ConfigFile(ConfigFile const &&tmp);
+
+        ConfigFile &operator=(ConfigFile const &rhs) = default;
+
+        ConfigFile &operator=(ConfigFile const &&tmp);
+
         void setCommentHandling(Comment type);
         void setSearchCasing(SearchCasing type);
         void open(std::string const &fname);
-        const_RE_iterator beginRE(std::string const &re) const;
+
+        const_iterator begin() const;
+        const_iterator end() const;
+
+        const_RE_iterator beginRE(std::string const &re);
         const_RE_iterator endRE() const;
+
         const_iterator find(std::string const &target) const;
         const_iterator findRE(std::string const &re) const;
-        std::string findKey(std::string const &key, size_t idx) const;
-        std::string findKeyTail(std::string const &key, size_t idx) const;
+
+        std::string findKey(std::string const &key, size_t count = 1);
+        std::string findKeyTail(std::string const &key, size_t count = 1);
 
         size_t index(size_t lineNr);
         size_t index(const_iterator const &iterator);
 
+        std::string const &operator[](size_t idx) const;
+
     private:
-        static bool contains(std::string const &str, std::string &target);
-        static bool match(std::string const &str, Pattern &pat);
         size_t append_next(std::istream &istr, std::string &line);
         bool hasContent(std::string const &line);
         bool nextLine(std::istream &istr, std::string &line);
         void removeComment(std::string &line);
         void removeTrailingBlanks(std::string &line);
-        std::string searchFor(std::string const &key, Pattern &pattern, 
-                                                            size_t idx) const;
+        void resetVsIter(std::string const &re);
+        std::string searchFor(std::string const &keyPattern, size_t count);
+
+        static bool match(std::string const &str, Pattern &pat);
+        static bool finder(std::string const &haystack, 
+                           std::string const &needle);
+        static bool casefinder(std::string const &haystack, 
+                               std::string const &needle);
 };
-
-
-inline bool RE_iterator::operator==(RE_iterator const &other) const
-{
-    return d_current == other.d_current;
-}
-
-inline bool RE_iterator::operator!=(RE_iterator const &other) const
-{
-    return d_current != other.d_current;
-}
 
 inline std::string const &RE_iterator::operator*() const
 {
-    return *d_current;
+    return *d_vsIter[d_idx];
 }
 
 inline std::string const *RE_iterator::operator->() const
 {                     
-    return &*d_current;
+    return &*d_vsIter[d_idx];
 }
-
-inline RE_iterator::RE_iterator(iterator const &end)
-:
-    d_current(end),
-    d_end(end)
-{}
 
 inline void ConfigFile::setCommentHandling(Comment type)
 {
     d_rmComment = type == RemoveComment;
+}
+
+inline std::string const &ConfigFile::operator[](size_t idx) const
+{
+    return d_line[idx];
 }
 
 inline void ConfigFile::setSearchCasing(SearchCasing type)
@@ -148,18 +158,19 @@ inline void ConfigFile::setSearchCasing(SearchCasing type)
     d_caseSensitive = type == SearchCaseSensitive;
 }
 
-inline ConfigFile::const_RE_iterator 
-ConfigFile::beginRE(std::string const &re) const
+inline ConfigFile::const_iterator ConfigFile::begin() const
 {
-    return RE_iterator(
-        const_cast<ConfigFile *>(this)->begin(), 
-        const_cast<ConfigFile *>(this)->end(), 
-        re, d_caseSensitive);
+    return d_line.begin();
 }
-
+   
+inline ConfigFile::const_iterator ConfigFile::end() const
+{
+    return d_line.end();
+}
+   
 inline ConfigFile::const_RE_iterator ConfigFile::endRE() const
 {
-    return RE_iterator(const_cast<ConfigFile *>(this)->end());
+    return RE_iterator(d_vsIter, d_vsIter.size());
 }
 
 inline size_t ConfigFile::index(size_t lineNr)
@@ -171,6 +182,19 @@ inline size_t ConfigFile::index(const_iterator const &iterator)
 {
     return d_index[iterator - begin()];
 }
+
+
+inline int operator-(RE_iterator const &lhs, RE_iterator const &rhs)
+{
+    return lhs.d_idx - rhs.d_idx;
+}
+
+inline bool operator!=(RE_iterator const &lhs, RE_iterator const &rhs)
+{
+    return not (lhs == rhs);
+}
+
+bool operator==(RE_iterator const &lhs, RE_iterator const &rhs);
 
 
 } // FBB

@@ -11,9 +11,12 @@
 namespace FBB
 {
 
-class MailHeaders: public std::vector<std::string>
+class MailHeaders
 {
     public:
+        typedef std::vector<std::string>::const_iterator const_iterator;
+        typedef std::vector<std::string>::const_reverse_iterator 
+                                                    const_reverse_iterator;
         enum Mode
         {
             DONT_READ,
@@ -39,6 +42,7 @@ class MailHeaders: public std::vector<std::string>
             SIZEOFMATCH = lastMatch + 1,
         };
 
+        std::vector<std::string> d_lines;
         std::istream            &d_in;
         std::string             d_hdr;
         Match                   d_match;
@@ -94,6 +98,9 @@ class MailHeaders: public std::vector<std::string>
                                             const_reverse_hdr_iterator; 
 
         explicit MailHeaders(std::istream &in, Mode mode = READ);
+        MailHeaders(MailHeaders const &&tmp);
+
+        MailHeaders &operator=(MailHeaders const &&tmp);
 
         void read();
         void setHeaderIterator(char const *header, Match match = FULL);
@@ -103,7 +110,49 @@ class MailHeaders: public std::vector<std::string>
 
         const_reverse_hdr_iterator rbeginh() const;
         const_reverse_hdr_iterator rendh() const;
+
+        // available from vector<string>:
+
+        size_t size() const;
+        std::string const &operator[](size_t idx) const;
+
+        const_iterator begin() const;
+        const_iterator end() const;
+
+        const_reverse_iterator rbegin() const;
+        const_reverse_iterator rend() const;
+        
 };
+
+inline MailHeaders::const_iterator MailHeaders::begin() const
+{
+    return d_lines.begin();
+}
+
+inline MailHeaders::const_iterator MailHeaders::end() const
+{
+    return d_lines.end();
+}
+
+inline MailHeaders::const_reverse_iterator MailHeaders::rbegin() const
+{
+    return d_lines.rbegin();
+}
+
+inline MailHeaders::const_reverse_iterator MailHeaders::rend() const
+{
+    return d_lines.rend();
+}
+
+inline size_t MailHeaders::size() const
+{
+    return d_lines.size();
+}
+
+inline std::string const &MailHeaders::operator[](size_t idx) const
+{
+    return d_lines[idx];
+}
 
 inline void MailHeaders::setHeaderIterator(char const *header, Match match)
 {

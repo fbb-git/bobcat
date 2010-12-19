@@ -59,6 +59,7 @@ int main(int argc, char **argv)
 
         vector<string>::const_iterator it = cf.findRE(param);
 
+
         if (it != cf.end())
             cout << *it << ": at index " << cf.index(it) << endl;
         else        
@@ -72,6 +73,7 @@ int main(int argc, char **argv)
         return 0;
 
     ConfigFile::const_RE_iterator begin = cf.beginRE(param);
+
     ConfigFile::const_RE_iterator end = cf.endRE();
 
     cout << "Counting: " << (end - begin) << " matches\n";
@@ -80,6 +82,7 @@ int main(int argc, char **argv)
         cout << *begin << endl;
         ++begin;
     }
-    
-    return 0;
+
+    cout << "value of findKey: " << cf.findKey(param) << '\n';
 }
+
