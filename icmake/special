@@ -73,7 +73,7 @@ void askOpenSSL(int all)
 
     if (all || gets() == "y")
     {
-        g_sharedLibReq += " -lssl";
+        g_sharedLibReq += " -lssl -lcrypto";
         addClasses("SSLCLASSES");
     }    
 }
@@ -113,10 +113,10 @@ void special(int expand, int all)
 
     if (expand)
     {
-        askMilter(all);
         askXpointer(all);
         askOpenSSL(all);
         askReadLine(all);
+        askMilter(all);
 
         g_nClasses = sizeof(g_classes);
     }
