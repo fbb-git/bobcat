@@ -30,22 +30,23 @@ themselves redirect their standard streams.
 
 When using (output) redirection with the tt(USE_SHELL) path specification (see
 below for the path and IOMode specifications) the tt(IGNORE_COUT IOMode) (and
-possibly tt(IGNORE_CERR)) will normally be specified as well.
+possibly tt(IGNORE_CERR)) will normally be specified as well. See also section
+bf(PIPING) below.
 
 The same tt(Process) object may be used repeatedly to execute the same or
 different child processes in sequence. If a previously started child process
 is still active it will first be terminated. It is also possible (using the
-tt(stop()) member) to end a child process explicitly.
+tt(stop) member) to end a child process explicitly.
 
 Programs to call as child processes may be specified using tt(Process)'s
 constructors. They are not started by the constructor. To start a child
-process the tt(start()) members or the assignment operator may be used.
+process the tt(start) members or the assignment operator may be used.
 
 Some child processes continue until their standard input streams are
-exhausted. The tt(close()) member is provided to close such streams.
+exhausted. The tt(close) member is provided to close such streams.
 
 The class tt(Process) should not be used to construct em(daemon)s. To create 
-daemon processes the bf(FBB::Fork) class can be used.
+daemon processes the bf(Fork)(3bobcat) class can be used.
 
 Command line arguments passed to child processes may be surrounded by double
 or single quotes. Arguments surrounded by double quotes will have their double
@@ -57,7 +58,7 @@ Child processes may be allowed a limited amount of time (in seconds) to
 complete. Alternatively, child processes may have no time limit imposed upon
 then. A child process will forcefully be terminated when its parent
 tt(Process) object goes out of scope. Since tt(Process) inherits from
-tt(FBB::Fork) it may use the latter class's member tt(waitForChild()) to
+tt(FBB::Fork) it may use the latter class's member tt(waitForChild) to
 prevent premature termination of a child process.
 
 includefile(include/namespace)
@@ -91,6 +92,7 @@ manpagesection(ENUMERATIONS)
        The tt(IOMode) specification is used to define which of the standard
 streams used by child processes are accessed through the tt(Process)
 object. Sensible combinations may be formed using the tt(bit_or) operator.
+
 This enumeration defines the following values:
         itemization(
         itb(CIN)
@@ -100,7 +102,7 @@ required then the tt(CIN) specification can be omitted.
         itb(CERR)
             This value indicates that information written by the child process
 to its standard error stream should be accessible through the
-tt(FBB::Process::cerr()) member. If this is not required then the tt(CERR)
+tt(cerr) member. If this is not required then the tt(CERR)
 specification can be omitted.
         itb(COUT)
             This value indicates that information extracted from the
@@ -126,10 +128,13 @@ specified.
 tt(Process) object should be the information written by the child process to
 its standard output or error streams. 
             )
+    If no tt(IOMode) is specified, then tt(CIN|COUT|CERR) is used. This
+is used by tt(Process)'s default constructor.
+
 
     bf(enum ChildOutput):nl()
        The tt(ChildOutput) enumeration defines values returned by the
-tt(available()) member (see below) indicating to which standard stream the
+tt(available) member (see below) indicating to which standard stream the
 child process has written information.  This enumeration defines the following
 values:
         itemization(
@@ -169,7 +174,7 @@ to the intended program) and the child processes will be allowed unlimited
 time to run.nl()
     Following the construction of a tt(Process) object all default parameter
 values may be modified. Process parameters may be altered for a single process
-or the general defaults may be modified. The tt(setXXX()) members (see below)
+or the general defaults may be modified. The tt(setXXX) members (see below)
 may be used to change the default process parameters. When process parameters
 are specified otherwise they will be active for the next process only.
 
@@ -181,7 +186,7 @@ program is eventually started it may start and end with a em(back-tick)
 executed.
 
     A child process is em(not) started automatically following the object
-construction. A tt(start()) member or the assignment operator (see below) can
+construction. A tt(start) member or the assignment operator (see below) can
 be used to start the specified child process.
 
     itemization(
@@ -238,20 +243,20 @@ undefined unless tt(IOMode COUT) or tt(MERGE_COUT_CERR) was specified.
     itb(Process &operator+=(std::string const &))
        This operator adds the provided tt(std::string) object to the command
 specification currenly stored in a tt(Process) object. The currently stored
-command specification may be redefined using the member tt(setCommand()) (see
-below).  The member tt(operator+=()) does not add a separating blank space
+command specification may be redefined using the member tt(setCommand) (see
+below).  The member tt(operator+=) does not add a separating blank space
 between the currently stored command specification and the text to append.  It
 merely adds its right-hand side string to the command stored so far. It does
 not affect a currently running  child process.
 
     itb(int operator=(std::string const &cmd))
-       The tt(operator=()) member defines tt(cmd) as the  stored command in
+       The tt(operator=) member defines tt(cmd) as the  stored command in
 a tt(Process) object.  If the command starts and ends with a em(back-tick)
 (tt(`)) then the back-ticks are removed, and the resulting contents are
 interpreted as a command to execute.nl()
-    Next it will call tt(stop()) (see below) to end any ongoing process
-followed by calling tt(start()) to execute the newly defined command using the
-current default process parameters. It returns tt(stop())'s return value.
+    Next it will call tt(stop) (see below) to end any ongoing process
+followed by calling tt(start) to execute the newly defined command using the
+current default process parameters. It returns tt(stop)'s return value.
 
     itb(Process &operator()(iomode mode))
         This operator changes the tt(IOMode) of the next child process. It
@@ -279,7 +284,7 @@ manpagesection(MEMBERS)
     itb(bool active())
         This member returns tt(true) if the child process is currently running
 and tt(false) if not. It is automatically called from the insertion and
-extraction operators and from the tt(cerr()) member but is available as a
+extraction operators and from the tt(cerr) member but is available as a
 public member as well. It may terminate the child process if the child process
 has timed out.
 
@@ -326,12 +331,12 @@ the default value as the actual value may have been altered using a function
 call operator (see tt(operator()) above).
 
     itb(void setCommand(std::string const &cmd))
-       The tt(setCommand()) member (re)defines the (initial part of a) command
+       The tt(setCommand) member (re)defines the (initial part of a) command
 specification currently stored in an tt(Process) object. When the program is
 eventually started it may start and end with a em(back-tick) (tt(`)). The
 back-ticks will be removed just before the specified program is executed.nl()
-    The tt(setCommand()) member will em(not) start the specified command and
-tt(operator+=()) may be used to append the command specification before the
+    The tt(setCommand) member will em(not) start the specified command and
+tt(operator+=) may be used to append the command specification before the
 command is eventually executed. Also, this member does not affect a currently
 running child process.
 
@@ -351,17 +356,17 @@ processes if tt(timeLimit 0) is specified.
     itb(int start())
         The currently specified command is executed using the currently active
 process parameters. These process parameters may be modified (either as new
-defaults or for the next process only) using overloaded tt(start()) members,
-the tt(system()) members, function call operator or various
+defaults or for the next process only) using overloaded tt(start) members,
+the tt(system) members, function call operator or various
 tt(set-)members.nl()
     Having specified a command to execute, the first white-space delimited
 element of the specified command is used as the name of the program to
 execute. If the program should be called as a command to be executed by
-bf(sh)(1), the  tt(USE_SHELL ProcessType) or a tt(system()) member 
+bf(sh)(1), the  tt(USE_SHELL ProcessType) or a tt(system) member 
 should be used.nl()
     If a child process does not terminate by itself (within its allotted
 amount of time) it is terminated when it has run for its alloted time; when
-the tt(Process) object's tt(start()) or tt(stop()) members are called; when
+the tt(Process) object's tt(start) or tt(stop) members are called; when
 the object's assignment operator is used; or when the object goes out of
 scope.
 
@@ -369,43 +374,43 @@ scope.
        The currently specified command is executed using the specified
 tt(IOMode) rather than the currently specified default but otherwise using the
 currently specified default process parameters. The specified tt(IOMode) will
-only be used for the process executed by this tt(start()) member.
+only be used for the process executed by this tt(start) member.
 
     itb(int start(IOMode mode, Program program))
        The currently specified command is executed using the specified
 tt(IOMode) and tt(ProcessType) as well as the currently specified child
 process time limit. The specified arguments will only be used for the process
-executed by this tt(start()) member.
+executed by this tt(start) member.
 
     itb(int start(IOMode mode, Program program, size_t timeLimit))
        The currently specified command is executed using the specified
 arguments for the process parameters. The specified arguments will only be
-used for the process executed by this tt(start()) member.
+used for the process executed by this tt(start) member.
 
     itb(std::string const &str() const)
         This member returns the text of the command currently stored in the
 tt(Process) object. It shows the command as it will be executed by
-tt(start()), tt(system()) or the assignment operator. If the command's first
+tt(start), tt(system) or the assignment operator. If the command's first
 and last characters are back-ticks (tt(`)) then those back-ticks will be
 removed when the command is actually executed.
 
     itb(void system())
         This member executes the currently stored command as a command to
 bf(sh)(1) (therefore executing the command as a shell command).  When using
-tt(system()) redirections can be included in the command itself (although this
+tt(system) redirections can be included in the command itself (although this
 might render the redirected streams implied by the current bf(IOMode))
 useless. The currently set process parameters are used when bf(sh)(1) is
-executed.  Calling tt(system()) implies calling tt(start()).
+executed.  Calling tt(system) implies calling tt(start).
 
     itb(void system(IOMode mode))
         This member executes the currently stored command as a command to
-bf(sh)(1) (cf. tt(system()) above) using the specified tt(IOMode) rather than
+bf(sh)(1) (cf. tt(system) above) using the specified tt(IOMode) rather than
 the current default tt(IOMode) setting. The currently specified default time
 limit, however, will be used when executing the bf(sh)(1) process.
 
     itb(void system(IOMode mode, size_t timeLimit))
         This member executes the currently stored command as a command to
-bf(sh)(1) (cf. tt(system()) above) using the specified tt(IOMode) and time
+bf(sh)(1) (cf. tt(system) above) using the specified tt(IOMode) and time
 limit values rather than their current default settings.
 
     itb(int stop())
@@ -414,21 +419,62 @@ process is twice sent a tt(SIG_TERM) signal, followed by a tt(SIG_KILL)
 signal. This member's return value is the exit-value of the child process
 that was stopped. It is underfined if it was called without a running child
 process. nl()
-    Following tt(stop()) a new command may be called using tt(start(),
-system()) or the assignment operator (see earlier). Those members will first
-call tt(stop()) so when the intention is to start another child process
-calling tt(stop()) can be skipped. Also, tt(stop()) is called when the
+    Following tt(stop) a new command may be called using tt(start,
+system) or the assignment operator (see earlier). Those members will first
+call tt(stop) so when the intention is to start another child process
+calling tt(stop) can be skipped. Also, tt(stop) is called when the
 tt(Process) object goes out of scope.
 
     itb(int waitForChild())
         This member is inherited from the class tt(FBB::Fork) and will wait
 for a child process to finish. It can be used to prevent premature termination
-of a child process before calling tt(stop()). It is not always required to use
-tt(waitForChild()). E.g., when a process writes to its standard output stream
+of a child process before calling tt(stop). It is not always required to use
+tt(waitForChild). E.g., when a process writes to its standard output stream
 and all output has been read then the child process can be stopped without
-calling tt(waitForChild()). 
+calling tt(waitForChild). 
 
     )
+
+manpagesection(PIPING)
+
+When executing multiple commands using the piping operator (tt('|'))
+tt(USE_SHELL) must be specified as piping using the piping operator is a
+shell-feature.
+
+The additional shell process may be avoided by explicitly setting up the
+stdin-stdout piping using tt(Process) objects. This can be accomplished as
+follows (see bf(Fork)(3bobcat) and 
+bf(Pipe)(3bobcat) for details about those clases):
+    itemization(
+    it() Derive a class (e.g., tt(Piper)) from bf(FBB::Fork)(3) in which the
+        first process (tt(p1)) is executed by tt(Piper::childProcess) and the
+        second process (tt(p2)) is executed by tt(Piper::parentProcess)
+    it() tt(p1) and tt(p2) must specify tt(Process::COUT) and their standard
+        output should be forwarded to the tt(std::cout) streams of their
+        enclosing processes. E.g, the child process could do as follows: 
+    verb(
+    Process p1(Process::COUT, "...");
+    p1.start();
+    cout << p1.rdbuf();
+    )
+    it() tt(Piper) should define an bf(FBB::Pipe d_pipe) object, setting up
+        the redirections from the child process's standard output stream to
+        the parent process's standard input stream. E.g., tt(Piper)'s
+        redirection functions could be defined as follows:
+    verb(
+    virtual void childRedirections()
+    {
+        d_pipe.writtenBy(STDOUT_FILENO);
+    }
+
+    virtual void parentRedirections()
+    {
+        d_pipe.readFrom(STDIN_FILENO);
+    }
+    )
+    it() 
+    )
+
 
 manpagesection(EXAMPLE)
         verbinclude(../../process/driver/driver.cc)

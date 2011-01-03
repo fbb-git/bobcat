@@ -19,7 +19,7 @@ size_t Process::whichStream()
 
         default:
             throw Errno("Process::whichStream(): internal error. "
-                "d_selector.nReady() returns ") << insertable <<
-                count << ", should be <= 2" << throwable;
+                                        "d_selector.nReady() returns ") << 
+                         count << " (should be <= 2)";
     }
 }

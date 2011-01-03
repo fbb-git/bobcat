@@ -6,8 +6,8 @@ void Pattern::match(string const &text, int options)
                             d_nSub, d_subExpression, options);
 
     if (errcode)
-        throw Errno("Pattern::match()") << insertable << "no match" <<
-                                                                throwable; 
+        throw Errno("Pattern::match()") << "no match";
+
     d_text = text;
 
     for (d_beyondLast = d_nSub; d_beyondLast--; )

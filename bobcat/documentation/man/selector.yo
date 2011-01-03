@@ -11,7 +11,7 @@ manpagesynopsis()
     Linking option: tt(-lbobcat) 
 
 manpagedescription()
-    bf(FBB::Selector) objects are wrappers around the bf(select())(2) system
+    bf(FBB::Selector) objects are wrappers around the bf(select)(2) system
 calls and allow timed delays, alarm functionality and/or multiple file I/O. It
 requires the use of em(file descriptors), which are not an official part of
 bf(C++). However, most operating systems offer em(file descriptors). Sockets
@@ -33,7 +33,7 @@ manpagesection(MEMBER FUNCTIONS)
     itemization(
     itb(void addExceptFd(int fd))
         Adds a filedescriptor to the set of file descriptors that are
-monitored for exceptions (note these are not bf(C++) exceptions. See bf(man 2
+monitored for exceptions (note these are not bf(C++) exceptions. See tt(man 2
 select) for details).
     itb(void addReadFd(int fd))
         Adds a filedescriptor to the set of file descriptors that are
@@ -45,7 +45,7 @@ monitored for writing.
         Returns -1 of no more file descriptors are
 available in the em(exception) category. Otherwise the next available file
 descriptor in the em(exception) category is returned. Returning from
-bf(wait()), this function can be called repeatedly until -1 is returned,
+tt(wait), this function can be called repeatedly until -1 is returned,
 servicing each available filedescriptor in turn.
     itb(void noAlarm()) 
         This member prevents any timeout-alarm from occurring.
@@ -55,11 +55,16 @@ timeout, -1: is returned when tt(select)(2) itself failed.
     itb(int readFd())
         Returns -1 of no more file descriptors are available for
 reading. Otherwise the next available file descriptor for reading is
-returned. Returning from bf(wait()), this function can be called repeatedly
-until -1 is returned, servicing each available filedescriptor in turn.
+returned. Returning from tt(wait), this function can be called repeatedly
+until -1 is returned, servicing each available filedescriptor in turn. Note
+that the file whose file descriptor is returned by tt(readFd) may also be at
+its end-of-file position. The file is `ready for reading', but no characters
+will be returned when trying to read from it due to its end-of-file status. In
+that case the file descriptor is probably best removed from the set of active
+file descriptors. 
     itb(void rmExceptFd(int fd)) 
         Removes a filedescriptor from the set of file descriptors that are
-monitored for exceptions (note these are not bf(C++) exceptions. See bf(man 2
+monitored for exceptions (note these are not bf(C++) exceptions. See tt(man 2
 select) for details).
     itb(void rmReadFd(int fd))
         Removes a filedescriptor from the set of file descriptors that are
@@ -70,23 +75,27 @@ monitored for writing.
     itb(void setAlarm(int sec, int usec = 0))
         This member sets the alarm at the indicated seconds and
 micro-seconds. If no action occurred on one of the monitored file descriptions
-following the indicated amount of time, tt(wait()) will return with
-tt(nReady()) returning 0. The requested alarm time (tt(sec + usec / 1e+6)) may
-not be negative and may not exceed tt(INT_MAX) or an bf(FBB::Errno) exception
-(em(Selector::setAlarm())) will be thrown. A 0 alarm time specification
-results in tt(wait()) returning immediately. To switch off the alarm time use
-tt(noAlarm()).
+following the indicated amount of time, tt(wait) will return with
+tt(nReady) returning 0. The requested alarm time (tt(sec + usec / 1e+6)) may
+not be negative and may not exceed tt(INT_MAX) or an tt(FBB::Errno) exception
+(see tt(setAlarm)) will be thrown. A 0 alarm time specification
+results in tt(wait) returning immediately. To switch off the alarm time use
+tt(noAlarm).
     itb(int wait())
         This member should be called to wait for activities on the installed
-file descriptors or timeout-period. The members tt(exceptFd(), nReady(),
-readFd()) and tt(writeFd()) show their defined behaviors only after bf(wait())
-has returned.  It throws an bf(FBB::Errno) exception when tt(select()) fails,
+file descriptors or timeout-period. The members tt(exceptFd, nReady,
+readFd) and tt(writeFd) show their defined behaviors only after tt(wait)
+has returned.  It throws an tt(FBB::Errno) exception when bf(select)(2) fails,
 which may very well indicate the end of any available input. Otherwise it
-returns the number of available file descriptors.
+returns the number of available file descriptors. Note that tt(wait)
+may also return with an input file descriptor returned by tt(readFd) of a file
+at its end-of-file position. The file is `ready for reading', but no
+characters will be returned when trying to  read from it due to its
+end-of-file status.
     itb(int writeFd())
         Returns -1 of no more file descriptors are available for
 writing. Otherwise the next available file descriptor for writing is
-returned. Returning from bf(wait()), this function can be called repeatedly
+returned. Returning from tt(wait), this function can be called repeatedly
 until -1 is returned, servicing each available filedescriptor in turn.
     )
 
@@ -138,6 +147,15 @@ manpageseealso()
     bf(bobcat)(7), bf(select)(2)
 
 manpagebugs()
-    None Reported.
+    Not so much a bug as something to be aware of: When removing input file
+descriptors of files at their end-of-file positions the set of active file
+descriptors monitored by tt(wait) may decay to an empty set. If 
+tt(wait) is thereupon called it will wait forever since there are no more 
+file descriptors to monitor. The monitoring process should check for this
+empty-set situation before calling tt(wait).
+
+    Facilities to prevent tt(wait) from waiting indefinitely in this situation
+will be added to tt(Selector) in a future Bobcat release.
+
 
 includefile(include/trailer)

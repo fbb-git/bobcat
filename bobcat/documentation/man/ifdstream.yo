@@ -47,6 +47,10 @@ manpageseealso()
     bf(bobcat)(7), bf(ifdstreambuf)(3bobcat), bf(ofdstream)(3bobcat)
 
 manpagebugs()
-    None Reported.
+    The tt(IFdStream) object uses a tt(IFdStreamBuf) for its
+tt(std::streambuf). This buffer is associated with the file descriptor passed
+to tt(IFdStream)'s constructor. When the tt(IFdStream) object goes out of
+scope the device (file, socket, etc.) to which the file descriptor that was
+passed to tt(IFdStream)'s constructor is em(not) closed. 
 
 includefile(include/trailer)
