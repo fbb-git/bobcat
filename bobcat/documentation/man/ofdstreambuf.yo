@@ -70,7 +70,7 @@ descriptor tt(fd), and an optional unget buffer size (by default having size
 the bf(open) member is called, the bf(Mode) argument determines whether the
 file descriptor will be closed or will remain open.
     )
-    There is no copy constructor.
+    There are no copy or move constructors.
 
 manpagesection(MEMBER FUNCTIONS)
      All members of bf(std::streambuf) are
@@ -78,37 +78,35 @@ available, as bf(FBB::OFdStreambuf) inherits from this class. Some of the
 bf(std::streambuf)'s member are overridden by bf(FBB::OFdStreambuf), see
 below. 
     itemization(
+    itb(void close())
+        The file descriptor used by the tt(OFdStreambuf) is closed,
+irrespective of the tt(Mode) that was specified when the tt(OFdStreambuf)
+object was constructed. Following tt(close) the tt(OFdStreambuf) object can
+no longer be used until one of its tt(open) members has been called.
+    itb(int fd() const)
+        The file descriptor used by the tt(OFdStreambuf) object is returned.
     itb(void open(int xfd, size_t n = 1))
-        This member (re)initializes the streambuf, using file
-descriptor tt(fd), and an optional unget buffer size (by default having size
-1). When called repeatedly, the bf(Mode) specification used whem the object
-was constructed determines whether the file descriptor will be closed or will
-remain open.
+        The streambuf is (re)initialized, using file descriptor tt(fd), and an
+optional unget buffer size (by default having size 1). When called repeatedly,
+the bf(Mode) specification used whem the object was constructed determines
+whether the file descriptor will be closed or will remain open.
     itb(void open(int xfd, Mode mode, size_t n = 1))
-        This member (re)initializes the streambuf, using file
-descriptor tt(fd), a file descriptor closing parameter and an optional unget
-buffer size (by default having size 1). Depending on the bf(Mode) argument the
-object's currently used file descriptor will be closed or will remain open.
-    itb(int overflow(int c))
-        This member em(overrides) the bf(std::streambuf) member. It is
-called by tt(std::ostream) objects using bf(OFdStreambuf). It calls
-tt(sync()), an then it puts the next available character into the buffer. It
-returns the inserted character.
-    itb(int sync()): nl()
-        This member em(overrides) the bf(std::streambuf) member. It writes
-the buffer to the device associated with the file descriptor, and returns 0.
+        The streambuf is (re)initialized, using file descriptor tt(fd), a file
+descriptor closing parameter and an optional unget buffer size (by default
+having size 1). Depending on the bf(Mode) argument the object's currently used
+file descriptor will be closed or will remain open when the tt(IFdStreambuf)
+object is destroyed.
     )
-    Note that there is no overloaded assignment operator available for this
-class. 
+    The overloaded assignment operator is not available.
 
 manpagesection(PROTECTED MEMBER FUNCTION)
 
     The member listed in this section implements the tasks of the comparably
 named virtual function in the class's private interface. This separates the
-redefinable interface from the user-interface. The class bf(IFdStreambuf)
+redefinable interface from the user-interface. The class bf(OFdStreambuf)
 can, in accordance with Liskov's Substitution Principle, be used as a
 tt(std:streambuf); but it also offers a facility for classes deriving from
-bf(IFdStreambuf). This facility is listed here.
+bf(OFdStreambuf). This facility is listed here.
     itemization(
     itb(int pSync())
         The contents of the bf(OFdStreambuf)'s internal buffer flushed.
@@ -125,10 +123,7 @@ manpageseealso()
     bf(std::streambuf)
 
 manpagebugs()
-    Starting with bobcat version 1.7.0, open file descriptors will be closed
-when the object is destroyed or if the object is re-opened. Note that this
-differs from earlier implementations, in which the file descriptor remained
-open.
+    None reported
 
 includefile(include/trailer)
 

@@ -73,32 +73,26 @@ available, as bf(FBB::IFdStreambuf) inherits from this class. Some of the
 bf(std::streambuf)'s member are overridden by bf(FBB::IFdStreambuf), see
 below. 
     itemization(
+    itb(void close())
+        The file descriptor used by the tt(IFdStreambuf) is closed,
+irrespective of the tt(Mode) that was specified when the tt(IFdStreambuf)
+object was constructed. Following tt(close) the tt(IFdStreambuf) object can
+no longer be used until one of its tt(open) members has been called.
+    itb(int fd() const)
+        The file descriptor used by the tt(IFdStreambuf) object is returned.
     itb(void open(int xfd, size_t n = 1))
-        This member (re)initializes the streambuf, using file
-descriptor tt(fd), and an optional unget buffer size (by default having size
-1). When called repeatedly, the bf(Mode) specification used whem the object
-was constructed determines whether the file descriptor will be closed or will
-remain open.
+        The streambuf is (re)initialized, using file descriptor tt(fd), and an
+optional unget buffer size (by default having size 1). When called repeatedly,
+the bf(Mode) specification used whem the object was constructed determines
+whether the file descriptor will be closed or will remain open.
     itb(void open(int xfd, Mode mode, size_t n = 1))
-        This member (re)initializes the streambuf, using file descriptor
-tt(fd), a file descriptor closing parameter and an optional unget buffer size
-(by default having size 1). Depending on the bf(Mode) argument the object's
-currently used file descriptor will be closed or will remain open.
-    itb(int underflow())
-    This member em(overrides) the bf(std::streambuf) member. It is called by
-tt(std::istream) objects using bf(IFdStreambuf). It produces the next
-available character. It returns tt(EOF) if no (more) characters are available.
-    itb(std::streamsize xsgetn(char *dest, std::streamsize n))
-        This member em(overrides) the bf(std::streambuf) member. It returns
-the tt(n) next available characters, storing them into tt(dest). It returns
-the number of characters that were actually read.
-    This function is called from, e.g., the tt(istream::read()) member.  It
-will first copy what's available in tt(IFdStreambuf)'s own buffer and will
-then try to read some more from the file descriptor, adding additionally read
-bytes to the destination buffer. Unless the requested amount of tt(n) bytes is
-available tt(istream::good()) will return ttfalse). Programs may have
-to clear the stream's flags when, e.g., fewer bytes were read.
+        The streambuf is (re)initialized, using file descriptor tt(fd), a file
+descriptor closing parameter and an optional unget buffer size (by default
+having size 1). Depending on the bf(Mode) argument the object's currently used
+file descriptor will be closed or will remain open when the tt(IFdStreambuf)
+object is destroyed.
     )
+
     Note that there is no overloaded assignment operator available for this
 class. 
 
