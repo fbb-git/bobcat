@@ -45,7 +45,8 @@ process the tt(start) members or the assignment operator may be used.
 Some child processes continue until their standard input streams are
 exhausted. The tt(close) member is provided to close such streams.
 
-The class tt(Process) should not be used to construct em(daemon)s. To create 
+The class tt(Process) should not be used to construct em(daemon)s as
+tt(Process)'s destructor forcefully terminates its child process. To create 
 daemon processes the bf(Fork)(3bobcat) class can be used.
 
 Command line arguments passed to child processes may be surrounded by double
@@ -56,10 +57,16 @@ removed, accepting their contents unmodified.
 
 Child processes may be allowed a limited amount of time (in seconds) to
 complete. Alternatively, child processes may have no time limit imposed upon
-then. A child process will forcefully be terminated when its parent
-tt(Process) object goes out of scope. Since tt(Process) inherits from
-tt(FBB::Fork) it may use the latter class's member tt(waitForChild) to
-prevent premature termination of a child process.
+then. A child process is forcefully terminated when its parent tt(Process)
+object goes out of scope. tt(Process) makes tt(FBB::Fork)'s tt(waitForChild)
+member available, which may be used to prevent a premature termination of a
+child process.
+
+If tt(waitForChild) is not called but information sent to the child which
+could not be fully processed by the child process because the child process
+terminated as a result of the tt(Process) object going out of scope, then the
+operating system issues a tt(Broken pipe) message, indicating that information
+in a pipe was lost.
 
 includefile(include/namespace)
 
@@ -91,45 +98,46 @@ manpagesection(ENUMERATIONS)
     bf(enum IOMode):nl()
        The tt(IOMode) specification is used to define which of the standard
 streams used by child processes are accessed through the tt(Process)
-object. Sensible combinations may be formed using the tt(bit_or) operator.
+object. Sensible combinations may be formed using the tt(bit_or) operator.  If
+no tt(IOMode) is specified, then tt(CIN | COUT | CERR) is used (see
+below). This is also used by tt(Process)'s default constructor.
 
 This enumeration defines the following values:
         itemization(
         itb(CIN)
-            This value indicates that information inserted into the
-tt(Process) object should be forwared to its child process. If this is not
-required then the tt(CIN) specification can be omitted.
+            Information inserted into the tt(Process) object is forwarded to
+its child process. If this is not required then the tt(CIN) specification can
+be omitted (but note tt(IGNORE_ALL) below).
         itb(CERR)
-            This value indicates that information written by the child process
-to its standard error stream should be accessible through the
-tt(cerr) member. If this is not required then the tt(CERR)
-specification can be omitted.
+            Information written by the child process to its standard error
+stream is accessible through the tt(cerr) member. If this is not required then
+the tt(CERR) specification can be omitted  (but note tt(IGNORE_ALL) below).
         itb(COUT)
-            This value indicates that information extracted from the
-tt(Process) object should be the information written by the child process to
-its standard output stream.  If this is not required then the tt(COUT)
-specification can be omitted.
+            Information extracted from the tt(Process) object was written by
+the child process to its standard output stream.  If this is not required then
+the tt(COUT) specification can be omitted (but note tt(IGNORE_ALL) below).
+        itb(DIRECT) 
+           The current process is replaced by the child process, using the
+standard input and output streams. When this mode is specified in combination
+with other tt(IOMode) values an tt(std::invalid_argument) exception is thrown.
         itb(IGNORE_ALL)
-            This value indicates that the tt(Process) object will not extract
-information from or insert information into the standard streams of its child
-process. It is ignored if any other specification is provided as well.
+            The tt(Process) object will not extract information from or insert
+information into the standard streams of its child process. The child process
+will read from the standard input stream and write the standard output
+streams. When this mode is specified in combination with other tt(IOMode)
+values an tt(std::invalid_argument) exception is thrown.
         itb(IGNORE_CERR)
-            This value indicates that information written by the child process
-to its standard error stream should be sent to tt(/dev/null). This
-specification is ignored when either bf(CERR) or bf(MERGE_COUT_CERR) is
-specified.
+            Information written by the child process to its standard error
+stream is sent to tt(/dev/null). This specification is silently ignored if
+either bf(CERR) or bf(MERGE_COUT_CERR) were specified.
         itb(IGNORE_COUT)
-            This value indicates that information written by the child process
-to its standard output stream should be sent to tt(/dev/null). This
-specification is ignored when either bf(COUT) or bf(MERGE_COUT_CERR) is
-specified.
+            Information written by the child process to its standard output
+stream is sent to tt(/dev/null). This specification is silently ignored when
+either bf(COUT) or bf(MERGE_COUT_CERR) were specified.
         itb(MERGE_COUT_CERR)
-            This value indicates that information extracted from the
-tt(Process) object should be the information written by the child process to
-its standard output or error streams. 
+            Information extracted from the tt(Process) object is written by
+the child process to its standard output and standard error streams.
             )
-    If no tt(IOMode) is specified, then tt(CIN|COUT|CERR) is used. This
-is used by tt(Process)'s default constructor.
 
 
     bf(enum ChildOutput):nl()
@@ -167,7 +175,7 @@ child streams to access from the tt(Process) object (as an bf(IOMode) value);
 the way to locate or start the child program (as a bf(ProcessType) value); and
 the maximum time (in seconds) the child program is allowed to run.nl()
     Unless specified otherwise, all the child's standard streams (standard
-input, output and error) will be accessible from the tt(Parent) process; the
+input, output and error) are accessible from the tt(Parent) process; the
 tt(PATH) environment variable will em(not) be used to locate the child program
 to be executed (often resulting in the requirement to provide an absolute path
 to the intended program) and the child processes will be allowed unlimited
