@@ -24,7 +24,7 @@ class OFdStreambuf: public std::streambuf
 
     private:
         Mode        d_mode;
-        size_t    d_n;
+        size_t      d_n;
         int         d_fd;
         char       *d_buffer;
 
@@ -38,6 +38,9 @@ class OFdStreambuf: public std::streambuf
 
         void open(int fd, Mode mode, size_t n = 1);
         void open(int fd, size_t n = 1);
+
+        int fd() const;
+        void close();
 
     protected:
         int pSync();
@@ -82,16 +85,27 @@ inline OFdStreambuf::OFdStreambuf(int fd, Mode mode, size_t n)
     open(fd, CLOSE_FD, n);
 }
 
-inline OFdStreambuf::~OFdStreambuf()
-{
-    cleanup(d_mode);
-}
-
 inline void OFdStreambuf::open(int fd, size_t n)
 {
     open(fd, d_mode, n);
 }
 
+inline void OFdStreambuf::close()
+{
+    cleanup(CLOSE_FD);
+}
+
+inline int OFdStreambuf::fd() const
+{
+    return d_fd;
+}
+
 } // FBB
 
 #endif
+
+
+
+
+
+

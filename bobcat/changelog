@@ -10,6 +10,12 @@ bobcat (2.11.00) [ISN]
   * IOStream(istream &, ostream &)'s constructor now also opens the IOStream
     object (as it always should have done)
 
+  * OFdStreambuf and IFdStreambuf have a new member (int fd()) returning the
+    File Descriptor. Their descructors are not defined inline anymore (but
+    their implementations have not changed) and they have a new member
+    (close()) closing the streambuf. Closed OFdStreambuf and IFdStreambuf
+    objects can again be opened using open()
+
   * Updated several man-pages
 
 bobcat (2.10.03)

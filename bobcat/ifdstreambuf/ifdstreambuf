@@ -38,6 +38,8 @@ namespace FBB
             void open(int xfd, Mode mode, size_t n = 1);
             void open(int xfd, size_t n = 1);
 
+            int fd() const;
+
         private:
             virtual int underflow();
             virtual std::streamsize xsgetn(char *dest, std::streamsize n);
@@ -78,14 +80,20 @@ inline IFdStreambuf::IFdStreambuf(int fd, Mode mode, size_t n)
     open(fd, KEEP_FD, n);
 }
 
-inline IFdStreambuf::~IFdStreambuf()
-{
-    cleanup(d_mode);
-}
-
 inline void IFdStreambuf::open(int xfd, size_t n)
 {
     open(xfd, d_mode, n);
+}
+
+inline void IFdStreambuf::close()
+{
+    cleanup(CLOSE_FD);
+}
+
+
+inline int IFdStreambuf::fd() const
+{
+    return d_fd;
 }
 
 } // FBB
