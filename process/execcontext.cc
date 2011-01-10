@@ -38,7 +38,11 @@ void Process::execContext(String::SplitPair const &splitPair,
         break;
 
         case String::SQUOTE:
-            ec.args[ec.argc++] = splitPair.first.c_str();
+        {
+                    // see above
+            string *sp = new string(splitPair.first);
+            ec.args[ec.argc++] = sp->c_str();
+        }
         break;
     }
 }

@@ -10,8 +10,8 @@ void Log::open(string const &filename, ios::openmode mode, char const *delim)
     {
         d_stream.open(filename.c_str(), mode);
         if (!d_stream)
-            Errno("Log::Log(string, ...)") << insertable <<
-                ": can't write `" << filename << "'" << throwable;
+            Errno("Log::Log(string, ...)") << ": can't write `" << 
+                                                        filename << '\'';
         setStream(d_stream);
     }
     settimestamp(TIMESTAMPS, delim);

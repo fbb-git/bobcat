@@ -15,8 +15,7 @@ DecryptBuf::DecryptBuf(ostream &outStream, char const *type,
             if (type == 0)
                 type = "** unspecified cipher type **";
     
-            throw Errno(1, "DecryptBuf `") << insertable << type << 
-                                            "' not available" << throwable;
+            throw Errno(1, "DecryptBuf `") << type << "' not available";
         }
 
         size_t keyLength = key.length();

@@ -9,9 +9,5 @@ void Process::initialize(size_t timeLimit, iomode mode,
     d_setProcessType = d_processType = processType; 
     d_setMode = sanitizeIOMode(mode);
 
-    d_oldIn = -1;
-    d_oldOut = -1; 
-    d_oldErr = -1;
-
-    open(d_childCout, d_childCin);
+    open(d_iChildOut, d_oChildIn);
 }

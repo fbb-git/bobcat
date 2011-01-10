@@ -15,8 +15,7 @@ EncryptBuf::EncryptBuf(ostream &outStream, char const *type,
             if (type == 0)
                 type = "** unspecified cipher type **";
     
-            throw Errno(1, "EncryptBuf `") << insertable << type << 
-                                            "' not available" << throwable;
+            throw Errno(1, "EncryptBuf `") << type << "' not available";
         }
 
         size_t keyLength = key.length();

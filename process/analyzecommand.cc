@@ -16,12 +16,11 @@ Process::ExecContext Process::analyzeCommand()
                                FnWrap::unary(execContext, ec));
     
     if (!ec.ok)
-        throw Errno("Process ") << insertable << d_command << ": " << 
-                                                ec.message << throwable;
+        throw Errno("Process ") << d_command << ": " << ec.message;
     
     if (!ec.argc)
-        throw Errno("Process: can't execute ") << insertable << d_command <<
-                                                                    throwable;
+        throw Errno("Process: can't execute ") << d_command;
+
     ec.args[ec.argc] = 0;
      
     return ec;

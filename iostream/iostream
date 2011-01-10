@@ -24,10 +24,11 @@ inline IOStream::IOStream()
 
 inline IOStream::IOStream(std::istream &in, std::ostream &out)
 :
-    IOStreambuf(in, out),
     std::istream(this),
     std::ostream(this)
-{}
+{
+    open(in, out);
+}
 
 inline void IOStream::open(std::istream &in, std::ostream &out)
 {

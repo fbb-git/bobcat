@@ -1,8 +1,9 @@
 #include "process.ih"
 
-Pipe *Process::newPipe() const
+void Process::newPipe(Pipe &pipe)
 {
-    Pipe *ret = new Pipe;
-    ret->verify();
-    return ret;
+    closeReadFd(pipe);
+    closeWriteFd(pipe);
+
+    pipe = Pipe();
 }
