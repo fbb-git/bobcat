@@ -84,7 +84,9 @@ irrespective of the tt(Mode) that was specified when the tt(OFdStreambuf)
 object was constructed. Following tt(close) the tt(OFdStreambuf) object can
 no longer be used until one of its tt(open) members has been called.
     itb(int fd() const)
-        The file descriptor used by the tt(OFdStreambuf) object is returned.
+        The file descriptor used by the tt(OFdStreambuf) object is returned. 
+        If the tt(OFdStreambuf) is not associated with a file descriptor -1 is
+        returned. 
     itb(void open(int xfd, size_t n = 1))
         The streambuf is (re)initialized, using file descriptor tt(fd), and an
 optional unget buffer size (by default having size 1). When called repeatedly,

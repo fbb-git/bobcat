@@ -18,10 +18,17 @@ void Process::childProcess()
         (ec.args[0], const_cast<char * const *>(ec.args));
 
     throw Errno("Process: ") << " cannot execv[p] " << d_command;
+
 }
 
 //    std::cerr << "ChildProcess starts as:\n";
 //    for (char const **cp = ec.args; *cp; ++cp)
 //        std::cerr << "  " << *cp << endl;
 //    std::cerr << "======================\n";
+
+
+
+
+
+
 

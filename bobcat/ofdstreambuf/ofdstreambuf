@@ -57,36 +57,6 @@ class OFdStreambuf: public std::streambuf
         void cleanup(Mode mode);
 };
 
-inline OFdStreambuf::OFdStreambuf()
-:
-    d_mode(CLOSE_FD),          // comply with old default
-    d_n(0),
-    d_buffer(0)
-{}
-
-inline OFdStreambuf::OFdStreambuf(Mode mode)
-:
-    d_mode(mode),
-    d_n(0),
-    d_buffer(0)
-{}
-
-inline OFdStreambuf::OFdStreambuf(int fd, size_t n)
-:
-    d_mode(CLOSE_FD),
-    d_buffer(0)
-{
-    open(fd, CLOSE_FD, n);
-}
-
-inline OFdStreambuf::OFdStreambuf(int fd, Mode mode, size_t n)
-:
-    d_mode(mode),
-    d_buffer(0)
-{
-    open(fd, CLOSE_FD, n);
-}
-
 inline void OFdStreambuf::open(int fd, size_t n)
 {
     open(fd, d_mode, n);
