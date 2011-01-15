@@ -215,12 +215,13 @@ inline void Process::start()
 
 inline void Process::start(iomode mode)
 {
-    start(mode, d_setProcessType, d_setTimeLimit);
+    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
+                                        d_setProcessType, d_setTimeLimit);
 }
 
 inline void Process::start(iomode mode, ProcessType type)
 {
-    start(mode, type, d_setTimeLimit);
+    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), type, d_setTimeLimit);
 }
 
 template <typename Type>
@@ -253,12 +254,13 @@ inline void Process::system()
 
 inline void Process::system(iomode mode)
 {
-    start(mode, USE_SHELL, d_timeLimit);
+    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
+                                                USE_SHELL, d_timeLimit);
 }
 
 inline void Process::system(iomode mode, size_t timeLimit)
 {
-    start(mode, USE_SHELL, timeLimit);
+    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), USE_SHELL, timeLimit);
 }
 
 inline Process &Process::operator+=(std::string const &command)
@@ -284,22 +286,24 @@ inline void Process::setTimeLimit(size_t timeLimit)
 
 inline void Process::setIOMode(iomode mode)
 {
-    d_setMode = sanitizeIOMode(mode);
+    d_setMode = sanitizeIOMode(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC));
 }
 
 inline Process &Process::operator()(iomode mode)
 {
-    return operator()(mode, d_setProcessType, d_setTimeLimit);
+    return operator()(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
+                                            d_setProcessType, d_setTimeLimit);
 }
 
 inline Process &Process::operator()(iomode mode, ProcessType type)
 {
-    return operator()(mode, type, d_setTimeLimit);
+    return operator()(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
+                                                    type, d_setTimeLimit);
 }
 
 inline Process::iomode Process::ioMode() const
 {
-    return d_mode;
+    return d_mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC);
 }
 
 inline Process::ProcessType Process::processType() const

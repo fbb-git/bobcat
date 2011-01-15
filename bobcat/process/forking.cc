@@ -4,6 +4,9 @@
 
 void Process::forking()
 {
+    if (d_mode == IOMode::DIRECT)
+        childProcess();
+
     fork();
 
     // this is the parent, following parentRedirections()
