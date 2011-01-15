@@ -179,17 +179,17 @@ manpagesection(MEMBER FUNCTIONS)
         which is the name of a field defined by the form, the second is a
         vector of strings containing the field's value(s). See also the
         description of the tt(param()) member below.
+
     itb(CGI::MapStringVector::const_iterator end() const)
        Returns the end iterator of the form's parameter map.
+
     itb(unsigned long long maxUploadSize() const)
        Returns the current maximum file upload size in bytes.
+
     itb(CGI::Method method() const) 
        Returns the method used when submitting the form as either tt(CGI::GET)
         or tt(CGI::POST).
-    itb(std::string const &query() const) 
-       Returns the query-string submitted with tt(CGI::GET) or tt(CGI::POST)
-        forms (if the tt(POST)ed form specified
-        tt(ENCTYPE="multipart/form-data") the query string is empty). 
+
     itb(std::vector<std::string> const &param(std::string const &variable)
         const)
        Returns the value of the form-variable specified by the function's
@@ -210,6 +210,15 @@ manpagesection(MEMBER FUNCTIONS)
         the file was successfully uploaded and tt(truncated) if the file was
         truncated. Existing files will not be overwritten. When uploading a
         file a usable filename must be found within 100 trials.
+
+    itb(std::string const &query() const) 
+       Returns the query-string submitted with tt(CGI::GET) or tt(CGI::POST)
+        forms (if the tt(POST)ed form specified
+        tt(ENCTYPE="multipart/form-data") the query string is empty). 
+
+
+itb(report())
+
     itb(void setFileDestination(std::string const &path, 
                                 std::string const &prefix = "",
                                 Create create = CREATE_PATH))
@@ -220,6 +229,7 @@ manpagesection(MEMBER FUNCTIONS)
         able to create the path. If tt(DONT_CREATE_PATH) is specified the
         specified path must be available. If not, an tt(FBB::Errno) exception
         will be thrown.
+
     itb(void setMaxUploadSize(size_t maxSize, int unit = 'M'))
        This member can be used to change the maximum size of uploaded
         files. Its default value is 100Mb. The tt(unit) can be one of tt(b)
@@ -232,6 +242,13 @@ manpagesection(MEMBER FUNCTIONS)
 called these members may detect errors in the the received form data. If so,
 an error message is written to the standard output stream and an
 tt(FBB::Errno) exception will be thrown.
+
+manpagesection(STATIC MEMBERS)
+    itemization(
+    itb(std::string dos2unix(std::string const &text))
+
+    itb(std::string unPercent(std::string const &text))
+    )    
 
 manpagesection(EXAMPLE)
     verbinclude(../../cgi/driver/driver.cc)
