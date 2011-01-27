@@ -2,7 +2,7 @@
 
 Process::iomode Process::sanitizeIOMode(iomode mode)
 {
-    if ((mode & DIRECT) && (mode & ~DIRECT)
+    if ((mode & DIRECT) && (mode & ~DIRECT))
         throw invalid_argument("IOModes cannot be combined with DIRECT");
  
     d_mode = mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC);
