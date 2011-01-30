@@ -13,6 +13,11 @@ void Process::childProcess()
         ec.args[2] = d_command.c_str();
         ec.args[3] = 0;
     }
+
+#ifdef BOBCAT_DIY_CLOEXEC_
+    if (d_closedByChild != 0)
+        close(d_closedByChild);
+#endif
                           
     (*(d_processType == USE_PATH ? execvp : execv))
         (ec.args[0], const_cast<char * const *>(ec.args));

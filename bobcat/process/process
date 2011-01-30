@@ -2,7 +2,6 @@
 #define INCLUDED_BOBCAT_PROCESS_
 
 #include <string>
-// #include <memory>
 #include <ostream>
 #include <istream>
 
@@ -13,6 +12,12 @@
 #include <bobcat/ifdstreambuf>
 #include <bobcat/ofdstreambuf>
 #include <bobcat/iostream>
+
+#if defined(__FreeBSD_kernel__) || defined(__FreeBSD__)
+    #ifndef BOBCAT_DIY_CLOEXEC_
+    #define BOBCAT_DIY_CLOEXEC_
+    #endif
+#endif
 
 namespace FBB
 {
@@ -43,9 +48,9 @@ class Process: private Fork, public IOStream
                                             // too.
         std::string     d_command;
 
-        Pipe d_oChildInPipe;   // cin read by the CHILD
-        Pipe d_iChildOutPipe;  // cout written by the CHILD
-        Pipe d_iChildErrPipe;  // cerr written by the CHILD    
+        Pipe d_oChildInPipe;    // cin read by the CHILD
+        Pipe d_iChildOutPipe;   // cout written by the CHILD
+        Pipe d_iChildErrPipe;   // cerr written by the CHILD    
 
         OFdStreambuf    d_oChildInbuf;      // Child extracts,  
         IFdStreambuf    d_iChildOutbuf;     // Child inserts,
@@ -66,6 +71,10 @@ class Process: private Fork, public IOStream
         };
         RetPid d_child;
         RetPid d_monitor;
+
+#ifdef BOBCAT_DIY_CLOEXEC_
+        int d_closedByChild;    // DIY CLOSE_ON_EXEC
+#endif
 
     public:
         enum IOMode

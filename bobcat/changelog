@@ -1,4 +1,15 @@
-bobcat (2.11.01)
+bobcat (2.12.00)
+
+  * FreeBSD flavors lack the fntl flag F_DUPFD_CLOEXEC, so Process::operator|
+    must use a work-around for that flag. The work-around is compiled into
+    Process objects/code when the BOBCAT_DIY_CLOEXEC_ identifier has been
+    defined. It is defined by default in process/process when the identifiers 
+    __FreeBSD_kernel__ or __FreeBSD__ are defined.
+    As F_DUPFD_CLOEXEC has been defined by POSIX since 2008 it is possible
+    that it will soon be defined by FreeBSD systems as well. The work-around
+    adds an additional data member to the Process class. Since the data member
+    is the last data member of Process objects it can easily be removed at a
+    later stage when F_DUPFD_CLOEXEX becomes available for FreeBSD systems.
 
   * Lacking descriptions of some FBB::CGI members were added to the 
     cgi(3bobcat) man-page.
@@ -6,6 +17,12 @@ bobcat (2.11.01)
   * The CGI class now uses a std::unordered_map, rather than a std::map
 
   * Process now supports IOMode::DIRECT
+
+  * The file README.process-pipe (and support files process-pipe.odp and
+    process-pipe.pdf) were added tot Bobcat's root direcory, describing the
+    inner workings of Process's operator|.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Sun, 30 Jan 2011 14:51:48 +0100
 
 bobcat (2.11.00)
 

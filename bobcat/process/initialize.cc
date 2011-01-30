@@ -3,6 +3,11 @@
 void Process::initialize(size_t timeLimit, iomode mode, 
                          ProcessType processType)
 {
+
+#ifdef BOBCAT_DIY_CLOEXEC_
+    d_closedByChild = 0;
+#endif
+
     d_active = false;
 
     d_setTimeLimit = d_timeLimit = timeLimit;
