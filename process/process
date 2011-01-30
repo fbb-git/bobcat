@@ -2,7 +2,6 @@
 #define INCLUDED_BOBCAT_PROCESS_
 
 #include <string>
-// #include <memory>
 #include <ostream>
 #include <istream>
 
@@ -13,6 +12,12 @@
 #include <bobcat/ifdstreambuf>
 #include <bobcat/ofdstreambuf>
 #include <bobcat/iostream>
+
+#if defined(__FreeBSD_kernel__) || defined(__FreeBSD__)
+    #ifndef BOBCAT_DIY_CLOEXEC_
+    #define BOBCAT_DIY_CLOEXEC_
+    #endif
+#endif
 
 namespace FBB
 {
@@ -43,9 +48,9 @@ class Process: private Fork, public IOStream
                                             // too.
         std::string     d_command;
 
-        Pipe d_oChildInPipe;   // cin read by the CHILD
-        Pipe d_iChildOutPipe;  // cout written by the CHILD
-        Pipe d_iChildErrPipe;  // cerr written by the CHILD    
+        Pipe d_oChildInPipe;    // cin read by the CHILD
+        Pipe d_iChildOutPipe;   // cout written by the CHILD
+        Pipe d_iChildErrPipe;   // cerr written by the CHILD    
 
         OFdStreambuf    d_oChildInbuf;      // Child extracts,  
         IFdStreambuf    d_iChildOutbuf;     // Child inserts,
@@ -66,6 +71,10 @@ class Process: private Fork, public IOStream
         };
         RetPid d_child;
         RetPid d_monitor;
+
+#ifdef BOBCAT_DIY_CLOEXEC_
+        int d_closedByChild;    // DIY CLOSE_ON_EXEC
+#endif
 
     public:
         enum IOMode
@@ -215,12 +224,13 @@ inline void Process::start()
 
 inline void Process::start(iomode mode)
 {
-    start(mode, d_setProcessType, d_setTimeLimit);
+    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
+                                        d_setProcessType, d_setTimeLimit);
 }
 
 inline void Process::start(iomode mode, ProcessType type)
 {
-    start(mode, type, d_setTimeLimit);
+    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), type, d_setTimeLimit);
 }
 
 template <typename Type>
@@ -253,12 +263,13 @@ inline void Process::system()
 
 inline void Process::system(iomode mode)
 {
-    start(mode, USE_SHELL, d_timeLimit);
+    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
+                                                USE_SHELL, d_timeLimit);
 }
 
 inline void Process::system(iomode mode, size_t timeLimit)
 {
-    start(mode, USE_SHELL, timeLimit);
+    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), USE_SHELL, timeLimit);
 }
 
 inline Process &Process::operator+=(std::string const &command)
@@ -284,22 +295,24 @@ inline void Process::setTimeLimit(size_t timeLimit)
 
 inline void Process::setIOMode(iomode mode)
 {
-    d_setMode = sanitizeIOMode(mode);
+    d_setMode = sanitizeIOMode(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC));
 }
 
 inline Process &Process::operator()(iomode mode)
 {
-    return operator()(mode, d_setProcessType, d_setTimeLimit);
+    return operator()(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
+                                            d_setProcessType, d_setTimeLimit);
 }
 
 inline Process &Process::operator()(iomode mode, ProcessType type)
 {
-    return operator()(mode, type, d_setTimeLimit);
+    return operator()(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
+                                                    type, d_setTimeLimit);
 }
 
 inline Process::iomode Process::ioMode() const
 {
-    return d_mode;
+    return d_mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC);
 }
 
 inline Process::ProcessType Process::processType() const

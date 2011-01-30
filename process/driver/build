@@ -4,15 +4,16 @@ ln -sf ../process .
 ln -sf ../process.ih .
 
 case $1 in
+    (b)
+        rm process process.ih
+        g++ -DBOBCAT --std=c++0x -I../../tmp -o driver driver.cc \
+	    -lbobcat -L../../tmp/lib -s
+    ;;
     (o)
         g++ --std=c++0x -o driver *.cc ../tmp/o/*.o -lbobcat -s
     ;;
     (c)
         g++ --std=c++0x -o driver *.cc -lbobcat -s
-    ;;
-    (b)
-        rm process process.ih
-        g++ --std=c++0x -I../../tmp -o driver driver.cc -lbobcat -L../../tmp/lib -s
     ;;
     (*)
     echo $0 b links to bobcat built by 'build libraries all'
