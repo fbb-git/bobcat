@@ -40,31 +40,31 @@ class bf(FBB::MailHeaders):
 immediately read by the constructor.
     itb(DONT_READ)
         When this value is specified at construction time, e-mail is read
-using the tt(read()) member (see below).
+using the tt(read) member (see below).
     )
 
     bf(enum Match)nl()
     This enumeration defines the following values:
     itemization(
     itb(FULL)
-    Used by the tt(setHeaderIterator()) (see below) to indicate that the
+    Used by  tt(setHeaderIterator) (see below) to indicate that the
 headers must exactly match a specified header name.
     itb(INITIAL)
-    Used by the tt(setHeaderIterator()) (see below) to indicate that the
+    Used by  tt(setHeaderIterator) (see below) to indicate that the
 initial part of the headers must match the specified header text.
     itb(PARTIAL)
-    Used by the tt(setHeaderIterator()) (see below) to indicate that the 
+    Used by  tt(setHeaderIterator) (see below) to indicate that the 
 headers must contain the specified header text.
     itb(CASE_FULL)
-    Used by the tt(setHeaderIterator()) (see below) to indicate that the
+    Used by tt(setHeaderIterator) (see below) to indicate that the
 headers must exactly match a specified header name. The matching is performed
 case insensititvely.
     itb(CASE_INITIAL)
-    Used by the tt(setHeaderIterator()) (see below) to indicate that the
+    Used by tt(setHeaderIterator) (see below) to indicate that the
 initial part of the headers must match the specified header text. The matching
 is performed case insensititvely.
     itb(CASE_PARTIAL)
-    Used by the tt(setHeaderIterator()) (see below) to indicate that the
+    Used by tt(setHeaderIterator) (see below) to indicate that the
 headers must contain the specified header text. The matching is performed case
 insensititvely.
     )
@@ -97,7 +97,7 @@ manpagesection(CONSTRUCTORS)
 processed. The second parameter is by default bf(MailHeaders::READ), causing
 the object to start reading the e-mail immediately. If set to
 bf(MailHeaders::DONT_READ), the e-mail is not read. In that case the member
-tt(read()) can be called to process the e-mail later.
+tt(read) can be called to process the e-mail later.
     )
     The copy and move constructors are available.
 
@@ -117,22 +117,22 @@ manpagesection(MEMBER FUNCTIONS)
 
     itb(const_hdr_iterator beginh() const)
     Returns the begin-iterator corresponding to the first header selected by
-the tt(setHeaderIterator()) member. 
+the tt(setHeaderIterator) member. 
 
     itb(const_iterator end() const)
     Returns an iterator beyond the last line of the mail headers.
 
     itb(const_hdr_iterator endh() const)
-    Returns the end-iterator matching tt(beginh()).  Note that the member
+    Returns the end-iterator matching tt(beginh).  Note that the member
 function's name ends in tt(h), to distinguish it from the
-tt(vector<string>::end()) member.
+tt(vector<string>::end) member.
 
     itb(const_reverse_iterator rbegin() const)
     Returns an iterator to the last line of the mail headers.
 
     itb(const_reverse_hdr_iterator rbeginh() const)
     Returns the reversed begin-iterator corresponding to the last header
-selected by the tt(setHeaderIterator()) member.  
+selected by the tt(setHeaderIterator) member.  
 
     itb(void read()) 
     Reads the mail-headers from the file passed to the bf(FBB::MailHeaders)
@@ -144,22 +144,22 @@ line wasn't found).
     Returns an iterator before the first line of the mail headers.
 
     itb(const_reverse_hdr_iterator rendh() const)
-    Returns the reversed end-iterator matching tt(rbeginh()). 
+    Returns the reversed end-iterator matching tt(rbeginh). 
 
-     itb(void setHeaderIterator(std::string const &header, Match match = FULL))
+     itb(void setHeaderIterator(char const *header, Match match = FULL))
     Sets the header-iterators to the specified tt(header). The parameter
 tt(match) defines the match-type to use when selecting headers. The default
 bf(FBB::MailHeaders::FULL), indicates that the text provided in
 tt(header) must match exactly an e-mail header. nl()
     When matching headers the
 colon terminating the header is em(not) considered and should therefore
-em(not) be specified by tt(setHeaderIterator()). nl()
+em(not) be specified by tt(setHeaderIterator). nl()
     Alternative matching strategies are used when other values of 
 the enumeration bf(FBB::Match) are specified.nl()
-    The member tt(setHeaderIterator()) em(must) have been called at least once
-or the members tt(beginh()) and tt(rendh()) will throw an bf(FBB::Errno)
+    The member tt(setHeaderIterator) em(must) have been called at least once
+or the members tt(beginh) and tt(rendh) will throw an bf(FBB::Errno)
 exception. An bf(FBB::Errno) exception is also thrown if
-tt(setHeaderIterator()) is called when no mail headers are available.
+tt(setHeaderIterator) is called when no mail headers are available.
 
     itb(size_t size() const)
     Returns the number of header lines
