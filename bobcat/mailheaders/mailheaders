@@ -183,7 +183,47 @@ inline MailHeaders::const_reverse_hdr_iterator MailHeaders::rendh() const
     return const_reverse_hdr_iterator(beginh());
 }
 
+inline MailHeaders::const_hdr_iterator 
+&MailHeaders::const_hdr_iterator::operator++()
+{
+    d_current = lookup(++d_current);
+    return *this;
+}
 
+inline MailHeaders::const_hdr_iterator 
+&MailHeaders::const_hdr_iterator::operator--()
+{
+    d_current = lookdown(d_current);
+    return *this;
+}
+
+inline MailHeaders::const_hdr_iterator const
+MailHeaders::const_hdr_iterator::operator++(int)
+{
+    return const_hdr_iterator(d_mh, d_current++);
+}
+
+inline bool MailHeaders::const_hdr_iterator::operator==(
+                                    const_hdr_iterator const &other) const
+{
+    return d_current == other.d_current;
+}
+
+inline bool MailHeaders::const_hdr_iterator::operator!=(
+                                    const_hdr_iterator const &other) const
+{
+    return d_current != other.d_current;
+}
+
+inline std::string const &MailHeaders::const_hdr_iterator::operator*() const
+{
+    return *d_current;
+}
+
+inline std::string const *MailHeaders::const_hdr_iterator::operator->() const
+{
+    return &*d_current;
+}
 
 } // FBB
         
