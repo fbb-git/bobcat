@@ -9,7 +9,7 @@
 #include <string>
 #include <getopt.h>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <unistd.h>
 #include <bobcat/errno>
 
@@ -19,13 +19,13 @@ namespace FBB
 class OptStructArray;
 class Arg
 {
-    typedef struct option                       OptStruct;
-    typedef std::vector<std::string>            StringVector;
-    typedef std::map<int, StringVector>         IntStringVectorMap;
-    typedef std::map<int, StringVector>::const_iterator ISVMapIterator;
-    typedef std::map<std::string, StringVector> StringStringVectorMap;
-    typedef std::map<std::string, StringVector>::const_iterator 
-                                                SSVMapIterator;
+    typedef struct option                           OptStruct;
+    typedef std::vector<std::string>                StringVector;
+    typedef std::unordered_map<int, StringVector>   IntStringVectorMap;
+    typedef IntStringVectorMap::const_iterator      ISVMapIterator;
+    typedef std::unordered_map<std::string, StringVector> 
+                                                    StringStringVectorMap;
+    typedef StringStringVectorMap::const_iterator   SSVMapIterator;
 
     std::string                     d_base;
     char const                      **d_argPointer;

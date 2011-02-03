@@ -2,12 +2,16 @@
                               driver.cc
 */
 
-#include "driver.h"
-
+#include <iostream>
+#include <string>
 #include <algorithm>
 #include <bobcat/errno>
 
-#include "../arg"
+#ifdef BOBCAT
+    #include <bobcat/arg>
+#else
+    #include "arg"
+#endif
 
 using namespace std;
 using namespace FBB;
@@ -17,7 +21,7 @@ void optcheck(char c)
     Arg &arg = Arg::instance();
 
     if (size_t count = arg.option(c))
-        cout << "Saw option " << c << " " << count << " times" << endl;
+        cout << "Saw option " << c << " " << count << " times" << '\n';
 
     if (string("def").find(c) != string::npos)
     {
@@ -30,20 +34,20 @@ void optcheck(char c)
                         ", which has value `" << value << "'\n";
 
         size_t count = arg.option(&idx, &value, c);
-        cout << count << " times option " << c << endl;
+        cout << count << " times option " << c << '\n';
         if (idx == count)
-            cout << "No non-empty option values" << endl;
+            cout << "No non-empty option values" << '\n';
         else
         {
-            cout << "First non-empty option at " << idx << endl;
+            cout << "First non-empty option at " << idx << '\n';
             for (size_t ix = 0; ix < count; ++ix)
             {
                 arg.option(ix, &value, c);
-                cout << ix << ": " << value << endl;
+                cout << ix << ": " << value << '\n';
             }
         }
     }
-    cout << endl;
+    cout << '\n';
 }
 
 void longopt(char const *longOpt)
@@ -56,7 +60,7 @@ void longopt(char const *longOpt)
         return;
 
     cout << longOpt << " " << opt << " times:\t" <<
-                (value.length() ? value : "-- no arg--") << endl;
+                (value.length() ? value : "-- no arg--") << '\n';
 }
 
 
@@ -76,17 +80,19 @@ void usage(string  const  &progname)
         "    --version (as -v), --add (as -a)\n";
 }
 
- 
+namespace {
+}
+
 int main(int argc, char **argv)
 try
 {
     Arg::LongOption lo[] =
     {
-        Arg::LongOption("optional", Arg::Optional),
-        Arg::LongOption("extra", Arg::Required),
-        Arg::LongOption("file", 'f'),
-        Arg::LongOption("version", 'v'),
-        Arg::LongOption("add", 'a')
+        {"optional", Arg::Optional},
+        {"extra", Arg::Required},
+        {"file", 'f'},
+        {"version", 'v'},
+        {"add", 'a'}
     };
     try
     {    
@@ -94,7 +100,7 @@ try
                 lo, lo + 5,
                 argc, argv);
 
-        Arg &arg = Arg::getInstance();
+        Arg &arg = Arg::instance();
 
         arg.versionHelp(usage, "0.00", 1);
 
@@ -102,8 +108,8 @@ try
             ;
 
         for (size_t idx = 0; idx < arg.nArgs(); idx++)
-            cout << "Argument " << idx << " = " << arg[idx] << endl;
-        cout << endl;
+            cout << "Argument " << idx << " = " << arg[idx] << '\n';
+        cout << '\n';
 
         cout << "Long options:\n" << dec;
         longopt("optional");
@@ -113,20 +119,20 @@ try
     }
     catch (Errno const &e)
     {
-        cout << e.which() << " " << e.why() << endl;
+        cout << e.which() << " " << e.why() << '\n';
     }
 
-    return 0;
 }
+
 catch (int x)
 {
-    cout << "int exception caught, value = " << x << endl;
+    cout << "int exception caught, value = " << x << '\n';
     return x;
 }
 catch (Errno const &e)
 {
     cout << "Errno exception caught, why() = " << e.why() << "\n"
-            "which() is: " << e.which() << endl;
+            "which() is: " << e.which() << '\n';
 
     return e.which();
 }
