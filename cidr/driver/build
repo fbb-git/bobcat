@@ -1,18 +1,16 @@
 #!/bin/bash
 
-ln -sf ../arg .
-ln -sf ../arg.ih .
-
-tput clear
+ln -sf ../cidr .
+ln -sf ../cidr.ih .
 
 case $1 in
     (b)
-        rm arg arg.ih
+        rm cidr cidr.ih
         g++ -DBOBCAT --std=c++0x -I../../tmp -o driver driver.cc \
-        -lbobcat -L../../tmp/lib -s
+            -lbobcat -L../../tmp/lib -s
     ;;
     (o)
-        g++ --std=c++0x -o driver *.cc ../tmp/o/*.o -lbobcat # -s
+        g++ --std=c++0x -o driver *.cc ../tmp/o/*.o -lbobcat -s
     ;;
     (c)
         g++ --std=c++0x -o driver *.cc -lbobcat -s
@@ -21,5 +19,8 @@ case $1 in
     echo $0 b links to bobcat built by 'build libraries all'
     echo $0 o links to the files in ../tmp/o
     echo $0 c links to the files in the current dir only
+    rm -f driver
     ;;
 esac
+
+rm -f cidr cidr.ih
