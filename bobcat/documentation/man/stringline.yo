@@ -1,0 +1,85 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::StringLine)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Line extractor)
+
+manpagename(FBB::StringLine)(extracting lines using operator>>)
+
+manpagesynopsis()
+    bf(#include <bobcat/stringline>)nl()
+
+manpagedescription()
+    The standard tt(operator>>(std::istream &, std::string &)) string
+extracion operator extracts the first `word' from a stream. In cases where the
+intent it to extract lines from the stream this operator cannot be used, but
+tt(getline(std::istream &, std::string &)) is usually called. 
+
+    However, tt(getline) is not called by many tools of generic algorithms,
+like the tt(istream_iterator). 
+
+    The class (actually: struct) tt(StringLine) was simply derived from
+tt(std::string), and defines its own tt(operator>>), reading the next line
+from the specified tt(std::istream). 
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    tt(std::string)
+
+manpagesection(CONSTRUCTORS)
+    tt(StringLine) is an empty shell around tt(std::string). It does not
+explicitly define constructors. The default and copy constructors are
+available. 
+
+manpagesection(OVERLOADED OPERATOR)
+    itemization(    
+    itb(std::istream &operator>>(std::istream &in, StringLine &str))
+        The extraction operator returns the next line on tt(in) in tt(str),
+        calling tt(getline(std::istream &, std::string &)).
+    )
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::string) are
+available, as bf(FBB::StringLine) inherits from these classes.
+
+
+manpagesection(EXAMPLE)
+    The following example extracts all lines from tt(std::cin) and adds them
+to the tt(std::vector<std::string> lines):
+        verb(
+#include <iostream>
+#include <algorithm>
+#include <iterator>
+#include <vector>
+#include <bobcat/stringline>
+
+using namespace std;
+using namespace FBB;
+
+int main()
+{
+    vector<string> lines;
+    
+    copy(
+        istream_iterator<StringLine>(cin), istream_iterator<StringLine>(), 
+        back_inserter(lines)
+    );
+}
+        )
+
+manpagefiles()
+    em(bobcat/stringline) - defines the class interface and
+tt(operator>>). 
+
+    There are tt(StringLine) object files in the Bobcat library,
+so linking to Bobcat when using tt(StringLine) is not necessary.
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
+

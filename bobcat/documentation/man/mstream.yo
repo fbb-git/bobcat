@@ -117,12 +117,12 @@ inserted messages since that call).
 bf(FBB::MStream) object, and tt(false) if inserted messages are ignored. When
 ignoring messages the message count is not updated.
 
-    itb(int  id() const)
+    itb(int id() const)
         returns the unique em(id) of the tt(Mstream) object. 
 
     itb(bool lineExcess() const)
         returns bf(true) after attempting to insert an additional message
-after tt(maxCount()) number of messages have been inserted.
+        after tt(maxCount) number of messages have been inserted.
 
     itb(std::string const &lineTag() const)
         returns the currently used line-tag (by default `tt(Line)').
@@ -149,12 +149,12 @@ tt(Mstream) object are sent to their destination stream.
     itb(void reset(std::ostream &ostr))
         messages inserted into the tt(Mstream) object are handled by the
 tt(std::streambuf) also used by tt(ostr). Other parameters (e.g.,
-tt(maxCount), the message label are kept as-is.
+tt(maxCount), the message label) are kept as-is.
 
     itb(void reset(std::streambuf *buf))
         messages inserted into the tt(Mstream) object are handled by
 tt(std::streambuf buf). Other parameters (e.g., tt(maxCount), the message
-label are kept as-is.
+label) are kept as-is.
 
     itb(void reset(FBB::Mstream const &mstream))
         the current object is reset using the parameters of the tt(mstream)
@@ -166,7 +166,7 @@ parameter.
 tt(std::ofstream) created using the provided tt(name) parameter.
 tt(FBB::Errno) exception if the stream cannot be opened for writing. If a file
 by that name already exists it is rewritten. Other parameters (e.g.,
-tt(maxCount), the message label are kept as-is.
+tt(maxCount), the message label) are kept as-is.
 
     itb(void reset(std::ostream &ostr, size_t maxCount, 
                 std::string const &tag, bool throwing))

@@ -2,7 +2,12 @@
 
 Cidr::MaskPair Cidr::parse(string const &cidr)
 {
-    MaskPair ret {dotted2binary(cidr), 32};
+    MaskPair ret {0, 0};
+
+    if (s_empty << cidr)                // empty line or comment
+        return ret;
+
+    ret = MaskPair{dotted2binary(cidr), 32};
 
     size_t pos = cidr.find_first_of('/');
     if (pos != string::npos)
