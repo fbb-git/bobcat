@@ -1,5 +1,6 @@
+
+#include <fstream>
 #include <iostream>
-#include <iterator>
 
 #include <bobcat/errno>
 #ifdef BOBCAT
@@ -13,16 +14,80 @@ using namespace FBB;
 
 int main(int argc, char **argv)
 {
-    if (argc == 1)
+    enum Spec
     {
-        cout << "Provide cidr and address as arg1 and arg2\n";
-        return 1;
+        NONE,
+        FILE,
+        CIN
+    };
+    
+    Spec spec = CIN;
+    ifstream in;
+
+    if (argc > 1)
+    {
+        Errno::open(in, argv[1]);       // file containing cidr-specs
+        spec = FILE;
     }
-
-    Cidr cidr(argv[1]);
-    if (!cidr.match(argv[2]))
-        cout << "Didn't match 
+    
+    while (true)
     {
+        string cidrSpec;
+        if (spec == CIN)
+        {
+            cout << "Specify cidr (empty to quit): ";
+            if (!getline(cin, cidrSpec) || cidrSpec.empty())
+                break;
+        }
+        try
+        {
+            Cidr cidr;
 
+            switch (spec)
+            {
+                case NONE:
+                return 0;
+
+                case FILE:
+                    cidr.setCidr(in);
+                    spec = NONE;
+                break;
+
+                case CIN:
+                    cidr.setCidr(cidrSpec);
+            }
+        
+            while (true)
+            {
+                cout << "Specify address to test (empty to " <<
+                    (spec == CIN ? "respec. CIDR" : "quit") << "): ";
+                string address;
+                if (!getline(cin, address) || address.empty())
+                    break;
+            
+                if (!cidr.match(address))
+                {
+                    cout << "Address " << address << " not in ";
+                    if (spec == CIN)
+                        cout << cidrSpec << '\n';
+                    else
+                        cout << "specifications in " << argv[1] << '\n';
+                }
+                else
+                    cout << "Address " << address << " in " << cidr.cidr() << 
+                                                                        "\n"
+                        "Lowest address: " << cidr.first() << "\n"
+                        "Highest address: " << cidr.last() << "\n"
+                        "CIDR mask: " << cidr.mask() << "\n"
+                        "Address: " << cidr.address() << '\n';
+            }
+        }
+        catch (Errno const &err)
+        {
+            cout << "Oops... " << err.why() << "\n"
+                    "Try again...\n";
+        }
+    }
 }
+
 
