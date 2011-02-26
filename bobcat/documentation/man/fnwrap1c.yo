@@ -145,85 +145,15 @@ const *) then tt(argument_type) will be tt(std::string);
 bf(ReturnType) template parameter.
     )
 
-manpagesection(EXAMPLE)
-        verb(
-    #include <iostream>
-    #include <vector>
-    #include <string>
-    #include <algorithm>
-    #include <bobcat/fnwrap1c>
-    
-    using namespace std;
-    using namespace FBB;
-    
-    class Strings
-    {
-        vector<string> d_vs;
-    
-        public:
-            Strings()
-            {
-                d_vs.push_back("one");
-                d_vs.push_back("two");
-                d_vs.push_back("");
-                d_vs.push_back("three");
-            }
-    
-            void display(ostream &out) const
-            {
-                SContext c = {1, out};
-                find_if(d_vs.begin(), d_vs.end(),
-                    FnWrap1c<string const &, SContext &, bool>
-                         (&Strings::untilEmpty, c));
-            }
-    
-        private:
-            struct SContext
-            {
-                size_t nr;
-                ostream &out;
-            };
-    
-            static bool untilEmpty(string const &str, SContext &c)
-            {
-                if (str.empty())
-                    return true;        // stop
-    
-                c.out << c.nr++ << " " << str << endl;
-                return false;           // don't stop
-            }
-    };
-    
-    int main()
-    {
-        Strings s;
-    
-        s.display(cout);
-    }
-        )
-    After compilation and linking, simply call the program without any
-arguments. 
-
 manpagefiles()
     em(bobcat/fnwrap1c) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7),  bf(fnwrap)(3bobcat), 
-    bf(fnwrap1)(3bobcat), bf(fnwrap2)(3bobcat), 
-    bf(fnwrap2c)(3bobcat), bf(foreach)(3bobcat), bf(lc)(3bobcat), 
+    bf(bobcat)(7),  bf(fnwrap)(3bobcat), bf(foreach)(3bobcat), 
     bf(repeat)(3bobcat)
 
 manpagebugs()
-    The bf(fnwrap)(3bobcat) function wrapper is easier to use an provides this
-    class's functionality. 
-
-    em(Caveat): the template parameter specifying the type of the local
-context struct should probably not be specified as a value type as this will
-result in copying the local context struct for each call of the tt(FNWrap1c)
-object or of the function that it is provided with, making it impossible for
-the algorithms to modify value- or pointer-fields of the outermost local
-context struct. Instead, the template type specifying the type of the local
-context struct should be specified as a pointer or reference template type
-when instantiating the tt(FnWrap1c) object.
+    The bf(fnwrap)(3bobcat) function wrapper is easier to use and provides 
+    this class's functionality. 
 
 includefile(include/trailer)

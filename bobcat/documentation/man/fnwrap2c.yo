@@ -10,6 +10,10 @@ manpagesynopsis()
     bf(#include <bobcat/fnwrap2c>)nl()
 
 manpagedescription()
+    This class is now deprecated and is superseded by tt(FBB::fnwrap). 
+    It should no longer be used as it will be removed from Bobcat in a future
+    release. 
+
     The bf(FBB::FnWrap2c) class is a configurable binary argument context
 wrapper template class. Its primary use is in combination with the generic
 algorithms from the standard template libray. The called function expects a
@@ -145,93 +149,15 @@ bf(ReturnType) template parameter.
     )
 
 
-manpagesection(EXAMPLES)
-        verb(
-    // accumulating strings from a vector to one big string, using
-    // `accumulate'
-    #include <iostream>
-    #include <numeric>
-    #include <string>
-    #include <vector>
-    #include <bobcat/fnwrap2c>
-    
-    using namespace std;
-    using namespace FBB;
-    
-    class Strings
-    {
-        vector<string> d_vs;
-    
-        public:
-            Strings()
-            {
-                d_vs.push_back("one");
-                d_vs.push_back("two");
-                d_vs.push_back("three");
-            }
-    
-            void display(ostream &out) const
-            {
-                SContext c = {1, out};
-    
-                cout << "On Exit: " <<
-                    accumulate(
-                        d_vs.begin(), d_vs.end(),
-                        string("HI"),
-                        FnWrap2c<string const &, string const &, 
-                                 SContext &, string>(&show, c)
-                    ) <<
-                    endl;
-            }
-    
-        private:
-            struct SContext
-            {
-                size_t nr;
-                ostream &out;
-            };
-    
-            static string show(string const &str1,
-                                    string const &str2,
-                                    SContext &c)
-            {
-                c.out << c.nr++ << " " << str1 << " " << str2 <<
-                         endl;
-                return str1 + " " + str2;
-            }
-    };
-    
-    int main()
-    {
-        Strings s;
-    
-        s.display(cout);
-    }
-        )
-    After compilation and linking, simply call the program without any
-arguments. 
-
 manpagefiles()
     em(bobcat/fnwrap2c) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7),  bf(fnwrap)(3bobcat), 
-    bf(fnwrap1)(3bobcat), bf(fnwrap2)(3bobcat), 
-    bf(fnwrap2)(3bobcat), bf(foreach)(3bobcat), bf(lc)(3bobcat), 
+    bf(bobcat)(7),  bf(fnwrap)(3bobcat), bf(foreach)(3bobcat), 
     bf(repeat)(3bobcat)
 
 manpagebugs()
-    The bf(fnwrap)(3bobcat) function wrapper is easier to use an provides this
-class's functionality. 
-
-    em(Caveat): the template parameter specifying the type of the local
-context struct should probably not be specified as a value type as this will
-result in copying the local context struct for each call of the tt(FNWrap2c)
-object or of the function that it is provided with, making it impossible for
-the algorithms to modify value- or pointer-fields of the outermost local
-context struct. Instead, the template type specifying the type of the local
-context struct should be specified as a pointer or reference template type
-when instantiating the tt(FnWrap1c) object.
-
+    The bf(fnwrap)(3bobcat) function wrapper is easier to use and provides 
+    this class's functionality. 
 
 includefile(include/trailer)

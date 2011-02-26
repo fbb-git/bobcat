@@ -24,27 +24,27 @@ class Strings
         {
             size_t nr = 1;
             find_if(d_vs.begin(), d_vs.end(),
-                FnWrap::unary(untilEmpty, nr, out));
+                context(untilEmpty, nr, out));
         }
 
         void display() const
         {
             for_each(d_vs.begin(), d_vs.end(),
-                FnWrap::unary(toCout));
+                context(toCout));
         }
 
         void show(ostream &out) const
         {
             size_t nr = 1;
             for_each(d_vs.begin(), d_vs.end(),
-                FnWrap::unary(all, nr, out));
+                context(all, nr, out));
         }
 
         void accu(ostream &out) const
         {
             size_t nr = 1;
             equal(d_vs.begin(), d_vs.end(), d_vs.rbegin(),
-                FnWrap::binary(cmpfun2, nr, out));
+                context(cmpfun2, nr, out));
         }
 
         void count()
@@ -52,7 +52,7 @@ class Strings
             size_t nLines = 0;
             cout << "Number of counts: " <<
                 count_if(d_vs.begin(), d_vs.end(), 
-                         FnWrap::unary(counter, cout, nLines));
+                         context(counter, cout, nLines));
             cout << '\n' << 
                     nLines << " lines processed\n";
         }
