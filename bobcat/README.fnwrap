@@ -1,0 +1,357 @@
+FnWrap: new implementation (as of Bison 2.15.00)
+
+FnWrap's new implementation reduces its size to slightly less than 50% of its
+previous size: from over 415 lines to 200.
+
+What follows is a description of its inner workings. All function
+implementations are given as in-class implementations. In Bobcat's FnWrap
+class all implementations were moved out of the the class interfaces, keeping
+the interfaces as clean as possible.
+
+Almost all of the functionality is encapsulated in the class FnWrap, as
+before. Although the FnWrap::unary and FnWrap::binary functions remain in
+existence, their implementations are now identical. In fact, their use is
+discouraged, promoting the use of the free function FBB::context instead.
+
+To start out, the class FnWrap defines several support structs that are not
+made visible outside of FnWrap. They are:
+
+    template <typename Function>
+    struct Dissect
+    {};
+    template <typename Ret, typename ...Args>
+    struct Dissect <Ret (*)(Args ...)>
+    {
+        typedef Ret ReturnType;
+    };
+
+The struct Dissect's specialization may receive any function pointer and
+determines the function's return type. The function's return type may then be
+obtained from the type ReturnType, defined by Dissect. 
+
+In addition to determining a function's return value Dissect is also used to
+define a stand-in type for unary functors. Here care must be taken that no
+user-software can use this type to avoid confusion. By putting Dissect in
+FnWrap's private section user software cannot use this stand-in type, which is
+defined as a pointer type using the typedef:
+
+    typedef Dissect<int> *NotUsed;
+
+
+The second support struct is:
+
+    template <size_t count, typename Tuple>
+    struct At
+    {
+        typedef typename std::tuple_element<count - 1, Tuple>::type Type;
+    };
+
+This is a simple typework-saving struct, allowing the retrieval of the type of
+count's tuple's argument. It expects a count, which is converted to the
+corresponding index.
+
+
+FnWrap's core business is found in its nested struct Functor. Functor defines
+a unary or binary function object. The unary or binary function object is
+typically used by a generic algorithm. 
+
+FnWrap::Functor objects are created (returned) by FBB::context, and also by
+the functions FBB::FnWrap::unary and FBB::FnWrap::binary.
+
+These three functions have identical implementations. FnWrap::unary and
+FnWrap::binary remain available for reasons of backward compatibility, their
+use is discouraged from now on, and they are no longer referred to in this
+description.
+
+FBB::context is a free (classless) function, having the following
+implementation: 
+
+    template <typename Function, typename ... Args>
+    FnWrap::Functor<Function, Args...>  context(Function fun, Args &&...args)
+    {
+        return FnWrap::Functor<Function, Args...>
+                              (fun, std::forward<Args>(args) ...);
+    }
+
+The function FBB::context receives the address of a Function, as well as any
+number of additional arguments. Since this is a function template, callers
+noramlly do not have to specify any of the types, as function templates are
+usually able to determine the types themselves. 
+
+Having determined Function and the parameter pack's types, these are used to
+construct a matching FnWrap::Functor object, whose constructor receives the
+function's address (i.e., fun) and all remaining perfectly forwarded arguments
+that were used when calling FBB::context.
+
+Here FBB::context's work ends. Its purpose in life is to make a unary or
+binary function object available. By returning an FnWrap::Functor it has
+fullfilled that purpose.
+
+
+FnWrap::Functor is a nested struct in FnWrap's public section.  Functor
+determines the function's return type (defining it as its RetType type) and
+its constructor saves the function's address in its d_function data member. In
+addition, it saves any remaining arguments received by the constructor in a
+tuple d_args, again perfectly forwarding the arguments originally passed to
+FBB::context. FnWrap::Functor's outline and constructor look like this:
+
+    template <typename Function, typename ... Args>
+    struct Functor
+    {
+        typedef typename Dissect<Function>::ReturnType RetType;
+
+        Function d_function;
+        std::tuple<Args ...> d_args;
+
+        Functor(Function fun, Args &&... args)
+        :
+            d_function(fun),
+            d_args(std::forward<Args>(args)...)
+        {}
+
+        // two members, see below
+    };
+
+Functor defines two member templates: a unary and binary function call
+operator. Since they are member function templates they can determine the
+types of their arguments when they are actually called. Here are their
+implementations:
+
+The unary function:
+        template <typename Arg1>
+        typename Functor::RetType operator()(Arg1 &&arg1)
+        {
+            return CallPack<RetType, Function, Arg1, NotUsed,
+                            sizeof ... (Args),
+                            std::tuple<Args ...>
+                    >::call(d_function, std::forward<Arg1>(arg1), 0, d_args);
+        }
+
+The binary function:
+        template <typename Arg1, typename Arg2>
+        typename Functor::RetType operator()(Arg1 &&arg1, Arg2 &&arg2)
+        {
+            return CallPack<RetType, Function, Arg1, Arg2, sizeof ... (Args),
+                            std::tuple<Args ...>>::call(d_function, 
+                                                    std::forward<Arg1>(arg1),
+                                                    std::forward<Arg2>(arg2),
+                                                    d_args);
+        }
+
+These members merely pass their arguments, as well as the values of Functor's
+data members d_function and d_args, to a static function 'call', defined in
+the CallPack struct. The real meat of what happens inside FnWrap becomes
+apparent when we turn our attention to CallPack.
+
+
+The CallPack struct has two tasks: 
+
+    * First, it must unpack tuple's arguments so they can be passed as
+arguments instead of a tuple to the function that is passed to its call
+member;
+
+    * Second, it must call 'd_function' with the appropriate arguments.
+
+Whereas packing (variadic) arguments into a tuple is not difficult, unpacking
+a tuple back into a parameter pack is not a trivial tasks. CallPack uses the
+following algorithm:
+
+    Initially there is a tuple, there are 'size' elements in the tuple and 
+    there is an empty parameter pack.
+
+    Tuple element [size - 1] is obtained, and prepended to the parameter pack
+    while recursively calling the function call. At each recursion size - 1 is
+    passed to the recursive call as well, so 'size' eventually decays to 0.
+
+    Once size has decayed to 0, a non-recursive partial specialization is
+    selected by the compiler which will call the function (d_function),
+    passing it arg1, arg2 (for binary functors), and the perfectly forwarded
+    arguments of the parameter pack, which now contains all the arguments
+    found in tuple.
+
+In addition to passing the correct arguments to d_function, CallPack also
+defines the types first_argument_type and second_argument_type, which are
+required by some generic algorithms.
+
+Here is the setup of struct CallPack, and its generic (recursive) call member:
+
+    template <typename RetType, typename Func, typename Arg1, typename Arg2, 
+                size_t size, typename Tuple, typename ... Args>
+    struct CallPack: public CallPack<RetType, Arg1, Arg2, Func, size - 1, 
+                            Tuple, typename At<size, Tuple>::Type, Args ...>
+    {
+        typedef typename TypeTrait<Arg1>::Plain first_argument_type;
+        typedef typename TypeTrait<Arg2>::Plain second_argument_type;
+
+        typedef typename At<size, Tuple>::Type  LastType;
+
+        static RetType call(Func fun, Arg1 &&arg1, Arg2 &&arg2, 
+                                      Tuple &&tuple, Args &&...args)
+        {
+            return CallPack<RetType, Func, Arg1, Arg2, size - 1, Tuple, 
+                                                          LastType, Args ...
+            >::call(fun, std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), 
+                tuple, std::forward<LastType>(std::get<size - 1>(tuple)), 
+                std::forward<Args>(args) ...
+            );
+        }
+    };
+
+There's no CallPack object construction: the call function is static. It finds
+the type and value of the last not yet processed element in the tuple object
+and prepends that using perfect forwarding to the existing variable argument
+list, passing this series as the next variable argument list to the recursive
+all. Eventually all tuple's elements have been processed. As each recursive
+call reduces the size parameter by one, it will eventually decay to zero. At
+that point d_function can be called. 
+
+Once size has reduced to 0 four situations must be distinguished, each using
+its own partial specialization of the member function 'call':
+
+    * A void unary function was used.
+        In this case Arg2 has type FnWrap::NotUsed, and RetType is
+void (remember that Functor's operator() members are called with either one
+or two arguments and that the unary Functor::operator() functions passes an
+FnWrap::NotUsed as Arg2 to CallPack::call).
+
+    * A non-void unary function was used.
+        In this case Arg2 has type FnWrap::NotUsed
+
+    * A void binary function was used.
+        In this case RetType is void.
+
+    * A non-void binary function was used.
+
+Each alternative has its own specialization. Here are their implementations:
+
+    * The void unary function (RetType is specified as void, Arg2 as
+      FnWrap::NotUsed): 
+
+        template <typename Func, typename Arg1, typename Tuple, 
+                  typename ... Args>
+        void CallPack<void, Func, Arg1, FnWrap::NotUsed, 0, Tuple, 
+                Args...>::call( Func fun, Arg1 &&arg1, FnWrap::NotUsed &&arg2, 
+                                Tuple &&tuple, Args &&...args)
+        {
+            fun(std::forward<Arg1>(arg1), std::forward<Args>(args)...);
+        }
+    
+
+    * The non-void unary function (Arg2 is specified as
+      FnWrap::NotUsed): 
+
+        template <typename RetType, typename Func,
+                  typename Arg1, typename Tuple, typename ... Args>
+        RetType CallPack<RetType, Func, Arg1, FnWrap::NotUsed, 0, Tuple, 
+                    Args...>::call( Func fun, 
+                                    Arg1 &&arg1, FnWrap::NotUsed &&arg2, 
+                                    Tuple &&tuple, Args &&...args)
+        {
+            return fun(std::forward<Arg1>(arg1), std::forward<Args>(args)...);
+        }
+
+
+    * The void binary function (RetType is specified as void):
+
+        template <typename Func, typename Arg1, typename Arg2, typename Tuple, 
+                                                            typename ... Args>
+        void CallPack<void, Func, Arg1, Arg2, 0, Tuple, Args...>::call(
+            Func fun, Arg1 &&arg1, Arg2 &&arg2, Tuple &&tuple, Args &&...args)
+        {
+            fun(std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), 
+                                          std::forward<Args>(args)...);
+        }
+
+
+    * The non-void binary function:
+
+        template <typename RetType, typename Func, typename Arg1, 
+                  typename Arg2, typename Tuple, typename ... Args>
+        RetType CallPack<RetType, Func, Arg1, Arg2, 0, Tuple, Args...>::call(
+            Func fun, Arg1 &&arg1, Arg2 &&arg2, Tuple &&tuple, Args &&...args)
+        {
+            return fun(std::forward<Arg1>(arg1), std::forward<Arg1>(arg1), 
+                       std::forward<Args>(args)...);
+        }
+
+Now that we've designed and implemented FnWrap, here's how it can be used:
+
+Assume we have a class Strings having the following basic setup:
+
+    class Strings
+    {
+        vector<string> d_vs;
+    
+        public:
+            Strings()
+            :
+                d_vs({"one", "two", "", "three"})
+            {}
+    
+        ...
+    };
+
+It simply defines a vector of strings: four elements, the 3rd one empty.
+All functions below are members, all implementations are given in-class:
+
+    * Unary predicate: display all strings until the first empty one:
+
+        void display(ostream &out) const
+        {
+            size_t nr = 0;
+            find_if(d_vs.begin(), d_vs.end(),
+                context(untilEmpty, nr, out));
+        }
+
+      Using the following context-aware predicate function:
+
+        static bool untilEmpty(string const &str, size_t &nr, ostream &out)
+        {
+            if (str.empty())
+                return true;        // done
+
+            out << ++nr << ' ' << str << '\n';
+            return false;           // continue
+        }
+
+    * Unary functor: display all strings:
+
+        void show(ostream &out) const
+        {
+            size_t nr = 0;
+            for_each(d_vs.begin(), d_vs.end(),
+                context(all, nr, out));
+        }
+
+      Using the following context-aware void function:
+
+        static void all(string const &str, size_t &nr, ostream &out)
+        {
+            out << ++nr << ' ' << str << '\n';
+        }
+
+    * Binary predicate: count strings containing 't'
+
+        void count()
+        {
+            size_t nLines = 0;
+            cout << "Number of counts: " <<
+                count_if(d_vs.begin(), d_vs.end(), 
+                         context(counter, cout, nLines));
+            cout << '\n' << 
+                    nLines << " lines processed\n";
+        }
+
+      Using the binary predicate function:
+
+        static bool counter(string const &str, ostream &out, size_t &nLines)
+        {
+            out << "Line nr " << ++nLines << ": " << str;
+            if (str.find('t') != string::npos)
+            {
+                out << ", contains 't'\n";
+                return true;
+            }
+            out << ", no 't'\n";
+            return false;
+        }

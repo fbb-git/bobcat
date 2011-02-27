@@ -22,7 +22,7 @@ class Strings
 
         void display(ostream &out) const
         {
-            size_t nr = 1;
+            size_t nr = 0;
             find_if(d_vs.begin(), d_vs.end(),
                 context(untilEmpty, nr, out));
         }
@@ -35,14 +35,14 @@ class Strings
 
         void show(ostream &out) const
         {
-            size_t nr = 1;
+            size_t nr = 0;
             for_each(d_vs.begin(), d_vs.end(),
                 context(all, nr, out));
         }
 
         void accu(ostream &out) const
         {
-            size_t nr = 1;
+            size_t nr = 0;
             equal(d_vs.begin(), d_vs.end(), d_vs.rbegin(),
                 context(cmpfun2, nr, out));
         }
@@ -61,8 +61,11 @@ class Strings
         static bool cmpfun2(string const &str1, string const &str2, 
                         size_t &nr, ostream &out)
         {
-            out << nr++ << " " << str1 << " and " << str2 << '\n';
-            return true;           // don't stop
+            if (str1.empty())       // somewhat strange equality definition...
+                return false;
+
+            out << ++nr << ' ' << str1 << " and " << str2 << '\n';
+            return true;
         }
 
         static void toCout(string const &str)
@@ -75,12 +78,12 @@ class Strings
             if (str.empty())
                 return true;        // stop
 
-            out << nr++ << " " << str << '\n';
+            out << ++nr << ' ' << str << '\n';
             return false;           // don't stop
         }
         static void all(string const &str, size_t &nr, ostream &out)
         {
-            out << nr++ << " " << str << '\n';
+            out << ++nr << ' ' << str << '\n';
         }
         static bool counter(string const &str, ostream &out, size_t &nLines)
         {
@@ -90,11 +93,8 @@ class Strings
                 out << ", contains 't'\n";
                 return true;
             }
-            else
-            {
-                out << ", no 't'\n";
-                return false;
-            }
+            out << ", no 't'\n";
+            return false;
         }
 };
 
