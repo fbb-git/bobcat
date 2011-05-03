@@ -2,7 +2,6 @@
 #define INCLUDED_TABLELINES_
 
 #include <ostream>
-
 #include <bobcat/tablesupport>
 
 namespace FBB
@@ -29,7 +28,7 @@ inline TableLines::TableLines(TableLines const &&tmp)
 
 inline TableLines &TableLines::operator=(TableLines const &&tmp)
 {
-    static_cast<TableSupport>(*this) = std::move(tmp);
+    static_cast<TableSupport &>(*this) = std::move(tmp);
     return *this;
 }
 

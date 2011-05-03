@@ -2,7 +2,7 @@
 
 CmdFinderBase& CmdFinderBase::operator=(CmdFinderBase const &rhs)
 {
-    CmdFinderBase tmp(rhs);
+    CmdFinderBase tmp(std::move(rhs));
     fswap(*this, tmp);
     return *this;
 }
