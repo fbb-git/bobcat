@@ -35,7 +35,7 @@ class FnWrap
         typedef typename At<size, Tuple>::Type  LastType;
 
         static RetType call(Func fun, Arg1 &&arg1, Arg2 &&arg2, 
-                                      Tuple const &tuple, Args &&...args);
+                                      Tuple &tuple, Args &&...args);
     };
 
                                        // specialization: unary + ret. type
@@ -44,7 +44,7 @@ class FnWrap
     struct CallPack<RetType, Func, Arg1, NotUsed, 0, Tuple, Args...>
     {
         static RetType call(Func fun, Arg1 &&arg1, NotUsed &&arg2, 
-                                      Tuple const &tuple, Args &&...args);
+                                      Tuple &tuple, Args &&...args);
     };
                                        // specialization: binary + ret. type
     template <typename RetType, typename Func, typename Arg1, typename Arg2,
@@ -52,14 +52,14 @@ class FnWrap
     struct CallPack<RetType, Func, Arg1, Arg2, 0, Tuple, Args...>
     {
         static RetType call(Func fun, Arg1 &&arg1, Arg2 &&arg2, 
-                                      Tuple const &tuple, Args &&...args);
+                                      Tuple &tuple, Args &&...args);
     };
                                        // specialization: void unary
     template <typename Func, typename Arg1, typename Tuple, typename ... Args>
     struct CallPack<void, Func, Arg1, NotUsed, 0, Tuple, Args...>
     {
         static void call(Func fun, Arg1 &&arg1, NotUsed &&arg2, 
-                                   Tuple const &tuple, Args &&...args);
+                                   Tuple &tuple, Args &&...args);
     };
                                         // specialization: void binary
     template <typename Func, typename Arg1, typename Arg2, typename Tuple, 
@@ -67,7 +67,7 @@ class FnWrap
     struct CallPack<void, Func, Arg1, Arg2, 0, Tuple, Args...>
     {
         static void call(Func fun, Arg1 &&arg1, Arg2 &&arg2, 
-                                   Tuple const &tuple, Args &&...args);
+                                   Tuple &tuple, Args &&...args);
     };
 
 public:
@@ -99,8 +99,7 @@ public:
 template <typename RetType, typename Func, typename Arg1, typename Arg2, 
           size_t size, typename Tuple, typename ... Args>
 RetType FnWrap::CallPack<RetType, Func, Arg1, Arg2, size, Tuple, Args...
-    >::call(Func fun, Arg1 &&arg1, Arg2 &&arg2, Tuple const &tuple, 
-                                                Args &&...args)
+    >::call(Func fun, Arg1 &&arg1, Arg2 &&arg2, Tuple &tuple, Args &&...args)
 {
     return CallPack<RetType, Func, Arg1, Arg2, size - 1, Tuple, 
                               LastType, Args ...
@@ -114,7 +113,7 @@ RetType FnWrap::CallPack<RetType, Func, Arg1, Arg2, size, Tuple, Args...
 template <typename Func, typename Arg1, typename Tuple, typename ... Args>
 void FnWrap::CallPack<void, Func, Arg1, FnWrap::NotUsed, 0, Tuple, 
             Args...>::call( Func fun, Arg1 &&arg1, FnWrap::NotUsed &&arg2, 
-                            Tuple const &tuple, Args &&...args)
+                            Tuple &tuple, Args &&...args)
 {
     fun(std::forward<Arg1>(arg1), std::forward<Args>(args)...);
 }
@@ -124,7 +123,7 @@ template <typename RetType, typename Func,
           typename Arg1, typename Tuple, typename ... Args>
 RetType FnWrap::CallPack<RetType, Func, Arg1, FnWrap::NotUsed, 0, Tuple, 
             Args...>::call( Func fun, Arg1 &&arg1, FnWrap::NotUsed &&arg2, 
-                            Tuple const &tuple, Args &&...args)
+                            Tuple &tuple, Args &&...args)
 {
     return fun(std::forward<Arg1>(arg1), std::forward<Args>(args)...);
 }
@@ -133,8 +132,7 @@ RetType FnWrap::CallPack<RetType, Func, Arg1, FnWrap::NotUsed, 0, Tuple,
 template <typename Func, typename Arg1, typename Arg2, typename Tuple, 
                                                             typename ... Args>
 void FnWrap::CallPack<void, Func, Arg1, Arg2, 0, Tuple, Args...>::call(
-            Func fun, Arg1 &&arg1, Arg2 &&arg2, Tuple const &tuple, 
-                                                Args &&...args)
+            Func fun, Arg1 &&arg1, Arg2 &&arg2, Tuple &tuple, Args &&...args)
 {
     fun(std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), 
                                   std::forward<Args>(args)...);
@@ -144,8 +142,7 @@ void FnWrap::CallPack<void, Func, Arg1, Arg2, 0, Tuple, Args...>::call(
 template <typename RetType, typename Func, typename Arg1, typename Arg2,
             typename Tuple, typename ... Args>
 RetType FnWrap::CallPack<RetType, Func, Arg1, Arg2, 0, Tuple, Args...>::call(
-            Func fun, Arg1 &&arg1, Arg2 &&arg2, Tuple const &tuple, 
-                                                Args &&...args)
+            Func fun, Arg1 &&arg1, Arg2 &&arg2, Tuple &tuple, Args &&...args)
 {
     return fun(std::forward<Arg1>(arg1), std::forward<Arg1>(arg1), 
                std::forward<Args>(args)...);
