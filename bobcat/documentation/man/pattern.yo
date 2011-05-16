@@ -219,7 +219,14 @@ manpageseealso()
     bf(bobcat)(7), bf(regcomp)(3), bf(regex)(3), bf(regex)(7)
 
 manpagebugs()
-    None Reported.
+    Using tt(Pattern) objects as static data members of classes (or as global
+objects) is potentially dangerous. If the object files defining these static
+data members are stored in a dynamic library they may not be initialized
+properly or timely, and their eventual destruction may result in a
+segmentation fault. This is a well-known problem with static data, see, e.g.,
+tt(http://www.parashift.com/c++-faq-lite/ctors.html#faq-10.15). In situations
+like this prefer the use of a (shared, unique) pointer to a tt(Pattern),
+initialzing the pointer when, e.g., first used.
 
 includefile(include/trailer)
 

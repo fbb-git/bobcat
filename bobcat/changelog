@@ -1,3 +1,25 @@
+bobcat (2.15.02)
+
+  * Replaced the auto_ptr in Log by a unique_ptr. Since both have equal sizes
+    and are only used in compiled sources (not in inline functions) no
+    recompilation of programs dynamically linking to bobcat is required wrt
+    this change.
+
+  * The Pattern static data members in the class Cidr are in some situations
+    not properly initialized with g++-4.6. This, e.g., already happens when an
+    empty main() function is linked against the Bobcat library. Although the
+    Pattern objects are not properly initialized, their destructors are
+    nonetheless called when the program ends, causing a segfault.  Static
+    object initialization is a known protential source of problems, see, e.g.,
+    to cause problem. See also
+        http://www.parashift.com/c++-faq-lite/ctors.html#faq-10.15 
+    In the case of Cidr the problem was easily solved. Each of the two static
+    Pattern members is only used in a single Cidr-member. Removing the static
+    data members from the interface and defining them as static local objects
+    in the member functions using them solves the problem.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Wed, 11 May 2011 14:26:49 +0200
+
 bobcat (2.15.01)
 
   * Repaired flaw in fnwrap, emerging while compiling bisonc++ 
