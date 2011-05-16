@@ -2,9 +2,11 @@
 
 Cidr::MaskPair Cidr::parse(string const &cidr)
 {
+    static Pattern sl_empty("^\\s*(#.*)?$");
+
     MaskPair ret {0, 0};
 
-    if (s_empty << cidr)                // empty line or comment
+    if (sl_empty << cidr)               // empty line or comment
         return ret;
 
     ret = MaskPair{dotted2binary(cidr), 32};

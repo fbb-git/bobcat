@@ -18,7 +18,7 @@ enum LogManipulator
 class Log: private LogBuffer, public std::ostream
 {
     private:
-        static std::auto_ptr<Log> s_stream;
+        static std::unique_ptr<Log> s_stream;
 
         std::ofstream d_stream;
         size_t d_level;
