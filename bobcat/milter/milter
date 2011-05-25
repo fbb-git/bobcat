@@ -97,10 +97,8 @@ class Milter
     protected:
         virtual ~Milter();          // empty
 
-        virtual sfsistat abort()
-        {
-            return CONTINUE;
-        }
+        virtual sfsistat abort();
+
         bool addHeader(std::string const &hdrName, 
                         std::string const &hdrValue)
         {
@@ -117,10 +115,8 @@ class Milter
             return smfi_addrcpt(d_ctx, 
                     const_cast<char *>(rcptName.c_str())) == SUCCESS;
         }
-        virtual sfsistat body(unsigned char *text, size_t length)
-        {
-            return CONTINUE;
-        }
+        virtual sfsistat body(unsigned char *text, size_t length);
+
         bool changeHeader(std::string const &hdrName, 
                         unsigned headerNr, std::string const &hdrValue)
         {
@@ -134,41 +130,20 @@ class Milter
                     ) == SUCCESS;
         }
         virtual Milter *clone() const = 0;       // cloning required
-        virtual sfsistat close()
-        {
-            return CONTINUE;
-        }
-        virtual sfsistat connect(char *hostname, _SOCK_ADDR *hostaddr)
-        {
-            return CONTINUE;
-        }
+        virtual sfsistat close();
+        virtual sfsistat connect(char *hostname, _SOCK_ADDR *hostaddr);
 #if SMFI_VERSION > 3
-        virtual sfsistat data()
-        {
-            return CONTINUE;
-        }
+        virtual sfsistat data();
 #endif
         bool deleteRecipient(std::string const &rcptName)
         {
             return smfi_delrcpt(d_ctx, 
                     const_cast<char *>(rcptName.c_str())) == SUCCESS;
         }
-        virtual sfsistat eoh()
-        {
-            return CONTINUE;
-        }
-        virtual sfsistat eom()
-        {
-            return CONTINUE;
-        }
-        virtual sfsistat header(char *headerf, char *headerv)
-        {
-            return CONTINUE;
-        }
-        virtual sfsistat helo(char *helohost)
-        {
-            return CONTINUE;
-        }
+        virtual sfsistat eoh();
+        virtual sfsistat eom();
+        virtual sfsistat header(char *headerf, char *headerv);
+        virtual sfsistat helo(char *helohost);
         SMFICTX *id() const
         {
             return d_ctx;
@@ -190,10 +165,7 @@ class Milter
             return  smfi_quarantine(d_ctx, 
                     const_cast<char *>(reason.c_str())) == SUCCESS;
         }
-        virtual sfsistat recipient(char **argv)
-        {
-            return CONTINUE;
-        }
+        virtual sfsistat recipient(char **argv);
         bool replaceBody(std::string const &body)
         {
             return smfi_replacebody(d_ctx, 
@@ -203,10 +175,7 @@ class Milter
                         ),
                         body.length()) == SUCCESS;
         }
-        virtual sfsistat sender(char **argv)
-        {
-            return CONTINUE;
-        }
+        virtual sfsistat sender(char **argv);
         static bool setBacklog(size_t backlog = 5)
         {
             return smfi_setbacklog(backlog) == SUCCESS;
@@ -274,10 +243,7 @@ class Milter
                     const_cast<char *>(name.c_str()));
         }
 #if SMFI_VERSION > 2
-        virtual sfsistat unknown(char const *ptr)
-        {
-            return CONTINUE;
-        }
+        sfsistat unknown(char const *ptr);
 #endif
         bool wait()                           // from eom() only
         {
