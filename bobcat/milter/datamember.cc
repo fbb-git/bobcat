@@ -1,6 +1,6 @@
-#if SMFI_VERSION > 3
-
 #include "milter.ih"
+
+#if SMFI_VERSION > 3
 
 sfsistat Milter::data()
 {
