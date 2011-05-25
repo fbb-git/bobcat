@@ -34,7 +34,6 @@ list
 #include "icmake/man"
 #include "icmake/library"
 #include "icmake/libraries"
-#include "icmake/bobcatlcgen"
 #include "icmake/install"
 
 void main(int argc, list argv, list envp)
@@ -62,9 +61,6 @@ void main(int argc, list argv, list envp)
 
     option = element(1, argv);
 
-    if (option == "lcgen")
-        bobcatlcgen();
-
     if (option == "clean")
         clean();
 
@@ -84,8 +80,6 @@ void main(int argc, list argv, list envp)
     {
         system(P_NOCHECK, "tput clear");
         libraries("bobcat", 1, 0);
-        system(P_NOCHECK, "tput clear");
-        bobcatlcgen();
     }
 
     if (option == "man")
@@ -102,21 +96,19 @@ void main(int argc, list argv, list envp)
 
     printf("Usage: build what\n"
         "Where `what' is one of:\n"
-        "   lcgen               - build the bobcatlcgen program\n"
         "   clean               - clean up remnants of previous compilations\n"
         "   install <rss dev>   - to install the software in the locations\n"
         "                         defined in the INSTALL.im file,\n"
         "                         optionally below <rss> (run-time package)\n"
         "                         and <dev> (development package)\n"
         "                         By default all is installed. To configure\n"
-        "                         Unset #defines in INSTALL.im\n"
+        "                         update setLocations() in INSTALL.im\n"
         "   man                 - build the manual page (requires Yodl)\n"
         "   libraries [all] [strip] - build the bobcat(-dev) libraries\n"
         "                         (optionally add optional classes,\n"
         "                         optionally strip the libraries)\n"
-        "   l                   - same as 'libraries all', and `lcgen', but\n"
-        "                         clearing the screen before starting the\n"
-        "                         compilation\n"
+        "   l                   - same as 'libraries all', but clearing the\n"
+        "                         screen before starting the compilation\n"
         "   sourceforge         - preliminaries required for SourceForge\n"
         "\n"
         "If the environment variable DRYRUN is defined, no commands are\n"

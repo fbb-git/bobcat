@@ -1,3 +1,19 @@
+bobcat (2.16.00)
+
+  * Removed obsolete classes Msg, FnWrap1, FnWrap1c, FnWrap2, FnWrap2c,
+    Autoptr, LC and bobcatlcgen
+
+  * All previously inline implemented virtual members are now defined as
+    non-inline members, which should solve an issue with compilers on armel
+    architecture which don't handle inline virtual members correctly.
+
+  * The 'build' script now uses the -g option by default (set in
+    INSTALL.im). To modify the g++ compilation options change the #define
+    CPPOPT in INSTALL.im. By default it is set to "-O2 -g". To modify the
+    flags `on the fly' set the environment variable CPPFLAGS to the compiler
+    options to use. The options "-isystem tmp -Wall" are always used and
+    should not be altered.
+
 bobcat (2.15.02)
 
   * Replaced the auto_ptr in Log by a unique_ptr. Since both have equal sizes

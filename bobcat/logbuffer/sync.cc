@@ -1,4 +1,4 @@
-#include "logbuf.ih"
+#include "logbuffer.ih"
 
 int LogBuffer::sync()
 {
