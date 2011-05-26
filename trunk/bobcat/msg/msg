@@ -1,0 +1,124 @@
+#ifndef INCLUDED_BOBCAT_MSG_
+#define INCLUDED_BOBCAT_MSG_
+
+#include <iterator>
+
+#include <sstream>
+#include <fstream>
+#include <string>
+
+#include <bobcat/errno>
+
+namespace FBB
+{
+
+void info(std::ostream &out);
+void spool(std::ostream &out);
+void warning(std::ostream &out);
+void err(std::ostream &out);
+void fatal(std::ostream &out);
+
+std::ostringstream &msg();
+std::ostringstream &lineMsg();
+
+class Msg
+{
+    friend void err(std::ostream &out);
+    friend void spool(std::ostream &out);
+    friend void info(std::ostream &out);
+    friend void warning(std::ostream &out);
+    friend void fatal(std::ostream &out);
+
+    friend std::ostringstream &msg();
+    friend std::ostringstream &msgstream();
+    friend std::ostringstream &lineMsg();
+
+    static size_t s_line;    
+    static char const *s_warning;
+    static size_t s_warnCount;
+    static size_t s_count;
+    static size_t s_maxCount;
+    static std::ostringstream s_msg;
+    static std::ostream s_out;
+    static std::ostream s_info;
+    static std::ofstream s_fout;
+    static bool s_display;
+
+    public:
+        static bool display();
+        static void open(std::ifstream &in, std::string const &name);
+        static void open(std::ofstream &out, std::string const &name);
+        static void open(std::ofstream &out, std::string const &name, 
+                                            size_t protection);
+        static bool setDisplay(bool mode);
+        static void setOstream(std::string const &name);
+        static void setLine(size_t linenr);
+        static void setWarning(char const *pre = "[Warning] ");
+        static void setMaxCount(size_t maxCount);
+        static size_t count();
+        static bool errors();
+        static size_t warnings();
+        static std::streambuf *setInfoBuf(std::streambuf *newBuffer,
+                                          bool display = true);
+        static std::streambuf *infoToWarning();
+};
+
+
+inline bool Msg::display()
+{
+    return s_display;
+}
+
+inline void Msg::setLine(size_t linenr)
+{
+    s_line = linenr;
+}            
+
+inline void Msg::setWarning(char const *pre)
+{
+    s_warning = pre;
+}
+
+inline void Msg::setMaxCount(size_t maxCount)
+{
+    s_maxCount = maxCount;
+}
+inline size_t Msg::count()
+{
+    return s_count;
+}
+
+inline bool Msg::errors()
+{
+    return s_count;
+}
+
+inline size_t Msg::warnings()
+{
+    return s_warnCount;
+}
+
+inline std::streambuf *Msg::infoToWarning()
+{
+    return setInfoBuf(s_out.rdbuf());
+}
+
+inline std::ostringstream &msgstream()
+{
+    return Msg::s_msg;
+}
+
+}   // namespace FBB
+
+namespace std
+{
+    inline void operator<<(ostream &ostrstream, void (*manip)(ostream &str))
+    {
+        (*manip)(ostrstream);
+    }
+}    
+
+#endif
+
+
+

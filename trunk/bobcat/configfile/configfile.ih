@@ -1,0 +1,31 @@
+#include "configfile"
+
+#include <algorithm>
+#include <fstream>
+#include <climits>
+#include <cstring>
+
+#include <bobcat/fnwrap>
+#include <bobcat/errno>
+#include <bobcat/fswap>
+
+using namespace std;
+using namespace FBB;
+
+
+inline bool ConfigFile::finder(string const &haystack, string const &needle)
+{
+    return haystack.find(needle) != string::npos;
+}
+
+inline bool ConfigFile::casefinder(string const &haystack, 
+                                    string const &needle)
+{
+    return strcasestr(haystack.c_str(), needle.c_str()) != 0;
+}
+
+
+inline bool ConfigFile::match(string const &str, Pattern &pat)
+{
+    return pat << str;
+}

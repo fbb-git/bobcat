@@ -1,0 +1,36 @@
+#ifndef INCLUDED_TABLELINES_
+#define INCLUDED_TABLELINES_
+
+#include <ostream>
+#include <bobcat/tablesupport>
+
+namespace FBB
+{
+
+class TableLines: public TableSupport
+{
+    public:
+        TableLines() = default;
+        TableLines(TableLines const &&tmp);
+    
+        TableLines &operator=(TableLines const &&tmp);
+
+    private:
+        virtual void v_hline(size_t row) const;
+
+        static void outLine(Field const &field,  std::ostream &out);
+};
+
+inline TableLines::TableLines(TableLines const &&tmp)
+:
+    TableSupport(std::move(tmp))
+{}
+
+inline TableLines &TableLines::operator=(TableLines const &&tmp)
+{
+    static_cast<TableSupport &>(*this) = std::move(tmp);
+    return *this;
+}
+
+} // FBB        
+#endif

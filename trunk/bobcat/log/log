@@ -1,0 +1,73 @@
+#ifndef INCLUDED_BOBCAT_LOG_
+#define INCLUDED_BOBCAT_LOG_
+
+#include <fstream>
+#include <memory>
+
+#include <bobcat/logbuffer>
+
+namespace FBB
+{
+
+enum LogManipulator
+{
+    FATAL,
+    nl,
+};
+
+class Log: private LogBuffer, public std::ostream
+{
+    private:
+        static std::unique_ptr<Log> s_stream;
+
+        std::ofstream d_stream;
+        size_t d_level;
+        size_t d_activeLevel;
+
+    public:
+        static Log &instance();
+        static Log &getInstance();      // old-style interface: avoid
+        static Log &initialize(std::string const &filename, 
+                std::ios::openmode = std::ios::out | std::ios::app, 
+                char const *delim = " ");
+
+        Log(char const *delim = " ");
+        Log(std::ostream &out,  char const *delim = " ");
+        Log(std::string const &filename, 
+                std::ios::openmode = std::ios::out | std::ios::app, 
+                char const *delim = " ");
+
+        void open(std::string const &filename, 
+                std::ios::openmode = std::ios::out | std::ios::app, 
+                char const *delim = " ");
+
+        size_t level() const;
+        std::ostream &level(size_t useLevel);
+        void  setLevel(size_t newLevel);
+        void  setTimestamp(TimeStamps timeStamp, char const *delim = " ");
+        void  off();
+
+    private:
+        void init();
+};
+
+inline void  Log::off()
+{
+    setActive(false);
+}
+
+inline size_t Log::level() const
+{
+    return d_level;
+}
+
+inline Log &Log::instance()
+{
+    return getInstance();
+}
+
+std::ostream &operator<<(std::ostream &str, LogManipulator);
+        
+} // FBB
+
+#endif

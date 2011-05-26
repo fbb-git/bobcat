@@ -1,0 +1,89 @@
+#ifndef INCLUDED_BOBCAT_ERRNO_
+#define INCLUDED_BOBCAT_ERRNO_
+
+    // errno.h is included to allow using errno values, like EINVAL
+#include <sys/errno.h>
+#include <string>
+#include <sstream>
+#include <iosfwd>
+#include <exception>
+#include <iostream>
+
+namespace FBB
+{
+
+class Errno: public std::ostringstream, public std::exception
+{
+    int d_errno;
+    std::string d_msg;
+
+    mutable std::string d_what;
+    
+    // throw() lists below are required by the std::exception base class
+
+    public:
+        Errno();
+        explicit Errno(char const *prefix); 
+        explicit Errno(int errnr, char const *text = 0);
+        Errno(Errno const &other);
+        virtual ~Errno() throw();
+
+        int which() const;
+        char const *why() const;
+
+
+        static void open(std::ifstream &in, std::string const &name,    // 1
+                                std::ios::openmode mode = std::ios::in);
+
+        static void open(std::ofstream &out, std::string const &name,   // 2
+                                std::ios::openmode mode = std::ios::out);
+
+        static void open(std::fstream &out, std::string const &name,    // 3
+                                std::ios::openmode mode);
+
+                                                // moves to private in a 
+                                                // future release
+        virtual char const *what() const throw();   
+    private:
+        void initMsg();
+};
+
+inline int Errno::which() const
+{
+    return d_errno;
+}
+
+inline char const *Errno::why() const
+{
+    return what();
+}
+
+template <typename Type>
+inline Errno const &operator<<(Errno const &in, Type const &t)
+{
+    dynamic_cast<std::ostream &>(const_cast<Errno &>(in)) << t;
+    return in;
+}
+
+
+// OBSOLETED, NOT REQUIRED ANYMORE
+
+inline Errno &operator<<(std::ostream &str, Errno *(*)())
+{
+    return *static_cast<Errno *>(&(str << std::flush));
+}
+
+inline std::ostream &insertable(std::ostream &errnoObject)
+{
+    return errnoObject;
+}
+
+inline Errno *throwable()
+{
+    return 0;
+}
+
+} // FBB
+
+   
+#endif

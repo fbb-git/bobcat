@@ -1,0 +1,107 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Hash)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Key hashing containers)
+
+manpagename(FBB::Hash)(Various mapping template classes using hashing)
+
+manpagesynopsis()
+    bf(#include <bobcat/hash>)nl()
+
+manpagedescription()
+    The bf(FBB:Hash) group of template classes offer hashing-based
+mapping. Various variants are availabe, all based on the facilities offered by
+the bf(unordered_map).
+
+    The hash-map offered in the bf(unordered_map) container has a fairly
+complex construction interface, and tt(Hash) is an attempt to simplify this
+part of its interface. In practice, hashing uses a textual key, which may be
+bf(std::string) or tt(char *) based, and the keys may be used either case
+sensitively or case insensitively. tt(Hash) merely requires its users to
+specify the map's value type, while the key may be a tt(char const *) or
+tt(std::string), used case sensitively or case insensitively.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    bf(std::unordered_map), using various instantiations.
+
+manpagesection(TYPE)
+
+    All variants define tt(value_type) as the corresponding tt(unordered_map
+value_type). In practice a tt(value_type) defines a tt(std::pair<Key, Value>),
+where tt(Key) represents the hash's key-type and tt(Value) represents the
+hash's value type.
+
+manpagesection(CONSTRUCTORS)
+
+    Variants of the tt(FBB::Hash) container are available for tt(char const *)
+or tt(std::string) keys, used case sensitively or case insensitively. All
+variants support default, copy, and move construction, support 
+construction from initializer
+lists and support construction from iterators defining a half-open range of
+tt(value_type) values.
+
+    The following variants are available (showing their default
+constructors). tt(Value) refers to the value type stored in the hash table.
+    
+    itemization(
+    itb(HashCharPtr<Value>()) this hash table uses em(case sensitive) bf(char
+const *) keys;
+
+    itb(HashCharCasePtr<Value>()) this hash table uses em(case insensitive)
+bf(char const *) keys;
+
+    itb(HashString<Value>()) this hash table uses em(case sensitive)
+bf(std::string) keys;
+
+    itb(HashStringCase<Value>())  this hash table uses em(case insensitive)
+bf(std::string) keys;
+    )
+
+manpagesection(OVERLOADED OPERATOR)
+     In addition to the index operator inherited from tt(unordered_map) the
+overloaded copy and move assignment operators are available for all tt(Hash)
+containers.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of the tt(unordered_map) container are available, as tt(Hash)
+inherits from this template class.
+
+manpagesection(EXAMPLE)
+        verb(
+    #include <iostream>
+    #include <bobcat/hash>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    pair<char const *, size_t> ap[] =
+    {
+        pair<char const *, size_t>("one", 1),
+        pair<char const *, size_t>("two", 2),
+    };
+    
+    int main()
+    {
+        HashCharPtr<size_t> hcp;
+        HashCharPtr<size_t> hcp2(ap, ap + 2);
+        HashCharPtr<size_t> hcp3(hcp2);
+
+        hcp = hcp2;
+    
+        cout << hcp2["one"] << endl;
+    }
+        )
+
+manpagefiles()
+    em(bobcat/hash) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)

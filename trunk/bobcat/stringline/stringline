@@ -1,0 +1,20 @@
+#ifndef INCLUDED_BOBCAT_STRINGLINE_
+#define INCLUDED_BOBCAT_STRINGLINE_
+
+#include <string>
+#include <istream>
+
+namespace FBB
+{
+
+struct StringLine: public std::string
+{};
+
+inline std::istream &operator>>(std::istream &in, StringLine &str)
+{
+    return getline(in, str);
+}
+
+} // FBB
+
+#endif

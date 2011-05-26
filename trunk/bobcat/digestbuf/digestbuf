@@ -1,0 +1,39 @@
+#ifndef INCLUDED_BOBCAT_DIGESTBUF_
+#define INCLUDED_BOBCAT_DIGESTBUF_
+
+#include <iosfwd>
+#include <streambuf>
+
+namespace FBB
+{
+
+struct DigestBufImp;
+
+class DigestBuf: public std::streambuf
+{
+    friend std::ostream &operator<<(std::ostream &out, 
+                                    DigestBuf const &digestbuf);
+
+    DigestBufImp *d_pimpl;
+
+    public:
+        explicit DigestBuf(char const *type, size_t bufsize = 1024);
+        virtual ~DigestBuf();
+
+        void open();
+        void close();
+
+        std::string const &hash() const;
+
+    private:
+        virtual int overflow(int c);
+};
+
+std::ostream &operator<<(std::ostream &out, DigestBuf const &digestbuf);
+
+}   // FBB
+        
+#endif
+
+
+

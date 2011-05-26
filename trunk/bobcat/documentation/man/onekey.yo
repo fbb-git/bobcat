@@ -1,0 +1,81 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::OneKey)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (One keystroke input)
+
+manpagename(FBB::OneKey)(Single keystroke input, not requiring `Return')
+
+manpagesynopsis()
+    bf(#include <bobcat/onekey>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(OneKey) objects may be used to realize `direct keyboard input': a
+pressed key becomes available without the need for pressing tt(Enter). The
+characters are obtained from the standard input stream. Direct key entry
+remains in effect for as long as the bf(OneKey) object exists. Once the object
+is destroyed the standard input stream will return to its default mode of
+operation, in which input is `confirmed' by a newline character.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(ENUMERATION)
+    The bf(OneKey::Mode) enumeration is used to control echoing of returned
+characters. It has two values:
+    itemization(
+    it() bf(OFF): returned characters are em(not) echoed to the standard
+output stream;
+    it() bf(ON): returned characters em(are) echoed to the standard output
+stream. 
+    )
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(OneKey(OneKey::Mode state = OneKey::OFF)) 
+        This constructor initializes the bf(OneKey) input object. By
+        default, entered characters are not echoed. By constructing the object
+        with the bf(OneKey::ON) argument, entered characters are echoed to
+        the standard output stream. 
+
+        This construct throws an tt(Errno) exception if it not properly
+        complete. The constructor may fail for the following reasons:
+            itemization(
+            it() the standard input stream is not a tty (e.g., when the
+             standard input stream is redirected to a file);
+            it() the current state of the standard input stream can't be
+             determined;
+            it() the standard input stream's state can't be changed to the
+             `direct keyboard input' mode.
+            )
+    )
+        The copy constructor (and the overloaded assignement operator) are not
+        available. 
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(int get() const) 
+        Returns the next character from the standard input stream, without the
+        need for pressing tt(Enter). 
+    itb(void setEcho(OneKey::Mode state)) 
+        Changes the echo-state of the bf(OneKey) object. The argument may be
+        either bf(OneKey::ON) or bf(OneKey::OFF).
+    itb(void verify() const)
+        Obsoleted, will be removed in a future Bobcat release.
+    )
+
+manpagesection(EXAMPLE)
+    verbinclude(../../onekey/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/onekey) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)

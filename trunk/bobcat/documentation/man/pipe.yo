@@ -1,0 +1,161 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Pipe)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Error handler)
+
+manpagename(FBB::Pipe)(Defines a system level pipe)
+
+manpagesynopsis()
+    bf(#include <bobcat/pipe>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB::Pipe) objects may be used to construct a em(pipe). bf(FBB::Pipe)
+objects offer a simple interface to the reading and writing ends of
+pipes. bf(FBB::Pipe) objects are object-wrappers around the bf(pipe)(2) system
+call.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Pipe())
+        The default bf(Pipe()) constructor constructs a basic pipe, calling
+bf(pipe)(2). 
+
+        This constructor throws an tt(Errno) exception if the default bf(Pipe)
+constructor did not properly complete.  The thrown bf(Errno) object's
+tt(which()) member shows the system's tt(errno) value set by the failing
+bf(pipe)(2) function.
+
+    itb(Pipe(int const *fd))
+        This constructor expects two file descriptors, which already define a
+pipe, stored at tt(fd). Following the construction of the tt(Pipe) object 
+the array at by tt(fd) is no longer used by the tt(Pipe) object.
+    )
+        The copy constructor is available.
+
+    Note that when the pipe goes out of scope, no bf(close)(2) operation is
+performed on the pipe's ends. If the pipe should be closed by the desctructor,
+derive a class from bf(Pipe)(3bobcat), whose destructor performs the required
+closing-operation.
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(int readFd() const)
+        Returns the pipe's file descriptor that is used for reading
+    itb(void readFrom(int filedescriptor))
+        Sets up redirection from the internal em(read) filedescriptor to the
+given filedescriptor: information is read from the bf(FBB::Pipe) object when
+reading from the provided filedescriptor.
+    itb(void readFrom(int const *filedescriptors, size_t n))
+        Sets up redirection from the internal em(read) filedescriptor to the
+given filedescriptors: information is read from the bf(FBB::Pipe) object when
+reading from any of the bf(n) provided filedescriptors (experimental).
+    itb(int readOnly())
+        Closes the writing end of the pipe, returns the reading end's file
+descriptor. 
+    itb(void verify() const)
+        Obsoleted, will be removed in a future Bobcat release.
+    itb(int writeFd() const)
+        Returns the pipe's file descriptor that is used for writing
+    itb(void writtenBy(int filedescriptor))
+        Sets up redirection from the internal em(write) filedescriptor to the
+given filedescriptor: information is  written to the bf(FBB::Pipe) object when
+writing to the provided filedescriptor.
+    itb(void writtenBy(int const *filedescriptors, size_t n))
+        Sets up redirection from the internal em(write) filedescriptor to the
+given filedescriptors: information is written to the bf(FBB::Pipe) object
+when writing to each of the bf(n) provided filedescriptors.
+    itb(int writeOnly())
+        Closes the reading end of the pipe, returns the writing end's file
+descriptor. 
+    )
+
+manpagesection(PROTECTED ENUMERATION)
+    The bf(RW) protected enumeration has the following elements:
+    itemization(
+    itb(READ)
+        The index in bf(d_fd[]) (see below) of the element holding the pipe's
+reading file descriptor;
+    itb(WRITE)
+        The index in bf(d_fd[]) (see below) of the element holding the pipe's
+writing file descriptor
+    )
+
+manpagesection(PROTECTED DATA)
+    itemization(
+    itb(int d_fd[2]) 
+        The array holding the pipe's file descriptors. The bf(READ) element
+contains the pipe's reading file descriptor, the bf(WRITE) element
+contains the pipe's writing file descriptor,
+    )
+
+manpagesection(EXAMPLE)
+        verb(
+    #include <bobcat/pipe>
+    #include <sys/types.h>
+    #include <sys/wait.h>
+    #include <unistd.h>
+    #include <iostream>
+    #include <string>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main()
+    {
+        Pipe p;                         // construct a pipe
+    
+        cout << "Read file descriptor: " << p.getReadFd() << endl;
+        cout << "Write file descriptor: " << p.getWriteFd() << endl;
+    
+        int pid = fork();
+    
+        if (pid == -1)
+            return 1;
+    
+        if (!pid)                       //child
+        {
+            p.readFrom(STDIN_FILENO);   // read what goes into the pipe
+    
+            string s;
+
+            getline(cin, s);
+            cout << "CHILD: Got `" << s << "'" << endl;    
+    
+            getline(cin, s);
+            cout << "CHILD: Got `" << s << "'" << endl;    
+    
+            return 0;
+        }
+    
+        p.writtenBy(STDOUT_FILENO);      // write to the pipe via cout
+    
+        cout << "first line" << endl;
+        cout << "second line" << endl;
+    
+        waitpid(pid, 0, 0);
+    
+        return 0;
+    }
+        )
+
+manpagefiles()
+    em(bobcat/pipe) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(pipe)(2), bf(mkfifo)(3)
+
+manpagebugs()
+    Note that when the pipe goes out of scope, no bf(close)(2) operation is
+performed on the pipe's ends. If the pipe should be closed by the desctructor,
+derive a class from bf(Pipe)(3bobcat), whose destructor performs the required
+closing-operation.
+
+
+includefile(include/trailer)

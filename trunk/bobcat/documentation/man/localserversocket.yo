@@ -1,0 +1,192 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::LocalServerSocket)(3bobcat)
+        (_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+        (Unix Domain Server Socket)
+
+manpagename(FBB::LocalServerSocket)
+            (Unix Domain Server socket accepting connection requests)
+
+manpagesynopsis()
+    bf(#include <bobcat/localserversocket>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    An bf(FBB::LocalServerSocket) defines a Unix Domain server socket,
+listening for connection requests from the local host using a Unix Domain
+socket. Connection requests may be accepted in either em(blocking) or
+em(non-blocking) modes. When a connection is accepted a socket is returned
+which may be used to read information from or write information to the client
+requesting the connection. The socket that is made available is a em(file
+descriptor) which may be used to initialize a bf(std::istream) and/or
+bf(std::ostream). The bf(std::istream) is used to read information from the
+client process; the bf(std::ostream) is used to send information to the client
+process.  Since a socket may be considered a em(file descriptor) the avaiable
+bf(FBB::IFdStream), bf(FBB::IFdStreamBuf), bf(FBB::OFdStream), and
+bf(FBB::OFdStreamBuf) classes may be used profitably here. Note that having
+available a socket does not mean that this defines the communication
+protocol. It is (still) the responsibility of the programmer to comply with an
+existing protocol or to implement a tailor-made protocol. The latter situation
+implies that the sequence of input- and output operations is defined by the
+programmer.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::LocalSocketBase)
+
+manpagesection(ENUMERATION)
+    The following enumeration is defined in th class
+bf(FBB::LocalServerSocket):
+
+    bf(enum Socket)nl()
+    This enumeration holds two values:
+    itemization(
+    itb(KEEP)
+        When this value is specified at construction time, the file
+representing the Unix Domain Socket will not be removed when the
+bf(LocalServerSocket) is destroyed. This is the default value used with the
+bf(LocalServerSocket) constructor.
+    itb(UNLINK)
+        When this value is specified at construction time, the file
+representing the Unix Domain Socket will be removed when the
+bf(LocalServerSocket) is destroyed.
+    )
+
+manpagesection(CONSTRUCTOR)
+    itemization(
+    itb(LocalServerSocket()) 
+        This constructor creates an empty (non-functioning)
+tt(FBB::LocalServerSocket) object. Before it can be used, the tt(open()) member
+must be called (see below).
+    itb(LocalServerSocket(string const &name, Socket action = KEEP) 
+        throw (Errno))
+        This constructor initializes an bf(FBB::LocalServerSocket) object,
+which will listen for connection requests using the named Unix Domain
+socket.  An bf(FBB::Errno) is thrown if the socket could not be
+constructed. If the constructor is given a second argument
+tt(FBB::LocalServerSocket::UNLINK), the constructed socket will be unlinked
+when the bf(FBB::LocalServerSocket) object is destroyed.  The construction of
+the socket does not mean that the bf(FBB::LocalServerSocket) object is
+actually listening for connections. To start listening, the member
+bf(listen()) should be called.
+    )
+    The copy constructor is not available.
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(size_t accept())
+        The bf(accept()) member returns an tt(size_t) which is a file
+descriptor (socket) that may be used to communicate with the client requesting
+the connection. In more complex programs the returned file descriptor (socket)
+could be passed to a class derived from bf(FBB::Fork), handling the
+communication with the child as a separate (child) process.
+
+    itb(void listen(size_t backlog = 5, bool blocking = true))
+        The bf(listen()) member defines the way the bf(FBB::LocalServerSocket)
+will listen for clients requesting a connection.  It can be used only once
+with a bf(FBB::LocalServerSocket). An bf(FBB::Errno) object is thrown if
+listening fails.
+
+     The bf(listen()) member's tt(backlog) parameter defines the size of the
+bf(FBB::LocalServerSocket)'s internal queue in which connection requests may be
+stored waiting for their turn to be serviced. When tt(backlog) requests are
+waiting and another request arrives, then that request is lost. 
+
+    The member's second parameter, tt(blocking), is used to control the
+blocking mode. By default, blocking is used, and tt(listen()) will wait until
+a connection is established. This is ok in situations where clients connect
+infrquently and for relatively short time intervals. Otherwise, in more
+complex programs, an bf(FBB::Selector) object can be used to sense input on
+the server socket and/or on various client sockets.
+
+    itb(void open(string const &name, Socket action = KEEP))
+        This member prepares a bf(FBB::LocalServerSocket) object for use. It
+should only be used in combination with the default constructor. Following
+tt(open()) the tt(FBB:::LocalServerSocket) object will be able to listen for
+connection requests using the named Unix Domain socket.  An bf(FBB::Errno) is
+thrown if the socket could not be constructed. If the a second argument
+tt(FBB::LocalServerSocket::UNLINK), is provided the constructed socket will be
+unlinked when the bf(FBB::LocalServerSocket) object is destroyed.  The
+construction of the socket does not mean that the bf(FBB::LocalServerSocket)
+object is actually listening for connections. To start listening, the member
+bf(listen()) should be called next.
+    )
+
+
+manpagesection(EXAMPLE)
+    See also the bf(localclientsocket)(3bobcat) example.
+        verb(
+    #include <iostream>
+    #include <bobcat/localserversocket>
+    #include <bobcat/ifdstream>
+    #include <bobcat/ofdstream>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main(int argc, char **argv)
+    try
+    {
+        if (argc == 1)
+        {
+            cerr << "Provide local filename, e.g., /tmp/uds\n";
+            return 1;
+        }
+    
+        LocalServerSocket server(argv[1]);
+    
+        cerr << "server using `" << argv[1] << "'" << endl;
+    
+        cout << 
+            "The server terminates when it receives a single `q' on a line\n"
+            "A connection is terminated when no input is received anymore.\n"
+            "Then another connection is possible" << endl;
+    
+        server.listen();                // listen in blocking mode
+    
+        while (true)
+        {
+            int fd = server.accept();
+    
+            cerr << "Client FD = " << fd << ", " << endl;
+    
+            IFdStream in(fd);           // stream to read from client
+            OFdStream out(fd);          // stream to write to client
+            string cmd;
+            
+            while (getline(in, cmd))
+            {
+                cout << "Got: " << cmd << endl;
+                out << "Got: " << cmd << "\r" << endl;
+    
+                if (cmd[0] == 'q')
+                    return 0;
+            }
+            cout << "Ready for another connection\n";
+        }
+    }
+    catch (Errno const &err)
+    {
+        cerr <<
+            err.what() << endl <<
+            "Server socket on port " << argv[1] << 
+            " can't be opened" << endl;
+        return -1;
+    }        
+        )
+
+manpagefiles()
+    em(bobcat/serversocket) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(localclientsocket)(3bobcat), bf(fork)(3bobcat),
+bf(ifdstream)(3bobcat), bf(ifdstreambuf)(3bobcat),
+bf(localsocketbase)(3bobcat), bf(ofdstream)(3bobcat), bf(ofdstream)(3bobcat),
+bf(select)(2), bf(selector)(3bobcat), bf(serversocket)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)

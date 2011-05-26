@@ -1,0 +1,83 @@
+#ifndef INCLUDED_BOBCAT_OFDSTREAMBUF_
+#define INCLUDED_BOBCAT_OFDSTREAMBUF_
+
+#include <streambuf>
+
+namespace FBB
+{    
+
+class OFdStreambuf: public std::streambuf
+{
+    public:
+            // Mode defines what to do with the file descriptor at
+            // destruction-time or when the default open is
+            // called. CLOSE_FD will close the fd, KEEP_FD will leave the
+            // fd as-is. When open is called with a Mode argument, then
+            // the provided argument is used for the actual fd. The Mode
+            // specified at the constructor is therefore only used for the
+            // mode-less open() call and for the destructor.
+        enum Mode
+        {
+            CLOSE_FD,
+            KEEP_FD,
+        };
+
+    private:
+        Mode        d_mode;
+        size_t      d_n;
+        int         d_fd;
+        char       *d_buffer;
+
+    public:
+        OFdStreambuf();
+        explicit OFdStreambuf(Mode mode);
+        explicit OFdStreambuf(int fd, size_t n = 1);
+        OFdStreambuf(int fd, Mode mode, size_t n = 1);
+
+        OFdStreambuf(OFdStreambuf const &other) = delete;
+
+        virtual ~OFdStreambuf();
+
+        OFdStreambuf &operator=(OFdStreambuf const &other) = delete;
+
+
+        void open(int fd, Mode mode, size_t n = 1);
+        void open(int fd, size_t n = 1);
+
+        int fd() const;
+        void close();
+
+    protected:
+        int pSync();
+
+    private:
+        virtual int sync();
+        virtual int overflow(int c);
+
+        void cleanup(Mode mode);
+};
+
+inline void OFdStreambuf::open(int fd, size_t n)
+{
+    open(fd, d_mode, n);
+}
+
+inline void OFdStreambuf::close()
+{
+    cleanup(CLOSE_FD);
+}
+
+inline int OFdStreambuf::fd() const
+{
+    return d_fd;
+}
+
+} // FBB
+
+#endif
+
+
+
+
+
+

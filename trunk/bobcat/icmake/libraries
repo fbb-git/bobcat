@@ -1,0 +1,107 @@
+void cpHeaders()
+{
+    int idx;
+    string file;
+    string class;
+
+    for (idx = g_nClasses; idx--; )
+    {
+        class = element(idx, g_classes);
+        file = class + "/" + class;
+    
+        if (file newer g_tmphdr + class)
+            run("cp " + file + " " + g_tmphdr);
+    }
+}
+
+void static_library(string library)
+{
+    if (sizeof(makelist("*/oa/*.o")))
+    {
+        run("ar cru " + library + " */oa/*.o");
+        run("ranlib " + library);
+        run("rm */oa/*.o");
+    }
+}
+
+void shared_library(string destDir, string libso, string libsoshared, 
+                    int strip)
+{
+    string libsomajor;
+
+    if (sizeof(makelist("*/os/*.o")))
+    {
+        libsomajor  = libso + "." + element(0, strtok(g_version, "."));
+
+        run(GPP +   " -shared -Wl,--as-needed,"
+                    "-z,defs,-soname," + 
+                    libsomajor +
+                    " -o " + destDir + libsoshared +
+                    " */os/*.o " +
+                    g_sharedLibReq);
+    
+        chdir(destDir);
+    
+        if (strip)
+            run("strip --strip-unneeded " + libsoshared);
+
+        run("chmod -x " + libsoshared);
+        
+        run("ln -sf " + libsoshared + " " + libsomajor);
+        run("ln -sf " + libsomajor  + " " + libso);
+    
+//        run("rm -f */os/*");
+
+        chdir(g_cwd);
+    }
+}
+
+setGcopt(string always)
+{
+    list optvar;
+
+    optvar = getenv("CPPFLAGS");    
+
+    g_copt = always;
+
+    if (optvar[0] == "1")
+        g_copt += optvar[1];
+    else if (CPPOPT != "")
+        g_copt += CPPOPT;
+}
+
+void libraries(string libname, int all, int strip)
+{
+    string libso;
+    string libsoshared;
+    string staticLib;
+
+    staticLib = g_tmplib + "lib" LIBRARY ".a";
+
+    addClasses("CLASSES");
+    special(1, all);
+
+    md(g_tmplib + " " + g_tmphdr);
+
+    cpHeaders();
+
+    setGcopt("-isystem tmp -Wall ");
+
+    library("oa", staticLib);               // compile for static lib.
+    static_library(staticLib);              // build static library
+
+#ifndef STATIC
+    libso = "libbobcat.so";
+    libsoshared = libso + "." + g_version;
+
+    setGcopt("-isystem tmp -Wall -fPIC ");
+                                          // adds option for shared lib
+
+    library("os", g_tmplib + libsoshared);      // compile the shared lib
+
+    shared_library(g_tmplib, libso, libsoshared, strip);
+#endif
+
+    exit(0);
+}
+

@@ -1,0 +1,37 @@
+#ifndef INCLUDED_BOBCAT_LOCALCLIENTSOCKET_
+#define INCLUDED_BOBCAT_LOCALCLIENTSOCKET_
+
+#include <bobcat/localsocketbase>
+
+#include <string>
+#include <sys/socket.h>
+#include <sys/un.h>
+
+namespace FBB
+{
+
+class LocalClientSocket: public LocalSocketBase
+{
+    public:
+        LocalClientSocket() = default;
+        explicit LocalClientSocket(std::string const &name);
+
+        void open(std::string const &name);
+        int connect();          // returns fd (socket) to talk to the server
+    private:
+        LocalClientSocket(LocalClientSocket const &other) = delete;
+};
+
+inline LocalClientSocket::LocalClientSocket(std::string const &name) 
+:
+    LocalSocketBase(name)
+{}
+
+inline void LocalClientSocket::open(std::string const &name)
+{
+    LocalSocketBase::open(name);
+}
+
+} // FBB
+
+#endif

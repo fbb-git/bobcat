@@ -1,0 +1,56 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::OFdStream)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (File Descriptor Output Stream)
+
+manpagename(FBB::Ofdstream)(Output Stream initialized by a File Descriptor)
+
+manpagesynopsis()
+    bf(#include <bobcat/ofdstream>)nl()
+
+manpagedescription()
+    bf(FBB::OFdStream) objects may be used to insert information into a device
+whose file descriptor is available.
+
+File descriptors are not defined within the context of bf(C++),
+but they can be used on operating systems that support the concept. Realize
+that using file descriptors introduces operating system dependencies.
+
+    Note that em(sockets) can be used as file descriptors.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    bf(std::ostream)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(OFdStream(int fd, size_t n = 1))
+        The constructor initializes the object to write to descriptor tt(fd),
+using a buffer of size tt(n), by default having size 1. 
+    )
+    The copy constructor is not available.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::ostream) are available, as bf(FBB::OFdStream)
+inherits from this class. There are no additional members.
+
+manpagesection(EXAMPLE)
+    See the bf(clientsocket)(3bobcat) man-page for an example showing how to
+use tt(OFdStream).
+
+manpagefiles()
+    em(bobcat/ofdstream) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(ifdstream)(3bobcat), bf(ofdstreambuf)(3bobcat)
+
+manpagebugs()
+    The tt(OFdStream) object uses a tt(OFdStreamBuf) for its
+tt(std::streambuf). This buffer is associated with the file descriptor passed
+to tt(OFdStream)'s constructor. When the tt(OFdStream) object goes out of
+scope the device (file, socket, etc.) to which the file descriptor that was
+passed to tt(OFdStream)'s constructor is em(not) closed. 
+
+includefile(include/trailer)

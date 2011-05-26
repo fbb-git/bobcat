@@ -1,0 +1,521 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Milter)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Milter interface)
+
+manpagename(FBB::Milter)(Interface to the sendmail mail filter facilities)
+
+manpagesynopsis()
+    bf(#include <bobcat/milter>)nl()
+    Linking option: tt(-lmilter -lbobcat) 
+
+manpagedescription()
+
+    bf(Milter) defines an abtract base class interfacing to the sendmail mail
+filter (milter) facilities. It defines a bf(C++) interface, based on the
+assumption that a single mail filter program does not implement multiple mail
+filters. The traditional sendmail bf(C)-based Milter API uses a (tt(SMFICTX))
+pointer representing a mail connection, and a pointer to connection-specific
+`private' data, requiring the Milter constructor to perform quite a few
+administrative tasks. While acceptable in a bf(C) environment these
+administratve tasks distract from the main task: the Milter's mail filtering
+functionality. The bf(FBB::Milter) class hides these administrative tasks from
+the programmer, who is then able to concentrate on filtering mail. The main
+benefits of bf(Milter) are therefore
+    itemization(
+    it() Basic administration is performed by the bf(Milter) class
+    it() The class' interface is more bf(C++) like than the raw bf(C)
+interface offered by the milter API.
+    it() Administration, allocation and communicating of connection specific
+data is no longer required
+    it() It is not normally necessary to use connection-specific data, like a
+pointer identifying the connection, anymore when implementing the Milter.
+    it() bf(Milter) uses current-day design patterns enforcing principles of
+reuable software, thus simplifying the construction of the actual Milter.
+    )
+    To activate a milter from the tt(sendmail.mc) configuration file, use,
+e.g., tt(INPUT_MAIL_FILTER(`name', `S=socket')), where tt(name) is the
+milter's name, and tt(socket) is the name of the socket. See also the
+tt(setConnection()) member below.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(ENUMERATIONS)
+    
+    The class defines four enumerations. One enumeration is used to indicate
+the callback-functions that need to be called, the second one renames the
+flags that can be passed to sendmail to indicate which actions the milter is
+allowed to perform. The third one defines status values that may be used to
+inform sendmail how to further process a message. The fourth one defines
+return values. The enumerations are:
+
+    bf(enum CallBack)nl()
+    This enumeration holds the following values:
+    itemization(
+    itb(CONNECT)
+        Indicates that the milter defines (overrides) the
+connection-functionality. This is the first callback function that can be
+called by sendmail.
+    itb(HELO)
+        Indicates that the milter defines (overrides) the
+helo-functionality. This indicates that the tt(helo()) function should be
+called by sendmail, providing the milter with information about the connecting
+client. 
+    itb(SENDER)
+        Indicates that the milter defines (overrides) the
+sender-functionality. This indicates that the tt(sender()) function should be
+called by sendmail, providing the milter with the sender's envelope
+information. 
+    itb(RECIPIENT)
+        Indicates that the milter defines (overrides) the
+recipient-functionality. This indicates that the tt(recipient()) function
+should be called by sendmail, providing the milter with the recipient's
+envelope information.
+    itb(HEADER)
+        Indicates that the milter defines (overrides) the
+header-functionality. This indicates that the tt(header()) function
+should be called by sendmail for each mail header that is used in the current
+mail message.
+    itb(EOH)
+        Indicates that the milter defines (overrides) the
+end-of-header-functionality. This indicates that the tt(eoh()) function
+should be called by sendmail once all header lines have been processed.
+    itb(BODY)
+        Indicates that the milter defines (overrides) the
+body-functionality. This indicates that the tt(body()) function
+should be called by sendmail, offering the mail-body to the milter.
+    itb(EOM)
+        Indicates that the milter defines (overrides) the
+end-of-message-functionality. This indicates that the tt(eom()) function
+should be called by sendmail, once all elements of the e-mail message have
+been processed.
+    itb(ABORT)
+        Indicates that the milter defines (overrides) the
+abort-functionality. The tt(abort()) function may be called by sendmail before
+bf(eom()) is called. It should reclaim all resources used by the message, but
+not delete any memory allocated by the milter, as this is bf(close())'s job.
+    itb(CLOSE)
+        Indicates that the milter defines (overrides) the
+close-functionality. The tt(close()) function should delete all (connection
+specific) memory allocated by the milter. It may be called `out-of-order',
+i.e. even before bf(connect()) is called and developers should anticipate this
+possibility when crafting their bf(close()) code. In particular, it is
+incorrect to assume the private context pointer will be something other than
+0 in this callback.
+    itb(UNKNOWN)
+        Currently not used. Reserved for versions exceeding version 2 of the
+sendmail milter API
+    itb(DATA)
+        Currently not used. Reserved for versions exceeding version 3 of the
+sendmail milter API
+    itb(ALL_CALLBACKS)
+        Shortcut to indicate all callback facilities. The bf(CallBack) values
+are bit-flags. The bf(bit_or) operator may be used to combine them, and the
+bf(bit_not) operator may be used to remove a flag from bf(ALL_CALLBACKS)
+(e.g., bf(ALL_CALLBACKS && ~ABORT)).
+    )
+
+    bf(enum Flags)nl()
+    This enumeration holds the following values:
+    itemization(
+    itb(NO_FLAGS)
+        No flags are defined.
+    itb(ADD_HEADERS)
+        This flag indicates that the milter is allowed to add headers to the
+current e-mail message.
+    itb(ADD_RECIPIENTS)
+        This flag indicates that the milter is allowed to add recipients to the
+current e-mail message.
+    itb(CHANGE_BODY)
+        This flag indicates that the milter is allowed to modify the message's
+body contents.
+    itb(CHANGE_HEADERS)
+        This flag indicates that the milter is allowed to change headers of
+the current e-mail message.
+    itb(DELETE_RECIPIENTS)
+        This flag indicates that the milter is allowed to remove recipients
+from the current e-mail message.
+    itb(QUARANTINE)
+        This flag indicates that the milter is allowed to request sendmail to
+quarantine the current e-mail message.
+    itb(ALL_FLAGS)
+        Shortcut to indicate all callback facilities. The bf(Flags) values
+are bit-flags. The bf(bit_or) operator may be used to combine them, and the
+bf(bit_not) operator may be used to remove a flag from bf(ALL_FLAGS)
+(e.g., bf(ALL_FLAGS && ~QUARANTINE)).
+    )
+
+    bf(Status)nl()
+    This enumeration simplifies the extended tt(SMFIS_) values used by the
+bf(C) API. These values may be used to return  tt(sfsistat) values:
+    itemization(
+    itb(ACCEPT)
+        This value is equal to tt(SMFIS_ACCEPT), indicating that Sendmail
+should accept the message. For a connection-oriented callback (see below at
+bf(PROTECTED VIRTUAL MEMBER FUNCTIONS)), accept this connection without
+further filter processing, call bf(close()) (see below).  For other callbacks:
+accept this message without further filtering.
+    itb(CONTINUE)
+        This value is equal to tt(SMFIS_CONTINUE), indicating that Sendmail
+should continue processing. This is the default for all callback functions
+which are not overridden by the class derived from bf(Milter).
+    itb(DISCARD)
+        This value is equal to tt(SMFIS_DISCARD), indicating that Sendmail
+should discard the mail message. It should not be returned by a
+connection-oriented callback. For other callbacks: the message is accepted,
+but silently discarded.
+    itb(REJECT)
+        This value is equal to tt(SMFIS_REJECT), indicating that Sendmail
+should reject the mail message. For a connection-oriented callback, reject
+this connection; call bf(close()).  For a message-oriented callback (except
+for bf(eom()) or bf(abort(), see below)), reject this message.  For a
+recipient-oriented callback, reject the current recipient (but continue
+processing the current message).
+    itb(TEMPFAIL)
+        This value is equal to tt(SMFIS_TEMPFAIL), indicating that Sendmail
+should return a `temporary unavailable' message to the sender of the mail
+message. For a message-oriented callback (except bf(sender()), see below),
+fail for this message.  For a connection-oriented callback, fail for this
+connection and call bf(close()).  For a recipient-oriented callback, only fail
+for the current recipient and continue message processing.
+    )
+
+    bf(Return)nl()
+    This enumeration simplifies the extended tt(MI_) values used by the
+bf(C) API. Most return values used by the bf(Milter) class, however, are
+bf(bool) values. The bf(Return) values are:
+    itemization(
+    itb(FAILURE)
+        This value is equal to tt(MI_FAILURE), indicating that a bf(C)-api
+function failed to perform its task.
+    itb(SUCCESS)
+        This value is equal to tt(MI_SUCCESS), indicating that a bf(C)-api
+function succeeded in performing its task.
+    )
+
+manpagesection(CONSTRUCTORS)
+
+    The default- and copy constructors are available for derived classes. They
+perform no actions.
+
+manpagesection(PUBLIC STATIC MEMBER FUNCTIONS)
+
+    These functions form the heart of the bf(Milter) base-class. They can be
+called to initialize, start and stop the Milter.
+    itemization(
+    itb(void initialize(std::string const &name, 
+                Milter &milter,
+                callback_set callbacks = CONNECT, 
+                flag_set flags = NO_FLAGS))
+        This function initializes the Milter's administration. It expects the
+name of the mailfilter as its first argument. Its second argument is a
+reference to a tt(Milter) object. Since bf(Milter) is an abstract base class
+the actual object is always an object of a class derived from bf(Milter).  Its
+third argument specifies the callbacks to call for this milter. By default the
+bf(connect()) callback will be called. Note that the bf(close()) callback is
+not called by default. This is ok, since the bf(Milter) object doesn't have to
+cleanup `private' data, as is normal with the bf(C) API. The last argument
+defines flags, specifying the Milter's capabilities.
+    itb(std::string const &name())
+        This function returns the milter's name. 
+    itb(bool start())
+        This member function calls tt(smfi_main()), controlling the milter's
+event loop. It returns tt(true) if the event-loop is successfully terminated. 
+    itb(void stop())
+        This member function terminates the milter's event loop, after
+finishing all threads. Following this call tt(start()) may be called again to
+continue the milter.
+    )
+
+manpagesection(PROTECTED VIRTUAL MEMBER FUNCTIONS)
+
+    The remaining functionality of the class tt(Milter) is useful only for
+Milter-implementations in classes derived from bf(Milter). The following
+members can be overridden by derived classes. Note that bf(clone()) em(must)
+be overridden. Except for bf(clone()), all the members in this sections are
+em(callback) functions. I.e., the MTA will call them to process parts of the
+mail message. Recipient-, message-, and connection-oriented callbacks are
+distinguished.  
+
+    The recipient-oriented callback (bf(recipient()), see below) may affect
+the processing of a single message to a single recipient. Connection-oriented
+callbacks (bf(connect(), helo()) and bf(close())) affect the processing of the
+entire connection (during which multiple messages may be delivered to multiple
+sets of recipients). The remaining callbacks are message-oriented, affecting
+the processing of a single message to all its recipients.
+
+    itemization(
+    itb(virtual sfsistat abort())
+        This message-oriented member may be called at any time during message
+processing (i.e. between some message-oriented routine and
+bf(eom())). bf(abort()) reclaim any resources allocated on a per-message basis
+(which are em(not) the connection specific data, which should be handled by
+the derived class' destructor), and must be tolerant of being called between
+any two message-oriented callbacks. bf(abort()) is only called if the message
+is aborted outside the filter's control and the filter has not completed its
+message-oriented processing. For example, if a filter has already returned
+tt(ACCEPT, REJECT), or tt(DISCARD) from a message-oriented routine,
+bf(abort()) will not be called even if the message is later aborted outside
+its control.
+    itb(virtual sfsistat body(unsigned char *text, size_t length))
+        This message-oriented member is called zero or more times between
+bf(eoh()) and bf(eom()).  tt(text) points to a sequence of bytes. It is not
+necessarily a 0-terminated. Moreover, the sequence may contain 0-characters.
+Since message bodies can be very large, defining bf(body()) can significantly
+impact filter performance.  End-of-lines are represented as received from SMTP
+(normally CR/LF).  Later filters will see body changes made by earlier ones,
+and message bodies may be sent in multiple chunks, with one call to bf(body())
+per chunk.
+
+    itb(virtual Milter *clone() const = 0)
+        This pure virtual function must be implemented by derived classes to
+return a newly allocated copy of the derived object passed to the
+bf(initialize()) static member. It is used by the standard `virtual
+constructor' design pattern. The destruction of the allocated object is the
+responsibility of bf(clone())'s caller.
+
+    itb(virtual sfsistat close())
+        This connection-oriented member is always called once at the end of
+each connection.  It may be called "out-of-order", i.e. before even the
+bf(connect()) is called. After a connection is established by the MTA to the
+filter, if the MTA decides this connection's traffic will be discarded
+(e.g. via an access_db result), no data will be passed to the filter from the
+MTA until the client closes down. At that time, bf(close()) is called. It can
+therefore be the only callback ever used for a given connection, and
+developers should anticipate this possibility when crafting their bf(close())
+code. The member bf(close()) is called on close even if the previous mail
+transaction was aborted.
+
+    itb(virtual sfsistat connect(char *hostname, _SOCK_ADDR *hostaddr))
+        This connection-oriented member may be called once, at the start of
+each SMTP connection. The parameter tt(hostname) is he host name of the
+message sender, as determined by a reverse lookup on the host address. If the
+reverse lookup fails, hostname will contain the message sender's IP address
+enclosed in square brackets (e.g. tt([a.b.c.d])). The parameter tt(hostaddr)
+is the host address, as determined by a bf(getpeername)(2) call on the SMTP
+socket. It is 0 if the type is not supported in the current version or if the
+SMTP connection is made via stdin.
+
+    itb(virtual sfsistat data()) 
+        Not yet supported. Will be available with libmilter versions beyond 3.
+
+    itb(virtual sfsistat eoh())
+        This message-oriented member is called once after all headers have
+been processed.
+
+    itb(virtual sfsistat eom())
+        This message-oriented member is called once after all calls to
+bf(body()) for a given message have been completed. bf(Note) that only in this
+function modifications to the message headers, body, and envelope can be made
+(see the bf(add-, change-) and bf(delete-) members listed below).
+    itb(virtual sfsistat header(char *headerf, char *headerv))
+        This message-oriented member is called zero or more times between
+bf(recipient()) and bf(eoh()), once per message header. The tt(headerf)
+parameter will contain the text of the header, the tt(headerv) parameter will
+contain its value. E.g., if an e-mail message contains the following headers:
+        verb(
+    From: sender <f@example.com>
+    Subject:no
+        )
+    then tt(header()) will be called twice with the following values for,
+respectively tt(headerf) and tt(headerv):
+        verb(
+    First header:   "From",     " sender <f@example.com>"
+    Second header:  "Subject",  "no"
+        )
+    Further details about header information is given in RFC 882. 
+    itb(virtual sfsistat helo(char *helohost))
+        This connection-oriented member is called whenever the client sends a
+HELO/EHLO command. It may therefore be called between zero and three
+times. The tt(helohost) parameter should be the domain name of the sending
+host (but is, in practice, anything the sending host wants to send).
+
+    itb(virtual sfsistat recipient(char **argv))
+        This recipient-oriented member is called once per recipient, hence one
+or more times per message, immediately after bf(sender). The parameter
+tt(argv) is a 0-terminated array of pointers to SMTP command arguments;
+argv[0] is guaranteed to be the recipient address. Later arguments are the
+ESMTP arguments. TEMPFAIL may be returned indicate that sendmail should return
+a temporary failure for this particular recipient; further recipients may
+still be sent, bf(abort()) is not called.  REJECT will reject this particular
+recipient; further recipients may still be sent, bf(abort()) is not called.
+DISCARD will accept (but discard) the message, bf(abort()) will be called.
+ACCEPT will accept recipient, bf(abort()) will not be called. More details on
+ESTMP responses, are described in RFC 1869.
+
+    itb(virtual sfsistat sender(char **argv))
+        This message-oriented member is called once at the beginning of each
+message, before bf(recipient()).  TEMPFAIL may be returned indicate that
+sendmail should return a temporary failure for this particular message,
+bf(abort()) is not called.  REJECT will reject this message, bf(abort()) is
+not called.  DISCARD will accept (but discard) the message, bf(abort()) will
+be called.  ACCEPT will accept recipient, bf(abort()) will not be called. More
+details on ESTMP responses, are described in RFC 1869.
+    itb(virtual sfsistat unknown(char *ptr))
+        Not yet supported. Will be available with libmilter versions beyond 2.
+    )
+
+manpagesection(PROTECTED MEMBER FUNCTIONS)
+
+    The following members are non-virtual. They can be called by members of
+classes derived from bf(Milter):
+    itemization(
+    itb(bool addHeader(std::string const &hdrName, 
+                        std::string const &hdrValue))
+        This member may only be called from bf(eom()), and the flag
+bf(ADD_HEADERS) must have been specified or it will fail.  The tt(hdrName) and
+tt(hdrValue) must be non-empty strings. Each line of the header must be under
+2048 characters and should be under 998 characters. If longer headers are
+needed, make them multi-line. To make a multi-line header, insert a line feed
+(tt(\n)) followed by at least one whitespace character such as a space or tab
+(tt(\t)). The line feed should em(not) be preceded by a carriage return. It is
+the filter writer's responsibility to ensure that no standards are violated.
+    itb(bool addRecipient(std::string const &rcptName))
+        This member may only be called from bf(eom()), and the flag
+bf(ADD_RECIPIENTS) must have been specified or it will fail.
+    itb(bool changeHeader(std::string const &hdrName, 
+                        size_t headerNr, std::string const &hdrValue))
+        This member may only be called from bf(eom()), and the flag
+bf(CHANGE_HEADERS) must have been specified or it will fail. See
+bf(addHeader()) for the header-requirements. The tt(headerNr) parameter is a
+1-based header index value. A tt(headerNr) value of 1 will modify the first
+occurrence of a header named tt(hdrValue). If tt(headerNr) is greater than the
+number of times tt(hdrName) appears, a new tt(hdrName)-header will be
+added. If tt(hdrValue) is empty, the header is deleted.
+    itb(bool deleteRecipient(std::string const &rcptName))
+        This member may only be called from bf(eom()), and the flag
+bf(DELETE_RECIPIENTS) must have been specified or it will fail.
+        This member removes the named recipient from the current message's
+envelope. 
+     itb(SMFICTX *id() const)
+        This member may be called by the Milter object to obtain a pointer
+identifying its sendmail-connection. Normally it should not be necessary to
+call this member.
+    itb(bool insertHeader(size_t hdrIdx, std::string const &hdrName, 
+                          std::string const &hdrValue))
+        This member may only be called from bf(eom()), and the flag
+bf(ADD_HEADERS) must have been specified or it will fail. See
+bf(addHeader()) for the header-requirements. The tt(headerNr) parameter is a
+header index value. A tt(headerNr) value of 0 will insert this header as the
+first of the tt(hdrName) headers. If tt(headerNr) is greater than the
+number of times tt(hdrName) appears, a new tt(hdrName)-header will be
+added. 
+    itb(bool openSocket(bool removeIfTrue = true))
+        This member should be called before bf(start()) is called.
+        This member attempts to create the socket specified by
+bf(setConnection()) (see below). This allows the calling application to ensure
+that the socket can be created, possibly changing its protection (access
+rights) before the milter starts its work.  If this member is not called, it
+will be called implicitly when bf(run()) is started. It returns tt(true) if
+the socket could be created.
+    itb(bool quarantine(std::string const &reason))
+         This member may only be called from bf(eom()) and causes the MTA to
+quarantines the message using the given reason.
+    itb(bool replaceBody(std::string const &body))
+        This member may only be called from bf(eom()), and the flag
+bf(CHANGE_BODY) must have been specified or it will fail. It may be called
+multiple times in which case the various body contents are concatenated in the
+final message. Newlines should be coded as CRLF.
+    itb(bool setBacklog(size_t backlog = 5))
+        This member should be called before bf(start()) is called.
+        Sets the incoming socket backlog used by bf(listen)(2).  If
+bf(setBacklog()) is not called, the operating system default is used. The
+function returns tt(false) if the backlog could not be set as requested.  It
+is the responsibility of the programmer not to call this function with a 0
+argument.
+    itb(bool setConnection(std::string const &name))
+        This member should be called before bf(start()) is called.
+        Sets the socket through which the filter communicates with sendmail. 
+The socket may be specified using one of the following variants:nl()
+    tt({unix|local}:/path/to/file) - A named pipe;nl()
+    tt(net:port@{hostname|ip-address}) - An IPV4 socket;nl()
+    tt(inet6:port@{hostname|ip-address}) - An IPV6 socket.nl()
+
+    If possible, filters should not run as root when communicating over
+unix/local domain sockets.  
+
+    Unix/local sockets should have their permissions set to 0600 (read/write
+permission only for the socket's owner) or 0660 (read/write permission for the
+socket's owner and group) which is useful if the sendmail RunAsUser option is
+used. The permissions for a unix/local domain socket are determined as usual
+by umask, which should be set to 007 or 077.
+
+    Possible failure of this function cannot be determined from its return
+value. Rather, tt(run()) will fail.
+    itb(setReply(std::string const &rcode, std::string const &xcode = "",
+                      std::string const &msg = ""))
+        This member sets the default SMTP error reply code.  It may be called
+from any callback member, except bf(connect()). The parameter tt(rcode) should
+be a he three-digit (RFC 821/2821) SMTP reply code and it must be a valid 4XX
+or 5XX reply code. The parameter tt(xcode), when specified, must be a extended
+(RFC 1893/2034) reply code. The parameter tt(msg) may be an additional textual
+message. The bf(Milter) class has no member comparable to the libmilter API
+function tt(smfi_setmlreply()).  the bf(Milter) class.
+    itb(void setTimeout(size_t seconds = 7210))
+        This member should be called before bf(start()) is called.
+        Sets the number of seconds libmilter will wait for an MTA connection
+before timing out a socket. If bf(setTimeout()) is not called, a default
+timeout of 7210 seconds is used. It is the responsibility of the programmer
+not to call this function with an argument equal to  0.
+    itb(char const *symval(std::string const &name) const)
+        This member returns the value of a specific sendmail macro. The
+tt(name) parameter should be set to he name of a sendmail macro . Single letter
+macros can optionally be enclosed in braces (tt({) and tt(})), longer macro
+names must be enclosed in braces, just as in a sendmail.cf file.0 is returned
+if the macro is not defined.  By default, the following macros are valid in
+the given contexts:nl()
+    for bf(connect()): tt(daemon_name, if_name, if_addr, j, _);nl()
+    for bf(helo()): tt(tls_version, cipher, cipher_bits, cert_subject,
+cert_issuer);nl()
+    for bf(sender()): tt(i, auth_type, auth_authen, auth_ssf, auth_author,
+mail_mailer, mail_host, mail_addr);nl()
+    for bf(recipient()): tt(rcpt_mailer, rcpt_host, rcpt_addr).nl()
+    All macros stay in effect from the point they are received until the end
+of the connection for the first two sets, the end of the message for the third
+(bf(sender())), and just for each recipient for the final set
+(bf(recipient())).nl()
+    The following macros may be specified in the sendmail.mc configuration
+file:nl()
+    tt(define(`confMILTER_MACROS_CONNECT', `m1', ...)),
+tt(define(`confMILTER_MACROS_HELO', ...)),
+tt(define(`confMILTER_MACROS_ENVFROM', ...)),
+tt(define(`confMILTER_MACROS_ENVRCPT', ...)), where tt(`m1', ...) represents a
+comma separated list of returnable macros.  Single letter macros can
+optionally be enclosed in braces (tt({) and tt(})), longer macro names must be
+enclosed in braces.
+    itb(bool wait())
+        This member may only be called from bf(eom()) and tells the MTA that
+the filter is still working on a message, causing the MTA to re-start its
+timeouts. 
+    )
+
+manpagesection(EXAMPLE)
+    To do
+
+manpagefiles()
+    em(bobcat/milter) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(getpeername)(2), bf(listen)(2), nl()
+    tt(http://www.milter.org) (e.g., 
+        tt(http://www.milter.org/developers/api))nl()
+    tt(http://sendmail.org/m4/readme.html)nl()
+    tt(http://rfc.net/rfc821.html)nl()
+    tt(http://rfc.net/rfc822.html)nl()
+    tt(http://rfc.net/rfc1869.html)nl()
+    tt(http://rfc.net/rfc1893.html)nl()
+    tt(http://rfc.net/rfc2034.html)nl()
+    tt(http://rfc.net/rfc2821.html)
+
+manpagebugs()
+    Note that tt(-lmilter) must be specified before tt(-lbobcat).
+
+includefile(include/trailer)
+
+
+
+

@@ -1,0 +1,132 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::fswap)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Fast swap function)
+
+manpagename(FBB::fswap)(generic template fast swap function)
+
+manpagesynopsis()
+    bf(#include <bobcat/fswap>)nl()
+
+manpagedescription()
+    The information stored in objects frequently needs to be swapped. A
+well-known example is the swapping operation required when implementing an
+overloaded assignment operator. For example, the generic form of the operator
+assignment operator is:
+        verb(
+    Class &operator=(Class const &other)
+    {
+        Class tmp(other);
+        swap(tmp);
+        return *this;
+    }
+        )
+    The swap functionality merely swaps the contents of the current object and
+another object. The standard tt(std::swap) function calls the class's
+tt(operator=) function to swap objects. Newer implementations might use
+move-operations to increase the speed of the swaping operation, but in both
+cases some form of the assignment operator must be available. Swapping,
+however, might be possible when assignemnt isn't. Classes having reference
+data members usually don't offer assignment operators but swapping might be a
+well-defined operation.
+
+    It is well known that objects can be installed in a block of memory using
+em(placement new), using a block of memory the size of the object to construct
+the object it. This is the foundation of the template function tt(FBB::fswap)
+(fast swap). This swap function merely uses the memory occupied by objects to
+implement the swapping operation and it may therefore be used with classes
+having const data members, reference data members, ponters to allocated memory
+etc, etc. The function simply uses a spare block of memory the size of the
+object to be swapped. It then uses bf(memcpy)(3) to swap the information
+contained in the two objects, using the spare block of memory as a
+placeholder.
+
+    The function uses partial specializations to optimize the swapping
+operation for objects of sizes 1, 2, 4 or 8 bytes. It uses bf(memcpy)(3) for
+objects of other sizes.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(SWAP FUNCTION)
+
+    itemization(
+    itb(fswap(Type &lhs, Type &rhs))
+        This template function swaps the contents of the two objects. It can
+be used with classes having const data members, reference members, pointer
+members or standard value-typed data members.
+    )
+
+manpagesection(EXAMPLE)
+    verbinclude(../../fswap/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/fswap) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(memcpy)(3)
+
+manpagebugs()
+    The tt(fswap) function should not be applied mechanically to swap objects
+of classes having pointer data members defining, e.g., a linked list. Consider
+a list of four objects like:
+        verb(
+    A -> B -> C -> D
+        )
+    fast-swapping B and C would result in the following corrupted list:
+        verb(
+               +------+
+               |      |
+    A -> C -+  +-> B -+   +-> D
+            |             |
+            +-------------+
+        )
+    However, classes implementing a data structure like a linked-list might
+still benefit from fast swapping operations: by implementing their own swap
+member they could first use fast swapping to swap the objects, followed by 
+another fast swap to unswap their `next' pointers.
+
+    The tt(fswap) function should also not be used for objects defining
+(back-)pointers to their own data. Consider the following objects using
+pointers to data and (back-)pointers to the original objects:
+        verb(
+    Before fswapping:
+        A                                  B                          
+       +--------+   +-----------+         +--------+   +-----------+  
+       |        |   |           |         |        |   |           |  
+     +--> *Aimp------> *A (back)--+     +--> *Bimp------> *B (back)--+
+     | |        |   |           | |     | |        |   |           | |
+     +--**Aimp  |   +-----------+ |     +--**Bimp  |   +-----------+ |
+       +--------+ <---------------+       +--------+ <---------------+
+
+    After fswapping:
+                     +-------------------------------+
+                  +--|-------------------------------|-+                
+    +-------------|--|-----------------+             | |                
+    |   A         |  v                 |   B         | v              
+    |  +--------+ | +-----------+      |  +--------+ | +-----------+  
+    |  |        | | |           |      |  |        | | |           |  
+  +-----> *Bimp---+ |  *A (back)--+    +---> *Aimp---+ |  *B (back)--+
+  | |  |        |   |           | |       |        |   |           | |
+  | +---**Bimp  |   +-----------+ |    +---**Aimp  |   +-----------+ |
+  |    +--------+ <---------------+    |  +--------+ <---------------+
+  +------------------------------------+
+        )
+    After the swap tt(**Bimp) should point to tt(Bimp)'s address (now at A),
+but in fact it points to tt(Aimp)'s address (now at B). Likewise, the back
+pointers still point at their original objects rather than at their swapped
+objects. 
+
+All tt(stream) classes define such pointers and can therefore not be swapped
+using tt(fswap).
+
+The bottom line being that tt(fswap) should only be used for self-defined
+classes for which it can be proven that fast-swapping does not corrupt the
+values of its pointer data.
+
+includefile(include/trailer)
+
+
