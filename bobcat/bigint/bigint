@@ -47,27 +47,27 @@ class BigInt
 
         BigInt &operator=(BigInt const &other);
 
-        BigInt const operator-() const;
+        BigInt operator-() const;
         BigInt &negate();
-        BigInt const negatec() const;
+        BigInt negatec() const;
 
         BigInt &setNegative(bool negative);
-        BigInt const setNegativec(bool negative) const;
+        BigInt setNegativec(bool negative) const;
 
         bool isNegative() const;
 
 
         BigInt &tildeBits();
-        BigInt const tildeBitsc() const;
+        BigInt tildeBitsc() const;
 
         BigInt &tildeInt();
-        BigInt const tildeIntc() const;
+        BigInt tildeIntc() const;
 
         BigInt &operator--();
-        BigInt const operator--(int);
+        BigInt operator--(int);
 
         BigInt &operator++();
-        BigInt const operator++(int);
+        BigInt operator++(int);
 
 
         class Bit;
@@ -100,15 +100,15 @@ class BigInt
 
         BigInt &operator+=(BigInt const &rhs);
         BigInt &addMod(BigInt const &rhs, BigInt const &mod);
-        BigInt const addModc(BigInt const &rhs, BigInt const &mod) const;
+        BigInt addModc(BigInt const &rhs, BigInt const &mod) const;
 
         BigInt &operator-=(BigInt const &rhs);
         BigInt &subMod(BigInt const &rhs, BigInt const &mod);
-        BigInt const subModc(BigInt const &rhs, BigInt const &mod) const;
+        BigInt subModc(BigInt const &rhs, BigInt const &mod) const;
 
         BigInt &operator*=(BigInt const &rhs);
         BigInt &mulMod(BigInt const &rhs, BigInt const &mod);
-        BigInt const mulModc(BigInt const &rhs, BigInt const &mod) const;
+        BigInt mulModc(BigInt const &rhs, BigInt const &mod) const;
 
         BigInt &operator%=(BigInt const &rhs);
         BigInt &operator/=(BigInt const &rhs);      // integer division,
@@ -116,13 +116,13 @@ class BigInt
                                                     // integer division, also
                                                     // returning remainder
         BigInt &div(BigInt *remainder, BigInt const &rhs);
-        BigInt const divc(BigInt *remainder, BigInt const &rhs) const;
+        BigInt divc(BigInt *remainder, BigInt const &rhs) const;
 
         BigInt &sqr();
-        BigInt const sqrc() const;
+        BigInt sqrc() const;
 
         BigInt &sqrMod(BigInt const &mod);
-        BigInt const sqrModc(BigInt const &mod) const;
+        BigInt sqrModc(BigInt const &mod) const;
 
         BigInt &operator&=(BigInt const &rhs);
         BigInt &operator|=(BigInt const &rhs);
@@ -142,63 +142,63 @@ class BigInt
         int uCompare(BigInt const &other) const;
 
         BigInt &exp(BigInt const &exponent);
-        BigInt const expc(BigInt const &exponent) const;
+        BigInt expc(BigInt const &exponent) const;
         BigInt &expMod(BigInt const &exponent, BigInt const &mod);
-        BigInt const expModc(BigInt const &exponent, BigInt const &mod) const;
+        BigInt expModc(BigInt const &exponent, BigInt const &mod) const;
 
         BigInt &gcd(BigInt const &rhs);
-        BigInt const gcdc(BigInt const &rhs) const;
+        BigInt gcdc(BigInt const &rhs) const;
 
         BigInt &inverseMod(BigInt const &mod);
-        BigInt const inverseModc(BigInt const &mod) const;
+        BigInt inverseModc(BigInt const &mod) const;
 
         BigInt &isqrt();
-        BigInt const isqrtc() const;
+        BigInt isqrtc() const;
 
-        static BigInt const rand(size_t bitsSize, 
+        static BigInt rand(size_t bitsSize, 
                            Msb msb = MSB_IS_ONE, Lsb lsb = ODD);
 
-        static BigInt const randRange(BigInt const &max);
+        static BigInt randRange(BigInt const &max);
 
-        static BigInt const setBigEndian(std::string const &bytes);
+        static BigInt setBigEndian(std::string const &bytes);
 
-        static BigInt const pseudoRand(size_t bitsSize, 
+        static BigInt pseudoRand(size_t bitsSize, 
                            Msb msb = MSB_IS_ONE, Lsb lsb = ODD);
-        static BigInt const pseudoRandRange(BigInt const &max);
+        static BigInt pseudoRandRange(BigInt const &max);
 
-        static BigInt const prime(size_t nBits, 
+        static BigInt prime(size_t nBits, 
                             BigInt const *add = 0, BigInt const *rem = 0,
                             PrimeType primeType = ANY);
 
-        static BigInt const fromText(std::string const &text, int mode = 0);
+        static BigInt fromText(std::string const &text, int mode = 0);
 
         BigInt &clearBit(size_t index);
-        BigInt const clearBit(size_t index) const;
+        BigInt clearBit(size_t index) const;
 
         bool hasBit(size_t index) const;
 
         BigInt &maskBits(size_t lowerNBits);
-        BigInt const maskBitsc(size_t lowerNBits) const;
+        BigInt maskBitsc(size_t lowerNBits) const;
 
         BigInt &setBit(size_t index);
-        BigInt const setBitc(size_t index) const;
+        BigInt setBitc(size_t index) const;
 
         BigInt &setBit(size_t index, bool value);
-        BigInt const setBitc(size_t index, bool value) const;
+        BigInt setBitc(size_t index, bool value) const;
 
         BigInt &lshift();
-        BigInt const lshiftc() const;
+        BigInt lshiftc() const;
 
         BigInt &lshift(size_t nBits);
-        BigInt const lshiftc(size_t nBits) const;
+        BigInt lshiftc(size_t nBits) const;
 
         BigInt &operator<<=(size_t nBits);
 
         BigInt &rshift();
-        BigInt const rshiftc() const;
+        BigInt rshiftc() const;
 
         BigInt &rshift(size_t nBits);
-        BigInt const rshiftc(size_t nBits) const;
+        BigInt rshiftc(size_t nBits) const;
 
         BigInt &operator>>=(size_t nBits);
 
@@ -231,12 +231,6 @@ class BigInt
                                      BIGNUM const *, BIGNUM const *, 
                                      BN_CTX *), 
                         BigInt const &rhs, char const *op);
-
-
-//        BigInt const checked5(BIGNUM *(*BN_op)(BIGNUM *, 
-//                                     BIGNUM const *, BIGNUM const *, 
-//                                     BN_CTX *), 
-//                        BigInt const &rhs, char const *op) const;
 
 
         static void primeCallback(int reason, int primeNr, void *primeBase);
@@ -415,19 +409,19 @@ inline BigInt::Bit::operator bool() const
     return d_bi.hasBit(d_idx);
 }
 
-BigInt const operator*(BigInt const &lhs, BigInt const &rhs);
-BigInt const operator/(BigInt const &lhs, BigInt const &rhs);
-BigInt const operator%(BigInt const &lhs, BigInt const &rhs);
-BigInt const operator+(BigInt const &lhs, BigInt const &rhs);
-BigInt const operator-(BigInt const &lhs, BigInt const &rhs);
-BigInt const operator>>(BigInt const &lhs, size_t rhs);
-BigInt const operator<<(BigInt const &lhs, size_t rhs);
-BigInt const operator|(BigInt const &lhs, BigInt const &rhs);
-BigInt const operator&(BigInt const &lhs, BigInt const &rhs);
-BigInt const operator^(BigInt const &lhs, BigInt const &rhs);
+BigInt operator*(BigInt const &lhs, BigInt const &rhs);
+BigInt operator/(BigInt const &lhs, BigInt const &rhs);
+BigInt operator%(BigInt const &lhs, BigInt const &rhs);
+BigInt operator+(BigInt const &lhs, BigInt const &rhs);
+BigInt operator-(BigInt const &lhs, BigInt const &rhs);
+BigInt operator>>(BigInt const &lhs, size_t rhs);
+BigInt operator<<(BigInt const &lhs, size_t rhs);
+BigInt operator|(BigInt const &lhs, BigInt const &rhs);
+BigInt operator&(BigInt const &lhs, BigInt const &rhs);
+BigInt operator^(BigInt const &lhs, BigInt const &rhs);
 
-BigInt const gcd(BigInt const &lhs, BigInt const &rhs);
-BigInt const inverseMod(BigInt const &lhs, BigInt const &mod);
+BigInt gcd(BigInt const &lhs, BigInt const &rhs);
+BigInt inverseMod(BigInt const &lhs, BigInt const &mod);
 
 std::istream &operator>>(std::istream &out, BigInt &bn);
 
