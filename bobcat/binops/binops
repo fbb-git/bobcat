@@ -1,0 +1,142 @@
+#ifndef INCLUDED_BOBCAT_BINOPS_
+#define INCLUDED_BOBCAT_BINOPS_
+
+#include <utility>
+
+namespace FBB
+{
+
+template <typename Class>
+inline Class operator+(Class &&lhs, Class const &rhs)
+{
+    return lhs += rhs;
+}
+
+template <typename Class>
+Class operator+(Class const &lhs, Class const &rhs)
+{
+    Class tmp(lhs);
+    return operator+(std::move(tmp), rhs);
+}
+
+template <typename Class>
+inline Class operator-(Class &&lhs, Class const &rhs)
+{
+    return lhs -= rhs;
+}
+
+template <typename Class>
+Class operator-(Class const &lhs, Class const &rhs)
+{
+    Class tmp(lhs);
+    return operator-(std::move(tmp), rhs);
+}
+
+template <typename Class>
+inline Class operator*(Class &&lhs, Class const &rhs)
+{
+    return lhs *= rhs;
+}
+
+template <typename Class>
+Class operator*(Class const &lhs, Class const &rhs)
+{
+    Class tmp(lhs);
+    return operator*(std::move(tmp), rhs);
+}
+
+template <typename Class>
+inline Class operator/(Class &&lhs, Class const &rhs)
+{
+    return lhs /= rhs;
+}
+
+template <typename Class>
+Class operator/(Class const &lhs, Class const &rhs)
+{
+    Class tmp(lhs);
+    return operator/(std::move(tmp), rhs);
+}
+
+template <typename Class>
+inline Class operator%(Class &&lhs, Class const &rhs)
+{
+    return lhs %= rhs;
+}
+
+template <typename Class>
+Class operator%(Class const &lhs, Class const &rhs)
+{
+    Class tmp(lhs);
+    return operator%(std::move(tmp), rhs);
+}
+
+template <typename Class>
+inline Class operator^(Class &&lhs, Class const &rhs)
+{
+    return lhs ^= rhs;
+}
+
+template <typename Class>
+Class operator^(Class const &lhs, Class const &rhs)
+{
+    Class tmp(lhs);
+    return operator^(std::move(tmp), rhs);
+}
+
+template <typename Class>
+inline Class operator&(Class &&lhs, Class const &rhs)
+{
+    return lhs &= rhs;
+}
+
+template <typename Class>
+Class operator&(Class const &lhs, Class const &rhs)
+{
+    Class tmp(lhs);
+    return operator&(std::move(tmp), rhs);
+}
+
+template <typename Class>
+inline Class operator|(Class &&lhs, Class const &rhs)
+{
+    return lhs |= rhs;
+}
+
+template <typename Class>
+Class operator|(Class const &lhs, Class const &rhs)
+{
+    Class tmp(lhs);
+    return operator|(std::move(tmp), rhs);
+}
+
+template <typename Class>
+inline Class operator<<(Class &&lhs, Class const &rhs)
+{
+    return lhs <<= rhs;
+}
+
+template <typename Class>
+Class operator<<(Class const &lhs, Class const &rhs)
+{
+    Class tmp(lhs);
+    return operator<<(std::move(tmp), rhs);
+}
+
+template <typename Class>
+inline Class operator>>(Class &&lhs, Class const &rhs)
+{
+    return lhs >>= rhs;
+}
+
+template <typename Class>
+Class operator>>(Class const &lhs, Class const &rhs)
+{
+    Class tmp(lhs);
+    return operator>>(std::move(tmp), rhs);
+}
+
+} // FBB        
+#endif
+
+
