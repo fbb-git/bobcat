@@ -1,6 +1,8 @@
 #include "user.ih"
 
-User::User(User &&tmp)
+#include "../iuo/iuo"
+
+User::User(User const &&tmp)
 :
     d_name( move(tmp.d_name) ),
     d_password( move(tmp.d_password) ),
@@ -10,7 +12,11 @@ User::User(User &&tmp)
 
     d_uid(tmp.d_uid),
     d_gid(tmp.d_gid)
-{}
+{
+    static bool called = false;
+    deprecated__(called, "User::User(User const &&tmp) is "
+                "deprecated. Please recompile this program");
+}
 
 
 

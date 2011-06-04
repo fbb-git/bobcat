@@ -85,8 +85,8 @@ class MailHeaders
             public:
                 const_hdr_iterator &operator++();
                 const_hdr_iterator &operator--();
-                const_hdr_iterator const operator++(int);
-                const_hdr_iterator const operator--(int);
+                const_hdr_iterator operator++(int);
+                const_hdr_iterator operator--(int);
                 bool operator==(const_hdr_iterator const &other) const;
                 bool operator!=(const_hdr_iterator const &other) const;
                 std::string const &operator*() const;
@@ -98,9 +98,9 @@ class MailHeaders
                                             const_reverse_hdr_iterator; 
 
         explicit MailHeaders(std::istream &in, Mode mode = READ);
-        MailHeaders(MailHeaders const &&tmp);
+        MailHeaders(MailHeaders &&tmp);
 
-        MailHeaders &operator=(MailHeaders const &&tmp);
+        MailHeaders &operator=(MailHeaders &&tmp);
 
         void read();
         void setHeaderIterator(char const *header, Match match = FULL);
@@ -122,6 +122,8 @@ class MailHeaders
         const_reverse_iterator rbegin() const;
         const_reverse_iterator rend() const;
         
+        MailHeaders(MailHeaders const &&tmp);               // Deprecated
+        MailHeaders &operator=(MailHeaders const &&tmp);    // Deprecated
 };
 
 inline MailHeaders::const_iterator MailHeaders::begin() const
