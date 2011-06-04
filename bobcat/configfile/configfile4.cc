@@ -1,6 +1,8 @@
 #include "configfile.ih"
 
-ConfigFile::ConfigFile(ConfigFile &&tmp)
+#include "../iuo/iuo"
+
+ConfigFile::ConfigFile(ConfigFile const &&tmp)
 :
     d_line( move(tmp.d_line) ),
 
@@ -13,4 +15,8 @@ ConfigFile::ConfigFile(ConfigFile &&tmp)
     d_vsIter( move(tmp.d_vsIter) ),
     d_re( move(tmp.d_re) ),
     d_pattern( move(tmp.d_pattern) )
-{}
+{
+    static bool called = false;
+    deprecated__(called, "ConfigFile::ConfigFile(ConfigFile const &&tmp) is "
+                "deprecated. Please recompile this program");
+}

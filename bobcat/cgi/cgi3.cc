@@ -1,6 +1,9 @@
 #include "cgi.ih"
 
-CGI::CGI(CGI &&tmp)
+// Deprecated. Kept for backward compatibility only
+#include "../iuo/iuo"
+
+CGI::CGI(CGI const &&tmp)
 :
     d_method(tmp.d_method),
     d_escapeValue(tmp.d_escapeValue),
@@ -23,6 +26,15 @@ CGI::CGI(CGI &&tmp)
     d_activated(tmp.d_activated),
     d_maxUploadSize(tmp.d_maxUploadSize)
 {
+    static bool called = false;
+    deprecated__(called, 
+            "CGI::CGI(CGI const &&) is deprecated, please recompile "
+            "your program");
+
     memcpy(d_escape, tmp.d_escape, sizeof(d_escape));
 }
+
+
+
+
 

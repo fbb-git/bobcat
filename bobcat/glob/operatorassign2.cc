@@ -1,7 +1,7 @@
 #include "glob.ih"
 
-Glob &Glob::operator=(Glob const &&tmp)
+Glob &Glob::operator=(Glob &&tmp)
 {
-    swap(const_cast<Glob &>(tmp));
+    swap(tmp);
     return *this;
 }

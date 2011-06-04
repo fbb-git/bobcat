@@ -1,7 +1,7 @@
 #include "cgi.ih"
 
-CGI &CGI::operator=(CGI const &&tmp)
+CGI &CGI::operator=(CGI &&tmp)
 {
-    fswap(*this, const_cast<CGI &>(tmp));
+    fswap(*this, tmp);
     return *this;
 }

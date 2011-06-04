@@ -31,10 +31,10 @@ class CmdFinder: public CmdFinderBase
 
     protected:
         CmdFinder(Entry const *begin, Entry const *end, size_t mode = 0);
-        CmdFinder(CmdFinder const &&tmp);
+        CmdFinder(CmdFinder &&tmp);
 
         CmdFinder &operator=(CmdFinder const &rhs) = default;
-        CmdFinder &operator=(CmdFinder const &&tmp);
+        CmdFinder &operator=(CmdFinder &&tmp);
 
         FP findCmd(std::string const &cmd);
         size_t count() const;
@@ -54,7 +54,7 @@ class CmdFinder: public CmdFinderBase
 };
 
 template <typename FP>
-CmdFinder<FP>::CmdFinder(CmdFinder const &&tmp)
+CmdFinder<FP>::CmdFinder(CmdFinder &&tmp)
 :
     CmdFinderBase(move(tmp)),
     d_count(tmp.d_count),
@@ -63,9 +63,9 @@ CmdFinder<FP>::CmdFinder(CmdFinder const &&tmp)
 {}
 
 template <typename FP>
-inline CmdFinder<FP> &CmdFinder<FP>::operator=(CmdFinder const &&tmp)
+inline CmdFinder<FP> &CmdFinder<FP>::operator=(CmdFinder &&tmp)
 {
-    FBB::fswap(*this, const_cast<CmdFinder &>(tmp));
+    FBB::fswap(*this, tmp);
     return *this;
 }
 

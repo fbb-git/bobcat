@@ -1,6 +1,6 @@
 #include "cidr.ih"
 
-Cidr::Cidr(Cidr const &&tmp) 
+Cidr::Cidr(Cidr &&tmp) 
 :
     d_cidr(move(tmp.d_cidr)),
     d_iter(move(tmp.d_iter)),
