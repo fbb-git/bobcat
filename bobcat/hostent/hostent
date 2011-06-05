@@ -21,7 +21,7 @@ class Hostent: private hostent
     public:
         Hostent();
         Hostent(Hostent const &other);
-        Hostent(Hostent const &&other);
+        Hostent(Hostent &&tmp);
         explicit Hostent(hostent const *other);
 
         ~Hostent();
@@ -43,6 +43,8 @@ class Hostent: private hostent
         size_t addressType() const;
 
         void swap(Hostent &other);
+
+        Hostent(Hostent const &&tmp);                   // Deprecated
 
     private:
         static char *xstrdup(char const *src);

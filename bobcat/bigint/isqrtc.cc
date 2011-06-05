@@ -1,6 +1,6 @@
 #include "bigint.ih"
 
-BigInt const BigInt::isqrtc() const
+BigInt BigInt::isqrtc() const
 {
     BigInt ret(*this);
     ret.isqrt();

@@ -1,6 +1,6 @@
 #include "bigint.ih"
 
-BigInt const BigInt::tildeBitsc() const
+BigInt BigInt::tildeBitsc() const
 {
     BigInt ret(*this);
     ret.tildeBits();

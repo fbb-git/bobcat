@@ -1,6 +1,6 @@
 #include "bigint.ih"
 
-BigInt const BigInt::operator++(int)
+BigInt BigInt::operator++(int)
 {
     BigInt tmp(*this);
     ++*this;

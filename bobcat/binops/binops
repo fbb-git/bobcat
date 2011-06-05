@@ -3,8 +3,13 @@
 
 #include <utility>
 
-namespace FBB
-{
+// The templates in this file were not defined in the namespace FBB to enhance
+// their usability. If you want to declare them in a namespace of your own
+// include them in your namespace-block, like this:
+//  namespace YOUR_NAMESPACE
+//  {
+//      #include <bobcat/binops>
+//  }
 
 template <typename Class>
 inline Class operator+(Class &&lhs, Class const &rhs)
@@ -136,7 +141,6 @@ Class operator>>(Class const &lhs, Class const &rhs)
     return operator>>(std::move(tmp), rhs);
 }
 
-} // FBB        
 #endif
 
 

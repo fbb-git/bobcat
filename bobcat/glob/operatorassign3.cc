@@ -1,5 +1,7 @@
 #include "glob.ih"
 
+#include "../iuo/iuo"
+
 Glob &Glob::operator=(Glob const &&tmp)
 {
     static bool called = false;
