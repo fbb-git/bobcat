@@ -1,8 +1,6 @@
 #ifndef INCLUDED_BOBCAT_BINOPS_
 #define INCLUDED_BOBCAT_BINOPS_
 
-#include <utility>
-
 // The templates in this file were not defined in the namespace FBB to enhance
 // their usability. If you want to declare them in a namespace of your own
 // include them in your namespace-block, like this:
@@ -21,7 +19,7 @@ template <typename Class>
 Class operator+(Class const &lhs, Class const &rhs)
 {
     Class tmp(lhs);
-    return operator+(std::move(tmp), rhs);
+    return std::move(tmp) + rhs;
 }
 
 template <typename Class>
@@ -34,7 +32,7 @@ template <typename Class>
 Class operator-(Class const &lhs, Class const &rhs)
 {
     Class tmp(lhs);
-    return operator-(std::move(tmp), rhs);
+    return std::move(tmp) - rhs;
 }
 
 template <typename Class>
@@ -47,7 +45,7 @@ template <typename Class>
 Class operator*(Class const &lhs, Class const &rhs)
 {
     Class tmp(lhs);
-    return operator*(std::move(tmp), rhs);
+    return std::move(tmp) * rhs;
 }
 
 template <typename Class>
@@ -60,7 +58,7 @@ template <typename Class>
 Class operator/(Class const &lhs, Class const &rhs)
 {
     Class tmp(lhs);
-    return operator/(std::move(tmp), rhs);
+    return std::move(tmp) / rhs;
 }
 
 template <typename Class>
@@ -73,7 +71,7 @@ template <typename Class>
 Class operator%(Class const &lhs, Class const &rhs)
 {
     Class tmp(lhs);
-    return operator%(std::move(tmp), rhs);
+    return std::move(tmp) % rhs;
 }
 
 template <typename Class>
@@ -86,7 +84,7 @@ template <typename Class>
 Class operator^(Class const &lhs, Class const &rhs)
 {
     Class tmp(lhs);
-    return operator^(std::move(tmp), rhs);
+    return std::move(tmp) ^ rhs;
 }
 
 template <typename Class>
@@ -99,7 +97,7 @@ template <typename Class>
 Class operator&(Class const &lhs, Class const &rhs)
 {
     Class tmp(lhs);
-    return operator&(std::move(tmp), rhs);
+    return std::move(tmp) & rhs;
 }
 
 template <typename Class>
@@ -112,7 +110,7 @@ template <typename Class>
 Class operator|(Class const &lhs, Class const &rhs)
 {
     Class tmp(lhs);
-    return operator|(std::move(tmp), rhs);
+    return std::move(tmp) | rhs;
 }
 
 template <typename Class>
@@ -125,7 +123,7 @@ template <typename Class>
 Class operator<<(Class const &lhs, Class const &rhs)
 {
     Class tmp(lhs);
-    return operator<<(std::move(tmp), rhs);
+    return std::move(tmp) << rhs;
 }
 
 template <typename Class>
@@ -138,7 +136,7 @@ template <typename Class>
 Class operator>>(Class const &lhs, Class const &rhs)
 {
     Class tmp(lhs);
-    return operator>>(std::move(tmp), rhs);
+    return std::move(tmp) >> rhs;
 }
 
 #endif

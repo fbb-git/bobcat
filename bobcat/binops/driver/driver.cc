@@ -1,6 +1,6 @@
 #include <iostream>
-
-#include "../binops"
+#include <utility>
+#include <binary/binops>
 
 class Demo
 {
@@ -19,7 +19,6 @@ class Demo
             return *this;
         }
 };
-
 std::ostream &operator<<(std::ostream &out, Demo const &demo)
 {
     return out << demo.d_value;
@@ -29,12 +28,8 @@ using namespace std;
 
 int main()
 {
-    using FBB::operator+;
-
     Demo four(4);
     Demo five(5);
 
     cout << four + five << '\n';
 }
-
-

@@ -1,61 +1,143 @@
 includefile(include/header)
 
 COMMENT(manpage, section, releasedate, archive, short name)
-manpage(FBB::Errno)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
-                    (Error handler)
+manpage(binops)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Binary Operators)
 
-manpagename(FBB::Errno)(shortdesc)
+manpagename(binops)(Template functions for class-type binary operators)
 
 manpagesynopsis()
-    bf(#include <bobcat/errno>)nl()
-==================================
-REMOVE for plain template classes:    
-    Linking option: tt(-lbobcat) 
-==================================
+    bf(#include <bobcat/binops>)nl()
 
 manpagedescription()
+    Classes can overload binary operators. A class named tt(Class) may
+overload these binary operators to suit its own needs, allowing, e.g., two
+tt(Class) type objects to be added after overloading tt(operator+). Operators
+for the binary operators *, /, %, +, -, <<, >>, &, |, and ^ (in this man-page
+they are generically indicated as the `tt(@)' operator) can be overloaded by
+defining the tt(operator@) function.
 
-includefile(include/namespace)
+    If a class supports copy construction and if it offers binary assignment
+operators (i.e., it offers members of the form tt(operator@=)), then the
+matching binary operators can all be implemented identically. The
+em(move-aware) tt(Class &operator@(Class &&lhs, Class const &rhs)) is easily
+implemented in terms of tt(operator@=) (note that the class itself doesn't
+have to be `move-aware' to define this function). The move-aware binary
+operator requires but one line in its implementation, and as its
+implementation never changes it can safely be defined tt(inline):
+        verb(
+Class operator@(Class &&lhs, Class const &rhs)
+{
+    return lhs @= rhs;
+}
+        )
+    Once the move-aware tt(operator@) is available the traditional binary
+operator can be implemented using the copy constructor and the above
+move-aware binary operator:
+        verb(
+Class operator@(Class const &lhs, Class const &rhs)
+{
+    Class tmp(lhs);
+    return std::move(tmp) @ rhs;
+}
+        )
+
+    As the binary operators can all be implemented like their definitions are
+perfectly suited for templates: A class offering a particular tt(operator@=)
+then automatically also offers the matching binary operators after including
+tt(bobcat/binops). Since the binary function templates are not instantiated
+until used their definitions can be processed by the compiler even if a class
+implements only a subset of the available binary assignment operators.
+
+    The binary operator functions templates in tt(bobcat/binops) are em(not)
+implemented in a particular namespace. Nor is the header file tt(utility),
+implementing tt(std::move), read by tt(bobcat/binops). This allows sources to
+include  tt(bobcat/binops) for multiple namespaces. If this is required the
+include safeguard (using the identifier tt(INCLUDED_BOBCAT_BINOPS_)) must be
+suppressed between inclusions of tt(bobcat/binops) in different
+namespaces. Eg., to make the binary operator function templates available in
+a source file using the tt(namespace FBB) and the default namespace the
+following scheme can be used:
+        verb(
+#include <utility>              // ensure std::move is available
+
+namespace FBB
+{
+    #include "../binops"        // binary operators defined in FBB
+}
+#undef INCLUDED_BOBCAT_BINOPS_  // suppress the include guard
+#include "../binops"            // read binops again so the binary
+                                // operators can be used in the
+                                // default namespace as well
+    )
 
 manpagesection(INHERITS FROM)
     -
 
-manpagesection(TYPEDEFS AND ENUMS)
-
-manpagesection(CONSTRUCTORS)
-    itemization(
-    itb(Errno())
-    )
-    The copy and move constructors are available.
-
 manpagesection(OVERLOADED OPERATORS)
-    itemization(
-    itb()
-    )
-    The copy and move assignment operators are available.
+    The function templates in tt(bobcat/binops) implement all arithmetic
+binary operators, both move-aware and the traditional binary operators,
+expecting constant lvalue references. They can be used if the matching binary
+assignment operators were implemented in the classes for which the templates
+must be instantiated. The following operators are available:
 
-manpagesection(MEMBER FUNCTIONS)
-     All members of bf(std::ostringstream) and bf(  std::exception) are
-available, as bf(FBB::Errno) inherits from these classes.
+Move-aware operators, using temporary objects for its left-hand side operands:
     itemization(
-    itb()
+    itb(Class operator*(Class &&lhs, Class const &rhs))
+    itb(Class operator/(Class &&lhs, Class const &rhs))
+    itb(Class operator%(Class &&lhs, Class const &rhs))
+    itb(Class operator+(Class &&lhs, Class const &rhs))
+    itb(Class operator-(Class &&lhs, Class const &rhs))
+    itb(Class operator<<(Class &&lhs, Class const &rhs))
+    itb(Class operator>>(Class &&lhs, Class const &rhs))
+    itb(Class operator&(Class &&lhs, Class const &rhs))
+    itb(Class operator|(Class &&lhs, Class const &rhs))
+    itb(Class operator^(Class &&lhs, Class const &rhs))
     )
 
-manpagesection(MANIPULATORS)
+`Traditional' operators, using lvalue references to constant objects 
+for its left-hand side operands:
     itemization(
-    itb(FBB::insertable) 
+    itb(Class operator*(Class const &lhs, Class const &rhs))
+    itb(Class operator/(Class const &lhs, Class const &rhs))
+    itb(Class operator%(Class const &lhs, Class const &rhs))
+    itb(Class operator+(Class const &lhs, Class const &rhs))
+    itb(Class operator-(Class const &lhs, Class const &rhs))
+    itb(Class operator<<(Class const &lhs, Class const &rhs))
+    itb(Class operator>>(Class const &lhs, Class const &rhs))
+    itb(Class operator&(Class const &lhs, Class const &rhs))
+    itb(Class operator|(Class const &lhs, Class const &rhs))
+    itb(Class operator^(Class const &lhs, Class const &rhs))
     )
+
 
 manpagesection(EXAMPLE)
-    To do
+    verbinclude(../../binops/driver/driver.cc)
 
 manpagefiles()
-    em(bobcat/errno) - defines the class interface
+    em(bobcat/binops) - defines the binary operator function templates
 
 manpageseealso()
     bf(bobcat)(7)
 
 manpagebugs()
-    None Reported.
+    itemization(
+    it() Function templates don't do promotions. If a class offers single
+argument constructors for arguments of type tt(Type) then tt(Type) arguments
+cannot directly be used as arguments for the overloaded binary operators. In
+that case the constructor for tt(Type) should explicitly be called. Example:
+        verb(
+Type value;
+Class object;
+
+Class result(object + Class(value));
+        )
+    it() The header file tt(utility), defining tt(std::move), is required by,
+but not included by tt(bobcat/binops). This was a design decision, see the
+bf(DESCRIPTION) section.
+    )
 
 includefile(include/trailer)
+
+
+
