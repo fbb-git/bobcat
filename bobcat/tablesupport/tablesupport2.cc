@@ -1,6 +1,6 @@
 #include "tablesupport.ih"
 
-TableSupport::TableSupport(TableSupport const &&tmp)
+TableSupport::TableSupport(TableSupport &&tmp)
 :
     d_streamPtr(tmp.d_streamPtr),
     d_nRows(tmp.d_nRows),
