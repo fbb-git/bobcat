@@ -5,8 +5,7 @@
 User &User::operator=(User const &&tmp)
 {
     static bool called = false;
-    deprecated__(called, "User::operator=(User const &&tmp) is "
-                        "deprecated. Please recompile this program");
+    deprecated__(called, "User::operator=(User const &&tmp) is");
     fswap(*this, const_cast<User &>(tmp));
     return *this;
 }

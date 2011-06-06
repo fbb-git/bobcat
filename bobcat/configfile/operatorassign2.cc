@@ -5,8 +5,7 @@
 ConfigFile &ConfigFile::operator=(ConfigFile const &&tmp)
 {
     static bool called = false;
-    deprecated__(called, "ConfigFile::operator=(ConfigFile const &&tmp) is "
-                        "deprecated. Please recompile this program");
+    deprecated__(called, "ConfigFile::operator=(ConfigFile const &&tmp)");
     fswap(*this, const_cast<ConfigFile &>(tmp));
     return *this;
 }

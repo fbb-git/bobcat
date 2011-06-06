@@ -10,6 +10,5 @@ Cidr::Cidr(Cidr const &&tmp)
     d_last(tmp.d_last)
 {
     static bool called = false;
-    deprecated__(called, "Cidr::Cidr(Cidr const &&tmp) is deprecated. Please "
-                         "recompile this program");
+    deprecated__(called, "Cidr::Cidr(Cidr const &&tmp)");
 }

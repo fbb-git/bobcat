@@ -17,6 +17,5 @@ ConfigFile::ConfigFile(ConfigFile const &&tmp)
     d_pattern( move(tmp.d_pattern) )
 {
     static bool called = false;
-    deprecated__(called, "ConfigFile::ConfigFile(ConfigFile const &&tmp) is "
-                "deprecated. Please recompile this program");
+    deprecated__(called, "ConfigFile::ConfigFile(ConfigFile const &&tmp)");
 }

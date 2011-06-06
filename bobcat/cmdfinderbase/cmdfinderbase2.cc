@@ -9,6 +9,5 @@ CmdFinderBase::CmdFinderBase(CmdFinderBase const &&tmp)
 {
     static bool called = false;
     deprecated__(called, 
-        "CmdFinderBase::CmdFinderBase(CmdFinderBase const &&tmp) is "
-        "deprecated. Please recompile this program");
+        "CmdFinderBase::CmdFinderBase(CmdFinderBase const &&tmp)");
 }

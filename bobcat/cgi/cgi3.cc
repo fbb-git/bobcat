@@ -27,9 +27,7 @@ CGI::CGI(CGI const &&tmp)
     d_maxUploadSize(tmp.d_maxUploadSize)
 {
     static bool called = false;
-    deprecated__(called, 
-            "CGI::CGI(CGI const &&) is deprecated, please recompile "
-            "your program");
+    deprecated__(called, "CGI::CGI(CGI const &&)");
 
     memcpy(d_escape, tmp.d_escape, sizeof(d_escape));
 }

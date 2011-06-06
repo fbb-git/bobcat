@@ -7,8 +7,7 @@ Glob::Glob(Glob const &&tmp)
     d_share(tmp.d_share)
 {
     static bool called = false;
-    deprecated__(called, "Glob::Glob(Glob const &&tmp) is deprecated. Please "
-                         "recompile this program");
+    deprecated__(called, "Glob::Glob(Glob const &&tmp)");
 
     const_cast<Glob &>(tmp).d_share = 0;
 }

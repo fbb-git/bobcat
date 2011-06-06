@@ -7,7 +7,9 @@ namespace FBB
         if (called)
             return;
     
-        cerr << msg << '\n';
+        cerr << "[Warning] " << msg << 
+            " is deprecated.\n"
+            "Recompile this program to remove this warning\n";
         called = true;
     }
 }

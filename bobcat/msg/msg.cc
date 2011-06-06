@@ -5,8 +5,13 @@
 ostringstream &FBB::msg()
 {
     static bool called = false;
-    deprecated__(called, "FBB::msg() is deprecated. "
-                         "Use FBB::Mstream objects instead");
+
+    if (not called)
+    {
+        called = true;
+        cerr << "[Warning] FBB::msg() is deprecated.\n"
+                         "Use FBB::Mstream objects instead\n";
+    }
 
     Msg::s_msg.clear();
     Msg::s_msg.str("");

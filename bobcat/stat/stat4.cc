@@ -10,6 +10,5 @@ Stat::Stat(Stat const &&tmp)
     d_name( move(tmp.d_name) )
 {
     static bool called = false;
-    deprecated__(called, "Stat::Stat(Stat const &&tmp) is "
-                "deprecated. Please recompile this program");
+    deprecated__(called, "Stat::Stat(Stat const &&tmp)");
 }

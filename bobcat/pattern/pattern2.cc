@@ -12,7 +12,6 @@ Pattern::Pattern(Pattern const &&tmp)
     d_matchOptions(tmp.d_matchOptions)
 {
     static bool called = false;
-    deprecated__(called, "Pattern::Pattern(Pattern const &&tmp) is "
-                "deprecated. Please recompile this program");
+    deprecated__(called, "Pattern::Pattern(Pattern const &&tmp)");
     const_cast<Pattern &>(tmp).d_regex = 0;
 }

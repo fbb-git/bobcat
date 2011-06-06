@@ -14,7 +14,6 @@ TableSupport::TableSupport(TableSupport const &&tmp)
 {
     static bool called = false;
     deprecated__(called, 
-                "TableSupport::TableSupport(TableSupport const &&tmp) is "
-                "deprecated. Please recompile this program");
+                "TableSupport::TableSupport(TableSupport const &&tmp)");
 }
 
