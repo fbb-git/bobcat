@@ -90,11 +90,10 @@ class ConfigFile
                     SearchCasing sType = SearchCaseSensitive,
                     Indices iType = IgnoreIndices);
 
-        ConfigFile(ConfigFile const &&tmp);
+        ConfigFile(ConfigFile &&tmp);
 
         ConfigFile &operator=(ConfigFile const &rhs) = default;
-
-        ConfigFile &operator=(ConfigFile const &&tmp);
+        ConfigFile &operator=(ConfigFile &&tmp);
 
         void setCommentHandling(Comment type);
         void setSearchCasing(SearchCasing type);
@@ -118,6 +117,9 @@ class ConfigFile
         std::string const &operator[](size_t idx) const;
 
         size_t size() const;
+
+        ConfigFile(ConfigFile const &&tmp);             // Deprecated
+        ConfigFile &operator=(ConfigFile const &&tmp);  // Deprecated
 
     private:
         size_t append_next(std::istream &istr, std::string &line);

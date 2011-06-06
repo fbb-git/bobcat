@@ -74,10 +74,10 @@ class CGI
             char const *header = "Content-type: text/html", 
             std::ostream &out = std::cout);
 
-        CGI(CGI const &&tmp);
+        CGI(CGI &&tmp);
 
         CGI &operator=(CGI const &rhs) = default;
-        CGI &operator=(CGI const &&tmp);
+        CGI &operator=(CGI &&tmp);
 
         CGI &operator<<(std::string const &set);
         CGI &operator<<(std::pair<char, char> range);
@@ -108,6 +108,9 @@ class CGI
         static std::string unPercent(std::string const &text);
         static std::string dos2unix(std::string const &text);
         
+        CGI(CGI const &&tmp);                       // Deprecated
+        CGI &operator=(CGI const &&tmp);            // Deprecated
+
     private:
         void setQuery();
 

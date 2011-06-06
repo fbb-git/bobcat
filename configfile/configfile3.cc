@@ -1,6 +1,6 @@
 #include "configfile.ih"
 
-ConfigFile::ConfigFile(ConfigFile const &&tmp)
+ConfigFile::ConfigFile(ConfigFile &&tmp)
 :
     d_line( move(tmp.d_line) ),
 

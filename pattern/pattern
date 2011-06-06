@@ -103,11 +103,11 @@ class Pattern
                         size_t nSub = 10,
                         int options = REG_EXTENDED | REG_NEWLINE);
         Pattern(Pattern const &other);
-        Pattern(Pattern const &&tmp);                   // 1
+        Pattern(Pattern &&tmp);                         // 1
         ~Pattern();
 
         Pattern &operator=(Pattern const &other);
-        Pattern &operator=(Pattern const &&tmp);
+        Pattern &operator=(Pattern &&tmp);
 
         Pattern &operator<<(int matchOption);
         bool operator<<(std::string const &text);
@@ -152,6 +152,9 @@ class Pattern
         std::string const &pattern() const; // compiled pattern
 
         void swap(Pattern &other);
+
+        Pattern(Pattern const &&tmp);                   // Deprecated
+        Pattern &operator=(Pattern const &&tmp);        // Deprecated
 
     private:
         void newRegex(std::string const &pattern, int options);

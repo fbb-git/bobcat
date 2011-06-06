@@ -1,8 +1,8 @@
 #include "tablesupport.ih"
 
-TableSupport &TableSupport::operator=(TableSupport const &&tmp)
+TableSupport &TableSupport::operator=(TableSupport &&tmp)
 {
-    fswap(*this, const_cast<TableSupport &>(tmp));
+    fswap(*this, tmp);
     return *this;
 }
 

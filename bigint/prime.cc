@@ -1,6 +1,6 @@
 #include "bigint.ih"
 
-BigInt const BigInt::prime(size_t nBits, BigInt const *mod, BigInt const *rem,
+BigInt BigInt::prime(size_t nBits, BigInt const *mod, BigInt const *rem,
                      PrimeType primeType)
 {
     BigInt ret;

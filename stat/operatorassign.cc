@@ -1,7 +1,7 @@
 #include "stat.ih"
 
-Stat &Stat::operator=(Stat const &&tmp)
+Stat &Stat::operator=(Stat &&tmp)
 {
-    fswap(*this, const_cast<Stat &>(tmp));
+    fswap(*this, tmp);
     return *this;
 }

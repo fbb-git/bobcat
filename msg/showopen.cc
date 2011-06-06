@@ -1,17 +1,15 @@
 #include "msg.ih"
 
+#include "../iuo/iuo"
+
 void FBB::showOpen()
 {
-    static bool shown = false;
+    static bool called = false;
 
-    if (!shown)
+    if (not called)
     {
-        shown = true;
-        cerr << "\n"
-                "FBB::Msg::open(...) functions are DEPRECATED and will be "
-                                                            "removed from\n" 
-                "BOBCAT in a future release. Use FBB::Errno::open functions "
-                                                                "instead\n"
-                "\n";
+        called = true;
+        cerr << "[Warning] FBB::Msg::open(...) functions are deprecated.\n"
+                         "Use FBB::Errno::open functions instead\n";
     }
 }

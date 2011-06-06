@@ -1,7 +1,7 @@
 #include "configfile.ih"
 
-ConfigFile &ConfigFile::operator=(ConfigFile const &&tmp)
+ConfigFile &ConfigFile::operator=(ConfigFile &&tmp)
 {
-    fswap(*this, const_cast<ConfigFile &>(tmp));
+    fswap(*this, tmp);
     return *this;
 }
