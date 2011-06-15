@@ -2,5 +2,5 @@
 
 Cidr::Cidr(std::string const &cidrPattern)
 {
-    pushCidr(cidrPattern, *this);
+    pushCidr(cidrPattern);
 }

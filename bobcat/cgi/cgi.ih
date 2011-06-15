@@ -12,7 +12,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include <bobcat/fnwrap>
 #include <bobcat/a2x>
 #include <bobcat/errno>
 #include <bobcat/string>
@@ -106,22 +105,8 @@ class CGIFSA
         size_t wordToken();
 
         static void setFsa(Record const &record);
-        static bool isFirst(PairCPPFunP const &cClass, string const &key);
-        static bool hasToken(Transition const &transition, size_t token);
-
         static int iscgi(int ch);
 };
-
-inline bool CGIFSA::isFirst(pair<char const *const, int (*const )(int)> 
-                     const &cClass, string const &key)
-{
-    return key == cClass.first;
-}
-
-inline bool CGIFSA::hasToken(Transition const &transition, size_t token)
-{
-    return token == transition.token;
-}
 
 inline int CGIFSA::iscgi(int ch)
 {

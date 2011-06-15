@@ -4,5 +4,5 @@ void Cidr::setCidr(std::string const &cidrPattern)
 {
     d_cidr.clear();
 
-    pushCidr(cidrPattern, *this);
+    pushCidr(cidrPattern);
 }

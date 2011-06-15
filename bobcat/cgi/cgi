@@ -66,8 +66,12 @@ class CGI
         unsigned long long d_maxUploadSize;
 
         static std::vector<std::string> s_empty;
-        static size_t const s_uploadBlock = 8000;   // upload.cc
-        static size_t const s_nTries = 100;         // upload.cc
+
+        enum: size_t 
+        {
+            s_uploadBlock = 8000,                   // upload.cc
+            s_nTries = 100
+        };
 
     public:
         explicit CGI(bool defaultEscape = true,

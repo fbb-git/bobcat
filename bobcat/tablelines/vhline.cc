@@ -12,7 +12,13 @@ void TableLines::v_hline(size_t row) const
         if (iter == beyond)
             return;
 
-        for_each(iter, beyond, FnWrap::unary(outLine, out()));
+        for_each(
+            iter, beyond, 
+            [this](Field const &field)
+            {
+                outLine(field, this->out());  
+            }
+        );
     }
     out() << '\n';
 }

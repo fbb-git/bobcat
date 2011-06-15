@@ -1,16 +1,11 @@
 #include "tablesupport"
 
 #include <algorithm>
-#include <bobcat/fnwrap>
+
 #include <bobcat/fswap>
 
 using namespace std;
 using namespace FBB;
-
-inline void TableSupport::setCols(UMValue &elements, size_t nCols)
-{
-    elements.second.resize(TableSupport::rightSeparator(nCols) + 1);
-}
 
 inline size_t TableSupport::leftSeparator(size_t column)
 {
@@ -42,9 +37,3 @@ inline void TableSupport::rightType(size_t *target, size_t type)
                 : 
                     RIGHT_MID;
 }
-
-inline void TableSupport::add(string const &src, size_t &dest)
-{
-    dest += src.length();
-}
-

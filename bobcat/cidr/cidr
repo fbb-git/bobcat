@@ -57,13 +57,10 @@ class Cidr
         Cidr &operator=(Cidr const &&tmp);          // Deprecated
 
     private:
-        static bool matchLine(std::string const &line, Cidr &cidr);
-
+        bool matchLine(std::string const &line);
         MaskPair parse(std::string const &cidrPattern);
-        static void pushCidr(std::string const &cidrPattern, Cidr &cidr);
-
-        static bool compare(MaskPair const &mp, Cidr &cidr, 
-                                                std::string const &address);
+        void pushCidr(std::string const &cidrPattern);
+        bool compare(MaskPair const &mp, std::string const &address);
 };
 
 inline std::string const &Cidr::address() const
