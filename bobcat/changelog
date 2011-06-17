@@ -2,15 +2,22 @@ bobcat (2.18.00)
 
   * Added missing Stat::operator=(Stat const &other) member. 
 
-  * FnWrap* calls removed: they are now superfluous as compilers support 
-    lambda functions
+  * FnWrap* calls removed from the bobcat library: they are now superfluous as
+    compilers support lambda functions. The FnWrap* classes remain available.
 
   * George Danchev observed that static const numeric datamembers (e.g.,
     size_t) using in-class initialization values cause compilation errors when
     all optimizations are switched off (-O0). These static const data members
     were replaced by enum values.
 
- -- Frank B. Brokken <f.b.brokken@rug.nl>  Wed, 15 Jun 2011 11:41:52 +0200
+  * Added IfElse<bool, TrueType, FalseType> and LpromotesR<LeftType,
+    RightType> class templates to bobcat/typetrait
+
+  * The arithmetic operator function templates defined in bobcat/binops now
+    support promotions for classes defining constructors allowing
+    promotions.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Fri, 17 Jun 2011 10:32:38 +0200
 
 bobcat (2.17.00)
 

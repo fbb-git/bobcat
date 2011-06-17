@@ -1,6 +1,7 @@
 #include <iostream>
 #include <utility>
 
+#include "../../typetrait/typetrait"
 #include "../binops"
 
 class Demo
@@ -39,5 +40,7 @@ int main()
     Demo four(4);
     Demo five(5);
 
-    cout << four + five << '\n';
+    cout << four + five << '\n' <<
+            four + 5 << '\n' <<
+            4  + five << '\n';
 }
