@@ -1,8 +1,8 @@
 #include "cidr.ih"
 
-void Cidr::pushCidr(string const &cidrPattern, Cidr &cidr)
+void Cidr::pushCidr(string const &cidrPattern)
 {
-    MaskPair spec = cidr.parse(cidrPattern);
+    MaskPair spec = parse(cidrPattern);
     if (spec.second)
-        cidr.d_cidr.push_back(spec);
+        d_cidr.push_back(spec);
 }

@@ -1,83 +1,51 @@
 #!/usr/bin/make -f
-# -*- makefile -*-
-# Sample debian/rules that uses debhelper.
-# This file was originally written by Joey Hess and Craig Small.
-# As a special exception, when this file is copied by dh-make into a
-# dh-make output file, you may use that output file without restriction.
-# This special exception was added by Craig Small in version 0.37 of dh-make.
 
 # Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
+# export DH_VERBOSE=1
 
-#   -Wall is always used by bobcat's build script, -O2 and -g are defined by
-#   INSTALL.im, see that file for details
-CPPFLAGS = -O2 -g
-# 
-# ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-# 				CFLAGS += -O0
-# else
-# 				CFLAGS += -O2
-# endif
+# -Wall is always used by bobcat's build script, -O2 and -g are defined by
+# INSTALL.im, see that file for details
+CPPFLAGS = -g
 
-# shared library versions, option 1
-version=2.0.5
-major=2
-# option 2, assuming the library is created as src/.libs/libfoo.so.2.0.5 or so
-#version=`ls src/.libs/lib*.so.* | \
-# awk '{if (match($$0,/[0-9]+\.[0-9]+\.[0-9]+$$/)) print substr($$0,RSTART)}'`
-#major=`ls src/.libs/lib*.so.* | \
-# awk '{if (match($$0,/\.so\.[0-9]+$$/)) print substr($$0,RSTART+4)}'`
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CPPFLAGS += -O0
+else
+	CPPFLAGS += -O2
+endif
 
-configure: configure-stamp
-
-configure-stamp:
+build: build-indep build-arch
+build-indep:
+build-arch: build-stamp
+build-stamp:
 	dh_testdir
-	# Add here commands to configure the package.
-
-	touch configure-stamp
-
-build: build-stamp
-build-stamp: configure-stamp
-	dh_testdir
-
 	# Add here commands to compile the package.
 	./build libraries all
 	./build man
-
 	touch build-stamp
 
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp configure-stamp
-
-	# Add here commands to clean up after the build process.
+	rm -f build-stamp
 	./build clean
-
 	dh_clean
 
-install: build
+install: build-arch
 	dh_testdir
 	dh_testroot
-	# dh_clean -k deprecated according to lintian
 	dh_clean
 	dh_installdirs
-
-	# Add here commands to install the package into debian/tmp
 	./build install debian/libbobcat2 debian/libbobcat-dev
 
-# Build architecture-independent files here.
-binary-indep: build install
-# We have nothing to do by default.
+binary-indep:
 
-# Build architecture-dependent files here.
-binary-arch: build install
+binary-arch: build-arch install
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs -A changelog
 	dh_installdocs
-	dh_installexamples
-	#dh_installman
+#	dh_installexamples
+#	dh_installman
 	dh_link
 	dh_strip
 	dh_compress
@@ -96,7 +64,7 @@ binary-arch: build install
 # archive downloaded from https://www.icce.rug.nl/debian/bobcat
 # (bobcat_x.y.z..tar.gz)
 
-MD5TRUSTED := 923e497b821cd31c82a2a4bc8462de6e
+MD5TRUSTED := 232c11dd91048ae8618db84b43a5d706
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
@@ -108,7 +76,6 @@ MD5CURRENT := `md5sum ../tarballs/$(DEFILE) | sed -e 's/ .*//'`
 SVNTRUNK   := https://svn.sourceforge.net/svnroot/bobcat/trunk/bobcat
 
 get-orig-source:
-	@@dh_testdir
 	@@[ -d ../tarballs/. ]||mkdir -p ../tarballs
 
 	-@if [ ! -f ../tarballs/$(DEFILE) ] ; then \
@@ -129,7 +96,6 @@ get-orig-source:
 
 
 get-svn-trunk:
-	@@dh_testdir
 	@@[ -d ../tarballs/. ]||mkdir -p ../tarballs
 	rm -rf ../tarballs/$(DEFILE) ../tarballs/bobcat-svn-trunk
 	svn --force export $(SVNTRUNK) ../tarballs/bobcat-svn-trunk
@@ -145,4 +111,4 @@ print-version:
 
 
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install configure
+.PHONY: clean build build-indep build-arch binary-indep binary-arch binary install

@@ -18,11 +18,16 @@ BigInt BigInt::fromText(string const &text, int mode)
 
     bool negative = text[0] == '-';
     
-    auto iter = find_if(text.begin() + negative, text.end(), 
-                        FnWrap::unary(addDigit, ret, radix, 
+    auto iter = find_if(
+                    text.begin() + negative, text.end(), 
+                    [&, mode](char ch)
+                    {
+                        return addDigit(ch, ret, radix,
                                         mode & ios::oct ?   isoctdigit : 
                                         mode & ios::hex ? ::isxdigit   :
-                                                          ::isdigit));
+                                                          ::isdigit);
+                    }
+                );
 
     if (iter - text.begin() <= negative)
         throw Errno("fromText: text does not represent a BigInt value");

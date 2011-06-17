@@ -1,6 +1,6 @@
 #include "cidr.ih"
 
-bool Cidr::compare(MaskPair const &mp, Cidr &cidr, string const &address)
+bool Cidr::compare(MaskPair const &mp, string const &address)
 {
     size_t binary = dotted2binary(address);
 
@@ -12,8 +12,8 @@ bool Cidr::compare(MaskPair const &mp, Cidr &cidr, string const &address)
 
     if (mp.first <= binary && binary <= last)
     {
-        cidr.d_matched = address;
-        cidr.d_last = last;
+        d_matched = address;
+        d_last = last;
         return true;
     }
 

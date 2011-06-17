@@ -11,8 +11,14 @@ size_t CGIFSA::wordToken()
         return charToken();             
 
                                         // look for a character class name
-    PairCPPFunP const *ret = find_if(s_charClass, s_charClassEnd, 
-            FnWrap::unary(isFirst, d_buffer));
+    PairCPPFunP const *ret = 
+            find_if(
+                s_charClass, s_charClassEnd, 
+                [&](PairCPPFunP const &cClass)
+                {
+                    return d_buffer == cClass.first;
+                }
+            );
 
     if (ret == s_charClassEnd)          // no character class found
         return static_cast<unsigned char>(*d_buffer.rbegin());
