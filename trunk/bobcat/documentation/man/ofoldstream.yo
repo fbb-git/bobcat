@@ -1,0 +1,161 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::OFoldStream)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Fold long lines)
+
+manpagename(FBB::OFoldStream)(Folds long lines)
+
+manpagesynopsis()
+    bf(#include <bobcat/ofoldstream>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB::OFoldStream) folds long lines written to it. The
+tt(OFoldStream) writes the (folded) lines to a second tt(ostream) which is
+either used by or opened by the tt(OFoldStream) object.
+
+    tt(OFoldStream) objects never fold lines in the middle of series of
+non-blank characters but will always break a line at white space
+characters. The resulting lines will always appear to the right of a
+configurable left margin and to the left of a configurable right margin. There
+is a somewhat pathological exception to this: if a word is too long to fit in
+between the margins then the word will exceed the right hand margin.
+
+    The indentation used for the left margins is configurable to either blanks
+(the default) or tabs. When tabs are used the width of a tab character is
+configurable, using a default of 8 positions in the destination stream.
+
+    tt(OFoldStream) is implemented as a wrapper class around tt(std::ostream)
+and tt(FBB::OFoldStreambuf) and a more complete description of the folding
+process can be found in the bf(ofoldstreambuf)(3bobcat) man page.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    std::ostream,nl()
+    (and privately from FBB::OFoldStreambuf)
+
+manpagesection(ENUMERATION)
+    The enumeration tt(TabsOrBlanks) is used to select tabs or blanks when
+writing the indentation. The default is blanks. When tabs are selected the
+display width of tabs characters can be configured as well (using the default
+of 8 positions for each tab-character. The enumeration has two values:
+    itemization(
+    itb(BLANKS)
+        The default, indicating that the left margin is specified and written
+as a number of blanks;
+    itb(TABS)
+        Indicating that the left margin is specified and written as a number
+of tab-characters.
+    )
+
+    The enumeration tt(TrailingBlanks) is used to configure the
+tt(OFoldStream) object with respect to any trailing blanks that may appear
+on the final line. It is the same enumeration type as used with
+tt(OFoldStreambuf) (cf. bf(ofoldstreambuf)(3bobcat)) having two values:
+    itemization(
+    itb(IGNORE_TRAILING_BLANKS)
+        This indicates that trailing blanks appearing at the final line if it
+is not terminated by a newline should not be written to the destination
+tt(std::ostream). This is the default used by tt(OFoldStream) objects.
+    itb(KEEP_TRAILING_BLANKS)
+        This indicates that trailing blanks at the final line if it is not
+terminated by a newline should be written to the destination tt(std::ostream)
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(OFoldStream())
+        This constructor initializes an tt(OFoldStream) object but does not
+associate it with a destination stream. It uses the values 0, 80, tt(BLANKS),
+and tt(IGNORE_TRAILING_BLANKS)for, resp. its left margin, right margin
+left-margin characters and tt(TrailingBlanks) handling mode.
+
+    itb(OFoldStream(char const *fname,
+                   size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
+                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS))
+    This constructor initializes an tt(OFoldStream) object and opens (using
+tt(std::ios::out)) the destination stream using the name specified as its
+tt(fname) argument. 
+
+    itb(OFoldStream(std::ostream &stream,
+                   size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
+                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS))
+    This constructor initializes an tt(OFoldStream) object and uses as its
+destination stream the tt(std::ostream stream).
+    )
+
+    The destructor writes any buffered information to the destination stream
+and will then flush the destination stream.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::ostream) are available, as bf(FBB::OFoldStream)
+inherits from this class.
+    itemization(
+    itb(void close())
+        This member flushes any pending information to the destination stream
+and then closes the destination stream.
+
+    itb(void open(char const *fname, openmode mode = std::ios::out))
+        This member associates the tt(OFilterStream) object with an
+tt(std::ofstream) object whose filename is provided and that should receive
+the folded information.
+        
+    itb(void open(std::ostream &out))
+        This member associates the tt(OFilterStream) object with the provided
+tt(ostream) object.
+
+    itb(void setMargins(size_t leftMargin, size_t rightMargin))
+        This member can be used to modify the left- and right folding
+margins. Note that the left margin may also be modified using the tt(FBB::lm)
+and tt(FBB::mlm) manipulators.
+
+    itb(void setTrailingBlanks(TrailingBlanks tb))
+        This member can be used to modify the currently used
+tt(TrailingBlanks) parameter.
+
+    itb(void useBlanks())
+        This member can be used to select blanks  to be used when inserting
+left margins.
+
+    itb(void useTabs(size_t tabWidth = 8))
+        This member can be used to select tab-characters to be used when
+inserting left margins. The second parameter is used to specify the display
+width of a tab-character.
+    )
+
+manpagesection(STATIC MEMBER FUNCTIONS)
+
+    itemization(
+    itb(size_t leftMargin(std::ostream const &os))
+        This member returns the current left margin setting of the
+tt(OFoldStream) object passed to it as its argument. The member defines a
+tt(std::ostream) parameter since in many cases the tt(OFoldStream) object will
+be used in functions themselves defining tt(std::ostream)
+parameters. Internally, the tt(std::ostream)'s tt(std::streambuf) is down cast
+to an tt(OFoldStreambuf) and an tt(FBB::Errno) exception is thrown if that
+cast fails.
+    itb(size_t rightMargin(std::ostream const &os))
+        This member returns the current right margin setting of the
+tt(OFoldStream) object passed to it as its argument. The member's parameter is
+down cast in the same way as tt(leftMargin())'s argument: an tt(FBB::Errno)
+exception is thrown if that cast fails.
+    )
+
+manpagesection(EXAMPLE)
+    verbinclude(../../ofoldstream/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/ofoldstream) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7),  bf(lm)(3bobcat), bf(mlm)(3bobcat),
+    bf(ofoldstreambuf)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)

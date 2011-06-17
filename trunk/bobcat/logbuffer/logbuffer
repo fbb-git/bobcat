@@ -1,0 +1,79 @@
+#ifndef INCLUDED_BOBCAT_LOGBUFFER_
+#define INCLUDED_BOBCAT_LOGBUFFER_
+
+#include <streambuf>
+#include <ostream>
+#include <string>
+
+namespace FBB
+{
+
+enum TimeStamps
+{
+    NOTIMESTAMPS,
+    TIMESTAMPS
+};
+
+class LogBuffer: public std::streambuf
+{
+    std::ostream *d_stream; // the stream to insert info to
+    bool d_insertTimestamp; // write the timestamp or not
+    bool d_active;          // actually write information or not
+    bool d_empty;           // set to true at the beginning, after writing \n
+    std::string d_delim;    // delimiter following time stamps
+
+    public:
+        explicit LogBuffer(         // output to cerr
+                TimeStamps timestamps = TIMESTAMPS,  
+                bool active = true,
+                char const *delim = " ");
+        explicit LogBuffer(std::ostream &stream, 
+                TimeStamps timestamps = TIMESTAMPS,
+                bool active = true,
+                char const *delim = " ");
+
+        void setStream(std::ostream &stream);
+        bool empty() const;
+
+        void setActive(bool active);
+        void settimestamp(TimeStamps timestamps, char const *delim = " ");
+
+        void setEmpty(bool empty);
+
+    protected:
+        virtual int pSync();
+
+    private:
+        virtual int sync();
+        virtual int overflow(int c);
+
+        void insertTimestamp();
+        LogBuffer(LogBuffer const &other) = delete;
+        LogBuffer &operator=(LogBuffer const &other) = delete;
+};
+
+inline void LogBuffer::setStream(std::ostream &stream)
+{
+    d_stream = &stream;
+}
+inline bool LogBuffer::empty() const
+{
+    return d_empty;
+}
+
+inline void LogBuffer::setActive(bool active)
+{
+    d_active = active;
+}
+
+inline void LogBuffer::setEmpty(bool empty)
+{
+    d_empty = empty;
+}
+
+} // FBB
+        
+#endif
+
+
+

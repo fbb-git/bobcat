@@ -1,0 +1,132 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::LocalClientSocket)(3bobcat)
+            (_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+            (Unix Domain client Socket)
+
+manpagename(FBB::LocalClientSocket)
+            (Client Socket connecting to a Server in the Unix Domain)
+
+manpagesynopsis()
+    bf(#include <bobcat/localclientsocket>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    An bf(FBB::LocalClientSocket) may be constructed to connect to a server
+process in the Unix Domain. The socket made available by the
+bf(FBB:LocalClientSocket) may be used to initialize a bf(std::istream) and/or
+bf(std::ostream). The bf(std::istream) is used to read information from the
+server process to which the bf(FBB::LocalClientSocket) connects, The
+bf(std::ostream) is used to send information to the server process to which
+the bf(FBB::LocalClientSocket) connects.  Since a socket may be considered a
+em(file descriptor) the avaiable bf(FBB::IFdStream), bf(FBB::IFdStreamBuf),
+bf(FBB::OFdStream), and bf(FBB::OFdStreamBuf) classes may be used profitably
+here. Note that having available a socket does not mean that this defines the
+communication protocol. It is (still) the responsibility of the programmer to
+comply with an existing protocol or to implement a tailor-made protocol. The
+latter situation implies that the sequence of input- and output operations is
+defined by the programmer.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::LocalSocketBase)
+
+manpagesection(CONSTRUCTOR)
+    itemization(
+    itb(LocalClientSocket())
+        This constructor merely creates a bf(FBB::LocalClientSocket)
+object. Before it can be used, its tt(open()) member must be called.
+    itb(LocalClientSocket(std::string const &name))
+        This constructor initializes an bf(FBB::LocalClientSocket) object,
+using the named Unix Domain socket to connect to the server using the named
+Unix Domain socket. An bf(FBB::Errno) is thrown if the socket could not be
+constructed. The construction of the socket does not mean that a connection
+has actually been established. In order to connect to the server, the member
+bf(connect()) (see below) should be used.
+    )
+    The copy constructor is not available.
+
+manpagesection(MEMBER FUNCTION)
+    itemization(
+    itb(int connect())
+        This member returns a socket that can be used to communicate with the
+server process. An bf(FBB::Errno) exception is thrown if the connection could
+not be established.
+    itb(open(std::string const &name))
+        This member function prepares the bf(FBB::LocalClientSocket) object,
+constructed earlier using the default constructor, for use.  The named Unix
+Domain socket is used to connect to the server using the named Unix Domain
+socket. An bf(FBB::Errno) is thrown if the socket could not be
+constructed. The construction of the socket does not mean that a connection
+has actually been established. In order to connect to the server, the member
+bf(connect()) should be used.
+    )
+
+manpagesection(EXAMPLE)
+    See also the bf(localserversocket)(3bobcat) example.
+        verb(
+    #include <iostream>
+    #include <bobcat/localclientsocket>
+    #include <bobcat/ifdstream>
+    #include <bobcat/ofdstream>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main(int argc, char **argv)
+    try
+    {
+        if (argc == 1)
+        {
+            cerr << "Provide filename representing the unix domain socket\n";
+            return 1;
+        }
+    
+        LocalClientSocket client(argv[1]);
+        int fd = client.connect();
+        string line;
+    
+        cout << "Connecting to socket " << fd << endl;
+    
+        IFdStream in(fd);                 // stream to read from        
+        OFdStream out(fd);                // stream to write to
+    
+        while (true)
+        {
+                                    // Ask for a textline, stop if empty / none
+            cout << "? ";                   
+            if (!getline(cin, line) || line.length() == 0)
+                return 0;
+            cout << "Line read: " << line << endl;
+                                    // Return the line to the server
+            out << line.c_str() << endl;    
+            cout << "wrote line\n";
+    
+                                    // Wait for a reply from the server
+            getline(in, line);
+            cout << "Answer: " << line << endl;
+        }
+        return 0;
+    }
+    catch (Errno const &err)
+    {
+        cerr << err.what() << "\n" <<
+                "Can't connect to " << argv[1] << ", port " << argv[2] << endl;
+        return 1;
+    }
+        )
+
+manpagefiles()
+    em(bobcat/localclientsocket) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(ifdstream)(3bobcat), bf(ifdstreambuf)(3bobcat),
+bf(clientsocket)(3bobcat), bf(localserversocket)(3bobcat),
+bf(localsocketbase)(3bobcat), bf(ofdstream)(3bobcat), bf(ofdstream)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)

@@ -1,0 +1,127 @@
+// With g++ 4.3 ext/hash_map is deprecated. The following example shows how to
+// use hashes with version >= 4.3:
+
+#if __GNUC__ > 4 || \
+              (__GNUC__ == 4 && (__GNUC_MINOR__ > 2))
+
+
+// FOR NOW, THE OPTION -std=c++0x IS REQUIRED
+
+
+
+#include <iostream>
+#include <string>
+//#include <unordered_map>
+
+#include "../hash"
+
+using namespace std;
+using namespace FBB;
+
+// This example illustrates the use of the unordered_map, available from
+//  g++-4.3. It also illustrates that consecutive > chars in template type
+//  definitions no longer confuse the compiler.
+//
+// int main(int argc, char *const *const argv)
+// {
+//     pair<char const *, int> d[] = 
+//     {
+//         pair<char const *, int>("aap", 18),
+//         pair<char const *, int>("noot", 20),
+//         pair<char const *, int>("wim", 30)
+//     };
+// 
+//     unordered_map<char const *, int, hash<char const *>> hcp(d, d + 3);
+// 
+//     cout << hcp["noot"] << endl;
+// 
+//     return 0;
+// }
+
+class Hash
+{
+    public: 
+// std::string and char *'s can be used:
+//
+//        size_t operator()(string const &str) const
+//        {
+//            size_t ret = 0;
+
+//            for (size_t idx = 0; idx < str.length(); ++idx)
+//                ret += idx + str[idx];
+//            return ret;
+//        }
+
+        size_t operator()(char const *str) const
+        {
+            size_t ret = 0;
+
+            for (size_t idx = 0; *str; ++idx, ++str)
+                ret += idx + *str;
+            return ret;
+        }
+};
+
+
+int main(int argc, char *const *const argv)
+{
+//    unordered_map<char const *, std::string, Hash > 
+        
+    pair<char const *, int> d[10];
+
+    hash<char const *> hc;
+
+//    cout << hc("hello world");
+
+    HashCharPtr<int> hcp(d, d + 10);
+
+        HashCharPtr<std::string>    
+        chstringmap;
+
+return 0;
+
+    string key;
+
+    while (cin >> key)
+    {
+        if (key[0] == '?')
+        {
+            key.erase(0, 1);
+            if (chstringmap.find(key.c_str()) == chstringmap.end())
+                cout << "not found\n";
+            else
+                cout << chstringmap[key.c_str()] << endl;
+        }
+        else
+        {
+            string value;
+            cin >> value;
+            chstringmap[key.c_str()] = value;
+        }
+    }
+    return 0;
+}
+
+#else
+
+#include "../hash"
+
+using namespace FBB;
+using namespace std;
+
+int main(int argc, char *const *const argv)
+{
+    pair<char const *, int> d[10];
+
+    HashCharPtr<int> hcp(d, d + 10);
+    return 0;
+}
+
+#endif
+
+
+
+
+
+
+

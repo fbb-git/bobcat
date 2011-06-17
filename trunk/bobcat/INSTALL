@@ -1,0 +1,73 @@
+To Install the bobcat library by hand instead of using the binary distribution
+perform the following steps:
+
+    0. The previously used scripts below make/ are obsolete and were removed
+        from this and future distributions. Icmake should be used instead, for
+        which a top-level script (build) and support scripts in the ./icmake/
+        directory are available. Icmake is available on a great many
+        architectures. See the file INSTALL (and INSTALL.im, replacing the
+        previously used INSTALL.cf) for further details.
+
+    1. Inspect the values of the variables in the file INSTALL.im Modify these
+       when necessary.
+
+    2. Inspect the path to icmake in the `build' script. By default it is
+        /usr/bin/icmake, but some installations use /usr/local/bin/icmake
+        Adapt where necessary.
+
+    3. Run 
+            ./build libraries
+
+        to compile the bobcat libraries. 
+        Optionally add the argument 'strip' if you want the libraries to be
+        stripped. Unless you need the symbolic information in the compiled
+        object modules, it is probably a good idea to provide this
+        argument. So in that case issue:
+
+            ./build libraries strip 
+
+        If you want to add the Milter and Xpointer classes, issue
+
+            ./build libraries all
+        or
+            ./build libraries all strip
+
+        If `all' is omitted, you will be asked interactively which of the two
+        classes (if any) should be added to the libraries.
+
+        To compile the Milter class you need the header libmilter/mfapi.h,
+        which is (in Debian) part of the libmilter-dev package. 
+  
+        To compile Xpointer, you need X11/Xlib.h, which is (in Debian) part of
+        the libx11-dev package.
+  
+        If you don't intend to write programs using these classes, it's ok not
+        to include these classes into the library, since no other classes
+        depend on these two (see README.class-setup).
+
+    4. Run
+            ./build lcgen
+        
+        to build the bobcatlcgen program
+    
+    5. Run (probably as root) 
+            ./build install
+
+        to install. Optionally add two additional argument as a base
+        directories below which respectively the run time (shared) library
+        documentation and the development files plus static library 
+        documentation will be installed.
+
+    Following the installation nothing in this directory tree is required
+    for the proper functioning of the bobcat library, so consider removing it.
+
+Make sure that the library is found by the loader. By default it is installed
+in /usr/lib, which is in the loader's standard search path
+
+By default the headers are stored under /usr/include. Since this is part of
+the compiler's the standard include path the header files are included as,
+e.g., #include <bobcat/errno>. No `bobcat' headers have (.h) extensions.
+
+By default the manual pages are stored under /usr/share/man/man1,
+/usr/share/man/man3, and /usr/share/man/man7, which are normally in the `man'
+program's set of visited directories.

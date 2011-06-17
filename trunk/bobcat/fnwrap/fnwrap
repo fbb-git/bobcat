@@ -1,0 +1,202 @@
+#ifndef INCLUDED_BOBCAT_FNWRAP_
+#define INCLUDED_BOBCAT_FNWRAP_
+
+#include <tuple>
+#include <bobcat/typetrait>
+
+namespace FBB
+{
+
+class FnWrap
+{
+    template <typename Function>
+    struct Dissect
+    {};
+    template <typename Ret, typename ...Args>
+    struct Dissect <Ret (*)(Args ...)>
+    {
+        typedef Ret ReturnType;
+    };
+    typedef Dissect<int> *NotUsed;
+
+    template <size_t count, typename Tuple>
+    struct At
+    {
+        typedef typename std::tuple_element<count - 1, Tuple>::type Type;
+    };
+
+    template <typename RetType, typename Func, typename Arg1, typename Arg2, 
+                size_t size, typename Tuple, typename ... Args>
+    struct CallPack: public CallPack<RetType, Arg1, Arg2, Func, size - 1, 
+                            Tuple, typename At<size, Tuple>::Type, Args ...>
+    {
+        typedef typename TypeTrait<Arg1>::Plain first_argument_type;
+        typedef typename TypeTrait<Arg2>::Plain second_argument_type;
+        typedef typename At<size, Tuple>::Type  LastType;
+
+        static RetType call(Func fun, Arg1 &&arg1, Arg2 &&arg2, 
+                                      Tuple &tuple, Args &&...args);
+    };
+
+                                       // specialization: unary + ret. type
+    template <typename RetType, typename Func, typename Arg1,
+                typename Tuple, typename ... Args>
+    struct CallPack<RetType, Func, Arg1, NotUsed, 0, Tuple, Args...>
+    {
+        static RetType call(Func fun, Arg1 &&arg1, NotUsed &&arg2, 
+                                      Tuple &tuple, Args &&...args);
+    };
+                                       // specialization: binary + ret. type
+    template <typename RetType, typename Func, typename Arg1, typename Arg2,
+                typename Tuple, typename ... Args>
+    struct CallPack<RetType, Func, Arg1, Arg2, 0, Tuple, Args...>
+    {
+        static RetType call(Func fun, Arg1 &&arg1, Arg2 &&arg2, 
+                                      Tuple &tuple, Args &&...args);
+    };
+                                       // specialization: void unary
+    template <typename Func, typename Arg1, typename Tuple, typename ... Args>
+    struct CallPack<void, Func, Arg1, NotUsed, 0, Tuple, Args...>
+    {
+        static void call(Func fun, Arg1 &&arg1, NotUsed &&arg2, 
+                                   Tuple &tuple, Args &&...args);
+    };
+                                        // specialization: void binary
+    template <typename Func, typename Arg1, typename Arg2, typename Tuple, 
+                                                            typename ... Args>
+    struct CallPack<void, Func, Arg1, Arg2, 0, Tuple, Args...>
+    {
+        static void call(Func fun, Arg1 &&arg1, Arg2 &&arg2, 
+                                   Tuple &tuple, Args &&...args);
+    };
+
+public:
+    template <typename Function, typename ... Args>
+    struct Functor
+    {
+        typedef typename Dissect<Function>::ReturnType RetType;
+
+        Function d_function;
+        std::tuple<Args ...> d_args;
+
+        Functor(Function fun, Args &&... args);
+
+        template <typename Arg1, typename Arg2>
+        typename Functor::RetType operator()(Arg1 &&arg1, Arg2 &&arg2);
+
+        template <typename Arg1>
+        typename Functor::RetType operator()(Arg1 &&arg1);
+    };
+
+    template <typename Function, typename ... Args>
+    static Functor<Function, Args...> unary(Function fun, Args &&...args);
+
+    template <typename Function, typename ... Args>
+    static Functor<Function, Args...> binary(Function fun, Args &&...args);
+};    
+
+    // Generic CallPack::call function, unpacking the tuple
+template <typename RetType, typename Func, typename Arg1, typename Arg2, 
+          size_t size, typename Tuple, typename ... Args>
+RetType FnWrap::CallPack<RetType, Func, Arg1, Arg2, size, Tuple, Args...
+    >::call(Func fun, Arg1 &&arg1, Arg2 &&arg2, Tuple &tuple, Args &&...args)
+{
+    return CallPack<RetType, Func, Arg1, Arg2, size - 1, Tuple, 
+                              LastType, Args ...
+        >::call(fun, std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), 
+                tuple, std::forward<LastType>(std::get<size - 1>(tuple)), 
+                std::forward<Args>(args) ...
+        );
+}
+
+    // Unary void CallPack::call function
+template <typename Func, typename Arg1, typename Tuple, typename ... Args>
+void FnWrap::CallPack<void, Func, Arg1, FnWrap::NotUsed, 0, Tuple, 
+            Args...>::call( Func fun, Arg1 &&arg1, FnWrap::NotUsed &&arg2, 
+                            Tuple &tuple, Args &&...args)
+{
+    fun(std::forward<Arg1>(arg1), std::forward<Args>(args)...);
+}
+
+    // Unary non-void CallPack::call function
+template <typename RetType, typename Func,
+          typename Arg1, typename Tuple, typename ... Args>
+RetType FnWrap::CallPack<RetType, Func, Arg1, FnWrap::NotUsed, 0, Tuple, 
+            Args...>::call( Func fun, Arg1 &&arg1, FnWrap::NotUsed &&arg2, 
+                            Tuple &tuple, Args &&...args)
+{
+    return fun(std::forward<Arg1>(arg1), std::forward<Args>(args)...);
+}
+
+    // Binary void CallPack::call function
+template <typename Func, typename Arg1, typename Arg2, typename Tuple, 
+                                                            typename ... Args>
+void FnWrap::CallPack<void, Func, Arg1, Arg2, 0, Tuple, Args...>::call(
+            Func fun, Arg1 &&arg1, Arg2 &&arg2, Tuple &tuple, Args &&...args)
+{
+    fun(std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), 
+                                  std::forward<Args>(args)...);
+}
+
+    // Binary non-void CallPack::call function
+template <typename RetType, typename Func, typename Arg1, typename Arg2,
+            typename Tuple, typename ... Args>
+RetType FnWrap::CallPack<RetType, Func, Arg1, Arg2, 0, Tuple, Args...>::call(
+            Func fun, Arg1 &&arg1, Arg2 &&arg2, Tuple &tuple, Args &&...args)
+{
+    return fun(std::forward<Arg1>(arg1), std::forward<Arg1>(arg1), 
+               std::forward<Args>(args)...);
+}
+
+    // Functor's constructor
+template <typename Function, typename ... Args>
+FnWrap::Functor<Function, Args...>::Functor(Function fun, Args &&... args)
+:
+    d_function(fun),
+    d_args(std::forward<Args>(args)...)
+{}
+    
+template <typename Function, typename ... Args>     // unary operator()
+template <typename Arg1>
+typename FnWrap::Functor<Function, Args...>::RetType FnWrap::Functor<
+    Function, Args...>::operator()(Arg1 &&arg1)
+{
+    return CallPack<RetType, Function, Arg1, NotUsed, sizeof ... (Args),
+                    std::tuple<Args ...>
+            >::call(d_function, std::forward<Arg1>(arg1), 0, d_args);
+}
+    
+template <typename Function, typename ... Args>     // binary operator()
+template <typename Arg1, typename Arg2>
+typename FnWrap::Functor<Function, Args...>::RetType FnWrap::Functor<
+    Function, Args...>::operator()(Arg1 &&arg1, Arg2 &&arg2)
+{
+    return CallPack<RetType, Function, Arg1, Arg2, sizeof ... (Args),
+                    std::tuple<Args ...>
+            >::call(d_function, 
+                  std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), d_args);
+}
+
+template <typename Function, typename ... Args>
+FnWrap::Functor<Function, Args...> context(Function fun, Args &&...args)
+{
+    return FnWrap::Functor<Function, Args...>
+                          (fun, std::forward<Args>(args) ...);
+}
+
+template <typename Function, typename ... Args>
+FnWrap::Functor<Function, Args...> FnWrap::unary(Function fun, Args &&...args)
+{
+    return Functor<Function, Args...>(fun, std::forward<Args>(args) ...);
+}
+
+template <typename Function, typename ... Args>
+FnWrap::Functor<Function, Args...> FnWrap::binary(Function fun, Args &&...args)
+{
+    return Functor<Function, Args...>(fun, std::forward<Args>(args) ...);
+}
+
+}   // FBB
+
+#endif
+

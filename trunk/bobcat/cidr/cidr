@@ -1,0 +1,89 @@
+#ifndef _INCLUDED_BOBCAT_CIDR_
+#define _INCLUDED_BOBCAT_CIDR_
+
+#include <string>
+#include <iosfwd>
+#include <vector>
+#include <bobcat/x2a>
+
+namespace FBB
+{
+
+class Pattern;
+
+class Cidr
+{
+    typedef std::pair<size_t, size_t> MaskPair;     // 1st address, mask value
+    typedef std::vector<MaskPair> VectorMaskP;
+
+    VectorMaskP d_cidr;
+    VectorMaskP::const_iterator d_iter;
+
+    std::string d_matched;                          // address matched last
+    size_t d_last;                                  // last address in CIDR
+
+    public:
+        Cidr() = default;
+        Cidr(std::string const &cidrPattern);       // 1 one pattern to check
+        Cidr(std::istream &cidrStream);             // 2 stream of patterns
+        Cidr(Cidr &&tmp);                           // 3
+
+        Cidr &operator=(Cidr const &rhs) = default;
+        Cidr &operator=(Cidr &&tmp);
+
+            // all lines of 'in' are inspected for ip addresses matching
+            // any cidr-specification in d_cidr
+        bool match(std::istream &in);           // 1 true means: match found
+        bool match(std::string const &line);    // 2 match a single line
+
+        void setCidr(std::string const &cidrPattern);   // 1
+        void setCidr(std::istream &cidrStream);         // 2
+
+        // following a successful match the following members return
+        // dotted decimal addresses / maskvalues as strings
+        std::string const &address() const;     // the address matching a CIDR
+        std::string cidr() const;               // CIDR containing address()
+        std::string mask() const;               // the mask used by cidr()
+        std::string first() const;              // the 1st address in cidr()
+        std::string last() const;               // the last address in cidr()
+
+                                                // convert "a.b.c.d" to
+                                                // 32-bits value
+        static size_t dotted2binary(std::string const &dotted);
+                                                // reverse operation
+        static std::string binary2dotted(size_t binary);
+
+        Cidr(Cidr const &&tmp);                     // Deprecated
+        Cidr &operator=(Cidr const &&tmp);          // Deprecated
+
+    private:
+        bool matchLine(std::string const &line);
+        MaskPair parse(std::string const &cidrPattern);
+        void pushCidr(std::string const &cidrPattern);
+        bool compare(MaskPair const &mp, std::string const &address);
+};
+
+inline std::string const &Cidr::address() const
+{
+    return d_matched;
+}
+
+inline std::string Cidr::mask() const
+{
+    return X2a(d_iter->second);
+}
+
+inline std::string Cidr::first() const
+{
+    return binary2dotted(d_iter->first);
+}
+
+inline std::string Cidr::last() const
+{
+    return binary2dotted(d_last);
+}
+
+}   // namespace FBB
+
+
+#endif

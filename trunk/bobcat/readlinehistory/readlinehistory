@@ -1,0 +1,228 @@
+#ifndef INCLUDED_BOBCAT_READLINEHISTORY_
+#define INCLUDED_BOBCAT_READLINEHISTORY_
+
+#include <iterator>
+#include <string>
+
+#include <readline/history.h>
+
+namespace FBB
+{
+
+class ReadLineHistory;
+
+std::ostream &operator<<(std::ostream &out, 
+                                    ReadLineHistory const &history);
+std::istream &operator>>(std::istream &out, ReadLineHistory &history);
+class ReadLineHistory
+{
+    friend std::ostream &operator<<(std::ostream &out, 
+                                    ReadLineHistory const &history);
+    friend std::istream &operator>>(std::istream &out, 
+                                    ReadLineHistory &history);
+
+    static ReadLineHistory s_readLineHistory;
+    bool d_timestamps;
+
+    public:
+        class HistoryElement
+        {
+            friend class ReadLineHistory;
+
+            char const *d_line;
+            char const *d_timestamp;
+
+            public:
+                char const *line() const;
+                char const *timestamp() const;
+
+            private:
+                HistoryElement();
+                HistoryElement const &set(HIST_ENTRY const *element);
+        };
+
+        class const_iterator: public 
+                                std::iterator<std::input_iterator_tag, 
+                                              HistoryElement const>
+        {
+            friend class ReadLineHistory;
+            friend class std::reverse_iterator<const_iterator>;
+
+            size_t d_idx;
+            mutable HistoryElement d_element;
+
+            public:
+                const_iterator &operator++();
+                const_iterator operator++(int);
+                bool operator==(const_iterator const &rhs) const;
+                bool operator!=(const_iterator const &rhs) const;
+                HistoryElement const &operator*() const;
+                HistoryElement const *operator->() const;
+
+            private:
+                const_iterator();                   // inline, last element
+                const_iterator(size_t idx);         // 2
+
+                const_iterator &operator--();       // for the reverse iter.
+                const_iterator operator--(int);
+        };
+
+        typedef std::reverse_iterator<const_iterator> 
+                const_reverse_iterator;
+
+        ReadLineHistory(ReadLineHistory const &other)           = delete;
+        ReadLineHistory &operator=(ReadLineHistory const &rhs)  = delete;
+
+        const_iterator begin() const;               // begin of the history
+        const_iterator end() const;                 // end of the history
+        const_reverse_iterator rbegin() const;
+        const_reverse_iterator rend() const;
+
+        ReadLineHistory &setTimestampsIO(bool useTimestamps);
+        size_t size() const;
+        size_t maxSize() const;
+        bool timestamps() const;
+
+        static ReadLineHistory &instance();
+        static ReadLineHistory &instance(bool useTimestamps);
+
+    private:
+        ReadLineHistory();
+        static void insertHistoryElement(HistoryElement const &he,
+                                         std::ostream &out);
+        static void insertLine(HistoryElement const &he, std::ostream &out);
+
+        static std::istream &extractTimestamps(std::istream &in);
+        static std::istream &extractLines(std::istream &in);
+};
+
+inline ReadLineHistory::ReadLineHistory()
+{}
+
+inline ReadLineHistory &ReadLineHistory::setTimestampsIO(bool useTimestamps)
+{
+    d_timestamps = useTimestamps;
+    return *this;
+}
+
+inline ReadLineHistory::const_iterator ReadLineHistory::begin() const
+{
+    return const_iterator(0);
+}
+
+inline ReadLineHistory::const_iterator ReadLineHistory::end() const
+{
+    return const_iterator();
+}
+
+inline ReadLineHistory::const_reverse_iterator ReadLineHistory::rbegin() const
+{
+    return const_reverse_iterator(end());
+}
+
+inline ReadLineHistory::const_reverse_iterator ReadLineHistory::rend() const
+{
+    return const_reverse_iterator(begin());
+}
+
+inline ReadLineHistory &ReadLineHistory::instance()
+{
+    return s_readLineHistory;
+}
+
+inline ReadLineHistory &ReadLineHistory::instance(bool useTimestamps)
+{
+    return s_readLineHistory.setTimestampsIO(useTimestamps);
+}
+
+inline size_t ReadLineHistory::size() const
+{
+    return history_length;
+}
+
+inline bool ReadLineHistory::timestamps() const
+{
+    return d_timestamps;
+}
+
+inline size_t ReadLineHistory::maxSize() const
+{
+    return history_max_entries;
+}
+
+//  ======= HistoryElement members ============
+
+inline ReadLineHistory::HistoryElement::HistoryElement()
+:
+    d_line(0),
+    d_timestamp(0)
+{}
+
+inline char const *ReadLineHistory::HistoryElement::line() const
+{
+    return d_line;
+}
+
+inline char const *ReadLineHistory::HistoryElement::timestamp() const
+{
+    return d_timestamp;
+}
+
+// ======== const_iterator members
+
+inline ReadLineHistory::const_iterator::const_iterator()
+:
+    d_idx(history_length)
+{}
+
+inline ReadLineHistory::const_iterator::const_iterator(size_t idx)
+:
+    d_idx(idx)
+{}
+
+inline ReadLineHistory::const_iterator 
+    &ReadLineHistory::const_iterator::operator++()
+{
+    ++d_idx;
+    return *this;
+}
+
+inline ReadLineHistory::const_iterator 
+    ReadLineHistory::const_iterator::operator++(int)
+{
+    return const_iterator(d_idx++);
+}
+
+inline ReadLineHistory::const_iterator 
+    &ReadLineHistory::const_iterator::operator--()
+{
+    --d_idx;
+    return *this;
+}
+
+inline ReadLineHistory::const_iterator 
+    ReadLineHistory::const_iterator::operator--(int)
+{
+    return const_iterator(d_idx--);
+}
+
+inline bool ReadLineHistory::const_iterator::operator==(
+                                            const_iterator const &rhs) const
+{
+    return d_idx == rhs.d_idx;
+}
+
+inline bool ReadLineHistory::const_iterator::operator!=(
+                                            const_iterator const &rhs) const
+{
+    return not (*this == rhs);
+}
+
+inline ReadLineHistory::HistoryElement const 
+    *ReadLineHistory::const_iterator::operator->() const
+{
+    return &operator*();
+}
+
+} // FBB        
+#endif

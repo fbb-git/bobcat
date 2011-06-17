@@ -1,0 +1,98 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Xpointer)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Sets the X-pointer)
+
+manpagename(FBB::Xpointer)(Sets the location of the X-windows pointer)
+
+manpagesynopsis()
+    bf(#include <bobcat/xpointer>)nl()
+
+    Linking option: tt(-lX11 -lbobcat) 
+
+manpagedescription()
+    This class allows programs running within the X-graphical environment to
+set and retrieve the X-windows pointer location.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Xpointer())
+        The default constructor. Connects to the Display. throws an bf(Errno)
+exception if the display cannot be opened. With multiple bf(Xpointer) objects,
+the connection to the display is opened only once.
+
+        This constructor throws an tt(Errno) exception if it could not connect
+to the Display.
+    )
+    The copy constructor is available.
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(bool get(int *x, int *y) const)
+        Returns in its arguments the currnet pointer coordinates relative to
+the root-window. On success tt(true) is returned; tt(false) is returned if the
+pointer could not be moved.
+    itb(bool set(int x, int y) const)
+        Sets the pointer to a location whose pixel coordinates are given with
+respect to the root-window.  A negative x-coordinate is measured from the
+right screen-margin of the root window (going left), a negative y-coordinate
+is measured from the bottom screen-margin of the root window (going up). On
+success tt(true) is returned; tt(false) is returned if the pointer could not
+be moved.
+    itb(void verify() const)
+        Obsoleted, will be removed in a future Bobcat release.
+    )
+
+manpagesection(EXAMPLE)
+    verb(
+#include <iostream>
+#include <string>
+
+#include <bobcat/xpointer>
+
+using namespace FBB;
+
+int main()
+try
+{
+    Xpointer xpointer;
+    xpointer.verify();
+
+    if (!xpointer.set(100, 200))
+        throw string("Set pointer failed");
+
+    int x;
+    int y;
+
+    if (!xpointer.get(&x, &y))
+        throw string("Get pointer failed");
+
+    cout << "Pointer now at " << x << ", " << y << endl;
+
+    return 0;
+}
+catch (string msg)
+{
+    cout << msg << endl;
+    return 1;
+}
+    )
+
+
+manpagefiles()
+    em(bobcat/xpointer) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    Note that tt(-lX11) must be specified before tt(-lbobcat).
+
+
+includefile(include/trailer)

@@ -1,0 +1,148 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Cidr)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (CIDR matching)
+
+manpagename(FBB::Cidr)(Compares IP4 addresses to CIDR specifications)
+
+manpagesynopsis()
+    bf(#include <bobcat/errno>)nl()
+    Linking option: tt(-lbobcat) 
+
+
+manpagedescription()
+
+    Objects of the class tt(Cidr) can be used for testing whether IP4 Internet
+addresses belong to address ranges defined by Classless Inter-Domain Routing
+(CIDR) address block specifications. CIDR blocks are specified as
+tt(a.b.c.d/m) where tt(a.b.c.d) are the four octets of a dotted decimal IP4
+address specification (e.g., 129.125.14.80) and tt(m) is a mask-size (ranging
+from 0 to 32) defining the number of most significant bits to remain
+as-is. The CIDR specification 129.125.14.80/16 defines a class B network,
+with addresses ranging from 129.125.0.0 to 129.125.255.255.
+
+The mask size does not have to be a multiple of 8. E.g., when specifying
+129.125.14.80/5 only the most significant 5 bits of the first octed are fixed,
+resulting in an address range ranging from 128.0.0.0 to 135.255.255.255.
+
+CIDR specifications passed to a tt(Cidr) object must be of the form
+tt(a.b.c.d) or tt(a.b.c.d/m). If the mask is not specified a mask-size of 32
+is used, effectively defining an address range of only one address. Mask
+values of 0 are ignored.  Mask values of 0 are ignored by tt(Cidr) objects.
+
+When specifying CIDRs on a stream, empty lines and comment lines (having a
+hash-character (#) as their first non-blank character) are ignored. 
+Non-empty lines must start with a CIDR specification, and the tt(Cidr) object
+will ignore all information on a line trailing a CIDR specification.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Cidr(std::string const &cidrPattern))
+        The tt(Cidr) object is initialized with a single CIDR specification.
+
+    itb(Cidr(std::istream &cidrStream))
+        The tt(Cidr) object is initialized with CIDR specifications
+        read from the tt(std::istream cidrStream). 
+    )
+    The default, copy and move constructors are available.
+
+manpagesection(OVERLOADED OPERATORS)
+
+    The copy and move assignment operators are available.
+
+manpagesection(MEMBER FUNCTIONS)
+
+    The return valuess of the accessors (i.e., the tt(const) members) are only
+    defined following a successful match (see below, the tt(match) members).
+
+    itemization(
+    itb(std::string const &address() const)
+        returns the address matching a CIDR. 
+
+    itb(std::string cidr() const)
+        returns the CIDR containing a specified address.
+
+    itb(std::string first() const)
+        returns the first address of the range of addresses defined by the
+        CIDR specification.
+
+    itb(std::string last() const)
+        returns the last address of the range of addresses defined by the
+        CIDR specification. Note that tt(first, last) do not define an
+        iterator range. The address returned by tt(last) still belongs to the
+        CIDR-range. 
+
+    itb(bool match(std::istream &in))
+        The value tt(true) is returned when an IP4 address found in the lines
+        of tt(in) belongs to a CIDR range inspected by the tt(Cidr)
+        object. The tt(match) function returns tt(true) at the first matching
+        address.  E.g., if a line contains the text 
+            verb(
+    This is address 1.2.3.4 and this is 5.6.7.8
+            )
+        and the CIDR specifications
+            verb(
+        5.1.1.1/8
+        1.2.1.1/16
+            )
+        were provided to the tt(Cidr) object, then the object will report a
+        match for tt(5.6.7.8). 
+
+        As soon as a match is found tt(match) returns
+        tt(true). If none of the addresses found in the lines of tt(in)
+        matches any of the object's CIDR specifications, tt(false) is
+        returned.
+
+    itb(std::string mask() const)
+        returns the mask used by the tt(CIDR) specification.
+
+    itb(bool match(std::string const &line))
+        The value tt(true) is returned when an IP4 address found in tt(line)
+        belongs to a CIDR range inspected by the tt(Cidr) object. The
+        tt(match) function returns tt(true) at the first matching address.
+
+        If none of the addresses found in tt(line) matches any of the object's
+        CIDR specifications, tt(false) is returned.
+
+    itb(void setCidr(std::istream &cidrStream))
+        A new set of CIDR specification is loaded into the tt(Cidr) object,
+        reading the specifications from tt(cidrStream).
+
+    itb(void setCidr(std::string const &cidrPattern))
+        A new CIDR specification is loaded into the tt(Cidr) object, using the
+        specification found in tt(cidrPattern).  The
+        tt(Cidr) object is initialized with a single CIDR specification which
+        must be of the form tt(a.b.c.d) or tt(a.b.c.d/m). If the mask is not
+        specified a mask-size of 32 is used, effectively defining an address
+        range of only one address. Mask values of 0 are ignored.
+    )
+
+manpagesection(STATIC MEMBERS)
+    itemization(
+    itb(size_t dotted2binary(std::string const &dotted))
+        Converts "a.b.c.d" to a 32-bits value
+        
+    itb(std::string binary2dotted(size_t binary))
+        Converts a 32-bits value to a dotted decimal IP4 address
+    )
+
+manpagesection(EXAMPLE)
+    verbinclude(../../cidr/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/cidr) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    Members of tt(Cidr) use static data. The current implementation of 
+    tt(Cidr) is therefore not thread-safe. 
+
+includefile(include/trailer)

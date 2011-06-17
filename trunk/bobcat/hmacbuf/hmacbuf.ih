@@ -1,0 +1,36 @@
+#include "hmacbuf"
+
+#include <string>
+#include <openssl/hmac.h>
+// #include <iomanip>
+#include <ostream>
+#include <bobcat/errno>
+
+// #include <bobcat/ohexstreambuf>
+#include "../ohexstreambuf/ohexstreambuf"
+
+namespace FBB
+{
+
+struct HMacBufImp
+{
+    HMAC_CTX      ctx;
+    EVP_MD const *md;
+    std::string   digest;
+    char         *buffer;
+    size_t        bufsize;
+    std::string   key;
+
+    HMacBufImp(std::string const &key, size_t bufsize);
+    ~HMacBufImp();
+};
+
+inline HMacBufImp::~HMacBufImp()
+{
+    delete [] buffer;
+}
+
+} // FBB
+
+using namespace std;
+using namespace FBB;

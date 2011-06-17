@@ -1,0 +1,89 @@
+#!/bin/sh
+
+CMDS="
+cidr        icmbuild        tmp/bin/cidr        ~/bin   icmbuild clean
+imgx        make/program    tmp/bin/imgx        ~/bin   make/clean
+ip2country  icmbuild        tmp/bin/ip2country  ~/bin   icmbuild clean
+logconvert  icmbuild        bin/logconvert      ~/bin   icmbuild clean
+match2file  icmbuild        tmp/bin/match2file  ~/bin   icmbuild clean
+mk          icmbuild        tmp/bin/mk          ~/bin   icmbuild clean
+pause       build           pause               /tmp    rm pause
+remailer    build           tmp/bin/remailer    /tmp    build distclean
+reminder    icmbuild        tmp/bin/reminders   /tmp    icmbuild clean
+spamgrep    icmbuild        tmp/bin/spamgrep    ~/bin   icmbuild clean
+syslog      build           syslog              /tmp    rm -rf o syslog
+xpointer    icmbuild        tmp/bin/xpointer    /tmp    icmbuild clean
+"
+
+if [ "$1" == "-q" ]
+then 
+    ASK=false
+    shift
+else
+    ASK=true
+fi
+
+run()
+{
+     cd ~/svn/$SOURCE
+     svn up
+     $BUILD clean
+     UPDATE=0
+     while ! $BUILD program
+     do
+         echo "Repair the error and press Enter"
+         UPDATE=1
+         read ENTER
+     done
+     strip $BIN
+     cp $BIN $DEST
+     if [ $UPDATE = 1 ]
+     then
+         echo "Consider defining a new Release Tag and \`svn ci' for $SRC"
+     fi
+
+    if [ "$ASK" == "true" ] 
+    then
+        echo "Press Enter to continue"
+        read ENTER
+    fi
+    $*
+}    
+
+FS=$IFS
+NL="
+"
+IFS=$NL
+
+START=$1
+
+for line in $CMDS
+do
+    echo $line
+    SOURCE=`echo $line | sed -r 's/([^ ]+).*/\1/'`
+
+    if [ "$START" == "" -o "$START" == "$SOURCE" ]
+    then 
+        BUILD=`echo $line | sed -r '
+            s/([^ ]+[ ]+){1}([^ ]+).*/\2/
+            s,~,'${HOME}',
+            '`
+        BIN=`echo $line | sed -r '
+            s/([^ ]+[ ]+){2}([^ ]+).*/\2/
+            s,~,'${HOME}',
+            '`
+        DEST=`echo $line | sed -r '
+            s/([^ ]+[ ]+){3}([^ ]+).*/\2/
+            s,~,'${HOME}',
+            '`
+        CLEANUP=`echo $line | sed -r 's/([^ ]+[ ]+){4}//'`
+        IFS=$FS
+        run $CLEANUP
+        IFS=$NL
+        START=""
+    fi
+    done
+
+exit 0
+
+

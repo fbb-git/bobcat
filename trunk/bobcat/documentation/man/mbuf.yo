@@ -1,0 +1,165 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Mbuf)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Message handler)
+
+manpagename(FBB::Mbuf)(std::streambuf handling messages)
+
+manpagesynopsis()
+    bf(#include <bobcat/mbuf>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    Objects of this class implement a tt(std::streambuf) class that are used
+to handle messages in a standardized way. Messages may be prefixed with order
+numbers and labels and/or line numbers. 
+
+    By default all messages are inserted into the standard output stream, but
+other destinations (standard error, a named file, etc.) can easily be
+configured. 
+
+    bf(FBB::Mbuf) objects themselves are tt(std::streambuf) objects, so they
+can be used to construct tt(std::ostream) objects. However, they are intended
+to be used by bf(mstream)(3bobcat) objects.
+
+manpagesection(NAMESPACE)
+    bf(FBB)nl()
+    All elements mentioned in this man-page, are defined in the namespace
+bf(FBB).
+
+manpagesection(INHERITS FROM)
+    bf(std::streambuf)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Mbuf())
+        The default constructor handles messages using the tt(std::streambuf)
+also used by tt(std::cout). There is no limit to the number of messages that
+may be inserted. No message or line numbers are shown, no exception are thrown
+when inserting messages.
+    itb(explicit Mbuf(std::streambuf *buf, size_t maxCount = UINT_MAX, 
+                std::string const &tag = "", bool throwing = false))
+        This constructor uses tt(buf) to handle messages. By default (using
+the default argument values) there is no limit to the number of messages that
+may be inserted. No message or line numbers are shown, no exception are thrown
+when inserting messages. Specifying any other value than tt(UINT_MAX) will set
+the maximum number of messages that can be inserted to that value. The tt(tag)
+defines the text of the message label (e.g., tt(Error)). When tt(throwing) is
+specified as tt(true) an tt(FBB::Errno) exception is thrown after completing a
+message. The generated exception holds the id (see below for the member
+tt(id)) of the bf(FBB::Mbuf) object from which the exception was thrown as
+well as the text tt(FBB::Mbuf).
+    itb(explicit Mbuf(std::string const &name, size_t maxCount = UINT_MAX, 
+                std::string const &tag = "", bool throwing = false))
+        This constructor creates a tt(std::ofstream) from the provided
+tt(name) parameter that receives the messages handled by the constructed
+bf(FBB:Mbuf) object. It throws an tt(FBB::Errno) exception if the stream
+cannot be opened for writing. If a file by that name already exists it is
+rewritten.  The remaining parameters are identical to those of the previous
+two constructors.
+    )
+    As bf(FBB::Mbuf) inherits from tt(std::streambuf) the copy constructor is
+not available. Neither is the move constructor.
+
+manpagesection(MEMBER FUNCTIONS)
+
+    itemization(
+    itb(size_t count() const)
+        returns the number of inserted messages (if tt(setCount) has been
+called: the value set by the last tt(setCount) call plus the number of
+inserted messages since that call).
+
+    itb(bool lineExcess() const)
+        returns bf(true) after attempting to insert an additional message
+after tt(maxCount()) number of messages have been inserted.
+
+    itb(std::string const &lineTag() const)
+        returns the currently used line-tag (by default `tt(Line)').
+
+    itb(size_t maxCount() const)
+        returns the maximum number of messages that can be inserted. If the
+returned value equals tt(UINT_MAX) then there is no limit to the number of
+messages that can be inserted.
+
+    itb(void noLineNr())
+        calling this member will suppress the display of a line number if it
+is called after calling tt(setLineNr) (see below) but before a message is
+being (or has been) inserted.
+
+    itb(void reset(std::streambuf *buf, size_t maxCount, 
+                std::string const &tag, bool throwing))
+        messages inserted into bf(FBB::Mbuf) objects are handled by
+tt(std::streambuf buf).  By specifying tt(UINT_MAX) for tt(maxCount) there is
+no limit to the number of messages that may be handled by this
+tt(std::streambuf). The tt(tag) defines the text of the message label (e.g.,
+tt(Error) or the empty string for no message label). When tt(throwing) is
+specified as tt(true) an tt(FBB::Errno) exception is thrown after completing a
+message.
+
+    itb(void reset(std::string const &name, size_t maxCount, 
+                std::string const &tag, bool throwing))
+        messages inserted into bf(FBB::Mbuf) objects are handled by a
+tt(std::ofstream) created using the provided tt(name) parameter. It throws an
+tt(FBB::Errno) exception if the stream cannot be opened for writing. If a file
+by that name already exists it is rewritten.  The remaining parameters are
+identical to those of the previous tt(reset) members.
+
+    itb(void reset(FBB::Mbuf const &mbuf))
+        the current object is reset using the parameters of the tt(mbuf)
+parameter. Following the reset all of the current object's parameters can
+independently be modified from those used by tt(mbuf).
+
+    itb(void setCount(size_t count))
+        assigns the value tt(count) to the object's message counter.
+
+    itb(void setLineNr(size_t lineNr))
+        specifies the value tt(lineNr) as the message's line number when the
+next line is displayed (see also tt(noLineNr)). This value is em(not) changed
+by the bf(FBB::Mbuf) object. To display another line number the member will
+have to be called again (i.e., the line number is not displayed automatically
+again at every new line).
+
+    itb(void setLineTag(std::string const &tag))
+        specifies the tag prefixing line numbers. By default the line tag
+equals `tt(Line)'.
+
+    itb(void setMaxCount(size_t maxCount))
+        defines tt(maxCount) as the maximum number of messages that can be
+inserted into the bf(FBB::Mbuf) object.
+
+    itb(void setTag(std::string const &tag))
+        specifies the tag prefixing messages. By default the tag is empty. If
+not empty the tag is enclosed by square brackets. E.g., specifying the tag
+`tt(Error)' will prefix messages with tt([Error]).
+
+    itb(std::string const &tag() const)
+        returns the currently used message tag (by default an empty string).
+
+    itb(bool throws())
+        returns tt(true) when the bf(FBB::Mbuf) object will throw an
+tt(FBB::Errno) exception at the next completed message. The generated
+exception holds the id (see earlier for the member tt(id)) of the
+bf(FBB::Mbuf) object from which the exception was thrown as well as the
+text tt(FBB::Mbuf).
+
+    itb(void throwing(bool ifTrue))
+        modifies the behavior of bf(FBB::Mbuf) objects at completed
+messages. After passing tt(true) bf(FBB::Mbuf) objects will throw an
+tt(FBB::Errno) exception at the next completed message, otherwise this
+exception is not thrown.
+    )
+
+manpagesection(EXAMPLE)
+    See the bf(mstream)(3bobcat) example.
+
+manpagefiles()
+    em(bobcat/mbuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(errno)(3bobcat), bf(mstream)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)

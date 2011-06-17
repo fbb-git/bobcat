@@ -1,0 +1,328 @@
+#ifndef INCLUDED_BOBCAT_PROCESS_
+#define INCLUDED_BOBCAT_PROCESS_
+
+#include <string>
+#include <ostream>
+#include <istream>
+
+#include <bobcat/fork>
+#include <bobcat/string>
+#include <bobcat/pipe>
+#include <bobcat/selector>
+#include <bobcat/ifdstreambuf>
+#include <bobcat/ofdstreambuf>
+#include <bobcat/iostream>
+
+#if defined(__FreeBSD_kernel__) || defined(__FreeBSD__)
+    #ifndef BOBCAT_DIY_CLOEXEC_
+    #define BOBCAT_DIY_CLOEXEC_
+    #endif
+#endif
+
+namespace FBB
+{
+
+class Process: private Fork, public IOStream
+{
+    friend Process &operator|(Process &lhs, Process &rhs);
+
+    public:
+        enum ProcessType
+        {
+            NO_PATH,
+            USE_PATH,
+            USE_SHELL
+        };
+
+    private:
+        bool            d_active;
+        size_t          d_mode;
+        size_t          d_timeLimit;      // seconds allowed to child-process
+        ProcessType     d_processType;
+
+        size_t          d_setMode;          // these values are set by the 
+        size_t          d_setTimeLimit;   // set members and used as 
+        ProcessType     d_setProcessType;   // defaults unless overridden by
+                                            // actual values
+                                            // Constructors set these values 
+                                            // too.
+        std::string     d_command;
+
+        Pipe d_oChildInPipe;    // cin read by the CHILD
+        Pipe d_iChildOutPipe;   // cout written by the CHILD
+        Pipe d_iChildErrPipe;   // cerr written by the CHILD    
+
+        OFdStreambuf    d_oChildInbuf;      // Child extracts,  
+        IFdStreambuf    d_iChildOutbuf;     // Child inserts,
+        IFdStreambuf    d_iChildErrbuf;     // Child inserts
+    
+        std::ostream   d_oChildIn;          // Parent inserts to child's cin
+        std::istream   d_iChildOut;         // Parent extracts child's cout
+        std::istream   d_iChildErr;         // Parent extracts child's cerr
+    
+        Selector        d_selector;         // senses activities on Child's
+                                            // out/err streams
+        struct RetPid
+        {
+            int     ret;
+            pid_t   pid;
+    
+            RetPid();
+        };
+        RetPid d_child;
+        RetPid d_monitor;
+
+#ifdef BOBCAT_DIY_CLOEXEC_
+        int d_closedByChild;    // DIY CLOSE_ON_EXEC
+#endif
+
+    public:
+        enum IOMode
+        {
+            IGNORE_ALL      = 0,
+            STD             = 0,
+
+            CIN             = 1 << 0,
+            COUT            = 1 << 1,
+            CERR            = 1 << 2,
+
+            IGNORE_COUT     = 1 << 3,
+            IGNORE_CERR     = 1 << 4,
+
+            MERGE_COUT_CERR = 1 << 5,
+
+            DIRECT          = 1 << 8,
+
+            // flags below are Internal Use Only and cannot be set by
+            // users
+
+            IN_PIPE         = 1 << 10,
+            OUT_PIPE        = 1 << 11,
+
+            CLOSE_ON_EXEC   = 1 << 12,
+        };
+        typedef size_t iomode;
+
+        enum ChildOutput
+        {
+            NOTHING_AVAILABLE   = 0,
+            CHILD_COUT          = 1 << 0,
+            CHILD_CERR          = 1 << 1,
+        };
+            
+        explicit Process(std::string const &command = "");              // 1
+        explicit Process(iomode mode, std::string const &command = ""); // 2
+        Process(iomode mode, ProcessType type,                          // 3
+                                    std::string const &command = "");
+        Process(iomode mode, ProcessType type, size_t timeLimit,      // 4
+                                    std::string const &command = "");
+
+        virtual ~Process();                 // stop()s any ongoing process
+
+        iomode ioMode() const;              // returns default IOMode
+        ProcessType processType() const;    // returns default ProcessType
+        size_t timeLimit() const;           // returns default time limit
+
+        void setIOMode(iomode mode);            // change IOMode
+
+        void setProcessType(ProcessType type);
+
+        void setTimeLimit(size_t timeLimit);    // for the next cmd to start
+                                                // 0 means: no time monitor
+
+        void setCommand(std::string const &command);    // sets cmd,
+                                                        // eats backticks
+        Process &operator+=(std::string const &text);   // adds to the command
+        
+        void start();
+        void start(iomode mode);
+        void start(iomode mode, ProcessType type);
+        void start(iomode mode, ProcessType type, size_t timeLimit);
+
+        void system();              // calls /bin/sh -c cmd; shell redirs OK
+        void system(iomode mode);   
+        void system(iomode mode, size_t timeLimit);  
+
+
+        int operator=(std::string const &cmd);  // sets and starts a command
+
+
+        std::string const &str() const; // current command
+
+        int stop();                     // terminate a running childprocess
+
+        template <typename Type>
+        Process &operator<<(Type const &value);
+
+        Process &operator<<(std::ostream &(*pf)(std::ostream &));
+
+        template <typename Type>
+        Process &operator>>(Type &value);
+
+        bool active();
+
+        Process &operator()(iomode mode);
+        Process &operator()(iomode mode, ProcessType type);
+        Process &operator()(iomode mode, ProcessType type, size_t timeLimit);
+
+        void close();                           // closes input to the child
+
+        std::istream &cerr();                   // READ cerr from the child
+
+        size_t available();                     // returns ChildOutput bit_or
+                                                // (cf. manpage)
+
+        void showMode(char const *lab);
+
+        using Fork::waitForChild;
+                                
+    private:
+        Process(Process const &other) = delete;
+        Process &operator=(Process const &other) = delete;
+
+        virtual void childProcess();
+        virtual void childRedirections();
+        virtual void parentProcess();
+        virtual void parentRedirections();
+
+        void newPipe(Pipe &pipe);
+        pid_t discontinue(RetPid &proc);
+        size_t whichStream();
+        void close(int fd);
+        void closeWriteFd(Pipe &pipe);
+        void closeReadFd(Pipe &pipe);
+
+        void forking();
+        void initialize(size_t timeLimit, iomode mode, 
+                                                ProcessType processType);
+        iomode sanitizeIOMode(iomode mode);
+        void newPipes();
+        void closeChildInputOnExec();
+
+        struct ExecContext
+        {
+            bool ok;                // true: status is ok
+            size_t argc;            // must eventually be at least 1
+            char const *message;    // only set if !ok
+            char const **args;      // 0-terminated array of pointers to the 
+                                    // arguments
+        };
+        static void execContext(String::SplitPair const &splitPair,
+                                ExecContext &ec);
+        ExecContext analyzeCommand();
+};
+
+inline void Process::start()
+{   
+    start(d_setMode, d_setProcessType, d_setTimeLimit);
+}
+
+inline void Process::start(iomode mode)
+{
+    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
+                                        d_setProcessType, d_setTimeLimit);
+}
+
+inline void Process::start(iomode mode, ProcessType type)
+{
+    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), type, d_setTimeLimit);
+}
+
+template <typename Type>
+Process &Process::operator<<(Type const &value)
+{
+    if (active())
+        dynamic_cast<std::ostream &>(*this) << value;
+
+    return *this;
+}
+
+template <typename Type>
+Process &Process::operator>>(Type &value)
+{
+    if ((available() & CHILD_COUT) || active())
+        dynamic_cast<std::istream &>(*this) >> value;
+
+    return *this;
+}
+
+inline std::string const &Process::str() const
+{
+    return d_command;
+}
+
+inline void Process::system()
+{
+    start(d_mode, USE_SHELL, d_timeLimit);
+}
+
+inline void Process::system(iomode mode)
+{
+    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
+                                                USE_SHELL, d_timeLimit);
+}
+
+inline void Process::system(iomode mode, size_t timeLimit)
+{
+    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), USE_SHELL, timeLimit);
+}
+
+inline Process &Process::operator+=(std::string const &command)
+{
+    d_command += command;
+    return *this;
+}
+
+inline void Process::setCommand(std::string const &command)
+{
+    d_command = command;
+}
+
+inline void Process::setProcessType(ProcessType type)
+{
+    d_setProcessType = d_processType = type;
+}
+
+inline void Process::setTimeLimit(size_t timeLimit)
+{
+    d_setTimeLimit = d_timeLimit = timeLimit;
+}
+
+inline void Process::setIOMode(iomode mode)
+{
+    d_setMode = sanitizeIOMode(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC));
+}
+
+inline Process &Process::operator()(iomode mode)
+{
+    return operator()(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
+                                            d_setProcessType, d_setTimeLimit);
+}
+
+inline Process &Process::operator()(iomode mode, ProcessType type)
+{
+    return operator()(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
+                                                    type, d_setTimeLimit);
+}
+
+inline Process::iomode Process::ioMode() const
+{
+    return d_mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC);
+}
+
+inline Process::ProcessType Process::processType() const
+{
+    return d_setProcessType;
+}
+
+inline size_t Process::timeLimit() const
+{
+    return d_setTimeLimit;
+}
+
+
+} // FBB        
+
+#endif
+
+

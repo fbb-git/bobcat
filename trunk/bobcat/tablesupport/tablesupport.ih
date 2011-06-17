@@ -1,0 +1,39 @@
+#include "tablesupport"
+
+#include <algorithm>
+
+#include <bobcat/fswap>
+
+using namespace std;
+using namespace FBB;
+
+inline size_t TableSupport::leftSeparator(size_t column)
+{
+    return column * 2;
+}
+
+inline size_t TableSupport::element(size_t column)
+{
+    return column * 2 + 1;
+}
+
+inline size_t TableSupport::rightSeparator(size_t column)
+{
+    return column * 2 + 2;
+}
+
+inline void TableSupport::leftType(size_t *target, size_t type)
+{
+    *target =   *target != SKIP || (type & (USE | LEFT_FULL)) ? 
+                    USE 
+                : 
+                    LEFT_MID;
+}
+
+inline void TableSupport::rightType(size_t *target, size_t type)
+{
+    *target =   *target != SKIP || (type & (USE | RIGHT_FULL)) ? 
+                    USE 
+                : 
+                    RIGHT_MID;
+}

@@ -1,0 +1,35 @@
+#include "digestbuf"
+
+#include <iomanip>
+#include <ostream>
+#include <string>
+#include <openssl/evp.h>
+#include <bobcat/errno>
+//#include <bobcat/ohexstreambuf>
+#include "../ohexstreambuf/ohexstreambuf"
+
+namespace FBB
+{
+    
+struct DigestBufImp
+{
+    EVP_MD_CTX    ctx;
+    EVP_MD const *md;
+    std::string   digest;
+    char         *buffer;
+    size_t        bufsize;
+
+    DigestBufImp(size_t bufsize);
+    ~DigestBufImp();
+};
+
+inline DigestBufImp::~DigestBufImp()
+{
+    delete[] buffer;
+}
+
+} // FBB
+
+using namespace std;
+using namespace FBB;
+

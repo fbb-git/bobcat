@@ -1,0 +1,117 @@
+#!/usr/bin/icmake -qt/tmp/bobcat
+
+#include "INSTALL.im"
+
+#define ECHO_COMMANDS       1
+#define PROJECT             "BOBCAT"
+#define DESTINATION         "tmp"
+#define LIBRARY             "bobcat"
+
+string
+    g_compiler,         // actual compiler to use
+    g_cwd,              // current WD
+    g_file,             // used to store the name of a file from a list
+    g_copt,             // compiler options
+    g_sources,          // sources to be used
+    g_version,          // The library's version from the file VERSION
+    g_tmplib,           // Library compilation target
+    g_tmphdr,           // Class header target
+    g_tmpbin,           // Binary target
+    g_lcgen,            // bobcat lcgen program name
+    g_lcgendefault,     // default max size of the bobcat/lc structs
+    g_sharedLibReq;     // libraries required by the shared lib
+int
+    g_nClasses;         // number of classes/subdirectories
+list
+    g_classes;          // list of classes/directories, listed in CLASSES
+
+#include "icmake/run"
+#include "icmake/getenv"
+#include "icmake/clean"
+#include "icmake/addclasses""
+#include "icmake/special"
+#include "icmake/man"
+#include "icmake/library"
+#include "icmake/libraries"
+#include "icmake/install"
+
+void main(int argc, list argv, list envp)
+{
+    string option;
+    string all;
+    string strip;
+
+    echo(ECHO_COMMANDS);
+
+    g_env = envp;
+
+    g_cwd = chdir(".");
+
+    g_tmplib = DESTINATION "/lib/";
+    g_tmphdr = DESTINATION "/" LIBRARY "/";
+    g_tmpbin = DESTINATION "/bin/";
+    g_lcgen  = "bobcatlcgen";
+    g_lcgendefault = " 10 ";    // KEEP THE BLANKS
+
+    setLocations();     // from INSTALL.im
+
+    getenvSF("DRYRUN");
+    g_dryrun = g_envvar;
+
+    option = element(1, argv);
+
+    if (option == "clean")
+        clean();
+
+    if (option == "libraries")
+    {
+        all = element(2, argv);
+
+        if (all == "all")
+            strip = element(3, argv);
+        else
+            strip = all;
+
+        libraries("bobcat", all == "all", strip == "strip");
+    }
+
+    if (option == "l")
+    {
+        system(P_NOCHECK, "tput clear");
+        libraries("bobcat", 1, 0);
+    }
+
+    if (option == "man")
+        man();
+
+    if (option == "sourceforge")
+    {
+        special(0, 0);
+        exit(0);
+    }
+
+    if (option == "install")
+        install(element(2, argv), element(3, argv));
+
+    printf("Usage: build what\n"
+        "Where `what' is one of:\n"
+        "   clean               - clean up remnants of previous compilations\n"
+        "   install <rss dev>   - to install the software in the locations\n"
+        "                         defined in the INSTALL.im file,\n"
+        "                         optionally below <rss> (run-time package)\n"
+        "                         and <dev> (development package)\n"
+        "                         By default all is installed. To configure\n"
+        "                         update setLocations() in INSTALL.im\n"
+        "   man                 - build the manual page (requires Yodl)\n"
+        "   libraries [all] [strip] - build the bobcat(-dev) libraries\n"
+        "                         (optionally add optional classes,\n"
+        "                         optionally strip the libraries)\n"
+        "   l                   - same as 'libraries all', but clearing the\n"
+        "                         screen before starting the compilation\n"
+        "   sourceforge         - preliminaries required for SourceForge\n"
+        "\n"
+        "If the environment variable DRYRUN is defined, no commands are\n"
+        "actually executed\n"
+    );
+    exit(1);
+}

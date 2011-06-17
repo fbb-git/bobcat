@@ -1,0 +1,106 @@
+#ifndef INCLUDED_BOBCAT_GLOB_
+#define INCLUDED_BOBCAT_GLOB_
+
+#include <string>
+#include <glob.h>
+
+namespace FBB
+{
+
+class Glob
+{
+    struct GlobShare
+    {
+        glob_t      globStruct;
+        size_t      users;
+    };
+
+    GlobShare *d_share;
+
+    public:
+        enum Flags
+        {
+            // These flags are those used by glob.h
+
+            ERR =       1 << 0, // Return on read errors.
+            MARK =      1 << 1, // Append a slash to each name.
+            NOSORT =    1 << 2, // Don't sort the names.
+            NOESCAPE =  1 << 6, // Backslashes don't quote metacharacters.
+            PERIOD =    1 << 7, // Leading `.' can be matched by metachars.
+        };
+
+        enum Dots
+        {
+            FIRST,
+            DEFAULT
+        };
+            
+        Glob(std::string const &pattern = "*", int flags = PERIOD,
+             Dots dots = FIRST);
+
+        Glob(Glob const &other);
+        Glob(Glob &&tmp);
+
+        ~Glob();
+
+        Glob &operator=(Glob const &other);
+        Glob &operator=(Glob &&tmp);
+
+        size_t size() const;
+        char const *operator[](size_t idx) const;
+        char const *const *begin() const;
+        char const *const *end() const;
+
+        void verify() const;        // no-op
+
+        void swap(Glob &other);
+
+        Glob(Glob const &&tmp);             // Deprecated
+        Glob &operator=(Glob const &&tmp);  // Deprecated
+
+    private:
+        char const **mbegin() const;
+        char const **mend() const;
+        void copy(Glob const &other);
+        void destroy();
+
+        static bool isDot(char const *cp);
+};
+
+inline Glob::Glob(Glob const &other)
+{
+    copy(other);
+}
+
+inline Glob::~Glob()
+{
+    destroy();
+}
+
+inline size_t Glob::size() const
+{
+    return d_share->globStruct.gl_pathc;
+}
+
+inline char const *Glob::operator[](size_t idx) const
+{
+    return idx < size() ? d_share->globStruct.gl_pathv[idx] : "";
+}
+
+inline char const *const *Glob::begin() const
+{
+    return d_share->globStruct.gl_pathv;
+}
+
+inline char const *const *Glob::end() const
+{
+    return d_share->globStruct.gl_pathv + size();
+}
+
+} // FBB
+        
+#endif
+
+
+
+

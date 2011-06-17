@@ -1,0 +1,47 @@
+#include "bigint"
+
+#include <cstring>
+#include <cctype>
+#include <algorithm>
+#include <openssl/ui.h>
+#include <bobcat/errno>
+#include <bobcat/fswap>
+
+namespace FBB
+{
+
+class BNCTX
+{
+    BN_CTX *d_ctx;
+
+    public:
+        BNCTX();
+        ~BNCTX();
+        void verify();
+
+        operator BN_CTX *();
+
+    private:
+        BNCTX(BNCTX const &other) = delete;
+        BNCTX &operator=(BNCTX const &other) = delete;
+};
+
+inline BNCTX::BNCTX()
+{
+    d_ctx = BN_CTX_new();
+}
+
+inline BNCTX::~BNCTX()
+{
+    BN_CTX_free(d_ctx);
+}
+
+inline BNCTX::operator BN_CTX *()
+{
+    return d_ctx;
+}
+
+} // namespace FBB
+        
+using namespace std;
+using namespace FBB;

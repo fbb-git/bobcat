@@ -1,0 +1,76 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::lm)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (OFoldStream manipulator)
+
+manpagename(FBB::lm)(Manipulator setting left margins of OFoldStream objects)
+
+manpagesynopsis()
+    bf(#include <bobcat/ofoldstream>) or nl()
+    bf(#include <bobcat/ofoldstreambuf>) nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+
+The tt(lm) class implements a manipulator that can be inserted into
+tt(OFoldStream) objects to set the stream's left margin to a requested
+value. 
+
+Depending on the tab-setting of the tt(OFoldStream) the inserted value
+represents the number of blank space characters or the number of
+tab-characters that will be used for the left margin.
+
+The request will be processed at the next newline character or tt(std::flush)
+or tt(std::endl) manipulator that is inserted into the stream. If a line is
+still once an tt(lm) object and a tt(flush) manipulator are inserted into the
+stream then the new left margin will be effective at the next word inserted
+into that line (cf., the example section below).
+
+A em(bad_cast) exception is thrown when the manipulator is inserted into an
+tt(ostream) that is not using a tt(OFoldStreambuf) buffer.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTOR)
+    itemization(
+    itb(lm(size_t newValue))
+    )
+    The standard copy constructor is available.
+
+manpagesection(MEMBER FUNCTIONS)
+    There are no public or protected member functions in this class. 
+
+manpagesection(EXAMPLE)
+        verb(
+    #include <iostream>
+    #include <bobcat/ofoldstream>
+
+    using namespace std;
+    using namespace FBB;
+
+    int main()
+    {
+        OFoldStream out(cout, 0, 80);
+        out << "hello world (left margin is 0)" << lm(4) << "\n"
+               "this uses a 4 character wide left margin\n" <<
+               lm(0) << flush << "at column 0 again\n";
+        return 0;
+    }
+        )
+
+manpagefiles()
+    em(bobcat/lm) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(manipulators)(3bobcat), bf(mlm)(3bobcat), 
+    bf(ofoldstream)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
+

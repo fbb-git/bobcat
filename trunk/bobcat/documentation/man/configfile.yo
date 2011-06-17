@@ -1,0 +1,317 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::ConfigFileile)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Configuration File Processing)
+
+manpagename(FBB::ConfigFileile)
+            (A class processing standard unix-like configuration files)
+
+manpagesynopsis()
+    bf(#include <bobcat/configfile>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(ConfigFile) objects read standard tt(unix)-style configuration
+files.  Lines are stored with initial white-space (blanks and tabs) removed.
+If a line ends in \, then the next line (initial white-space removed) is
+appended to the current line.
+
+    Information at and beyond the first tt(#) on individual lines is removed
+if the tt(rmComment) flag is set to tt(true).  In that case, lines containing
+only blanks and tabs are not stored.
+
+All non-empty lines of the configuration file (when comment is ignored comment
+is not considered to be line-content) are stored in the bf(ConfigFile) object.
+When line indices should be stored the (0-based) line indices of lines will be
+available as well.
+
+At construction time comment handling (keep comment / remove comment),
+case-sensitive searching (sensitive / insensitive) and index storage (store /
+don't store) can be specified.
+
+It can't be modified using the tt(open) member, but overloaded assignment is
+supported and comment and letter case handling can be modified by set-members.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(ENUMERATIONS)
+    The following enumerations are defined by the class bf(ConfigFile):
+    itemization(
+    itb(Comment)
+        This enumeration has two values: nl()
+        bf(ConfigFile::KeepComment) is used to indicate that comment on
+lines must be kept; nl()
+        bf(ConfigFile::RemoveComment) is used to indicate that comment on
+lines must be removed;
+    itb(SearchCasing)
+        This enumeration also has two values:nl() 
+        bf(ConfigFile::SearchCaseSensitive) is used to do case sensitive
+searches for targets;nl()
+        bf(ConfigFile::SearchCaseInsensitive) is used to do case
+insensitive searches for targets.
+    itb(Indices)
+        This enumeration also has two values:nl() 
+        bf(ConfigFile::IgnoreIndices) when used, the line numbers of the
+original configuration file will not be made available;nl()
+        bf(ConfigFile::StoreIndices) when used, the line numbers of the
+original configuration file will be made available;nl()
+    )
+
+manpagesection(TYPES)
+    The following types are defined by the class tt(ConfigFile):
+    itemization(
+    itb(const_iterator) 
+        a tt(const_iterator) is an iterator pointing to a
+line (tt(std::string)) of the configuration file;
+    itb(const_RE_iterator) a tt(const_RE_iterator) is an iterator pointing to
+lines matching a regular expression. It supports the following operations:
+        itemization(
+        itt(const_RE_iterator &operator++()): the prefix increment operator
+increments the iterator to point to the next line in the configuration file
+matching the iterator's regular expression;
+        itt(std::string const &operator*()): the dereferencing operator
+returns the line of the configuration file the iterator refers to;
+        itt(std::string const *operator->()): the pointer operator returns the
+address of the line of the configuration file the iterator refers to;
+        )
+    tt(const_RE_iterator)s can be compared for (in)equality and they can be
+copy-constructed. A tt(const_RE_iterator) object is returned by the
+tt(ConfigFile::beginRE) and tt(ConfigFile::endRE) members and cannot otherwise
+be constructed. 
+
+    When two tt(const_RE_iterator) objects are subtracted the
+number of lines matching their regular expression is returned. E.g., (see
+below for a description of the functions used in the next example):
+        verb(
+    ConfigFile cf(...)
+    auto start = cf.beginRE("^hello");
+    cout << "There are " << (cf.endRE() - start) << " lines starting with "
+            "hello\n";
+        )
+    The two tt(const_RE_iterator) objects should refer to the same regular
+expression. The provided example illustrates how this is realized using
+tt(beginRE) and tt(endRE).
+
+    tt(FBB::Pattern) is used to perform the regular expression pattern
+matching.
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(ConfigFile(Comment cType = KeepComment, SearchCasing sType =
+            SearchCaseSensitive, Indices iType = IgnoreIndices))
+        This constructor is used to create an empty bf(ConfigFile)
+object. It is not associated with an input stream: the tt(open) member can
+be used for that. The parameters can be used to specify specific handling of
+comment, letter-casing and storage of line numbers in the original
+configuration file.
+    itb(ConfigFile(std::string const &fname, Comment cType = KeepComment,
+            SearchCasing sType = SearchCaseSensitive, 
+            Indices iType = IgnoreIndices))
+        This constructor is used to create a bf(ConfigFile) object, which
+is filled with the information from a file whose name is provided as the
+constructor's first argument. The other parameters are used as described with
+the first constructor. It throws an tt(FBB::Errno) exception if the file
+could not be opened.
+    )nl()
+        The copy and move constructors are available.
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(std::string const &operator[](size_t idx) const)
+        This member returns the (0-based) tt(idx)-th line of the configuration
+    file. 
+    )nl()
+    The overloaded assignment and move assignment operators are available.
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(ConfigFile::const_iterator begin() const)
+        This member returns a tt(const_iterator) to the first line of the
+configuration file.
+
+    itb(ConfigFile::const_RE_iterator beginRE(std::string const &target) const)
+        This member returns a tt(const) iterator to the first element (i.e.,
+line) of the bf(ConfigFile) object in which the regular expression tt(target)
+is found. If the tt(RemoveComment) flag was specified, then comment-text is
+not searched.  The returned iterator can be incremented until tt(endRe) is
+reached; all iterators will point to lines matching the specified regular
+expression.  When increment operator will search for the next line matching
+the specified regular expression.nl()
+    Although the difference between two tt(const_RE_iterators) can be computed
+it is a relatively expensive operation. The difference is obtained by
+performing repeated regular expression matchings rather than the mere
+algebraic subtraction of pointer values. If the difference cannot be computed
+tt(UINT_MAX) is returned.nl() 
+        This member also interprets the tt(SearchCasing) flag.
+
+    itb(ConfigFile::const_iterator end() const)
+        This member returns a tt(const_iterator) pointing beyond the last line
+of the configuration file.
+
+    itb(ConfigFile::const_RE_iterator endRE() const)
+        This member returns a tt(const) iterator marking the end of the series
+of lines started at the the first line matching the regular expression
+specified by tt(beginRE)
+
+    itb(ConfigFile::const_iterator find(std::string const &target) const)
+        This member returns an iterator to the first element (i.e., line) of
+the tt(FBB::ConfigFile) object in which tt(target) is found. Note that
+tt(target) may appear anywhere within a line. If the tt(RemoveComment) flag
+was specified, then comment-text is not searched. Use the tt(end) member to
+determine the end-iterator. It is not guaranteed that all lines between the
+returned iterator and tt(end) will also contain tt(target).  This member also
+interprets the tt(SearchCasing) flag.
+
+    itb(std::string findKey(std::string const &keyPattern, 
+                                                     size_t count = 1) const)
+        This member can be used to retrieve information from lines having the
+general pattern `tt(keyPattern value)'. Initial and trailing white space on
+lines are ignored. tt(keyPattern) itself should not contain initial or
+trailing white space. At least one white space character must appear between
+tt(keyPattern) and tt(value). If at least tt(count) lines were found matching
+tt(keyPattern value) then this member returns the first sequence of non white
+space characters following tt(keyPattern) after matching tt(count) lines
+matching tt(keyPattern value) (i.e., `tt(value)' is returned). If tt(value) is
+empty or if fewer than tt(count) lines match tt(keyPattern) an empty string is
+returned. An tt(FBB::Errno) exception is thrown if tt(count) equals 0.
+
+    itb(std::string findKeyTail(std::string const &keyPattern, 
+                                                    size_t count = 1) const)
+        This member can be used to retrieve information from lines having the
+general pattern `tt(keyPattern value)', merely followed by white
+space. Initial and trailing white space on lines are ignored. tt(keyPattern)
+itself should not contain initial or trailing white space. At least one white
+space character must appear between tt(keyPattern) and tt(value).  If at least
+tt(count) lines were found matching tt(keyPattern value) then this member
+returns the information beyond tt(keyPattern) after matching tt(count) lines
+matching tt(keyPattern) (i.e., `tt(value)' is returned). This function differs
+from tt(findKey) in that all information trailing tt(keyPattern) is returned
+in tt(value).  If tt(value) is empty or if fewer than tt(count) lines match
+tt(keyPattern) an empty string is returned. An tt(FBB::Errno) exception is
+thrown if tt(count) equals 0.
+
+    itb(ConfigFile::const_iterator findRE(std::string const &target) const)
+        This member returns an iterator to the first line of the
+bf(ConfigFile) object matching the regular expression tt(target). After
+calling this function tt(beginRE) will return an iterator to the same line and
+tt(endRE) returns the end-iterator for lines matching tt(target). If the
+tt(RemoveComment) flag was specified, then comment-text is not searched.  The
+inherited tt(end) member can be used to determine the end-iterator. It is not
+guaranteed that all lines between the returned iterator and tt(end) will also
+contain tt(target). If that is required, the members tt(beginRE) and tt(endRE)
+can be used.  This member also interprets the tt(SearchCasing) flag.
+
+    itb(size_t index(size_t idx))
+        This function should only be used when the parameter tt(StoreIndices)
+was specified at construction time. In that case it will return the original
+0-based line index in the configuration file associated with the tt(idx)sup(th)
+(0-based) index in the current tt(Configuration) object. 
+
+    itb(size_t index(const_iterator const &iter))
+        This function should only be used when the parameter tt(StoreIndices)
+was specified at construction time. In that case it will return the original
+0-based line index in the configuration file associated with the configuration
+line in the current tt(Configuration) object pointed to by tt(iter). This may
+also be an (incremented version of the) iterator returned by the member
+tt(findRE) or tt(beginRE), as long as the iterator's value is within the half
+open range tt(beginRE) to tt(endRE).
+
+    itb(void open(std::string const &fname))
+        This member will read the configuration file having name tt(fname).
+It will redefine the current contents of the bf(ConfigFile) object,
+destroying any information previously stored in it. The configuation file is
+read according to the latest setting of the comment-flag. It will throw an
+tt(FBB::Errno) exception if the file could not be opened.
+
+This member clears previously available information and reinitializes the
+object with information read from the new file.
+
+    itb(void setCommentHandling(Comment type))
+        This member can be used to change the comment-handling type originally
+set by the constructor, or set by earlier calls of this function. When called
+it won't affect the current contents of the bf(ConfigFile) object, but
+new calls of its tt(open) member will read the configuation file according
+to the last setting of the comment flag.
+
+    itb(void setSearchCasing(SearchCasing type))
+        This member can be used to change the handling of the letter-casing
+originally set by the constructor, or set by earlier calls of this
+function. When called it won't affect the current contents of the
+bf(ConfigFile) object, but new calls of its tt(open) member will read
+the configuation file according to the last setting of the letter-casing flag.
+
+    itb(size_t size() const)
+        This member returns the number of lines in the configuration file.
+    )
+
+manpagesection(EXAMPLE)
+    Assume the configuration file is called tt(config.rc) and contains the
+following lines: 
+
+    COMMENT(Keep the blank following the backslashes below:)
+    verb(
+
+# this is ignored
+
+noline: this one too
+
+line: this is found
+
+this is not a line containing line: at the beginning \
+                                    of the line
+
+line: this one is
+
+    line: what about this one? \ 
+        it's extending over multiple lines
+
+and there may, of course, be more lines in this file
+    )
+
+    The following program may be compiled and run as tt(a.out config.rc):
+    verb(
+#include <iostream>
+#include <iterator>
+#include <algorithm>
+#include <string>
+#include <bobcat/configfile>
+
+using namespace std;
+using namespace FBB;
+    
+int main(int argc, char **argv)
+{
+    ConfigFile cf(argv[1]);     
+
+    cout << *cf.find("this one") << endl; // find text within a line
+
+                                         // find all lines matching 
+                                         // `^line:'
+    copy(cf.beginRE("^line:"), cf.endRE(), 
+                    ostream_iterator<string>(cout, "\n"));
+}
+    )
+
+    Producing the output:
+    verb(
+noline: this one too
+line: this is found
+line: this one is
+line: what about this one? it's extending over multiple lines
+    )
+
+manpagefiles()
+    em(bobcat/configfile) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(errno)(3bobcat), bf(pattern)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
