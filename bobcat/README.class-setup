@@ -21,28 +21,34 @@ Entries below, tagged with `(cont)' were mentioned earlier in the next
 hierarchy. Entries tagged with (Obs) are obsolete, and will be removed in a
 future relase: 
 
-0   X2a     Hash   Hostent  TypeTrait   Swap    
-                                |
-                      +---------+--------+
-                      |         |        |
+0   X2a     Hash   Hostent  TypeTrait   Swap     ReadLineBuf ReadLineHistory
+                                |                     |
+                      +---------+--------+            |
+                      |         |        |       ReadLineStream
                     FnWrap   foreach   repeat
 
 
 0   DateTime       SyslogBuf          RandBuffer        Indent      RefCount
        |               |                   |
      Stat         SyslogStream         IRandStream                  
-
-0                        Errno                                    LogBuffer
+                                           |
+0                        Errno             |                      LogBuffer
+                           |               |                          |
+                           +------+        |                          |
+                           |      |        |                          |
+                           |      +---+----+                          |
+                           |          |                               |
+                           |      EncryptBuf                          |
                            |                                          |
-      +-------+--------+---+------+----------+-----+-------+-----+    |
-      |       |        |          |          |     |       |     |    |
-      |       | FnWrap |          |          |     |       |     |    |
-      |       |   |    |          |          |     |       |     |    |
-      |       +---+    |          |          |     |       |     |    |
-      |       |        |          |          |     |       |     |    |
-    BigInt    |     Pattern     OneKey       |     |      User   +--+-+
-              |        |                     |     |                |
-              +--------+                     |     |               Log
+      +-------+--------+---+---+------+------+-----+-------+-----+    |
+      |       |        |       |      |      |     |       |     |    |
+      |       | FnWrap |       |      |      |     |       |     |    |
+      |       |   |    |       |      |      |     |       |     |    |
+      |       +---+    |       |      |      |     |       |     |    |
+      |       |        |       |      |      |     |       |     |    |
+    BigInt    |     Pattern  OneKey   |      |     |      User   +--+-+
+              |        |              |      |     |                |
+              +--------+          DecryptBuf |     |               Log
               |        |                     |     |   Hostent      |  
               |        |                     |     |    (cont)    level
           ConfigFile   |                     |     |      |       
@@ -78,29 +84,46 @@ future relase:
                   |             |    |    |       |           | 
                String           |    +----+  MultiStreambuf  Glob
                   |             |         |
-             +----+----+        |         |
-             |         |        |         |
-             |         +---+----+         |
-             |         |   |              |
-             |         |  Arg  ConfigFile |
-             |         |   |     (cont)   |
-             |         |   |       |      |
-       CmdFinderBase   |   +---+---+      |
-             |         |       |          |
-             |         |   ArgConfig      |
-             |         |                  |
-         CmdFinder     +----+-------------+
+         +--------+----+        |         |
+         |             |        |         |
+         |             +---+----+         |
+         |             |   |              |
+         |             |  Arg  ConfigFile |
+         |             |   |     (cont)   |
+         |             |   |       |      |
+   CmdFinderBase       |   +---+---+      |
+         |             |       |          |
+         |             |   ArgConfig      |
+         |             |                  |
+     CmdFinder         +----+-------------+
                             |                                    
-                            |                                    
-0           OFdStreambuf    |   IFdStreambuf     OFilterStreambuf  lm  mlm
-                 |          |        |               |              |   |
-         +-------+          |        +-----+         +-------+------+---+
-         |       |          |        |     |                 |        
-     OFdStream   +-------+--+--------+  IFdStream            |        
-                         |                             OFoldStreambuf 
-                      Process                                |        
-                                                             |        
-                                                        OFoldStream   
+                            |                   A2x(cont)        
+                            |                    |               
+                            |                    |               
+0           OFdStreambuf    |   IFdStreambuf     |   OFilterStreambuf  lm  mlm
+                 |          |        |           |       |              |   |
+                 |          |        |           |       |              |   |
+                 |          |        |           |   +---+              |   |
+                 |          |        |           |   |   |              |   |
+                 |          |        |           +---+   |              |   |
+                 |          |        |           |       |              |   |
+                 |          |        |     OHexStreambuf |              |   |
+                 |          |        |           |       |              |   |
+         +-------+          |        +----+      |       +-------+------+---+
+         |       |          |        |    |      |               |        
+     OFdStream   +-------+--+--------+ IFdStream |               |        
+                         |                       |          OFoldStreambuf 
+                      Process                    |                |        
+                                                 |                |        
+                                                 |          OFoldStream   
+                                     Errno(cont) |
+                                       |         |
+                                       +----+----+
+                                            |     
+                                      +-----+-----+
+                                      |           |
+                                   DigestBuf    HMacBuf
+
 
 
 0                     Align                     StringLine     Errno(cont)
