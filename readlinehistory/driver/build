@@ -1,6 +1,11 @@
 #!/bin/bash
 
-CMD="g++ --std=c++0x -o driver -Wall -I../../tmp driver.cc -L../../tmp/lib \
-                                                    -lreadline -lbobcat -s"
+LIBS="-lreadline -lbobcat"
+
+#CMD="g++ --std=c++0x -o driver -Wall -I../../tmp driver.cc -L../../tmp/lib \
+#                                                    ${LIBS} -s"
+
+CMD="g++ --std=c++0x -o driver -Wall driver.cc ${LIBS} -s"
+
 echo $CMD
 $CMD

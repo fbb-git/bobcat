@@ -102,8 +102,10 @@ class ConfigFile
         const_iterator begin() const;
         const_iterator end() const;
 
-        const_RE_iterator beginRE(std::string const &re);
-        const_RE_iterator endRE() const;
+        const_RE_iterator beginRE(std::string const &re);   // deprecated
+        const_RE_iterator endRE() const;                    // deprecated
+        std::pair<const_RE_iterator, const_RE_iterator>   // use this instead
+                            beginEndRE(std::string const &re);
 
         const_iterator find(std::string const &target) const;
         const_iterator findRE(std::string const &re) const;
