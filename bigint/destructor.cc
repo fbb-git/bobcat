@@ -2,5 +2,5 @@
 
 BigInt::~BigInt()
 {
-    BN_clear(&d_bn);
+    BN_free(&d_bn);
 }
