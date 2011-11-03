@@ -179,6 +179,14 @@ struct IfElse<true, True, False>
     typedef True type;
 };
 
+template <typename LHS, typename RHS>
+struct Use
+{
+    typedef typename IfElse<LpromotesR<LHS, RHS>::yes, LHS, RHS>::type
+            type;
+};
+
+
 } // FBB
 
 #endif
