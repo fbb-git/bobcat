@@ -25,26 +25,28 @@ matching binary operators can all be implemented identically. The
 em(move-aware) tt(Class &operator@(Class &&lhs, Class const &rhs)) is easily
 implemented in terms of tt(operator@=) (note that the class itself doesn't
 have to be `move-aware' to define this function). The move-aware binary
-operator requires but one line in its implementation, and as its
-implementation never changes it can safely be defined tt(inline):
+operator one requires a one line implementation, and as its
+implementation never changes it could safely be defined tt(inline):
         verb(
 Class operator@(Class &&lhs, Class const &rhs)
 {
-    return lhs @= rhs;
+    return std::move(lhs @= rhs);
 }
         )
-    Once the move-aware tt(operator@) is available the traditional binary
-operator can be implemented using the copy constructor and the above
-move-aware binary operator:
+    The traditional binary operator can be implemented using its standard
+form:
         verb(
 Class operator@(Class const &lhs, Class const &rhs)
 {
     Class tmp(lhs);
-    return std::move(tmp) @ rhs;
+    tmp @= rhs;
+    return tmp;
 }
         )
+    The implementation in tt(bobcat/binops) is slightly more complex as it
+allows from lhs or rhs promotions.
 
-    As the binary operators can all be implemented like their definitions are
+    As the binary operators can all be implemented alike their definitions are
 perfectly suited for templates: A class offering a particular tt(operator@=)
 then automatically also offers the matching binary operators after including
 tt(bobcat/binops). Since the binary function templates are not instantiated
@@ -54,24 +56,24 @@ implements only a subset of the available binary assignment operators.
 manpagesection(NAMESPACE)
 
     The binary operator functions templates in tt(bobcat/binops) are em(not)
-implemented in a particular namespace. Nor are the header files tt(utility)
-and tt(bobcat/typetrait), implementing functionality used by tt(bobcat/binops)
-included by tt(bobcat/binops). This allows sources to include
+implemented in a particular namespace. This allows sources to include
 tt(bobcat/binops) in multiple namespaces. 
 
     If tt(bobcat/binops) is to be used in multiple namespaces then the include
 safeguard (using the identifier tt(INCLUDED_BOBCAT_BINOPS_)) must be
 suppressed between inclusions of tt(bobcat/binops) in different
-namespaces. Eg., to make the binary operator function templates available in a
-source file using the tt(namespace FBB) and the default namespace the
-following scheme can be used:
+namespaces. 
+
+    E.g., to make the binary operator function templates available in a source
+file using the tt(namespace FBB) and in a source file using the default
+namespace the following scheme can be used:
         verb(
 #include <utility>              // ensure std::move is available
 #include <bobcat/typetrait>     // required by binops
 
 namespace MY_NAMESPACE
 {
-    #include <bobcat/binops>    // binary operators defined in MY_NAMESPACE
+    #include <bobcat/binops>    // binary operators available in MY_NAMESPACE
 }
 #undef INCLUDED_BOBCAT_BINOPS_  // suppress the include guard
 
@@ -118,7 +120,7 @@ for its left-hand side operands:
     itb(Class operator|(Class const &lhs, Class const &rhs))
     itb(Class operator^(Class const &lhs, Class const &rhs))
     )
-
+    The latter group of operators also support promotions.
 
 manpagesection(EXAMPLE)
     verbinclude(../../binops/driver/driver.cc)

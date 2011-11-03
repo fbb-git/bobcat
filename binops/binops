@@ -15,172 +15,151 @@
 template <typename Class>
 inline Class operator*(Class &&lhs, Class const &rhs)
 {
-    return lhs *= rhs;
+    return std::move(lhs *= rhs);
 }
 
 template <typename Class>
 inline Class operator/(Class &&lhs, Class const &rhs)
 {
-    return lhs /= rhs;
+    return std::move(lhs /= rhs);
 }
 
 template <typename Class>
 inline Class operator%(Class &&lhs, Class const &rhs)
 {
-    return lhs %= rhs;
+    return std::move(lhs %= rhs);
 }
 
 template <typename Class>
 inline Class operator+(Class &&lhs, Class const &rhs)
 {
-    return lhs += rhs;
+    return std::move(lhs += rhs);
 }
 
 template <typename Class>
 inline Class operator-(Class &&lhs, Class const &rhs)
 {
-    return lhs -= rhs;
+    return std::move(lhs -= rhs);
 }
 
 template <typename Class>
 inline Class operator^(Class &&lhs, Class const &rhs)
 {
-    return lhs ^= rhs;
+    return std::move(lhs ^= rhs);
 }
 
 template <typename Class>
 inline Class operator&(Class &&lhs, Class const &rhs)
 {
-    return lhs &= rhs;
+    return std::move(lhs &= rhs);
 }
 
 template <typename Class>
 inline Class operator|(Class &&lhs, Class const &rhs)
 {
-    return lhs |= rhs;
+    return std::move(lhs |= rhs);
 }
 
 template <typename Class>
 inline Class operator<<(Class &&lhs, Class const &rhs)
 {
-    return lhs <<= rhs;
+    return std::move(lhs <<= rhs);
 }
 
 template <typename Class>
 inline Class operator>>(Class &&lhs, Class const &rhs)
 {
-    return lhs >>= rhs;
+    return std::move(lhs >>= rhs);
 }
 
 template <typename LHS, typename RHS>
-inline typename FBB::IfElse<FBB::LpromotesR<LHS, RHS>::yes, LHS, RHS>::type 
-       operator*(LHS const &lhs, RHS const &rhs)
+inline typename FBB::Use<LHS, RHS>::type operator*(LHS const &lhs, 
+                                                   RHS const &rhs)
 {
-    typedef typename FBB::IfElse<
-                                FBB::LpromotesR< LHS, RHS >::yes, LHS, RHS
-                            >::type type;
-    type tmp(lhs);
-    return std::move(tmp) * type(rhs);
+    typename FBB::Use<LHS, RHS>::type tmp(lhs);
+    tmp *= rhs;
+    return tmp;
 }
 
 template <typename LHS, typename RHS>
-inline typename FBB::IfElse<FBB::LpromotesR<LHS, RHS>::yes, LHS, RHS>::type 
-       operator/(LHS const &lhs, RHS const &rhs)
+inline typename FBB::Use<LHS, RHS>::type operator/(LHS const &lhs, 
+                                                   RHS const &rhs)
 {
-    typedef typename FBB::IfElse<
-                                FBB::LpromotesR< LHS, RHS >::yes, LHS, RHS
-                            >::type type;
-    type tmp(lhs);
-    return std::move(tmp) / type(rhs);
+    typename FBB::Use<LHS, RHS>::type tmp(lhs);
+    tmp /= rhs;
+    return tmp;
 }
 
 template <typename LHS, typename RHS>
-inline typename FBB::IfElse<FBB::LpromotesR<LHS, RHS>::yes, LHS, RHS>::type 
-       operator%(LHS const &lhs, RHS const &rhs)
+inline typename FBB::Use<LHS, RHS>::type operator%(LHS const &lhs, 
+                                                   RHS const &rhs)
 {
-    typedef typename FBB::IfElse<
-                                FBB::LpromotesR< LHS, RHS >::yes, LHS, RHS
-                            >::type type;
-    type tmp(lhs);
-    return std::move(tmp) % type(rhs);
+    typename FBB::Use<LHS, RHS>::type tmp(lhs);
+    tmp %= rhs;
+    return tmp;
 }
 
 template <typename LHS, typename RHS>
-inline typename FBB::IfElse<FBB::LpromotesR<LHS, RHS>::yes, LHS, RHS>::type 
-       operator+(LHS const &lhs, RHS const &rhs)
+inline typename FBB::Use<LHS, RHS>::type operator+(LHS const &lhs, 
+                                                   RHS const &rhs)
 {
-    typedef typename FBB::IfElse<
-                                FBB::LpromotesR< LHS, RHS >::yes, LHS, RHS
-                            >::type type;
-    type tmp(lhs);
-    return std::move(tmp) + type(rhs);
+    typename FBB::Use<LHS, RHS>::type tmp(lhs);
+    tmp += rhs;
+    return tmp;
 }
 
 template <typename LHS, typename RHS>
-inline typename FBB::IfElse<FBB::LpromotesR<LHS, RHS>::yes, LHS, RHS>::type 
-       operator-(LHS const &lhs, RHS const &rhs)
+inline typename FBB::Use<LHS, RHS>::type operator-(LHS const &lhs, 
+                                                   RHS const &rhs)
 {
-    typedef typename FBB::IfElse<
-                                FBB::LpromotesR< LHS, RHS >::yes, LHS, RHS
-                            >::type type;
-    type tmp(lhs);
-    return std::move(tmp) - type(rhs);
+    typename FBB::Use<LHS, RHS>::type tmp(lhs);
+    tmp -= rhs;
+    return tmp;
 }
 
 template <typename LHS, typename RHS>
-inline typename FBB::IfElse<FBB::LpromotesR<LHS, RHS>::yes, LHS, RHS>::type 
-       operator&(LHS const &lhs, RHS const &rhs)
+inline typename FBB::Use<LHS, RHS>::type operator&(LHS const &lhs, 
+                                                   RHS const &rhs)
 {
-    typedef typename FBB::IfElse<
-                                FBB::LpromotesR< LHS, RHS >::yes, LHS, RHS
-                            >::type type;
-    type tmp(lhs);
-    return std::move(tmp) & type(rhs);
+    typename FBB::Use<LHS, RHS>::type tmp(lhs);
+    tmp &= rhs;
+    return tmp;
 }
 
 template <typename LHS, typename RHS>
-inline typename FBB::IfElse<FBB::LpromotesR<LHS, RHS>::yes, LHS, RHS>::type 
-       operator^(LHS const &lhs, RHS const &rhs)
+inline typename FBB::Use<LHS, RHS>::type operator^(LHS const &lhs, 
+                                                   RHS const &rhs)
 {
-    typedef typename FBB::IfElse<
-                                FBB::LpromotesR< LHS, RHS >::yes, LHS, RHS
-                            >::type type;
-    type tmp(lhs);
-    return std::move(tmp) ^ type(rhs);
+    typename FBB::Use<LHS, RHS>::type tmp(lhs);
+    tmp ^= rhs;
+    return tmp;
 }
 
 template <typename LHS, typename RHS>
-inline typename FBB::IfElse<FBB::LpromotesR<LHS, RHS>::yes, LHS, RHS>::type 
-       operator|(LHS const &lhs, RHS const &rhs)
+inline typename FBB::Use<LHS, RHS>::type operator|(LHS const &lhs, 
+                                                   RHS const &rhs)
 {
-    typedef typename FBB::IfElse<
-                                FBB::LpromotesR< LHS, RHS >::yes, LHS, RHS
-                            >::type type;
-    type tmp(lhs);
-    return std::move(tmp) | type(rhs);
+    typename FBB::Use<LHS, RHS>::type tmp(lhs);
+    tmp |= rhs;
+    return tmp;
 }
 
 template <typename LHS, typename RHS>
-inline typename FBB::IfElse<FBB::LpromotesR<LHS, RHS>::yes, LHS, RHS>::type 
-       operator>>(LHS const &lhs, RHS const &rhs)
+inline typename FBB::Use<LHS, RHS>::type operator>>(LHS const &lhs, 
+                                                   RHS const &rhs)
 {
-    typedef typename FBB::IfElse<
-                                FBB::LpromotesR< LHS, RHS >::yes, LHS, RHS
-                            >::type type;
-    type tmp(lhs);
-    return std::move(tmp) >> type(rhs);
+    typename FBB::Use<LHS, RHS>::type tmp(lhs);
+    tmp >>= rhs;
+    return tmp;
 }
 
-
 template <typename LHS, typename RHS>
-inline typename FBB::IfElse<FBB::LpromotesR<LHS, RHS>::yes, LHS, RHS>::type 
-       operator<<(LHS const &lhs, RHS const &rhs)
+inline typename FBB::Use<LHS, RHS>::type operator<<(LHS const &lhs, 
+                                                   RHS const &rhs)
 {
-    typedef typename FBB::IfElse<
-                                FBB::LpromotesR< LHS, RHS >::yes, LHS, RHS
-                            >::type type;
-    type tmp(lhs);
-    return std::move(tmp) << type(rhs);
+    typename FBB::Use<LHS, RHS>::type tmp(lhs);
+    tmp <<= rhs;
+    return tmp;
 }
 
 #endif
