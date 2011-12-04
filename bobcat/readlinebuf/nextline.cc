@@ -1,22 +1,23 @@
 #include "readlinebuf.ih"
 
-char *ReadLineBuf::nextLine(char *buf)
+char *ReadLineBuf::nextLine(char *buf)      // malloc allocated buf
 {
-    size_t buflen = strlen(buf);
+    string line(buf);
 
-    if (d_history && buflen > 0)
-    {
+    if (d_history && not line.empty())      // add line (+ maybe a timestamp) 
+    {                                       // to the history 
         add_history(buf);
         if (d_timestamp)
             add_history_time((*d_timestamp)().c_str());
     }
 
-    d_buffer = reinterpret_cast<char *>(
-                    memcpy(new char[buflen + 1], buf, buflen)
-                );
+    free(buf);                              // done with the malloc-ed buf.
 
-    d_buffer[buflen] = '\n';
-    free(buf);
+    d_buffer = new char[line.length() + 1]; // room for the next line + '\n'
 
-    return d_buffer + buflen + 1;
+                                            // copy buf (+ '\n') to d_buffer
+    d_buffer[line.copy(d_buffer, string::npos)] = '\n';
+
+    return d_buffer + line.length() + 1;    // returns 'd_buffer.end()'
 }
+
