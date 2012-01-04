@@ -10,10 +10,10 @@ void TableSpec::tabulate()
 
                                             // determine max width per column,
                                             // and max column width
-    for (size_t col = 0; col < d_nColumns; col++)
+    for (size_t col = 0; col < d_nColumns; ++col)
     {
         size_t width = 0;
-        for (size_t row = 0; row < d_nRows; row++)
+        for (size_t row = 0; row < d_nRows; ++row)
         {
             size_t len = stringAt(row, col).length();
             if (width < len)

@@ -8,11 +8,11 @@ ostream &TableSpec::insert(ostream &ostr) const
     d_tableSupport.setParam(ostr, d_nRows, d_colWidth, 
                             d_widthType == EqualWidth ? d_maxWidth : 0);
     
-    for (size_t row = 0; row < d_nRows; row++)
+    for (size_t row = 0; row < d_nRows; ++row)
     {
         d_tableSupport.hline(row);
 
-        for (size_t col = 0; col < d_nColumns; col++)
+        for (size_t col = 0; col < d_nColumns; ++col)
         {
             size_t colwidth = width(col);
 
