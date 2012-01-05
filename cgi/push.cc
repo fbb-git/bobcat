@@ -2,8 +2,6 @@
 
 void CGIFSA::push()
 {
-    for (auto iter = d_buffer.begin(), end = d_buffer.end();
-        iter != end;
-            ++iter)
-        d_stack.push(*iter);
+    for (auto &element: d_buffer)
+        d_stack.push(element);
 }

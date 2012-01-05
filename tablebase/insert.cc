@@ -9,11 +9,11 @@ ostream &TableBase::insert(ostream &ostr)
 
     d_tableSupport.setParam(ostr, d_nRows, d_nColumns, d_align);
 
-    for (size_t row = 0; row < d_nRows; row++)
+    for (size_t row = 0; row < d_nRows; ++row)
     {
         d_tableSupport.hline(row);
 
-        for (size_t col = 0; col < d_nColumns; col++)
+        for (size_t col = 0; col < d_nColumns; ++col)
         {
             size_t colwidth = columnWidth(col);
 

@@ -12,10 +12,10 @@ void TableBase::def()
                                             // max column width, and alignment
     size_t maxWidth = 0;
     
-    for (size_t col = 0; col < d_nColumns; col++)
+    for (size_t col = 0; col < d_nColumns; ++col)
     {
         size_t maxColWidth = 0;
-        for (size_t row = 0; row < d_nRows; row++)
+        for (size_t row = 0; row < d_nRows; ++row)
         {
             Element &element = elementAt(row, col);
 
@@ -32,7 +32,7 @@ void TableBase::def()
 
     if (d_widthType == EQUALWIDTH)
     {
-        for (size_t col = 0; col < d_nColumns; col++)
+        for (size_t col = 0; col < d_nColumns; ++col)
             d_align[col].setWidth(maxWidth);
     }
 

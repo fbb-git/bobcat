@@ -16,12 +16,13 @@ EncryptBufImp::EncryptBufImp(ostream &outStream, string const &ivv,
 
         IRandStream irs(0, 255, time(0));
 
-        for_each(
-            iv.begin(), iv.end(), 
-            [&](char &ch)
-            {
-                setChar(ch, irs);
-            }
-        );
+        for (auto &ch: iv)
+            setChar(ch, irs);
     }
 }
+
+
+
+
+
+

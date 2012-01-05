@@ -11,14 +11,9 @@ Process::ExecContext Process::analyzeCommand()
     
                                             // set up a process struct
     ExecContext ec = {true, 0, 0, new char const *[count + 1]};
-    
-    for_each(
-        elements.begin(), elements.end(), 
-        [&](String::SplitPair const &splitPair)
-        {
-            execContext(splitPair, ec);
-        }
-    );
+
+    for (auto &splitPair: elements)
+        execContext(splitPair, ec);
     
     if (!ec.ok)
         throw Errno("Process ") << d_command << ": " << ec.message;
