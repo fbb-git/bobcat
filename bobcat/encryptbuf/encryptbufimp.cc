@@ -16,8 +16,9 @@ EncryptBufImp::EncryptBufImp(ostream &outStream, string const &ivv,
 
         IRandStream irs(0, 255, time(0));
 
-        for (auto &ch, iv)
+        for (auto &ch: iv)
             setChar(ch, irs);
+    }
 }
 
 
