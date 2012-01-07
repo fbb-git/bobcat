@@ -1,0 +1,68 @@
+#ifndef INCLUDED_BOBCAT_PTRITER_
+#define INCLUDED_BOBCAT_PTRITER_
+
+#include <iterator>
+
+namespace FBB
+{
+template <typename Iterator>
+class PtrIter: public std::iterator<std::input_iterator_tag, 
+                                    decltype(&*Iterator())>
+{
+    Iterator d_iter;
+
+    public:
+        typedef decltype(&*Iterator()) PtrType;
+
+        PtrIter(Iterator const &iter);
+        PtrIter(PtrIter &&tmp)          = default;
+        PtrIter(PtrIter const &other)   = default;
+
+        PtrType operator*() const;
+    
+        PtrIter &operator++();
+    
+        bool operator==(PtrIter const &other) const;
+        bool operator!=(PtrIter const &other) const;
+};
+
+template<typename Iterator>
+PtrIter<Iterator> ptrIter(Iterator const &iter)
+{
+    return PtrIter<Iterator>(iter);
+}
+
+
+template <typename Iterator>
+PtrIter<Iterator>::PtrIter(Iterator const &iter)
+:
+    d_iter(iter)
+{}
+
+template <typename Iterator>
+typename PtrIter<Iterator>::PtrType PtrIter<Iterator>::operator*() const
+{
+    return &*d_iter;
+}
+
+template <typename Iterator>
+PtrIter<Iterator> &PtrIter<Iterator>::operator++()
+{
+    ++d_iter;
+    return *this;
+}
+
+template <typename Iterator>
+bool PtrIter<Iterator>::operator==(PtrIter const &other) const
+{
+    return d_iter == other.d_iter;
+}
+
+template <typename Iterator>
+bool PtrIter<Iterator>::operator!=(PtrIter const &other) const
+{
+    return d_iter != other.d_iter;
+}
+
+} // FBB        
+#endif
