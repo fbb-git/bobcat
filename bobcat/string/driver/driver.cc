@@ -2,8 +2,10 @@
                               driver.cc
 */
 
-#include "driver.h"
-#include "../string.h"
+
+#include <iostream>
+
+#include "../string"
 
 using namespace std;
 using namespace FBB;
@@ -19,21 +21,22 @@ static char const *type[] =
     "SQUOTE",
 };
 
-int main(int argc)
+int main(int argc, char **argv)
 {
     if (argc == 1)
         cout << "Provide an argument to suppress SEPARATOR fields\n";
 
     while (true)
     {
-        cout << "Enter a line, or empty line to stop:" << endl;
+        cout << "Enter a line, or empty line to stop: " << endl;
 
-        String line;
+        string line;
         if (!getline(cin, line) || !line.length())
             break;
 
         vector<String::SplitPair> splitpair;
-        cout << "Split into " << line.split(&splitpair, " \t", argc == 1) << 
+        cout << "Split into " << 
+                    String::split(&splitpair, line, " \t", argc == 1) << 
                 " fields\n"; 
         for 
         (
@@ -43,8 +46,15 @@ int main(int argc)
         )
             cout << (it - splitpair.begin() + 1) << ": " <<
                     type[it->second] << ": `" << it->first << 
-                    "', unescaped: `" << String(it->first).unescape() << 
-                    "'" << endl;
+                    "', unescaped: `" << String::unescape(it->first) << 
+                    "'\n";
+
+        cout << line << "Upper case: " << String::uc(line) << ", lc: " <<
+                                        String::lc(line) << '\n';
     }
-    return 0;
 }
+
+
+
+
+

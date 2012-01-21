@@ -4,7 +4,8 @@ string String::uc(string const &lhs)
 {
     string ret(lhs);
 
-    for_each(ret.begin(), ret.end(), String::toupper);
+    for (auto &ch: ret)
+        toupper(ch);
 
     return ret;
 }
