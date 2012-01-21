@@ -63,8 +63,6 @@ try
     FBB::for_each(cgi.begin(), cgi.end(), &showParam);
 
     cout << "END OF PROGRAM\n";
-
-    return 0;
 }
 catch (Errno const &err)
 {

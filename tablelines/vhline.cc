@@ -12,13 +12,8 @@ void TableLines::v_hline(size_t row) const
         if (iter == beyond)
             return;
 
-        for_each(
-            iter, beyond, 
-            [this](Field const &field)
-            {
-                outLine(field, this->out());  
-            }
-        );
+        for (auto &field: ranger(iter, beyond))
+            outLine(field, out());
     }
     out() << '\n';
 }

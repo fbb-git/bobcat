@@ -10,7 +10,10 @@ void CGIFSA::charRange()
     d_stack.pop();                  // first char
 
     if (begin <= end)
-        for_each(begin, end + 1, this, &CGIFSA::setEscape);
+    {
+        for(++end; begin != end; ++begin)
+            setEscape(begin);
+    }
 
     acceptAll();                       // unescape any remaining chars
 }
