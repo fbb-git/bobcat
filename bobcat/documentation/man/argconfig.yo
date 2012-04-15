@@ -29,21 +29,27 @@ single bf(ArgConfig) object. See below.
 manpagesection(STATIC MEMBERS)
     itemization(
     itb(FBB::ArgConfig &initialize(char const *optstring, 
-        int argc, char **argv, 
+        int argc, char **argv, [std::string const &fname,]
             Comment cType = KeepComment, 
             SearchCasing sType = SearchCaseSensitive,
             Indices iType = IgnoreIndices))
         Initializes the bf(FBB::ArgConfig) singleton. Must be called only
 once.  Throws an bf(FBB::Errno) exception if called repeatedly or if called
 with tt(argv) not containing a defined option (which is shown by the
-bf(FBB::Errno)'s tt(what()) member). The final three parameters are
-tt(ConfigFile) parameters, receiving the shown default values. This function
-returns a reference to the singleton object, allowing code initializing
-bf(ArgConfig) to use the initialized object immediately.
+bf(FBB::Errno)'s tt(what()) member). The tt(fname) argument is optional. If
+provided, a configuration file by the specified name is opened (and must
+exist); if omitted the tt(ArgConfig) is created without using a configuration
+file. In the latter case a configuration file may be specified later using the
+tt(open) member inherited from tt(ConfigFile). The final three parameters are
+tt(ConfigFile) parameters, receiving the shown default values. This
+constructor returns a reference to the singleton object, allowing code
+initializing bf(ArgConfig) to use the initialized object immediately.
+
     itb(FBB::ArgConfig &initialize(char const *optstring,
                                 LongOption const * const begin,
                                 LongOption const * const end,
                                 int argc, char **argv,    
+             [std::string const &fname,]
             Comment cType = KeepComment, 
             SearchCasing sType = SearchCaseSensitive,
             Indices iType = IgnoreIndices))
@@ -51,11 +57,11 @@ bf(ArgConfig) to use the initialized object immediately.
 an array of bf(Arg::LongOption) objects, holding long-options. Must be called
 only once. Throws an bf(FBB::Errno) exception if called repeatedly or if
 called with tt(argv) not containing a defined option (which is shown by the
-bf(FBB::Errno)'s tt(what()) member).  See the description of
-bf(Arg::LongOption) below.  The final three parameters are tt(ConfigFile)
-parameters, receiving the shown default values. This function returns a
-reference to the singleton object, allowing code initializing bf(ArgConfig) to
-use the initialized object immediately. 
+bf(FBB::Errno)'s tt(what()) member).  Refer to bf(arg)(3bobcat) for the
+description of bf(Arg::LongOption).  The constructor's final six parameters
+are identical to the previous constructor's final six arguments. This
+constructor returns a reference to the singleton object, allowing code
+initializing bf(ArgConfig) to use the initialized object immediately.
 
     The argument
         tt(optstring) should consist of letters, possibly postfixed by:
