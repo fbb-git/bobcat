@@ -7,7 +7,7 @@ size_t ArgConfig::option(string *value, char const *longOption)
     if (ret != 0)
         return ret;
 
-    const_RE_iterator optIt = longConfigOpt(longOption);
+    auto optIt = longConfigOpt(longOption);
 
     ret = endRE() - optIt;
     if (value && ret != 0)

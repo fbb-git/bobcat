@@ -15,7 +15,7 @@ size_t ArgConfig::option(string *value, int optChar)
         return 0;
 
     if (value)
-        *value = findKeyTail(d_longOption.find(optChar)->second, 1);
+        *value = findKeyTail(d_longOption.find(optChar)->second + ":?", 1);
 
     return endRE() - longOpt;
 }
