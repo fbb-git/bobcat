@@ -8,14 +8,18 @@ case $1 in
         g++ --std=c++0x -o driver *.cc -lbobcat -s
     ;;
     (o)
-        g++ -o driver *.cc -L../tmp -largconfig -lbobcat -s
+        g++ --std=c++0x -o driver *.cc -L../../tmp -largconfig -lbobcat -s
+    ;;
+    (l)
+        g++ --std=c++0x  -o driver *.cc -L../../tmp/lib -lbobcat -s
     ;;
     (c)
-        g++ -o driver *.cc -lbobcat -s
+        g++ --std=c++0x -o driver *.cc -lbobcat -s
     ;;
     (*)
     echo $0 b links to the installed bobcat library
-    echo $0 o links to the files in ../tmp/o
     echo $0 c links to the files in the current dir only
+    echo $0 l links to the library in ../../tmp/lib
+    echo $0 o links to the files in ../../tmp/o
     ;;
 esac

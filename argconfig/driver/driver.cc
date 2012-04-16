@@ -37,6 +37,8 @@ void X::function()
     cout << "Counting " << d_arg.option('o') << " instances of -o or "
                                                             "--option\n";
 
+    cerr << "\nNow opening config file `" << d_arg[0] << "'\n";
+
     d_arg.open(d_arg[0]);       // Now open the config file explicitly
                             // (alternatively: use a constructor expecting 
                             // a file name)
@@ -48,9 +50,7 @@ void X::function()
     size_t count = d_arg.option(&optval, 'v');
 
     cout << "Counting " << count << 
-                        " instances of -v or --value-option\n";
-    if (count)
-        cout << "Option value = " << optval << endl;
+                        " instances of -v or --option-value\n";
 }
 
 int main(int argc, char **argv)
@@ -60,11 +60,12 @@ try
 
     X x;
     x.function();
-
-    return 0;
 }
 catch (Errno const &err)
 {
     cout << "Terminating " << err.why() << endl;
     return 1;
 }
+
+
+

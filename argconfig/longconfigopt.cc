@@ -1,9 +1,8 @@
 #include "argconfig.ih"
 
-ArgConfig::const_RE_iterator 
-                        ArgConfig::longConfigOpt(string const &longOpt)
+ArgConfig::const_RE_iterator ArgConfig::longConfigOpt(string const &longOpt)
 {
-    string pattern = "^\\s*" + longOpt + "(\\s|$)";
+    string pattern = "^\\s*" + longOpt + ":?(\\s|$)";
 
     return beginRE(pattern);
 }

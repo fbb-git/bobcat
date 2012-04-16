@@ -15,7 +15,6 @@ bool ConfigFile::nextLine(istream &istr, string &line)
 
         if (d_rmComment)
             removeComment(line);
-
                                                     // process lines ending
                                                     // in a backslash
         n_continuations = 0;
