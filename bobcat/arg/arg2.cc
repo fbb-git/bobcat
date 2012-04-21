@@ -6,7 +6,8 @@ Arg::Arg(char const *optstring,
          LongOption const * const begin, LongOption const * const end,
          int argc, char **argv)
 :
-    d_argPointer(0)
+    d_argPointer(0),
+    d_beyondDashes(find(argv, argv + argc, string("--")) - argv)
 {
     setBasename(argv[0]);
 
@@ -24,11 +25,13 @@ Arg::Arg(char const *optstring,
     while (true)
     {
         d_getOpt = getopt_long(argc, argv, opts.c_str(), optStructs.get(), 
-                                                     &longOptionIndex);
+                                                         &longOptionIndex);
 
         switch (d_getOpt)
         {
-            case EOF:
+            case -1:
+                d_beyondDashes = 
+                    d_beyondDashes == argc ? -1 : d_beyondDashes - optind + 1;
                 copy(argv + optind, argv + argc, back_inserter(d_argv));
             return;
 

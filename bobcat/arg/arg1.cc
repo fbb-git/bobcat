@@ -2,7 +2,8 @@
 
 Arg::Arg(char const *optstring, int argc, char **argv)
 :
-    d_argPointer(0)
+    d_argPointer(0),
+    d_beyondDashes(find(argv, argv + argc, string("--")) - argv)
 {
     setBasename(argv[0]);
 
@@ -17,7 +18,9 @@ Arg::Arg(char const *optstring, int argc, char **argv)
 
         switch (d_getOpt)
         {
-            case EOF:
+            case -1:
+                d_beyondDashes = 
+                    d_beyondDashes == argc ? -1 : d_beyondDashes - optind + 1;
                 copy(argv + optind, argv + argc, back_inserter(d_argv));
             return;
 
