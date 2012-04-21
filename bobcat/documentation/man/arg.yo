@@ -171,8 +171,15 @@ manpagesection(NON-STATIC MEMBER FUNCTIONS)
 		displayed to tt(std::cout). Otherwise, if the tt(helpFlag) was
 		provided or if there are fewer arguments than tt(minArgs) tt(usage())
 		is called with argument bf(basename()). If either version- or help
-		information is shown, the bf(int) value 1 is thrown as an exception.
-
+		information is shown, the bf(int) value 1 is thrown as an
+        exception.nl() 
+       Note that tt(versionhelp) compares tt(minArgs) against tt(nArgs). If
+        tt(minArgs) should be compaired against the number of arguments up to
+        a possible `--' argument (i.e., tt(beyondDashes)' return value), then
+        add tt(nArgs() - beyondDashes()) to the tt(minArg) argument. E.g.,
+            verb(
+    arg.versionHelp(usage, version, 2 + arg.nArgs() - arg.beyondDashes());
+            )
        The address of the tt(usage()) function, the current version and the
 		minimum number of arguments must be specified. Default argument values
 		are provided for the option flags.
