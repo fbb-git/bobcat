@@ -19,8 +19,7 @@ Arg::Arg(char const *optstring, int argc, char **argv)
         switch (d_getOpt)
         {
             case -1:
-                d_beyondDashes = 
-                    d_beyondDashes == argc ? -1 : d_beyondDashes - optind + 1;
+                d_beyondDashes += (d_beyondDashes != argc) - optind;
                 copy(argv + optind, argv + argc, back_inserter(d_argv));
             return;
 
