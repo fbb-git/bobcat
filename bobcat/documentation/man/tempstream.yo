@@ -1,0 +1,75 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::TempStream)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Temporary fstream)
+
+manpagename(FBB::TempStream)(Temporary fstream)
+
+manpagesynopsis()
+    bf(#include <bobcat/tempstream>)nl()
+
+manpagedescription()
+    bf(FBB::TempStream) objects are temporary tt(std::fstreams) opened with
+mode 0600 (user only read+write). The file created by a tt(TempStream) object
+is removed from the file system once the tt(TempStream) object goes out of
+scope.
+
+    A tt(TempStream) object creates an empty file, and information can
+immediately be inserted into the tt(TempStream) object. To switch between
+insertion and extraction simply call tt(seekg) (for extraction) or tt(seekp)
+(for insertion).
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    bf(std::fstream)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(TempStream(std::string const &base = "/tmp/FBB::TempStream"))
+        The constructor initializes the object and creates a file with the
+given base-name to which six random characters are appended. If the
+tt(TempStream) could not be constructed an tt(FBB::Errno) exception is thrown.
+    )
+    The copy constructor is not available.
+
+manpagesection(MEMBER FUNCTIONS)
+     All bf(std::fstream) members are available, as bf(FBB::TempStream)
+inherits from this class. In addition, tt(TempStream) itself offers 
+    itemization(
+    itb(std::string const &fileName() const)
+        The name of the created temporary file.
+    )
+
+manpagesection(EXAMPLE)
+        verb(
+    #include <iostream>
+    #include <bobcat/tempstream>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main()
+    {
+        TempStream ts("/tmp/demo");
+    
+        ts << "Hello world\n";
+    
+        ts.seekg(0);
+        string line;
+        getline(ts, line);
+        cout << line << ", removed: " << ts.fileName() << '\n';
+    }
+        )    
+
+manpagefiles()
+    em(bobcat/tempstream) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(mkostemp)(3)
+
+manpagebugs()
+    None reported.
+
+includefile(include/trailer)
