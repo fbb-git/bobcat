@@ -1,6 +1,6 @@
 #include "arg.ih"
 
-size_t Arg::firstNonEmpty(size_t *idx, string *value, 
+size_t Arg__::firstNonEmpty(size_t *idx, string *value, 
                             StringVector const &sv) const
 {
     StringVector::const_iterator sit = find_if(sv.begin(), sv.end(), 

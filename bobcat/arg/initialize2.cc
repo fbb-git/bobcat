@@ -10,7 +10,7 @@ Arg &Arg::initialize(char const *optstring,
 
     s_arg = new Arg(optstring, begin, end, argc, argv);
 
-    s_arg->verify();
+    s_arg->d_arg->verify();
 
     return *s_arg;
 }

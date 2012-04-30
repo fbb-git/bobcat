@@ -1,8 +1,6 @@
 #include "arg.ih"
 
-#include <iterator>
-
-Arg::Arg(char const *optstring, 
+Arg__::Arg__(char const *optstring, 
          LongOption const * const begin, LongOption const * const end,
          int argc, char **argv)
 :
@@ -59,9 +57,9 @@ Arg::Arg(char const *optstring,
     }
 }
 
-
-
-
-
-
-
+Arg::Arg(char const *optstring, 
+         LongOption const * const begin, LongOption const * const end,
+         int argc, char **argv)
+:
+    d_arg(new Arg__(optstring, begin, end, argc, argv))
+{}

@@ -1,6 +1,6 @@
 #include "arg.ih"
 
-Arg::Arg(char const *optstring, int argc, char **argv)
+Arg__::Arg__(char const *optstring, int argc, char **argv)
 :
     d_argPointer(0),
     d_beyondDashes(find(argv, argv + argc, string("--")) - argv)
@@ -40,4 +40,9 @@ Arg::Arg(char const *optstring, int argc, char **argv)
     }
 }
 
+
+Arg::Arg(char const *optstring, int argc, char **argv)
+:
+    d_arg(new Arg__(optstring, argc, argv))
+{}
 

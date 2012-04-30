@@ -1,6 +1,6 @@
 #include "arg.ih"
 
-Arg::LongOption::LongOption(char const *name)
+LongOption__::LongOption__(char const *name)
 :
     d_name(name),
     d_type(None),

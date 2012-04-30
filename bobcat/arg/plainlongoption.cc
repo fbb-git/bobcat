@@ -1,6 +1,6 @@
 #include "arg.ih"
 
-bool Arg::plainLongOption(Arg::LongOption const &longOption)
+bool Arg__::plainLongOption(Arg__::LongOption const &longOption)
 {
     addLongOption(longOption.d_name);
 
