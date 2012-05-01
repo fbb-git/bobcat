@@ -1,7 +1,7 @@
 #ifndef INCLUDED_BOBCAT_ARGCONFIG_
 #define INCLUDED_BOBCAT_ARGCONFIG_
 
-#include <map>                          // do not use unordered_map
+#include <unordered_map>
 #include <string>
 
 #include <bobcat/arg>
@@ -10,13 +10,17 @@
 namespace FBB
 {
 
+class ArgConfig__;
+
 class ArgConfig: public Arg, public ConfigFile
 {
     static ArgConfig            *s_argconfig; // points to Singleton ArgConfig
 
+    ArgConfig__ *d_ptr;
+
                                             // find long options given short
                                             // option char
-    std::map<int, std::string> d_longOption; 
+    std::unordered_map<int, std::string> d_longOption; 
         
     public:
         static ArgConfig &initialize(char const *optstring,             // 1

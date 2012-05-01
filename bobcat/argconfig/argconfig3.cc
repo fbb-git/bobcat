@@ -6,9 +6,6 @@ ArgConfig::ArgConfig(char const *optstring,
     Comment cType, SearchCasing sType, Indices iType)
 :
     Arg(optstring, begin, end, argc, argv),
-    ConfigFile(cType, sType, iType)
-{
-    storeLongOptions(begin, end);
-}
-
-
+    ConfigFile(cType, sType, iType),
+    d_ptr(new ArgConfig__(begin, end))
+{}

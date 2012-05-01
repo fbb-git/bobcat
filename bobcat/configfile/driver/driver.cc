@@ -76,15 +76,13 @@ int main(int argc, char **argv)
     if (!getline(cin, param) || !param.length())
         return 0;
 
-    ConfigFile::const_RE_iterator begin = cf.beginRE(param);
+    auto iters = cf.beginEndRE(param);
 
-    ConfigFile::const_RE_iterator end = cf.endRE();
-
-    cout << "Counting: " << (end - begin) << " matches\n";
-    while (begin != end)
+    cout << "Counting: " << (iters.second - iters.first) << " matches\n";
+    while (iters.first != iters.second)
     {
-        cout << *begin << endl;
-        ++begin;
+        cout << *iters.first << endl;
+        ++iters.first;
     }
 
     cout << "value of findKey: " << cf.findKey(param) << '\n';

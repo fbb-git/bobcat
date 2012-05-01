@@ -7,11 +7,9 @@
 
 
 #include <string>
-#include <getopt.h>
 #include <vector>
-#include <map>
-#include <unistd.h>
-#include <bobcat/errno>
+#include <getopt.h>
+
 
 namespace FBB
 {
@@ -45,6 +43,7 @@ class LongOption__: public ArgOptionType__
         LongOption__(char const *name, int optionChar);
 
         std::string const &getName() const;
+        int optionChar() const;
 };
 
 class Arg__;
@@ -73,7 +72,6 @@ class Arg: public ArgOptionType__
 
             // total number of specified short (and combined long) options
         size_t nOptions() const;
-
             // total numer of long-only options specified
         size_t nLongOptions() const;
 
@@ -122,6 +120,16 @@ inline size_t Arg::option(std::string *value, int optChar) const
 inline size_t Arg::option(std::string *value, char const *longOption) const
 {
     return option(static_cast<size_t>(0), value, longOption);
+}
+
+inline int LongOption__::optionChar() const
+{
+    return d_optionChar;
+}
+
+inline std::string const &LongOption__::getName() const
+{
+    return d_name;
 }
 
 } // FBB

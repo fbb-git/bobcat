@@ -3,11 +3,9 @@
 #include <iostream>
 #include <functional>
 #include <algorithm>
-#include <string>
-#include <getopt.h>
-#include <vector>
-#include <map>
+#include <unordered_map>
 #include <unistd.h>
+
 #include <bobcat/errno>
 #include <bobcat/string>
 
@@ -42,9 +40,9 @@ class Arg__: public ArgOptionType__
     typedef FBB::LongOption__ LongOption;
     typedef struct option                           OptStruct;
     typedef std::vector<std::string>                StringVector;
-    typedef std::map<int, StringVector>   IntStringVectorMap;
+    typedef std::unordered_map<int, StringVector>   IntStringVectorMap;
     typedef IntStringVectorMap::const_iterator      ISVMapIterator;
-    typedef std::map<std::string, StringVector> 
+    typedef std::unordered_map<std::string, StringVector> 
                                                     StringStringVectorMap;
     typedef StringStringVectorMap::const_iterator   SSVMapIterator;
 
@@ -141,11 +139,6 @@ class Arg__: public ArgOptionType__
         int setOptionType(std::string const &optString,
                         LongOption const &longOption);
 };
-
-inline std::string const &LongOption__::getName() const
-{
-    return d_name;
-}
 
 } // FBB
 

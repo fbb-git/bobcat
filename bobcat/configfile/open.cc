@@ -18,6 +18,10 @@ void ConfigFile__::open(string const &fname)
         d_line.push_back(line);
 }
 
+void ConfigFile::open(string const &fname)
+{
+    d_ptr->open(fname);
+}
 
 
 

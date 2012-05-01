@@ -3,6 +3,8 @@
 
 #include "argconfig"
 
+#include <bobcat/errno>
+
 using namespace std;
 using namespace FBB;
 
