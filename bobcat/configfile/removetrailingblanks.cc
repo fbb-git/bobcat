@@ -1,7 +1,7 @@
 #include "configfile.ih"
 
                                                 // `line' must have content.
-void ConfigFile::removeTrailingBlanks(string &line)
+void ConfigFile__::removeTrailingBlanks(string &line)
 {
                             // convert idx of last non-blank char to 
                             // a length, resize to that length.

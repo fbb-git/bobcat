@@ -1,6 +1,6 @@
 #include "configfile.ih"
 
-bool ConfigFile::nextLine(istream &istr, string &line)
+bool ConfigFile__::nextLine(istream &istr, string &line)
 {
     size_t n_continuations;
 

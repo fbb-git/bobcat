@@ -1,6 +1,6 @@
 #include "configfile.ih"
 
-size_t ConfigFile::append_next(istream &istr, string &line)
+size_t ConfigFile__::append_next(istream &istr, string &line)
 {
     string next;
 

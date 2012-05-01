@@ -2,7 +2,7 @@
 
 // The keyPat *must* have a (...) subexpression, defining what to return
 
-string ConfigFile::searchFor(string const &keyPat, size_t count)
+string ConfigFile__::searchFor(string const &keyPat, size_t count)
 {
     string ret;
 

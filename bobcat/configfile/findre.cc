@@ -1,6 +1,6 @@
 #include "configfile.ih"
 
-vector<string>::const_iterator ConfigFile::findRE(string const &re) const
+vector<string>::const_iterator ConfigFile__::findRE(string const &re) const
 {
     d_pattern.setPattern(re, d_caseSensitive);
 

@@ -1,6 +1,6 @@
 #include "configfile.ih"
 
-ConfigFile::const_RE_iterator ConfigFile::beginRE(string const &re)
+ConfigFile__::const_RE_iterator ConfigFile__::beginRE(string const &re)
 {
     if (re != d_re)
         resetVsIter(re);

@@ -1,6 +1,6 @@
 #include "configfile.ih"
 
-void ConfigFile::removeComment(string &line)
+void ConfigFile__::removeComment(string &line)
 {
     size_t pos;
 

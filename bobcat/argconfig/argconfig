@@ -1,7 +1,7 @@
 #ifndef INCLUDED_BOBCAT_ARGCONFIG_
 #define INCLUDED_BOBCAT_ARGCONFIG_
 
-#include <map>
+#include <map>                          // do not use unordered_map
 #include <string>
 
 #include <bobcat/arg>
@@ -97,9 +97,11 @@ class ArgConfig: public Arg, public ConfigFile
         void storeLongOptions(LongOption const *begin, 
                               LongOption const *const end);
 
-        const_RE_iterator findLongOption(int optChar);
+        std::pair<const_RE_iterator, const_RE_iterator> 
+                            findLongOption(int optChar);
 
-        const_RE_iterator longConfigOpt(std::string const &longOpt);
+        std::pair<const_RE_iterator, const_RE_iterator> 
+                            longConfigOpt(std::string const &longOpt);
 };
 
 inline size_t ArgConfig::option(size_t idx, std::string *value, 
