@@ -11,10 +11,10 @@ string ConfigFile__::searchFor(string const &keyPat, size_t count)
 
     beginRE(keyPat);
 
-    if (d_vsIter.size() <= count)
-    {
-        d_pattern << *d_vsIter[count - 1];
-        ret = d_pattern[d_pattern.end() - 1];
+    if (count <= d_vsIter.size())               // at least 'count' lines
+    {                                           // are required
+        d_pattern << *d_vsIter[count - 1];      // if so, return the tail of
+        ret = d_pattern[d_pattern.end() - 1];   // line[count - 1]
     }
 
     return ret;

@@ -11,3 +11,8 @@ vector<string>::const_iterator ConfigFile__::find(string const &target) const
                 }
             );
 }
+
+vector<string>::const_iterator ConfigFile::find(string const &target) const
+{
+    return d_ptr->find(target);
+}

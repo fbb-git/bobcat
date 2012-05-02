@@ -7,7 +7,6 @@
 
 #include <bobcat/pattern>
 #include <bobcat/errno>
-// #include <bobcat/fswap>
 
 using namespace std;
 using namespace FBB;
@@ -16,7 +15,7 @@ using namespace FBB;
 //    If a line ends in \, then the next line (initial WS removed)
 //    is appended to the current line.
 //    Information at and beyond the first # on individual lines is removed
-//    if the rmComment flag is set to true
+//    if the rmComment flag is set to true (\# is converted to a #-character)
 //    Then, lines containing only blanks and tabs are not stored
 
 namespace FBB
@@ -85,6 +84,8 @@ class ConfigFile__: public CFEnums__
         size_t size() const;
 
     private:
+        void removeInitialWs(std::string &line) const;
+
         size_t append_next(std::istream &istr, std::string &line);
         bool hasContent(std::string const &line);
         bool nextLine(std::istream &istr, std::string &line);
@@ -111,3 +112,62 @@ inline bool ConfigFile__::casefinder(string const &haystack,
 {
     return strcasestr(haystack.c_str(), needle.c_str()) != 0;
 }
+
+inline size_t ConfigFile__::size() const
+{
+    return d_line.size();
+}
+
+inline std::string const &ConfigFile__::operator[](size_t idx) const
+{
+    return d_line[idx];
+}
+
+inline size_t ConfigFile__::index(const_iterator const &iterator)
+{
+    return d_index[iterator - begin()];
+}
+
+inline size_t ConfigFile__::index(size_t lineNr)
+{
+    return d_index[lineNr];
+}
+
+inline string ConfigFile__::findKeyTail(string const &keyPattern, size_t count)
+{
+    return searchFor("^\\s*" + keyPattern + "\\s+(.*)\\s*$", count);
+}
+
+inline string ConfigFile__::findKey(string const &keyPattern, size_t count)
+{
+    return searchFor("^\\s*" + keyPattern + "\\s+(\\S+)", count);
+}
+
+inline ConfigFile__::const_RE_iterator ConfigFile__::endRE() const
+{
+    return RE_iterator(d_vsIter, d_vsIter.size());
+}
+
+inline ConfigFile__::const_iterator ConfigFile__::begin() const
+{
+    return d_line.begin();
+}
+   
+inline ConfigFile__::const_iterator ConfigFile__::end() const
+{
+    return d_line.end();
+}
+   
+inline void ConfigFile__::setSearchCasing(SearchCasing type)
+{
+    d_caseSensitive = type == SearchCaseSensitive;
+}
+
+inline void ConfigFile__::setCommentHandling(Comment type)
+{
+    d_rmComment = type == RemoveComment;
+}
+
+
+
+

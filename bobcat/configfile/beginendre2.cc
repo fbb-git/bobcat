@@ -1,9 +1,6 @@
 #include "configfile.ih"
 
-pair<ConfigFile::const_RE_iterator, ConfigFile::const_RE_iterator>
-    ConfigFile::beginEndRE()
+ConfigFile::RE_iteratorPair ConfigFile::beginEndRE()
 {
-    return 
-        pair<const_RE_iterator, const_RE_iterator>(d_ptr->endRE(),
-                                                   d_ptr->endRE());
+    return RE_iteratorPair(d_ptr->endRE(), d_ptr->endRE());
 }

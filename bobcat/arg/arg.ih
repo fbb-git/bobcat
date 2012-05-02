@@ -33,7 +33,7 @@ class OptStructArray
         }
 };
 
-class Arg__: public ArgOptionType__
+class Arg__: public ArgTypes__
 {
     friend class Arg;
 
@@ -140,7 +140,39 @@ class Arg__: public ArgOptionType__
                         LongOption const &longOption);
 };
 
+inline int Arg__::beyondDashes() const
+{
+    return d_beyondDashes;
+}
+
+inline std::string const &Arg__::basename() const
+{
+    return d_base;
+}
+
+inline size_t Arg__::nArgs() const
+{
+    return d_argv.size();
+}
+
+inline size_t Arg__::nOptions() const
+{
+    return d_nOptv;
+}
+
+inline size_t Arg__::nLongOptions() const
+{
+    return d_nOptv;
+}
+
+inline char const *Arg__::operator[](size_t idx) const
+{
+    return (idx >= nArgs()) ? 0 : d_argv[idx].c_str();
+}
+
+
 } // FBB
+
 
 
 using namespace FBB;

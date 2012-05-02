@@ -12,6 +12,7 @@ using namespace std;
 using namespace FBB;
 
 int main(int argc, char **argv)
+try
 {
     if (argc == 1)
     {
@@ -19,20 +20,17 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    ConfigFile cf(ConfigFile::RemoveComment, 
+    ConfigFile cf(argv[1], ConfigFile::RemoveComment, 
                     ConfigFile::SearchCaseInsensitive, 
                     ConfigFile::StoreIndices);
 
-    try 
-    {
-        cf.open(argv[1]);
-    }
-    catch (Errno e)
-    {
-        cout << "Fatal: " << e.why() << endl;
-        return 1;
-    }
+    cout << "opened: " << argv[1] << '\n';
 
+    cout << "Got " << cf.size() << " lines\n";
+    
+    cf.open(argv[1]);
+
+    cout << "opened again: " << argv[1] << '\n';
     cout << "Got " << cf.size() << " lines\n";
     cout << cf[0] << " from line " << cf.index(0) << "\n";
     cout << "================\n";
@@ -41,12 +39,12 @@ int main(int argc, char **argv)
     
     while (true)
     {
-        cout << "Literal search for: \n";
+        cout << "Enter literal to search for (or just Enter): ";
         string param;
         if (!getline(cin, param) || !param.length())
             break;
 
-        vector<string>::const_iterator it = cf.find(param);
+        auto it = cf.find(param);
 
         if (it != cf.end())
             cout << *it << ": at index " << cf.index(it) << endl;
@@ -56,13 +54,12 @@ int main(int argc, char **argv)
     
     while (true)
     {
-        cout << "RE search for: \n";
+        cout << "Enter RE to search for (or just Enter): ";
         string param;
         if (!getline(cin, param) || !param.length())
             break;
 
-        vector<string>::const_iterator it = cf.findRE(param);
-
+        auto it = cf.findRE(param);
 
         if (it != cf.end())
             cout << *it << ": at index " << cf.index(it) << endl;
@@ -70,21 +67,29 @@ int main(int argc, char **argv)
             cout << " < not found > " << endl;
     }
     
-    cout << "Finding all lines matching a RE.\n"
-            "Enter the RE: ";
-    string param;
-    if (!getline(cin, param) || !param.length())
-        return 0;
-
-    auto iters = cf.beginEndRE(param);
-
-    cout << "Counting: " << (iters.second - iters.first) << " matches\n";
-    while (iters.first != iters.second)
+    while (true)
     {
-        cout << *iters.first << endl;
-        ++iters.first;
+        cout << "Finding all lines matching a RE.\n"
+                "Enter the RE (or just Enter): ";
+        string param;
+        if (!getline(cin, param) || !param.length())
+            return 0;
+    
+        auto iters = cf.beginEndRE(param);
+    
+        cout << "Counting: " << (iters.second - iters.first) << " matches\n";
+        while (iters.first != iters.second)
+        {
+            cout << *iters.first << endl;
+            ++iters.first;
+        }
+    
+        cout << "value of findKey: " << cf.findKey(param) << '\n';
     }
-
-    cout << "value of findKey: " << cf.findKey(param) << '\n';
+}
+catch (Errno e)
+{
+    cout << "Fatal: " << e.why() << endl;
+    return 1;
 }
 

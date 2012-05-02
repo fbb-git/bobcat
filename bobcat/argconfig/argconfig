@@ -18,10 +18,6 @@ class ArgConfig: public Arg, public ConfigFile
 
     ArgConfig__ *d_ptr;
 
-                                            // find long options given short
-                                            // option char
-    std::unordered_map<int, std::string> d_longOption; 
-        
     public:
         static ArgConfig &initialize(char const *optstring,             // 1
             int argc, char **argv,
@@ -97,15 +93,8 @@ class ArgConfig: public Arg, public ConfigFile
             SearchCasing sType = SearchCaseSensitive,
             Indices iType = IgnoreIndices);
 
-
-        void storeLongOptions(LongOption const *begin, 
-                              LongOption const *const end);
-
-        std::pair<const_RE_iterator, const_RE_iterator> 
-                            findLongOption(int optChar);
-
-        std::pair<const_RE_iterator, const_RE_iterator> 
-                            longConfigOpt(std::string const &longOpt);
+        RE_iteratorPair findLongOption(int optChar);
+        RE_iteratorPair longConfigOpt(std::string const &longOpt);
 };
 
 inline size_t ArgConfig::option(size_t idx, std::string *value, 

@@ -7,7 +7,7 @@ ArgConfig::ArgConfig(char const *optstring,
 :
     Arg(optstring, begin, end, argc, argv),
     ConfigFile(fname, cType, sType, iType),
-    d_ptr(new ArgConfig__(begin, end))
+    d_ptr(new ArgConfig__(begin, end))              // 5
 {}
 
 

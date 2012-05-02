@@ -17,8 +17,3 @@ void Arg__::verify()
         return;
     }
 }
-
-void Arg::verify()
-{
-    d_arg->verify();
-}

@@ -10,5 +10,5 @@ char const **Arg__::argPointers()
 
 char const **Arg::argPointers()
 {
-    return d_arg->argPointers();
+    return d_ptr->argPointers();
 }

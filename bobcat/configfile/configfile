@@ -43,6 +43,8 @@ struct CFEnums__
 {
         typedef RE_iterator const_RE_iterator;
         typedef std::vector<std::string>::const_iterator const_iterator;
+        typedef std::pair<const_RE_iterator, const_RE_iterator> 
+                                                        RE_iteratorPair;
 
         enum Comment
         {
@@ -68,34 +70,33 @@ class ConfigFile: public CFEnums__
     ConfigFile__ *d_ptr;
 
     public:
-        explicit ConfigFile(Comment cType = KeepComment, 
+        explicit ConfigFile(Comment cType = KeepComment,        // 1
                    SearchCasing sType = SearchCaseSensitive,
                    Indices iType = IgnoreIndices);
-
-        explicit ConfigFile(std::string const &fname,// Name of the config file
+                                                        // 2
+        explicit ConfigFile(std::string const &fname,   // config file name
                     Comment cType = KeepComment, 
                     SearchCasing sType = SearchCaseSensitive,
                     Indices iType = IgnoreIndices);
 
-        ConfigFile(ConfigFile &&tmp);
-        ConfigFile(ConfigFile const &rhs);
+        ConfigFile(ConfigFile &&tmp);                   // 3
+        ConfigFile(ConfigFile const &rhs);              // 4
 
-        ~ConfigFile();
+        ~ConfigFile();                          
 
         ConfigFile &operator=(ConfigFile &&tmp);
-        ConfigFile &operator=(ConfigFile const &rhs);
+        ConfigFile &operator=(ConfigFile const &rhs);   // 2
+
+        void open(std::string const &fname);
 
         void setCommentHandling(Comment type);
         void setSearchCasing(SearchCasing type);
-        void open(std::string const &fname);
 
         const_iterator begin() const;
         const_iterator end() const;
 
-        std::pair<const_RE_iterator, const_RE_iterator>
-                            beginEndRE(std::string const &re);
-
-        std::pair<const_RE_iterator, const_RE_iterator> beginEndRE();
+        RE_iteratorPair beginEndRE(std::string const &re);
+        RE_iteratorPair beginEndRE();
 
         const_iterator find(std::string const &target) const;
         const_iterator findRE(std::string const &re) const;
@@ -103,8 +104,8 @@ class ConfigFile: public CFEnums__
         std::string findKey(std::string const &key, size_t count = 1);
         std::string findKeyTail(std::string const &key, size_t count = 1);
 
-        size_t index(size_t lineNr);
-        size_t index(const_iterator const &iterator);
+        size_t index(size_t lineNr);                        // 1
+        size_t index(const_iterator const &iterator);       // 2
 
         std::string const &operator[](size_t idx) const;
 

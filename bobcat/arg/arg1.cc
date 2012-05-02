@@ -43,6 +43,8 @@ Arg__::Arg__(char const *optstring, int argc, char **argv)
 
 Arg::Arg(char const *optstring, int argc, char **argv)
 :
-    d_arg(new Arg__(optstring, argc, argv))
-{}
+    d_ptr(new Arg__(optstring, argc, argv))
+{
+    d_ptr->verify();
+}
 

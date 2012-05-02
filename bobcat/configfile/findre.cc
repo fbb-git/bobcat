@@ -13,3 +13,7 @@ vector<string>::const_iterator ConfigFile__::findRE(string const &re) const
             );
 }
 
+vector<string>::const_iterator ConfigFile::findRE(string const &re) const
+{
+    return d_ptr->findRE(re);
+}

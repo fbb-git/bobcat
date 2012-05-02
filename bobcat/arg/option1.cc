@@ -8,5 +8,5 @@ size_t Arg__::option(int optChar) const
 
 size_t Arg::option(int optChar) const
 {
-    return d_arg->option(optChar);
+    return d_ptr->option(optChar);
 }

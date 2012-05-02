@@ -26,7 +26,6 @@ class Log: private LogBuffer, public std::ostream
 
     public:
         static Log &instance();
-        static Log &getInstance();      // old-style interface: avoid
         static Log &initialize(std::string const &filename, 
                 std::ios::openmode = std::ios::out | std::ios::app, 
                 char const *delim = " ");
@@ -59,11 +58,6 @@ inline void  Log::off()
 inline size_t Log::level() const
 {
     return d_level;
-}
-
-inline Log &Log::instance()
-{
-    return getInstance();
 }
 
 std::ostream &operator<<(std::ostream &str, LogManipulator);

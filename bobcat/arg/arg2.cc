@@ -61,5 +61,7 @@ Arg::Arg(char const *optstring,
          LongOption const * const begin, LongOption const * const end,
          int argc, char **argv)
 :
-    d_arg(new Arg__(optstring, begin, end, argc, argv))
-{}
+    d_ptr(new Arg__(optstring, begin, end, argc, argv))
+{
+    d_ptr->verify();
+}

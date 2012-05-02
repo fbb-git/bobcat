@@ -3,7 +3,8 @@
 // findKey("key:") - first ws-delimited field following key. initial ws before
 //                   key should not be specified: skipped by findKey.
 
-string ConfigFile__::findKey(string const &keyPattern, size_t count)
+string ConfigFile::findKey(string const &keyPattern, size_t count)
 {
-    return searchFor("^\\s*" + keyPattern + "\\s+(\\S+)", count);
+    return d_ptr->findKey(keyPattern, count);
 }
+

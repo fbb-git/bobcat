@@ -1,9 +1,14 @@
-bobcat (2.23.00)
+bobcat (3.00.00)
 
-  * Added TemStream creating a temporary fstream
+  * Functionality deprecated in Bobcat < 3.00.00 is removed in this
+    release. This includes the classes Msg (Use Mstream or Errno),
+    the FnWrap* and ForEach templates (use lamda functions), and AutoPtr /
+    RefCount (use std::shared_ptr or std::unique_ptr)
 
-  * Added member int beyondDashes() returning the index of the first argument
-    beyond a -- argument (or -1)
+  * Added TempStream creating a temporary fstream
+
+  * Added member int Arg::beyondDashes() returning the index of the first
+    argument beyond a -- argument (or -1)
 
   * Arg/ConfigFile/ArgConfig now use the Bridge Design Pattern. Note that this
     requires (only once) all programs using Arg, ConfigFile or ArgConfig to be

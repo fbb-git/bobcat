@@ -14,9 +14,8 @@ manpagedescription()
     bf(FBB::TypeTrait) is a traits class. It does not define any member
 functions or data members, but merely types. It can be used to determine the
 basic type and other characteristics of (const) plain, (const) pointer or
-(const) reference types. It is used, e.g., by the bf(FBB::FnWrap*) family of
-template classes and was designed after Alexandrescu's (2001) tt(TypeTraits)
-template class.
+(const) reference types. It was designed after Alexandrescu's (2001)
+tt(TypeTraits) template class.
 
     The bf(FBB::IfElse) class template allows the conditional (on a tt(bool)
 value) use of one of two types.
@@ -72,23 +71,6 @@ such a constructor is defined using the tt(explicit) keyword.
 
 manpagesection(EXAMPLES)
 
-    The following example shows a fragment of the code used in the
-bf(FBB::FnWrap1) class determining the basic type of its tt(Type) template
-parameter: 
-        verb(
-    #include <bobcat/typetrait>
-    ...
-    template <typename Type, typename ReturnType = void>
-    class FnWrap1
-    {
-        ...
-        public:
-            typedef typename TypeTrait<Type>::Plain  argument_type;
-        ...
-    };
-        )    
-    The above code could have used tt(TypeTrait<Type>::isPointer) to determine
-whether tt(Type) actually represents a pointer type.
 
     Here is an example using tt(IfElse):
         verb(

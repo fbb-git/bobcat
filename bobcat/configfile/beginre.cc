@@ -7,3 +7,5 @@ ConfigFile__::const_RE_iterator ConfigFile__::beginRE(string const &re)
 
     return RE_iterator(d_vsIter, 0);
 }
+
+// Note: NO ConfigFile::beginRE

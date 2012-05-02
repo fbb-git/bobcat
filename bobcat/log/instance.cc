@@ -1,6 +1,6 @@
 #include "log.ih"
 
-Log &Log::getInstance()
+Log &Log::instance()
 {
     if (!s_stream.get())
         throw Errno("Log::getInstance()") <<  ": FBB::Log not initialized";

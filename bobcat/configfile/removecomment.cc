@@ -1,17 +1,36 @@
 #include "configfile.ih"
 
-void ConfigFile__::removeComment(string &line)
+bool ConfigFile__::rmCommentAndBackslashes(string &line)
 {
-    size_t pos;
+    size_t pos = 0;
+    size_t lastBackslash = 0;
 
-    if 
-    (                               // saw #
-        (pos = line.find_first_of('#')) != string::npos
-        &&                          // but not \#
-        pos > 0 && line[pos - 1] != '\\'
-    )
-        line.erase(pos);            // throw away beyond '#'
+    while (true)
+    {
+        size_t hit;
 
-    while ((pos = line.find("\\#")) != string::npos)    // replace \# by #
-        line.replace(pos, 2, "#");
+                                            // change \\ to one backslash
+        if ((hit = line.find("\\\\", pos)) != string::npos)
+            line.erase(lastBackslash = hit, 1);
+        else if ((hit = line.find("\\#", pos)) != string::npos)
+            line.replace(hit, 2, "#");      // replace by #
+        else 
+        {
+            if ((hit = line.find('#', pos)) != string::npos)
+            {
+                lastBackslash = string::npos;
+                line.erase(hit);                // erase comment
+            }
+
+            if (line.length() > lastBackslash + 1 && *line.rbegin() == '\\')
+            {
+                line.resize(line.length() - 1);
+                return true;
+            }
+            return false;                   
+        }
+
+        pos = hit + 1;                      // try again beyond the 
+                                            // last-checked character
+    }
 }   

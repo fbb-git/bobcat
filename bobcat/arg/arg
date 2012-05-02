@@ -14,28 +14,30 @@
 namespace FBB
 {
 
-struct ArgOptionType__
+class ArgTypes__
 {
-    enum Type
-    {
-        None        = 0,
-        Required    = 1,
-        Optional    = 2,
-        AsCharOption,
-    };
+    protected:
+        typedef struct option               OptStruct;
+        typedef std::vector<std::string>    StringVector;
+
+    public:
+        enum Type
+        {
+            None        = 0,
+            Required    = 1,
+            Optional    = 2,
+            AsCharOption,
+        };
 };
 
-class LongOption__: public ArgOptionType__
+class LongOption__: public ArgTypes__
 {
     friend class Arg__;
     friend class ArgConfig;
 
-    public:
-
-    private:
-        std::string d_name;
-        Type        d_type;
-        int         d_optionChar;
+    std::string d_name;
+    Type        d_type;
+    int         d_optionChar;
     
     public:
         explicit LongOption__(char const *name);
@@ -47,13 +49,13 @@ class LongOption__: public ArgOptionType__
 };
 
 class Arg__;
-class Arg: public ArgOptionType__
+class Arg: public ArgTypes__
 {
-    typedef struct option               OptStruct;
-    typedef std::vector<std::string>    StringVector;
+    friend class ArgConfig;         // accesses the constructors and
+                                    // longOption()
 
-    Arg__ *d_arg;                           // pointer to the implementation
-    static Arg            *s_arg;           // points to Singleton Arg
+    Arg__ *d_ptr;                   // pointer to the implementation
+    static Arg *s_arg;              // points to Singleton Arg
 
     public:
         typedef FBB::LongOption__ LongOption;
@@ -95,21 +97,17 @@ class Arg: public ArgOptionType__
             int versionFlag = 'v') const;
 
         char const **argPointers();
+
     private:
         Arg(Arg const &other) = delete;
         Arg &operator=(Arg const &other) = delete;
 
-        friend class ArgConfig;     // accesses the constructors and
-                                    // longOption()
-                                                          
         Arg(char const *optstring, int argc, char **argv);      // 1
 
         Arg(char const *optstring,                              // 2
             LongOption const * const begin,
             LongOption const * const end,
             int argc, char **argv);
-
-        void verify();          
 };
 
 inline size_t Arg::option(std::string *value, int optChar) const
