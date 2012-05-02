@@ -1,6 +1,6 @@
 #include "configfile.ih"
 
-bool ConfigFile__::rmCommentAndBackslashes(string &line)
+bool ConfigFile__::rmCommentAndEscapes(string &line)
 {
     size_t pos = 0;
     size_t lastBackslash = 0;
@@ -29,7 +29,6 @@ bool ConfigFile__::rmCommentAndBackslashes(string &line)
             }
             return false;                   
         }
-
         pos = hit + 1;                      // try again beyond the 
                                             // last-checked character
     }

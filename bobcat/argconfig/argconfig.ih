@@ -45,12 +45,19 @@ class ArgConfig__
         std::unordered_map<int, std::string>::const_iterator 
                                                     find(int optChar) const;
         
+        std::unordered_map<int, std::string>::const_iterator findEnd() const;
 };
 
 inline std::unordered_map<int, std::string>::const_iterator 
     ArgConfig__::find(int optChar) const
 {
     return d_longOption.find(optChar);
+}
+
+inline std::unordered_map<int, std::string>::const_iterator 
+    ArgConfig__::findEnd() const
+{
+    return d_longOption.end();
 }
 
 

@@ -84,13 +84,11 @@ class ConfigFile__: public CFEnums__
         size_t size() const;
 
     private:
-        void removeInitialWs(std::string &line) const;
+        static void trimLeft(std::string &line);
+        static void trimRight(std::string &line, bool appendNext);
+        bool rmCommentAndEscapes(std::string &line);
+        bool nextLine(std::istream &inStream, std::string &dest);
 
-        size_t append_next(std::istream &istr, std::string &line);
-        bool hasContent(std::string const &line);
-        bool nextLine(std::istream &istr, std::string &line);
-        void removeComment(std::string &line);
-        void removeTrailingBlanks(std::string &line);
         void resetVsIter(std::string const &re);
         std::string searchFor(std::string const &keyPattern, size_t count);
 
