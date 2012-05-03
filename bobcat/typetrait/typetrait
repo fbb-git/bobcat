@@ -1,39 +1,33 @@
 #ifndef INCLUDED_BOBCAT_TYPETRAIT_
 #define INCLUDED_BOBCAT_TYPETRAIT_
 
+#include <type_traits>
+
 namespace FBB
 {
 
 template <typename T>
 class TypeTrait
 {
+    template <typename ClassType>
+    static double fun(void (ClassType::*)());
+
+    template <typename NonClassType>
+    static char fun(...);
+
     template <typename U> struct Type
     {
-        template <typename ClassType>
-        static double fun(void (ClassType::*)());
-    
-        template <typename NonClassType>
-        static char fun(...);
-
         enum { isClass = sizeof(fun<U>(0)) == sizeof(double) };
-        enum { isDereferenceable = isClass};
-        enum { isPointer = false };
         enum { isConst   = false };
-        enum { isRef     = false };
+        enum { isPointer = false };
         enum { isR_Ref   = false };
+        enum { isRef     = false };
 
         typedef U Plain;
     };
     template <typename U> struct Type<U const>
     {
-        template <typename ClassType>
-        static double fun(void (ClassType::*)());
-    
-        template <typename NonClassType>
-        static char fun(...);
-
         enum { isClass = sizeof(fun<U>(0)) == sizeof(double) };
-        enum { isDereferenceable = isClass};
         enum { isPointer = false };
         enum { isConst   = true };
         enum { isRef     = false };
@@ -44,7 +38,6 @@ class TypeTrait
     template <typename U> struct Type<U *>
     {
         enum { isClass = false };
-        enum { isDereferenceable = true };
         enum { isPointer = true };
         enum { isConst   = false };
         enum { isRef     = false };
@@ -55,7 +48,6 @@ class TypeTrait
     template <typename U> struct Type<U const *>
     {
         enum { isClass = false };
-        enum { isDereferenceable = true };
         enum { isPointer = true };
         enum { isConst   = true };
         enum { isRef     = false };
@@ -65,14 +57,7 @@ class TypeTrait
     };
     template <typename U> struct Type<U &>
     {
-        template <typename ClassType>
-        static double fun(void (ClassType::*)());
-    
-        template <typename NonClassType>
-        static char fun(...);
-
         enum { isClass = sizeof(fun<U>(0)) == sizeof(double) };
-        enum { isDereferenceable = isClass};
         enum { isPointer = false };
         enum { isConst   = false };
         enum { isRef     = true };
@@ -82,14 +67,7 @@ class TypeTrait
     };
     template <typename U> struct Type<U const &>
     {
-        template <typename ClassType>
-        static double fun(void (ClassType::*)());
-    
-        template <typename NonClassType>
-        static char fun(...);
-
         enum { isClass = sizeof(fun<U>(0)) == sizeof(double) };
-        enum { isDereferenceable = isClass};
         enum { isPointer = false };
         enum { isConst   = true };
         enum { isRef     = true };
@@ -99,14 +77,7 @@ class TypeTrait
     };
     template <typename U> struct Type<U &&>
     {
-        template <typename ClassType>
-        static double fun(void (ClassType::*)());
-    
-        template <typename NonClassType>
-        static char fun(...);
-
         enum { isClass = sizeof(fun<U>(0)) == sizeof(double) };
-        enum { isDereferenceable = isClass};
         enum { isPointer = false };
         enum { isConst   = false };
         enum { isRef     = false };
@@ -116,14 +87,7 @@ class TypeTrait
     };
     template <typename U> struct Type<U const &&>
     {
-        template <typename ClassType>
-        static double fun(void (ClassType::*)());
-    
-        template <typename NonClassType>
-        static char fun(...);
-
         enum { isClass = sizeof(fun<U>(0)) == sizeof(double) };
-        enum { isDereferenceable = isClass};
         enum { isPointer = false };
         enum { isConst   = true };
         enum { isRef     = false };
@@ -133,14 +97,7 @@ class TypeTrait
     };
 
     public:
-        template <typename ClassType>
-        static double fun(void (ClassType::*)());
-    
-        template <typename NonClassType>
-        static char fun(...);
-
         enum { isClass = Type<T>::isClass };
-        enum { isDereferenceable = Type<T>::isDereferenceable };
         enum { isPointer = Type<T>::isPointer };
         enum { isConst   = Type<T>::isConst };
         enum { isRef     = Type<T>::isRef };
@@ -165,28 +122,19 @@ class LpromotesR
         enum { yes = sizeof(test(makeR())) == sizeof(char) };
 };
 
-template <bool ifTrue, typename True, typename False>
-struct IfElse
-{
-    IfElse() = delete;
-    typedef False type;
-};
-
-template <typename True, typename False>
-struct IfElse<true, True, False>
-{
-    IfElse() = delete;
-    typedef True type;
-};
-
 template <typename LHS, typename RHS>
 struct Use
 {
-    typedef typename IfElse<LpromotesR<LHS, RHS>::yes, LHS, RHS>::type
-            type;
+    typedef typename std::conditional<
+                           LpromotesR<LHS, RHS>::yes, LHS, RHS>::type type;
 };
 
 
 } // FBB
 
 #endif
+
+
+
+
+

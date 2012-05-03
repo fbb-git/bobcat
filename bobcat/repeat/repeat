@@ -1,30 +1,49 @@
 #ifndef INCLUDED_BOBCAT_REPEAT_
 #define INCLUDED_BOBCAT_REPEAT_
 
+#include <bobcat/typetrait>
+
 namespace FBB
 {
 
-template<typename Counter, typename Function>
-inline void repeat(Counter count, Function &fun)
-{
-    for (; count--; )
-        fun();
-}
+template <bool type>
+struct Repeat__;
 
-template<typename Counter, typename Class, typename Member>
-inline void repeat(Counter count, Class &object, Member member)
+template <>
+struct Repeat__<false>
 {
-    for (; count--; )
-        (object.*member)();
-}
+    template <typename Fun, typename ...Params>
+    static void call(Fun fun, Params &&...params)
+    {
+        fun(std::forward<Params>(params)...);
+    }
+};
 
-template<typename Counter, typename Class, typename Member>
-inline void repeat(Counter count, Class *object, Member member)
+template <>
+struct Repeat__<true>
 {
-    for (; count--; )
-        (object->*member)();
-}
+    template <typename Class, typename Member, typename ...Params>
+    static void call(Class &obj, Member member, Params &&...params)
+    {
+        (obj.*member)(std::forward<Params>(params)...);
+    }
 
+    template <typename Class, typename Member, typename ...Params>
+    static void call(Class const &obj, Member member, Params &&...params)
+    {
+        (obj.*member)(std::forward<Params>(params)...);
+    }
+};
+
+
+template <typename Counter, typename First, typename ...Params>
+inline void repeat(Counter counter, First &&first, Params &&...params)
+{
+    for (; counter; --counter)
+        Repeat__<TypeTrait<First>::isClass>::call(
+                                std::forward<First>(first), 
+                                std::forward<Params>(params)...);
+}    
 
 } // FBB
 

@@ -1,22 +1,21 @@
 bobcat (3.00.00)
 
-  * Functionality deprecated in Bobcat < 3.00.00 is removed in this
-    release. This includes the classes Msg (Use Mstream or Errno),
-    the FnWrap* and ForEach templates (use lamda functions), and AutoPtr /
-    RefCount (use std::shared_ptr or std::unique_ptr)
-
-  * Added TempStream creating a temporary fstream
-
-  * Added member int Arg::beyondDashes() returning the index of the first
-    argument beyond a -- argument (or -1)
+  * Functionality deprecated in Bobcat < 3.00.00 has been removed. This
+    includes the classes Msg (Use Mstream or Errno), the FnWrap* and ForEach
+    templates (use lamda functions), and AutoPtr / RefCount (use
+    std::shared_ptr or std::unique_ptr)
 
   * Arg/ConfigFile/ArgConfig now use the Bridge Design Pattern. Note that this
     requires (only once) all programs using Arg, ConfigFile or ArgConfig to be
     recompiled.
 
-  * Replacing std::map by std::unordered_map (cf. release 2.13.00) with Arg
-    (and ArgConfig) is incorrect, since the ordering is used by these
-    classes. Reinstalled the use of std::map for these classes.
+  * Added member int Arg::beyondDashes() returning the index of the first
+    argument beyond a -- argument (or -1)
+
+  * The 'repeat' function template was improved, now perfectly forwarding 
+    arguments to (member) functions repeatedly called by `repeat'.
+
+  * Added TempStream creating a temporary fstream
 
 bobcat (2.22.00)
 
