@@ -8,4 +8,11 @@ ConfigFile__::const_RE_iterator ConfigFile__::beginRE(string const &re)
     return RE_iterator(d_vsIter, 0);
 }
 
-// Note: NO ConfigFile::beginRE
+ConfigFile::const_RE_iterator ConfigFile::beginRE(string const &re)
+{
+    static bool called = false;
+    deprecated__(called, "ConfigFile::beginRE(std::string const &)");
+
+    return d_ptr->beginRE(re);
+}
+
