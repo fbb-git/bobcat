@@ -1,3 +1,17 @@
+bobcat (3.01.00)
+
+  * Repaired a bug in DateTime: its dstCorrection(bool *ok) member failed to
+    set the ok boolean to true if the localime_r performed correctly.
+
+  * According to the man-page localtime_r does not assume that tzset(3) has
+    been called, but leaves this to the calling program. Localtime_r's
+    man-page states: 
+        For  portable  code  tzset  should  be  called before localtime_r().
+    DateTime::dstCorrection(bool *) now calls tzset before calling
+    localtime_r. 
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Mon, 14 May 2012 11:43:08 +0200
+
 bobcat (3.00.02)
 
   * Cosmetic split of configile/beginre.cc into two sources, one holding the
