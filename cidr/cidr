@@ -4,7 +4,9 @@
 #include <string>
 #include <iosfwd>
 #include <vector>
+
 #include <bobcat/x2a>
+#include <bobcat/errno>
 
 namespace FBB
 {
@@ -52,9 +54,6 @@ class Cidr
         static size_t dotted2binary(std::string const &dotted);
                                                 // reverse operation
         static std::string binary2dotted(size_t binary);
-
-        Cidr(Cidr const &&tmp);                     // Deprecated
-        Cidr &operator=(Cidr const &&tmp);          // Deprecated
 
     private:
         bool matchLine(std::string const &line);

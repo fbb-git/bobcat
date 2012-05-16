@@ -1,6 +1,6 @@
 #include "arg.ih"
 
-void Arg::fillLongOptions(OptStruct *optStruct,
+void Arg__::fillLongOptions(OptStruct *optStruct,
                             std::string const &optString,
                             LongOption const * const begin,
                             LongOption const * const end)

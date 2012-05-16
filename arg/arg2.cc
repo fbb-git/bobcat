@@ -1,12 +1,11 @@
 #include "arg.ih"
 
-#include <iterator>
-
-Arg::Arg(char const *optstring, 
+Arg__::Arg__(char const *optstring, 
          LongOption const * const begin, LongOption const * const end,
          int argc, char **argv)
 :
-    d_argPointer(0)
+    d_argPointer(0),
+    d_beyondDashes(find(argv, argv + argc, string("--")) - argv)
 {
     setBasename(argv[0]);
 
@@ -24,11 +23,12 @@ Arg::Arg(char const *optstring,
     while (true)
     {
         d_getOpt = getopt_long(argc, argv, opts.c_str(), optStructs.get(), 
-                                                     &longOptionIndex);
+                                                         &longOptionIndex);
 
         switch (d_getOpt)
         {
-            case EOF:
+            case -1:
+                d_beyondDashes += (d_beyondDashes != argc) - optind;
                 copy(argv + optind, argv + argc, back_inserter(d_argv));
             return;
 
@@ -57,9 +57,11 @@ Arg::Arg(char const *optstring,
     }
 }
 
-
-
-
-
-
-
+Arg::Arg(char const *optstring, 
+         LongOption const * const begin, LongOption const * const end,
+         int argc, char **argv)
+:
+    d_ptr(new Arg__(optstring, begin, end, argc, argv))
+{
+    d_ptr->verify();
+}

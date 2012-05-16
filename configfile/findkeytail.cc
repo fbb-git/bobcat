@@ -6,5 +6,6 @@
 
 string ConfigFile::findKeyTail(string const &keyPattern, size_t count)
 {
-    return searchFor("^\\s*" + keyPattern + "\\s+(.*)\\s*$", count);
+    return d_ptr->findKeyTail(keyPattern, count);
 }
+

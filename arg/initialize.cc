@@ -7,7 +7,5 @@ Arg &Arg::initialize(char const *optstring, int argc, char **argv)
 
     s_arg = new Arg(optstring, argc, argv);
 
-    s_arg->verify();
-
     return *s_arg;
 }

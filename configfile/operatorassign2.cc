@@ -1,11 +1,10 @@
 #include "configfile.ih"
 
-#include "../iuo/iuo"
-
-ConfigFile &ConfigFile::operator=(ConfigFile const &&tmp)
+ConfigFile &ConfigFile::operator=(ConfigFile const &rhs)
 {
-    static bool called = false;
-    deprecated__(called, "ConfigFile::operator=(ConfigFile const &&tmp)");
-    fswap(*this, const_cast<ConfigFile &>(tmp));
+    ConfigFile tmp(rhs);
+    swap(d_ptr, tmp.d_ptr);
     return *this;
 }
+
+    

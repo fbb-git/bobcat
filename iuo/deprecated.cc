@@ -9,7 +9,7 @@ namespace FBB
     
         cerr << "[Warning] " << msg << 
             " is deprecated.\n"
-            "Recompile this program to remove this warning\n";
+            "Avoid its use, see the man-page for alternatives.\n";
         called = true;
     }
 }

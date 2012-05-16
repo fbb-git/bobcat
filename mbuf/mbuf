@@ -6,7 +6,9 @@
 #include <ostream>
 #include <string>
 #include <iosfwd>
-#include <climits>
+#include <limits>
+
+#include <bobcat/errno>
 
 namespace FBB
 {
@@ -32,11 +34,12 @@ class Mbuf: public std::streambuf
         Mbuf();                                               // 1
 
         explicit Mbuf(std::streambuf *strbuf,                 // 2
-                        size_t maxCount = UINT_MAX,
+                        size_t maxCount = std::numeric_limits<size_t>::max(),
                         std::string const &tag = "", bool throwing = false);
 
                                                                 // 3
-        explicit Mbuf(std::string const &name, size_t maxCount = UINT_MAX, 
+        explicit Mbuf(std::string const &name, size_t maxCount = 
+                    std::numeric_limits<size_t>::max(), 
                      std::string const &tag = "", bool throwing = false);
 
         void reset(Mbuf const &mbuf);               // 1: initialize from 

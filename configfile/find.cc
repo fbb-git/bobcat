@@ -1,6 +1,6 @@
 #include "configfile.ih"
 
-vector<string>::const_iterator ConfigFile::find(string const &target) const
+vector<string>::const_iterator ConfigFile__::find(string const &target) const
 {
     return find_if(
                 begin(), end(), 
@@ -10,4 +10,9 @@ vector<string>::const_iterator ConfigFile::find(string const &target) const
                                 (haystack, target);
                 }
             );
+}
+
+vector<string>::const_iterator ConfigFile::find(string const &target) const
+{
+    return d_ptr->find(target);
 }

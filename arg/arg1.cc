@@ -1,8 +1,9 @@
 #include "arg.ih"
 
-Arg::Arg(char const *optstring, int argc, char **argv)
+Arg__::Arg__(char const *optstring, int argc, char **argv)
 :
-    d_argPointer(0)
+    d_argPointer(0),
+    d_beyondDashes(find(argv, argv + argc, string("--")) - argv)
 {
     setBasename(argv[0]);
 
@@ -17,7 +18,8 @@ Arg::Arg(char const *optstring, int argc, char **argv)
 
         switch (d_getOpt)
         {
-            case EOF:
+            case -1:
+                d_beyondDashes += (d_beyondDashes != argc) - optind;
                 copy(argv + optind, argv + argc, back_inserter(d_argv));
             return;
 
@@ -38,4 +40,11 @@ Arg::Arg(char const *optstring, int argc, char **argv)
     }
 }
 
+
+Arg::Arg(char const *optstring, int argc, char **argv)
+:
+    d_ptr(new Arg__(optstring, argc, argv))
+{
+    d_ptr->verify();
+}
 

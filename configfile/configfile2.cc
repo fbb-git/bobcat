@@ -1,7 +1,7 @@
 #include "configfile.ih"
 
-ConfigFile::ConfigFile(string const &fname, Comment cType, SearchCasing sType,
-                       Indices iType)
+ConfigFile__::ConfigFile__(string const &fname, Comment cType, 
+                            SearchCasing sType, Indices iType)
 :
     d_rmComment(cType == RemoveComment),
     d_caseSensitive(sType == SearchCaseSensitive),
@@ -10,5 +10,11 @@ ConfigFile::ConfigFile(string const &fname, Comment cType, SearchCasing sType,
     open(fname);
 }
 
+
+ConfigFile::ConfigFile(string const &fname, Comment cType, 
+                       SearchCasing sType, Indices iType)
+:
+    d_ptr(new ConfigFile__(fname, cType, sType, iType))
+{}
 
 

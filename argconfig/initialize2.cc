@@ -9,7 +9,6 @@ ArgConfig &ArgConfig::initialize(char const *optstring,
 
     s_argconfig = new ArgConfig(optstring, argc, argv, fname, 
                                 cType, sType, iType);
-    s_argconfig->verify();
 
     return *s_argconfig;
 }

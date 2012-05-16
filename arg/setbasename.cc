@@ -1,6 +1,6 @@
 #include "arg.ih"
 
-void Arg::setBasename(string const &argv0)
+void Arg__::setBasename(string const &argv0)
 {
     string::size_type idx = argv0.rfind(s_dirsep);
 

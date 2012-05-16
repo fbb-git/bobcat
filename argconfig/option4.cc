@@ -7,9 +7,9 @@ size_t ArgConfig::option(string *value, char const *longOption)
     if (ret != 0)
         return ret;
 
-    auto optIt = longConfigOpt(longOption);
+    auto iterators = longConfigOpt(longOption);
 
-    ret = endRE() - optIt;
+    ret = iterators.second - iterators.first;
     if (value && ret != 0)
         *value = findKeyTail(longOption, 1);
 

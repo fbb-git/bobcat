@@ -35,7 +35,7 @@ install: build-arch
 	dh_testroot
 	dh_clean
 	dh_installdirs
-	./build install debian/libbobcat2 debian/libbobcat-dev
+	./build install debian/libbobcat3 debian/libbobcat-dev
 
 binary-indep:
 
@@ -64,7 +64,8 @@ binary-arch: build-arch install
 # archive downloaded from https://www.icce.rug.nl/debian/bobcat
 # (bobcat_x.y.z..tar.gz)
 
-MD5TRUSTED := f929da341eb361e2cec856f5ce2e79ad
+#   3.00.02:    0420160b5b0890cc9cdaaf66feca57ae
+MD5TRUSTED := 68a748955d88a974203d84121c74a836
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
@@ -79,7 +80,7 @@ get-orig-source:
 	@@[ -d ../tarballs/. ]||mkdir -p ../tarballs
 
 	-@if [ ! -f ../tarballs/$(DEFILE) ] ; then \
-	echo "Downloading $(URL)/$(UPFILE) from $(URL)/$(UPFILE) ..." ; \
+	echo -e "Downloading $(URL)/$(UPFILE)\nSaving into ../tarballs/$(DEFILE) ..." ; \
 	wget --no-check-certificate --quiet -nv -T20 -t3 -O \
 	../tarballs/$(DEFILE) $(URL)/$(UPFILE) ; \
 	else \

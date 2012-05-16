@@ -10,10 +10,11 @@ void show(char const *name)
 {
     cout << "Type: " << name << boolalpha << ":\n"
             "   "
-            "is pointer: "  << TypeTrait<T>::isPointer << ", "
+            "is class: "    << TypeTrait<T>::isClass << ", "
             "is const: "    << TypeTrait<T>::isConst << ", "
-            "is ref: "      << TypeTrait<T>::isRef << ", "
-            "is r-ref: "    << TypeTrait<T>::isR_Ref << '\n';
+            "is pointer: "  << TypeTrait<T>::isPointer << ", "
+            "is r-ref: "    << TypeTrait<T>::isR_Ref << ", "
+            "is ref: "      << TypeTrait<T>::isRef << '\n';
 }
     
 int main()
@@ -33,6 +34,7 @@ int main()
     show<int const &>("int const &");   
     show<int &&>("int &&");   
     show<int const &&>("int const &&");   
+    show<std::string>("std::string");   
 
 
     cout << "=======================\n";
@@ -44,3 +46,9 @@ int main()
     cout << "char const * promotes string " << 
                 LpromotesR<char const *, string>::yes << '\n';
 }
+
+
+
+
+
+

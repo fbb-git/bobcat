@@ -7,7 +7,7 @@ void Mbuf::showTag()
 
     d_ostr << d_tag;                    // starts with [
 
-    if (d_maxCount != UINT_MAX)
+    if (d_maxCount != numeric_limits<size_t>::max())
         d_ostr << ' ' << d_count;
 
     d_ostr << "] ";

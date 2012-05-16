@@ -2,5 +2,5 @@
 
 namespace FBB
 {
-    Mstream wmsg(std::cout, UINT_MAX,       "Warning");
+    Mstream wmsg(std::cout, numeric_limits<size_t>::max(),       "Warning");
 }

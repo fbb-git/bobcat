@@ -10,13 +10,10 @@ Standards-Version: 3.9.3
 Vcs-Svn: https://svn.openfmi.net/debian-addons-bg/bobcat/trunk
 Vcs-Browser: http://svn.openfmi.net/debian-addons-bg/bobcat/trunk
 
-Package: libbobcat2
+Package: libbobcat3
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Provides: libbobcat1
-Conflicts: libbobcat1
-Replaces: libbobcat1
 Description: run-time (shared) Bobcat library
  The (shared) Bobcat library contains classes and templates used by, e.g., the
  Stealth and Bisonc++ programs. 
@@ -28,7 +25,6 @@ Description: run-time (shared) Bobcat library
     Command-to-Function associations
     Command-line arguments and history handling
     Command-line editing using streams
-    Configurable Context Wrapping (Templates)
     Configuration Files
     Decryption and Encryption
     Extended String Operations
@@ -38,18 +34,15 @@ Description: run-time (shared) Bobcat library
     Mail headers and mail filtering (milters)
     Message Digests
     Pattern matching
-    Reference Counting
     Single (Direct) Key Input
     Syslog- and other kinds of messages
+    Temporary files
     Universal Type Conversions (Templates)
 
 Package: libbobcat-dev
 Architecture: any
 Section: libdevel
-Depends: libbobcat2 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
-Provides: libbobcat1-dev
-Conflicts: libbobcat1-dev
-Replaces: libbobcat1-dev
+Depends: libbobcat3 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: headers and documentation for the Bobcat library
  Headers and documentation of classes defined in the Bobcat library.
  .
@@ -60,7 +53,6 @@ Description: headers and documentation for the Bobcat library
     Command-to-Function associations
     Command-line arguments
     Command-line editing using streams
-    Configurable Context Wrapping (Templates)
     Configuration Files
     Decryption and Encryption
     Extended String Operations
@@ -70,10 +62,12 @@ Description: headers and documentation for the Bobcat library
     Mail headers and mail filtering (milters)
     Message Digests
     Pattern matching
-    Reference Counting
     Single (Direct) Key Input
     Syslog- and other kinds of messages
+    Temporary files
     Universal Type Conversions (Templates)
  .
  The libbobcat-dev package contains the static library as well as header
  files and manual pages of the Bobcat classes and templates.
+
+

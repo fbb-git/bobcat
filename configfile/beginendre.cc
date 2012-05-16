@@ -1,11 +1,9 @@
 #include "configfile.ih"
 
-pair<ConfigFile::const_RE_iterator, ConfigFile::const_RE_iterator>
-    ConfigFile::beginEndRE(std::string const &re)
+ConfigFile::RE_iteratorPair ConfigFile::beginEndRE(std::string const &re)
 {
-    const_RE_iterator begin = beginRE(re);
-
-    pair<const_RE_iterator, const_RE_iterator> ret(begin, endRE());
+    auto begin = d_ptr->beginRE(re);
+    RE_iteratorPair ret(begin, d_ptr->endRE());
 
     return ret;
 }
