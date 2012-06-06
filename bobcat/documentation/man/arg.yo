@@ -46,13 +46,13 @@ immediately.
                                 LongOption const * const end,
                                 int argc, char **argv))
        Initializes the bf(FBB::Arg) singleton. Accepts two iterators of an
-		array of bf(Arg::LongOption) objects, holding long-options. Must be
-		called only once. Throws an bf(FBB::Errno) exception if called
-		repeatedly or if called with tt(argv) not containing a defined option
-		(which is shown by the bf(FBB::Errno)'s tt(what()) member).  See the
-		description of bf(Arg::LongOption) below.  Returns a reference to the
-		singleton object, allowing code initializing bf(Arg) to use the
-		initialized object immediately.
+        array of bf(Arg::LongOption) objects, holding long-options. Must be
+        called only once. Throws an bf(FBB::Errno) exception if called
+        repeatedly or if called with tt(argv) not containing a defined option
+        (which is shown by the bf(FBB::Errno)'s tt(what()) member).  See the
+        description of bf(Arg::LongOption) below.  Returns a reference to the
+        singleton object, allowing code initializing bf(Arg) to use the
+        initialized object immediately.
 
         tt(optstring) should consist of letters, possibly postfixed by:
         itemization(
@@ -65,8 +65,8 @@ immediately.
 
     itb(FBB::Arg &instance()) 
        Returns the instance of the bf(Arg) object, available after calling one
-		of the bf(Arg::initialize()) members.  If called before
-		initialization, an tt(FBB::Errno) exception is thrown.
+        of the bf(Arg::initialize()) members.  If called before
+        initialization, an tt(FBB::Errno) exception is thrown.
     )
 
 manpagesection(OVERLOADED OPERATOR)
@@ -74,27 +74,27 @@ manpagesection(OVERLOADED OPERATOR)
     itemization(
     itb(char const *operator[](size_t idx) const)
        Returns tt(argument[idx]), after having removed all specified options.
-		0 is returned if no tt(arg[x]) is available.  The program name
-		(tt(argv[0])) is NOT counted here: index 0 refers to the first
-		ARGUMENT, e.g., the program's tt(argv[1]).
+        0 is returned if no tt(arg[x]) is available.  The program name
+        (tt(argv[0])) is NOT counted here: index 0 refers to the first
+        ARGUMENT, e.g., the program's tt(argv[1]).
     )
 
 manpagesection(NON-STATIC MEMBER FUNCTIONS)
     itemization(
     itb(char const **argPointers())
        Returns tt(argv)-like set of pointers to all remaining arguments. The
-		last element is guaranteed to be a 0-pointer. The first tt(nArg())
-		elements point to the respective bf(C)-string values of the arguments.
+        last element is guaranteed to be a 0-pointer. The first tt(nArg())
+        elements point to the respective bf(C)-string values of the arguments.
     itb(std::string const &basename() const)
         Returns the program's basename.
     itb(size_t beyondDashes() const)
        Returns the index of the first argument after a tt(--)
-		argument or tt(nArgs()) if no tt(--) argument was encountered.nl() 
+        argument or tt(nArgs()) if no tt(--) argument was encountered.nl() 
        A tt(--) argument ends tt(Arg)'s argument processing, and all arguments
-		beyond the first tt(--) argument are kept `as is'. The
-		tt(beyondDashes) member returns the index of the first argument beyond
-		the tt(--) argument, which itself is removed from the remaining set of
-		arguments.
+        beyond the first tt(--) argument are kept `as is'. The
+        tt(beyondDashes) member returns the index of the first argument beyond
+        the tt(--) argument, which itself is removed from the remaining set of
+        arguments.
     itb(size_t nArgs() const)
        Returns the number of arguments left after option-removal.  The
         program name bf(argv[0]) is NOT counted here.
@@ -104,10 +104,10 @@ manpagesection(NON-STATIC MEMBER FUNCTIONS)
         is counted.
     itb(size_t nOptions() const)
        Returns the number of specified single character options. If short
-		options have long option synonyms, then these long option synonyms are
-		counted as if they were specified as single character options. If
-		single character options (or their long option synonyms) are multiply
-		specified, then each specification is counted.
+        options have long option synonyms, then these long option synonyms are
+        counted as if they were specified as single character options. If
+        single character options (or their long option synonyms) are multiply
+        specified, then each specification is counted.
     itb(size_t option(int option) const)
        The number of times `option' (or its long option synonym, if defined)
         was specified is returned.
@@ -116,62 +116,62 @@ manpagesection(NON-STATIC MEMBER FUNCTIONS)
         argument (or their long option synonyms) were present is returned.
     itb(size_t option(string *value, int option) const)
        Returns the number of times the provided option (or its long option
-		synonym) was present. If the return value is non-zero then the value
-		of the first occurrence of this option is stored in tt(*value), which
-		is left untouched if `option' was not present. 0 may be specified for
-		bf(value) if the option does not have a value or if the value should
-		not be stored.
+        synonym) was present. If the return value is non-zero then the value
+        of the first occurrence of this option is stored in tt(*value), which
+        is left untouched if `option' was not present. 0 may be specified for
+        bf(value) if the option does not have a value or if the value should
+        not be stored.
     itb(size_t option(size_t idx, string *value, int option) const)
        Returns the number of times the provided option (or its long option
-		synonym) was present. If the return value is non-zero then the value
-		of the tt(idx)th occurrence (0-based offset) of this option is stored
-		in tt(*value), which is left untouched if `option' was not present or
-		if tt(idx) is or exceeds the number of specifications of the provided
-		option. 0 may be specified for bf(value) if the option does not have a
-		value or if the value should not be stored.
+        synonym) was present. If the return value is non-zero then the value
+        of the tt(idx)th occurrence (0-based offset) of this option is stored
+        in tt(*value), which is left untouched if `option' was not present or
+        if tt(idx) is or exceeds the number of specifications of the provided
+        option. 0 may be specified for bf(value) if the option does not have a
+        value or if the value should not be stored.
     itb(size_t option(size_t *idx, string *value, int option) const)
        Returns the number of times the provided option (or its long option
-		synonym) was present. If the return value is non-zero then the offset
-		(within the series of tt(option) specifications) of the first option
-		having a non-empty option value is returned in tt(*idx), while its
-		option value is stored in tt(*value). Both tt(*value) and tt(*idx) are
-		left untouched if `option' was not present. 0 may be specified for
-		bf(value) if the option does not have a value or if the value should
-		not be stored.
+        synonym) was present. If the return value is non-zero then the offset
+        (within the series of tt(option) specifications) of the first option
+        having a non-empty option value is returned in tt(*idx), while its
+        option value is stored in tt(*value). Both tt(*value) and tt(*idx) are
+        left untouched if `option' was not present. 0 may be specified for
+        bf(value) if the option does not have a value or if the value should
+        not be stored.
     itb(size_t option(string *value, char const *longOption) const)
        Returns the number of times the specified long option (not having a
-		single-character synonym) was present. Its value is then stored in
-		tt(*value), which is left untouched if the long option was not
-		present. 0 may be specified for bf(value) if the option does not have
-		a value or if the value should not be stored.
+        single-character synonym) was present. Its value is then stored in
+        tt(*value), which is left untouched if the long option was not
+        present. 0 may be specified for bf(value) if the option does not have
+        a value or if the value should not be stored.
     itb(size_t option(size_t idx, string *value, 
                                         char const * longOption) const)
        Returns the number of times the provided long option (not having a
-		single-character synonym) was present. If the return value is non-zero
-		then the value of the tt(idx)th occurrence (0-based offset) of this
-		long option is stored in tt(*value), which is left untouched if the
-		long option was not present or if tt(idx) is or exceeds the number of
-		specifications of the provided long option. 0 may be specified for
-		bf(value) if the long option does not have a value or if the value
-		should not be stored.
+        single-character synonym) was present. If the return value is non-zero
+        then the value of the tt(idx)th occurrence (0-based offset) of this
+        long option is stored in tt(*value), which is left untouched if the
+        long option was not present or if tt(idx) is or exceeds the number of
+        specifications of the provided long option. 0 may be specified for
+        bf(value) if the long option does not have a value or if the value
+        should not be stored.
     itb(size_t option(size_t *idx, string *value, int longOption) const)
        Returns the number of times the provided long option (not having a
-		single-character synonym) was present. If the return value is non-zero
-		then the offset (within the series of this long option specifications)
-		of the first long option having a non-empty option value is returned
-		in tt(*idx), while its option value is stored in tt(*value). Both
-		tt(*value) and tt(*idx) are left untouched if long option was not
-		present. 0 may be specified for bf(value) if the long option does not
-		have a value or if the value should not be stored.
+        single-character synonym) was present. If the return value is non-zero
+        then the offset (within the series of this long option specifications)
+        of the first long option having a non-empty option value is returned
+        in tt(*idx), while its option value is stored in tt(*value). Both
+        tt(*value) and tt(*idx) are left untouched if long option was not
+        present. 0 may be specified for bf(value) if the long option does not
+        have a value or if the value should not be stored.
     itb(void versionHelp(void (*usage)(std::string const &progname), 
         char const *version, size_t minArgs, int helpFlag = 'h', 
         int versionFlag = 'v') const)
        If tt(versionFlag) was specified, and the tt(helpFlag) was not
-		specified the program's name (using bf(basename())) and tt(version) is
-		displayed to tt(std::cout). Otherwise, if the tt(helpFlag) was
-		provided or if there are fewer arguments than tt(minArgs) tt(usage())
-		is called with argument bf(basename()). If either version- or help
-		information is shown, the bf(int) value 1 is thrown as an
+        specified the program's name (using bf(basename())) and tt(version) is
+        displayed to tt(std::cout). Otherwise, if the tt(helpFlag) was
+        provided or if there are fewer arguments than tt(minArgs) tt(usage())
+        is called with argument bf(basename()). If either version- or help
+        information is shown, the bf(int) value 1 is thrown as an
         exception.nl() 
        Note that tt(versionhelp) compares tt(minArgs) against tt(nArgs). If
         tt(minArgs) should be compaired against the number of arguments up to
@@ -181,8 +181,8 @@ manpagesection(NON-STATIC MEMBER FUNCTIONS)
     arg.versionHelp(usage, version, 2 + arg.nArgs() - arg.beyondDashes());
             )
        The address of the tt(usage()) function, the current version and the
-		minimum number of arguments must be specified. Default argument values
-		are provided for the option flags.
+        minimum number of arguments must be specified. Default argument values
+        are provided for the option flags.
     )
 
 manpagesection(THE NESTED CLASS FBB::Arg::LongOption)
@@ -191,14 +191,14 @@ bf(FBB::Arg::LongOption). This class offers the following constructors:
     itemization(
     itb(FBB::Arg::LongOption(char const *name, FBB::Arg::Type type = None))
        This constructor is used to define a long option for which no
-		corresponding short option is defined. The parameter tt(name) is the
-		name of the long option (without prefixing the tt(--) characters,
-		which em(are) required when specifying the long option).
+        corresponding short option is defined. The parameter tt(name) is the
+        name of the long option (without prefixing the tt(--) characters,
+        which em(are) required when specifying the long option).
     itb(FBB::Arg::LongOption(char const *name, int optionChar))
        This constructor is used to define a long option for which a
-		corresponding short option is defined. The parameter tt(name) is the
-		name of the long option (without prefixing the tt(--) characters,
-		which em(are) required when specifying the long option).
+        corresponding short option is defined. The parameter tt(name) is the
+        name of the long option (without prefixing the tt(--) characters,
+        which em(are) required when specifying the long option).
     )
     In a program, long options may be specified as follows:
     itemization(
@@ -217,43 +217,40 @@ manpagesection(EXAMPLE)
 initialization. It is not a full-fledched example in the sense of a small 
 runnable program.
         verb(
-    #include <bobcat/arg>
+#include <bobcat/arg>
 
-    using namespace FBB;
+using namespace FBB;
 
-    namespace   // the anonymous namespace can be used here
+namespace   // the anonymous namespace can be used here
+{
+    Arg::LongOption longOptions[] = 
     {
-        Arg::LongOption longOptions[] = 
-        {
-            Arg::LongOption("debug"),
-            Arg::LongOption("filenames", 'f'),
-            Arg::LongOption("help", 'h'),
-            Arg::LongOption("version", 'v'),
-        };
-    
-        Arg::LongOption const *const longEnd = 
-                        longOptions + 
-                        sizeof(longOptions) / sizeof(Arg::LongOption); 
-    }
-    
-    int main(int argc, char **argv)
-    try
-    {
-        Arg &arg = Arg::initialize("df:hv", 
-                        longOptions, longEnd, argc, argv);
+        Arg::LongOption("debug"),
+        Arg::LongOption("filenames", 'f'),
+        Arg::LongOption("help", 'h'),
+        Arg::LongOption("version", 'v'),
+    };
+    auto longEnd = longOptions + sizeof(longOptions) / sizeof(longOptions[0]);
+}
 
-        // code using arg, etc.
-    }
-    catch(Errno const &err)     // handle exceptions
-    {
-        cerr << err.what() << endl;
-        return err.which();
-    }
-    catch(int x)
-    {
-        return x;
-    }
-        )
+int main(int argc, char **argv)
+try
+{
+    Arg &arg = Arg::initialize("df:hv", 
+                    longOptions, longEnd, argc, argv);
+
+    // code using arg, etc.
+}
+catch(Errno const &err)     // handle exceptions
+{
+    cerr << err.what() << endl;
+    return err.which();
+}
+catch(int x)
+{
+    return x;
+}
+    )
 
 manpagefiles()
     em(bobcat/arg) - defines the class interface
