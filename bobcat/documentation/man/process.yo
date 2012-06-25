@@ -276,9 +276,9 @@ not affect a currently running  child process.
 a tt(Process) object.  If the command starts and ends with a em(back-tick)
 (tt(`)) then the back-ticks are removed, and the resulting contents are
 interpreted as a command to execute.nl()
-    Next it will call tt(stop) (see below) to end any ongoing process
-followed by calling tt(start) to execute the newly defined command using the
-current default process parameters. It returns tt(stop)'s return value.
+    Next it calls tt(stop) (see below) to end any ongoing process followed by
+calling tt(start) to execute the newly defined command using the current
+default process parameters. It returns tt(stop)'s return value.
 
     itb(Process &operator()(iomode mode))
         This operator changes the tt(IOMode) of the next child process. It
@@ -427,7 +427,7 @@ parameter of child processes.
 parameter of child processes. No time limit will be imposed upon child
 processes if tt(timeLimit 0) is specified.
 
-    itb(int start())
+    itb(void start())
         The currently specified command is executed using the currently active
 process parameters. These process parameters may be modified (either as new
 defaults or for the next process only) using overloaded tt(start) members,
@@ -444,19 +444,19 @@ the tt(Process) object's tt(start) or tt(stop) members are called; when
 the object's assignment operator is used; or when the object goes out of
 scope.
 
-    itb(int start(IOMode mode))
+    itb(void start(IOMode mode))
        The currently specified command is executed using the specified
 tt(IOMode) rather than the currently specified default but otherwise using the
 currently specified default process parameters. The specified tt(IOMode) will
 only be used for the process executed by this tt(start) member.
 
-    itb(int start(IOMode mode, Program program))
+    itb(void start(IOMode mode, Program program))
        The currently specified command is executed using the specified
 tt(IOMode) and tt(ProcessType) as well as the currently specified child
 process time limit. The specified arguments will only be used for the process
 executed by this tt(start) member.
 
-    itb(int start(IOMode mode, Program program, size_t timeLimit))
+    itb(void start(IOMode mode, Program program, size_t timeLimit))
        The currently specified command is executed using the specified
 arguments for the process parameters. The specified arguments will only be
 used for the process executed by this tt(start) member.

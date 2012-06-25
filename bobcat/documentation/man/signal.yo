@@ -1,0 +1,142 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Signal)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (signal handler)
+
+manpagename(FBB::Signal)(Signal Handler)
+
+manpagesynopsis()
+    bf(#include <bobcat/signal>)nl()
+==================================
+REMOVE for plain template classes:    
+    Linking option: tt(-lbobcat) 
+==================================
+
+manpagedescription()
+
+Signals have the well known drawback that signals arrive free of
+context. E.g., assume a program runs a flow control loop like this:
+    verb(
+void Class::run()
+{
+    while (d_continue)
+        handleTasks();
+    cleanup();
+}
+    )
+    then if the program needs to recognize  a termination signal then the
+typical signal handler looks like this:
+    verb(
+void signalHandler(int signal)
+{
+    // perform required actions
+}
+    )
+    Since the tt(signalHandler) is called asynchronically, there is no context
+available, and the usual way of communicating between objects and signal
+handlers is via static variables, like this:
+    verb(
+// declared as static bool s_continue;
+bool Class::s_continue = true; 
+
+void Class::run()
+{
+    while (s_continue)
+        handleTasks();
+    cleanup();
+}
+
+// declared as static void signalHander(int signal);
+void Class::signalHandler(int signal)
+{
+    s_continue = false;
+}
+    )
+    The class tt(Signal) allows the signal handler to operate in the context
+of a class. The advantage of this is that static data members are no longer
+required and that the signal may be used to control data members of individual
+objects. 
+
+    The signal is now handled by an object, whose class must define a member 
+        verb(
+    virtual void signalHandler(size_t signum) override;
+        )
+    and this function is responsible for handling the received signal. Since
+it is a member function it may affect its object's local variables and it may
+call its object's member functions. Static data members are not required
+anymore (see below for an example).
+
+    Note that, as the signal may arrive at unpredicable times data members
+that can be modified by tt(signalHandler) should be declared using the
+tt(volatile) modifier.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    tt(Signal) is not derived from other classes, but the classes for which
+signals must be handled by tt(Signal) must themselves publicly be derived from
+the class tt(FBB::SignalHandler) and must implement a member 
+        verb(
+    virtual void signalHandler(size_t signum) override;
+        )
+    handling the received signal.
+
+
+manpagesection(CONSTRUCTORS AND OVERLOADED OPERATORS)
+    tt(Signal) is defined as a em(singleton), and does not offer public or
+protected constructors, nor does it offer overloaded operators.
+
+manpagesection(STATIC MEMBER FUNCTION)
+    itemization(
+    itb(static Signal &instance())nl()
+        This static member can be used to access a reference to the program's
+single tt(Signal) object.
+    )
+        
+
+manpagesection(MEMBER FUNCTIONS)
+    All of tt(Signal)'s member functions can only be called through a
+reference to the program's tt(Signal) object, returning a reference to the
+program's single tt(Signal) object:
+    itemization(
+    itb(void add(size_t signum, SignalHandler &object))nl() 
+       tt(SignalHandler object) is activated on arrival of signal
+        tt(signum). If multiple tt(SignalHandler) objects must be called then
+        multiple tt(Signal::add) calls can be provided, and the various
+        tt(SignalHandler::signalHandler) members are called in the same
+        sequence as their respective tt(Signal::add) calls. If one of the
+        earlier tt(signalHandler) members terminates the program then later
+        tt(signalHandler) members are not activated anymore.
+    itb(void ignore(size_t signum))nl()
+       Any previously installed tt(SignalHandler) object is no longer
+        activated on arrival of signal tt(signum). In addition, if possible,
+        signal tt(signum) is completely ignored (some signals cannot be
+        caught, blocked, of ignored, like tt(SIGKILL) and tt(SIGSTOP)
+        (cf. bf(signal)(7)).
+    itb(void reset(size_t signum))nl()
+       Any previously installed tt(SignalHandler) object is no longer
+        activated on arrival of signal tt(signum). In addition, the default
+        action the program takes on arrival of signal tt(signum) is
+        reinstalled (cf. bf(signal)(7)).
+    )
+
+    If the tt(signum) value that is passed to tt(Signal)'s members is not a
+defined signal value, then an bf(FBB::Errno) exception is thrown. 
+
+manpagesection(EXAMPLE)
+    verbinclude(../../signal/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/signal) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(signal)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
+
+
+
