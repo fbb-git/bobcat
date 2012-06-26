@@ -11,6 +11,8 @@
 namespace FBB
 {
 
+class User;
+
 class Stat
 {
     struct stat d_stat;
@@ -47,8 +49,13 @@ class Stat
             OW =    02,
             OX =    01,
 
+          READ =  UR | GR | OR,
+         WRITE =  UW | GW | OW,
+          EXEC =  UX | GX | OX,
+
            RWX =  0777,
         };
+
         enum Type
         {
             BLOCK_DEVICE        =  0060000,
@@ -68,6 +75,8 @@ class Stat
         Stat &operator=(Stat const &other) = default;
         Stat &operator=(Stat &&tmp);
 
+        bool access(User const &user, size_t mode, 
+                                       bool useEffective = true) const;
         DateTime lastAccess() const;
         DateTime lastChange() const;
         DateTime lastModification() const;

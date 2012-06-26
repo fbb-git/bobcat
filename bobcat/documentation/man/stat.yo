@@ -1,5 +1,7 @@
 includefile(include/header)
 
+COMMENT( see also getgroups )
+
 COMMENT(manpage, section, releasedate, archive, short name)
 manpage(FBB::Stat)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
                     (Characteristics of object in the filesystem)
@@ -46,6 +48,9 @@ manpagesection(ENUMERATIONS)
        it() bf(OR): others have read permissions
        it() bf(OW): others have write permissions
        it() bf(OX): others have execute permissions
+       it() bf(READ): equal to tt(UR | GR | OR)
+       it() bf(WRITE): equal to tt(UW | GW | OW)
+       it() bf(EXEC): equal to tt(UX | GX | OX)
        it() bf(RWX): all of the above.
         )
  
@@ -96,6 +101,20 @@ manpagesection(OVERLOADED OPERATORS)
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
+    itb(bool access(FBB::User const &user, size_t spec, bool useEffective =
+        true) const)
+       Returns tt(true) if tt(user) has the permissions as specified at
+        tt(spec) (of which only the defined tt(Mode) bits are interpreted). If
+        a combination of read, write and/or execute permissions are specified,
+        then at least one of the read permissions, one of the write
+        permissions and one of the execute permissions must be granted or the
+        function returns tt(false). E.g, when specifying tt(access(user, UW |
+        UR | GR)) then the user em(must) have write permissions, but either
+        the user or the user's group must have read permissions. If multiple
+        read, multiple write or multiple execute permissions are specified
+        (like tt(UR | GR)) then this member returns tt(true) if at least one
+        of the requested read, write, or execute permissions are granted for
+        tt(user).
     itb(size_t blockSize() const)
         Returns the blocksize (tt(st_blksize)) for filesystem I/O
     itb(size_t device() const)
