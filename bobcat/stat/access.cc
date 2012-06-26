@@ -16,25 +16,27 @@ bool Stat::access(User const &user, size_t spec, bool useEffective) const
             &&
             user.inGroup(gid(), useEffective);
 
-    bool readTest = 
-            (spec & OR) ||
-            ((spec & UR) && userIsOwner) ||
-            ((spec & GR) && userInGroup) ||
-            not (spec & READ);
+    size_t mod = mode();
 
-    bool writeTest = 
-            (spec & OW) ||
-            ((spec & UW) && userIsOwner) ||
-            ((spec & GW) && userInGroup) ||
-            not (spec & WRITE);
-
-    bool execTest = 
-            (spec & OX) ||
-            ((spec & UX) && userIsOwner) ||
-            ((spec & GX) && userInGroup) ||
-            not (spec & EXEC);
-
-    return readTest && writeTest && execTest;
+    return
+        (       // Read test:
+            (mod & OR) ||
+            ((mod & UR) && userIsOwner) ||
+            ((mod & GR) && userInGroup) ||
+            not (spec & READ)
+        )
+        and
+        (       // Write test:
+            (mod & OW) ||
+            ((mod & UW) && userIsOwner) ||
+            ((mod & GW) && userInGroup) ||
+            not (spec & WRITE)
+        )
+        and
+        (       // Exec test:
+            (mod & OX) ||
+            ((mod & UX) && userIsOwner) ||
+            ((mod & GX) && userInGroup) ||
+            not (spec & EXEC)
+        );
 }
-
-
