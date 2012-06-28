@@ -69,7 +69,10 @@ anymore (see below for an example).
 
     Note that, as the signal may arrive at unpredicable times data members
 that can be modified by tt(signalHandler) should be declared using the
-tt(volatile) modifier.
+tt(volatile) modifier. Moreover, data that can be modified by
+the tt(signalHandler) member and by other class members should be protected
+by em(mutexes) (cf. the bf(C++-11) class tt(std::mutex) or
+bf(pthread_mutex_lock)(3posix)). 
 
 includefile(include/namespace)
 
@@ -131,7 +134,8 @@ manpagefiles()
     em(bobcat/signal) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(signal)(7)
+    bf(bobcat)(7), bf(pthread_mutex_lock)(3posix), bf(signal)(7),nl()
+    and the bf(C++-11) class tt(std::mutex).
 
 manpagebugs()
     None Reported.
