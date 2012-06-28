@@ -28,25 +28,28 @@ future relase:
                     FnWrap   foreach   repeat
 
 
-0   DateTime       SyslogBuf          RandBuffer        Indent      RefCount
-       |               |                   |
-     Stat         SyslogStream         IRandStream                  
+0                  SyslogBuf          RandBuffer        Indent      RefCount
+                       |                   |
+                  SyslogStream         IRandStream                  
                                            |
-0                        Errno             |                      LogBuffer
-                           |               |                          |
-                           +------+        |                          |
-                           |      |        |                          |
-                           |      +---+----+                          |
-                           |          |                               |
-                           |      EncryptBuf                          |
+0   DateTime             Errno             |                      LogBuffer
+       |                   |               |                          |
+       |                   |               |                          |
+       |       +-----------+               |                          |
+       |       |           |               |                          |
+       |      User         +------+        |                          |
+       |       |           |      |        |                          |
+       +-------+           |      +---+----+                          |
+       |                   |          |                               |
+     Stat                  |      EncryptBuf                          |
                            |                                          |
-      +-------+--------+---+---+------+------+-----+-------+-----+    |
-      |       |        |       |      |      |     |       |     |    |
-      |       | FnWrap |       |      |      |     |       |     |    |
-      |       |   |    |       |      |      |     |       |     |    |
-      |       +---+    |       |      |      |     |       |     |    |
-      |       |        |       |      |      |     |       |     |    |
-    BigInt    |     Pattern  OneKey   |      |     |      User   +--+-+
+      +-------+--------+---+---+------+------+-----+-------------+    |
+      |       |        |       |      |      |     |             |    |
+      |       | FnWrap |       |      |      |     |             |    |
+      |       |   |    |       |      |      |     |             |    |
+      |       +---+    |       |      |      |     |             |    |
+      |       |        |       |      |      |     |             |    |
+    BigInt    |     Pattern  OneKey   |      |     |             +--+-+
               |        |              |      |     |                |
               +--------+          DecryptBuf |     |               Log
               |        |                     |     |   Hostent      |  
@@ -65,6 +68,11 @@ future relase:
                 +------+---------+       
                 |                |       
             ClientSocket   ServerSocket  
+
+
+     Errno(cont)
+        |
+0     Signal
 
 
      Errno(cont)
@@ -148,6 +156,8 @@ future relase:
                                   |
                                   |
                                  CGI
+
+
 
 
 
