@@ -3,15 +3,18 @@
 #include "INSTALL.im"
 
 #define ECHO_COMMANDS       1
-#define PROJECT             "BOBCAT"
-#define DESTINATION         "tmp"
 #define LIBRARY             "bobcat"
+#define DRYRUN              ""
+
+//#define ONLYCLASSES
+    // comment out if the additional library requiring classes should also
+    // be compiled
 
 string
-    g_compiler,         // actual compiler to use
     g_cwd,              // current WD
     g_file,             // used to store the name of a file from a list
     g_copt,             // compiler options
+    g_cxx,              // compiler used
     g_sources,          // sources to be used
     g_version,          // The library's version from the file VERSION
     g_tmplib,           // Library compilation target
@@ -35,7 +38,7 @@ list
 #include "icmake/libraries"
 #include "icmake/install"
 
-void main(int argc, list argv, list envp)
+void main(int argc, list argv)
 {
     string option;
     string all;
@@ -43,20 +46,21 @@ void main(int argc, list argv, list envp)
 
     echo(ECHO_COMMANDS);
 
-    g_env = envp;
-
     g_cwd = chdir(".");
 
-    g_tmplib = DESTINATION "/lib/";
-    g_tmphdr = DESTINATION "/" LIBRARY "/";
-    g_tmpbin = DESTINATION "/bin/";
+    g_tmplib = "tmp/lib/";
+    g_tmphdr = "tmp/" LIBRARY "/";
+    g_tmpbin = "tmp/bin/";
+
     g_lcgen  = "bobcatlcgen";
     g_lcgendefault = " 10 ";    // KEEP THE BLANKS
 
     setLocations();     // from INSTALL.im
 
-    getenvSF("DRYRUN");
-    g_dryrun = g_envvar;
+    g_cxx =  setOpt(CXX, "CXX");
+    g_copt = setOpt(CXXFLAGS, "CXXFLAGS");
+
+    g_dryrun = setOpt(DRYRUN, "DRYRUN") != "";
 
     option = element(1, argv);
 

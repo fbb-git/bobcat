@@ -1,19 +1,14 @@
-list g_env;         // set to env in main()
-int g_envvar;       // set to 1 if the env var is defined
-
-string getenvSF(string var)
+string setOpt(string install_im, string envvar)
 {
-    int idx;
+    list optvar;
+    string ret;
 
-    for (idx = sizeof(g_env); idx; )
-    {
-        idx -= 2;
-        if (element(idx, g_env) == var)
-        {
-            g_envvar = 1;
-            return element(idx + 1, g_env);
-        }
-    }
-    g_envvar = 0;
-    return "";
+    optvar = getenv(envvar);    
+
+    if (optvar[0] == "1")
+        ret = optvar[1];
+    else 
+        ret = install_im;
+
+    return ret;
 }

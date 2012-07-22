@@ -34,23 +34,25 @@ list inspect(string dstDir, int prefix, list srcList, string library)
 // c_compile: compile all sources in `{srcDir}/{cfiles}', storing the object
 // files in  {srcDir}/o/{prefix}filename.o
 //
-//  uses: g_compiler, g_opt, md, run
+//  uses: g_opt, md, run
 //
 void c_compile(string dstDir, int prefix, string srcDir, list cfiles)
 {
     int idx;
     string compdest;
 
-    compdest = g_compiler + " -c -o " + srcDir + "/" + dstDir + 
-                                                "/" + (string)prefix;
+    printf("\n"
+           "Compiling ", srcDir, "\n");
+
+    compdest = g_cxx + " " + g_copt + 
+                " -c -o " + srcDir + "/" + dstDir + "/" + (string)prefix;
     md(srcDir + "/" + dstDir);
 
     for (idx = sizeof(cfiles); idx--; )
     {
         g_file = element(idx, cfiles);
         
-        run(compdest + change_ext(g_file, "o") + " " + 
-                g_copt + " " + srcDir + "/" + g_file);
+        run(compdest + change_ext(g_file, "o") + " " + srcDir + "/" + g_file);
     }
 }
 
@@ -72,7 +74,7 @@ void library(string dstDir, string libname)
     int idx;
 
     g_sources = "*.cc";
-    g_compiler = GPP;
+
     for (idx = g_nClasses; idx--; )
         std_cpp(dstDir, idx, element(idx, g_classes), "../" + libname);
 }

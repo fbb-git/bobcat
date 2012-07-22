@@ -20,6 +20,13 @@
     // #define: it prevents the construction of the shared library (until
     // somebody tells me how to do that under CYGWIN....)
 
+#define CXX         "g++"
+#define CXXFLAGS    "--std=c++0x -O2 -g -Wall"
+    // Specify compiler options that should be used.
+    // This is overruled by the environment variable CXXFLAGS
+    // The options "-isystem tmp" must always be used, are set in
+    // icmake/library and should not be altered.
+
 #define LIBRARIES
     // Install the libraries, remove if not requested
 
@@ -35,11 +42,6 @@
 #define DOCOTHER
     // Install remaining docs (README, examples, etc), remove if not requested
 
-#define CPPOPT    "-O2 -g"
-    // Specify compiler options that should be used.
-    // This is overruled by the environment variable CPPFLAGS
-    // The options "-isystem tmp -Wall" are always used, and should not be
-    // altered.
 
     // The following /bin/cp options are used to keep, rather than follow
     // symbolic references. If your installation doesn't support these flags,
@@ -51,6 +53,7 @@
     //          mode,ownership,timestamps), if possible  additional  
     //          attributes:  context, links, all
     //   -d     same as --no-dereference --preserve=links
+
 #define CPOPTS  "-d"
 
     // The following icmake string variables are given their values below, in
@@ -68,7 +71,7 @@ string BASE;
 string BIN;
     // The location of the binary program bobcatlcgen
 
-string GPP;
+//string GPP;
     // GPP specifies the compiler to use. By defining GPP with a specific 
     // version (e.g., GPP=g++-4.1) that particular version can be used. The
     // distributed definition uses the `default' compiler version and uses 
@@ -85,10 +88,6 @@ string DOCDEV;
 
 string INC;
     // the directory in which the header files will be stored
-
-string GCC;
-    // The compiler to use for bobcat's C-sources. See GPP above for
-    // considerations
 
 string LIB;
     // the directory in which the bobcat libraries will be stored
@@ -110,7 +109,4 @@ void setLocations()
     INC  =      BASE + "/include/bobcat";
     LIB  =      BASE + "/lib";
     MAN  =      BASE + "/share/man";    
-
-    GPP = "g++ --std=c++0x";
-    GCC = "gcc";
 }
