@@ -42,7 +42,9 @@ void shared_library(string destDir, string libso, string libsoshared,
 
         libsomajor  = libso + "." + element(0, strtok(g_version, "."));
 
-        run(gxx +   " -shared -Wl,--as-needed,"
+        run(gxx +  
+                    " " + setOpt(LDFLAGS, "LDFLAGS") +
+                    " -shared -Wl,--as-needed,"
                     "-z,defs,-soname," + 
                     libsomajor +
                     " -o " + destDir + libsoshared +
