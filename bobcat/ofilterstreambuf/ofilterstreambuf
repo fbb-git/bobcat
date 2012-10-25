@@ -16,11 +16,14 @@ class OFilterStreambuf: public std::streambuf
 
     public:
         OFilterStreambuf();
+        OFilterStreambuf(std::string const &fname, 
+                                            openmode mode = std::ios::out);
         OFilterStreambuf(char const *fname, openmode mode = std::ios::out);
         OFilterStreambuf(std::ostream &out);
         virtual ~OFilterStreambuf();
 
         void open(char const *fname, openmode mode = std::ios::out);
+        void open(std::string const &fname, openmode mode = std::ios::out);
         void open(std::ostream &out);
 
         void close();
