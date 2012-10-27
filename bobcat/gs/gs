@@ -1,0 +1,37 @@
+#ifndef INCLUDED_GSTYPE_
+#define INCLUDED_GS_
+
+namespace FBB
+{
+
+struct GS__
+{
+    enum Type
+    {
+        BLOCK_DEVICE        =  0060000,
+        CHARACTER_DEVICE    =  0020000,   
+        DIRECTORY           =  0040000,
+        FIFO                =  0010000,
+        REGULAR_FILE        =  0100000,
+        SOCKET              =  0140000,
+        SYMBOLIC_LINK       =  0120000,
+        ANY                 =  
+                                BLOCK_DEVICE  | CHARACTER_DEVICE | DIRECTORY |
+                                FIFO          | REGULAR_FILE     | SOCKET    |
+                                SYMBOLIC_LINK
+    };
+};
+
+inline GS__::Type operator|(GS__::Type lhs, GS__::Type rhs)
+{
+    return static_cast<GS__::Type>(
+                        static_cast<int>(lhs) | static_cast<int>(rhs)
+            );
+}
+
+}   // namespace FBB
+        
+#endif
+
+
+

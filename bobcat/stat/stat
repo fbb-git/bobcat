@@ -7,13 +7,14 @@
 #include <string>
 
 #include <bobcat/datetime>
+#include <bobcat/gs>
 
 namespace FBB
 {
 
 class User;
 
-class Stat
+class Stat: public GS__
 {
     struct stat d_stat;
     bool d_errno;
@@ -54,17 +55,6 @@ class Stat
           EXEC =  UX | GX | OX,
 
            RWX =  0777,
-        };
-
-        enum Type
-        {
-            BLOCK_DEVICE        =  0060000,
-            CHARACTER_DEVICE    =  0020000,   
-            DIRECTORY           =  0040000,
-            FIFO                =  0010000,
-            REGULAR_FILE        =  0100000,
-            SOCKET              =  0140000,
-            SYMBOLIC_LINK       =  0120000,
         };
 
         Stat();

@@ -23,7 +23,12 @@ manpagesection(INHERITS FROM)
 
 manpagesection(ENUMERATIONS)
 
-    bf(Flags):
+    bf(Glob::Type): nl() 
+        This enumeration, which is identical to the bf(stat)(3bobcat) tt(Type)
+enumeration), defines the following values:
+    includefile(gstype.yo)
+
+    bf(Glob::Flags):
     itemization(
     itt(ERR): Return on read errors;
     itt(MARK): Append a slash to each name.
@@ -33,7 +38,7 @@ manpagesection(ENUMERATIONS)
             tt(*) and tt(?)).
     )
 
-    bf(Dots):
+    bf(Glob::Dots):
     itemization(
     itt(FIRST): Filenames starting with a dot will be listed first. Within
     this set and in the leftover-set the relative ordering is maintained.
@@ -45,19 +50,23 @@ manpagesection(CONSTRUCTORS)
     itb(Glob(std::string const &pattern = "*", int flags = PERIOD,
              Dots dots = FIRST)) 
         This constructor (which can also be used as the default constructor)
-    determines all elements in the current directory. The tt(.) and tt(..)
-    relative filenames are not part of the listings. Used as default
-    constructor, other directory elements starting with a period will be the
-    first elements in the series of detected directory elements.
+    determines all elements matching tt(pattern). 
 
-        This constructor throws an tt(Errno) exception if it did not properly
-complete it tasks.
+        An tt(Errno) exception is thrown if the constructor could not  properly
+    complete it tasks.
 
     Multiple flags may be specified, separated by the tt(bitor) operator. 
 
     This constructor properly completes its task if only defined bf(Flag)
 values were specified and if the bf(glob)(3) function returned without
 errors. 
+
+    itb(Glob(Type type, std::string const &pattern = "*", int flags = PERIOD,
+             Dots dots = FIRST)) 
+        This constructor 
+    determines all elements of tt(pattern) matching tt(Type). The
+    specified tt(type) value may consist of any tt(bitor)-ed combination of 
+    enum values defined by the tt(Type) enum. Remaining parameters and 
     )
 
     tt(Glob) offers copy and move constructors.
