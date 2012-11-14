@@ -1,8 +1,25 @@
 #include "glob.ih"
 
-Glob::Glob(Glob &&tmp)
+Glob::Glob(Type type, string const &pattern, int flags, Dots dots)
+try
 :
-    d_share(tmp.d_share)
+    d_share(new GlobShare {glob_t {}, 1, type} )
 {
-    tmp.d_share = 0;
+    if (flags & ~(ERR | MARK | NOSORT | NOESCAPE | PERIOD))
+        throw Errno(flags, "Glob: unknown Flag specified");
+
+    int err = glob(pattern.c_str(), flags, 0, &d_share->globStruct);
+
+    if (err)
+        throw Errno(err, "Glob: glob() failed");
+
+    accept(type);
+
+    if (dots == FIRST)
+        stable_partition(mbegin(), mend(), isDot);
+}
+catch(...)
+{
+    delete d_share;
+    throw;
 }

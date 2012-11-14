@@ -21,32 +21,37 @@ Entries below, tagged with `(cont)' were mentioned earlier in the next
 hierarchy. Entries tagged with (Obs) are obsolete, and will be removed in a
 future relase: 
 
-0   X2a     Hash   Hostent  TypeTrait   Swap     ReadLineBuf ReadLineHistory
-                                |                     |
-                      +---------+--------+            |
-                      |         |        |       ReadLineStream
-                    FnWrap   foreach   repeat
+0   X2a     Hash   Hostent  TypeTrait   Swap     Indent     ReadLineHistory
+                                |                
+                          +-----+------+
+                          |            |
+                        binops       repeat              
+                  
 
-
-0   DateTime       SyslogBuf          RandBuffer        Indent      RefCount
-       |               |                   |
-     Stat         SyslogStream         IRandStream                  
+0   MultiStreambuf     SyslogBuf      RandBuffer        ReadLineBuf
+                           |               |                 |        
+                      SyslogStream     IRandStream      ReadLineStream
                                            |
-0                        Errno             |                      LogBuffer
-                           |               |                          |
-                           +------+        |                          |
-                           |      |        |                          |
-                           |      +---+----+                          |
-                           |          |                               |
-                           |      EncryptBuf                          |
+                                           |
+0   DateTime       Errno                   |                
+       |             |                     |                      
+       |       +-----+-----+------+        |
+       |       |     |     |      |        |
+       |      User Signal  |      +---+----+                      
+       |       |           |          |                           
+       +-------+           |      EncryptBuf                      
+       |                   |                      
+       |   GS__            |                      
+       |    |              |                                      
+       +----+              |                                      
+       |                   |                                      
+      Stat                 |                                                
+       |                   |                                      LogBuffer
+      Glob                 |                                          |
                            |                                          |
-      +-------+--------+---+---+------+------+-----+-------+-----+    |
-      |       |        |       |      |      |     |       |     |    |
-      |       | FnWrap |       |      |      |     |       |     |    |
-      |       |   |    |       |      |      |     |       |     |    |
-      |       +---+    |       |      |      |     |       |     |    |
-      |       |        |       |      |      |     |       |     |    |
-    BigInt    |     Pattern  OneKey   |      |     |      User   +--+-+
+      +-------+--------+---+---+------+------+-----+-------------+    |
+      |       |        |       |      |      |     |             |    |
+    BigInt    |     Pattern  OneKey   |      |     |             +--+-+
               |        |              |      |     |                |
               +--------+          DecryptBuf |     |               Log
               |        |                     |     |   Hostent      |  
@@ -66,7 +71,6 @@ future relase:
                 |                |       
             ClientSocket   ServerSocket  
 
-
      Errno(cont)
         |
 0       +---------+--------+----+----+-----+------+----------+    IOStreambuf
@@ -76,13 +80,13 @@ future relase:
                                 |    +-----+------+----------+---------+
                                 |    |
                                 |    |
-                         +------+    |        FnWrap(cont)   Errno(cont)
-                         |      |    |            |               |
-                     TempStream |    |    +-------+-----------+   |  IUO
-                                |    |    |       |           |   |   |
-0                A2x            |    |    |       |           +---+---+
-                  |             |    |    |       |           | 
-               String           |    +----+  MultiStreambuf  Glob
+                         +------+    |                     
+                         |      |    |                     
+                     TempStream |    |                     
+                                |    |                     
+0                A2x            |    |                     
+                  |             |    |                     
+               String           |    +----+                
                   |             |         |
          +--------+----+        |         |
          |             |        |         |
@@ -100,14 +104,13 @@ future relase:
                             |                   A2x(cont)        
                             |                    |               
                             |                    |               
-0           OFdStreambuf    |   IFdStreambuf     |   OFilterStreambuf  lm  mlm
-                 |          |        |           |       |              |   |
-                 |          |        |           |       |              |   |
-                 |          |        |           |   +---+              |   |
-                 |          |        |           |   |   |              |   |
-                 |          |        |           +---+   |              |   |
-                 |          |        |           |       |              |   |
-                 |          |        |     OHexStreambuf |              |   |
+0           OFdStreambuf    |   IFdStreambuf     |   OFilterStreambuf  
+                 |          |        |           |       |             
+                 |          |        |           |   +---+             
+                 |          |        |           |   |   |             
+                 |          |        |           +---+   |             
+                 |          |        |           |       |             
+                 |          |        |     OHexStreambuf |             lm  mlm
                  |          |        |           |       |              |   |
          +-------+          |        +----+      |       +-------+------+---+
          |       |          |        |    |      |               |        
@@ -142,12 +145,11 @@ future relase:
         |        Table    TableBuf
         |
         |
-        |   Stat(cont) Pattern(cont)  X2a(cont)  foreach(cont)
-        |       |           |            |           |
-        +-------+-----------+-----+------+-----------+ 
+        |   Stat(cont) Pattern(cont)  X2a(cont)
+        |       |           |            |     
+        +-------+-----------+-----+------+
                                   |
                                   |
                                  CGI
-
 
 

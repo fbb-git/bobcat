@@ -35,10 +35,19 @@ manpagesection(OVERLOADED OPERATORS)
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
+    itb(size_t eGroupid() const)
+        Returns the user's tt(effective) group-id.
+    itb(size_t eUserid() const)
+        Returns the user's tt(effective) user-id.
     itb(size_t groupid() const)
         Returns the user's group-id.
     itb(std::string homedir() const)
         Returns the user's home directory (including a trailing tt(/)).
+    itb(bool inGroup(size_t gid, bool useEffective = true) const)
+       Returns tt(true) if the current user is a member of group tt(gid),
+        otherwise tt(false) is returned. The user's effective group id is also
+        checked if tt(useEffective) is specified as tt(true) (which is
+        provided as default function argument).
     itb(std::string name() const)
         Returns the user's user-name.
     itb(std::string password() const)
@@ -51,8 +60,6 @@ manpagesection(MEMBER FUNCTIONS)
         Returns the user's shell.
     itb(size_t userid() const)
         Returns the user's user-id.
-    itb(void verify() const)
-        Obsoleted, will be removed in a future Bobcat release.
     )
 
 manpagesection(EXAMPLE)

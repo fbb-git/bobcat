@@ -3,15 +3,12 @@
 # Uncomment this to turn on verbose mode.
 # export DH_VERBOSE=1
 
-# -Wall is always used by bobcat's build script, -O2 and -g are defined by
-# INSTALL.im, see that file for details
-CPPFLAGS = -g
+export DEB_BUILD_HARDENING=1
+export LDFLAGS = $(shell dpkg-buildflags --get LDFLAGS)
+export CPPFLAGS = $(shell dpkg-buildflags --get CPPFLAGS)
+export CXXFLAGS = $(shell dpkg-buildflags --get CXXFLAGS)
 
-ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-	CPPFLAGS += -O0
-else
-	CPPFLAGS += -O2
-endif
+CXXFLAGS += --std=c++0x -Wall
 
 build: build-indep build-arch
 build-indep:
@@ -64,15 +61,14 @@ binary-arch: build-arch install
 # archive downloaded from https://www.icce.rug.nl/debian/bobcat
 # (bobcat_x.y.z..tar.gz)
 
-#   3.00.02:    0420160b5b0890cc9cdaaf66feca57ae
-MD5TRUSTED := 68a748955d88a974203d84121c74a836
+MD5TRUSTED := 050c18bf9478ffba7119bb809f4d5dc8
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
 UPNAME := bobcat
 UPFILE := $(UPNAME)_$(UPVERSION).tar.gz
 DEFILE := $(UPNAME)_$(UPVERSION).orig.tar.gz
-URL		   := https://www.icce.rug.nl/debian/bobcat
+URL				   := https://www.icce.rug.nl/debian/bobcat
 MD5CURRENT := `md5sum ../tarballs/$(DEFILE) | sed -e 's/ .*//'`
 SVNTRUNK   := https://svn.sourceforge.net/svnroot/bobcat/trunk/bobcat
 
@@ -95,21 +91,36 @@ get-orig-source:
 	echo "Upstream filename md5sum is trusted!" ; \
 	fi
 
+# call git-build from the project's base directory as `fakeroot debian/rules git-build'
+# it creates the ./build-area and runs dpkg-buildpackage in build-area/$(UPNAME)-$(UPVERSION)
+# which, if successful, creates the debian files in the build-area
+# Probably easier to use is `git-bl'
+git-build:
+	@@[ -d ./build-area/. ]||mkdir -p ./build-area
 
-get-svn-trunk:
-	@@[ -d ../tarballs/. ]||mkdir -p ../tarballs
-	rm -rf ../tarballs/$(DEFILE) ../tarballs/bobcat-svn-trunk
-	svn --force export $(SVNTRUNK) ../tarballs/bobcat-svn-trunk
-	@@if [ -d ../tarballs/bobcat-svn-trunk/debian ] ; then rm -rf ../tarballs/bobcat-svn-trunk/debian; fi
-	@@ echo Building the SVN TRUNK tarball in ../tarballs/$(DEFILE)
-	@@GZIP=-9 tar -b1 -czf ../tarballs/$(DEFILE) -C ../tarballs bobcat-svn-trunk
-	rm -rf ../tarballs/bobcat-svn-trunk
-
+	-@if [ ! -f ../tarballs/$(DEFILE) ] ; then \
+	    echo "Upstream source tarball ../tarballs/$(DEFILE) not found" ; \
+	else \
+	    rm -rf build-area/$(UPNAME)-$(UPVERSION) build-area/run.lintian ; \
+	    cp ../tarballs/$(DEFILE) build-area ; \
+	    chdir build-area ; \
+	    tar xzf $(DEFILE) ; \
+	    cp -r ../debian $(UPNAME)-$(UPVERSION) ; \
+	    chdir $(UPNAME)-$(UPVERSION) ; \
+	    dpkg-buildpackage $(DPKG_BUILDPACKAGE) ; \
+	    if [ "$$?" -eq 0 ] ; then \
+	        chdir .. ; \
+	        touch run.lintian ; \
+	        rm -rf $(UPNAME)-$(UPVERSION) ; \
+	    else \
+	        chdir .. ; \
+	        mv $(UPNAME)-$(UPVERSION) $(UPNAME)-$(UPVERSION)-obsolete-`date +%s` ; \
+	    fi \
+	fi
 
 print-version:
 	@@echo "Debian version:   $(DEBVERSION)"
 	@@echo "Upstream version: $(UPVERSION)"
-
 
 binary: binary-indep binary-arch
 .PHONY: clean build build-indep build-arch binary-indep binary-arch binary install

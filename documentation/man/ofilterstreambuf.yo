@@ -68,10 +68,15 @@ manpagesection(CONSTRUCTORS)
         This constructor creates a tt(OFilterStreambuf) object without
 associating it with a destination (filtered) tt(ostream).
 
-    itb(OFilterStreambuf(char const *fname, openmode mode = std::ios::out))
+    itb(OFilterStreambuf(std::string const &fname, 
+                                            openmode mode = std::ios::out))
         This constructor creates a tt(OFilterStreambuf) object and opens a
 private tt(std::ofstream) object whose filename is provided and that should 
 receive the filtered information.
+        
+    itb(OFilterStreambuf(char const *fname, openmode mode = std::ios::out))
+        Same as the previous constructor, expecting a tt(char const *)
+defining the name of the private tt(std::ofstream) object.
         
     itb(OFilterStreambuf(std::ostream &out))
         This constructor creates a tt(OFilterStreambuf) object and will insert
@@ -93,11 +98,16 @@ destination stream. Note that the default tt(sync()) member performs no
 special actions but it can be overridden by derived classes to flush the
 destination stream just prior to its closing.
 
-    itb(void open(char const *fname, openmode mode = std::ios::out))
+    itb(void open(std::string const &fname, openmode mode = std::ios::out))
         This member closes the current destination (filtered) tt(std::ostream)
 object and associates the tt(OFilterStreambuf) object with a private
 tt(std::ofstream) object whose filename is provided and that should receive
 subsequently filtered information.
+        
+    itb(void open(char const *fname, openmode mode = std::ios::out))
+        Same as the previous member, but using a tt(char const *) to specify
+the name of the private tt(std::ofstream) object to receive the filtered
+information.
         
     itb(void open(std::ostream &out))
         This member closes the current destination (filtered) tt(std::ostream)
@@ -120,14 +130,14 @@ manpagesection(EXAMPLE)
     
     class NoDigits: public FBB::OFilterStreambuf
     {
-        public:
-            int overflow(int ch)
+        private:
+            int overflow(int ch) override
             {
                 if (not isdigit(ch))
                     out().put(ch);
                 return ch;
             }
-            int sync()
+            int sync() override
             {
                 out() << flush;
                 return 0;
