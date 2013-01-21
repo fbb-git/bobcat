@@ -79,14 +79,15 @@ provided by bf(man -e bobcat manipulators).
     bf(FBB::DecryptBuf): Decrypting information.nl()
     Manpage(decryptbuf)
 
-    bf(FBB::DigestBuf): Computeting message digests.nl()
+    bf(FBB::DigestBuf): Computing message digests.nl()
     Manpage(digestbuf)
 
     bf(FBB::EncryptBuf): Encrypting information.nl()
     Manpage(encryptbuf)
 
-    bf(FBB::Errno): Defines objects which may be thrown as an exception.nl()
-    Manpage(errno)
+    bf(FBB::Exception): objects of this class accept tt(ostream) insertions,
+    and are also tt(std::exception) objects.nl()
+    Manpage(exception)
 
     bf(FBB::Fork): Defines bf(fork)(2) as part of a Template Algorithm Design
     Pattern. nl()
@@ -365,9 +366,7 @@ categories are offered:
     it() bf(STREAMS AND FILES)
     it() bf(TABLES)
     it() bf(VARIOUS OTHER CLASSES)
-COMMENT(
     it() bf(DEPRECATED CLASSES)
-END)
     )    
 
     itemization(
@@ -415,8 +414,9 @@ END)
 
     it() bf(ERRORS AND MESSAGE HANDLING)
 
-    bf(FBB::Errno): Defines objects which may be thrown as an exception.nl()
-    Manpage(errno)
+    bf(FBB::Exception): objects of this class accept tt(ostream) insertions,
+    and are also tt(std::exception) objects.nl()
+    Manpage(exception)
 
     bf(FBB::level): Manipulator setting the log-level of bf(FBB::Log)
     objects.nl() 
@@ -718,13 +718,24 @@ END)
     bf(FBB::Xpointer): sets and retrieves the X-windows pointer.nl()
     Manpage(xpointer)
 
-COMMENT(
     it() bf(DEPRECATED CLASSES)
         Deprecated classes should no longer be used. Their functionality is
         better provided by other classes. The deprecated classes are no
-        longer maintained and will be removed in a future Bobcat release. 
-        Consult their man-pages for details.
-END)
+        longer maintained.
+
+    bf(FBB::AutoPtr): replacement: bf(C++-11) tt(std::shared_ptr) and
+        tt(unique_ptr).nl()
+
+    bf(FBB::Errno): replacement: bf(FBB::Exception).nl()
+
+    bf(FBB::FnWrap): replacement: bf(C++-11) lambda functions.nl()
+
+    bf(FBB::for_each): replacement: bf(C++-11) lambda functions.nl()
+
+    bf(FBB::Msg): replacement: bf(FBB::Mstream).nl()
+
+    bf(FBB::RefCount): replacement: bf(C++-11) tt(std::shared_ptr) and
+        tt(unique_ptr).nl()
     )
 
 manpagefiles()

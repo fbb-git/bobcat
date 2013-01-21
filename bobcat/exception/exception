@@ -25,8 +25,15 @@ class Exception: public std::exception
         static void open(StreamType &stream, std::string const &name);
 
         template <typename StreamType>
+        static void open(int errnoValue, StreamType &stream, 
+                         std::string const &name);
+
+        template <typename StreamType>
         static void open(StreamType &stream, std::string const &name,
                                 std::ios::openmode mode);
+        template <typename StreamType>
+        static void open(int errnoValue, StreamType &stream, 
+                            std::string const &name, std::ios::openmode mode);
     private:
         char const *what() const noexcept(true) override;
 };
@@ -43,6 +50,18 @@ void Exception::open(StreamType &stream, std::string const &name)
 }
 
 template <typename StreamType>
+void Exception::open(int errnoValue, StreamType &stream, 
+                     std::string const &name)
+{
+    if (stream.is_open())
+        stream.close();
+
+    stream.open(name);
+    if (!stream)
+        throw Exception(errnoValue) << "Can't open `" << name << '\'';
+}
+
+template <typename StreamType>
 void Exception::open(StreamType &stream, std::string const &name,
                                          std::ios::openmode mode)
 {
@@ -53,6 +72,20 @@ void Exception::open(StreamType &stream, std::string const &name,
     if (!stream)
         throw Exception() << "Can't open `" << name << '\'';
 }
+
+
+template <typename StreamType>
+void Exception::open(int errnoValue, StreamType &stream, 
+                        std::string const &name, std::ios::openmode mode)
+{
+    if (stream.is_open())
+        stream.close();
+
+    stream.open(name, mode);
+    if (!stream)
+        throw Exception(errnoValue) << "Can't open `" << name << '\'';
+}
+
 
 
 template <typename Type>

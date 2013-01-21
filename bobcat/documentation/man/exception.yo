@@ -1,0 +1,148 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Exception)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Error handler)
+
+manpagename(FBB::Exception)(std::exception objects acception stream insertions)
+
+manpagesynopsis()
+    bf(#include <bobcat/exception>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+       bf(FBB::Exception) objects derived from tt(std::exception), but accept
+stream insertions. Their intended use consists of throwing an anonymous
+object, into which the text of the tt(std::exception::what) 
+message has been inserted.
+
+    tt(Exception) exceptions are thrown by several Bobcat classes. These
+classes are tt(
+Arg, 
+ArgConfig,
+BigInt,
+Cidr,
+ClientSocket,
+CmdFinder,
+CmdFinderBase,
+ConfigFile,
+DateTime,
+DecryptBuf,
+DigestBuf,
+EncryptBuf,
+Fork,
+GetHostent,
+Glob,
+HMacBuf,
+Hostname,
+InetAddress,
+level,
+LocalClientSocket,
+LocalServerSocket,
+LocalSocketBase,
+Log,
+MailHeaders,
+Mbuf,
+Milter,
+Mstream,
+OFoldStream,
+OFoldStreambuf,
+OneKey,
+Pattern,
+Pipe,
+Process,
+Redirector,
+Selector,
+ServerSocket,
+SocketBase,
+Stat,
+TempStream,
+User,
+Xpointer)
+
+
+manpagesection(NAMESPACE)
+    bf(FBB)nl()
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace bf(FBB).
+
+manpagesection(INHERITS FROM)
+    bf(std::exception)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Exception())
+    The default constructor
+    itb(Exception(int errnoValue)) 
+    This constructor stores the provided tt(errnoValue) value in the global
+tt(::errno) variable, provided by the run-time support system.
+    )
+    Move and copy constructors are available.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::exception) are
+available, as bf(FBB::Exception) inherits from this class.
+    itemization(
+    itb(char const *what() const noexcept(true) override) 
+    Returns the text that was inserted into the bf(FBB::Exception) object.
+    )
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(Exception &&operator<<(Exception &&in, Type const &t))
+    A function template implementing the overloaded insertion operator. It
+can be used to insert values of any type that can also be inserted into an
+tt(ostringstream) object.
+    )
+    The overloaded assignment and move assignment operators are  available.
+
+manpagesection(STATIC MEMBERS)
+
+    The following convenience functions can be used for controlled opening of
+stream-type objects, like tt(std::ofstream) and tt(std::ifstream). These
+stream-type objects must support tt(open) and tt(close) members, like those
+provided by tt(std::ifstream) and tt(std::ofstream). 
+
+If the stream  was already open it is first closed.
+
+If opening fails an tt(FBB::Exception) exception is thrown containing a
+short message stating that the named stream could not be opened. 
+
+    itemization(
+    itb(static void open(StreamType &stream, std::string const &name))
+        Opens the stream object, using its default tt(open) member.
+
+    itb(static void open(int errnoValue, 
+                         StreamType &stream, std::string const &name))
+       Opens the stream object, using its default tt(open) member. If opening
+        the stream fails, then the thrown bf(FBB::Exception) assigns
+tt(errnoValue) to tt(::errno).
+
+    itb(static void open(StreamType &stream, std::string const &name,
+                                    std::ios::openmode mode))
+       Opens the stream object, using its tt(open) member, passing tt(mode) to
+        tt(open).
+
+    itb(static void open(int errnoValue, StreamType &stream,
+                        std::string const &name, std::ios::openmode mode))
+       Opens the stream object, using its tt(open) member, passing tt(mode) to
+        tt(open). If opening the stream fails, then the thrown
+        bf(FBB::Exception) assigns tt(errnoValue) to tt(::errno).
+    )
+
+manpagesection(EXAMPLE)
+        verb(
+    if (exceptionalCondition)
+        throw FBB::Exception(1) << "Exceptional condition occurred";
+        )
+
+manpagefiles()
+    em(bobcat/exception) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
