@@ -8,5 +8,5 @@ try
     pattern.match(param);
     d_param[pattern[1]].push_back(escape(unPercent(pattern[2])));
 }
-catch (Errno const &err)
+catch (std::exception const &exc)
 {}

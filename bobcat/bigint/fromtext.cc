@@ -30,7 +30,8 @@ BigInt BigInt::fromText(string const &text, int mode)
                 );
 
     if (iter - (text.begin() + negative) == 0)
-        throw Errno("fromText: text does not represent a BigInt value");
+        throw Exception() << 
+                "fromText: text does not represent a BigInt value";
 
     if (negative)
         ret.negate();

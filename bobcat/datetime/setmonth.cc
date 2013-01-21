@@ -25,7 +25,7 @@ bool DateTime::setMonth(Month month, Relative where)
         break;
 
         default:
-        throw Errno(1, "DateTime::setMonth(): invalid Relative spec.");
+        throw Exception(1) << "DateTime::setMonth(): invalid Relative spec.";
     }
 
     ts.tm_mon = month;

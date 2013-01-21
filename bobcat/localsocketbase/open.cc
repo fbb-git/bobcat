@@ -5,7 +5,7 @@ void LocalSocketBase::open(std::string const &name)
     d_address.sun_family = AF_UNIX;
 
     if (name.length() >= sizeof(d_address.sun_path))
-        throw Errno("LocalSocketBase::open(name)");
+        throw Exception() << "LocalSocketBase::open(" << name << ')';
 
     d_address.sun_path[name.copy(d_address.sun_path, string::npos)] = 0;
 
@@ -14,5 +14,5 @@ void LocalSocketBase::open(std::string const &name)
     d_socket = ::socket(AF_UNIX, SOCK_STREAM, 0);
 
     if (d_socket < 0)
-        throw Errno("LocalSocketBase::open(name)");
+        throw Exception() << "LocalSocketBase::open(" << name << ')';
 }

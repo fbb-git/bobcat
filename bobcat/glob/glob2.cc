@@ -6,12 +6,12 @@ try
     d_share(new GlobShare {glob_t {}, 1, type} )
 {
     if (flags & ~(ERR | MARK | NOSORT | NOESCAPE | PERIOD))
-        throw Errno(flags, "Glob: unknown Flag specified");
+        throw Exception(flags) << "Glob: unknown Flag specified";
 
     int err = glob(pattern.c_str(), flags, 0, &d_share->globStruct);
 
     if (err)
-        throw Errno(err, "Glob: glob() failed");
+        throw Exception(err) << "Glob: glob() failed";
 
     accept(type);
 
