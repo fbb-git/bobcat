@@ -4,6 +4,8 @@
 #include <fstream>
 #include <cerrno>
 
+#include <cstring>
+
 using namespace std;
 using namespace FBB;
 
@@ -63,6 +65,14 @@ int main(int argc, char **argv)
         cout << e.what() << '\n';
     }
 
+    try
+    {
+        throw Exception(E2BIG) << "Error: " << FBB::strerror;
+    }
+    catch(exception const &e)
+    {
+        cout << e.what() << '\n';
+    }
 }
 
 

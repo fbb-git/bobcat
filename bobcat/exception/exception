@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <exception>
+#include <iosfwd>
 
 namespace FBB
 {
@@ -16,6 +17,11 @@ class Exception: public std::exception
     std::string d_what;
     
     public:
+        enum 
+        {
+            STRERROR_BUFSIZE = 100
+        };
+
         Exception() = default;
         explicit Exception(int errnoValue);              // exception1.cc
 
@@ -97,6 +103,8 @@ inline Exception &&operator<<(Exception &&tmp, Type const &value)
 
     return std::move(tmp);
 }
+
+std::ostream &strerror(std::ostream &out);
 
 } // FBB
 

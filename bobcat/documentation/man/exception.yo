@@ -39,12 +39,10 @@ LocalClientSocket,
 LocalServerSocket,
 LocalSocketBase,
 Log,
-
 MailHeaders,
 Mbuf,
 Milter,
 Mstream,
-OFoldStream,
 OFoldStreambuf,
 OneKey,
 Pattern,
@@ -127,6 +125,20 @@ tt(errnoValue) to tt(::errno).
        Opens the stream object, using its tt(open) member, passing tt(mode) to
         tt(open). If opening the stream fails, then the thrown
         bf(FBB::Exception) assigns tt(errnoValue) to tt(::errno).
+    )
+
+manpagesection(MANIPULATOR)
+
+    The following manipulator (which is em(not) part of the
+bf(FBB::Exception), class, but em(is) defined in the bf(FBB) namespace) can be
+inserted into the bf(FBB::Exception) object:
+    itemization(
+    itb(FBB::strerror) 
+        The descriptive text associated with the current tt(errno) value is
+inserted into the bf(FBB::Exception) object (it can also be used to insert the
+descriptive text in a tt(std::ostream) object). No text is inserted if
+tt(errno) equals zero. This manipulator is thread-safe (but tt(errno) may be
+modified when tt(errno) holds an invalid value).
     )
 
 manpagesection(EXAMPLE)

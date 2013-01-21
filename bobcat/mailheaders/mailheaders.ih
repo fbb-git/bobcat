@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include <bobcat/fswap>
+#include <bobcat/errno>
 
 using namespace std;
 using namespace FBB;
@@ -10,7 +11,7 @@ using namespace FBB;
 inline bool MailHeaders::const_hdr_iterator::fail(
                                     string const &hdr, string const &key)
 {
-    throw Errno(1, "MailHeaders: setHeaderIterator() not called");
+    throw Exception(1) << "MailHeaders: setHeaderIterator() not called";
     return false;       // not reached
 }
 
