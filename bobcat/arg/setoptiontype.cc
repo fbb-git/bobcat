@@ -6,7 +6,7 @@ int Arg__::setOptionType(string const &optString,
     string::size_type pos = optString.find_first_of(longOption.d_optionChar);
 
     if (pos == string::npos)
-        throw Exception(EINVAL) << "Arg__::setOptionType()") <<
+        throw Exception(EINVAL) << "Arg__::setOptionType()" <<
                                 ": short option `" << 
                                 static_cast<char>(longOption.d_optionChar) << 
                                 "' not found";

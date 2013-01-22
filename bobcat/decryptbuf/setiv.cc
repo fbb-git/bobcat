@@ -3,7 +3,7 @@
 void DecryptBuf::setIv(string iv)
 {
     if (d_pimpl->active)
-        throw Errno(1, "Can't change IV during encryption");
+        throw Exception(1) << "Can't change IV during encryption";
 
     if (iv.empty())
         throw Exception(1) << 
