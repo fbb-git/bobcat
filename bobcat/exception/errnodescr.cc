@@ -3,7 +3,7 @@
 namespace FBB
 {
 
-std::ostream &strerror(std::ostream &out)
+std::ostream &errnodescr(std::ostream &out)
 {
     if (errno != 0)
     {

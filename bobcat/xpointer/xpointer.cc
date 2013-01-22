@@ -8,7 +8,7 @@ Xpointer::Xpointer()
     s_theDisplay = XOpenDisplay(0);
 
     if (!s_theDisplay)
-        throw Errno(1, "Can't open the display");
+        throw Exception(1) << "Can't open the display";
 }
     
     

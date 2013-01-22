@@ -10,7 +10,7 @@ TempStream::TempStream(string const &base)
     int fd = mkostemp(buf, O_RDWR);
 
     if (fd == -1)
-        throw Errno("TempStream");
+        throw Exception() << "TempStream: " << errnodescr;
 
     d_fileName = buf;
     delete[] buf;

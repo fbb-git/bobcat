@@ -3,7 +3,7 @@
 void Fork::fork()
 {
     if ((d_pid = ::fork()) < 0)
-        throw Exception() << "Fork::fork()";
+        throw Exception() << "Fork::fork(): " << errnodescr;
 
     if (d_pid == 0)         // childprocess has pid == 0
     {
