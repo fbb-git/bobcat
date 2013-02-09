@@ -43,7 +43,7 @@ functionality the name of the member returning a tt(BigInt) object ends
 in a tt(c) (const) (e.g., tt(addMod) and tt(addModc).
 
 Almost all operators, members and constructors (except for the default
-constructor) throw tt(Errno) exceptions on failure.
+constructor) throw tt(Exception) exceptions on failure.
 
 manpagesection(INHERITS FROM)
     -
@@ -124,6 +124,27 @@ manpagesection(MEMBER FUNCTIONS)
     itb(BigInt clearBit(size_t index) const)
        A copy of the current object having its bit at index position
         tt(index) cleared.
+
+    itb(long long diophantus(long long *factor1, long long *factor2, 
+                             long long value1, long long value2)
+       The integral solution of tt(factor1 * value1 + factor2 * value2 = gcd)
+        is computed. The function returns the greatest common divisor
+        (tt(gcd)) of tt(value1) and tt(value2), and returns their
+        multiplication factors in, respectively, tt(*factor1) and
+        tt(*factor2). The solution is not unique: another solution is obtained
+        by adding tt(k * value2) to tt(factor1) and subtracting tt(k * value1)
+        from tt(factor2). For values exceeding tt(std::numeric_limits<long,
+        long>::max()) the next member can be used.
+
+    itb(BigInt diophantus(BigInt *factor1, BigInt *factor2, 
+                            BigInt const &value1, BigInt const &value2)
+       The integral solution of tt(factor1 * value1 + factor2 * value2 = gcd)
+        is computed. The function returns the greatest common divisor
+        (tt(gcd)) of tt(value1) and tt(value2), and returns their
+        multiplication factors in, respectively, tt(*factor1) and
+        tt(*factor2). The solution is not unique: another solution is obtained
+        by adding tt(k * value2) to tt(factor1) and subtracting tt(k * value1)
+        from tt(factor2).
 
     itb(BigInt &div(BigInt *remainder, BigInt const &rhs))
        The current object is divided by tt(rhs). The division's remainder
@@ -366,6 +387,10 @@ tt(BigInt), possibly promoting the rhs operand.
     bf(Unary operators:)
 
     itemization(
+    itb(bool operator bool() const)
+       Returns tt(true) if the tt(BigInt) value is unequal zero, otherwise
+        tt(false) is returned.
+
     itb(BigInt &operator++())
     itb(BigInt operator++(int))
     itb(BigInt &operator--())

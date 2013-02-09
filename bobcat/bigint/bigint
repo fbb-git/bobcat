@@ -131,6 +131,8 @@ class BigInt
         BigInt &operator^=(BigInt const &rhs);
 
         bool isZero() const;
+        operator bool() const;
+
         bool isOne() const;
         bool isOdd() const;
 
@@ -142,6 +144,12 @@ class BigInt
 
         int compare(BigInt const &other) const;
         int uCompare(BigInt const &other) const;
+
+        long long diophantus(long long *factor1, long long *factor2, 
+                             long long const &value1, 
+                             long long const &value2);
+        BigInt diophantus(BigInt *factor1, BigInt *factor2, 
+                          BigInt const &value1, BigInt const &value2);
 
         BigInt &exp(BigInt const &exponent);
         BigInt expc(BigInt const &exponent) const;
@@ -411,6 +419,11 @@ inline BigInt::Bit::operator bool() const
     return d_bi.hasBit(d_idx);
 }
 
+inline BigInt::operator bool() const
+{
+    return not isZero();
+}
+
 BigInt operator*(BigInt const &lhs, BigInt const &rhs);
 BigInt operator/(BigInt const &lhs, BigInt const &rhs);
 BigInt operator%(BigInt const &lhs, BigInt const &rhs);
@@ -433,7 +446,3 @@ int isoctdigit(int ch);
 
 
 #endif
-
-
-
-
