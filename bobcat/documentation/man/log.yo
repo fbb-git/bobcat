@@ -35,7 +35,7 @@ bf(FBB) and has the following two values:
     itemization(
     itb(FATAL)
         This value may be inserted into an bf(FBB::Log) object to throw an
-bf(FBB::Errno) exception (see bf(operator<<()) below);
+bf(FBB::Exception) exception (see bf(operator<<()) below);
     itb(nl)
         This value may be inserted into an bf(FBB::Log) object to terminate
 the current line. It will em(not) cause the next line to begin with a
@@ -92,7 +92,7 @@ at the latest tt(setLevel()) call).
     itb(std::ostream &level(size_t useLevel))
         This member defines a log-level. Messages will be inserted into
 the stream when tt(useLevel) is equal to or exceeds the level set by
-    bf(setLevel()). The maximum level which can be selected is bf(UINT_MAX). If
+    bf(setLevel()). The maximum level which can be selected is bf(std::numeric_limits<size_t>::max()). If
 not even such messages should be inserted into the bf(ostream), then the
 stream should be deactivated, using bf(off()), see below. The selected level
 remains active until redefined. Alternatively, the bf(FBB::level) manipulator
@@ -134,7 +134,7 @@ manpagesection(STATIC MEMBERS)
             char const *delim = " "))
         
         Returns a reference to a static bf(FBB::Log) object. It may only be
-called once, or an tt(FBB::Errno) exception is thrown. It associates a static
+called once, or an tt(FBB::Exception) exception is thrown. It associates a static
 bf(FBB::Log) object with the named file. If tt(filename == "&1") the
 logmessages will be written to the standard output stream. If tt(filename ==
 "&2") the logmessages will be written to the standard error stream.  By
@@ -146,7 +146,7 @@ inappropriate, an empty string or a 0-pointer may be specified.
     itb(FBB::Log &instance())
         Returns a reference to a static bf(FBB::Log) object, available after
 calling bf(Log::initialize()). If called before tt(Log::initialize())
-an tt(FBB::Errno) exception is thrown. 
+an tt(FBB::Exception) exception is thrown. 
     )
 
 manpagesection(OVERLOADED OPERATOR)
@@ -156,7 +156,7 @@ bf(FBB::Log) object. If the overloaded operator is used in combination with
 another type of object it performs no actions.
     itemization(
     itb(std::ostream &::operator<<(std::ostream &str, FBB::LogManipulator)) 
-        When inserting bf(FBB::FATAL) an bf(FBB::Errno) exception is thrown;
+        When inserting bf(FBB::FATAL) an bf(FBB::Exception) exception is thrown;
 when inserting bf(FBB::nl) the line is terminated, but next insertions will
 not start with a time stamp (if applicable). 
     )

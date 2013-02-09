@@ -77,7 +77,7 @@ monitored for writing.
 micro-seconds. If no action occurred on one of the monitored file descriptions
 following the indicated amount of time, tt(wait) will return with
 tt(nReady) returning 0. The requested alarm time (tt(sec + usec / 1e+6)) may
-not be negative and may not exceed tt(INT_MAX) or an tt(FBB::Errno) exception
+not be negative and may not exceed tt(std::numeric_limits<int>::max()) or an tt(FBB::Exception) exception
 (see tt(setAlarm)) will be thrown. A 0 alarm time specification
 results in tt(wait) returning immediately. To switch off the alarm time use
 tt(noAlarm).
@@ -85,7 +85,7 @@ tt(noAlarm).
         This member should be called to wait for activities on the installed
 file descriptors or timeout-period. The members tt(exceptFd, nReady,
 readFd) and tt(writeFd) show their defined behaviors only after tt(wait)
-has returned.  It throws an tt(FBB::Errno) exception when bf(select)(2) fails,
+has returned.  It throws an tt(FBB::Exception) exception when bf(select)(2) fails,
 which may very well indicate the end of any available input. Otherwise it
 returns the number of available file descriptors. Note that tt(wait)
 may also return with an input file descriptor returned by tt(readFd) of a file
@@ -132,7 +132,7 @@ int main(int argc, char **argv, char **envp)
             }
         }
     }
-    catch (Errno const &e)
+    catch (Exception const &e)
     {
         cout << e.what() << endl;
     }

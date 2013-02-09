@@ -182,7 +182,7 @@ manpagesection(STATIC MEMBERS)
     itb(ReadLineBuf &initialize(std::string const &prompt = "", Type type =
         NO_EXPANSION))
         This static member returns the tt(ReadLineBuf) using an initial
-prompt, using a history of at most tt(INT_MAX) lines, and by default not using
+prompt, using a history of at most tt(std::numeric_limits<int>::max()) lines, and by default not using
 history expansion.  If the object has already been initialized a
 tt(logic_error) exception is thrown.
     itb(ReadLineBuf &initialize(std::string const &prompt, size_t historySize,
@@ -191,7 +191,7 @@ tt(logic_error) exception is thrown.
 prompt, an initial history of a predefined maximum size, and by default not
 using history expansion. Specifying a history size 0 results in no history
 being kept, any value equal to or exceeding the predefined constant
-tt(INT_MAX) results in a history of at most tt(INT_MAX) lines. If no history
+tt(std::numeric_limits<int>::max()) results in a history of at most tt(std::numeric_limits<int>::max()) lines. If no history
 is requested but tt(type) is specified as tt(EXPAND_HISTORY) a tt(logic_error)
 exception is thrown. A tt(logic_error) is also thrown if the object has
 already been initialized.

@@ -402,7 +402,7 @@ DST is not active.
 
     itb(size_t error() const)
         Returns the tt(errno) value after the tt(DateTime) object. 
-construction.  It can be interpreted by, e.g., bf(FBB::Errno).
+construction.  It can be interpreted by, e.g., bf(FBB::Exception).
 
     itb(size_t hours() const)
         Returns the number of hours of the time stored in a tt(DateTime)
@@ -491,7 +491,7 @@ will be before the current month (e.g., the current month: tt(JUNE),
 requesting tt(AUGUST, LAST) will decrement the object's year, but tt(MAY,
 LAST) won't). Analogously, tt(DateTime::NEXT) may be specified to ensure that
 the requested month will be following the current month. If another value for
-tt(where) is specified an bf(Errno) exception is thrown. If the assignment
+tt(where) is specified an bf(Exception) exception is thrown. If the assignment
 resulted in a new (valid) time tt(true) is returned. Otherwise tt(false) is
 returned. 
 
@@ -543,7 +543,7 @@ starting at Sunday and ending at Saturday). By default the day will be in the
 future. By specifying tt(LAST) for tt(where) the day will be in the past. It
 is also possible to specify tt(where) as tt(THIS_WEEK) in which case the day
 will be computed in the current week. If another value for tt(where) is
-specified an bf(Errno) exception is thrown.  If the current weekday is
+specified an bf(Exception) exception is thrown.  If the current weekday is
 specified with tt(where) equal to either tt(NEXT) or tt(LAST) the time will be
 set to either one week ahead or one week in the past. The object date is
 revalidated. Time value 0 represents Jan, 1, 1970, 0:00:00 hours. If the
@@ -607,7 +607,7 @@ manpagefiles()
     em(bobcat/datetime) defines the class interface.
 
 manpageseealso()
-        bf(bobcat)(7), bf(Errno)(3bobcat), bf(asctime_r)(3), 
+        bf(bobcat)(7), bf(Exception)(3bobcat), bf(asctime_r)(3), 
         bf(gmtime_r)(3), bf(localtime_r)(3), bf(time)(2),
         bf(mktime)(3),
 

@@ -26,14 +26,14 @@ manpagesection(PROTECTED CONSTRUCTORS)
         This constructor creates a bf(SocketBase) to be used with
 bf(ServerSocket)-objects, listening on tt(port).  
 
-        This constructor throws an tt(Errno) exception if it did not properly
+        This constructor throws an tt(Exception) exception if it did not properly
 complete.
 
     itb(SocketBase(std::string const &host, unit_16_t port)) 
         This constructor creates a bf(FBB::SocketBase) to be used with a
 bf(ClientSocket)-object, connecting to tt(hostname), at port `tt(port)'. 
 
-        This constructor throws an tt(Errno) exception if it did not properly
+        This constructor throws an tt(Exception) exception if it did not properly
 complete.
 
 
@@ -49,19 +49,19 @@ available, as bf(FBB::SocketBase) inherits from this class.
     itemization(
     itb(bool debug() const)
         This accessor returns bf(true) if the socket's em(debug)
-(bf(SO_DEBUG)) socket option is active. It throws an bf(FBB::Errno) exception
+(bf(SO_DEBUG)) socket option is active. It throws an bf(FBB::Exception) exception
 if the status of the debug option could not be determined.
     itb(bool reuse() const)
         This accessor returns bf(true) if the socket's em(reuse)
-(bf(SO_REUSEADDR)) socket option is active. It throws an bf(FBB::Errno)
+(bf(SO_REUSEADDR)) socket option is active. It throws an bf(FBB::Exception)
 exception if the status of the reuse option could not be determined.
     itb(void setDebug(bool trueIsOn) const)
         This member may be used to modify the socket's em(debug)
-(bf(SO_DEBUG)) socket option. It throws an bf(FBB::Errno) exception
+(bf(SO_DEBUG)) socket option. It throws an bf(FBB::Exception) exception
 if the socket's debug option could not be modified.
     itb(void setReuse(bool trueIsOn) const)
         This member may be used to modify the socket's em(reuse)
-(bf(SO_REUSEADDR)) socket option. It throws an bf(FBB::Errno) exception
+(bf(SO_REUSEADDR)) socket option. It throws an bf(FBB::Exception) exception
 if the socket's reuse option could not be modified.
     itb(int socket() const)
         This accessor returns the bf(FBB::SocketBase)'s socket value.
