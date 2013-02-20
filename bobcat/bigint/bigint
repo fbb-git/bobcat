@@ -1,14 +1,14 @@
 #ifndef INCLUDED_BOBCAT_BIGINT_
 #define INCLUDED_BOBCAT_BIGINT_
 
-#include <iosfwd>
-#include <openssl/bn.h>
 
-#include <bobcat/errno>
+#include <iosfwd>
+#include <vector>
+
+#include <openssl/bn.h>
 
 namespace FBB
 {
-class PrimeBase;
 
 class BigInt
 {
@@ -180,6 +180,7 @@ class BigInt
                             BigInt const *add = 0, BigInt const *rem = 0,
                             PrimeType primeType = ANY);
 
+
         static BigInt fromText(std::string const &text, int mode = 0);
 
         BigInt &clearBit(size_t index);
@@ -241,7 +242,6 @@ class BigInt
                                      BIGNUM const *, BIGNUM const *, 
                                      BN_CTX *), 
                         BigInt const &rhs, char const *op);
-
 
         static void primeCallback(int reason, int primeNr, void *primeBase);
         static bool addDigit(char ch, BigInt &ret, BigInt const &radix, 
