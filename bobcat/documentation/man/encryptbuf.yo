@@ -200,7 +200,7 @@ tt(EncryptBuf) object with random data. When the key and/or the iv is too
 small for the requested method they will be expanded by adding the required
 number of zero valued bytes.
 
-    The constructor throws an tt(FBB::Errno) exception if an unknown
+    The constructor throws an tt(FBB::Exception) exception if an unknown
 encryption method was specified.
 
     The constructor's first parameter refers to the tt(std::ostream) to
@@ -242,11 +242,11 @@ rounds or 0 if the member is called for another encryption method than RC5.
     itb(void setIv(std::string const &iv))
         This member can be used to specify the initialization vector to use
 after construction time but before any data has been encrypted. When called
-after encryption has started an tt(FBB::Errno) exception will be thrown.
+after encryption has started an tt(FBB::Exception) exception will be thrown.
     itb(void setKey(std::string const &key, size_t numberOfBytes = 0))
         This member can be used to specify the key and its length after
 construction time but before any data has been encrypted. When called after
-encryption has started an tt(FBB::Errno) exception will be thrown. The size of
+encryption has started an tt(FBB::Exception) exception will be thrown. The size of
 the key is assumed to be the number of bytes in the key's data. If another key
 length is required the member function's second parameter can be used to
 specify the length of the key em(in bytes).

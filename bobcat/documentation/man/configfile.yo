@@ -122,7 +122,7 @@ configuration file.
         This constructor is used to create a bf(ConfigFile) object, which
 is filled with the information from a file whose name is provided as the
 constructor's first argument. The other parameters are used as described with
-the first constructor. It throws an tt(FBB::Errno) exception if the file
+the first constructor. It throws an tt(FBB::Exception) exception if the file
 could not be opened.
     )nl()
         The copy and move constructors are available.
@@ -169,7 +169,7 @@ specified regular expression.
 it is a relatively expensive operation. The difference is obtained by
 performing repeated regular expression matchings rather than the mere
 algebraic subtraction of pointer values. If the difference cannot be computed
-tt(UINT_MAX) is returned.
+tt(std::numeric_limits<size_t>::max()) is returned.
 
         This member also interprets the tt(SearchCasing) flag.
 
@@ -198,7 +198,7 @@ tt(keyPattern value) then this member returns the first sequence of non white
 space characters following tt(keyPattern) after matching tt(count) lines
 matching tt(keyPattern value) (i.e., `tt(value)' is returned). If tt(value) is
 empty or if fewer than tt(count) lines match tt(keyPattern) an empty string is
-returned. An tt(FBB::Errno) exception is thrown if tt(count) equals 0.
+returned. An tt(FBB::Exception) exception is thrown if tt(count) equals 0.
 
     itb(std::string findKeyTail(std::string const &keyPattern, 
                                                     size_t count = 1) const)
@@ -212,7 +212,7 @@ returns the information beyond tt(keyPattern) after matching tt(count) lines
 matching tt(keyPattern) (i.e., `tt(value)' is returned). This function differs
 from tt(findKey) in that all information trailing tt(keyPattern) is returned
 in tt(value).  If tt(value) is empty or if fewer than tt(count) lines match
-tt(keyPattern) an empty string is returned. An tt(FBB::Errno) exception is
+tt(keyPattern) an empty string is returned. An tt(FBB::Exception) exception is
 thrown if tt(count) equals 0.
 
     itb(ConfigFile::const_iterator findRE(std::string const &target) const)
@@ -247,7 +247,7 @@ open range tt(beginRE) to tt(endRE).
 It redefines the current contents of the bf(ConfigFile) object,
 destroying any information previously stored in it. The configuation file is
 read according to the latest setting of the comment-flag. It throws an
-tt(FBB::Errno) exception if the file cannot be opened.
+tt(FBB::Exception) exception if the file cannot be opened.
 
 This member clears previously available information and reinitializes the
 object with information read from the new file.

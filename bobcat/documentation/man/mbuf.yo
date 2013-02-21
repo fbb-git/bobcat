@@ -48,7 +48,7 @@ when inserting messages. Specifying any other value than
 tt(std::numeric_limits<size_t>::max()) sets the maximum number of messages
 that can be inserted to that value. The tt(tag) defines the text of the
 message label (e.g., tt(Error)). When tt(throwing) is specified as tt(true) an
-tt(FBB::Errno) exception is thrown after completing a message. The generated
+tt(FBB::Exception) exception is thrown after completing a message. The generated
 exception holds the id (see below for the member tt(id)) of the bf(FBB::Mbuf)
 object from which the exception was thrown as well as the text tt(FBB::Mbuf).
     itb(explicit Mbuf(std::string const &name, size_t maxCount =
@@ -56,7 +56,7 @@ object from which the exception was thrown as well as the text tt(FBB::Mbuf).
                 std::string const &tag = "", bool throwing = false))
         This constructor creates a tt(std::ofstream) from the provided
 tt(name) parameter that receives the messages handled by the constructed
-bf(FBB:Mbuf) object. It throws an tt(FBB::Errno) exception if the stream
+bf(FBB:Mbuf) object. It throws an tt(FBB::Exception) exception if the stream
 cannot be opened for writing. If a file by that name already exists it is
 rewritten.  The remaining parameters are identical to those of the previous
 two constructors.
@@ -96,14 +96,14 @@ tt(std::streambuf buf).  By specifying tt(std::numeric_limits<size_t>::max())
 for tt(maxCount) there is no limit to the number of messages that may be
 handled by this tt(std::streambuf). The tt(tag) defines the text of the
 message label (e.g., tt(Error) or the empty string for no message label). When
-tt(throwing) is specified as tt(true) an tt(FBB::Errno) exception is thrown
+tt(throwing) is specified as tt(true) an tt(FBB::Exception) exception is thrown
 after completing a message.
 
     itb(void reset(std::string const &name, size_t maxCount, 
                 std::string const &tag, bool throwing))
         messages inserted into bf(FBB::Mbuf) objects are handled by a
 tt(std::ofstream) created using the provided tt(name) parameter. It throws an
-tt(FBB::Errno) exception if the stream cannot be opened for writing. If a file
+tt(FBB::Exception) exception if the stream cannot be opened for writing. If a file
 by that name already exists it is rewritten.  The remaining parameters are
 identical to those of the previous tt(reset) members.
 
@@ -140,7 +140,7 @@ not empty the tag is enclosed by square brackets. E.g., specifying the tag
 
     itb(bool throws())
         returns tt(true) when the bf(FBB::Mbuf) object will throw an
-tt(FBB::Errno) exception at the next completed message. The generated
+tt(FBB::Exception) exception at the next completed message. The generated
 exception holds the id (see earlier for the member tt(id)) of the
 bf(FBB::Mbuf) object from which the exception was thrown as well as the
 text tt(FBB::Mbuf).
@@ -148,7 +148,7 @@ text tt(FBB::Mbuf).
     itb(void throwing(bool ifTrue))
         modifies the behavior of bf(FBB::Mbuf) objects at completed
 messages. After passing tt(true) bf(FBB::Mbuf) objects will throw an
-tt(FBB::Errno) exception at the next completed message, otherwise this
+tt(FBB::Exception) exception at the next completed message, otherwise this
 exception is not thrown.
     )
 

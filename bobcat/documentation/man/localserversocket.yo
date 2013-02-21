@@ -61,10 +61,10 @@ manpagesection(CONSTRUCTOR)
 tt(FBB::LocalServerSocket) object. Before it can be used, the tt(open()) member
 must be called (see below).
     itb(LocalServerSocket(string const &name, Socket action = KEEP) 
-        throw (Errno))
+        throw (Exception))
         This constructor initializes an bf(FBB::LocalServerSocket) object,
 which will listen for connection requests using the named Unix Domain
-socket.  An bf(FBB::Errno) is thrown if the socket could not be
+socket.  An bf(FBB::Exception) is thrown if the socket could not be
 constructed. If the constructor is given a second argument
 tt(FBB::LocalServerSocket::UNLINK), the constructed socket will be unlinked
 when the bf(FBB::LocalServerSocket) object is destroyed.  The construction of
@@ -86,7 +86,7 @@ communication with the child as a separate (child) process.
     itb(void listen(size_t backlog = 5, bool blocking = true))
         The bf(listen()) member defines the way the bf(FBB::LocalServerSocket)
 will listen for clients requesting a connection.  It can be used only once
-with a bf(FBB::LocalServerSocket). An bf(FBB::Errno) object is thrown if
+with a bf(FBB::LocalServerSocket). An bf(FBB::Exception) object is thrown if
 listening fails.
 
      The bf(listen()) member's tt(backlog) parameter defines the size of the
@@ -105,7 +105,7 @@ the server socket and/or on various client sockets.
         This member prepares a bf(FBB::LocalServerSocket) object for use. It
 should only be used in combination with the default constructor. Following
 tt(open()) the tt(FBB:::LocalServerSocket) object will be able to listen for
-connection requests using the named Unix Domain socket.  An bf(FBB::Errno) is
+connection requests using the named Unix Domain socket.  An bf(FBB::Exception) is
 thrown if the socket could not be constructed. If the a second argument
 tt(FBB::LocalServerSocket::UNLINK), is provided the constructed socket will be
 unlinked when the bf(FBB::LocalServerSocket) object is destroyed.  The
@@ -167,7 +167,7 @@ manpagesection(EXAMPLE)
             cout << "Ready for another connection\n";
         }
     }
-    catch (Errno const &err)
+    catch (Exception const &err)
     {
         cerr <<
             err.what() << endl <<

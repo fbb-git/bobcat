@@ -53,14 +53,14 @@ manpagesection(STATIC MEMBERS)
         The bf(gethostent()) member returns a pointer to a static bf(struct
 hostent). It contains the information about the host whose name or dotted
 decimal address was provided as its second argument. Its first argument is an
-error string prefix, prefixing the error message in an bf(FBB::Errno)
+error string prefix, prefixing the error message in an bf(FBB::Exception)
 object. Such an object is thrown as an exception when the host's information
 could not be retrieved.
     itb(std::string addressToString(char const *errorprefix, 
                               void const *ads))
         This member returns the dotted decimal address of the host whose
 binary address is provided at bf(ads). Its first argument is an error string
-prefix, prefixing the error message in an bf(FBB::Errno) object. Such an
+prefix, prefixing the error message in an bf(FBB::Exception) object. Such an
 object is thrown as an exception when the dotted decimal address could not be
 determined.
 
@@ -101,7 +101,7 @@ manpagesection(EXAMPLE)
             for (size_t idx = 0; idx < he.nAddresses(); idx++)
                 cout << he.dottedDecimalAddress(idx) << endl;
         }
-        catch (Errno const &err)
+        catch (Exception const &err)
         {
             cout << err.what() << endl;
             return 1;

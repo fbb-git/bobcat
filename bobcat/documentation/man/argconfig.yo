@@ -54,9 +54,9 @@ manpagesection(STATIC MEMBERS)
             SearchCasing sType = SearchCaseSensitive,
             Indices iType = IgnoreIndices))
         Initializes the bf(FBB::ArgConfig) singleton. Must be called only
-once.  Throws an bf(FBB::Errno) exception if called repeatedly or if called
+once.  Throws an bf(FBB::Exception) exception if called repeatedly or if called
 with tt(argv) not containing a defined option (which is shown by the
-bf(FBB::Errno)'s tt(what) member). The tt(fname) argument is optional. If
+bf(FBB::Exception)'s tt(what) member). The tt(fname) argument is optional. If
 provided, a configuration file by the specified name is opened (and must
 exist); if omitted the tt(ArgConfig) is created without using a configuration
 file. In the latter case a configuration file may be specified later using the
@@ -75,9 +75,9 @@ initializing bf(ArgConfig) to use the initialized object immediately.
             Indices iType = IgnoreIndices))
        Initializes the bf(FBB::ArgConfig) singleton. Accepts two iterators of
         an array of bf(Arg::LongOption) objects, holding long-options. Must be
-        called only once. Throws an bf(FBB::Errno) exception if called
+        called only once. Throws an bf(FBB::Exception) exception if called
         repeatedly or if called with tt(argv) not containing a defined option
-        (which is shown by the bf(FBB::Errno)'s tt(what) member).  Refer to
+        (which is shown by the bf(FBB::Exception)'s tt(what) member).  Refer to
         bf(arg)(3bobcat) for the description of bf(Arg::LongOption).  The
         constructor's final six parameters are identical to the previous
         constructor's final six arguments. This constructor returns a
@@ -96,7 +96,7 @@ initializing bf(ArgConfig) to use the initialized object immediately.
     itb(FBB::ArgConfig &instance()) 
        Returns the instance of the bf(ArgConfig) object, available after
         calling one of the bf(ArgConfig::initialize) members.  If called
-        before initialization, an tt(FBB::Errno) exception is thrown.
+        before initialization, an tt(FBB::Exception) exception is thrown.
     )
 
 manpagesection(NON-STATIC MEMBER FUNCTIONS)
@@ -185,7 +185,7 @@ manpagesection(EXAMPLE)
 #include <string>
 
 #include <bobcat/argconfig>
-#include <bobcat/errno>
+#include <bobcat/exception>
 
 using namespace std;
 using namespace FBB;
@@ -213,7 +213,7 @@ X::X()
 void X::function()
 {
     if (d_arg.nArgs() == 0)
-        throw Errno("Provide the name of a config file as 1st arg");
+        throw Exception() << "Provide the name of a config file as 1st arg";
 
     cout << "Counting " << d_arg.option('o') << " instances of -o or "
                                                             "--option\n";
@@ -244,7 +244,7 @@ try
 
     return 0;
 }
-catch (Errno const &err)
+catch (Exception const &err)
 {
     cout << "Terminating " << err.what() << endl;
     return 1;
