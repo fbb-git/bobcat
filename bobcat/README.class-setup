@@ -2,12 +2,12 @@ The following diagram shows the class dependencies. Classes listed on the same
 line have no mutual dependencies. Classes listed on lines starting with the
 digit 0 are not depenent on other bobcat classes. Then, diagrams showing
 dependencies of other classes. Dependencies should be read upwards, e.g.,
-String depends on A2x, Hostname depends on Hostent and Errno.
+String depends on A2x, Hostname depends on Hostent and Exception.
 
 Dependencies refer to the construction of the class members as well as the use
-of the class headers. So, when compiling the class Msg the class Errno must be
-available (if not compile-time then most likely run-time). The dependencies
-are not necessarily related to inheritance.
+of the class headers. So, when compiling the class Msg the class Exception
+must be available (if not compile-time then most likely run-time). The
+dependencies are not necessarily related to inheritance.
 
 The file CLASSES lists all classes, in something resembling the order of
 addition of the classes to the Bobcat library. The classes `Milter' and
@@ -33,25 +33,32 @@ future relase:
                       SyslogStream     IRandStream      ReadLineStream
                                            |
                                            |
-0   DateTime       Errno                   |                
+0   DateTime     Exception                 |                
        |             |                     |                      
-       |       +-----+-----+------+        |
-       |       |     |     |      |        |
-       |      User Signal  |      +---+----+                      
-       |       |           |          |                           
-       +-------+           |      EncryptBuf                      
-       |                   |                      
-       |   GS__            |                      
-       |    |              |                                      
-       +----+              |                                      
-       |                   |                                      
-      Stat                 |                                                
-       |                   |                                      LogBuffer
-      Glob                 |                                          |
-                           |                                          |
-      +-------+--------+---+---+------+------+-----+-------------+    |
-      |       |        |       |      |      |     |             |    |
-    BigInt    |     Pattern  OneKey   |      |     |             +--+-+
+       |       +-----+-----+---+--+        |
+       |       |     |         |  |        |
+       |      User Signal      |  +---+----+                      
+       |       |               |      |                           
+       |       |     +---------+      |                           
+       |       |     |         |      |                           
+       |       |  BigInt       |      |                           
+       |       |     |         |      |                           
+       |       +-----+         |      |                           
+       |       |     |         |      |                           
+       +-------+     |         |  EncryptBuf                      
+       |             |         |                  
+       |        PrimeFactors   |                  
+       |                       |                  
+       |   GS__                |                  
+       |    |                  |                                  
+       +----+                  |                                  
+       |                       |                                  
+      Stat                     |                                            
+       |                       |                                  LogBuffer
+      Glob                     |                                      |
+              +--------+-------+------+------+-----+-------------+    |
+              |        |       |      |      |     |             |    |
+              |     Pattern  OneKey   |      |     |             +--+-+
               |        |              |      |     |                |
               +--------+          DecryptBuf |     |               Log
               |        |                     |     |   Hostent      |  
@@ -71,7 +78,7 @@ future relase:
                 |                |       
             ClientSocket   ServerSocket  
 
-     Errno(cont)
+     Exception(cont)
         |
 0       +---------+--------+----+----+-----+------+----------+    IOStreambuf
         |         |        |    |    |     |      |          |         |
@@ -119,7 +126,7 @@ future relase:
                       Process                    |                |        
                                                  |                |        
                                                  |          OFoldStream   
-                                     Errno(cont) |
+                                 Exception(cont) |
                                        |         |
                                        +----+----+
                                             |     
@@ -129,7 +136,7 @@ future relase:
 
 
 
-0                     Align                     StringLine     Errno(cont)
+0                     Align                     StringLine   Exception(cont)
                         |                           |            |
                         |                           +------------+
                    TableSupport                     |

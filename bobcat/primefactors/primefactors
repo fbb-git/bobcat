@@ -1,0 +1,104 @@
+#ifndef INCLUDED_BOBCAT_PRIMEFACTORS_
+#define INCLUDED_BOBCAT_PRIMEFACTORS_
+
+#include <iostream>
+
+#include <vector>
+
+#include <fstream>
+#include <iterator>
+
+#include <bobcat/bigint>
+
+namespace FBB
+{
+
+struct BigIntFactor
+{
+    BigInt prime;
+    size_t count;
+};
+
+struct PrimeFactors
+{
+    typedef std::vector<BigIntFactor> Factors;
+
+    private:
+
+    typedef std::vector<BigInt> BigIntVector;
+    typedef BigIntVector::const_iterator ConstIterator;
+
+    std::fstream d_stream;
+    size_t d_blockSize;
+
+    BigIntVector d_primes;
+    BigIntVector d_newPrimes;
+
+    BigInt d_value;
+    BigInt d_last;
+    BigInt d_lastPrime;
+    BigInt d_sentinel;
+    bool   d_atSentinel;
+
+    Factors d_factors;
+
+    class const_iterator: public 
+                            std::iterator<std::input_iterator_tag, BigInt>
+    {
+        friend class PrimeFactors;
+
+        PrimeFactors &d_primeFactors;
+        ConstIterator d_iterator;
+
+        public:
+            const_iterator &operator++();
+            BigInt const &operator*() const;
+
+        private:
+            const_iterator(PrimeFactors &primeFactors);
+    };
+    friend class const_iterator;
+
+    public:
+
+        PrimeFactors(std::string const &name, size_t blockSize = 1000);
+        PrimeFactors(PrimeFactors const &other) = delete;
+        ~PrimeFactors();
+
+        Factors const &factorize(BigInt const &value);
+
+    private:
+        void iniRead();
+
+        void increment(ConstIterator &iterator);
+        bool sentinel();
+        bool newPrimes();
+        bool nextLoad();
+
+
+        void reduce(BigInt const &prime);
+        void availablePrimes();
+        void addPrimes();
+
+        void nextPrime(BigInt *prime);
+        bool isComposite(BigInt const &candidate);
+
+        void writeNewPrimes();
+};
+
+inline BigInt const &PrimeFactors::const_iterator::operator*() const
+{
+    return *d_iterator;
+}
+
+} // FBB        
+#endif
+
+
+
+
+
+
+
+
+
