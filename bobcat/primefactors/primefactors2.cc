@@ -2,6 +2,6 @@
 
 PrimeFactors::PrimeFactors(string const &name, size_t blockSize)
 :
-    d_iterator(iteratorStream(name, blockSize))
+    d_iterator(new iteratorStream(name, blockSize))
 {}
 

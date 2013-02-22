@@ -1,6 +1,6 @@
-#include "primefactors.ih"
+#include "../primefactors/primefactors.ih"
 
-PrimeFactors::~PrimeFactors()
+PrimeFactors::iteratorStream::~iteratorStream()
 {
     writeNewPrimes();
 }

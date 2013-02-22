@@ -38,7 +38,7 @@ struct PrimeFactors
             public:
                 virtual ~iterator();
                 iterator() = default;
-                iterator(BigIntVector &primes);
+                iterator(BigIntVector &primes);     // 2
 
                 iterator &operator++();
                 BigInt const &operator*() const;
@@ -48,33 +48,37 @@ struct PrimeFactors
                 void nextPrime();
                 iterator *clone() const;
 
-                size_t sentinelSize() const
-                {
-                    return d_sentinel.size();
-                }
-
             protected:
                 void sentinel();
                 bool isComposite();
-
     
             private:
                 virtual iterator &operatorPreInc();
                 virtual void next();
                 virtual iterator *duplicate() const;
-
         };
 
         class iteratorStream: public iterator
         {
+                std::string d_name;
                 std::fstream d_stream;
                 size_t d_blockSize;
                 BigIntVector d_primes;
                 BigIntVector d_newPrimes;
+
             public:
-                iteratorStream(std::string const &name, size_t blockSize);
+                iteratorStream(std::string name, size_t blockSize);
+                ~iteratorStream();
+
             private:
                 iterator &operatorPreInc() override;
+                virtual void next() override;
+                virtual iterator *duplicate() const override;
+
+                void iniRead();
+                bool nextLoad();
+                bool newPrimes();
+                void writeNewPrimes();
         };
 
         BigInt d_value;
@@ -92,18 +96,9 @@ struct PrimeFactors
         Factors const &factorize(BigInt const &value);
 
     private:
-//        void iniRead();
-//
-//        void increment(ConstIterator &iterator);
-//        bool newPrimes();
-//        bool nextLoad();
-
-
         void reduce(BigInt const &prime);
         void availablePrimes();
         void addPrimes();
-
-//        void writeNewPrimes();
 };
 
 } // FBB        

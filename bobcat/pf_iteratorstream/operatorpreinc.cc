@@ -1,7 +1,9 @@
-#include "primefactors.ih"
+#include "../primefactors/primefactors.ih"
 
-PrimeFactors::const_iterator &PrimeFactors::const_iterator::operator++()
+PrimeFactors::iterator &PrimeFactors::iteratorStream::operatorPreInc()
 {
-    d_primeFactors.increment(d_iterator);
+    if (++d_iterator == d_primes.cend() && not nextLoad() && not newPrimes())
+        sentinel();
+
     return *this;
 }
