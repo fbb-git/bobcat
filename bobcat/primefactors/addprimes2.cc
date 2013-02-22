@@ -2,11 +2,11 @@
 
 void PrimeFactors::addPrimes()
 {
-    BigInt prime(d_lastPrime);
+    BigInt const &prime = d_iterator->lastPrime();
 
     while (not d_value.isOne())
     {
-        nextPrime(&prime);
+        d_iterator->nextPrime();
 
         if (prime > d_last)             // beyond the last possible factor
         {

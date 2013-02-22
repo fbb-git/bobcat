@@ -5,7 +5,11 @@ PrimeFactors::Factors const &PrimeFactors::factorize(BigInt const &value)
     d_factors.clear();
     d_value = value;
     d_last = d_value.isqrtc();
-    d_sentinel = d_last + 1;
+
+    d_iterator->setSentinel(d_last + 1);
+
+cerr << "last = " << d_last << ", value = " <<
+d_value << '\n';
 
     availablePrimes();
 
@@ -14,8 +18,3 @@ PrimeFactors::Factors const &PrimeFactors::factorize(BigInt const &value)
 
     return d_factors;
 }
-
-
-
-
-

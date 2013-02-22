@@ -2,94 +2,109 @@
 #define INCLUDED_BOBCAT_PRIMEFACTORS_
 
 #include <iostream>
-
 #include <vector>
-
 #include <fstream>
-#include <iterator>
+#include <memory>
 
 #include <bobcat/bigint>
 
 namespace FBB
 {
 
-struct BigIntFactor
-{
-    BigInt prime;
-    size_t count;
-};
-
 struct PrimeFactors
 {
-    typedef std::vector<BigIntFactor> Factors;
+    struct PrimePower
+    {
+        BigInt prime;
+        size_t power;
+    };
+
+    typedef std::vector<PrimePower> Factors;
 
     private:
+        typedef std::vector<BigInt> BigIntVector;
+        typedef BigIntVector::const_iterator ConstIterator;
+    
+        class iterator
+        {
+            BigIntVector *d_primes;
 
-    typedef std::vector<BigInt> BigIntVector;
-    typedef BigIntVector::const_iterator ConstIterator;
+            protected:
+                ConstIterator d_iterator;
+                BigInt d_lastPrime;
+                BigIntVector d_sentinel;
+                bool   d_atSentinel;
+                    
+            public:
+                virtual ~iterator();
+                iterator() = default;
+                iterator(BigIntVector &primes);
 
-    std::fstream d_stream;
-    size_t d_blockSize;
+                iterator &operator++();
+                BigInt const &operator*() const;
+                bool atSentinel() const;
+                void setSentinel(BigInt const &sentinel);
+                BigInt const &lastPrime() const;
+                void nextPrime();
+                iterator *clone() const;
 
-    BigIntVector d_primes;
-    BigIntVector d_newPrimes;
+                size_t sentinelSize() const
+                {
+                    return d_sentinel.size();
+                }
 
-    BigInt d_value;
-    BigInt d_last;
-    BigInt d_lastPrime;
-    BigInt d_sentinel;
-    bool   d_atSentinel;
+            protected:
+                void sentinel();
+                bool isComposite();
 
-    Factors d_factors;
+    
+            private:
+                virtual iterator &operatorPreInc();
+                virtual void next();
+                virtual iterator *duplicate() const;
 
-    class const_iterator: public 
-                            std::iterator<std::input_iterator_tag, BigInt>
-    {
-        friend class PrimeFactors;
+        };
 
-        PrimeFactors &d_primeFactors;
-        ConstIterator d_iterator;
+        class iteratorStream: public iterator
+        {
+                std::fstream d_stream;
+                size_t d_blockSize;
+                BigIntVector d_primes;
+                BigIntVector d_newPrimes;
+            public:
+                iteratorStream(std::string const &name, size_t blockSize);
+            private:
+                iterator &operatorPreInc() override;
+        };
 
-        public:
-            const_iterator &operator++();
-            BigInt const &operator*() const;
+        BigInt d_value;
+        BigInt d_last;
 
-        private:
-            const_iterator(PrimeFactors &primeFactors);
-    };
-    friend class const_iterator;
+        std::shared_ptr<iterator> d_iterator;
+    
+        Factors d_factors;
 
     public:
-
-        PrimeFactors(std::string const &name, size_t blockSize = 1000);
+        PrimeFactors(BigIntVector &primes);
+        PrimeFactors(std::string const &name = "", size_t blockSize = 1000);
         PrimeFactors(PrimeFactors const &other) = delete;
-        ~PrimeFactors();
 
         Factors const &factorize(BigInt const &value);
 
     private:
-        void iniRead();
-
-        void increment(ConstIterator &iterator);
-        bool sentinel();
-        bool newPrimes();
-        bool nextLoad();
+//        void iniRead();
+//
+//        void increment(ConstIterator &iterator);
+//        bool newPrimes();
+//        bool nextLoad();
 
 
         void reduce(BigInt const &prime);
         void availablePrimes();
         void addPrimes();
 
-        void nextPrime(BigInt *prime);
-        bool isComposite(BigInt const &candidate);
-
-        void writeNewPrimes();
+//        void writeNewPrimes();
 };
-
-inline BigInt const &PrimeFactors::const_iterator::operator*() const
-{
-    return *d_iterator;
-}
 
 } // FBB        
 #endif
