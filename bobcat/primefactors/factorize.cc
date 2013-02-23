@@ -8,9 +8,6 @@ PrimeFactors::Factors const &PrimeFactors::factorize(BigInt const &value)
 
     d_iterator->setSentinel(d_last + 1);
 
-cerr << "last = " << d_last << ", value = " <<
-d_value << '\n';
-
     availablePrimes();
 
     if (not d_value.isOne())

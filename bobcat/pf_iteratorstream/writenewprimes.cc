@@ -2,6 +2,11 @@
 
 void PrimeFactors::iteratorStream::writeNewPrimes()
 {
+    if (d_newPrimes.empty())
+        return;
+
+    // cerr << "adding " << d_newPrimes.size() << " new primes\n";
+
     d_stream.clear();
     d_stream.seekp(0, ios::end);
 

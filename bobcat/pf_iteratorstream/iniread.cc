@@ -6,5 +6,9 @@ void PrimeFactors::iteratorStream::iniRead()
     d_stream.seekg(0);
     d_atSentinel = false;
 
-    nextLoad();
+    if (not nextLoad())
+    {
+        d_newPrimes = BigIntVector {2, 3};
+        newPrimes();
+    }
 }

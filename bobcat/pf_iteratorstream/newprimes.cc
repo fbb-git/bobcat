@@ -2,13 +2,15 @@
 
 bool PrimeFactors::iteratorStream::newPrimes()
 {
-    if (not d_newPrimes.empty())
-    {
-        d_primes = d_newPrimes;
+    if (d_newPrimes.empty())
+        return false;
+
+    d_primes = d_newPrimes;
+
+    if (d_newPrimes.size() == d_blockSize)
         writeNewPrimes();
 
-        d_iterator = d_primes.begin();
-    }
+    d_iterator = d_primes.begin();
 
-    return not d_primes.empty();
+    return true;
 }

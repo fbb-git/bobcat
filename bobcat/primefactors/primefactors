@@ -37,7 +37,7 @@ struct PrimeFactors
                     
             public:
                 virtual ~iterator();
-                iterator() = default;
+                iterator();
                 iterator(BigIntVector &primes);     // 2
 
                 iterator &operator++();
@@ -46,7 +46,6 @@ struct PrimeFactors
                 void setSentinel(BigInt const &sentinel);
                 BigInt const &lastPrime() const;
                 void nextPrime();
-                iterator *clone() const;
 
             protected:
                 void sentinel();
@@ -55,7 +54,6 @@ struct PrimeFactors
             private:
                 virtual iterator &operatorPreInc();
                 virtual void next();
-                virtual iterator *duplicate() const;
         };
 
         class iteratorStream: public iterator
@@ -67,13 +65,12 @@ struct PrimeFactors
                 BigIntVector d_newPrimes;
 
             public:
-                iteratorStream(std::string name, size_t blockSize);
+                iteratorStream(std::string const &name, size_t blockSize);
                 ~iteratorStream();
 
             private:
                 iterator &operatorPreInc() override;
-                virtual void next() override;
-                virtual iterator *duplicate() const override;
+                void next() override;
 
                 void iniRead();
                 bool nextLoad();

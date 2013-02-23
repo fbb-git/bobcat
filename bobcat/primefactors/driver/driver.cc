@@ -7,7 +7,7 @@ using namespace FBB;
 
 int main(int argc, char **argv)
 {
-//    vector<BigInt> primes;
+    vector<BigInt> primes;
 
 //    PrimeFactors primeFactors(primes);
     PrimeFactors primeFactors("/tmp/primes");

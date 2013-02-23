@@ -19,9 +19,9 @@ PrimeFactors::iteratorStream::iteratorStream(std::string const &name,
     {
         d_stream.clear();
         Exception::open(d_stream, name, ios::out | ios::trunc | ios::in);
-        d_stream.seekp(0);
-        d_stream << 2 << '\n' << 3 << endl;
     }
+
+    d_stream << hex;
 
     d_primes.reserve(blockSize);
 

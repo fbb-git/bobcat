@@ -2,6 +2,8 @@
 
 void PrimeFactors::iteratorStream::next()
 {
+    iniRead();
+
     do
         d_lastPrime += 2;                 
     while (isComposite());

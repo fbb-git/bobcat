@@ -7,9 +7,6 @@ void PrimeFactors::availablePrimes()
 
         BigInt const &prime = **d_iterator; // get the next prime
 
-cerr << "prime = " << prime << ", last = " << d_last << ", value = " <<
-d_value << '\n';
-
         if (prime > d_last)                 // checked the last available 
         {
             if (not d_iterator->atSentinel())

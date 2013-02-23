@@ -5,20 +5,13 @@ bool PrimeFactors::iterator::isComposite()
     BigInt last(d_lastPrime.isqrtc());
     d_sentinel[0] = last + 1;
 
-    iterator *iterPtr = clone();
-    iterator &iter = *iterPtr;
-
-    while (*iter <= last)
+    while (*d_iterator <= last)
     {
-        if ((d_lastPrime % *iter).isZero())
-        {
-            delete iterPtr;
+        if ((d_lastPrime % *d_iterator).isZero())
             return true;
-        }
 
-        ++iter;
+        ++d_iterator;
     }
 
-    delete iterPtr;
     return false;
 }

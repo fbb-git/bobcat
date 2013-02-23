@@ -10,6 +10,4 @@ PrimeFactors::iterator::iterator(BigIntVector &primes)
 
     d_lastPrime = primes.back();
     d_iterator = primes.begin();
-
-    cerr << "primes size = " << primes.size() << '\n';
 }
