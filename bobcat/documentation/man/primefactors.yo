@@ -1,0 +1,175 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::PrimeFactors)(3bobcat)(_CurYrs_)
+            (libbobcat1-dev__CurVers_-x.tar.gz)(Prime Factorization)
+
+manpagename(FBB::PrimeFactors)(Performs the prime-number factorization of
+            (BigInt) values)
+
+manpagesynopsis()
+    bf(#include <bobcat/primefactors>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+
+    Integral values fall into two categories: prime numbers, which only have
+one and themselves as integral divisors, and composite numbers, which also
+have at least one other integral divisor. Values in both categories can be
+written as the product of prime numbers. E.g., 6 can be written as the product
+of the primes 2 and 3. Finding these primes is called the prime number
+factorization, or `prime factorization'. When factorizing a value its prime
+factors may sometimes repeatedly be used as integral divisors. E.g., 36 can
+twice be devided by 2, and twice be divided by 3: 
+        verb
+    36 = pow(2, 2) * pow(3, 2)
+        )
+
+    The class bf(FBB::PrimeFactors) performs prime number factorizations of
+tt(FBB::BigInt) values. When factorizing a value prime numbers up to
+tt(sqrt(value)) must be available, as prime numbers up to tt(sqrt(value)) may
+be factors of tt(value). Currently tt(PrimeFactors) uses the sieve of
+Eratosthenes to find these prime numbers. The sieve of Eratosthenes is fine
+for relative small numbers, but they must be computed
+nevertheless. bf(PrimeFactors) saves computed prime numbers in either a
+tt(std::vector) or in a file, so they can be used again when factorizing
+another value. 
+
+    After factorizing a value its prime number factors and associated powers
+are made available in a vector of (tt(PrimeFactors::PrimePower)) structs,
+containing the value's sorted prime factors and associated powers.
+
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(TYPEDEFS AND ENUMS)
+
+    itemization(
+    itb(struct PrimePower) contains two fields:
+        verb(
+    struct PrimePower
+    {
+        BigInt prime;
+        size_t power;
+    };
+        )
+        Here, tt(power) represents the number of times tt(prime) can be used
+as an integral divisor of the value that was factorized by bf(PrimeFactors).
+    itb(Factors) is a synonym for tt(std::vector<PrimePower)
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(PrimeFactors(BigIntVector &primes))
+        Prime numbers that are determined while factorizing values are
+collected in the tt(BigIntVector) that is passed as argument to this
+constructor. 
+
+    Initially the tt(BigIntVector) passed as argument may be empty or may
+contain at least two primes (respectively 2 and 3). The prime numbers in
+tt(primes) must be sorted. The constructor does not verify whether the prime
+numbers are indeed sorted, but if the tt(BigIntVector) contains primes it
+em(does) check whether the first two prime numbers are indeed 2 and 3. An
+tt(FBB::Exception) is thrown if this condition is not met. 
+
+    While numbers are being factorized, new prime numbers may be added to
+tt(primes), and tt(primes) can be reused by subsequently constructed
+tt(PrimeFactors) objects.
+
+    itb(PrimeFactors(std::string const &name = "", size_t blockSize = 1000))
+        Prime numbers that are determined while factorizing values are
+collected on a stream whose name is passed as argument to this
+constructor. By default tt(~/.primes) is used. When specifying filenames an
+initial tt(~) character is replaced by the user's home directory. Primes are
+read from this stream in blocks of at most tt(blockSize), and new primes are
+flushed to this stream once tt(blockSize) new primes have been generated or
+when the bf(PrimeFactors) object (i.e., the last bf(PrimeFactors) object
+sharing the stream) is destroyed.
+
+    If the stream does not yet exist it is created by bf(PrimeFactors). The
+stream may also be empty, or it must contain sorted primes, one prime written
+as hexadecimal tt(BigInt) value per line, where the first two primes must be,
+respectively, 2 and 3. The constructor does not verify whether the prime
+numbers are indeed sorted, but if the stream contains primes it em(does) check
+whether the first two prime numbers are indeed 2 and 3. An tt(FBB::Exception)
+is thrown if this condition is not met. 
+
+    While numbers are being factorized, new prime numbers may be added to the
+stream, and the stream can be reused by subsequently constructed
+tt(PrimeFactors) objects. 
+    )
+
+    The default copy and move constructors are available. The copy constructor
+shares the tt(BigIntVector) or the stream containing the primes with its
+source object.
+
+manpagesection(OVERLOADED OPERATORS)
+
+    The default copy and move assignment operators are available. The copy
+assignment operator shares the tt(BigIntVector) or the stream containing the
+primes with its right-hand side bf(PrimeFactors) argument.
+ 
+
+manpagesection(MEMBER FUNCTION)
+
+    itemization(
+    itb(Factors const &factorize(BigInt const &value))
+        The prime factors of tt(value) are determined and returned in the
+tt(PrimeFactors::Factors) vectors. While the prime factors of tt(value) are
+determined new prime numbers may be added to the tt(BigIntVector) or to the
+stream that is passed to the bf(PrimeFactors) object.
+    )
+
+manpagesection(EXAMPLE)
+    
+        verb(
+    #include <iostream>
+    #include <bobcat/primefactors>
+
+    using namespace std;
+    using namespace FBB;
+
+    int main()
+    {
+        vector<BigInt> primes;
+    
+        PrimeFactors pf(primes);
+    
+        PrimeFactors::Factors factors = pf.factorize(123456);
+
+        for (auto &factor: factors)
+            cout << factor.prime << "**" << factor.power << ' ';
+
+        cout << "\n"
+                "Collected primes: ";
+
+        for (auto &prime: primes)
+            cout << prime << ' ';
+
+        cout << '\n';
+    }    
+        )
+    This program produces the following output:
+        verb(
+2**6 3**1 643**1 
+Collected primes: 2 3 5 7 11 13 17 19 23 27 29 31 37 41 43 47 51 53 57 59 61
+67 71 73 79 83 87 89 93 97 101 103 107 109 113 117 123 127 131 135 137 139 145
+149 151 157 163 167 171 173 177 179 181 189 191 193 197 199 205 211 219 223
+227 229 233 237 239 241 249 251 255 257 261 263 267 269 271 277 281 283 291
+293 301 307 311 313 317 321 325 331 337 343 347 349 353  
+
+
+
+manpagefiles()
+    em(bobcat/primefactors) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(bigint)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)

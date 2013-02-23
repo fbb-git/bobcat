@@ -2,11 +2,12 @@
 
 void PrimeFactors::iterator::next()
 {
-    d_iterator = d_primes->begin();
-
     do
-        d_lastPrime += 2;                 
-    while (isComposite());
+    {
+        d_iterator = d_primes->begin();
+        d_lastPrime += 2;
+    }
+    while (isComposite(d_lastPrime));
 
     d_primes->push_back(d_lastPrime);
 }

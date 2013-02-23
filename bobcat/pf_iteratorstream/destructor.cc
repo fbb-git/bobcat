@@ -2,5 +2,7 @@
 
 PrimeFactors::iteratorStream::~iteratorStream()
 {
+    cerr << "DESTRUCTOR CALLED\n";
+
     writeNewPrimes();
 }

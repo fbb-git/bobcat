@@ -4,17 +4,18 @@ void PrimeFactors::availablePrimes()
 {
     while (not d_value.isOne())
     {
-
         BigInt const &prime = **d_iterator; // get the next prime
 
         if (prime > d_last)                 // checked the last available 
         {
+cerr<<"prime: " << prime << ", last = " << d_last << '\n';
             if (not d_iterator->atSentinel())
             {
+cerr << "not at sentinel\n";
                 d_factors.push_back({d_value, 1});
                 d_value = 1;
             }
-            break;
+            return;
         }
 
         reduce(prime);                      // try to reduce d_value by prime

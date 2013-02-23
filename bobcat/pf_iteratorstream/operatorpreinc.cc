@@ -2,7 +2,7 @@
 
 PrimeFactors::iterator &PrimeFactors::iteratorStream::operatorPreInc()
 {
-    if (++d_iterator == d_primes.cend() && not nextLoad() && not newPrimes())
+    if (++d_iterator == d_primes.cend() && not readPrimes())
         sentinel();
 
     return *this;

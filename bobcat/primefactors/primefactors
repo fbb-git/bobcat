@@ -48,8 +48,9 @@ struct PrimeFactors
                 void nextPrime();
 
             protected:
+                void checkInitialPrimes(BigIntVector const &primes) const;
                 void sentinel();
-                bool isComposite();
+                bool isComposite(BigInt const &candidate);
     
             private:
                 virtual iterator &operatorPreInc();
@@ -58,11 +59,12 @@ struct PrimeFactors
 
         class iteratorStream: public iterator
         {
-                std::string d_name;
-                std::fstream d_stream;
-                size_t d_blockSize;
-                BigIntVector d_primes;
-                BigIntVector d_newPrimes;
+            std::string d_name;
+            std::fstream d_stream;
+            size_t d_blockSize;
+
+            BigIntVector d_primes;
+            size_t d_nAvailable;
 
             public:
                 iteratorStream(std::string const &name, size_t blockSize);
@@ -72,9 +74,11 @@ struct PrimeFactors
                 iterator &operatorPreInc() override;
                 void next() override;
 
+                void openStream();
+
                 void iniRead();
-                bool nextLoad();
-                bool newPrimes();
+                void setPrimesStatistics();
+                bool readPrimes();
                 void writeNewPrimes();
         };
 

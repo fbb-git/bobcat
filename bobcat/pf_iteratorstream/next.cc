@@ -2,16 +2,21 @@
 
 void PrimeFactors::iteratorStream::next()
 {
-    iniRead();
+    BigInt candidate = d_lastPrime;
 
     do
-        d_lastPrime += 2;                 
-    while (isComposite());
+    {
+        iniRead();
+        candidate += 2;
+    }
+    while (isComposite(candidate));
 
-    d_newPrimes.push_back(d_lastPrime);
+cerr << "next prime = " << candidate << '\n';
 
-    if (d_newPrimes.size() == d_blockSize)
-        writeNewPrimes();
+    d_primes.push_back(d_lastPrime = candidate);
+    d_stream.clear();
+    d_stream.seekp(0, ios::end);
+    d_stream << candidate << endl;
 }
 
 

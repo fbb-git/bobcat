@@ -10,6 +10,8 @@ PrimeFactors::Factors const &PrimeFactors::factorize(BigInt const &value)
 
     availablePrimes();
 
+cerr << "After available primes value = " << d_value << '\n';
+
     if (not d_value.isOne())
         addPrimes();
 
