@@ -131,8 +131,6 @@ class BigInt
         BigInt &operator^=(BigInt const &rhs);
 
         bool isZero() const;
-        operator bool() const;
-
         bool isOne() const;
         bool isOdd() const;
 
@@ -417,11 +415,6 @@ inline BigInt::Bit BigInt::operator[](size_t idx)
 inline BigInt::Bit::operator bool() const
 {
     return d_bi.hasBit(d_idx);
-}
-
-inline BigInt::operator bool() const
-{
-    return not isZero();
 }
 
 BigInt operator*(BigInt const &lhs, BigInt const &rhs);

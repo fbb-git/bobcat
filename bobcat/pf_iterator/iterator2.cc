@@ -2,9 +2,9 @@
 
 PrimeFactors::iterator::iterator(BigIntVector &primes)
 :
+    d_mode(PRIMES),
     d_primes(&primes),
-    d_sentinel(1),
-    d_mode(PRIMES)
+    d_sentinel(1)
 {
     if (primes.empty())
         primes = BigIntVector{2, 3};
