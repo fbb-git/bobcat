@@ -3,10 +3,11 @@
 PrimeFactors::iterator::iterator(BigIntVector &primes)
 :
     d_primes(&primes),
-    d_sentinel(1)
+    d_sentinel(1),
+    d_mode(PRIMES)
 {
     if (primes.empty())
-        primes = BigIntVector {2, 3};
+        primes = BigIntVector{2, 3};
 
     d_lastPrime = primes.back();
     d_iterator = primes.begin();

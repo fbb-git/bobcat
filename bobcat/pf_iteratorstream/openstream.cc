@@ -16,6 +16,4 @@ void PrimeFactors::iteratorStream::openStream()
         d_stream.clear();
         Exception::open(d_stream, d_name, ios::out | ios::trunc | ios::in);
     }
-
-//    d_stream << hex;
 }

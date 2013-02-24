@@ -8,10 +8,8 @@ void PrimeFactors::availablePrimes()
 
         if (prime > d_last)                 // checked the last available 
         {
-cerr<<"prime: " << prime << ", last = " << d_last << '\n';
             if (not d_iterator->atSentinel())
             {
-cerr << "not at sentinel\n";
                 d_factors.push_back({d_value, 1});
                 d_value = 1;
             }

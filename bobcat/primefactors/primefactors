@@ -27,13 +27,18 @@ struct PrimeFactors
     
         class iterator
         {
-            BigIntVector *d_primes;
-
             protected:
+                enum InputMode
+                {
+                    PRIMES,
+                    SENTINEL
+                };
+                int d_mode;
+
+                BigIntVector *d_primes;
                 ConstIterator d_iterator;
                 BigInt d_lastPrime;
                 BigIntVector d_sentinel;
-                bool   d_atSentinel;
                     
             public:
                 virtual ~iterator();
@@ -41,15 +46,14 @@ struct PrimeFactors
                 iterator(BigIntVector &primes);     // 2
 
                 iterator &operator++();
-                BigInt const &operator*() const;
-                bool atSentinel() const;
                 void setSentinel(BigInt const &sentinel);
-                BigInt const &lastPrime() const;
+                BigInt const &operator*() const;
                 void nextPrime();
+                BigInt const &lastPrime() const;
+                bool atSentinel() const;
 
             protected:
                 void checkInitialPrimes(BigIntVector const &primes) const;
-                void sentinel();
                 bool isComposite(BigInt const &candidate);
     
             private:
@@ -59,12 +63,18 @@ struct PrimeFactors
 
         class iteratorStream: public iterator
         {
+            enum InputMode
+            {
+                STREAM_PRIMES,
+                NEW_PRIMES,
+                SENTINEL
+            };
             std::string d_name;
             std::fstream d_stream;
             size_t d_blockSize;
 
-            BigIntVector d_primes;
-            size_t d_nAvailable;
+            BigIntVector d_streamPrimes;
+            BigIntVector d_newPrimes;
 
             public:
                 iteratorStream(std::string const &name, size_t blockSize);
@@ -75,10 +85,9 @@ struct PrimeFactors
                 void next() override;
 
                 void openStream();
-
-                void iniRead();
-                void setPrimesStatistics();
+                void resetPrimes();
                 bool readPrimes();
+
                 void writeNewPrimes();
         };
 

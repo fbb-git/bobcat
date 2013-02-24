@@ -2,17 +2,21 @@
 
 bool PrimeFactors::iteratorStream::readPrimes()
 {
-    d_primes.clear();
+    d_streamPrimes.clear();
 
     BigInt tmp;
-    for (d_nAvailable = 0; d_nAvailable != d_blockSize; ++d_nAvailable)
+    size_t idx;
+    for (idx = 0; idx != d_blockSize; ++idx)
     {
         if (not (d_stream >> tmp))
             break;
-        d_primes.push_back(tmp);
+        d_streamPrimes.push_back(tmp);
     }
 
-    setPrimesStatistics();
+    if (idx != 0)
+        d_lastPrime = d_streamPrimes.back();
 
-    return d_nAvailable;
+    d_iterator = d_streamPrimes.begin();
+
+    return idx;
 }

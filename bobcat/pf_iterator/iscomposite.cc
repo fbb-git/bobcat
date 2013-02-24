@@ -10,7 +10,7 @@ bool PrimeFactors::iterator::isComposite(BigInt const &candidate)
         if ((candidate % *d_iterator).isZero())
             return true;
 
-        ++d_iterator;
+        ++*this;
     }
 
     return false;
