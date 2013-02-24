@@ -13,14 +13,15 @@ manpagesynopsis()
 
 manpagedescription()
 
-    Integral values fall into two categories: prime numbers, which only have
-one and themselves as integral divisors, and composite numbers, which also
-have at least one other integral divisor. Values in both categories can be
-written as the product of prime numbers. E.g., 6 can be written as the product
-of the primes 2 and 3. Finding these primes is called the prime number
-factorization, or `prime factorization'. When factorizing a value its prime
-factors may sometimes repeatedly be used as integral divisors. E.g., 36 can
-twice be devided by 2, and twice be divided by 3: 
+    Integral values fall into two categories: prime numbers, whose only
+integral divisors are their own values and 1, and composite numbers, which
+also have at least one other (prime number) integral divisor. All composite
+integral values can be factorized as the product of prime numbers. E.g., 6 can
+be factorized as 2 * 3; 8 can be factorized as 2 * 2 * 2. Finding these prime
+factors is called the prime number factorization, or `prime
+factorization'. When factorizing a value its prime factors may sometimes
+repeatedly be used as integral divisors: 8 is factorized as tt(pow(2, 3)), and
+36 is factorized as
         verb
     36 = pow(2, 2) * pow(3, 2)
         )
@@ -29,16 +30,19 @@ twice be devided by 2, and twice be divided by 3:
 tt(FBB::BigInt) values. When factorizing a value prime numbers up to
 tt(sqrt(value)) must be available, as prime numbers up to tt(sqrt(value)) may
 be factors of tt(value). Currently tt(PrimeFactors) uses the sieve of
-Eratosthenes to find these prime numbers. The sieve of Eratosthenes is fine
-for relative small numbers, but they must be computed
-nevertheless. bf(PrimeFactors) saves computed prime numbers in either a
-tt(std::vector) or in a file, so they can be used again when factorizing
-another value. 
+Eratosthenes to find these prime numbers. To find the next prime number beyond
+tt(lastPrime), the sieve of Eratosthenes must be used repeatedly for
+tt(lastPrime += 2) until tt(lastPrime) is prime. Once determined, prime
+numbers can of course be used directly to determine the next prime number or
+to factorize an integral value. To accellerate prime number factorization and
+Eratosthenes's sieve bf(PrimeFactors) saves all its computed prime numbers in
+either a tt(std::vector) or in a file. Once determined, these prime numbers
+may again be used when factorizing the next integral value.
 
-    After factorizing a value its prime number factors and associated powers
-are made available in a vector of (tt(PrimeFactors::PrimePower)) structs,
-containing the value's sorted prime factors and associated powers.
-
+    After factorizing an integral value its prime number factors and
+associated powers are made available in a vector of
+(tt(PrimeFactors::PrimePower)) structs, containing the value's sorted prime
+factors and associated powers.
 
 includefile(include/namespace)
 
@@ -58,59 +62,63 @@ manpagesection(TYPEDEFS AND ENUMS)
         )
         Here, tt(power) represents the number of times tt(prime) can be used
 as an integral divisor of the value that was factorized by bf(PrimeFactors).
+
     itb(Factors) is a synonym for tt(std::vector<PrimePower)
     )
 
 manpagesection(CONSTRUCTORS)
     itemization(
     itb(PrimeFactors(BigIntVector &primes))
-        Prime numbers that are determined while factorizing values are
+        Prime numbers that were determined while factorizing values are
 collected in the tt(BigIntVector) that is passed as argument to this
 constructor. 
 
     Initially the tt(BigIntVector) passed as argument may be empty or may
-contain at least two primes (respectively 2 and 3). The prime numbers in
-tt(primes) must be sorted. The constructor does not verify whether the prime
-numbers are indeed sorted, but if the tt(BigIntVector) contains primes it
-em(does) check whether the first two prime numbers are indeed 2 and 3. An
-tt(FBB::Exception) is thrown if this condition is not met. 
+contain at least two primes (which must be, respectively, 2 and 3). The prime
+numbers in tt(primes) must be sorted. The constructor does not verify whether
+the prime numbers are actually sorted, but if the tt(BigIntVector) contains
+primes it em(does) check whether the first two prime numbers are indeed 2 and
+3. An tt(FBB::Exception) is thrown if this condition is not met.
 
     While numbers are being factorized, new prime numbers may be added to
-tt(primes), and tt(primes) can be reused by subsequently constructed
-tt(PrimeFactors) objects.
+tt(primes), and tt(primes) can be reused by othher tt(PrimeFactors) objects.
 
-    itb(PrimeFactors(std::string const &name = "", size_t blockSize = 1000))
+    itb(PrimeFactors(std::string const &name = "~/.primes", size_t blockSize =
+1000))
         Prime numbers that are determined while factorizing values are
-collected on a stream whose name is passed as argument to this
-constructor. By default tt(~/.primes) is used. When specifying filenames an
-initial tt(~) character is replaced by the user's home directory. Primes are
-read from this stream in blocks of at most tt(blockSize), and new primes are
-flushed to this stream once tt(blockSize) new primes have been generated or
-when the bf(PrimeFactors) object (i.e., the last bf(PrimeFactors) object
-sharing the stream) is destroyed.
+collected on a stream whose name is passed as argument to this constructor. By
+default tt(~/.primes) is used. If tt(name) starts with `tt(~/)', then this
+string is replaced by the user's home directory. 
+
+    Primes are read from the named stream in blocks of at most tt(blockSize),
+and new primes are flushed to this stream once tt(blockSize) new primes have
+been generated or when the bf(PrimeFactors) object (i.e., the last
+bf(PrimeFactors) object sharing the stream) ceases to exist.
 
     If the stream does not yet exist it is created by bf(PrimeFactors). The
-stream may also be empty, or it must contain sorted primes, one prime written
-as hexadecimal tt(BigInt) value per line, where the first two primes must be,
-respectively, 2 and 3. The constructor does not verify whether the prime
-numbers are indeed sorted, but if the stream contains primes it em(does) check
-whether the first two prime numbers are indeed 2 and 3. An tt(FBB::Exception)
-is thrown if this condition is not met. 
+stream may either be empty, or it must contain sorted and white-space
+delimited prime numbers (inserted as hexadecimal tt(BigInt) values). The first
+two primes on this file must be, respectively, 2 and 3. The constructor does
+not verify whether the prime numbers are actually sorted, but if the stream
+contains primes it em(does) check whether the first two prime numbers are
+indeed 2 and 3. An tt(FBB::Exception) is thrown if this condition is not met.
 
     While numbers are being factorized, new prime numbers may be added to the
-stream, and the stream can be reused by subsequently constructed
-tt(PrimeFactors) objects. 
+stream, and the stream can be reused by other tt(PrimeFactors) objects.
     )
 
-    The default copy and move constructors are available. The copy constructor
-shares the tt(BigIntVector) or the stream containing the primes with its
-source object.
+    The default copy and move constructors are available. bf(FBB::PrimeFactor)
+objects created using the copy constructor share the prime numbers storage
+device (the tt(BigIntVector) or the stream containing the primes) with their
+source objects.
 
 manpagesection(OVERLOADED OPERATORS)
 
-    The default copy and move assignment operators are available. The copy
-assignment operator shares the tt(BigIntVector) or the stream containing the
-primes with its right-hand side bf(PrimeFactors) argument.
+    The default copy and move assignment operators are available. Left-hand
+side bf(FBB::PrimeFactor) objects receiving values from right-hand side
+bf(FBB::PrimeFactor) objects using the copy assignment operator share the
+prime numbers storage device (the tt(BigIntVector) or the stream containing
+the primes) with their right-hand side bf(FBB::PrimeFactors) arguments.
  
 
 manpagesection(MEMBER FUNCTION)
@@ -120,48 +128,24 @@ manpagesection(MEMBER FUNCTION)
         The prime factors of tt(value) are determined and returned in the
 tt(PrimeFactors::Factors) vectors. While the prime factors of tt(value) are
 determined new prime numbers may be added to the tt(BigIntVector) or to the
-stream that is passed to the bf(PrimeFactors) object.
+stream that is passed to the bf(PrimeFactors) object. The elements of
+tt(PrimeFactors::Factors) are sorted by their prime numbers. The first element
+contains the value's smallest prime number factor.
     )
 
 manpagesection(EXAMPLE)
     
+        verbinsert(../../primefactors/driver/driver.cc)
+
+    If this program is run with argument 1950 it produces the following
+output: 
         verb(
-    #include <iostream>
-    #include <bobcat/primefactors>
-
-    using namespace std;
-    using namespace FBB;
-
-    int main()
-    {
-        vector<BigInt> primes;
-    
-        PrimeFactors pf(primes);
-    
-        PrimeFactors::Factors factors = pf.factorize(123456);
-
-        for (auto &factor: factors)
-            cout << factor.prime << "**" << factor.power << ' ';
-
-        cout << "\n"
-                "Collected primes: ";
-
-        for (auto &prime: primes)
-            cout << prime << ' ';
-
-        cout << '\n';
-    }    
+    Using /tmp/primes:
+    2**1 3**1 5**2 13**1 
+    Using BigIntVector:
+    2**1 3**1 5**2 13**1 
+    Collected primes: 2 3 5 7 11 13 
         )
-    This program produces the following output:
-        verb(
-2**6 3**1 643**1 
-Collected primes: 2 3 5 7 11 13 17 19 23 27 29 31 37 41 43 47 51 53 57 59 61
-67 71 73 79 83 87 89 93 97 101 103 107 109 113 117 123 127 131 135 137 139 145
-149 151 157 163 167 171 173 177 179 181 189 191 193 197 199 205 211 219 223
-227 229 233 237 239 241 249 251 255 257 261 263 267 269 271 277 281 283 291
-293 301 307 311 313 317 321 325 331 337 343 347 349 353  
-
-
 
 manpagefiles()
     em(bobcat/primefactors) - defines the class interface

@@ -4,10 +4,8 @@ void PrimeFactors::iteratorStream::openStream()
 {
     User user;
 
-    if (d_name.empty())
-        d_name = user.homedir() + ".primes";
-    else if (d_name[0] == '~')
-        d_name.replace(0, 1, user.homedir());
+    if (d_name.find("~/") == 0)
+        d_name.replace(0, 2, user.homedir());
 
     d_stream.open(d_name, ios::in | ios::out);
 
