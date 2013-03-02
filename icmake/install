@@ -55,7 +55,11 @@ void install(string rss, string dev)
 
 #ifdef MANPAGES
     printf("\n  installing the manual pages\n");
-    md(dev + MAN + "/man3 " + dev + MAN + "/man7");
+    md(dev + MAN + "/man1 " + dev + MAN + "/man3 " + dev + MAN + "/man7");
+
+    run("gzip -9 < tmp/man/man1/bobcatlcgen.1 > " +
+                   dev + MAN + "/man1/bobcatlcgen.1.gz");
+
     rungzip9("tmp/man/man3/", dev + MAN + "/man3/");
     
     run("gzip -9 < tmp/man/man7/bobcat.7 > " +
@@ -88,6 +92,13 @@ void install(string rss, string dev)
         md(rss + DOC);
         reqzip(rss + DOC + "/", "README");
     }
+#endif
+
+#ifdef LCGEN
+    printf("\n  installing " + g_lcgen + "\n");
+
+    md(dev + BIN);
+    run("cp " + g_tmpbin + g_lcgen + " " + dev + BIN);
 #endif
 
     printf("\n  Installation completed\n");

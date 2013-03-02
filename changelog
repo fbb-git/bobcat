@@ -1,3 +1,46 @@
+bobcat (2.10.0) (TO DO)
+
+  * Included  cstdio in all .ih files of classes using EOF (required for g++
+    4.4) 
+
+  * Moved Table::Element's constructor back to the <table> header file
+    (required for Table::push_back()).
+
+  * Added Log member level() retrieving the currently set loglevel. 
+
+  * Added Log member instance() as a (preferred) alternative for
+    getInstance(). 
+
+  * LogBuffer::overflow() now has protected access rights.
+
+  * Stat's lastAccess(), lastChange(), and lastModification() members now 
+    return DateTime objects representing the times in UTC.
+
+  * New class: LC, template class to define and/or declare Local Context
+               structs to be used with the FnWrap[12]c classes (cf man -e
+               bobcat lc as well as the FnWrap[12]c man pages)
+
+  * Added program `bobcatlcgen' generating a file defining the template class
+               LC for a configurable maximum number of fields of the local
+               context structs (cf. man -e bobcatlcgen)
+
+  * New class: OFilterStreambuf, std::streambuf specialization implementing an
+               ostream filtering design pattern (cf man -e bobcat
+               ofilterstreambuf)
+
+  * New class: OFoldStreambuf, OFilterStreambuf specialization folding long
+               lines to lines having configurable left and right margins (cf
+               man -e bobcat ofoldstreambuf)
+
+  * New class: OFoldStream, wrapper class around OFoldStreambuf (cf man -e
+               bobcat ofoldstream)
+
+  * New class: lm, implementing a manipulator for OFoldStreams setting their
+               left margin (number of indented blanks) (cf. man -e bobcat lm)
+
+  * New class: mlm, implementing a manipulator for OFoldStreams modifying their
+               left margin (cf. man -e bobcat mlm)
+
 bobcat (2.00.1)
 
   * George Danchev detected a compilation problem in ArgConfig's option3.cc:

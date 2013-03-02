@@ -28,7 +28,8 @@ class Log: private LogBuffer, public std::ostream
         size_t d_activeLevel;
 
     public:
-        static Log &getInstance();
+        static Log &instance();
+        static Log &getInstance();      // old-style interface: avoid
         static Log &initialize(std::string const &filename, 
                 std::ios::openmode = std::ios::out | std::ios::app, 
                 char const *delim = " ");
@@ -43,6 +44,7 @@ class Log: private LogBuffer, public std::ostream
                 std::ios::openmode = std::ios::out | std::ios::app, 
                 char const *delim = " ");
 
+        size_t level() const;
         std::ostream &level(size_t useLevel);
         void  setLevel(size_t newLevel);
         void  setTimestamp(TimeStamps timeStamp, char const *delim = " ");
@@ -56,6 +58,17 @@ inline void  Log::off()
 {
     setActive(false);
 }
+
+inline size_t Log::level() const
+{
+    return d_level;
+}
+
+inline Log &Log::instance()
+{
+    return getInstance();
+}
+
 
 } // FBB
 

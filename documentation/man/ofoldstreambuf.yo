@@ -1,0 +1,207 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::OFoldStreambuf)(3bobcat)(_CurYrs_)
+    (libbobcat1-dev__CurVers_-x.tar.gz)(Fold long lines)
+
+manpagename(FBB::OFoldStreambuf)(Folds long lines written to ostream)
+
+manpagesynopsis()
+    bf(#include <bobcat/ofoldstreambuf>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB::OFoldStreambuf) is a specialization of tt(FBB::OFilterStreambuf)
+folding long lines written to an tt(std::ostream) object. The
+tt(OFoldStreambuf) writes the (folded) lines to a second tt(ostream) (the
+em(destination stream) which is either used by or opened by the
+tt(OFoldStreambuf) object.
+
+    Internally the tt(OFoldStreambuf) defines its actions using a little
+finite state automation distinguishing three states (INDENT, WS and NON_WS)
+and three character categories (tt(\n), other white space characters (space),
+and non-space characters). The nine combinations resulting from these two sets
+are discussed below.
+
+    tt(OFoldStreambuf) objects will never fold lines in the middle of series
+of non-blank characters (called a `word' below) but will always break a line
+at a white space character. The resulting lines will always appear to the
+right of a configurable left margin and to the left of a configurable right
+margin. There is a somewhat pathological exception to this: if a word is too
+long to fit in between the margins then the word will exceed the right hand
+margin. 
+
+    The indentation used for the left margins is configurable to either blanks
+(the default) or tabs. When tabs are used the width of a tab character is
+configurable, using a default of 8 positions in the destination stream.
+
+    What follows is a description of the em(Finite State Automaton) (FSA)
+defining what happens when various character types appear at its three
+states. The phrase `... is written' means that the described information is
+written to the tt(ostream) used or opened by the tt(OFoldStreambuf)
+object. tt(OFoldStreambuf)'s initial state is tt(INDENT):
+
+DEFINEMACRO(rw)(3)(row(cell(ARG1)cell(ARG2)cell(ARG3)))
+
+table(3)(lll)(
+rw(State)(char.)(description)
+rowline()
+rw(INDENT)  (\n)      (a new line character is written)
+rw()        (space)   (the indentation is set;)
+                rw()()(the space character is added to the indentation;)
+                rw()()(next state: WS)
+rw()        (non-ws)  (the character is added to the currently stored word;)
+                rw()()(next state: NON_WS)
+rowline()
+rw(WS)      (\n)      (a new line character is written;)
+                rw()()(stored white-space is erased;)
+                rw()()(next state: INDENT)
+rw()        (space)   (white space character is added to the currently stored)
+                rw()()(space characters;)
+rw()        (non-ws)  (the character is added to the currently stored word;)
+                rw()()(next state: NON_WS)
+rowline()
+rw(NON_WS)  (\n)      (stored white space and word are written;)
+                rw()()(a new line is written;)
+                rw()()(next state: INDENT)
+rw()        (space)   (stored white space and word are written;)
+                rw()()(white space character is added to the currently stored)
+                rw()()(space characters;)
+                rw()()(next state: WS)
+rw()        (non-ws)  (the character is added to the currently stored word;)
+rowline()
+)
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    FBB::OFilterStreambuf
+
+manpagesection(ENUMERATION)
+    The enumeration tt(TabsOrBlanks) is used to select tabs or blanks when
+writing the indentation. The default is blanks. When tabs are selected the
+display width of tabs characters can be configured as well (using the default
+of 8 positions for each tab-character. The enumeration has two values:
+    itemization(
+    itb(BLANKS)
+        The default, indicating that the left margin is specified and written
+as a number of blanks;
+    itb(TABS)
+        Indicating that the left margin is specified and written as a number
+of tab-characters.
+    )
+
+    The enumeration tt(TrailingBlanks) is used to configure the
+tt(OFoldStreambuf) object with respect to any trailing blanks that may appear
+on the final line. These trailing blanks can appear on the final line it it is 
+not properly terminated with a newline character but instead ends in white
+space. By default these white space characters are ignored, but they may be
+kept as well. The enumeration has two values:
+    itemization(
+    itb(IGNORE_TRAILING_BLANKS)
+        This indicates that trailing blanks appearing at the final line if it
+is not terminated by a newline should not be written to the destination
+tt(std::ostream). This is the default used by tt(OFoldStreambuf) objects.
+    itb(KEEP_TRAILING_BLANKS)
+        This indicates that trailing blanks at the final line if it is not
+terminated by a newline should be written to the destination tt(std::ostream)
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(OFoldStreambuf(size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
+                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS))
+        This constructor initializes an tt(OFoldStreambuf) object but does not
+associate it with a destination stream. It can also be used as the default
+constructor. 
+
+    itb(OFoldStreambuf(char const *fname,
+                   size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
+                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS))
+    This constructor initializes an tt(OFoldStreambuf) object and opens (using
+tt(std::ios::out)) the destination stream using the name specified as its
+tt(fname) argument. 
+
+    itb(OFoldStreambuf(std::ostream &stream,
+                   size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
+                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS))
+    This constructor initializes an tt(OFoldStreambuf) object and uses as its
+destination stream the tt(std::ostream stream).
+    )
+
+    The destructor writes any buffered information to the destination stream
+and will then flush the destination stream.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(FBB::OFilterStreambuf), in particular its tt(out()) and
+tt(open()) members are available, as bf(FBB::OFoldStreambuf) inherits from
+this class.
+    itemization(
+    itb(void setMargins(size_t leftMargin, size_t rightMargin))
+        This member can be used to modify the left- and right folding
+margins. Note that the left margin may also be modified using the tt(FBB::lm)
+and tt(FBB::mlm) manipulators.
+
+    itb(void setTrailingBlanks(TrailingBlanks tb))
+        This member can be used to modify the currently used
+tt(TrailingBlanks) parameter.
+
+    itb(void useBlanks())
+        This member can be used to select blanks  to be used when inserting
+left margins.
+
+    itb(void useTabs(size_t tabWidth = 8))
+        This member can be used to select tab-characters to be used when
+inserting left margins. The second parameter is used to specify the display
+width of a tab-character.
+    )
+
+manpagesection(PROTECTED MEMBER FUNCTIONS)
+    itemization(
+    itb(int sync()) 
+        This member writes all buffered information to the destination stream
+and will then flush the destination stream.
+    itb(int overflow(int ch)) 
+    This member function implements the FSA mentioned in the bf(DESCRIPTION)
+section. 
+    ) 
+
+manpagesection(EXAMPLE)
+        verb(
+    #include <iostream>
+    #include <ostream>
+    #include <string>
+    #include <bobcat/ofoldstreambuf>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main()
+    {
+        OFoldStreambuf fb(cout, 4, 40);
+        ostream out(&fb);
+
+        out << lm(4);
+
+        string line;
+        while (getline(cin, line))
+            out << line << '\n';
+    
+        return 0;
+    }
+        )
+
+manpagefiles()
+    em(bobcat/ofoldstreambuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7),  bf(lm)(3bobcat), bf(mlm)(3bobcat),
+    bf(ofilterstreambuf)(3bobcat), bf(ofoldstream)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)
