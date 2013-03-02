@@ -18,6 +18,10 @@ EncryptBuf::EncryptBuf(ostream &outStream, char const *type,
             throw Errno(1, "EncryptBuf `") << insertable << type << 
                                             "' not available" << throwable;
         }
+
+        size_t keyLength = key.length();
+        if (keyLength > EVP_MAX_KEY_LENGTH)
+            keyLength = EVP_MAX_KEY_LENGTH;
     
         key.resize(EVP_MAX_KEY_LENGTH);
         iv.resize(EVP_MAX_IV_LENGTH);
@@ -27,10 +31,12 @@ EncryptBuf::EncryptBuf(ostream &outStream, char const *type,
         if 
         (
             !EVP_EncryptInit_ex(&d_pimpl->ctx, d_pimpl->md, 0,
-                reinterpret_cast<unsigned char const *>(key.data()), 
+                0, // no key yet, is entered next
                 reinterpret_cast<unsigned char const *>(iv.data()))
         )
             throw Errno(1, "EncryptBuf: initialization failed");
+
+        installKey(key, keyLength);
     
         d_pimpl->buffer = new char[bufsize];
         d_pimpl->out = new char[

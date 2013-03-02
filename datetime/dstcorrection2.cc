@@ -3,8 +3,6 @@
 int DateTime::dstCorrection(bool *ok) const
 {
     TimeStruct ts;
-
-
     TimeStruct *ret =  localtime_r(&d_utcSec, &ts);
 
     if (ret == 0)    // 0: can't compute

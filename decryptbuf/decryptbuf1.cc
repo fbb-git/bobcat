@@ -19,9 +19,9 @@ DecryptBuf::DecryptBuf(ostream &outStream, char const *type,
                                             "' not available" << throwable;
         }
 
-        if (iv.empty())
-            throw Errno(1, 
-                "Decryptbuf: initialization vector cannot be empty");
+        size_t keyLength = key.length();
+        if (keyLength > EVP_MAX_KEY_LENGTH)
+            keyLength = EVP_MAX_KEY_LENGTH;
 
         key.resize(EVP_MAX_KEY_LENGTH);
         iv.resize(EVP_MAX_IV_LENGTH);
@@ -31,11 +31,13 @@ DecryptBuf::DecryptBuf(ostream &outStream, char const *type,
         if
         (
             !EVP_DecryptInit_ex(&d_pimpl->ctx, d_pimpl->md, 0,
-                reinterpret_cast<unsigned char const *>(key.data()), 
+                0, // no key yet, is entered next
                 reinterpret_cast<unsigned char const *>(iv.data()))
         )
             throw Errno(1, "DecryptBuf: initialization failed");
     
+        installKey(key, keyLength);
+
         d_pimpl->buffer = new char[bufsize];
         d_pimpl->out = new char[
             bufsize + EVP_CIPHER_CTX_block_size(&d_pimpl->ctx)];
