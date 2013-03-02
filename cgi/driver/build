@@ -13,7 +13,7 @@ case $1 in
                 g++ --std=c++0x -I../../tmp -o ${NAME}.o -c $x || exit 1
             fi
         done
-        g++ --std=c++0x -static -o driver *.o -L../../tmp/lib -lbobcat
+        g++ --std=c++0x -o driver *.o -L../../tmp/lib -lbobcat
     ;;
     (lib)
         for x in *.cc 
@@ -30,7 +30,7 @@ case $1 in
     (*)
     echo "
 Usage: 
-    build tmp   - build the driver using the static library created in
+    build tmp   - build the driver using the shared library created in
                   ../../tmp/lib
     build lib   - build the driver using the shared bobcat library installed
                   in the standard location for shared libs

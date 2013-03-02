@@ -4,7 +4,8 @@ string String::lc(string const &str)
 {
     string ret(str);
 
-    for_each(ret.begin(), ret.end(), String::tolower);
+    for (auto &ch: ret)
+        tolower(ch);
 
     return ret;
 }

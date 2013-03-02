@@ -30,7 +30,7 @@ class Ranger
 };
 
 template <typename Iter>
-Ranger<Iter> ranger(Iter const &begin, Iter const &end)
+Ranger<Iter> ranger(Iter &&begin, Iter &&end)
 {
     return Ranger<Iter>(begin, end);
 }
@@ -42,7 +42,7 @@ Ranger<Data *> ranger(Data *begin, Data *end)
 }
 
 template <typename Iter>
-Ranger<Iter> ranger(Iter const &begin, size_t count)
+Ranger<Iter> ranger(Iter &&begin, size_t count)
 {
     return Ranger<Iter>(begin, begin + count);
 }
