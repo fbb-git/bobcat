@@ -126,9 +126,11 @@ the tt(CERR) specification can be omitted  (but note tt(IGNORE_ALL) below).
 the child process to its standard output stream.  If this is not required then
 the tt(COUT) specification can be omitted (but note tt(IGNORE_ALL) below).
         itb(DIRECT) 
-           The current process is replaced by the child process, using the
-standard input and output streams. When this mode is specified in combination
-with other tt(IOMode) values an tt(std::invalid_argument) exception is thrown.
+           When starting the child process (see below at the member tt(start))
+the current process is replaced by the child process, inheriting the current
+process's standard input and output streams. When this mode is specified in
+combination with other tt(IOMode) values (except for tt(STD), see below) an
+tt(std::invalid_argument) exception is thrown.
         itb(IGNORE_ALL)
             Deprecated. Use tt(STD) (see below) instead. This symbolic
 enumeration value will be removed in a future tt(Bobcat) release.
@@ -148,8 +150,7 @@ the child process to its standard output and standard error streams.
 information into the standard streams of its child process. The child process
 read from the same standard input stream and write to the same standard output
 streams as used by its parent tt(Process) object. When this mode is specified
-in combination with other tt(IOMode) values an tt(std::invalid_argument)
-exception is thrown.
+in combination with other tt(IOMode) values it is silently ignored.
             )
     The tt(IOMode) enumeration also defines the enumeration values bf(IN_PIPE,
 OUT_PIPE) and bf(CLOSE_ON_EXEC). These enumeration values are ignored when

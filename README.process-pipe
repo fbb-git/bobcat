@@ -1,0 +1,71 @@
+This file contains a description of the operations of the Process::operator|
+function. There is an accompanying file process-pipe.odp (and its
+pdf-equivalent: process-pipe.pdf) that illustrates the steps described below.
+
+Assuming we're calling (p1|p2|p3).start() and that p1 is defined with the CIN
+flag and p3 with the COUT flag, the following happens (the numbers refer to
+the odp slides / pdf pages):
+
+
+1. P1 and P2 are passed to operator| as, resp. their lhs and rhs parameters.
+
+    Process objects have two FBB::Pipe objects that are relevant here:
+    oChildIn is the Pipe written to by the parent process and read by its
+    child using stdin; iChildOut is the Pipe read by the parent process and
+    written to by its child when writing its stdout.
+
+2. operator| calls lhs.start(). 
+
+    Since lhs is the first process for which operator| is called (which can be
+    deducted by operator| as lhs does not have the PIPE_IN flag set) it sets
+    it CLOSE_ON_EXEC flag. This flag will cause lhs's oChildIn writing end of
+    the pipe to close with future child processes.
+
+    Why is this necessary? When later on the rhs process starts its child, it
+    will contain a copy of all the parent's data. This includes, as lhs and
+    rhs are both objects of the same main program, lhs's oChildIn. If lhs's
+    oChildIn wouldn't be closed by rhs's child process then an open pipe to
+    the lhs's child's input stream would remain available preventing the lhs's
+    child process from ending at end-of-input.
+
+    The start() function sets up the redirections: from the parent to its
+    child, as shown in page/slide 2.
+
+3. operator| copies lhs.iChildOut to rhs.oChildIn
+    
+    This too looks initially looks a but weird as an (for the parent) IN-pipe
+    is copied to an OUT-pipe. However, when rhs.start() is called its child
+    receives a copy of its parent oChildIn from which the child will read. So,
+    the rhs parent never uses its oChildIn pipe for reading, but rhs's child
+    process does. As rhs.oChildIn itself is lhs's iChildOut, rhs's child
+    process will actually read the lhs's child process's output, setting up
+    the pipe between lhs and rhs.
+
+4. Next p2 and p3 are passed to operator|. 
+
+    Now p2 acts as lhs, p3 as rhs
+
+5. operator| calls lhs.start()
+
+    This is the point where lhs's child also receives p1's oChildIn pipe,
+    which is now automatically closed due to its CLOEXEC flag.
+        Note: not all operating systems, in particularly FreeBSD flavors,
+            support the CLOEXEC fntl flag, even though it's been defined by
+            POSIX since 2008. For those systems Process offers a work-around.
+
+    The child redirections are standard, so the child reads oChildIn, which in
+    fact is the output from p1's child; the parents obtains its child's output
+    from its iChildOut pipe.
+
+6. The lhs's iChildOut pipe is assigned to the rhs's oChildIn.
+
+    Same reason as given at 3.
+
+7. (p1|p2|p3).start() starts p3's child process.
+
+    Once again the child process receives a copy of p1's oChildIn, which is
+    again closed because of its CLOEXEC flag.
+
+Now, when the information inserted into p1 ends its oChildIn writing pipe is
+closed, informing p1's child that its input has been exhausted and the child
+process properly terminates.

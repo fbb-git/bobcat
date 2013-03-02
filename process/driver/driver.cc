@@ -1,5 +1,8 @@
-#include <bobcat/process>
-//#include "process"
+#ifdef BOBCAT
+    #include <bobcat/process>
+#else
+    #include "process"
+#endif
 
 #include <string>
 #include <iostream>
