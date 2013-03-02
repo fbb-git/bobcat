@@ -6,7 +6,7 @@ ostream &operator<<(ostream &str, LogManipulator manipulator)
     {
         case FATAL:
             str.flush();
-        exit(1);    
+        throw Errno(1);                     // was: exit(1) :-(
 
         case nl:
             str << static_cast<char>(0);    // 0-char is interpreted by
