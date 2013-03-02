@@ -1,9 +1,10 @@
 #ifndef _INCLUDED_BOBCAT_LOCALSERVERSOCKET_
 #define _INCLUDED_BOBCAT_LOCALSERVERSOCKET_
 
+#include <string>
+
 #include <bobcat/localsocketbase>
 #include <bobcat/errno>
-#include <string>
 
 namespace FBB
 {
@@ -31,9 +32,9 @@ namespace FBB
                                                         throw (Errno);
             ~LocalServerSocket();
 
-            void listen(unsigned backlog = 5, bool blocking = true)  
+            void listen(size_t backlog = 5, bool blocking = true)  
                                                                 throw (Errno);
-            unsigned accept() throw (Errno);
+            size_t accept() throw (Errno);
 
         private:
             LocalServerSocket(LocalServerSocket const &other);  // NI

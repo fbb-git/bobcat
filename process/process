@@ -37,9 +37,9 @@ class Process: private Fork, public IOStream
 
     int             d_ret;              // return value of last executed
                                         // process 
-    unsigned        d_mode;
-    unsigned        d_processType;
-    unsigned        d_waitSeconds;      // seconds to wait for 
+    size_t        d_mode;
+    size_t        d_processType;
+    size_t        d_waitSeconds;      // seconds to wait for 
                                         // child-termination
     public:
         enum Program
@@ -60,12 +60,12 @@ class Process: private Fork, public IOStream
 
             MERGE_COUT_CERR = 1 << 5,
         };
-        typedef unsigned iomode;
+        typedef size_t iomode;
 
         Process(std::string const &command = "", 
                 iomode mode = CIN | COUT | CERR);
                                                 
-        Process(unsigned waitSeconds, std::string const &command = "", 
+        Process(size_t waitSeconds, std::string const &command = "", 
                 iomode mode = CIN | COUT | CERR);
 
                                                 
@@ -79,7 +79,7 @@ class Process: private Fork, public IOStream
             start(1, mode, program);
         }
 
-        void start(unsigned waitSeconds, 
+        void start(size_t waitSeconds, 
             iomode mode, Program program = NO_PATH);
 
         virtual ~Process()
@@ -97,7 +97,7 @@ class Process: private Fork, public IOStream
             return d_childCerr;
         }
 
-        unsigned available();
+        size_t available();
 
         void system()
         {
@@ -109,14 +109,14 @@ class Process: private Fork, public IOStream
             start(mode, USE_SHELL);
         }
 
-        unsigned wait();
-        unsigned wait(unsigned sec, unsigned msec = 0);
+        size_t wait();
+        size_t wait(size_t sec, size_t msec = 0);
 
     private:
         struct ExecContext
         {
             bool ok;                // true: status is ok
-            unsigned argc;          // must eventually be at least 1
+            size_t argc;          // must eventually be at least 1
             char const *message;    // only set if !ok
             char const **args;      // 0-terminated array of pointers to the 
                                     // arguments
@@ -134,7 +134,7 @@ class Process: private Fork, public IOStream
         virtual void childProcess();
 
         void setPipes(iomode mode);
-        unsigned whichStream();
+        size_t whichStream();
 
         void init(std::string const &command, iomode mode);
 

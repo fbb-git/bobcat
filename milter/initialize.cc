@@ -31,7 +31,7 @@ void Milter::initialize(string const &name, Milter &milter,
                                             // function
     callbacks |= CLOSE;                     // always call mClose()
 
-    for (unsigned callback = 1; callback & ALL_CALLBACKS; callback <<= 1)
+    for (size_t callback = 1; callback & ALL_CALLBACKS; callback <<= 1)
     {
         switch (callback & callbacks)
         {

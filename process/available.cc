@@ -1,6 +1,6 @@
 #include "process.ih"
 
-unsigned Process::available()
+size_t Process::available()
 {
     d_selector.setAlarm(0);
     return whichStream();

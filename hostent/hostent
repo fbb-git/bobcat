@@ -12,8 +12,8 @@ class Hostent: private hostent
         char const *p1;
     };
 
-    unsigned d_nAliases;
-    unsigned d_nAddresses;
+    size_t d_nAliases;
+    size_t d_nAddresses;
             
     public:
         Hostent();
@@ -30,11 +30,11 @@ class Hostent: private hostent
 
         Hostent &operator=(Hostent const &other);
 
-        char const *alias(unsigned nr) const
+        char const *alias(size_t nr) const
         {
             return nr >= d_nAliases ? 0 : h_aliases[nr];
         }
-        char const *binaryAddress(unsigned nr) const    // length bytes!
+        char const *binaryAddress(size_t nr) const    // length bytes!
         {
             return nr >= nAddresses() ? 0 : h_addr_list[nr];
         }
@@ -43,7 +43,7 @@ class Hostent: private hostent
             return h_aliases;
         }
 
-        std::string dottedDecimalAddress(unsigned nr) const;
+        std::string dottedDecimalAddress(size_t nr) const;
 
         char const * const *endAlias() const
         {
@@ -53,33 +53,33 @@ class Hostent: private hostent
         {
             return h_name;
         }
-        unsigned nAliases() const
+        size_t nAliases() const
         {
             return d_nAliases - 1;
         }
-        unsigned nAddresses() const
+        size_t nAddresses() const
         {
             return d_nAddresses - 1;
         }
-        unsigned addressLength() const
+        size_t addressLength() const
         {
             return h_length;
         }
-        unsigned addressType() const
+        size_t addressType() const
         {
             return h_addrtype;
         }
     private:
         static char *xstrdup(char const *src);
 
-        void copy(hostent const *other, unsigned n_aliases, 
-                                         unsigned n_addresses);
+        void copy(hostent const *other, size_t n_aliases, 
+                                         size_t n_addresses);
         void destroy();
                                             // the count functions also count
                                             // the final 0-values.
-        unsigned countAliases(char const * const *alias) const;
-        unsigned countAddresses(char const * const *addresses, 
-                                            unsigned length) const;
+        size_t countAliases(char const * const *alias) const;
+        size_t countAddresses(char const * const *addresses, 
+                                            size_t length) const;
 };
 
         

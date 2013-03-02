@@ -1,6 +1,6 @@
 #include "tablespec.ih"
 
-TableSpec::TableSpec(unsigned nColumns,
+TableSpec::TableSpec(size_t nColumns,
                         FillDirection direction)
 :
     d_tableSupportPtr(new TableSupport()),

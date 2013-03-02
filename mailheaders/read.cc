@@ -1,10 +1,5 @@
 #include "mailheaders.ih"
 
-#ifndef _SYSINC_IOSTREAM_
-#include <iostream>
-#define _SYSINC_IOSTREAM_
-#endif
-
 void MailHeaders::read()
 {
     static char funName[] = "MailHeaders::read()";

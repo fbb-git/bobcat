@@ -1,11 +1,5 @@
-#ifndef _SYSINC_IOSTREAM_
-#include <iostream>
-#define _SYSINC_IOSTREAM_
-#endif
-#ifndef _SYSINC_IOMANIP_
-#include <iomanip>
-#define _SYSINC_IOMANIP_
-#endif
+// #include <iostream>
+// #include <iomanip>
 
 #include "pattern.ih"
 

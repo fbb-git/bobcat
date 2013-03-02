@@ -16,25 +16,25 @@ void optcheck(char c)
 {
     Arg &arg = Arg::instance();
 
-    if (unsigned count = arg.option(c))
+    if (size_t count = arg.option(c))
         cout << "Saw option " << c << " " << count << " times" << endl;
 
     if (string("def").find(c) != string::npos)
     {
         string value;
-        unsigned idx;
+        size_t idx;
 
         arg.option(&value, c);
         cout << "First option value of " << c << " is " << value << endl;
 
-        unsigned count = arg.option(&idx, &value, c);
+        size_t count = arg.option(&idx, &value, c);
         cout << count << " times option " << c << endl;
         if (idx == count)
             cout << "No non-empty option values" << endl;
         else
         {
             cout << "First non-empty option at " << idx << endl;
-            for (unsigned ix = 0; ix < count; ++ix)
+            for (size_t ix = 0; ix < count; ++ix)
             {
                 arg.option(ix, &value, c);
                 cout << ix << ": " << value << endl;
@@ -49,7 +49,7 @@ void longopt(char const *longOpt)
     string value;
     Arg &arg = Arg::instance();
 
-    unsigned opt =  arg.option(&value, longOpt);
+    size_t opt =  arg.option(&value, longOpt);
     if (!opt)
         return;
 
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
         for_each("abcdefg", "abcdefg" + 7, optcheck)
             ;
 
-        for (unsigned idx = 0; idx < arg.nArgs(); idx++)
+        for (size_t idx = 0; idx < arg.nArgs(); idx++)
             cout << "Argument " << idx << " = " << arg[idx] << endl;
 
         cout << "Long options:\n" << dec;

@@ -1,7 +1,7 @@
 #include "pattern.ih"
 
 void Pattern::setPattern(string const &pattern, 
-        bool caseSensitive, unsigned nSub, int options) throw (Errno)
+        bool caseSensitive, size_t nSub, int options) throw (Errno)
 {
     delete [] d_subExpression;
     d_subExpression =   new regmatch_t[nSub];

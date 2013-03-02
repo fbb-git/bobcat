@@ -10,7 +10,7 @@ MailHeaders::const_iterator
 
     if (d_match != FAIL)
     {
-        unsigned idx = lookup(d_hdr.c_str(), d_match);
+        size_t idx = lookup(d_hdr.c_str(), d_match);
              
         if (idx != string::npos)
             return where == BEGIN ? 

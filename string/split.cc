@@ -1,6 +1,6 @@
 #include "string.ih"
 
-unsigned String::split(std::vector<std::string> *words, 
+size_t String::split(std::vector<std::string> *words, 
                 char const *sep, bool addEmpty) const
 {
     words->clear();

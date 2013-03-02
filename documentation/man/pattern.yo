@@ -65,7 +65,7 @@ bf(setPattern()) (see below). An bf(FBB::Errno) object is thrown if the object
 could not be constructed.
     itb(Pattern(std::string const &pattern, 
                             bool caseSensitive = true, 
-                            unsigned nSub = 10,
+                            size_t nSub = 10,
                         int options = REG_EXTENDED | REG_NEWLINE))
         This constructor compiles tt(pattern), preparing the bf(FBB::Pattern)
 object for pattern matches. The second parameter determines whether case
@@ -118,7 +118,7 @@ matched text.
     itb(std::string beyond() const)
         Following a successful match, bf(beyond()) returns the text beyond the
 matched text.
-    itb(unsigned end() const)
+    itb(size_t end() const)
         Returns the number of matched elements (text and
 subexpressions). bf(end()) is the lowest index value for which bf(position())
 returns two tt(std::string::npos) values (see the bf(position()) member
@@ -141,14 +141,14 @@ Options may be:
                     match  (but  see  the  compilation flag REG_NEWLINE)
     itb(std::string matched() const)
         Following a successful match, this function returns the matched text.
-    itb(Pattern::Position position(unsigned index) const) 
+    itb(Pattern::Position position(size_t index) const) 
         With em(index == 0) the fully matched text is returned (identical to
 tt(matched())). Other index values return the corresponding
 subexpressions. bf(std::string::npos, std::string::npos) is returned if index
 is at least bf(end()) (which may happen at index value 0).
     itb(void setPattern(std::string const &pattern, 
                             bool caseSensitive = true, 
-                            unsigned nSub = 10,
+                            size_t nSub = 10,
                         int options = REG_EXTENDED | REG_NEWLINE))
         This member function installs a new  compiled tt(pattern) in its
 bf(FBB::Pattern) object. This member's parameters are identical to the second
@@ -162,7 +162,7 @@ manpagesection(OVERLOADED OPERATORS)
     itemization(
     itb(Pattern &operator=(Pattern &other)) 
         A standard overloaded assignment operator.
-    itb(std::string operator[](unsigned index) const)
+    itb(std::string operator[](size_t index) const)
         Returns the matched text (for index 0) or the text of a
 subexpression. An empty string is returned for index values which are at least
 bf(end()).

@@ -19,14 +19,14 @@ int main(int argc, char **argv)
 
     Glob general;
 
-    for (unsigned idx = 0; idx < general.size(); idx++)
+    for (size_t idx = 0; idx < general.size(); idx++)
         cout << idx << ": " << general[idx] << endl;
 
     cout << "Pattern: " << argv[1] << "\n";
 
     Glob pattern(argv[1], Glob::PERIOD, Glob::DEFAULT);
 
-    for (unsigned idx = 0; idx < pattern.size(); idx++)
+    for (size_t idx = 0; idx < pattern.size(); idx++)
         cout << idx << ": " << pattern[idx] << endl;
 
     return 0;

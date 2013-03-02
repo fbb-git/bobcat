@@ -9,7 +9,7 @@ Process::ExecContext Process::analyzeCommand()
     vector<String::SplitPair> elements;     // destination for the command's
                                             // elements,
     
-    unsigned count = args.split(&elements); // now extract the elements
+    size_t count = args.split(&elements); // now extract the elements
     
                                             // set up a process struct
     ExecContext ec = {true, 0, 0, new char const *[count + 1]};

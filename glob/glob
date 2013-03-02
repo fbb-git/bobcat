@@ -12,7 +12,7 @@ namespace FBB
         struct GlobShare
         {
             glob_t      globStruct;
-            unsigned    users;
+            size_t    users;
         };
     
         GlobShare *d_share;
@@ -45,11 +45,11 @@ namespace FBB
                 destroy();
             }
             Glob &operator=(Glob const &other);
-            unsigned size() const
+            size_t size() const
             {
                 return d_share->globStruct.gl_pathc;
             }
-            char const *operator[](unsigned idx) const
+            char const *operator[](size_t idx) const
             {
                 return idx < size() ? d_share->globStruct.gl_pathv[idx] : "";
             }

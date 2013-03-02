@@ -2,7 +2,7 @@
 
 int IFdStreambuf::underflow()
 {
-            // the static_cast<unsigned char> is required to prevent
+            // the static_cast<size_t char> is required to prevent
             // promotions of 0xff characters to -1, thus returning EOF...
 
     if (gptr() < egptr())               

@@ -1,6 +1,6 @@
 #include "pattern.ih"
 
-Pattern::Pattern(string const &pattern, bool caseSensitive, unsigned nSub,
+Pattern::Pattern(string const &pattern, bool caseSensitive, size_t nSub,
                  int options) throw (Errno)
 :
     d_subExpression(new regmatch_t[nSub]),

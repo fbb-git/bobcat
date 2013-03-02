@@ -1,6 +1,6 @@
 #include "serversocket.ih"
 
-void ServerSocket::listen(unsigned backlog, bool blocking) throw (Errno)
+void ServerSocket::listen(size_t backlog, bool blocking) throw (Errno)
 {
     static char name[] = "ServerSocket::listen()";
 

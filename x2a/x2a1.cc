@@ -1,6 +1,6 @@
 #include "x2a.ih"
 
-X2a::X2a(double x, unsigned behind)
+X2a::X2a(double x, size_t behind)
 {
     double power = pow(10, static_cast<double>(behind));
     *this << round(x * power) / power;

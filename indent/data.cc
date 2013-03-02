@@ -1,5 +1,5 @@
 #include "indent.ih"
 
-unsigned Indent::s_width = 0;
-unsigned Indent::s_inc = 4;
+size_t Indent::s_width = 0;
+size_t Indent::s_inc = 4;
 

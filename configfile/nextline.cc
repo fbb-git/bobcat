@@ -2,7 +2,7 @@
 
 bool ConfigFile::nextLine(istream &istr, string &line)
 {
-    unsigned n_continuations;
+    size_t n_continuations;
 
     while (getline(istr, line))
     {
@@ -18,7 +18,7 @@ bool ConfigFile::nextLine(istream &istr, string &line)
         n_continuations = 0;
         while (true)
         {
-            unsigned lastChar = line.length() - 1;   // the last char
+            size_t lastChar = line.length() - 1;   // the last char
     
             if (line[lastChar] != '\\')             // not '\\' ?
                 break;                              // then done here

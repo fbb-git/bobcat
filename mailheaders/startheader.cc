@@ -3,14 +3,14 @@
 MailHeaders::HdrLine *MailHeaders::startHeader(string const &line)
 {
                                                     // find the end of the   
-    unsigned pos = line.find_first_of(" \t");       // header label
+    size_t pos = line.find_first_of(" \t");       // header label
 
     if (pos == string::npos)                        // no found: only a label
         pos = line.length();
 
     string label = line.substr(0, pos);             // grab the label
 
-    unsigned index = lookup(label.c_str(), FULL);   // find its index
+    size_t index = lookup(label.c_str(), FULL);   // find its index
 
     if (index == string::npos)                      // label not found
     {

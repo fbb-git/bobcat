@@ -5,11 +5,11 @@ namespace
     char const escapeChars[] = "abfnrtv";
     char const escapeValue[] = {'\a', '\b', '\f', '\n', '\r', '\t', '\v'};
 
-    unsigned handleOctal(String *dest, String const &src, unsigned pos)
+    size_t handleOctal(String *dest, String const &src, size_t pos)
     {
-        unsigned const nOct = 3;                // need exactly 3 octals
+        size_t const nOct = 3;                // need exactly 3 octals
 
-        unsigned pos2 = min(pos + nOct, 
+        size_t pos2 = min(pos + nOct, 
                             src.find_first_not_of("01234567", pos));
 
         if (pos2 != pos + nOct)                 // need exactly nOct octals
@@ -20,18 +20,18 @@ namespace
 
         A2x a2x(src.substr(pos, nOct));
 
-        unsigned ch;
+        size_t ch;
         a2x >> oct >> ch;                       // convert substr. to octal
         *dest += static_cast<char>(ch);         // append the octal value
         return pos2;                            // pos. of next to handle
     }
 
-    unsigned handleHex(String *dest, String const &src, unsigned pos)
+    size_t handleHex(String *dest, String const &src, size_t pos)
     {
-        unsigned const nHex = 2;                // need exactly 2 hex digits
+        size_t const nHex = 2;                // need exactly 2 hex digits
 
         ++pos;                                  // skip the 'x'
-        unsigned pos2 = min(pos + nHex, 
+        size_t pos2 = min(pos + nHex, 
                             src.find_first_not_of("01234567ABCDEF", pos));
 
         if (pos2 != pos + nHex)
@@ -41,7 +41,7 @@ namespace
         }
 
         A2x a2x(src.substr(pos, nHex));
-        unsigned ch;
+        size_t ch;
         a2x >> hex >> ch;                       // convert substr. to hex
         *dest += static_cast<char>(ch);         // append the hex value
         return pos2;                            // pos. of next to handle
@@ -52,8 +52,8 @@ String String::unescape() const
 {
     String ret;
 
-    unsigned prefix = 0;                    // prefix text before \-char
-    unsigned pos = 0;
+    size_t prefix = 0;                    // prefix text before \-char
+    size_t pos = 0;
 
     while (true)
     {

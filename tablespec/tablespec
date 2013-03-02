@@ -35,15 +35,15 @@ class TableSpec
     private:
         TableSupport           *d_tableSupportPtr;
         TableSupport           &d_tableSupport;
-        unsigned                d_maxWidth;
-        unsigned                d_nRows;
-        unsigned                d_nColumns;
+        size_t                d_maxWidth;
+        size_t                d_nRows;
+        size_t                d_nColumns;
         WidthType               d_widthType;
-        std::vector<unsigned>   d_colWidth;
-        unsigned               (TableSpec::*d_widthFun)
-                                        (unsigned col) const;
+        std::vector<size_t>   d_colWidth;
+        size_t               (TableSpec::*d_widthFun)
+                                        (size_t col) const;
         std::string const     &(TableSpec::*d_indexFun)
-                                        (unsigned row, unsigned col) const;
+                                        (size_t row, size_t col) const;
 
     protected:
         std::vector<std::string> d_string;
@@ -52,10 +52,10 @@ class TableSpec
         void setWidth(WidthType type);
         
     protected:
-        TableSpec(TableSupport &tableSupport, unsigned nColumns,
+        TableSpec(TableSupport &tableSupport, size_t nColumns,
                     FillDirection direction);
 
-        TableSpec(unsigned nColumns, FillDirection direction);
+        TableSpec(size_t nColumns, FillDirection direction);
 
         ~TableSpec()
         {
@@ -65,30 +65,30 @@ class TableSpec
 
     private:
         std::ostream &insert(std::ostream &ostr) const;
-        unsigned width(unsigned col) const  // returns correct column width,
+        size_t width(size_t col) const  // returns correct column width,
         {                                   // given d_widthType
             return (this->*d_widthFun)(col);
         }
 
-        unsigned maxWidth(unsigned) const
+        size_t maxWidth(size_t) const
         {
             return d_maxWidth;
         }
-        unsigned columnWidth(unsigned col) const
+        size_t columnWidth(size_t col) const
         {
             return d_colWidth[col];
         }
                                     // returns string at particular location
-        std::string const &stringAt(unsigned row, unsigned col) const
+        std::string const &stringAt(size_t row, size_t col) const
         {
             return (this->*d_indexFun)(row, col);
         }
 
-        std::string const &hIndex(unsigned row, unsigned col) const
+        std::string const &hIndex(size_t row, size_t col) const
         {
             return d_string[row * d_nColumns + col];
         }
-        std::string const &vIndex(unsigned row, unsigned col) const
+        std::string const &vIndex(size_t row, size_t col) const
         {
             return d_string[col * d_nRows + row];
         }
@@ -99,20 +99,3 @@ class TableSpec
 } // FBB
 
 #endif
-/*
-    unsigned (TableSpec::*d_tableWidthFun)() const;
-
-        void updateColumn(unsigned col, unsigned width);
-
-        unsigned maxWidth() const
-        {
-            return d_maxWidth * d_nColumns;
-        }
-        unsigned columnSum() const;
-
-        unsigned tableWidth() const
-        {
-            return (this->*d_tableWidthFun)();
-        }
-
-*/
