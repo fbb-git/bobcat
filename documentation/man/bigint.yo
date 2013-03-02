@@ -194,11 +194,14 @@ manpagesection(MEMBER FUNCTIONS)
     itb(BigInt &isqrt())
        The current object's integer square root value is assigned to the
         current object. The integer square root of a value tt(x) is the
-        smallest integral value whose square does not exceed tt(x). E.g.,
-        tt(isqrt(17) == 4).
+        biggest integral value whose square does not exceed tt(x). E.g.,
+        tt(isqrt(17) == 4). An tt(Errno) exception is thrown if the current
+        object's value is smaller than one.
 
     itb(BigInt isqrtc() const)
-      The integer square root of the current object is returned.
+        The integer square root of the current object is returned. An
+        tt(Errno) exception is thrown if the current object's value is smaller
+        than one.  
 
     itb(bool isZero() const)
        Returns tt(true) if the current object equals zero (0).
