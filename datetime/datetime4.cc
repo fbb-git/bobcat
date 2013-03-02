@@ -1,9 +1,9 @@
 #include "datetime.ih"
 
-DateTime::DateTime(int displayZoneShift)
+DateTime::DateTime(time_t time, int displayZoneShift)
 :
     d_type(LOCALTIME),
-    d_time(::time(0))
+    d_time(time)
 {
     zoneCorrection();
 

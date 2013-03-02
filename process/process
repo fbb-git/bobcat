@@ -26,7 +26,6 @@ class Process: private Fork, public IOStream
             USE_PATH,
             USE_SHELL
         };
-    typedef ProcessType Program;        // OBSOLETE: removed shortly
 
     private:
         bool            d_active;
@@ -99,11 +98,6 @@ class Process: private Fork, public IOStream
         Process(iomode mode, ProcessType type, size_t timeLimit,      // 4
                                     std::string const &command = "");
 
-                                            // OBSOLETE                 // obs
-        Process(std::string const &command, iomode mode);
-        Process(size_t timeLimit, std::string const &command, iomode mode);
-
-                
         virtual ~Process();                 // stop()s any ongoing process
 
         iomode ioMode() const;              // returns default IOMode
@@ -112,7 +106,6 @@ class Process: private Fork, public IOStream
 
         void setIOMode(iomode mode);            // change IOMode
 
-        void setPath(ProcessType type);         // OBS: use setProcessType
         void setProcessType(ProcessType type);
 
         void setTimeLimit(size_t timeLimit);    // for the next cmd to start
@@ -162,11 +155,6 @@ class Process: private Fork, public IOStream
         int waitForChild();                     // cf. manpage
 
                                 
-        size_t wait();                      // OBSOLETE     
-        size_t wait(size_t sec, size_t msec = 0);
-
-
-
     private:
         virtual void childProcess();
         virtual void childRedirections();
