@@ -19,7 +19,7 @@ struct CaseHash
 };
 inline size_t CaseHash::operator()(std::string const &key) const
 {
-    return std::hash<std::string const &>()(FBB::String::lc(key));
+    return std::hash<std::string>()(FBB::String::lc(key));
 }
 
 struct CaseEqual
@@ -152,9 +152,9 @@ inline HashCharCasePtr<Value> &HashCharCasePtr<Value>::operator=(
 // ===========================================
 
 template<typename Value>
-class HashString: public std::unordered_map< std::string, Value>
+class HashString: public std::unordered_map<std::string, Value>
 {
-    typedef std::unordered_map< std::string, Value> BaseClass;
+    typedef std::unordered_map<std::string, Value> BaseClass;
 
     public:
         typedef typename BaseClass::value_type value_type;

@@ -1,0 +1,102 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Ranger)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Error handler)
+
+manpagename(FBB::Ranger)(generalizes ranges for range-based for-loops)
+
+manpagesynopsis()
+    bf(#include <bobcat/ranger>)nl()
+
+manpagedescription()
+
+The tt(Ranger) class template defines ranges that can be used with range-based
+for-loops. The standard range-based for-loop requires for its
+range-specificiation an array or an iterator range as offered by, e.g.,
+containers (through their tt(begin) and tt(end) members. Ranges defined by a
+pair of pointers or by a subrange defined by iterator expressions cannot
+currently be used in combination with range-based for-loops. 
+
+tt(Ranger) extends the applicability of range-based for-loops by turning pairs
+of pointers, an initial pointer and a pointer count, or a pair of iterators
+into a range that can be used by range-based for-loops.
+
+tt(Ranger) is a class template requiring one template type parameter:
+tt(Iterator), an iterator or pointer type reaching the data when dereferenced.
+
+tt(Ranger)'s users don't have to specify tt(Ranger)'s template type. The
+function template tt(ranger) returns the appropriate tt(Ranger) object.
+
+includefile(include/namespace)
+
+manpagesection(FREE FUNCTION)
+    When using the following free functions, any (subrange) of iterators or
+pointers can be used. With iterators subranges of em(reverse iterators) can
+also be specified. The bf(EXAMPLE) section below illustrates the use of the
+tt(ranger) function templates.
+    itemization(
+    itb(Ranger<Iterator> ranger(Iterator const &begin, Iterator const &end))
+        this function template returns a tt(Ranger) object for the (sub)range
+        defined by two (reverse) iterators;
+    itb(Ranger<Iterator> ranger(Iterator const &begin, size_t count))
+        this function template returns a tt(Ranger) object for the (sub)range
+        defined by the (reverse) iterator range tt(begin) and tt(begin +
+        count);
+    itb(Ranger<Data> ranger(Data *begin, Data *end))
+        this function template returns a tt(Ranger) object for the (sub)range
+        defined by the two pointers tt(begin) and tt(end);
+    itb(Ranger<Data> ranger(Data *begin, size_t count))
+        this function template returns a tt(Ranger) object for the (sub)range
+        defined by the two pointers tt(begin) and tt(begin + count). 
+    )
+
+manpagesection(CONSTRUCTORS)
+    Below, tt(Iterator) refers to the tt(Ranger) class template's type
+parameter. Although named 'Iterator' it can also be a pointer to some data
+type (e.g., tt(std::string *)).
+    itemization(
+    itb(Ranger(Iterator const &begin, Iterator const &end))
+        A tt(Ranger) object can be passed as range-specifier in a range-based
+for-loop. All elements defined by the range will subsequently be visited by
+the range-based for-loop.
+    )
+    The copy and move constructors are available.
+
+manpagesection(OVERLOADED OPERATORS)
+    The copy and move assignment operators are available.
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(Iterator const &begin() const)
+        returns (a copy of) the tt(begin) iterator passed to the tt(Ranger)'s
+constructor. Note that if tt(Iterator) was a pointer type (like tt(int *)) the
+data to which the iterator returned by tt(begin()) can actually be modified,
+as the member's return type (using tt(int *) for tt(Iterator)) becomes tt(int
+* const &), so a reference to a constant pointer to an tt(int). This is
+perfectly OK: if the data themselves should be immutable, then the data type
+must be defined as tt(int const), which is automatically the case when passing
+tt(int const *) data. See the bf(EXAMPLE) section for an illustration.
+    itb(Iterator const &end() const)
+        returns (a copy of) the tt(end) iterator passed to the tt(Ranger)'s
+constructor. 
+    )
+    If reverse iterators are passed to tt(Ranger)'s constructor, then 
+    the tt(begin) and tt(end) members return em(reverse iterators). Since 
+the intended use of tt(Ranger) objects is to define a range for range-base
+for-loops, members like tt(rbegin) and tt(rend) can be omitted from
+tt(Ranger).
+
+manpagesection(EXAMPLE)
+    verbinclude(../../ranger/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/ranger) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)

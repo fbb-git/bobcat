@@ -1,0 +1,95 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::PtrIter)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Error handler)
+
+manpagename(FBB::PtrIter)(Iterator returning pointer when dereferenced )
+
+manpagesynopsis()
+    bf(#include <bobcat/ptriter>)nl()
+
+manpagedescription()
+
+The tt(PtrIter) class template implements an input iterator whose
+tt(operator*) returns the address of the element the iterator refers to.
+Consider a tt(std::unordered_map<std::string, DataType>). Its tt(begin) member
+returns an iterator whose tt(operator*) returns a tt(std::pair<std::string,
+DataType> (const) &). This is usually what you want, but now assume we want to
+display the map's contents, sorted by its keys. Sorting can simply be
+performed by defining a support vector containing pointers to the elements in
+the map, and then sorting the strings the pointers point at.
+
+tt(PtrIter) is a tool that can be used to construct such a support vector, as
+shown in the bf(EXAMPLE) section.
+
+tt(PtrIter) is a class template requiring one template type parameter:
+tt(Iterator), the iterator's type (e.g., tt(vector<string>::iterator))
+
+tt(PtrIter)'s users don't have to specify tt(PtrIter)'s template type. The
+function template tt(ptrIter), when provided with an iterator returns the
+matching tt(PtrIter) object.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    tt(std::iterator<std::input_iterator_tag, ...>)
+
+manpagesection(FREE FUNCTION)
+    itemization(
+    itb(PtrIter<Iterator> ptrIter(Iterator const &iter))
+        this function template returns a tt(PtrIter) object for the function's
+tt(Iterator) argument. This function template simplyfies the construction of a
+tt(PtrIter) as no template parameters need to be specified (see also the
+bf(EXAMPLE) section)
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(PtrIter(Iterator const &iter))
+        The tt(iter) parameter must be initialized with an existing input
+iterator, offering tt(operator*, operator++, operator==) and tt(operator!=).
+As tt(PtrIter) is a class template, its template type parameters must be
+specified when defining a tt(PtrIter) object. E.g.,
+        verb(
+    PtrIter<set<string>::iterator> PtrIter(mySet.begin());
+    )
+        )
+    The copy and move constructors are available.
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(PtrType operator*() const)
+        the address of the entity the iterator refers to is returned;
+    itb(PtrIter &operator++())
+        the iterator is (pre)incremented to the next position;
+    itb(bool operator==(PtrIter const &other) const)
+        tt(true) is returned if the two iterators are equal;
+    itb(bool operator!=(PtrIter const &other) const)
+        tt(true) is returned if the two iterators are unequal;
+    )
+    The copy and move assignment operators are available.
+
+manpagesection(DEFINED TYPE)
+    tt(PtrIter) defines the following type:
+    itemization(   
+    itb(typedef decltype(&*Iterator()) PtrType)
+    )
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of tt(std::iterator<std:::input_iterator_tag, ...>) are
+available, as bf(FBB::PtrIter) inherits from this class.
+
+manpagesection(EXAMPLE)
+    verbinclude(../../ptriter/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/ptriter) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
