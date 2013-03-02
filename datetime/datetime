@@ -79,7 +79,8 @@ class DateTime
         time_t      d_time; // time used by members
         struct tm   d_tm;   // time's elements
         bool        d_ok;
-        size_t    d_errno;
+        size_t      d_errno;
+        int         d_timezone; // used for rfc2822
 
     public:
         DateTime(TimeType type = LOCALTIME);
@@ -123,6 +124,8 @@ class DateTime
         DateTime localTime() const;
         DateTime to(TimeType type) const;
 
+        std::string rfc2822() const;
+        
     private:
         bool breakDown(struct tm *tmStruct, TimeType type, time_t time);
         bool updateTime(struct tm *tmPtr);

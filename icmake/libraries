@@ -79,6 +79,7 @@ void libraries(string libname, int all, int strip)
     library(staticLib);                         // compile for static lib.
     static_library(staticLib);                  // build static library
 
+#ifndef STATIC
     libso = "libbobcat.so";
     libsoshared = libso + "." + g_version;
 
@@ -87,7 +88,7 @@ void libraries(string libname, int all, int strip)
 
 
     shared_library(g_tmplib, libso, libsoshared, strip);
-
+#endif
 
     exit(0);
 }
