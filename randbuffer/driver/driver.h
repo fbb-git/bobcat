@@ -4,7 +4,7 @@
 #defineH_driver_
 
 /*
-   $Id: driver.h 224 2008-03-19 15:16:28Z fbb $
+   $Id$
 
    $Log$
    Revision 1.1  2005/11/11 14:22:42  frank

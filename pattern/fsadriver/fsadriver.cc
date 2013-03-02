@@ -1,7 +1,7 @@
 /*
                               fsadriver.cc
 
-   $Id: fsadriver.cc 224 2008-03-19 15:16:28Z fbb $
+   $Id$
 
    $Log$
    Revision 1.1  2005/08/19 15:12:52  frank

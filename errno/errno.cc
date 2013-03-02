@@ -1,7 +1,7 @@
 /*
                               errno.cc
 
-   $Id: errno.cc 2 2005-08-19 15:12:51Z frank $
+   $Id$
 
    $Log$
    Revision 1.1  2005/08/19 15:12:52  frank
