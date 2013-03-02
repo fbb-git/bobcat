@@ -1,0 +1,96 @@
+.TH "FBB::Xpointer" "3bobcat" "2005-2007" "libbobcat1-dev_1\&.14\&.1-x\&.tar\&.gz" "Sets the X-pointer"
+
+.PP 
+.SH "NAME"
+FBB::Xpointer \- Sets the location of the X-windows pointer
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/xpointer>\fP
+.br 
+
+.PP 
+Linking option: \fI-lX11 -lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+This class allows programs running within the X-graphical environment to
+set and retrieve the X-windows pointer location\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBXpointer()\fP:
+.br 
+The default constructor\&. Connects to the Display\&. throws an \fBErrno\fP
+exception if the display cannot be opened\&. With multiple \fBXpointer\fP objects,
+the connection to the display is opened only once\&.
+.IP o 
+\fBXpointer(Xpointer const &other) throw()\fP:
+.br 
+The standard copy constructor is available\&.
+
+.PP 
+.SH "MEMBER FUNCTIONS"
+.IP o 
+\fBbool get(int *x, int *y) const\fP:
+.br 
+Returns in its arguments the currnet pointer coordinates relative to
+the root-window\&. On success \fItrue\fP is returned; \fIfalse\fP is returned if the
+pointer could not be moved\&.
+.IP o 
+\fBbool set(int x, int y) const\fP:
+.br 
+Sets the pointer to a location whose pixel coordinates are given with
+respect to the root-window\&.  A negative x-coordinate is measured from the
+right screen-margin of the root window (going left), a negative y-coordinate
+is measured from the bottom screen-margin of the root window (going up)\&. On
+success \fItrue\fP is returned; \fIfalse\fP is returned if the pointer could not
+be moved\&.
+
+.PP 
+.SH "EXAMPLE"
+To do
+.PP 
+.SH "FILES"
+\fIbobcat/xpointer\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7)
+.PP 
+.SH "BUGS"
+Note that \fI-lX11\fP must be specified before \fI-lbobcat\fP\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.14\&.1-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.14\&.1-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.14\&.1-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.14\&.1-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.14\&.1-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+GNU General Public License (GPL)\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

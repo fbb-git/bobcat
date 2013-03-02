@@ -1,0 +1,240 @@
+.TH "FBB::Wrap1" "3bobcat" "2005-2007" "libbobcat1-dev_1\&.14\&.1-x\&.tar\&.gz" "Unary Wrapper"
+
+.PP 
+.SH "NAME"
+FBB::Wrap1 \- STL unary argument wrapper template class
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/wrap1>\fP
+.br 
+
+.PP 
+.SH "DESCRIPTION"
+This class is obsolete and will be removed in a future release\&. 
+Use \fBFBB::FnWrap1\fP instead\&.
+.PP 
+The \fBFBB::Wrap1\fP class is a configurable unary argument wrapper template
+class\&. Its primary use is in combination with the generic algorithms of the
+standard template libray\&.
+.PP 
+The callled function itself may be specified as one of the constructor\&'s
+arguments\&. It must be a (static member) function\&. Using a (static member)
+function has various advantages, especially with the \fBWrap?c\fP classes to
+which a \fIlocal context\fP can be passed:
+.IP o 
+There is no introduced uncertainty about the \fBconst\fP-ness of the
+callled function, as static member functions do not support 
+a \fBconst\fP modifier;
+.IP o 
+The passed function can also be a free (global) function to which a
+local context is passed;
+.IP o 
+The passed function can be a static member function of the class
+using the generic algorithm to which the c() object is passed\&. By passing 
+the calling object in the function\&'s local context, the function may directly
+access the calling object\&'s members\&.
+.IP o 
+The passed function can be a static member function of the class
+whose objects are passed to the function via the generic template function s
+iterator parameters\&. In that case the function may directly access the passed
+object\&'s members\&.
+.IP o 
+Since no object is involved in calling the static function, no
+ambiguity can arise as to whether an object reference or an object pointer
+should be used in calling the function: static (member) functions may be
+called without using objects\&.
+
+.PP 
+The \fBFBB::Wrap1\fP template class has the following template parameters:
+.IP o 
+\fIType\fP: the type of the object passed to \fBFBB::Wrap1\fP\&'s
+\fBoperator()()\fP function\&. Specify a \fBplain\fP type, do not specify a pointer
+or reference type: if pointers or references are used, it will become obvious
+later on, as the template will be able to handle (const) references and
+pointers\&. Values of primitive types are handled by (and should be defined as)
+const-reference parameters\&.
+.IP o 
+\fIReturnType\fP: the \fBReturnType\fP is by default defined as \fIvoid\fP\&. By
+specifying another type, the \fBFBB::Wrap1\fP object\&'s \fBoperator()()\fP function
+will pass the called function\&'s return value as a value of the specified
+type\&. E\&.g, by specifying a \fIbool\fP \fBReturnType\fP, the \fBFBB::Wrap1\fP object
+may be used as a \fIUnary Predicate\fP
+
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBWrap1<Type [, Returntype = void]>(ReturnType (*fun)(Type &))\fP:
+.br 
+.br 
+This constructor expects one argument: the address of a function to
+call from within its \fBoperator()()\fP member\&. The function receives
+\fBFBB::Wrap1\fP\fB::operator()()\fP\&'s argument as its argument\&. The
+template parameter type \fIType\fP is the data type to which iterators
+(as specified in, e\&.g\&., \fBstd::for_each()\fP) eventually point\&.
+.IP o 
+\fBWrap1<Type [, Returntype = void]>(ReturnType (*fun)(Type const &))\fP:
+.br 
+.br 
+This constructor is identical to the first constructor, except for the
+actual \fIType\fP parameter that\&'s passed to the function, which is now
+a \fIType const &\fP\&.
+.IP o 
+\fBWrap1<Type [, Returntype = void]>(ReturnType (*fun)(Type *))\fP:
+.br 
+.br 
+This constructor is identical to the first constructor, except for the
+actual \fIType\fP parameter that\&'s passed to the function, which is now
+a \fIType *\fP\&.
+.IP o 
+\fBWrap1<Type [, Returntype = void]>(ReturnType (*fun)(Type const *))\fP:
+.br 
+.br 
+This constructor is identical to the first constructor, except for the
+actual \fIType\fP parameter that\&'s passed to the function, which is now
+a \fIType const *\fP\&.
+
+.PP 
+.SH "OVERLOADED OPERATORS"
+
+.PP 
+In normal situations the following member functions will call the function
+that is passed to \fBFBB::Wrap1\fP\&'s constructor\&. See the example below\&.
+.PP 
+.IP o 
+\fBReturnType operator()(Type &param) const\fP:
+.br 
+This function is called by the generic algorithms, receiving the
+dereferenced iterator that is managed  by the generic algorithm as its
+argument (so, the iterator points to modifiable \fIType\fP objects)\&. This
+operator is used with the first constructor\&.
+.IP o 
+\fBReturnType operator()(Type const &param) const\fP:
+.br 
+This function is called by the generic algorithms, receiving the
+dereferenced iterator that is managed  by the generic algorithm as its
+argument (so, the iterator points to immutable \fIType\fP objects)\&. This
+operator is used with the second constructor\&. 
+.IP o 
+\fBReturnType operator()(Type *param) const\fP:
+.br 
+This function is called by the generic algorithms, receiving the
+dereferenced iterator that is managed by the generic algorithm as its argument
+(so, the iterator points to pointers to modifiable \fIType\fP objects)\&. This
+operator is used with the third constructor\&.
+.IP o 
+\fBReturnType operator()(Type const *param) const\fP:
+.br 
+This function is called by the generic algorithms, receiving the
+dereferenced iterator that is managed by the generic algorithm as its argument
+(so, the iterator points to pointers to immutable \fIType\fP objects)\&. This
+operator is used with the fourth constructor\&.
+
+.PP 
+.SH "TYPEDEFS"
+
+.PP 
+The class defines two types, which are used by generic algorithms:
+.IP o 
+\fBargument_type\fP:
+.br 
+, a synonym for \fBType\fP;
+.IP o 
+\fBresult_type\fP:
+.br 
+, a synonym for \fBReturnType\fP\&.
+
+.PP 
+.SH "EXAMPLES"
+.nf 
+
+    #include <algorithm>
+    #include <iostream>
+    #include <vector>
+    #include <string>   
+    #include <bobcat/wrap1>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    bool cmp(string &actual)    // modifies `actual\&'
+    {
+        cout << "Saw " << actual << endl;
+        bool ret = actual == "hello";
+        actual += "\&.";
+        return ret;
+    }
+    
+    class X
+    {
+        public:
+                                // merely inspects `actual\&'
+            static bool cmp(string const &actual)
+            {
+                cout << "Saw " << actual << endl;
+                return actual == "hello";
+            }
+    };
+    
+    int main(int argc, char **argv)
+    {
+        vector<string> vs(argv, argv + argc);
+    
+        find_if(vs\&.begin(), vs\&.end(), 
+            Wrap1<string, bool>(&cmp));
+    
+        cout << endl;
+    
+        find_if(vs\&.begin(), vs\&.end(), 
+            Wrap1<string, bool>(&X::cmp));
+    
+    }
+        
+.fi 
+
+.PP 
+.SH "FILES"
+\fIbobcat/wrap1\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBwrap1c\fP(3bobcat), \fBwrap2\fP(3bobcat), 
+\fBwrap2c\fP(3bobcat)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.14\&.1-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.14\&.1-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.14\&.1-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.14\&.1-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.14\&.1-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+GNU General Public License (GPL)\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

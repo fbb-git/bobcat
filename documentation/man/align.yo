@@ -1,0 +1,103 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Align)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Table Element Alignment)
+
+manpagename(FBB::Align)(Class used to align elements in Table objects)
+
+manpagesynopsis()
+    bf(#include <bobcat/align>)nl()
+
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    This class defines the objects used by the bf(FBB::Table) to define the
+alignment of its columns and/or elements. 
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(ADDITIONAL TYPEDEF)
+
+    The type bf(FBB::Manipulator) can be used as a shorthand for 
+            verb(
+        std::ios_base &(*)(std::ios_base &)
+            )
+    which is the prototype of a standard io-manipulator like tt(std::left).
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Align(size_t column = 0, Manipulator manip = std::right))
+        This constructor defines the alignment of column tt([column])
+of a bf(Table) object. When it is used, it is the responsibility of the
+programmer to ensure that the indicated bf(Table) column exists. This
+constructor can also be used as a default constructor, defining a default
+right-alignment. 
+
+    itb(Align(int row, size_t column, Manipulator manip))
+        This constructor defines the alignment of element tt([row][column])
+of a bf(Table) object. When it is used, it is the responsibility of the
+programmer to ensure that the indicated bf(Table) element exists.
+
+    itb(Align(Manipulator manip))
+        This constructor is used to initialize the object with a specified
+alignment type. 
+    )
+    The standard copy constructor is available.
+
+manpagesection(OVERLOADED OPERATORS)
+
+    itemization(
+    itb(operator size_t() const)
+        Returns the value representing a requested width of an element in a
+bf(Table) object.
+
+    )
+
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(size_t col() const)
+        Returns the object's column index.
+    itb(bool hasRow() const)
+        Returns tt(true) if the object's bf(row()) member returns a sensible
+        value. 
+    itb(size_t row() const)
+        Returns the object's row index.
+    itb(Manipulator manip() const)
+        Returns the bf(Manipulator) stored in the object.
+
+    itb(void setWidth(size_t width))
+        Assigns a value to the field-width stored in the object.
+    itb(void setManip(Manipulator manip))
+        Changes the object's currently stored bf(Manipulator).
+    )
+
+manpagesection(MANIPULATORS)
+    The following manipulator (which is em(not) part of the bf(FBB::Align),
+class), is defined in the bf(FBB) namespace. It can be stored in 
+bf(Align) objects and is used by tt(Table) objects:
+    itemization(
+    itb(FBB::center) 
+    )
+
+manpagesection(EXAMPLE)
+    See the bf(table)(3bobcat) man-page.
+
+manpagefiles()
+    em(bobcat/align) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(table)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)
+
+
+
+

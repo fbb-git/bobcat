@@ -1,0 +1,125 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::TypeTrait</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::TypeTrait</h1>
+<h2>libbobcat1-dev_1.14.1-x.tar.gz</h2>
+<h2>2005-2007</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::TypeTrait(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::TypeTrait(3bobcat)</h1>
+<h2>libbobcat1-dev_1.14.1-x.tar.gz Error handler</h2>
+<h2>2005-2007</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::TypeTrait - shortdesc
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/typetrait&gt;</strong><br>
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+<strong>FBB::TypeTrait</strong> is a traits class. It does not define any member
+functions or data members, but only types. It can be used to determine the
+basic type and other characteristics of (const) plain, (const) pointer or
+(const) reference types. It is used, e.g., by the <strong>FBB::FnWrap*</strong> family of
+template classes and was designed after Alexandrescu's (2001) <em>TypeTraits</em>
+template class.
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>TYPE</h2>
+<p>
+<ul>
+    <li> <em>Plain</em>: the plain type of any const or non-const plain, pointer or
+reference type. 
+    </ul>
+<p>
+<h2>BOOL VALUES</h2>
+<p>
+<ul>
+    <li> <em>isPointer</em>: <em>true</em> if the template type argument represents a
+pointer type, <em>false</em> otherwise.
+    <li> <em>isConst</em>: <em>true</em> if the template type argument represents a
+const type, <em>false</em> otherwise.
+    <li> <em>isRef</em>: <em>true</em> if the template type argument represents a
+reference type, <em>false</em> otherwise.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+<p>
+The following example shows a fragment of the code used in the
+<strong>FBB::FnWrap1</strong> class determining the basic type of its <em>Type</em> template
+parameter: 
+        <pre>
+
+    #include &lt;bobcat/typetrait&gt;
+    ...
+    template &lt;typename Type, typename ReturnType = void&gt;
+    class FnWrap1
+    {
+        ...
+        public:
+            typedef typename TypeTrait&lt;Type&gt;::Plain  argument_type;
+        ...
+    };
+        
+</pre>
+    
+    The above code could have used <em>TypeTrait&lt;Type&gt;::isPointer</em> to determine
+whether <em>Type</em> actually represents a pointer type.    
+<p>
+<h2>FILES</h2>
+    <em>bobcat/typetrait</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7)<br>
+    Alexandrescu A. (2001) <strong>Modern C++ Design</strong>, Addison-Wesley, Boston.
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.14.1-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.14.1-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.14.1-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.14.1-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.14.1-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

@@ -1,0 +1,228 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Wrap1</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Wrap1</h1>
+<h2>libbobcat1-dev_1.14.1-x.tar.gz</h2>
+<h2>2005-2007</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Wrap1(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Wrap1(3bobcat)</h1>
+<h2>libbobcat1-dev_1.14.1-x.tar.gz Unary Wrapper</h2>
+<h2>2005-2007</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Wrap1 - STL unary argument wrapper template class
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/wrap1&gt;</strong><br>
+<p>
+<h2>DESCRIPTION</h2>
+    This class is obsolete and will be removed in a future release. 
+    Use <strong>FBB::FnWrap1</strong> instead.
+<p>
+The <strong>FBB::Wrap1</strong> class is a configurable unary argument wrapper template
+class. Its primary use is in combination with the generic algorithms of the
+standard template libray.
+<p>
+The callled function itself may be specified as one of the constructor's
+arguments. It must be a (static member) function. Using a (static member)
+function has various advantages, especially with the <strong>Wrap?c</strong> classes to
+which a <em>local context</em> can be passed:
+    <ul>
+    <li> There is no introduced uncertainty about the <strong>const</strong>-ness of the
+callled function, as static member functions do not support 
+a <strong>const</strong> modifier;
+    <li> The passed function can also be a free (global) function to which a
+local context is passed;
+    <li> The passed function can be a static member function of the class
+using the generic algorithm to which the c() object is passed. By passing 
+the calling object in the function's local context, the function may directly
+access the calling object's members.
+    <li> The passed function can be a static member function of the class
+whose objects are passed to the function via the generic template function s
+iterator parameters. In that case the function may directly access the passed
+object's members.
+    <li> Since no object is involved in calling the static function, no
+ambiguity can arise as to whether an object reference or an object pointer
+should be used in calling the function: static (member) functions may be
+called without using objects.
+    </ul>
+<p>
+The <strong>FBB::Wrap1</strong> template class has the following template parameters:
+    <ul>
+    <li> <em>Type</em>: the type of the object passed to <strong>FBB::Wrap1</strong>'s
+<strong>operator()()</strong> function. Specify a <strong>plain</strong> type, do not specify a pointer
+or reference type: if pointers or references are used, it will become obvious
+later on, as the template will be able to handle (const) references and
+pointers. Values of primitive types are handled by (and should be defined as)
+const-reference parameters.
+    <li> <em>ReturnType</em>: the <strong>ReturnType</strong> is by default defined as <em>void</em>. By
+specifying another type, the <strong>FBB::Wrap1</strong> object's <strong>operator()()</strong> function
+will pass the called function's return value as a value of the specified
+type. E.g, by specifying a <em>bool</em> <strong>ReturnType</strong>, the <strong>FBB::Wrap1</strong> object
+may be used as a <em>Unary Predicate</em>
+    </ul>
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Wrap1&lt;Type [, Returntype = void]&gt;(ReturnType (*fun)(Type &amp;))</strong>:<br> <br>
+       This constructor expects one argument: the address of a function to
+        call from within its <strong>operator()()</strong> member. The function receives
+        <strong>FBB::Wrap1</strong><strong>::operator()()</strong>'s argument as its argument. The
+        template parameter type <em>Type</em> is the data type to which iterators
+        (as specified in, e.g., <strong>std::for_each()</strong>) eventually point.
+    <li> <strong>Wrap1&lt;Type [, Returntype = void]&gt;(ReturnType (*fun)(Type const &amp;))</strong>:<br><br>
+       This constructor is identical to the first constructor, except for the
+        actual <em>Type</em> parameter that's passed to the function, which is now
+        a <em>Type const &amp;</em>.
+    <li> <strong>Wrap1&lt;Type [, Returntype = void]&gt;(ReturnType (*fun)(Type *))</strong>:<br> <br>
+       This constructor is identical to the first constructor, except for the
+        actual <em>Type</em> parameter that's passed to the function, which is now
+        a <em>Type *</em>.
+    <li> <strong>Wrap1&lt;Type [, Returntype = void]&gt;(ReturnType (*fun)(Type const *))</strong>:<br><br>
+       This constructor is identical to the first constructor, except for the
+        actual <em>Type</em> parameter that's passed to the function, which is now
+        a <em>Type const *</em>.
+    </ul>
+<p>
+<h2>OVERLOADED OPERATORS</h2>
+<p>
+In normal situations the following member functions will call the function
+that is passed to <strong>FBB::Wrap1</strong>'s constructor. See the example below.
+<p>
+<ul>
+    <li> <strong>ReturnType operator()(Type &amp;param) const</strong>:<br>
+        This function is called by the generic algorithms, receiving the
+dereferenced iterator that is managed  by the generic algorithm as its
+argument (so, the iterator points to modifiable <em>Type</em> objects). This
+operator is used with the first constructor.
+    <li> <strong>ReturnType operator()(Type const &amp;param) const</strong>:<br>
+        This function is called by the generic algorithms, receiving the
+dereferenced iterator that is managed  by the generic algorithm as its
+argument (so, the iterator points to immutable <em>Type</em> objects). This
+operator is used with the second constructor. 
+    <li> <strong>ReturnType operator()(Type *param) const</strong>:<br>
+        This function is called by the generic algorithms, receiving the
+dereferenced iterator that is managed by the generic algorithm as its argument
+(so, the iterator points to pointers to modifiable <em>Type</em> objects). This
+operator is used with the third constructor.
+    <li> <strong>ReturnType operator()(Type const *param) const</strong>:<br>
+        This function is called by the generic algorithms, receiving the
+dereferenced iterator that is managed by the generic algorithm as its argument
+(so, the iterator points to pointers to immutable <em>Type</em> objects). This
+operator is used with the fourth constructor.
+    </ul>
+<p>
+<h2>TYPEDEFS</h2>
+<p>
+The class defines two types, which are used by generic algorithms:
+    <ul>
+    <li> <strong>argument_type</strong>:<br>, a synonym for <strong>Type</strong>;
+    <li> <strong>result_type</strong>:<br>, a synonym for <strong>ReturnType</strong>.
+    </ul>
+<p>
+<h2>EXAMPLES</h2>
+        <pre>
+
+    #include &lt;algorithm&gt;
+    #include &lt;iostream&gt;
+    #include &lt;vector&gt;
+    #include &lt;string&gt;   
+    #include &lt;bobcat/wrap1&gt;
+    
+    using namespace std;
+    using namespace FBB;
+    
+    bool cmp(string &amp;actual)    // modifies `actual'
+    {
+        cout &lt;&lt; "Saw " &lt;&lt; actual &lt;&lt; endl;
+        bool ret = actual == "hello";
+        actual += ".";
+        return ret;
+    }
+    
+    class X
+    {
+        public:
+                                // merely inspects `actual'
+            static bool cmp(string const &amp;actual)
+            {
+                cout &lt;&lt; "Saw " &lt;&lt; actual &lt;&lt; endl;
+                return actual == "hello";
+            }
+    };
+    
+    int main(int argc, char **argv)
+    {
+        vector&lt;string&gt; vs(argv, argv + argc);
+    
+        find_if(vs.begin(), vs.end(), 
+            Wrap1&lt;string, bool&gt;(&amp;cmp));
+    
+        cout &lt;&lt; endl;
+    
+        find_if(vs.begin(), vs.end(), 
+            Wrap1&lt;string, bool&gt;(&amp;X::cmp));
+    
+    }
+        
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/wrap1</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>wrap1c</strong>(3bobcat), <strong>wrap2</strong>(3bobcat), 
+    <strong>wrap2c</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.14.1-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.14.1-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.14.1-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.14.1-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.14.1-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

@@ -1,0 +1,289 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Wrap2c</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Wrap2c</h1>
+<h2>libbobcat1-dev_1.14.1-x.tar.gz</h2>
+<h2>2005-2007</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Wrap2c(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Wrap2c(3bobcat)</h1>
+<h2>libbobcat1-dev_1.14.1-x.tar.gz Configurable Binary Wrapper</h2>
+<h2>2005-2007</h2>
+
+
+<p>
+<h2>NAME</h2>Wrap2c - Configurabale binary argument wrapper template class
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/wrap2c&gt;</strong><br>
+<p>
+<h2>DESCRIPTION</h2>
+    This class is obsolete and will be removed in a future release. 
+    Use <strong>FBB::FnWrap2c</strong> instead.
+<p>
+The <strong>FBB::Wrap2c</strong> class is a configurable binary argument wrapper
+template class. Its primary use is in combination with the generic algorithms
+from the standard template libray. The called function expects a <em>local
+context struct</em> which is used to pass arguments to the function called by the
+generic algorithm which are available in the local context of the called
+generic algorithm.  The local context struct can be either a <em>const</em> or
+non-<em>const</em> struct.
+<p>
+The callled function itself may be specified as one of the constructor's
+arguments. It must be a (static member) function. Using a (static member)
+function has various advantages, especially with the <strong>Wrap?c</strong> classes to
+which a <em>local context</em> can be passed:
+    <ul>
+    <li> There is no introduced uncertainty about the <strong>const</strong>-ness of the
+callled function, as static member functions do not support 
+a <strong>const</strong> modifier;
+    <li> The passed function can also be a free (global) function to which a
+local context is passed;
+    <li> The passed function can be a static member function of the class
+using the generic algorithm to which the <strong>FBB::Wrap2c</strong> object is passed. By
+passing the calling object in the function's local context, the function may
+directly access the calling object's members.
+    <li> The passed function can be a static member function of the class
+whose objects are passed to the function via the generic template function s
+iterator parameters. In that case the function may directly access the passed
+object's members.
+    <li> Since no object is involved in calling the static function, no
+ambiguity can arise as to whether an object reference or an object pointer
+should be used in calling the function: static (member) functions may be
+called without using objects.
+    </ul>
+<p>
+The <strong>FBB::Wrap2c</strong> template class has the following template parameters:
+    <ul>
+    <li> <em>Type1</em>: the type of the first object passed to
+<strong>FBB::Wrap2c</strong><strong>::operator()()</strong>'s function.  Specify a <strong>plain</strong> type, do
+not specify a pointer or reference type: if pointers or references are used,
+it will become obvious later on, as the template will be able to handle
+(const) references and pointers. Values are handled as const-references.
+    <li> <em>Type2</em>: the type of the second object passed to
+<strong>FBB::Wrap2c</strong><strong>::operator()()</strong>'s function.  Specify a <strong>plain</strong> type, do
+not specify a pointer or reference type: if pointers or references are used,
+it will become obvious later on, as the template will be able to handle
+(const) references and pointers. Values are handled as const-references.
+    <li> <em>Context</em>: the type of the <strong>local context struct</strong>. This <strong>struct</strong> is
+a local <strong>struct</strong>, that should be defined immediatey before applying the
+generic algorithm, specifying values, references or pointers to entities that
+are available in the local context where the generic algorithm is called. If
+no generic algorithm would have been used, but a local implementation of the
+generic algorithm would have been used instead, then the called function would
+have received certain arguments. The local context struct is a replacement of
+such a function's parameter list, mimicking the function's parameter list in
+the <strong>struct</strong> definition. The function will now receive a `standardized'
+parameter list, defined by the local context struct. The typename of the
+defined <strong>struct</strong> should be passed to the template as its second parameter. A
+concrete local context <strong>struct</strong> may be passed as either a <em>const</em> or
+non-<em>const</em> reference or pointer to <strong>FBB::Wrap2c</strong>'s constructor. When
+using a <em>non-const</em> reference or pointer, the function may modify the
+<strong>struct</strong>'s value fields identically to the situation in which the field's
+values would have been passed to the function as reference parameters.
+    <li> <em>ReturnType</em>: the <strong>ReturnType</strong> is by default defined as <em>void</em>. By
+specifying another type, the <strong>FBB::Wrap2c</strong> object's <strong>operator()()</strong>
+function will pass the called function's return value as a value of the
+specified type. E.g, by specifying a <em>bool</em> <strong>ReturnType</strong>, the
+<strong>FBB::Wrap2c</strong> object may be interpreted as a <em>Binary Predicate</em>
+    </ul>
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Wrap2c&lt;Type1, Type2, Context [, ReturnType = void]&gt;
+        (ReturnType (*fun)(Type1 &amp;, Type2 &amp;, Context &amp;), Context &amp;context)</strong>:<br>
+        <br>
+        This is an example of the form in which the class's constructurs may
+be called. Each constructor expects two arguments: the address of a function to
+call from within its <strong>operator()()</strong> member, and a local
+context <strong>struct</strong> which is passed to the called function as its second
+argument. 
+<p>
+All three arguments that are passed to the function pointed to by <em>fun</em>
+and the context struct itself may be passed as: <br>
+    reference, <br>
+    pointer,<br>
+    const reference, or <br>
+    const pointer. <br>
+    (albeit that the restriction applies that the types of the
+<em>context</em> constructor parameter and the function's <em>context</em> parameter
+must be identical (e.g., both pointers or both const references)).
+<p>
+Therefore, the class supports 64 different types of constructors. E.g.:
+<p>
+<li> <strong>Wrap2c&lt;Type1, Type2, Context [, ReturnType = void]&gt;
+        (ReturnType (*fun)(Type1 &amp;, Type2 *, Context const &amp;), 
+                                            Context const &amp;context)</strong>:<br>
+    or
+    <li> <strong>Wrap2c&lt;Type1, Type2, Context [, ReturnType = void]&gt;
+        (ReturnType (*fun)(Type1 const *, Type2 &amp;, Context *), 
+            Context *context)</strong>:<br> <br>
+    </ul>
+<p>
+Hint: In situations where no context other than the class <em>Class</em> to
+which the class' (static) member function belongs must be used
+`<em>Class &amp;obj</em>' (or (const) pointer) can be specified 
+as the context parameter (and <em>Class</em> itself as the context template
+parameter), passing, e.g., <em>*this</em> as the context. The static member
+function may then call any of its class member functions
+<em>member(Type [const] [&amp;,*])</em> as <em>obj.member(argument1, argument2)</em>.
+<p>
+<h2>OVERLOADED OPERATORS</h2>
+<p>
+In normal situations the following member functions will call the function
+that's passed to <strong>FBB::Wrap2c</strong>'s constructor. See the example below.
+<p>
+<ul>
+    <li> <strong>ReturnType operator()(Type1 &amp;param, Type1 &amp;param) const</strong>:<br>
+        This function is called by generic algorithms, receiving the
+dereferenced iterator that is managed  by the generic algorithm as its
+argument (so, the iterator points to modifiable <em>Type</em> objects). 
+<p>
+There are 16 overloaded versions of this function, one for each of the 4 x
+4 combinations of the first two parameter types specified for the function
+whose address is passed to the class's constructor (i.e., each parameter may
+be specified as reference, pointer, const reference or const pointer).
+<p>
+Some (but not all) overloaded versions are:
+    <li> <strong>ReturnType operator()(Type1 &amp;param, Type1 *param) const</strong>:<br>
+        or:
+    <li> <strong>ReturnType operator()(Type1 const *param, Type1 &amp;param) const</strong>:<br>
+    </ul>
+<p>
+<h2>TYPEDEFS</h2>
+<p>
+The class defines three types, which are used by generic algorithms:
+    <ul>
+    <li> <strong>first_argument_type</strong>:<br>, a synonym for <strong>Type1</strong>;
+    <li> <strong>second_argument_type</strong>:<br>, a synonym for <strong>Type2</strong>;
+    <li> <strong>result_type</strong>:<br>, a synonym for <strong>ReturnType</strong>.
+    </ul>
+<p>
+<h2>EXAMPLES</h2>
+        <pre>
+
+    // accumulating strings from a vector to one big string, using 
+    // `accumulate'
+    #include &lt;iostream&gt;
+    #include &lt;numeric&gt;
+    #include &lt;string&gt;
+    #include &lt;vector&gt;
+    #include &lt;bobcat/wrap2c&gt;
+
+    using namespace std;
+    using namespace FBB;
+    
+    class Strings
+    {
+        vector&lt;string&gt; d_vs;
+
+        public:
+            Strings()
+            {
+                d_vs.push_back("one");
+                d_vs.push_back("two");
+                d_vs.push_back("three");
+            }
+                
+            void display(ostream &amp;out) const
+            {
+                SContext c = {1, out};
+
+                cout &lt;&lt; "On Exit: " &lt;&lt; 
+                    accumulate
+                    (
+                        d_vs.begin(), d_vs.end(), 
+                        string("HI"), 
+                        Wrap2c
+                        &lt;
+                            string const &amp;, string const &amp;, 
+                            SContext, string
+                        &gt;(&amp;show, c)
+                    ) &lt;&lt; 
+                    endl;
+            }
+    
+        private:
+            struct SContext
+            {
+                size_t nr;
+                ostream &amp;out;
+            };
+
+            static string show(string const &amp;str1, 
+                                    string const &amp;str2, 
+                                    SContext &amp;c)
+            {
+                c.out &lt;&lt; c.nr++ &lt;&lt; " " &lt;&lt; str1 &lt;&lt; " " &lt;&lt; str2 &lt;&lt; 
+                         endl;
+                return str1 + " " + str2;
+            }
+    };
+    
+    
+    int main()
+    {
+        Strings s;
+    
+        s.display(cout);
+    }
+        
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/wrap2c</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>wrap1</strong>(3bobcat), <strong>wrap2</strong>(3bobcat), 
+    <strong>wrap2</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    No Reported Bugs.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.14.1-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.14.1-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.14.1-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.14.1-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.14.1-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

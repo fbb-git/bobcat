@@ -1,0 +1,309 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Table</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Table</h1>
+<h2>libbobcat1-dev_1.14.1-x.tar.gz</h2>
+<h2>2005-2007</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Table(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Table(3bobcat)</h1>
+<h2>libbobcat1-dev_1.14.1-x.tar.gz Table-formatter</h2>
+<h2>2005-2007</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Table - Generates row- or column-wise filled tables
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/table&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+<strong>FBB::Table</strong> objects may be used to create tables. The tables are filled
+either column-wise or row-wise. Many of the table's characteristics may be
+fine-tuned by a separate <strong>FBB::TableSupport</strong> object, described in a separate
+man-page (<strong>TableSupport</strong>(3bobcat)). When no <strong>FBB::TableSupport</strong> object is
+used, a plain row-wise or column-wise table will be constructed which can be
+inserted into a <strong>std::ostream</strong>.
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+<p>
+<strong>std::ostringstream</strong> - <strong>Table</strong> inherits from <strong>std::ostringstream</strong>,
+allowing insertions into a <strong>Table</strong> object. Each separate insertion adds
+another element to the <strong>Table</strong> object.
+<p>
+<h2>ENUMERATIONS</h2>
+    The following enumerations are defined in the class <strong>FBB::TableSpec</strong>,
+allowing the programmer to specifiy values like <strong>FBB::TableSpec::Vertical</strong>
+rather than <strong>FBB::Table&lt;std::istream_const_iterator&gt;::Vertical</strong>.
+<p>
+<strong>enum FillDirection</strong><br>
+    This enumeration holds two values:
+    <ul>
+    <li> <strong>ROWWISE</strong>:<br>
+        When this value is specified at construction time, elements are added
+row-wise to the table. I.e., the second element inserted into the <strong>Table</strong>
+will be found in the second column of the first row.
+    <li> <strong>COLUMNWISE</strong>:<br>
+        When this value is specified at construction time, elements are added
+column-wise to the table. I.e., the second element will be found in the second
+row of the first column.
+    </ul>
+<p>
+<strong>enum WidthType</strong><br>
+    This enumeration holds two values:
+    <ul>
+    <li> <strong>COLUMNWIDTH</strong>:<br>
+        This value may be specified when the columns should be allowed
+variable widths. In this case each column will be as wide as its widest
+element. This is the default <strong>WidthType</strong> used by <strong>Table</strong> objects. 
+    <li> <strong>EQUALWIDTH</strong>:<br>
+        This value may be specified when all the table's columns should have
+equal width (i.e., equal to the width of the widest table element), 
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Table(size_t nColumns, Table::FillDirection direction,
+            Table::WidthType widthType = Table::COLUMNWIDTH)</strong>:<br>
+        This constructor expects the table's number of columns.  The number of
+rows are implied by the combination of this parameter and the number of
+elements that will be inserted into the <strong>Table</strong> object.  The <strong>direction</strong>
+parameter specifies the way new elements will be added to the <strong>Table</strong>
+object: row-wise or column-wise. Finally, the <em>widthType</em> parameter is used
+to specify the way the width of the table's columns is determined: each column
+may either have its own width or all columns will have equal widths.
+    <li> <strong>Table(TableSupport &amp;tableSupport, Table::FillDirection direction,
+            Table::WidthType widthType = Table::COLUMNWIDTH)</strong>:<br>
+        This constructor operates identically to the previous constructor, but
+expects an additional reference to a <strong>TableSupport</strong> object. A
+<strong>TableSupport</strong> object offers additional formatting features used by the
+table to define elements like horizontal lines between rows, additional
+separators between elements etc. Note that the <strong>TableSupport</strong> object is
+passed as a non-const reference as the <strong>Table</strong> object must be able to
+manipulate its data.
+    </ul>
+    The copy constructor is not available.
+<p>
+<h2>OVERLOADED OPERATORS</h2>
+<p>
+<ul>
+    <li> <strong>std::ostream &amp;operator&lt;&lt;(std::ostream &amp;str, Table const &amp;table)</strong>:<br>
+        This operator inserts a <strong>Table</strong> into a <em>std::ostream</em> object.
+    <li> <strong>Table &amp;operator&lt;&lt;(Table &amp;obj, Align const &amp;align)</strong>:<br>
+        This operator is used to change the default alignment of either a
+column or an element. It is a wrapper around the member <em>setAlign()</em> (see
+below for its description). By default, all elements are right-aligned.
+    <li> <strong>Table &amp;operator&lt;&lt;(Table &amp;obj, Type const &amp;x)</strong>:<br>
+        This overloaded operator is defined as a template: <strong>Type</strong> is a
+template type parameter instantiated to a type for which
+<strong>std::ostringstream</strong> insertions are possible.  It inserts the value/object
+<em>x</em> into the <strong>Table</strong>'s <strong>std::ostringstream</strong> base class object as the
+next element of the table.
+    </ul>
+    The overloaded assignment operator is not available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+    <ul>
+    <li> <strong>Table &amp;append(std::string const &amp;text
+                 char const *sep = " \t", bool addEmpty = false)</strong>:<br>
+        This member adds all fields in <em>text</em> separated by one of the
+characters in <em>sep</em> as additional elements to the <strong>Table</strong> object. Empty
+fields are ignored unless the parameter <em>addEmpty</em> is initialized to
+<em>true</em>.
+    <li> <strong>void clear()</strong>:<br>
+        This member clears the table. All existing elements are removed, and
+the table will be empty.
+    <li> <strong>void fill(InputIterator begin, InputIterator end)</strong>:<br>
+        This member is defined as a template; <em>InputIterator</em> is a template
+type parameter representing any input iterator. It can also be, e.g., a
+pointer to an insertable type. The iterators must point to data elements which
+can be inserted into an <em>std::ostream</em>. The range of values implied by the
+member's iterator pair are inserted into the table as new elements.
+    <li> <strong>void push_back(std::string const &amp;element)</strong>:<br>
+        This member can be used to add another element to the table (it is
+also called from a <em>back_inserter</em> adaptor).
+    <li> <strong>size_t nRows()</strong>:<br>
+        This member returns the currently available number of rows in the
+table. Its value is only defined after calling <strong>d+ef()</strong>.
+    <li> <strong>Table &amp;setAlign(Align const &amp;align)</strong>:<br>
+        This member is used to specify the alignment of either a column or an
+element of the <strong>Table</strong> object. The standard alignments <em>std::left,
+std::right</em> and <em>std::internal</em> may be specified, but in addition the
+alignment <em>FBB::center</em> may be used if elements should be centered into
+their column. A construction like
+        <pre>
+tab &lt;&lt; Align(2, FBB::center)
+</pre>
+
+    requests centering of all elements in table column having index value 2
+(i.e., the table's 3rd column), whereas a construction like
+        <pre>
+tab &lt;&lt; Align(2, 3, FBB::center)
+</pre>
+
+    requests centering of element [2][3]. It is the responsibility of the
+programmer to ensure that such elements exist. By default, all elements are
+right-aligned.
+    <li> <strong>Table &amp;d+ef()</strong>:<br>
+        This member may be used to `complete' a <strong>Table</strong> object to a full
+rectangular object, for which all column widths and alignments have been
+determined. It is implied by <em>operator&lt;&lt;(ostream, Table)</em>. In
+other situations it may be called explicitly to force the insertion of another
+row in a table using <em>ROWWISE</em> insertions. With <em>COLUMNWISE</em> insertions
+its working is complex, since new elements added to a <em>COLUMNWISE</em> filled
+table will reshuffle its elements over the table's columns. 
+    </ul>
+<p>
+<h2>MANPULATORS</h2>
+    <ul>
+    <li> <strong>Table &amp;d+ef(Table &amp;table)</strong>:<br>
+        This manipulator can be inserted into a table to call the table's
+<strong>d+ef()</strong> member.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+<p>
+<pre>
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;algorithm&gt;
+
+#include &lt;bobcat/fnwrap1c&gt;
+#include &lt;bobcat/table&gt;
+
+using namespace std;
+using namespace FBB;
+
+class Support: public TableSupport
+{
+    public:
+        virtual void hline(size_t row) const;
+        virtual void vline(size_t col) const;
+        virtual void vline() const;
+    private:
+        static void outLine(Element const &amp;element, ostream &amp;out);
+};
+
+void Support::hline(size_t row) const
+{
+    if (row == 0 || row == nRows())
+        out() &lt;&lt; setfill('-') &lt;&lt; setw(width()) &lt;&lt; "-" &lt;&lt; setfill(' ');
+    else  
+    {
+        const_iterator fieldIt = begin(row);
+
+        if (fieldIt == end())
+            return;
+
+        for_each(fieldIt, end(), 
+                FnWrap1c&lt;Element const &amp;, ostream &amp;&gt;(outLine, out()));
+    }
+    out() &lt;&lt; endl;
+}
+
+void Support::outLine(Element const &amp;element, ostream &amp;out)
+{
+    if (element.width == 0)
+        return;
+
+    if (element.type == SKIP)
+        out &lt;&lt; setw(element.width) &lt;&lt; " ";
+    else
+        out &lt;&lt; setfill('-') &lt;&lt; setw(element.width) &lt;&lt; "-" &lt;&lt; setfill(' ');
+}
+
+void Support::vline(size_t col) const
+{
+    if (col &lt; sep().size())
+        out() &lt;&lt; sep()[col];
+}
+
+void Support::vline() const
+{
+    vline(nColumns());
+    out() &lt;&lt; "\n";
+}
+
+
+int main(int argc, char **argv)
+{
+    Support support;
+
+    support &lt;&lt; 0 &lt;&lt; " | " &lt;&lt; " | ";
+
+    support &lt;&lt; Support::HLine(1, 1, 3); // row[1] separator for cols 1 and 2
+
+    Table tab(support, 3, Table::ROWWISE, Table::EQUALWIDTH);
+//    Table tab(support, 3, Table::ROWWISE);
+ 
+    tab &lt;&lt; Align(0, std::left);     // set column non-default alignment
+    tab.fill(argv + 1, argv + argc);// fill range of values
+    cout &lt;&lt; tab &lt;&lt; endl;            // complete the table and insert
+ 
+    tab &lt;&lt; "hello" &lt;&lt; "" &lt;&lt; "wo";   // add additional elements.
+    if (tab.nRows() &gt; 2)
+        tab &lt;&lt; Align(2, 2, center); // set the layout of a specific element
+ 
+    cout &lt;&lt; tab &lt;&lt; endl;
+
+    return 0;
+}
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/table</em> - defines the class interface;<br>
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>align</strong>(3bobcat), <strong>tablesupport</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    Note that <em>d+ef()</em> will reshuffle elements over the table's
+columns when new elements are added to the table subsequent to calling
+<em>d+ef()</em>
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.14.1-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.14.1-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.14.1-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.14.1-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.14.1-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>
