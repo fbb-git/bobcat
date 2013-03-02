@@ -1,4 +1,4 @@
-#include "../process"
+#include <bobcat/process>
 #include <string>
 #include <iostream>
 #include <climits>

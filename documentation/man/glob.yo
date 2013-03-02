@@ -58,12 +58,15 @@ complete it tasks.
 values were specified and if the bf(glob)(3) function returned without
 errors. 
     )
+
     tt(Glob) offers copy and move constructors.
 
 manpagesection(OVERLOADED OPERATORS)
     itemization(
     itb(Glob &operator=(Glob const &other))
         The assignment operator is available.
+    itb(Glob &operator=(Glob const &&tmp))
+        The move-assignment operator is available.
     itb(char const *operator[](size_t idx) const)
         The element at index position tt(idx) is returns as a bf(C) string. It
     returns an empty string if tt(idx) is or exceeds bf(size()).
@@ -83,6 +86,8 @@ manpagesection(MEMBER FUNCTIONS)
        Returns a pointer beyond the last element that was detected. This
     pointer can be used in generic algorithms as an output-iterator supporting
     pointer arithmetic. 
+    itb(void swap(Glob &other))
+        Swaps the contents of the other object with the current object.
     )
 
 manpagesection(EXAMPLES)

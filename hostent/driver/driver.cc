@@ -2,9 +2,8 @@
                               driver.cc
 */
 
-#include "driver.h"
-
-#include <fbb/hostent.h>
+#include "../hostent"
+#include <iostream>
 #include <algorithm>
 #include <iterator>
 
@@ -12,7 +11,7 @@ using namespace std;
 using namespace FBB;
 
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
     Hostent he(gethostbyname("localhost"));
 

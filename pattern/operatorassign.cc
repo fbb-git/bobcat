@@ -2,10 +2,7 @@
 
 Pattern &Pattern::operator=(Pattern const &other)
 {
-    if (this != &other)
-    {
-        destroy();
-        copy(other);
-    }
+    Pattern tmp(other);
+    swap(tmp);
     return *this;    
 }
