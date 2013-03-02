@@ -9,14 +9,15 @@ using namespace FBB;
 int main(int argc, char **argv)
 try
 {
-    Xpointer xpointer;
-
     if (argc != 3)
     {
         cout << "Two arguments required: x and y pixel-pointerlocation" <<
                 endl;
         return 1;
     }
+
+    Xpointer xpointer;
+    xpointer.verify();
 
     if (!xpointer.set(A2x(argv[1]), A2x(argv[2])))
         throw Errno() << insertable << "Pointer setting sailed" << throwable;

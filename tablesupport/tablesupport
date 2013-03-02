@@ -127,30 +127,6 @@ inline size_t TableSupport::sepWidth(size_t col) const
     return col < d_sep.size() ? d_sep[col].length() : 0;
 }
 
-inline bool TableSupport::const_iterator::operator==(
-        TableSupport::const_iterator const &other) const
-{
-    return d_sep == other.d_sep && d_col == other.d_col;
-}
-
-inline bool TableSupport::const_iterator::operator!=(
-    TableSupport::const_iterator const &other) const
-{
-    return not (*this == other);
-}
-
-inline TableSupport::Element const 
-    *TableSupport::const_iterator::operator->() const
-{
-    return &d_element;
-}
-
-inline TableSupport::Element const 
-    &TableSupport::const_iterator::operator*() const
-{
-    return *operator->();
-}
-
 inline TableSupport::const_iterator TableSupport::end() const
 {
     return const_iterator(*this);
@@ -182,11 +158,6 @@ inline TableSupport::SizeBeginEndMap const &TableSupport::hlineMap() const
 inline std::vector<std::string> const &TableSupport::sep() const
 {
     return d_sep;
-}
-
-inline void TableSupport::add(std::string const &src, size_t &dest)
-{
-    dest += src.length();
 }
 
 inline size_t TableSupport::nColumns() const

@@ -4,10 +4,15 @@ void ServerSocket::listen(size_t backlog, bool blocking)
 {
     static char name[] = "ServerSocket::listen()";
 
+    verify();               // verify the SocketBase construction
+
+    if (d_msg)
+        throw Errno(1, d_msg);
+        
     int sock = socket();
 
     if (::listen(sock, backlog) < 0)
-        throw Errno(name);
+        throw Errno(1, name);
 
     if (blocking)
         return;
@@ -22,6 +27,6 @@ void ServerSocket::listen(size_t backlog, bool blocking)
         ) 
         == -1
     )
-        throw Errno(name);
+        throw Errno(1, name);
 }
 

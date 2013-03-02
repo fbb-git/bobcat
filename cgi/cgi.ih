@@ -83,7 +83,7 @@ class CGIFSA
     static PairCPPFunP const *const s_charClassEnd;
     static bool s_installed;
     static char const *s_stateName[];
-    static std::string s_cgi;
+    static string s_cgi;
 
     public:
         CGIFSA(bool *escape, istream &in = cin, bool setEscape = false);
@@ -124,12 +124,17 @@ inline bool CGIFSA::hasToken(Transition const &transition, size_t token)
 
 inline int CGIFSA::iscgi(int ch)
 {
-    return s_cgi.find(ch) != std::string::npos;
+    return s_cgi.find(ch) != string::npos;
 }
 
 inline void CGIFSA::setEscape(size_t idx)
 {
     d_escape[idx] = d_setEscape;
+}
+
+inline void CGI::init(bool &target)
+{
+    target = d_escapeValue;
 }
 
 

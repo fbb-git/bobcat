@@ -1,6 +1,6 @@
 #include "string.ih"
 
-char const **String::argv(std::vector<std::string> const &lines)
+char const **String::argv(std::vector<string> const &lines)
 {
     size_t idx = lines.size();
 

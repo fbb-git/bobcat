@@ -55,7 +55,8 @@ class DateTime
         {
             THIS_YEAR,
             LAST,
-            NEXT
+            NEXT,
+            THIS_WEEK,
         };
         enum WeekDay
         {
@@ -63,7 +64,7 @@ class DateTime
             MONDAY,
             TUESDAY,
             WEDNESDAY,
-            THIRSDAY,
+            THURSDAY,
             FRIDAY,
             SATURDAY,
         };
@@ -102,22 +103,24 @@ class DateTime
         DateTime &operator-=(tm const &tm);             // d_type
 
 
-        bool setSeconds(int seconds);
-        bool setDay(int day);
-        bool setTime(time_t time);
-        bool setYear(size_t year);
-        bool setHours(int hours);
-        bool setMinutes(int minutes);
+        bool setDay(int day);           // 'int' values may be negative or 
+        bool setHours(int hours);       // postive. 0 
+        bool setMinutes(int minutes);   
         bool setMonth(Month month, Relative where = THIS_YEAR);
-        bool setMonth(int month);       // set month, using 0: januari
+        bool setMonth(int month);       // set month, using 0: january
                                         // correct for overflows.
+        bool setSeconds(int seconds);
+        bool setTime(time_t time);
+        bool setWeekday(WeekDay weekday, Relative where = NEXT);
+        bool setYear(size_t year);
+
 
         size_t seconds() const;
         time_t time() const;
         WeekDay weekday() const;
         size_t year() const;
-        size_t yearDay() const;
-        size_t yearDayNr() const;
+        size_t yearDay() const;             // starts counting at 0
+        size_t yearDayNr() const;           // starts counting at 1
         TriVal dst() const;
 
         DateTime utc() const;
