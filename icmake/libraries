@@ -32,7 +32,8 @@ void static_library(string library)
     }
 }
 
-void shared_library(string destDir, string libso, string libsoshared)
+void shared_library(string destDir, string libso, string libsoshared, 
+                    int strip)
 {
     string libsomajor;
 
@@ -45,7 +46,9 @@ void shared_library(string destDir, string libso, string libsoshared)
     
         chdir(destDir);
     
-        run("strip --strip-unneeded " + libsoshared);
+        if (strip)
+            run("strip --strip-unneeded " + libsoshared);
+
         run("chmod -x " + libsoshared);
         
         run("ln -sf " + libsoshared + " " + libsomajor);
@@ -57,7 +60,7 @@ void shared_library(string destDir, string libso, string libsoshared)
     }
 }
 
-void libraries(string libname, int all)
+void libraries(string libname, int all, int strip)
 {
     string libso;
     string libsoshared;
@@ -83,7 +86,7 @@ void libraries(string libname, int all)
     library(g_tmplib + libsoshared);            // compile the shared lib
 
 
-    shared_library(g_tmplib, libso, libsoshared);
+    shared_library(g_tmplib, libso, libsoshared, strip);
 
 
     exit(0);
