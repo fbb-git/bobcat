@@ -2,7 +2,7 @@
 
 void Hostent::destroy()
 {
-    if (h_name = 0)
+    if (h_name == 0)
         return;
 
     delete h_name;
