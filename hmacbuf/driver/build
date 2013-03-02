@@ -1,8 +1,17 @@
 #!/bin/sh
 
-ln -s .. bobcat
+# ln -s .. bobcat
+# 
+# g++ -I. --std=c++0x -O2 -Wall -o driver driver.cc -lssl -lbobcat \
+#     -L../../ohexstreambuf/tmp -L../tmp -lhmacbuf   -lohexstreambuf
+# 
+# rm bobcat
 
-g++ -I. --std=c++0x -O2 -Wall -o driver driver.cc -lssl -lbobcat \
-    -L../../ohexstreambuf/tmp -L../tmp -lhmacbuf   -lohexstreambuf
+tput clear
 
-rm bobcat
+LIBS=" -lbobcat"
+GPP="g++ --std=c++0x"
+
+CMD="$GPP -o driver -Wall *.cc ${LIBS} -s"
+echo ${CMD}
+${CMD}

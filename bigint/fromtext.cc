@@ -17,19 +17,19 @@ BigInt BigInt::fromText(string const &text, int mode)
                  mode & ios::hex ? 16 : 10);
 
     bool negative = text[0] == '-';
-    
+
+    int (*isFunction)(int) = mode & ios::oct ?   isoctdigit : 
+                             mode & ios::hex ? ::isxdigit   :
+                                               ::isdigit;
     auto iter = find_if(
                     text.begin() + negative, text.end(), 
-                    [&, mode](char ch)
+                    [&, isFunction](char ch)
                     {
-                        return addDigit(ch, ret, radix,
-                                        mode & ios::oct ?   isoctdigit : 
-                                        mode & ios::hex ? ::isxdigit   :
-                                                          ::isdigit);
+                        return addDigit(ch, ret, radix, isFunction);
                     }
                 );
 
-    if (iter - text.begin() <= negative)
+    if (iter - (text.begin() + negative) == 0)
         throw Errno("fromText: text does not represent a BigInt value");
 
     if (negative)
@@ -37,12 +37,3 @@ BigInt BigInt::fromText(string const &text, int mode)
 
     return ret;
 }
-
-
-
-
-
-
-
-
-

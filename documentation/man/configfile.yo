@@ -79,22 +79,22 @@ returns the line of the configuration file the iterator refers to;
 address of the line of the configuration file the iterator refers to;
         )
     tt(const_RE_iterator)s can be compared for (in)equality and they can be
-copy-constructed. A tt(const_RE_iterator) object is returned by the
-tt(ConfigFile::beginRE) and tt(ConfigFile::endRE) members and cannot otherwise
-be constructed. 
+copy-constructed; tt(const_RE_iterator) objects are returned by the
+tt(ConfigFile::beginRE), tt(ConfigFile::endRE) and tt(ConfigFile::beginEndRE)
+members and cannot otherwise be constructed.
 
     When two tt(const_RE_iterator) objects are subtracted the
 number of lines matching their regular expression is returned. E.g., (see
 below for a description of the functions used in the next example):
         verb(
     ConfigFile cf(...)
-    auto start = cf.beginRE("^hello");
-    cout << "There are " << (cf.endRE() - start) << " lines starting with "
-            "hello\n";
+    auto iters = cf.beginEndRE("^hello");
+    cout << "There are " << (iters.second - iters.first) << 
+            " lines starting with hello\n";
         )
     The two tt(const_RE_iterator) objects should refer to the same regular
 expression. The provided example illustrates how this is realized using
-tt(beginRE) and tt(endRE).
+tt(beginEndRE).
 
     tt(FBB::Pattern) is used to perform the regular expression pattern
 matching.
@@ -135,28 +135,42 @@ manpagesection(MEMBER FUNCTIONS)
 configuration file.
 
     itb(ConfigFile::const_RE_iterator beginRE(std::string const &target) const)
-        This member returns a tt(const) iterator to the first element (i.e.,
-line) of the bf(ConfigFile) object in which the regular expression tt(target)
-is found. If the tt(RemoveComment) flag was specified, then comment-text is
-not searched.  The returned iterator can be incremented until tt(endRe) is
-reached; all iterators will point to lines matching the specified regular
-expression.  When increment operator will search for the next line matching
-the specified regular expression.nl()
-    Although the difference between two tt(const_RE_iterators) can be computed
-it is a relatively expensive operation. The difference is obtained by
-performing repeated regular expression matchings rather than the mere
-algebraic subtraction of pointer values. If the difference cannot be computed
-tt(UINT_MAX) is returned.nl() 
-        This member also interprets the tt(SearchCasing) flag.
+        Deprecated. Use tt(beginEndRE) instead. 
 
     itb(ConfigFile::const_iterator end() const)
         This member returns a tt(const_iterator) pointing beyond the last line
 of the configuration file.
 
     itb(ConfigFile::const_RE_iterator endRE() const)
-        This member returns a tt(const) iterator marking the end of the series
-of lines started at the the first line matching the regular expression
-specified by tt(beginRE)
+        Deprecated. Use tt(BeginEndRE) instead.
+
+    itb(std::pair<ConfigFile::const_RE_iterator, ConfigFile::const_RE_iterator>
+         beginEndRE(std::string const &target) const)
+        A pair of tt(const_RE_iterators) is returned. The tt(first)
+field of the pair is a tt(const) iterator to the first element (i.e.,
+line) of the bf(ConfigFile) object in which the regular expression tt(target)
+is found. 
+
+        The tt(second) field is a tt(const) iterator marking the end of the
+series of lines started at the the first line matching the regular expression
+specified by tt(target).
+
+If the tt(RemoveComment) flag was specified, then comment-text is not
+searched.  The iterator returned in the pair's tt(first) field can be
+incremented until the iteratr returned in the pair's tt(second) field is
+reached; all iterators (unequal the iterator in tt(second)) point to lines
+matching the specified regular expression.  
+
+    The iterator's increment operator searches the next line matching the
+specified regular expression.
+
+    Although the difference between two tt(const_RE_iterators) can be computed
+it is a relatively expensive operation. The difference is obtained by
+performing repeated regular expression matchings rather than the mere
+algebraic subtraction of pointer values. If the difference cannot be computed
+tt(UINT_MAX) is returned.
+
+        This member also interprets the tt(SearchCasing) flag.
 
     itb(ConfigFile::const_iterator find(std::string const &target) const)
         This member returns an iterator to the first element (i.e., line) of

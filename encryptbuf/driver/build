@@ -11,9 +11,18 @@
 # echo g++ --std=c++0x -O2 -Wall -o driver driver.cc -lbobcat 
 # g++ --std=c++0x -O2 -Wall -o driver driver.cc -lbobcat 
 
-echo g++ -I. --std=c++0x -O2 -Wall -o driver driver.cc -L../tmp -lencryptbuf \
-        -lssl -lbobcat
+# echo g++ -I. --std=c++0x -O2 -Wall -o driver driver.cc -L../tmp -lencryptbuf \
+#         -lssl -lbobcat
+# 
+# g++ -I. --std=c++0x -O2 -Wall -o driver driver.cc -L../tmp -lencryptbuf \
+#         -lssl -lbobcat
 
-g++ -I. --std=c++0x -O2 -Wall -o driver driver.cc -L../tmp -lencryptbuf \
-        -lssl -lbobcat
+tput clear
 
+LIBS=" -lbobcat"
+GPP="g++ --std=c++0x"
+
+CMD="$GPP -o driver -Wall *.cc ${LIBS} -s"
+
+echo ${CMD}
+${CMD}
