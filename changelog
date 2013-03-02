@@ -1,3 +1,36 @@
+bobcat (1.21.1)
+
+  * Several man-pages were updated/modified (Config, Log, Process, User, X2a)
+
+  * ConfigFile: 
+        added `std::string const &operator[](size_t idx) const' to the
+    interface offering a basic protection against accidentally modifying
+    the configuration file's lines by clients; 
+       added member std::string findKeyTail(std::string key, size_t idx = 1)
+    returning the contents beyond key of the idx-th line containing key.
+ 
+  * Process: this class received an extensive overhaul resulting in multiple
+    new members. See the Process man-page for details. Several of its former
+    constructors and members are now deprecated and will be removed in a
+    future release. Existing sources defining Process objects and the shared
+    Bobcat library must be recompiled as the data member organization of
+    Process has substantially been changed. Again consult the Process man-page
+    for details.
+
+  * Msg: added member open(ofstream &out, std::string const &name, size_t
+    protection) opening an ofstream using a specified protection mode.
+
+  * DateTime: TriVal's UNKNOWN value was changed; rfc2822() now correctly
+    represents the difference between UTC and local time, allowing for DST.
+
+  * The deprecated Arg::getInstance() member was removed. Arg::instance()
+    should be used instead.
+
+  * Added the new class ArgConfig combining the facilities of the Arg and
+    Config classes.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Sun, 26 Oct 2008 15:46:42 +0100
+
 bobcat (1.20.1)
 
   * Removed left-over cout stmnts from DateTime members

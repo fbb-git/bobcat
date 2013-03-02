@@ -14,14 +14,15 @@ void Process::childProcess()
         ec.args[3] = 0;
     }
                           
+    (*(d_processType == USE_PATH ? execvp : execv))
+        (ec.args[0], const_cast<char * const *>(ec.args));
+
+    throw Errno("Process: ") << insertable << " cannot execv[p] " << 
+                                                d_command << throwable;
+}
 
 //    std::cerr << "ChildProcess starts as:\n";
 //    for (char const **cp = ec.args; *cp; ++cp)
 //        std::cerr << "  " << *cp << endl;
 //    std::cerr << "======================\n";
 
-    (*(d_processType == USE_PATH ? execvp : execv))
-        (ec.args[0], const_cast<char * const *>(ec.args));
-
-    exit(-1); 
-}

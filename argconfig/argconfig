@@ -1,0 +1,141 @@
+#ifndef INCLUDED_BOBCAT_ARGCONFIG_
+#define INCLUDED_BOBCAT_ARGCONFIG_
+
+#include <map>
+#include <string>
+
+#include <bobcat/arg>
+#include <bobcat/configfile>
+
+namespace FBB
+{
+
+class ArgConfig: public Arg, public ConfigFile
+{
+    static ArgConfig            *s_argconfig; // points to Singleton ArgConfig
+
+    std::map<int, std::string> d_longOption; // find long options given short
+                                             // option char
+        
+    public:
+        static ArgConfig &initialize(char const *optstring,             // 1
+            int argc, char **argv,
+            Comment cType = KeepComment, 
+            SearchCasing sType = SearchCaseSensitive,
+            Indices iType = IgnoreIndices);
+
+        static ArgConfig &initialize(char const *optstring,             // 2
+            int argc, char **argv, std::string const &fname,    
+            Comment cType = KeepComment, 
+            SearchCasing sType = SearchCaseSensitive,
+            Indices iType = IgnoreIndices);
+
+        static ArgConfig &initialize(char const *optstring,             // 3
+            LongOption const *const begin, LongOption const *const end,
+            int argc, char **argv, Comment cType = KeepComment, 
+            SearchCasing sType = SearchCaseSensitive,
+            Indices iType = IgnoreIndices);
+
+        static ArgConfig &initialize(char const *optstring,             // 4
+            LongOption const *const begin, LongOption const *const end,
+            int argc, char **argv, std::string const &fname,
+            Comment cType = KeepComment, 
+            SearchCasing sType = SearchCaseSensitive,
+            Indices iType = IgnoreIndices);
+
+        static ArgConfig &instance();        
+
+        size_t option(int option) const;                                 // 1
+        size_t option(std::string const &optchars) const;                // 2
+        size_t option(std::string *value, int optChar) const;            // 3
+        size_t option(std::string *value, char const *longOption) const; // 4
+
+        size_t option(size_t idx,                               
+                        std::string *value, int option) const;  
+        size_t option(size_t *idx, 
+                        std::string *value, int option) const;  
+        size_t option(size_t idx, std::string *value, 
+                        char const *longOption) const;          
+        size_t option(size_t *idx, std::string *value, 
+                char const *longOption) const;                  
+
+        char const *operator[](size_t idx) const;           // Arg's []
+        std::string const &line(size_t idx) const;          // ConfigFile's []
+
+    private:
+        ArgConfig(ArgConfig const &other);                      // NI
+        ArgConfig &operator=(ArgConfig const &other);           // NI
+
+                                                                
+        ArgConfig(char const *optstring,                        // 1
+            int argc, char **argv,
+            Comment cType = KeepComment, 
+            SearchCasing sType = SearchCaseSensitive,
+            Indices iType = IgnoreIndices);
+
+        ArgConfig(char const *optstring,                        // 2
+            int argc, char **argv, std::string const &fname,    
+            Comment cType = KeepComment, 
+            SearchCasing sType = SearchCaseSensitive,
+            Indices iType = IgnoreIndices);
+
+        ArgConfig(char const *optstring,                        // 3
+            LongOption const *begin, LongOption const *const end,
+            int argc, char **argv, Comment cType = KeepComment, 
+            SearchCasing sType = SearchCaseSensitive,
+            Indices iType = IgnoreIndices);
+
+        ArgConfig(char const *optstring,                        // 4
+            LongOption const *begin, LongOption const *const end,
+            int argc, char **argv, std::string const &fname,
+            Comment cType = KeepComment, 
+            SearchCasing sType = SearchCaseSensitive,
+            Indices iType = IgnoreIndices);
+
+
+        void storeLongOptions(LongOption const *begin, 
+                              LongOption const *const end);
+
+        const_RE_iterator findLongOption(int optChar) const;
+
+        const_RE_iterator longConfigOpt(std::string const &longOpt) const;
+};
+
+inline size_t ArgConfig::option(size_t idx, std::string *value, 
+                                                    int optChar) const
+{
+    return Arg::option(idx, value, optChar);
+}
+
+inline size_t ArgConfig::option(size_t *idx, std::string *value, 
+                                                    int optChar) const
+{
+    return Arg::option(idx, value, optChar);
+}
+
+inline size_t ArgConfig::option(size_t idx, std::string *value, 
+                                            char const *longOption) const
+{
+    return Arg::option(idx, value, longOption);
+}
+
+inline size_t ArgConfig::option(size_t *idx, std::string *value, 
+                                            char const *longOpt) const
+{
+    return Arg::option(idx, value, longOpt);
+}
+
+inline char const *ArgConfig::operator[](size_t idx) const
+{
+    return Arg::operator[](idx);
+}
+
+inline std::string const &ArgConfig::line(size_t idx) const
+{
+    return ConfigFile::operator[](idx);
+}
+
+} // FBB
+
+#endif
+

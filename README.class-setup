@@ -24,6 +24,7 @@ future relase:
 0   X2a     Hash   Hostent  TypeTrait
                                 |
                 +--------+------+-------+------------+-----------+--------+
+                |        |              |            |           |        |
             FnWrap1  FnWrap1c         FnWrap2     FnWrap2c    foreach  repeat
 
 
@@ -31,28 +32,29 @@ future relase:
        |               |                   |                           |
      Stat         SyslogStream         IRandStream                  AutoPtr
 
-0                             Errno                                   LogBuffer
-                                |                                        |
-                  +--------+----+---------+------+---------+---+----+    |
-                  |        |              |      |         |   |    |    |
-              Pattern     Msg             |   OneKey      User |    +--+-+
-                  |                       |                    |       |
-           +------+-------+   FnWrap1c    |                    |      Log
-           |              |     (cont)    |                    |       |  
-           |              |       |       |                    |       |
-           |              +-------+       |                    |       |
-           |              |               |                    |       |
-      GetHostent      ConfigFile          |                    |     level
-           |                              |         Hostent    | 
-      InetAddress                         |         (cont)     |
-           |                              |            |       |
-       SocketBase                  LocalSocketBase     +---+---+
-           |                              |                |
-    +------+---------+          +---------+---------+   Hostname
-    |                |          |                   |
- ClientSocket   ServerSocket    |                   |
-                                |                   |
-                        LocalClientSocket  LocalServerSocket
+0                       Errno                                    LogBuffer
+                          |                                          |
+             +-------+----+------+----------+-----+-------+-----+    |
+             |       |           |          |     |       |     |    |
+            Msg  Pattern       OneKey       |     |      User   +--+-+
+             |       |                      |     |                |
+    FnWrap1c +-------+                      |     |               Log
+     (cont)  |       |                      |     |   Hostent      |  
+       |     |       |                      |     |    (cont)    level
+       +--+--+       |                      |     |      |       
+          |          |                      |     +---+--+       
+      ConfigFile     |                      |         |          
+                     |                      |     Hostname       
+                 GetHostent                 |                    
+                     |               LocalSocketBase                 
+                 InetAddress                |                          
+                     |                      |                          
+                 SocketBase                 +-------------------+  
+                     |                      |                   |
+                     |              LocalClientSocket   LocalServerSocket
+              +------+---------+       
+              |                |       
+          ClientSocket   ServerSocket  
 
 
      Errno(cont)
@@ -66,28 +68,30 @@ future relase:
 0                      A2x      |    |                                     
        FnWrap1(cont)    |       |    |      FnWrap1c(cont)   Errno(cont)
              |          |       |    |            |               |
-             +----+-----+       |    |  +---------+-----------+   |  IUO
-                  |             |    |  |         |           |   |   |
-                  |             |    |  |         |           +---+---+
-                  |             |    |  |         |           | 
-               String           |    +--+    MultiStreambuf  Glob
-                  |             |    |
-             +----+----+        |    |
-             |         |        |    |
-             |         +--------+    |
-             |         |        |    |
-             |         |       Arg   |
-             |         |             |
-             |         +-------------+
-       CmdFinderBase                 |
-             |                       |
-          CmdFinder                  |
-                                     |
-0                   OFdStreambuf     |     IFdStreambuf
-                         |           |          |
-             +-----------+           |          +--------+
-             |           |           |          |        |
-          OFdStream      +-----------+----------+     IFdStream
+             +----+-----+       |    |    +-------+-----------+   |  IUO
+                  |             |    |    |       |           |   |   |
+                  |             |    |    |       |           +---+---+
+                  |             |    |    |       |           | 
+               String           |    +----+  MultiStreambuf  Glob
+                  |             |         |
+             +----+----+        |         |
+             |         |        |         |
+             |         +---+----+         |
+             |         |   |              |
+             |         |  Arg  ConfigFile |
+             |         |   |     (cont)   |
+             |         |   |       |      |
+       CmdFinderBase   |   +---+---+      |
+             |         |       |          |
+             |         |   ArgConfig      |
+             |         |                  |
+          CmdFinder    +------------------+
+                                          |
+0                   OFdStreambuf          | IFdStreambuf
+                         |                |     |
+             +-----------+                |     +--------+
+             |           |                |     |        |
+          OFdStream      +-----------+----+-----+     IFdStream
                                      |
                                   Process
 

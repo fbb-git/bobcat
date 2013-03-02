@@ -51,14 +51,14 @@ original configuration file will be made available;nl()
 
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(Configfile(Comment cType = KeepComment, SearchCasing sType =
+    itb(ConfigFile(Comment cType = KeepComment, SearchCasing sType =
             SearchCaseSensitive, Indices iType = IgnoreIndices))
         This constructor is used to create an empty bf(FBB::ConfigFile)
 object. It is not associated with an input stream: the bf(open()) member can
 be used for that. The parameters can be used to specify specific handling of
 comment, letter-casing and storage of line numbers in the original
 configuration file.
-    itb(Configfile(std::string const &fname, Comment cType = KeepComment,
+    itb(ConfigFile(std::string const &fname, Comment cType = KeepComment,
             SearchCasing sType = SearchCaseSensitive, 
             Indices iType = IgnoreIndices))
         This constructor is used to create a bf(FBB::ConfigFile) object, which
@@ -67,6 +67,14 @@ constructor's first argument. The other parameters are used as described with
 the first constructor.
     )
         The copy constructor is available.
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(std::string const &operator[](size_t idx) const)
+        This member overloads the inherited tt(std::string
+&std::vector<std::string>::operator[](size_t idx)) offering a basic protection
+against accidentally modifying the configuration file's lines by clients.
+    )
 
 manpagesection(MEMBER FUNCTIONS)
      All members of bf(std::vector<std::string>)  are
@@ -79,7 +87,14 @@ tt(target) is found. bf(FBB::Pattern) is used to perform the pattern
 matching. If the tt(RemoveComment) flag was specified, then comment-text is
 not searched.  The returned iterator can be incremented until bf(endRe()) is
 reached; all iterators will point to lines matching the specified regular
-expression.  This member also interprets the tt(SearchCasing) flag.
+expression.  When increment operator will search for the next line matching
+the specified regular expression.nl()
+    Although the difference between two tt(const_RE_iterators) can be computed
+it is a relatively expensive operation. The difference is obtained by
+performing repeated regular expression matchings rather than the mere
+algebraic subtraction of pointer values. If the difference cannot be computed
+tt(UINT_MAX) is returned.nl() 
+        This member also interprets the tt(SearchCasing) flag.
     itb(ConfigFile::const_RE_iterator endRE() const)
         This member returns a tt(const) iterator marking the end of the series
 of lines started at the the first line matching the regular expression
@@ -93,6 +108,28 @@ bf(FBB::ConfigFile::end()) member to determine the end-iterator. It is not
 guaranteed that all lines between the returned iterator and bf(end()) will
 also contain tt(target).  This member also interprets the tt(SearchCasing)
 flag.
+    itb(std::string findKey(std::string const &keyPattern, 
+                                                        size_t nr = 1) const)
+        This member can be used to retrieve information from lines having the
+general pattern `tt(keyPattern value)'. Initial and trailing white space on
+lines is ignored. tt(keyPattern) itself should not contain white space. At
+least one white space character must appear between tt(keyPattern) and
+tt(value). If at least tt(nr) lines were found matching tt(keyPattern) then
+the member returns the first series of non white space characters beyond
+tt(value) of the tt(nr)+sups(th) line. Otherwise an empty string is returned.
+
+    itb(std::string findKeyTail(std::string const &keyPattern, 
+                                                        size_t nr = 1) const)
+        This member can be used to retrieve information from lines having the
+general pattern `tt(keyPattern value)'. Initial and trailing white space on
+lines is ignored. tt(keyPattern) itself should not contain white space. At
+least one white space character must appear between tt(keyPattern) and
+tt(value). If at least tt(nr) lines were found matching tt(keyPattern) then
+the member returns the (white space trimmed) contents of the text beyond
+tt(keyPattern) of the tt(nr)+sups(th) line. Otherwise an empty string is
+returned. The member tt(findKeyTail) uses the member tt(findRE()) (see below)
+to retrieve lines matching tt(keyPattern).
+
     itb(ConfigFile::const_iterator findRE(std::string const &target) const)
         This member returns an iterator to the first element (i.e., line) of
 the bf(FBB::ConfigFile) object in which the regular expression tt(target) is
