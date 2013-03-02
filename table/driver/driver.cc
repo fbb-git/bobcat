@@ -12,41 +12,41 @@ using namespace FBB;
 class Support: public TableSupport
 {
     public:
-        virtual void hline(size_t row) const;
+//        virtual void hline(size_t row) const;
         virtual void vline(size_t col) const;
         virtual void vline() const;
     private:
-        static void outLine(Element const &element, ostream &out);
+//        static void outLine(Element const &element, ostream &out);
 };
 
-void Support::hline(size_t row) const
-{
-    if (row == 0 || row == nRows())
-        out() << setfill('-') << setw(width()) << "-" << setfill(' ');
-    else  
-    {
-        const_iterator fieldIt = begin(row);
-
-        if (fieldIt == end())
-            return;
-
-        for_each(fieldIt, end(), 
-                FnWrap1c<Element const &, ostream &>(outLine, out()));
-    }
-    out() << endl;
-}
-
-void Support::outLine(Element const &element, ostream &out)
-{
-    if (element.width == 0)
-        return;
-
-    if (element.type == SKIP)
-        out << setw(element.width) << " ";
-    else
-        out << setfill('-') << setw(element.width) << "-" << setfill(' ');
-}
-
+//void Support::hline(size_t row) const
+//{
+//    if (row == 0 || row == nRows())
+//        out() << setfill('-') << setw(width()) << "-" << setfill(' ');
+//    else  
+//    {
+//        const_iterator fieldIt = begin(row);
+//
+//        if (fieldIt == end())
+//            return;
+//
+//        for_each(fieldIt, end(), 
+//                FnWrap1c<Element const &, ostream &>(outLine, out()));
+//    }
+//    out() << endl;
+//}
+//
+//void Support::outLine(Element const &element, ostream &out)
+//{
+//    if (element.width == 0)
+//        return;
+//
+//    if (element.type == SKIP)
+//        out << setw(element.width) << " ";
+//    else
+//        out << setfill('-') << setw(element.width) << "-" << setfill(' ');
+//}
+//
 void Support::vline(size_t col) const
 {
     if (col < sep().size())
