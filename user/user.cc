@@ -1,6 +1,6 @@
 #include "user.ih"
 
-User::User() throw (Errno)
+User::User()
 {
     register size_t uid = getuid();
     struct passwd *pwd;

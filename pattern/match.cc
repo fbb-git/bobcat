@@ -1,6 +1,6 @@
 #include "pattern.ih"
 
-void Pattern::match(string const &text, int options) throw (Errno)
+void Pattern::match(string const &text, int options)
 {
     int errcode = regexec(&d_regex->d_regex, text.c_str(), 
                             d_nSub, d_subExpression, options);

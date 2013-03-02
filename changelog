@@ -1,3 +1,18 @@
+bobcat (1.13.1)
+
+  * All function/member/constructor throw() specifications removed, following
+    Sutter & Alexandrescu's suggestions (except where required by external
+    classes, like std::exception.
+
+  * RefCount's header missed `public:'. Repaired, thus making relase() et
+    al. public members, conform the RefCount manual page.
+
+  * Added template class `AutoPtr'
+
+  * Added template classes FnWrap1, FnWrap1c, FnWrap2, FnWrap2c, obsoleting 
+    Wrap1, Wrap1c, Wrap2, Wrap2c. Classes previously depending on the Wrap*
+    classes were modified accordingly: they now use FnWrap*
+
 bobcat (1.12.1)
 
   * inline virtual destructors have an explicit `inline' mentioned in their

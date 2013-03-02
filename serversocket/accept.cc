@@ -1,6 +1,6 @@
 #include "serversocket.ih"
 
-SocketBase ServerSocket::accept() throw (Errno)
+SocketBase ServerSocket::accept()
 {
     sockaddr_in address;
 

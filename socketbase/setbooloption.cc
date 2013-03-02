@@ -1,6 +1,6 @@
 #include "socketbase.ih"
 
-bool SocketBase::setBoolOption(int optname, bool newValue) throw (Errno)
+bool SocketBase::setBoolOption(int optname, bool newValue)
 {
     bool oldValue = boolOption(optname);
 

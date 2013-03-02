@@ -1,7 +1,6 @@
 #include "gethostent.ih"
 
-string GetHostent::addressToString(char const *prefix, 
-                                        void const *ads) throw(Errno)
+string GetHostent::addressToString(char const *prefix, void const *ads)
 {
     char buffer[100];
 

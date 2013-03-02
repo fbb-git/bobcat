@@ -2,7 +2,7 @@
 
 void Arg::versionHelp(void (*usage)(string const &progname), 
         char const *version, size_t minArgs, int helpFlag, 
-        int versionFlag) const throw (int)
+        int versionFlag) const
 {
     if (option(versionFlag) && !option(helpFlag))
     {

@@ -1,6 +1,6 @@
 #include "configfile.ih"
 
-void ConfigFile::open(string const &fname) throw (Errno)
+void ConfigFile::open(string const &fname)
 {
     ifstream stream(fname.c_str());
 
