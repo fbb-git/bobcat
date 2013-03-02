@@ -66,7 +66,7 @@ terminated by a newline should be written to the destination tt(std::ostream)
 
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(OFoldStreambuf())
+    itb(OFoldStream())
         This constructor initializes an tt(OFoldStream) object but does not
 associate it with a destination stream. It uses the values 0, 80, tt(BLANKS),
 and tt(IGNORE_TRAILING_BLANKS)for, resp. its left margin, right margin
@@ -96,18 +96,17 @@ manpagesection(MEMBER FUNCTIONS)
 inherits from this class.
     itemization(
     itb(void close())
-        This member flushes any
-pending information to the destination stream and then closes the
-destination stream.
+        This member flushes any pending information to the destination stream
+and then closes the destination stream.
 
     itb(void open(char const *fname, openmode mode = std::ios::out))
-        This member closes the current destination stream and associates the
-tt(OFilterStream) object with an tt(std::ofstream) object whose filename is
-provided and that should receive the folded information.
+        This member associates the tt(OFilterStream) object with an
+tt(std::ofstream) object whose filename is provided and that should receive
+the folded information.
         
     itb(void open(std::ostream &out))
-        This member closes the current destination stream object and
-associates the tt(OFilterStream) object with the provided tt(ostream) object.
+        This member associates the tt(OFilterStream) object with the provided
+tt(ostream) object.
 
     itb(void setMargins(size_t leftMargin, size_t rightMargin))
         This member can be used to modify the left- and right folding
@@ -128,28 +127,26 @@ inserting left margins. The second parameter is used to specify the display
 width of a tab-character.
     )
 
+manpagesection(STATIC MEMBER FUNCTIONS)
+
+    itemization(
+    itb(size_t leftMargin(std::ostream const &os))
+        This member returns the current left margin setting of the
+tt(OFoldStream) object passed to it as its argument. The member defines a
+tt(std::ostream) parameter since in many cases the tt(OFoldStream) object will
+be used in functions themselves defining tt(std::ostream)
+parameters. Internally, the tt(std::ostream)'s tt(std::streambuf) is down cast
+to an tt(OFoldStreambuf) and an tt(FBB::Errno) exception is thrown if that
+cast fails.
+    itb(size_t rightMargin(std::ostream const &os))
+        This member returns the current right margin setting of the
+tt(OFoldStream) object passed to it as its argument. The member's parameter is
+down cast in the same way as tt(leftMargin())'s argument: an tt(FBB::Errno)
+exception is thrown if that cast fails.
+    )
+
 manpagesection(EXAMPLE)
-        verb(
-    #include <iostream>
-    #include <string>
-    #include <bobcat/ofoldstream>
-    
-    using namespace std;
-    using namespace FBB;
-    
-    int main()
-    {
-        OFoldStream out(cout, 4, 40);
-
-        out << lm(4);
-
-        string line;
-        while (getline(cin, line))
-            out << line << '\n';
-    
-        return 0;
-    }
-        )
+    verbinclude(../../ofoldstream/driver/driver.cc)
 
 manpagefiles()
     em(bobcat/ofoldstream) - defines the class interface
