@@ -5,5 +5,6 @@
 
 string ConfigFile::findKey(string const &keyPattern, size_t count)
 {
-    return searchFor("^\\s*" + keyPattern + "\\s+(\\S+)", count);
+    return d_ptr->findKey(keyPattern, count);
 }
+

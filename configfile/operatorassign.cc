@@ -2,6 +2,7 @@
 
 ConfigFile &ConfigFile::operator=(ConfigFile &&tmp)
 {
-    fswap(*this, tmp);
+    *d_ptr = move(*tmp.d_ptr);
     return *this;
 }
+

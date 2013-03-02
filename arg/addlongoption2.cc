@@ -4,7 +4,7 @@
     called by fillLongOption() to create the array of `struct option'
     (OptStruct) elements to be interpreted by getopt_long()
 */
-void Arg::addLongOption(OptStruct *optStruct,
+void Arg__::addLongOption(OptStruct *optStruct,
                             string const &optString,
                             LongOption const &longOption)
 {

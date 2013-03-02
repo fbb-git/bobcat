@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #include <bobcat/string>
+#include <bobcat/errno>
 
 namespace FBB
 {
@@ -32,7 +33,36 @@ namespace FBB
                 return d_opt;
             }
     };
+
+class ArgConfig__
+{
+                                            // find long options given short
+                                            // option char
+    std::unordered_map<int, std::string> d_longOption; 
+        
+    public:
+        ArgConfig__(LongOption__ const *begin, LongOption__ const *const end);
+        std::unordered_map<int, std::string>::const_iterator 
+                                                    find(int optChar) const;
+        
+        std::unordered_map<int, std::string>::const_iterator findEnd() const;
+};
+
+inline std::unordered_map<int, std::string>::const_iterator 
+    ArgConfig__::find(int optChar) const
+{
+    return d_longOption.find(optChar);
 }
+
+inline std::unordered_map<int, std::string>::const_iterator 
+    ArgConfig__::findEnd() const
+{
+    return d_longOption.end();
+}
+
+
+} // FBB
 
 using namespace FBB;
 using namespace std;
+

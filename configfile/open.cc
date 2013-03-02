@@ -1,6 +1,6 @@
 #include "configfile.ih"
 
-void ConfigFile::open(string const &fname)
+void ConfigFile__::open(string const &fname)
 {
     ifstream stream;
     Errno::open(stream, fname);
@@ -18,6 +18,10 @@ void ConfigFile::open(string const &fname)
         d_line.push_back(line);
 }
 
+void ConfigFile::open(string const &fname)
+{
+    d_ptr->open(fname);
+}
 
 
 

@@ -1,6 +1,6 @@
 #include "arg.ih"
 
-void Arg::verify()
+void Arg__::verify()
 {
     switch (d_getOpt)
     {

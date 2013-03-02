@@ -8,7 +8,7 @@ Mbuf::Mbuf()
     d_throw(false),
 
     d_count(0),
-    d_maxCount(UINT_MAX),
+    d_maxCount(numeric_limits<size_t>::max()),
     d_lineExcess(false),
 
     d_showLineNr(false),

@@ -10,7 +10,7 @@ std::ostream &flush(std::ostream &os)
     if (Mstream *mp = dynamic_cast<Mstream *>(&os))
     {
         if (mp->throws())
-            throw Errno(mp->id(), "FBB::Mstream");
+            throw Errno(mp->id());
 
         if (mp->lineExcess())
             throw Errno(mp->id()) << "Exceeding max. # of " << 

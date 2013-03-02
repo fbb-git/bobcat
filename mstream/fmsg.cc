@@ -2,5 +2,5 @@
 
 namespace FBB
 {
-    Mstream fmsg(std::cout, UINT_MAX,       "Fatal", true);
+    Mstream fmsg(std::cout, numeric_limits<size_t>::max(),       "Fatal", true);
 }

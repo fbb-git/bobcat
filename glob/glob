@@ -4,6 +4,8 @@
 #include <string>
 #include <glob.h>
 
+#include <bobcat/errno>
+
 namespace FBB
 {
 
@@ -54,9 +56,6 @@ class Glob
         void verify() const;        // no-op
 
         void swap(Glob &other);
-
-        Glob(Glob const &&tmp);             // Deprecated
-        Glob &operator=(Glob const &&tmp);  // Deprecated
 
     private:
         char const **mbegin() const;

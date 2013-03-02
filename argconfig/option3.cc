@@ -10,12 +10,17 @@ size_t ArgConfig::option(string *value, int optChar)
     if (ret != 0)
         return ret;
 
-    const_RE_iterator longOpt = findLongOption(optChar);
-    if (longOpt == endRE())
+    auto iterators = findLongOption(optChar);
+
+    if (iterators.second == iterators.first)
         return 0;
 
     if (value)
-        *value = findKeyTail(d_longOption.find(optChar)->second + ":?", 1);
+        *value = findKeyTail(d_ptr->find(optChar)->second + ":?", 1);
 
-    return endRE() - longOpt;
+    return iterators.second - iterators.first;
 }
+
+
+
+

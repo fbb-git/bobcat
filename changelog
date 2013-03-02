@@ -1,3 +1,64 @@
+bobcat (3.01.00)
+
+  * Repaired a bug in DateTime: its dstCorrection(bool *ok) member failed to
+    set the ok boolean to true if the localime_r performed correctly.
+
+  * According to the man-page localtime_r does not assume that tzset(3) has
+    been called, but leaves this to the calling program. Localtime_r's
+    man-page states: 
+        For  portable  code  tzset  should  be  called before localtime_r().
+    DateTime::dstCorrection(bool *) now calls tzset before calling
+    localtime_r. 
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Mon, 14 May 2012 11:43:08 +0200
+
+bobcat (3.00.02)
+
+  * Cosmetic split of configile/beginre.cc into two sources, one holding the
+    deprecated member ConfigFile::begin, the other one holding 
+    ConfigFile__::begin. 
+
+  * All classes that may throw Bobcat's Errno exceptions now include
+    bobcat/errno in their class-level header files.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Thu, 10 May 2012 13:50:36 +0200
+
+bobcat (3.00.01)
+
+  * Re-added deprecated classes and members that were removed in 3.00.00
+
+  * Old references to ...bobcat2 in icmake files replaced by references to
+    ...bobcat3  
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Mon, 07 May 2012 17:08:51 +0200
+
+bobcat (3.00.00)
+
+  * Functionality deprecated in Bobcat < 3.00.00 has been removed. This
+    includes the classes Msg (Use Mstream or Errno), the FnWrap* and ForEach
+    templates (use lamda functions), and AutoPtr / RefCount (use
+    std::shared_ptr or std::unique_ptr)
+
+  * Arg/ConfigFile/ArgConfig now use the Bridge Design Pattern. Note that this
+    requires (only once) all programs using Arg, ConfigFile or ArgConfig to be
+    recompiled.
+
+  * Added member int Arg::beyondDashes() returning the index of the first
+    argument beyond a -- argument (or -1)
+
+  * The 'repeat' function template was improved, now perfectly forwarding 
+    arguments to (member) functions repeatedly called by `repeat'.
+
+  * Replaced climits constants by limits const-expressions
+
+  * Added TempStream creating a temporary fstream
+
+  * NOTE: programs depending on the Bobcat shared library most likely must be
+    recompiled. Minor code modifications may be necessary if a program still
+    used Bobcat's deprecated facilities, which are now removed from Bobcat.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Sat, 05 May 2012 16:50:58 +0200
+
 bobcat (2.22.00)
 
   * Repaired bug in ArgConfig: following load() options in the config. file

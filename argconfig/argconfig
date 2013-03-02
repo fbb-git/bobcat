@@ -10,14 +10,14 @@
 namespace FBB
 {
 
+class ArgConfig__;
+
 class ArgConfig: public Arg, public ConfigFile
 {
     static ArgConfig            *s_argconfig; // points to Singleton ArgConfig
 
-                                            // find long options given short
-                                            // option char
-    std::unordered_map<int, std::string> d_longOption; 
-        
+    ArgConfig__ *d_ptr;
+
     public:
         static ArgConfig &initialize(char const *optstring,             // 1
             int argc, char **argv,
@@ -93,13 +93,8 @@ class ArgConfig: public Arg, public ConfigFile
             SearchCasing sType = SearchCaseSensitive,
             Indices iType = IgnoreIndices);
 
-
-        void storeLongOptions(LongOption const *begin, 
-                              LongOption const *const end);
-
-        const_RE_iterator findLongOption(int optChar);
-
-        const_RE_iterator longConfigOpt(std::string const &longOpt);
+        RE_iteratorPair findLongOption(int optChar);
+        RE_iteratorPair longConfigOpt(std::string const &longOpt);
 };
 
 inline size_t ArgConfig::option(size_t idx, std::string *value, 

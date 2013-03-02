@@ -11,7 +11,8 @@ case $1 in
         g++ --std=c++0x -o driver *.cc -L../../tmp -largconfig -lbobcat -s
     ;;
     (l)
-        g++ --std=c++0x  -o driver *.cc -L../../tmp/lib -lbobcat -s
+        g++ --std=c++0x --static -I../../tmp -o driver *.cc \
+                                        -L../../tmp/lib  -lbobcat -s
     ;;
     (c)
         g++ --std=c++0x -o driver *.cc -lbobcat -s

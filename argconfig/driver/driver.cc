@@ -3,6 +3,8 @@
 
 #include "argconfig"
 
+#include <bobcat/errno>
+
 using namespace std;
 using namespace FBB;
 
@@ -37,26 +39,38 @@ void X::function()
     cout << "Counting " << d_arg.option('o') << " instances of -o or "
                                                             "--option\n";
 
-    cerr << "\nNow opening config file `" << d_arg[0] << "'\n";
+    cerr << "\n"
+            "Now opening config file `" << d_arg[0] << "'\n";
 
     d_arg.open(d_arg[0]);       // Now open the config file explicitly
                             // (alternatively: use a constructor expecting 
                             // a file name)
 
-    cout << "Counting " << d_arg.option('o') << " instances of -o or "
+    cout << "\n"
+            "ALL LINES IN THE CONFIG FILE:\n";
+    copy(d_arg.begin(), d_arg.end(), ostream_iterator<string>(cout, "\n"));
+    cout << "\n"
+            "Counting " << d_arg.option('o') << " instances of -o or "
                                                             "--option\n";
-
+    
     string optval;
     size_t count = d_arg.option(&optval, 'v');
 
-    cout << "Counting " << count << 
-                        " instances of -v or --option-value\n";
+    cout << "\n"
+            "Counting " << count << " instances of -v or --option-value\n"
+            "The first one having value `" << optval << "'\n";
 }
 
 int main(int argc, char **argv)
 try
 {
-    ArgConfig::initialize("ov:", lo, lo + 2, argc, argv);
+    ArgConfig &arg = ArgConfig::initialize("cov:", lo, lo + 2, argc, argv);
+
+    if (arg.option('c'))
+    {
+        cout << "Comment lines are removed from the config file\n\n";
+        arg.setCommentHandling(ArgConfig::RemoveComment);
+    }
 
     X x;
     x.function();
@@ -66,6 +80,8 @@ catch (Errno const &err)
     cout << "Terminating " << err.why() << endl;
     return 1;
 }
+
+
 
 
 

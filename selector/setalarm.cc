@@ -6,6 +6,6 @@ void Selector::setAlarm(int sec, int usec)
     d_alarm.tv_usec = usec;
 
     long long testTime = usec + 1000000LL * sec;
-    if (testTime < 0 || testTime > INT_MAX * 1000000LL)
+    if (testTime < 0 || testTime > numeric_limits<int>::max() * 1000000LL)
         throw Errno(1, "Selector::setAlarm()");
 }

@@ -38,19 +38,21 @@ manpagesection(CONSTRUCTORS)
 also used by tt(std::cout). There is no limit to the number of messages that
 may be inserted. No message or line numbers are shown, no exception are thrown
 when inserting messages.
-    itb(explicit Mbuf(std::streambuf *buf, size_t maxCount = UINT_MAX, 
+    itb(explicit Mbuf(std::streambuf *buf, 
+                size_t maxCount = std::numeric_limits<size_t>::max(), 
                 std::string const &tag = "", bool throwing = false))
         This constructor uses tt(buf) to handle messages. By default (using
 the default argument values) there is no limit to the number of messages that
 may be inserted. No message or line numbers are shown, no exception are thrown
-when inserting messages. Specifying any other value than tt(UINT_MAX) will set
-the maximum number of messages that can be inserted to that value. The tt(tag)
-defines the text of the message label (e.g., tt(Error)). When tt(throwing) is
-specified as tt(true) an tt(FBB::Errno) exception is thrown after completing a
-message. The generated exception holds the id (see below for the member
-tt(id)) of the bf(FBB::Mbuf) object from which the exception was thrown as
-well as the text tt(FBB::Mbuf).
-    itb(explicit Mbuf(std::string const &name, size_t maxCount = UINT_MAX, 
+when inserting messages. Specifying any other value than
+tt(std::numeric_limits<size_t>::max()) sets the maximum number of messages
+that can be inserted to that value. The tt(tag) defines the text of the
+message label (e.g., tt(Error)). When tt(throwing) is specified as tt(true) an
+tt(FBB::Errno) exception is thrown after completing a message. The generated
+exception holds the id (see below for the member tt(id)) of the bf(FBB::Mbuf)
+object from which the exception was thrown as well as the text tt(FBB::Mbuf).
+    itb(explicit Mbuf(std::string const &name, size_t maxCount =
+                std::numeric_limits<size_t>::max(),  
                 std::string const &tag = "", bool throwing = false))
         This constructor creates a tt(std::ofstream) from the provided
 tt(name) parameter that receives the messages handled by the constructed
@@ -79,8 +81,8 @@ after tt(maxCount()) number of messages have been inserted.
 
     itb(size_t maxCount() const)
         returns the maximum number of messages that can be inserted. If the
-returned value equals tt(UINT_MAX) then there is no limit to the number of
-messages that can be inserted.
+returned value equals tt(std::numeric_limits<size_t>::max()) then there is no
+limit to the number of messages that can be inserted.
 
     itb(void noLineNr())
         calling this member will suppress the display of a line number if it
@@ -90,12 +92,12 @@ being (or has been) inserted.
     itb(void reset(std::streambuf *buf, size_t maxCount, 
                 std::string const &tag, bool throwing))
         messages inserted into bf(FBB::Mbuf) objects are handled by
-tt(std::streambuf buf).  By specifying tt(UINT_MAX) for tt(maxCount) there is
-no limit to the number of messages that may be handled by this
-tt(std::streambuf). The tt(tag) defines the text of the message label (e.g.,
-tt(Error) or the empty string for no message label). When tt(throwing) is
-specified as tt(true) an tt(FBB::Errno) exception is thrown after completing a
-message.
+tt(std::streambuf buf).  By specifying tt(std::numeric_limits<size_t>::max())
+for tt(maxCount) there is no limit to the number of messages that may be
+handled by this tt(std::streambuf). The tt(tag) defines the text of the
+message label (e.g., tt(Error) or the empty string for no message label). When
+tt(throwing) is specified as tt(true) an tt(FBB::Errno) exception is thrown
+after completing a message.
 
     itb(void reset(std::string const &name, size_t maxCount, 
                 std::string const &tag, bool throwing))
