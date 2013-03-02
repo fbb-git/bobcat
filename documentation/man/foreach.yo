@@ -1,0 +1,108 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::for_each)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Unary FnWrapper)
+
+manpagename(FBB::for_each)(Extensions to the STL for_each function template)
+
+manpagesynopsis()
+    bf(#include <bobcat/foreach>)nl()
+
+manpagedescription()
+
+The bf(FBB::for_each) function templates extend the STL tt(for_each) function
+template allowing its use in many often occurring situations.
+
+The STL tt(for_each) function template requires a pair of iterators preventing
+its use in situations where an action should be performed a number of times
+using a plain, non-dereferenceable variable rather than an
+iterator. Furthermore, the STL template requires the use of either a classless
+or static class member function or a function object. In situations in which a
+class member is called a number of times the STL template function cannot
+easily be used.
+
+The tt(FBB::for_each) function template was designed to allow the use of the
+tt(for_each) algorithm in the abovementioned situations. It cannot be used to
+pass a `local function context' to the function performing the action and it
+cannot be used to call a function a number of times. In the former case the
+tt(FBB::FnWrap1c) and tt(FBB::FnWrap2c) classes can be used; in the latter
+case the bf(repeat)(3bobcat) function templates can be used.
+
+All tt(FBB::for_each) template functions are defined tt(inline),
+allowing the compiler to `optimize away' the tt(for_each) function call 
+itself.
+
+Since some of the tt(FBB::for_each) function templates use the same number of
+parameters as the tt(stl::for_each) function templates the explicit use of the
+tt(FBB) namespace will often be required in situations where both function
+templates are made available to the compiler.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(OVERLOADED FUNCTIONS)
+    In the following description several template type parameters are
+used. They are:
+    itemization(
+    it() bf(Iter) represents an iterator type; 
+    it() bf(Function) represents a pointer to a classless or static class
+member function or to a function object; 
+    it() bf(Class) represents a class type;
+    it() bf(Member) represents a pointer to a tt(Class) member function
+expecting a (reference to a) derefenced tt(Iter) object or an argument of the
+same type as the first tt(for_each) parameter.
+    )
+    itemization(
+    itb(void for_each(Iter begin, Iter end, Function &fun))
+       tt(fun) is called tt(end - begin) times, passing tt(begin) or
+        tt(*begin) with tt(begin) iterating towards tt(end) to tt(fun). If
+        tt(begin) and tt(end) are class- or pointer type variables tt(*begin)
+        is passed to tt(fun) otherwise tt(begin) is passed to tt(fun).
+    itb(void for_each(Iter begin, Iter end, Class &object, Member member))
+       tt(object.*member) is called tt(end - begin) times, passing tt(begin)
+        or tt(*begin) with tt(begin) iterating towards tt(end) to
+        tt(object.*member). If tt(begin) and tt(end) are class- or pointer
+        type variables tt(*begin) is passed to tt(fun) otherwise tt(begin) is
+        passed to tt(fun).
+    itb(void for_each(Iter begin, Iter end, Class *object, Member member))
+       tt(object->*member) is called tt(end - begin) times, passing tt(begin)
+        or tt(*begin) with tt(begin) iterating towards tt(end) to
+        tt(object->*member). If tt(begin) and tt(end) are class- or pointer
+        type variables tt(*begin) is passed to tt(fun) otherwise tt(begin) is
+        passed to tt(fun).
+    )
+    tt(Class) and tt(Member) may also be defined as tt(const) objects. 
+
+manpagesection(EXAMPLES)
+    Assume a class tt(CGIFSA) defines the following inline function, using the
+array tt(bool d_escape[]) and the variable tt(bool d_setEscape):
+        verb(
+    inline void CGIFSA::setEscape(size_t idx)
+    {
+        d_escape[idx] = d_setEscape;
+    }
+        )
+    To set a series of tt(d_escape) elements to tt(d_setEscape) a member
+function of the class tt(CGIFSA) may use the following code (with tt(size_t
+begin, end)):
+        verb(
+    if (begin <= end)
+        for_each(begin, end + 1, this, &CGIFSA::setEscape);
+        )    
+
+manpagefiles()
+    em(bobcat/foreach) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(fnwrap1)(3bobcat), bf(fnwrap1c)(3bobcat), 
+    , bf(fnwrap2)(3bobcat), bf(fnwrap2c)(3bobcat), 
+    bf(repeat)(3bobcat)
+
+manpagebugs()
+    Note that the tt(for_each) algorithms iterate until tt(begin) equals
+tt(end); hence the test for tt(begin <= end) in the above example.
+
+includefile(trailer.inc)

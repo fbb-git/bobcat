@@ -4,24 +4,10 @@
 
 #include "driver.h"
 
-#ifndef _INCLUDED_GETHOSTENT_H_
 #include <fbb/gethostent.h>
-#endif
-
-#ifndef _SYSINC_ALGORITHM_
 #include <algorithm>
-#define _SYSINC_ALGORITHM_
-#endif
-
-#ifndef _INCLUDED_HOSTENT_H_
 #include <fbb/hostent.h>
-#endif
-
-#ifndef _SYSINC_ITERATOR_
 #include <iterator>
-#define _SYSINC_ITERATOR_
-#endif
-
 
 using namespace std;
 using namespace FBB;

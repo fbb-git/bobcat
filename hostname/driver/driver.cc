@@ -1,17 +1,17 @@
-#ifndef _INCLUDED_HOSTNAME_H_
+#ifndef INCLUDED_HOSTNAME_H_
 #include "../hostname.h"
 #endif
 
-#ifndef _INCLUDED_IOSTREAM_
+#ifndef INCLUDED_IOSTREAM_
 #include <iostream>
-#define _INCLUDED_IOSTREAM_
+#define INCLUDED_IOSTREAM_
 #endif
 
-#ifndef _INCLUDED_INETADDRESS_H_
+#ifndef INCLUDED_INETADDRESS_H_
 #include <fbb/inetaddress.h>
 #endif
 
-#ifndef _INCLUDED_ERRNO_H_
+#ifndef INCLUDED_ERRNO_H_
 #include <fbb/errno.h>
 #endif
 

@@ -7,6 +7,5 @@ Pattern &Pattern::operator=(Pattern const &other)
         destroy();
         copy(other);
     }
-        
     return *this;    
 }

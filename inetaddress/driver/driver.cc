@@ -1,4 +1,4 @@
-#ifndef _INCLUDED_INETADDRESS_H_
+#ifndef INCLUDED_INETADDRESS_H_
 #include "../inetaddress.h"
 #endif
 

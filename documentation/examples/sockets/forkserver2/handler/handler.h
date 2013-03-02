@@ -1,5 +1,5 @@
-#ifndef _INCLUDED_HANDLER_
-#define _INCLUDED_HANDLER_
+#ifndef INCLUDED_HANDLER_
+#define INCLUDED_HANDLER_
 
 #include <bobcat/fork>
 

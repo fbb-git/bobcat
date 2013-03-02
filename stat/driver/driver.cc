@@ -11,12 +11,11 @@
 using namespace std;
 using namespace FBB;
 
-
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
     if (argc == 1)
     {
-        cout << "Directory entry required\n";
+        cout << "Usage: driver object [colon-separated searchpath]\n";
         return 1;
     }
 
@@ -32,25 +31,13 @@ int main(int argc, char **argv, char **envp)
         return 1;
     }
 
-    cout << st.name() << ": access: " << st.lastAccess() << endl;
-    cout << st.name() << ": change: " << st.lastChange() << endl;
-    cout << st.name() << ": modif:  " << st.lastModification() << endl;
-    cout << "Mode: " << oct << st.mode() << endl;
-    cout << "Type: " << st.type() << endl;
-    switch (st.type())
-    {
-        case Stat::REGULAR_FILE:
-            cout << "It's a regular file\n";
-        break;
-        case Stat::DIRECTORY:
-            cout << "It's a directoryregular file\n";
-        break;
-        default:
-            cout << "It's not a directory nor regular file\n";
-        break;
-    }
+    cout << st.name() << ": access: " << st.lastAccess() << "\n" <<
+            st.name() << ": change: " << st.lastChange() << "\n" <<
+            st.name() << ": modif:  " << st.lastModification() << "\n"   
+            "Mode: " << oct << st.mode() <<  " (" << st.modeStr() << ")\n" 
+            "Type: " << st.type() << " (" << st.typeStr() << ")\n"
+            "Full path:  " << st.path()  << endl;
 
-    cout << "Full path:  " << st.path()  << endl;
     return 0;
 }
 

@@ -1,10 +1,10 @@
 //                              driver.h
 
-#ifndef _H_driver_
-#define _H_driver_
+#ifndefH_driver_
+#defineH_driver_
 
 /*
-   $Id: driver.h 45 2005-11-11 14:22:42Z frank $
+   $Id: driver.h 224 2008-03-19 15:16:28Z fbb $
 
    $Log$
    Revision 1.1  2005/11/11 14:22:42  frank

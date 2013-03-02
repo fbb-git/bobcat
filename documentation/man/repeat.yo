@@ -1,0 +1,68 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::repeat)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Unary FnWrapper)
+
+manpagename(FBB::repeat)(call a (member) function a number of times)
+
+manpagesynopsis()
+    bf(#include <bobcat/foreach>)nl()
+
+manpagedescription()
+
+The bf(FBB::repeat) function templates allows a function or function object to
+be called a certain number of times. 
+
+The STL tt(repeat) function templates requires a counter set to the number of
+times a function or function object is activated. No argument and no local
+context is passed to the function (object). The tt(for_each) function
+templates can be used for that.
+
+The tt(FBB::repeat) function templates are defined tt(inline),
+allowing the compiler to `optimize away' the tt(repeat) function call 
+itself.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(OVERLOADED FUNCTIONS)
+    In the following description several template type parameters are
+used. They are:
+    itemization(
+    it() bf(Counter) represents the counter's type. Usually it is an tt(int)
+or tt(size_t). 
+    it() bf(Function) represents a pointer to a classless or static class
+member function or a function object; 
+    it() bf(Class) represents a class type;
+    it() bf(Member) represents a pointer to a tt(Class) member function.
+    )
+    itemization(
+    itb(void repeat(Counter counter, Function &fun))
+       tt(fun) is called tt(counter) times. No argument is passed to tt(fun).
+    itb(void repeat(Counter counter, Class &object, Member member))
+       tt(object.*member) is called tt(counter) times, passing no argument to 
+        tt(object.*member).
+    itb(void repeat(Counter counter, Class *object, Member member))
+       tt(object->*member) is called tt(counter) times, passing no argument to 
+        tt(object->*member).
+    )
+    tt(Class) and tt(Member) may also be defined as tt(const) objects. 
+
+
+manpagesection(EXAMPLES)
+    TO DO
+
+manpagefiles()
+    em(bobcat/repeat) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(fnwrap1)(3bobcat), bf(fnwrap1c)(3bobcat), 
+    bf(fnwrap2)(3bobcat), bf(fnwrap2c)(3bobcat), bf(foreach)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

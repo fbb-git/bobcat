@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void _bobcat_fatal(char const *);
+void bobcat_fatal_(char const *, char const *);
 
 int XWarpPointer()
 {
-    _bobcat_fatal("XWarpPointer");
+    bobcat_fatal_("XWarpPointer", "X11");
     return 0;
 }

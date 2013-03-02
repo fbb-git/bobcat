@@ -4,46 +4,49 @@ void PerlSetFSA::copy()
 {
     d_target += *d_next;
 }
+
 void PerlSetFSA::copybs()
 {
     (d_target += "\\") += *d_next;
 }
-void PerlSetFSA::w_Set()
-{
-    d_target += "[[:alnum:]]";
-}
-void PerlSetFSA::W_Set()
-{
-    d_target += "[^[:alnum:]]";
-}
+
 void PerlSetFSA::d_Set()
 {
     d_target += "[[:digit:]]";
-}
-void PerlSetFSA::D_Set()
-{
-    d_target += "[^[:digit:]]";
 }
 void PerlSetFSA::s_Set()
 {
     d_target += "[[:space:]]";
 }
+void PerlSetFSA::w_Set()
+{
+    d_target += "[[:alnum:]]";
+}
+
+void PerlSetFSA::D_Set()
+{
+    d_target += "[^[:digit:]]";
+}
 void PerlSetFSA::S_Set()
 {
     d_target += "[^[:space:]]";
 }
-void PerlSetFSA::w_Nest()
+void PerlSetFSA::W_Set()
 {
-    d_target += "[:alnum:]]";
+    d_target += "[^[:alnum:]]";
 }
+
 void PerlSetFSA::d_Nest()
 {
-    d_target += "[[:digit:]]";
+    d_target += "[:digit:]";
 }
 void PerlSetFSA::s_Nest()
 {
-    d_target += "[[:space:]]";
+    d_target += "[:space:]";
 }
-
+void PerlSetFSA::w_Nest()
+{
+    d_target += "[:alnum:]";
+}
 
 
