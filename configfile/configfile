@@ -117,6 +117,8 @@ class ConfigFile
 
         std::string const &operator[](size_t idx) const;
 
+        size_t size() const;
+
     private:
         size_t append_next(std::istream &istr, std::string &line);
         bool hasContent(std::string const &line);
@@ -141,6 +143,11 @@ inline std::string const &RE_iterator::operator*() const
 inline std::string const *RE_iterator::operator->() const
 {                     
     return &*d_vsIter[d_idx];
+}
+
+inline size_t ConfigFile::size() const
+{
+    return d_line.size();
 }
 
 inline void ConfigFile::setCommentHandling(Comment type)
