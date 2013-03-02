@@ -3,6 +3,6 @@
 std::istream &Process::cerr()
 {
     active();
-    return d_childCerr;
+    return d_iChildErr;
 }
 

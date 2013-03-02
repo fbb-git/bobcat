@@ -14,9 +14,8 @@ Pattern::Regex::Regex(string pattern, int options)
 
         regerror(errcode, &d_regex, buffer.get(), 100);
 
-        throw Errno(errcode, "Pattern::Pattern(") << 
-                    insertable << pattern << "): " << buffer.get() << 
-                    throwable;
+        throw Errno(errcode, "Pattern::Pattern(") << pattern << "): " << 
+                                                                buffer.get();
     }
 
     s_converted = pattern;          // make the converted pattern available

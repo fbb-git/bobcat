@@ -2,7 +2,7 @@
 
 Process::iomode Process::sanitizeIOMode(iomode mode)
 {
-    d_mode = mode;
+    d_mode = mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC);
 
     if (d_mode & COUT)                  // overrules IGNORE_COUT
         d_mode &= ~(IGNORE_COUT);

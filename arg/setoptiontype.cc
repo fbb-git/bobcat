@@ -7,9 +7,9 @@ int Arg::setOptionType(string const &optString,
 
     if (pos == string::npos)
         throw Errno(EINVAL, "Arg::setOptionType()") <<
-                insertable <<  ": short option `" << 
+                ": short option `" << 
                 static_cast<char>(longOption.d_optionChar) << 
-                "' not found" << throwable;
+                "' not found";
 
     return optString[pos + 1] == ':' ? Arg::Required : Arg::None;
 }

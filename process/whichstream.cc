@@ -10,7 +10,7 @@ size_t Process::whichStream()
         return NOTHING_AVAILABLE;
 
         case 1:
-        return d_selector.readFd() == d_child_outp->readFd() ? 
+        return d_selector.readFd() == d_iChildOutPipe.readFd() ? 
                     CHILD_COUT 
                 : 
                     CHILD_CERR;
@@ -19,7 +19,7 @@ size_t Process::whichStream()
 
         default:
             throw Errno("Process::whichStream(): internal error. "
-                "d_selector.nReady() returns ") << insertable <<
-                count << ", should be <= 2" << throwable;
+                                        "d_selector.nReady() returns ") << 
+                         count << " (should be <= 2)";
     }
 }

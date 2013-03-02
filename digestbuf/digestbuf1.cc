@@ -14,8 +14,7 @@ DigestBuf::DigestBuf(char const *type, size_t bufsize)
             if (type == 0)
                 type = "** unspecified digest type **";
     
-            throw Errno(1, "DigestBuf `") << insertable << type << 
-                                            "' not available" << throwable;
+            throw Errno(1, "DigestBuf `") << type << "' not available";
         }
         d_pimpl->buffer = new char[bufsize];
         open();

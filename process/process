@@ -2,7 +2,7 @@
 #define INCLUDED_BOBCAT_PROCESS_
 
 #include <string>
-#include <memory>
+// #include <memory>
 #include <ostream>
 #include <istream>
 
@@ -19,6 +19,8 @@ namespace FBB
 
 class Process: private Fork, public IOStream
 {
+    friend Process &operator|(Process &lhs, Process &rhs);
+
     public:
         enum ProcessType
         {
@@ -39,24 +41,19 @@ class Process: private Fork, public IOStream
                                             // actual values
                                             // Constructors set these values 
                                             // too.
-
         std::string     d_command;
 
-        std::shared_ptr<Pipe> d_child_inp;    // cin read by the CHILD
-        std::shared_ptr<Pipe> d_child_outp;   // cout written by the CHILD
-        std::shared_ptr<Pipe> d_child_errp;   // cerr written by the CHILD    
+        Pipe d_oChildInPipe;   // cin read by the CHILD
+        Pipe d_iChildOutPipe;  // cout written by the CHILD
+        Pipe d_iChildErrPipe;  // cerr written by the CHILD    
 
-        int d_oldIn;                        // File Descriptors of previously 
-        int d_oldOut;                       // used pipes
-        int d_oldErr;
-
-        OFdStreambuf    d_childCinbuf;      // Child extracts,  
-        IFdStreambuf    d_childCoutbuf;     // Child inserts,
-        IFdStreambuf    d_childCerrbuf;     // Child inserts
+        OFdStreambuf    d_oChildInbuf;      // Child extracts,  
+        IFdStreambuf    d_iChildOutbuf;     // Child inserts,
+        IFdStreambuf    d_iChildErrbuf;     // Child inserts
     
-        std::ostream   d_childCin;          // Parent inserts to child's cin
-        std::istream   d_childCout;         // Parent extracts child's cout
-        std::istream   d_childCerr;         // Parent extracts child's cerr
+        std::ostream   d_oChildIn;          // Parent inserts to child's cin
+        std::istream   d_iChildOut;         // Parent extracts child's cout
+        std::istream   d_iChildErr;         // Parent extracts child's cerr
     
         Selector        d_selector;         // senses activities on Child's
                                             // out/err streams
@@ -74,13 +71,26 @@ class Process: private Fork, public IOStream
         enum IOMode
         {
             IGNORE_ALL      = 0,
+            STD             = 0,
+
             CIN             = 1 << 0,
             COUT            = 1 << 1,
             CERR            = 1 << 2,
+
             IGNORE_COUT     = 1 << 3,
             IGNORE_CERR     = 1 << 4,
 
             MERGE_COUT_CERR = 1 << 5,
+
+            DIRECT          = 1 << 8,
+
+            // flags below are Internal Use Only and cannot be set by
+            // users
+
+            IN_PIPE         = 1 << 10,
+            OUT_PIPE        = 1 << 11,
+
+            CLOSE_ON_EXEC   = 1 << 12,
         };
         typedef size_t iomode;
 
@@ -152,8 +162,10 @@ class Process: private Fork, public IOStream
 
         size_t available();                     // returns ChildOutput bit_or
                                                 // (cf. manpage)
-        int waitForChild();                     // cf. manpage
 
+        void showMode(char const *lab);
+
+        using Fork::waitForChild;
                                 
     private:
         Process(Process const &other) = delete;
@@ -164,15 +176,19 @@ class Process: private Fork, public IOStream
         virtual void parentProcess();
         virtual void parentRedirections();
 
-        Pipe *newPipe() const;
+        void newPipe(Pipe &pipe);
         pid_t discontinue(RetPid &proc);
         size_t whichStream();
         void close(int fd);
+        void closeWriteFd(Pipe &pipe);
+        void closeReadFd(Pipe &pipe);
+
         void forking();
         void initialize(size_t timeLimit, iomode mode, 
                                                 ProcessType processType);
         iomode sanitizeIOMode(iomode mode);
-        void setPipes();
+        void newPipes();
+        void closeChildInputOnExec();
 
         struct ExecContext
         {
@@ -206,9 +222,6 @@ inline void Process::start(iomode mode, ProcessType type)
 {
     start(mode, type, d_setTimeLimit);
 }
-
-inline void Process::parentProcess()
-{}
 
 template <typename Type>
 Process &Process::operator<<(Type const &value)
@@ -272,11 +285,6 @@ inline void Process::setTimeLimit(size_t timeLimit)
 inline void Process::setIOMode(iomode mode)
 {
     d_setMode = sanitizeIOMode(mode);
-}
-
-inline int Process::waitForChild()
-{
-    return Fork::waitForChild();
 }
 
 inline Process &Process::operator()(iomode mode)

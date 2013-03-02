@@ -9,7 +9,7 @@ BigInt &BigInt::checked2(
     BNCTX ctx;
 
     if ((*BN_op)(&d_bn, &d_bn, &rhs.d_bn, &mod.d_bn, ctx) != 1)
-        throw Errno("BigInt ") << insertable << op << " failed" << throwable;
+        throw Errno("BigInt ") << op << " failed";
 
     return *this;
 }
