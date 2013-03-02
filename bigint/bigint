@@ -11,8 +11,6 @@ class PrimeBase;
 class BigInt
 {
     friend std::ostream &operator<<(std::ostream &out, BigInt const &bn);
-    friend BigInt const gcd(BigInt const &lhs, BigInt const &rhs);
-    friend BigInt const inverseMod(BigInt const &lhs, BigInt const &mod);
 
     BIGNUM d_bn;
  
@@ -94,7 +92,6 @@ class BigInt
         };
 
         char *bigEndian() const;
-        BigInt &setBigEndian(std::string const &bytes, bool negative = false);
 
         BigInt &operator+=(BigInt const &rhs);
         BigInt &addMod(BigInt const &rhs, BigInt const &mod);
@@ -135,11 +132,15 @@ class BigInt
         BigInt &exp(BigInt const &exponent);
         BigInt &expMod(BigInt const &exponent, BigInt const &mod);
 
+        BigInt const gcd(BigInt const &rhs);
+        BigInt const inverseMod(BigInt const &mod);
 
         static BigInt const rand(size_t bitsSize, 
                            Msb msb = MSB_IS_ONE, Lsb lsb = ODD);
 
         static BigInt const randRange(BigInt const &max);
+
+        static BigInt const setBigEndian(std::string const &bytes);
 
         static BigInt const pseudoRand(size_t bitsSize, 
                            Msb msb = MSB_IS_ONE, Lsb lsb = ODD);
@@ -148,6 +149,8 @@ class BigInt
         static BigInt const prime(size_t nBits, 
                             BigInt const *add = 0, BigInt const *rem = 0,
                             PrimeType primeType = ANY);
+
+        static BigInt const fromText(std::string const &text, int mode = 0);
 
         BigInt &clearBit(size_t index);
         bool hasBit(size_t index) const;
@@ -164,6 +167,7 @@ class BigInt
 
     private:
         std::ostream &insertInto(std::ostream &out) const;
+        static char *bn2oct(BIGNUM const *bn);
 
         void copy(BigInt const &other);
         void copy(BIGNUM *lhs, BIGNUM const &rhs);
@@ -198,6 +202,14 @@ class BigInt
 
 
         static void primeCallback(int reason, int primeNr, void *primeBase);
+
+        struct Context
+        {
+            BigInt &ret;
+            BigInt const &radix;
+            int (*pConv)(int);
+        };
+        static bool addDigit(char ch, Context &ctx);
 };
 
 template<typename Type>
@@ -384,6 +396,9 @@ BigInt const operator^(BigInt const &lhs, BigInt const &rhs);
 BigInt const gcd(BigInt const &lhs, BigInt const &rhs);
 BigInt const inverseMod(BigInt const &lhs, BigInt const &mod);
 
+std::istream &operator>>(std::istream &out, BigInt &bn);
+
+int isoctdigit(int ch);
 
 }   // namespace FBB
 

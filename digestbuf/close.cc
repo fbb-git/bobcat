@@ -14,4 +14,6 @@ void DigestBuf::close()
                     &digestbufLen);
     d_pimpl->digest.assign(digestbuf, digestbufLen);
     delete[] digestbuf;
+
+    EVP_MD_CTX_cleanup(&d_pimpl->ctx);
 }
