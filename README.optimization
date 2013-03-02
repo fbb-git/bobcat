@@ -1,0 +1,77 @@
+The `build' script uses -O3 as one of its compiler flags. Why -O3 and not -O2? 
+
+    Compared to -O2, the compiler applies the following additional 
+optimizations:
+
+       -finline-functions
+           Integrate all simple functions into their callers.  The compiler
+           heuristically decides which functions are simple enough to be worth
+           integrating in this way.
+
+           If all calls to a given function are integrated, and the function
+           is declared "static", then the function is normally not output as
+           assembler code in its own right.
+
+This is what we want for all class member functions defined inside their
+classes. These functions are always simple, consisting of at most one line of
+code. There are probably no other situations in this code for which the
+compiler will find it useful to integrate, but for the inline members. But in
+the case of the inline members (especially with the accessors) the overhead of
+the additional call seems to be needlessly spillfull. After all, C++
+explicitly offers the in-class function definition for these kinds of
+functions, and thus, integrating their code rather than calling them 
+seems like the right thing to do.
+
+       -funswitch-loops
+           Move branches with loop invariant conditions out of the loop, with
+           duplicates of the loop on both branches (modified according to
+           result of the condition).
+
+Since they're invariants, they can safely be moved, even though it will
+enlarge the code somewhat (because of the duplication). It prevents the code
+from testing a condition time and again for each individual iteration within a
+loop when that's not required.
+
+       -fgcse-after-reload
+           When -fgcse-after-reload is enabled, a redundant load elimination
+           pass is performed after reload.  The purpose of this pass is to
+           cleanup redundant spilling.
+
+This refers to things like: removing dead code and reusing where possible
+values that can be proven to be already available in some registers. In
+`Contributions to the GNU Compiler Collection' the following paragraph is
+found:
+          
+     The first case, where redundant loads appear before register allocation,
+     is handled by redundancy elimination optimization. Redundancy elimination
+     removes redundant calculations of expressions by reusing previously
+     calculated values that are stored in some register. The redundancy
+     elimination pass of CCC did consider loading a calculation of an
+     expression from memory, but did not consider store operations as
+     expressions. Thus, GCC did replace a load following another load from the
+     same memory location by a register copy, but did not replace a load
+     following a store to the same location. We enhanced the redundancy
+     elimination pass so that it would also consider stores as expressions,
+     and hence replace subsequent loads from the same location with register
+     copies.
+ 
+     The second case of load-hit-store events was due to poor register
+     spilling (i.e., the reload pass in GCC). (43) We handled this case in two
+     ways.  First, we added a "cleanup" pass after the reload that removed
+     such redundancies, similar to the first case. However, this solution is
+     limited because it works with hard (that is, allocated) registers. We
+     reused the existing redundancy elimination infrastructure and added a
+     special consideration of register availability for the register moves
+     that we generate. We also took care of partial redundancy elimination by
+     adding loads on basic blocks that are less critical (according to
+     profiling), provided we can replace loads from critical blocks by
+     register moves.
+
+Again, this optimization is considered a desirable one and thus it was decided
+to use -O3 rather than -O2.
+
+Frank.
+
+
+
+

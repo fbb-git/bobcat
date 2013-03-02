@@ -4,10 +4,10 @@
 #define _H_driver_
 
 /*
-   $Id: driver.h,v 1.1 2005-11-11 14:22:42 frank Exp $
+   $Id: driver.h 45 2005-11-11 14:22:42Z frank $
 
-   $Log: driver.h,v $
-   Revision 1.1  2005-11-11 14:22:42  frank
+   $Log$
+   Revision 1.1  2005/11/11 14:22:42  frank
    Added local* classes, randstream randbuffer and mailheaders
 
    Revision 1.1.1.1  2003/05/31 13:17:04  frank
