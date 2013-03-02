@@ -1,5 +1,5 @@
-#ifndef INCLUDED_FNWRAP_
-#define INCLUDED_FNWRAP_
+#ifndef INCLUDED_BOBCAT_FNWRAP_
+#define INCLUDED_BOBCAT_FNWRAP_
 
 #include <tuple>
 #include <bobcat/typetrait>
@@ -9,407 +9,197 @@ namespace FBB
 
 class FnWrap
 {
-    template <int idx, typename Tuple>
-    struct Type
+    template <typename Function>
+    struct Dissect
+    {};
+    template <typename Ret, typename ...Args>
+    struct Dissect <Ret (*)(Args ...)>
     {
-        typedef typename std::tuple_element<idx, Tuple>::type type;
+        typedef Ret ReturnType;
+    };
+    typedef Dissect<int> *NotUsed;
+
+    template <size_t count, typename Tuple>
+    struct At
+    {
+        typedef typename std::tuple_element<count - 1, Tuple>::type Type;
     };
 
-    template <typename P>
-    struct FunInfo;
-    
-    template <typename Ret, typename First, typename ... Par>
-    struct FunInfo<Ret (*)(First, Par ...)>
+    template <typename RetType, typename Func, typename Arg1, typename Arg2, 
+                size_t size, typename Tuple, typename ... Args>
+    struct CallPack: public CallPack<RetType, Arg1, Arg2, Func, size - 1, 
+                            Tuple, typename At<size, Tuple>::Type, Args ...>
     {
-        typedef Ret     return_type;
-        typedef First   first_type;
-    };
-        
-    template <typename Ret, typename First, typename Second, typename ... Par>
-    struct FunInfo<Ret (*)(First, Second, Par ...)>
-    {
-        typedef Ret     return_type;
-        typedef First   first_type;
-        typedef Second  second_type;
+        typedef typename TypeTrait<Arg1>::Plain first_argument_type;
+        typedef typename TypeTrait<Arg2>::Plain second_argument_type;
+        typedef typename At<size, Tuple>::Type  LastType;
+
+        static RetType call(Func fun, Arg1 &&arg1, Arg2 &&arg2, 
+                                      Tuple const &tuple, Args &&...args);
     };
 
-    template <int size, typename Return, typename Tuple,
-              typename Fun, typename Arg1, typename ... Params>
-    struct FnWrap1: public FnWrap1<size - 1, Return, Tuple, 
-                                   Fun, Arg1, 
-                                        typename Type<size - 1, Tuple>::type, 
-                                        Params ...>
+                                       // specialization: unary + ret. type
+    template <typename RetType, typename Func, typename Arg1,
+                typename Tuple, typename ... Args>
+    struct CallPack<RetType, Func, Arg1, NotUsed, 0, Tuple, Args...>
     {
-        typedef typename Type<size - 1, Tuple>::type TupleType;
-    
-        FnWrap1(Return &ret, Tuple &&tuple, 
-                Fun fun, Arg1 &&arg, Params && ... params);
+        static RetType call(Func fun, Arg1 &&arg1, NotUsed &&arg2, 
+                                      Tuple const &tuple, Args &&...args);
     };
-        
-    template <typename Return, typename Tuple, 
-              typename Fun, typename Arg1, typename ... Params>
-    struct FnWrap1<0, Return, Tuple, Fun, Arg1, Params ...>
+                                       // specialization: binary + ret. type
+    template <typename RetType, typename Func, typename Arg1, typename Arg2,
+                typename Tuple, typename ... Args>
+    struct CallPack<RetType, Func, Arg1, Arg2, 0, Tuple, Args...>
     {
-        FnWrap1(Return &ret, Tuple &&tuple, 
-                Fun fun, Arg1 &&arg, Params && ... params);
+        static RetType call(Func fun, Arg1 &&arg1, Arg2 &&arg2, 
+                                      Tuple const &tuple, Args &&...args);
     };
-    
-    template <int size, typename Tuple,
-              typename Fun, typename Arg1, typename ... Params>
-    struct FnWrap1<size, void, Tuple, Fun, Arg1, Params ...>:
-        public FnWrap1<size - 1, void, Tuple, 
-                       Fun, Arg1, typename Type<size - 1, Tuple>::type, 
-                            Params ...>
+                                       // specialization: void unary
+    template <typename Func, typename Arg1, typename Tuple, typename ... Args>
+    struct CallPack<void, Func, Arg1, NotUsed, 0, Tuple, Args...>
     {
-        typedef typename Type<size - 1, Tuple>::type TupleType;
-    
-        FnWrap1(Tuple &&tuple, Fun fun, Arg1 &&arg, Params && ... params);
+        static void call(Func fun, Arg1 &&arg1, NotUsed &&arg2, 
+                                   Tuple const &tuple, Args &&...args);
     };
-        
-    template <typename Tuple, 
-              typename Fun, typename Arg1, typename ... Params>
-    struct FnWrap1<0, void, Tuple, Fun, Arg1, Params ...>
+                                        // specialization: void binary
+    template <typename Func, typename Arg1, typename Arg2, typename Tuple, 
+                                                            typename ... Args>
+    struct CallPack<void, Func, Arg1, Arg2, 0, Tuple, Args...>
     {
-        FnWrap1(Tuple &&tuple, Fun fun, Arg1 &&arg, Params && ... params);
-    };
-    
-    template <int size, typename Return, typename Tuple,
-              typename Fun, typename Arg1, typename Arg2, typename ... Params>
-    struct FnWrap2: public FnWrap2<size - 1, Return, Tuple, 
-                                   Fun, Arg1, Arg2, 
-                                        typename Type<size - 1, Tuple>::type, 
-                                        Params ...>
-    {
-        typedef typename Type<size - 1, Tuple>::type TupleType;
-    
-        inline FnWrap2(Return &ret, Tuple &&tuple, 
-                    Fun fun, Arg1 &&arg1, Arg2 &&arg2, Params && ... params);
-    };
-    
-    template <typename Return, typename Tuple, 
-              typename Fun, typename Arg1, typename Arg2, typename ... Params>
-    struct FnWrap2<0, Return, Tuple, Fun, Arg1, Arg2, Params ...>
-    {
-        inline FnWrap2(Return &ret, Tuple &&tuple, 
-                    Fun fun, Arg1 &&arg1, Arg2 &&arg2, Params && ... params);
-    };
-    
-    template <int size, typename Tuple,
-              typename Fun, typename Arg1, typename Arg2, typename ... Params>
-    struct FnWrap2<size, void, Tuple, Fun, Arg1, Arg2, Params ...>:
-            public FnWrap2<size - 1, void, Tuple, 
-                           Fun, Arg1, Arg2, 
-                                typename Type<size - 1, Tuple>::type, 
-                                Params ...>
-    {
-        typedef typename Type<size - 1, Tuple>::type TupleType;
-    
-        FnWrap2(Tuple &&tuple, 
-                Fun fun, Arg1 &&arg1, Arg2 &&arg2, Params && ... params);
-    };
-    
-    template <typename Tuple, 
-              typename Fun, typename Arg1, typename Arg2, typename ... Params>
-    struct FnWrap2<0, void, Tuple, Fun, Arg1, Arg2, Params ...>
-    {
-        FnWrap2(Tuple &&tuple, 
-                Fun fun, Arg1 &&arg1, Arg2 &&arg2, Params && ... params);
+        static void call(Func fun, Arg1 &&arg1, Arg2 &&arg2, 
+                                   Tuple const &tuple, Args &&...args);
     };
 
-    public:
-        template <int unary, typename Return, 
-                  typename Fun, typename ... Params>
-        class Wrapper
-        {
-            Fun d_fun;
-            std::tuple<Params ...> d_tuple;
-            
-            public:
-                typedef typename TypeTrait<Return>::Plain   result_type;
-                typedef typename 
-                        TypeTrait<typename FunInfo<Fun>::first_type>::Plain
-                             first_argument_type;
-        
-                Wrapper(Fun fun, Params && ... params);
-        
-                template <typename Arg1>
-                inline Return operator()(Arg1 &&arg1);
-        };
-        
-        template <int unary, typename Fun, typename ... Params>
-        class Wrapper<unary, void, Fun, Params ...>
-        {
-            Fun d_fun;
-            std::tuple<Params ...> d_tuple;
-            
-            public:
-                typedef void   result_type;
-                typedef typename 
-                    TypeTrait<typename FunInfo<Fun>::first_type>::Plain
-                             first_argument_type;
-        
-                Wrapper(Fun fun, Params && ... params);
-        
-                template <typename Arg1>
-                void operator()(Arg1 &&arg1);
-        };
-        
-        template <typename Return, typename Fun, typename ... Params>
-        class Wrapper<2, Return, Fun, Params ...>
-        {
-            Fun d_fun;
-            std::tuple<Params ...> d_tuple;
-            
-            public:
-                typedef typename TypeTrait<Return>::Plain   result_type;
-                typedef typename 
-                        TypeTrait<typename FunInfo<Fun>::first_type>::Plain
-                             first_argument_type;
-                typedef typename 
-                        TypeTrait<typename FunInfo<Fun>::second_type>::Plain
-                             second_argument_type;
-        
-                Wrapper(Fun fun, Params && ... params);
-        
-                template <typename Arg1, typename Arg2>
-                Return operator()(Arg1 &&arg1, Arg2 &&arg2);
-        };
-        
-        template <typename Fun, typename ... Params>
-        class Wrapper<2, void, Fun, Params ...>
-        {
-            Fun d_fun;
-            std::tuple<Params ...> d_tuple;
-            
-            public:
-                typedef void   result_type;
-                typedef typename 
-                        TypeTrait<typename FunInfo<Fun>::first_type>::Plain
-                             first_argument_type;
-                typedef typename 
-                        TypeTrait<typename FunInfo<Fun>::second_type>::Plain
-                             second_argument_type;
-        
-                Wrapper(Fun fun, Params && ... params);
-        
-                template <typename Arg1>
-                inline void operator()(Arg1 &&arg1);
-        };
+public:
+    template <typename Function, typename ... Args>
+    struct Functor
+    {
+        typedef typename Dissect<Function>::ReturnType RetType;
 
-        template <typename Func, typename ... Param>
-        static Wrapper<1, typename FunInfo<Func>::return_type, Func, Param ...> 
-            unary(Func fun, Param && ... param);
-    
-        template <typename Func, typename ... Param>
-        static Wrapper<2, typename FunInfo<Func>::return_type, Func, Param ...> 
-            binary(Func fun, Param && ... param);
-};
+        Function d_function;
+        std::tuple<Args ...> d_args;
 
-// IMPLEMENTATIONS NEXT
+        Functor(Function fun, Args &&... args);
 
-template <int size, typename Return, typename Tuple,
-          typename Fun, typename Arg1, typename ... Params>
-inline FnWrap::FnWrap1<size, Return, Tuple, Fun, Arg1, Params ... >::
-FnWrap1(Return &ret, Tuple &&tuple, Fun fun, Arg1 &&arg, Params && ... params)
-:
-    FnWrap1<size - 1, Return, Tuple, 
-                Fun, Arg1, typename Type<size - 1, Tuple>::type, 
-                     Params ...>
-    (
-        ret,
-        std::forward<Tuple>(tuple), 
-        fun, std::forward<Arg1>(arg),
-             std::forward<TupleType>(std::get<size - 1>(tuple)), 
-             std::forward<Params>(params) ...
-    )
-{}
+        template <typename Arg1, typename Arg2>
+        typename Functor::RetType operator()(Arg1 &&arg1, Arg2 &&arg2);
 
-template <typename Return, typename Tuple, 
-          typename Fun, typename Arg1, typename ... Params>
-inline FnWrap::FnWrap1<0, Return, Tuple, Fun, Arg1, Params ...>::
-FnWrap1(Return &ret, Tuple &&tuple, Fun fun, Arg1 &&arg, Params && ... params)
+        template <typename Arg1>
+        typename Functor::RetType operator()(Arg1 &&arg1);
+    };
+
+    template <typename Function, typename ... Args>
+    static Functor<Function, Args...> unary(Function fun, Args &&...args);
+
+    template <typename Function, typename ... Args>
+    static Functor<Function, Args...> binary(Function fun, Args &&...args);
+};    
+
+    // Generic CallPack::call function, unpacking the tuple
+template <typename RetType, typename Func, typename Arg1, typename Arg2, 
+          size_t size, typename Tuple, typename ... Args>
+RetType FnWrap::CallPack<RetType, Func, Arg1, Arg2, size, Tuple, Args...
+    >::call(Func fun, Arg1 &&arg1, Arg2 &&arg2, Tuple const &tuple, 
+                                                Args &&...args)
 {
-    ret = fun(std::forward<Arg1>(arg), std::forward<Params>(params) ...);
+    return CallPack<RetType, Func, Arg1, Arg2, size - 1, Tuple, 
+                              LastType, Args ...
+        >::call(fun, std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), 
+                tuple, std::forward<LastType>(std::get<size - 1>(tuple)), 
+                std::forward<Args>(args) ...
+        );
 }
 
-template <int size, typename Tuple,
-          typename Fun, typename Arg1, typename ... Params>
-inline FnWrap::FnWrap1<size, void, Tuple, Fun, Arg1, Params ...>::
-FnWrap1(Tuple &&tuple, Fun fun, Arg1 &&arg, Params && ... params)
-:
-    FnWrap1<size - 1, void, Tuple, Fun, Arg1, TupleType, Params ...>
-    (
-        std::forward<Tuple>(tuple), 
-        fun, std::forward<Arg1>(arg),
-             std::forward<TupleType>(std::get<size - 1>(tuple)), 
-             std::forward<Params>(params) ...
-    )
-{}
-
-template <typename Tuple, typename Fun, typename Arg1, typename ... Params>
-inline FnWrap::FnWrap1<0, void, Tuple, Fun, Arg1, Params ...>::
-FnWrap1(Tuple &&tuple, Fun fun, Arg1 &&arg, Params && ... params)
+    // Unary void CallPack::call function
+template <typename Func, typename Arg1, typename Tuple, typename ... Args>
+void FnWrap::CallPack<void, Func, Arg1, FnWrap::NotUsed, 0, Tuple, 
+            Args...>::call( Func fun, Arg1 &&arg1, FnWrap::NotUsed &&arg2, 
+                            Tuple const &tuple, Args &&...args)
 {
-    fun(std::forward<Arg1>(arg), std::forward<Params>(params) ...);
+    fun(std::forward<Arg1>(arg1), std::forward<Args>(args)...);
 }
 
-template <int size, typename Return, typename Tuple,
-          typename Fun, typename Arg1, typename Arg2, typename ... Params>
-inline FnWrap::FnWrap2<size, Return, Tuple, Fun, Arg1, Arg2, Params ...>::
-FnWrap2(Return &ret, Tuple &&tuple, 
-        Fun fun, Arg1 &&arg1, Arg2 &&arg2, Params && ... params)
-:
-    FnWrap2<size - 1, Return, Tuple, 
-            Fun, Arg1, Arg2, TupleType, Params ...>
-    (
-        ret,
-        std::forward<Tuple>(tuple), 
-        fun, std::forward<Arg1>(arg1), std::forward<Arg2>(arg2),
-             std::forward<TupleType>(std::get<size - 1>(tuple)), 
-             std::forward<Params>(params) ...
-    )
-{}
-
-template <typename Return, typename Tuple, 
-          typename Fun, typename Arg1, typename Arg2, typename ... Params>
-inline FnWrap::FnWrap2<0, Return, Tuple, Fun, Arg1, Arg2, Params ...>::
-FnWrap2(Return &ret, Tuple &&tuple, 
-        Fun fun, Arg1 &&arg1, Arg2 &&arg2, Params && ... params)
+    // Unary non-void CallPack::call function
+template <typename RetType, typename Func,
+          typename Arg1, typename Tuple, typename ... Args>
+RetType FnWrap::CallPack<RetType, Func, Arg1, FnWrap::NotUsed, 0, Tuple, 
+            Args...>::call( Func fun, Arg1 &&arg1, FnWrap::NotUsed &&arg2, 
+                            Tuple const &tuple, Args &&...args)
 {
-    ret =
-        fun(std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), 
-            std::forward<Params>(params) ...);
+    return fun(std::forward<Arg1>(arg1), std::forward<Args>(args)...);
 }
 
-template <int size, typename Tuple,
-          typename Fun, typename Arg1, typename Arg2, typename ... Params>
-inline FnWrap::FnWrap2<size, void, Tuple, Fun, Arg1, Arg2, Params ...>::
-FnWrap2(Tuple &&tuple, 
-        Fun fun, Arg1 &&arg1, Arg2 &&arg2, Params && ... params)
-:
-    FnWrap2<size - 1, void, Tuple, 
-            Fun, Arg1, Arg2, TupleType, Params ...>
-    (
-        std::forward<Tuple>(tuple), 
-        fun, std::forward<Arg1>(arg1), std::forward<Arg2>(arg2),
-             std::forward<TupleType>(std::get<size - 1>(tuple)), 
-             std::forward<Params>(params) ...
-    )
-{}
-
-template <typename Tuple, 
-          typename Fun, typename Arg1, typename Arg2, typename ... Params>
-inline FnWrap::FnWrap2<0, void, Tuple, Fun, Arg1, Arg2, Params ...>::
-FnWrap2(Tuple &&tuple, 
-        Fun fun, Arg1 &&arg1, Arg2 &&arg2, Params && ... params)
+    // Binary void CallPack::call function
+template <typename Func, typename Arg1, typename Arg2, typename Tuple, 
+                                                            typename ... Args>
+void FnWrap::CallPack<void, Func, Arg1, Arg2, 0, Tuple, Args...>::call(
+            Func fun, Arg1 &&arg1, Arg2 &&arg2, Tuple const &tuple, 
+                                                Args &&...args)
 {
     fun(std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), 
-        std::forward<Params>(params) ...);
+                                  std::forward<Args>(args)...);
 }
 
-template <int unary, typename Return, typename Fun, typename ... Params>
-inline FnWrap::Wrapper<unary, Return, Fun, Params ...>::
-Wrapper(Fun fun, Params && ... params)
-:
-    d_fun(fun),
-    d_tuple(std::forward<Params>(params) ...)
-{}
-
-template <int unary, typename Return, typename Fun, typename ... Params>
-template <typename Arg1>
-inline Return FnWrap::Wrapper<unary, Return, Fun, Params ...>::
-operator()(Arg1 &&arg1)
+    // Binary non-void CallPack::call function
+template <typename RetType, typename Func, typename Arg1, typename Arg2,
+            typename Tuple, typename ... Args>
+RetType FnWrap::CallPack<RetType, Func, Arg1, Arg2, 0, Tuple, Args...>::call(
+            Func fun, Arg1 &&arg1, Arg2 &&arg2, Tuple const &tuple, 
+                                                Args &&...args)
 {
-    Return ret;
-    FnWrap1<std::tuple_size<std::tuple<Params ...>>::value, 
-            Return &, std::tuple<Params ...>, 
-            Fun, Arg1>
-        (ret, std::move(d_tuple), d_fun, arg1);
-
-    return ret;
+    return fun(std::forward<Arg1>(arg1), std::forward<Arg1>(arg1), 
+               std::forward<Args>(args)...);
 }
 
-template <int unary, typename Fun, typename ... Params>
-FnWrap::Wrapper<unary, void, Fun, Params ...>::
-Wrapper(Fun fun, Params && ... params)
+    // Functor's constructor
+template <typename Function, typename ... Args>
+FnWrap::Functor<Function, Args...>::Functor(Function fun, Args &&... args)
 :
-    d_fun(fun),
-    d_tuple(std::forward<Params>(params) ...)
+    d_function(fun),
+    d_args(std::forward<Args>(args)...)
 {}
-
-template <int unary, typename Fun, typename ... Params>
+    
+template <typename Function, typename ... Args>     // unary operator()
 template <typename Arg1>
-inline void FnWrap::Wrapper<unary, void, Fun, Params ...>::
-operator()(Arg1 &&arg1)
+typename FnWrap::Functor<Function, Args...>::RetType FnWrap::Functor<
+    Function, Args...>::operator()(Arg1 &&arg1)
 {
-    FnWrap1< std::tuple_size<std::tuple<Params ...>>::value, 
-            void, std::tuple<Params ...>, 
-            Fun, Arg1>
-        (std::move(d_tuple), d_fun, arg1);
+    return CallPack<RetType, Function, Arg1, NotUsed, sizeof ... (Args),
+                    std::tuple<Args ...>
+            >::call(d_function, std::forward<Arg1>(arg1), 0, d_args);
 }
-
-template <typename Return, typename Fun, typename ... Params>
-FnWrap::Wrapper<2, Return, Fun, Params ...>::
-Wrapper(Fun fun, Params && ... params)
-:
-    d_fun(fun),
-    d_tuple(std::forward<Params>(params) ...)
-{}
-
-template <typename Return, typename Fun, typename ... Params>
+    
+template <typename Function, typename ... Args>     // binary operator()
 template <typename Arg1, typename Arg2>
-inline Return FnWrap::Wrapper<2, Return, Fun, Params ...>::
-operator()(Arg1 &&arg1, Arg2 &&arg2)
+typename FnWrap::Functor<Function, Args...>::RetType FnWrap::Functor<
+    Function, Args...>::operator()(Arg1 &&arg1, Arg2 &&arg2)
 {
-    Return ret;
-    FnWrap2<std::tuple_size<std::tuple<Params ...>>::value, 
-                Return &, std::tuple<Params ...>, 
-                Fun, Arg1, Arg2>
-            (ret, std::move(d_tuple), d_fun, arg1, arg2);
-    return ret;
+    return CallPack<RetType, Function, Arg1, Arg2, sizeof ... (Args),
+                    std::tuple<Args ...>
+            >::call(d_function, 
+                  std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), d_args);
 }
 
-template <typename Fun, typename ... Params>
-FnWrap::Wrapper<2, void, Fun, Params ...>::
-Wrapper(Fun fun, Params && ... params)
-:
-    d_fun(fun),
-    d_tuple(std::forward<Params>(params) ...)
-{}
-
-template <typename Fun, typename ... Params>
-template <typename Arg1>
-inline void FnWrap::Wrapper<2, void, Fun, Params ...>::
-operator()(Arg1 &&arg1)
+template <typename Function, typename ... Args>
+FnWrap::Functor<Function, Args...> context(Function fun, Args &&...args)
 {
-    FnWrap1<std::tuple_size<std::tuple<Params ...>>::value, 
-                void, std::tuple<Params ...>, 
-                Fun, Arg1>
-            (std::move(d_tuple), d_fun, arg1);
+    return FnWrap::Functor<Function, Args...>
+                          (fun, std::forward<Args>(args) ...);
 }
 
-template <typename Func, typename ... Param>
-FnWrap::Wrapper<1, typename FnWrap::FunInfo<Func>::return_type, Func, 
-                                                                    Param ...> 
-FnWrap::unary(Func fun, Param && ... param)
+template <typename Function, typename ... Args>
+FnWrap::Functor<Function, Args...> FnWrap::unary(Function fun, Args &&...args)
 {
-    Wrapper<1, typename FunInfo<Func>::return_type, Func, 
-                                                    Param ...> 
-         wrap(fun, std::forward<Param>(param) ... );
-    return wrap;
+    return Functor<Function, Args...>(fun, std::forward<Args>(args) ...);
 }
 
-template <typename Func, typename ... Param>
-FnWrap::Wrapper<2, typename FnWrap::FunInfo<Func>::return_type, Func, 
-                                                                    Param ...> 
-FnWrap::binary(Func fun, Param && ... param)
+template <typename Function, typename ... Args>
+FnWrap::Functor<Function, Args...> FnWrap::binary(Function fun, Args &&...args)
 {
-    Wrapper<2, typename FunInfo<Func>::return_type, Func, 
-                                                    Param ...> 
-         wrap(fun, std::forward<Param>(param) ... );
-    return wrap;
+    return Functor<Function, Args...>(fun, std::forward<Args>(args) ...);
 }
 
-} // FBB
+}   // FBB
 
 #endif
+

@@ -10,51 +10,57 @@ manpagesynopsis()
     bf(#include <bobcat/fnwrap>)nl()
 
 manpagedescription()
-    The bf(FBB::FnWrap) class contains two static members: tt(unary) and
-tt(binary). The tt(unary) function returns a unary functor that is ordinarily
-called from generic algorithms of the standard template libray expecting a
-unary functor or predicate.  The tt(binary) function returns a binary functor
-that is ordinarily called from generic algorithms of the standard template
-libray expecting a binary functor or predicate.
+    The bf(FBB::FnWrap) class traditionally contains two static members:
+tt(unary) and tt(binary). These functions are still available, but since
+Bobcat version 2.15.00 they have identical implementations and are in fact
+superseded by the new free function tt(FBB::context) (see below).  All three
+functions return the appropriate (unary or binary) functor that is ordinarily
+called from generic algorithms of the standard template library, expecting a
+unary or binary functor or predicate.
 
-The tt(unary) and tt(binary) functions expect the name of a (static or free)
-function that will be called from the functor's function operator. The
-arguments received by the functor's function operator are forwarded to the
-static or free function that is called by the functor's function operator.
+In this description there's no further reference to 
+tt(FnWrap::unary) and tt(FnWrap::binary). Instead, tt(FBB::context) is
+referred to, usually as just tt(context). Instead of tt(context) the functions
+tt(FnWrap::unary) or tt(FnWrap::binary) could be used as
+well. tt(FnWrap::unary) and tt(FnWrap::binary) will continue to be available
+in future versions of Bobcat.
 
-Any additional arguments that are passed to tt(unary) or tt(binary) are
-forwarded to the function that is called by the functor's function
-operator. This allows users of tt(FnWrap) to pass a em(local context) to the
-function that is indirectly called by a generic algorithm.
+The tt(context) function expects the name of a (static or free)
+function that is called by the functor's function operator. The
+arguments received by the functor's function operator are forwarded to this
+static or free function.
+
+Any additional arguments that are passed to tt(context) are forwarded to the
+function called by the functor's function operator. This allows users of
+tt(FnWrap) to pass a em(local context) to the function that is indirectly
+called by a generic algorithm.
 
 The number and types of arguments are determined by the parameter list of the
-function that is called by the functor's function operator. If that former 
-function, in addition to parameters matching the types of the arguments
-provided by the generic algorithm also defines, e.g., an tt(int) and
-tt(std::string &) parameter then the tt(FnWrap) member functions must be
-called with the address of the function to call, with an tt(int) argument and
-with a tt(std::string) em(lvalue).
+function specified as first argument of tt(context). If that function, in
+addition to parameters matching the types of the arguments provided by the
+generic algorithm also defines, e.g., an tt(int) and a tt(std::string &)
+parameter, then tt(context) must be called with arguments being, respectively,
+the address of the function to call, an tt(int) argument and a tt(std::string)
+em(lvalue).
 
-The type of the return value of the function whose address is passed to the
-tt(FnWrap) members will be the return type of the functor's function call
-operator. So if the generic algorithm expects a predicate function the
-function called by the functor's function call operator should return a
-tt(bool) value.
+The type of the return value of the function that is passed to tt(context)
+also becomes the return type of the functor's function call operator. So if
+the generic algorithm expects a predicate function the function called by the
+functor's function call operator should return a tt(bool) value.
 
 The called function must be a static member or free function. Using a static
 member or free function has several advantages over calling a non-static 
 class member function:
     itemization(
-    it() No object for which the member function will be called needs to be
-provided; 
+    it() No object for which the member function will be called is required;
     it() There is no introduced uncertainty about the bf(const)-ness of the
 callled function, as static member functions and free functions do not support
 bf(const) modifiers;
     it() The called function can be a static member function of the class
 using the generic algorithm to which the bf(FnWrap) object is passed. By
-specifying the calling object as one of the arguments of the tt(FnWrap)
-function, the called function will receive this object as well and may
-directly access the calling object's members;
+specifying the calling object as one of the arguments of tt(context), the
+called function will receive this object as well and may directly access the
+calling object's members;
     it() The passed function can be a static member function of the class
 whose objects are passed to the function via the generic template function's
 iterator parameters. In that case the function may directly access the passed
@@ -70,36 +76,35 @@ includefile(include/namespace)
 manpagesection(INHERITS FROM)
     -
 
+manpagesection(FREE FUNCTION)
+    itemization(
+    itb(Functor context(Function [, Arguments]))
+        This function is defined in the namespace tt(FBB). nl()
+        tt(Functor) represents the (unary or binary) functor that can be used
+by generic algorithms;nl()
+        tt(Function) is the name of a static member or free function that is
+called from the tt(Functor)'s function operator. The type of its first
+argument (or first two arguments if a binary functor is used) must match the
+type(s) of the argument(s) received by the functor's function call
+operator. Any additional parameters it may define must match, in types and
+number, the additional arguments that are passed to
+tt(context). tt(Function)'s return type becomes the return type of
+tt(Functor)'s function call operator. If a value is returned by tt(Function)
+that value will be returned by tt(Functor)'s function call operator.
+    )
+
 manpagesection(STATIC MEMBERS)
     itemization(
     itb(Functor unary(Function [, Arguments]))
-        tt(Functor) represents the (unary) functor that can be used by generic
-algorithms;nl()
-        tt(Function) is the name of a static member or free function that will
-be called from the tt(Functor)'s function operator. The type of its 
-first argument must match the type of the argument received by the functor's
-function call operator. Any additional types must match, in type and number,
-the additional arguments that are passed to tt(unary). tt(Function)'s return
-type will be the return type of tt(Functor)'s function call operator. If a
-value is returned by tt(Function) it will be returned by tt(Functor)'s
-function call operator.
+        See tt(FBB::context)'s description.
 
     itb(Functor binary(Function [, Arguments]))
-        tt(Functor) represents the (binary) functor that can be used by
-generic algorithms;nl()
-        tt(Function) is the name of a static member or free function that will
-be called from the tt(Functor)'s function operator. The types of its first two
-arguments must match the types of the first two arguments received by the
-functor's function call operator. Any additional types must match, in type and
-number, the additional arguments that are passed to tt(binary). tt(Function)'s
-return type will be the return type of tt(Functor)'s function call
-operator. If a value is returned by tt(Function) it will be returned by
-tt(Functor)'s function call operator.
+        See tt(FBB::context)'s description.
     )
 
 manpagesection(TYPEDEFS)
 
-   The functors defines types, that are used by generic algorithms:
+   The functors defines types, that may be required by generic algorithms:
     itemization(
     itb(first_argument_type), a synonym for the basic type of the argument
 received by the unary functor's function call operator and of the first
@@ -143,7 +148,7 @@ manpagesection(EXAMPLES)
                     accumulate(
                         d_vs.begin(), d_vs.end(),
                         string("HI"),
-                        FnWrap::binary(show, count, out)) << '\n';
+                        context(show, count, out)) << '\n';
                     
             }
     
@@ -168,12 +173,10 @@ manpagesection(EXAMPLES)
 arguments. 
 
 manpagefiles()
-    em(bobcat/fnwrap2c) - defines the class interface
+    em(bobcat/fnwrap) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(fnwrap1)(3bobcat), bf(fnwrap2)(3bobcat), 
-    bf(fnwrap2)(3bobcat), bf(foreach)(3bobcat), bf(lc)(3bobcat), 
-    bf(repeat)(3bobcat)
+    bf(bobcat)(7), bf(foreach)(3bobcat), bf(repeat)(3bobcat)
 
 manpagebugs()
     None Reported.
