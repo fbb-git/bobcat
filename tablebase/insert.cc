@@ -1,6 +1,6 @@
-#include "table.ih"
+#include "tablebase.ih"
 
-ostream &Table::insert(ostream &ostr)
+ostream &TableBase::insert(ostream &ostr)
 {
     def();
 
@@ -41,7 +41,7 @@ ostream &Table::insert(ostream &ostr)
                     ostr << setw(skip) << " ";
             }
         }
-        
+
         d_tableSupport.vline();
     }
     d_tableSupport.hline();

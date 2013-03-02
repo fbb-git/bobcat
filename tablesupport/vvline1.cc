@@ -1,6 +1,6 @@
 #include "tablesupport.ih"
 
-void TableSupport::vline() const
+void TableSupport::v_vline() const
 {
     vline(d_nColumns);
     out() << '\n';

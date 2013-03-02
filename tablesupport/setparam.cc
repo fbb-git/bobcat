@@ -10,8 +10,10 @@ void TableSupport::setParam(std::ostream &ostr, size_t rows, size_t nColumns,
     
     d_tableWidth = accumulate(align.begin(), align.end(), 0);
 
-    for_each(d_sep.begin(), d_sep.end(),
-        FnWrap1c<string const &, size_t &>(add, d_tableWidth));
+    for_each(d_elements.begin(), d_elements.end(), 
+        FnWrap::unary(setCols, d_nColumns));
+
+    for_each(d_sep.begin(), d_sep.end(), FnWrap::unary(add, d_tableWidth));
 }
 
 

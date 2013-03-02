@@ -1,0 +1,98 @@
+#ifndef INCLUDED_BOBCAT_TABLEBUF_
+#define INCLUDED_BOBCAT_TABLEBUF_
+
+#include <streambuf>
+#include <bobcat/tablebase>
+
+namespace FBB
+{
+
+class TableBuf: public TableBase, public std::streambuf
+{
+    friend std::ostream &operator<<(std::ostream &str, TableBuf &table); 
+
+    friend std::ostream &fs(std::ostream &out);
+    friend std::ostream &rs(std::ostream &out);
+
+    int d_fs;
+    int d_rs;
+    std::string d_str;
+    bool d_buffered;
+    bool d_insertEmptyRow;
+
+    public:
+        TableBuf(size_t nColumns, FillDirection direction,          // 0
+                                WidthType widthType = COLUMNWIDTH); 
+
+        TableBuf(TableSupport &tableSupport,                        // 1
+                size_t nColumns, FillDirection direction,             
+                WidthType widthType = COLUMNWIDTH);
+
+        TableBuf &def();                    // fillup an incomplete table
+        TableBuf &setAlign(Align const &align);    // set an alignment
+
+        void setFieldSeparator(char fs);
+        void setRowSeparator(char rs);
+        void setFieldSeparator();
+        void setRowSeparator();
+
+        virtual int sync();
+        virtual int overflow(int ch);
+
+    private:
+        void nextField();
+        void endRow();
+
+};
+
+std::ostream &fs(std::ostream &out);
+std::ostream &rs(std::ostream &out);
+
+inline void TableBuf::setFieldSeparator()
+{
+    d_fs = -1;
+}
+
+inline void TableBuf::setFieldSeparator(char fs)
+{
+    d_fs = fs;
+}
+
+inline void TableBuf::setRowSeparator()
+{
+    d_rs = -1;
+}
+
+inline void TableBuf::setRowSeparator(char rs)
+{
+    d_rs = rs;
+}
+
+inline TableBuf &TableBuf::setAlign(Align const &align)
+{
+    TableBase::setAlign(align);
+    return *this;
+}
+                        // Insert column or element alignments
+inline TableBuf &operator<<(TableBuf &tab, Align const &align)
+{
+    return tab.setAlign(align);
+}
+
+inline TableBuf &TableBuf::def()
+{
+    TableBase::def();
+    return *this;
+}
+
+inline TableBuf &def(TableBuf &table)
+{
+    return table.def();
+}
+
+} // FBB
+        
+#endif
+
+
+
