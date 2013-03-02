@@ -113,7 +113,7 @@ try
     }
     catch (Errno const &e)
     {
-        cout << e.which() << " " << e.what() << endl;
+        cout << e.which() << " " << e.why() << endl;
     }
 
     return 0;
@@ -125,7 +125,7 @@ catch (int x)
 }
 catch (Errno const &e)
 {
-    cout << "Errno exception caught, what() = " << e.what() << "\n"
+    cout << "Errno exception caught, why() = " << e.why() << "\n"
             "which() is: " << e.which() << endl;
 
     return e.which();

@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     }
     catch (Errno const &e)
     {
-        cout << e.what() << ": compilation failed" << endl;
+        cout << e.why() << ": compilation failed" << endl;
     }
         
     string pat = "\\d+";
@@ -100,14 +100,14 @@ int main(int argc, char **argv)
                 }
                 catch (Errno const &e)
                 {
-                    cout << e.what() << ": " << st << " doesn't match" << endl;
+                    cout << e.why() << ": " << st << " doesn't match" << endl;
                     continue;
                 }
             }
         }            
         catch (Errno const &e)
         {
-            cout << e.what() << ": compilation failed" << endl;
+            cout << e.why() << ": compilation failed" << endl;
         }
 
         cout << "New pattern: ";

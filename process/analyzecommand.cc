@@ -13,8 +13,7 @@ Process::ExecContext Process::analyzeCommand()
     ExecContext ec = {true, 0, 0, new char const *[count + 1]};
     
     for_each(elements.begin(), elements.end(), 
-                FnWrap1c<String::SplitPair const &, ExecContext &>
-                    (&execContext, ec));
+                               FnWrap::unary(execContext, ec));
     
     if (!ec.ok)
         throw Errno("Process ") << insertable << d_command << ": " << 

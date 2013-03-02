@@ -35,17 +35,18 @@ class LogBuffer: public std::streambuf
         void setStream(std::ostream &stream);
         bool empty() const;
 
-        virtual int sync();
-
         void setActive(bool active);
         void settimestamp(TimeStamps timestamps, char const *delim = " ");
 
         void setEmpty(bool empty);
 
     protected:
-        virtual int overflow(int c);
+        virtual int pSync();
 
     private:
+        virtual int sync();
+        virtual int overflow(int c);
+
         void insertTimestamp();
         LogBuffer(LogBuffer const &other) = delete;
         LogBuffer &operator=(LogBuffer const &other) = delete;
@@ -60,7 +61,7 @@ inline bool LogBuffer::empty() const
     return d_empty;
 }
 
-inline int LogBuffer::sync()
+inline int LogBuffer::pSync()
 {
     d_stream->flush();
     return 0;

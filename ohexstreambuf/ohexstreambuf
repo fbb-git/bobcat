@@ -2,14 +2,7 @@
 #define INCLUDED_BOBCAT_OHEXSTREAMBUF_
 
 #include <iosfwd>
-
-//#include <iosfwd>
-//#include <string>
-//#include <openssl/evp.h>
-//#include <streambuf>
-//#include <ostream>
 #include <bobcat/errno>
-
 #include <bobcat/ofilterstreambuf>
 
 namespace FBB
@@ -30,6 +23,8 @@ class OHexStreambuf: public OFilterStreambuf
         static std::string text2bin(std::string const &in); // length and 
                                                             // contents not
                                                             // checked
+    protected:
+        int pSync();
 
     private:
         virtual int overflow(int ch);

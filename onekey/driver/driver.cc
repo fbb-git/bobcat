@@ -42,7 +42,7 @@ int main()
     }
     catch (Errno const &e)
     {
-        cout << e.what() << endl;
+        cout << e.why() << endl;
         return e.which();
     }
 }

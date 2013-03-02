@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     }
     catch (Errno e)
     {
-        cout << "Fatal: " << e.what() << endl;
+        cout << "Fatal: " << e.why() << endl;
         return 1;
     }
 

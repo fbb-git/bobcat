@@ -50,7 +50,7 @@ try
 catch (Errno const &err)
 {
     cerr <<
-        err.what() << endl <<
+        err.why() << endl <<
         "Server socket on port " << argv[1] << 
         " can't be opened" << endl;
     return -1;

@@ -65,6 +65,6 @@ try
 }
 catch (Errno const &err)
 {
-    cout << "Terminating " << err.what() << endl;
+    cout << "Terminating " << err.why() << endl;
     return 1;
 }

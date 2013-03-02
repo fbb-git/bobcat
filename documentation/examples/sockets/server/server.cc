@@ -55,6 +55,6 @@ try
 }
 catch(Errno const &error)
 {
-    cerr << error.what() << endl;
+    cerr << error.why() << endl;
     return 1;
 }

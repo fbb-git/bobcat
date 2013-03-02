@@ -53,7 +53,7 @@ try
 }
 catch (Errno const &err)
 {
-    cerr << err.what() << "\n" <<
+    cerr << err.why() << "\n" <<
             "Can't connect to " << argv[1] << ", port " <<
             argv[2] << endl;
     return 1;

@@ -22,13 +22,13 @@ int main(int argc, char **argv)
         }
         catch(Errno const &e)
         {
-            cerr << e.what() << ", " << e.which() << "\n";
+            cerr << e.why() << ", " << e.which() << "\n";
             throw;
         }
     }
     catch(exception const &e)
     {
-        cout << "Exception caught: " << e.what() << "\n";
+        cout << "Exception caught: " << e.why() << "\n";
     }
 
     cerr << "================== second example ===============\n";
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     }
     catch(exception const &e)
     {
-        cout << "Exception caught: " << e.what() << "\n";
+        cout << "Exception caught: " << e.why() << "\n";
     }
 
     cerr << "================== third example ===============\n";
@@ -62,7 +62,7 @@ int main(int argc, char **argv)
     }
     catch(Errno const &e)
     {
-        cout << "Exception caught: " << e.what() << ", " << e.which() << "\n";
+        cout << "Exception caught: " << e.why() << ", " << e.which() << "\n";
     }
 
     cerr << "================== fourth examplle ===============\n";
@@ -75,7 +75,7 @@ int main(int argc, char **argv)
     }
     catch (exception const &e)
     {
-        cerr << e.what() << ".\n";
+        cerr << e.why() << ".\n";
     }
 
     cerr << "================== fifth example ===============\n";
@@ -89,7 +89,7 @@ int main(int argc, char **argv)
     }
     catch (exception const &e)
     {
-        cerr << e.what() << ".\n";
+        cerr << e.why() << ".\n";
     }
 }
 

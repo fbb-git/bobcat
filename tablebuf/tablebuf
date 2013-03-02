@@ -36,10 +36,13 @@ class TableBuf: public TableBase, public std::streambuf
         void setFieldSeparator();
         void setRowSeparator();
 
+    protected:
+        virtual int pSync();
+
+    private:
         virtual int sync();
         virtual int overflow(int ch);
 
-    private:
         void nextField();
         void endRow();
 

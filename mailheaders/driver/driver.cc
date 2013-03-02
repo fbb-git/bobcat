@@ -24,7 +24,7 @@ int main(int argc, char **argv, char **envp)
     }
     catch (Errno &err)
     {
-        cout << err.what() << endl;
+        cout << err.why() << endl;
     }
 
     mh.setHeaderIterator("Received");  
