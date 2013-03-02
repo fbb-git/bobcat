@@ -8,6 +8,8 @@ namespace FBB
 {
     class A2x: public std::istringstream
     {
+        static bool s_lastFail;
+
         public:
             A2x();
             A2x(char const *txt);          // initialize from text
@@ -24,6 +26,8 @@ namespace FBB
     
             A2x &operator=(std::string const &str);
             A2x &operator=(A2x const &other);
+
+            static bool lastFail();
     };
 
 inline A2x::A2x()
@@ -49,7 +53,7 @@ inline Type A2x::to()
 {
     Type t;
 
-    return (*this >> t) ? t : Type();
+    return (s_lastFail = (*this >> t).fail()) ? Type() : t;
 }
 
 template <typename Type>
@@ -66,6 +70,11 @@ inline A2x &A2x::operator=(std::string const &str)
 inline A2x &A2x::operator=(A2x const &other)
 {
     return operator=(other.str());
+}
+
+inline bool A2x::lastFail()
+{
+    return s_lastFail;
 }
 
 }

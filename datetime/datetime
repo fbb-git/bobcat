@@ -22,6 +22,14 @@ class DateTime
 
     friend  std::ostream &std::operator<<(std::ostream &str, 
                                           DateTime const &dt);
+
+    friend bool operator==(DateTime const &left, DateTime const &right);
+    friend bool operator!=(DateTime const &left, DateTime const &right);
+    friend bool operator<(DateTime const &left, DateTime const &right);
+    friend bool operator<=(DateTime const &left, DateTime const &right);
+    friend bool operator>(DateTime const &left, DateTime const &right);
+    friend bool operator>=(DateTime const &left, DateTime const &right);
+
     public:
         enum TimeType
         {
@@ -43,6 +51,12 @@ class DateTime
             NOVEMBER,
             DECEMBER,
         };
+        enum Relative
+        {
+            THIS_YEAR,
+            LAST,
+            NEXT
+        };
         enum WeekDay
         {
             SUNDAY,
@@ -62,8 +76,8 @@ class DateTime
 
     private:
         TimeType    d_type; // current type of info in d_tm member
-        time_t      d_time; // 
-        struct tm   d_tm;   // 
+        time_t      d_time; // time used by members
+        struct tm   d_tm;   // time's elements
         bool        d_ok;
         size_t    d_errno;
 
@@ -80,13 +94,22 @@ class DateTime
         Month month() const;
         size_t monthDayNr() const;
 
-        DateTime &operator+=(DateTime const &other);    // UTC
         DateTime &operator+=(time_t seconds);           // d_type
         DateTime &operator+=(tm const &tm);             // d_type
 
-        DateTime &operator-=(DateTime const &other);    // UTC
         DateTime &operator-=(time_t seconds);           // d_type
         DateTime &operator-=(tm const &tm);             // d_type
+
+
+        bool setSeconds(int seconds);
+        bool setDay(int day);
+        bool setTime(time_t time);
+        bool setYear(size_t year);
+        bool setHours(int hours);
+        bool setMinutes(int minutes);
+        bool setMonth(Month month, Relative where = THIS_YEAR);
+        bool setMonth(int month);       // set month, using 0: januari
+                                        // correct for overflows.
 
         size_t seconds() const;
         time_t time() const;
@@ -95,6 +118,14 @@ class DateTime
         size_t yearDay() const;
         size_t yearDayNr() const;
         TriVal dst() const;
+
+        DateTime utc() const;
+        DateTime localTime() const;
+        DateTime to(TimeType type) const;
+
+    private:
+        bool breakDown(struct tm *tmStruct, TimeType type, time_t time);
+        bool updateTime(struct tm *tmPtr);
 };
 
 inline DateTime::operator bool() const
@@ -162,43 +193,75 @@ inline DateTime::TriVal DateTime::dst() const
     return static_cast<TriVal>(d_tm.tm_isdst);  
 }
 
+inline DateTime DateTime::utc() const
+{
+    return to(UTC);
+}   
+
+inline DateTime DateTime::localTime() const
+{
+    return to(LOCALTIME);
+}   
+
+inline DateTime DateTime::to(TimeType type) const
+{
+    return DateTime(d_time, type);
 }
 
-inline FBB::DateTime operator-(FBB::DateTime const &left,   // UTC
-                               FBB::DateTime const &right)
-{
-    return FBB::DateTime(left) -= right;
-}   
-
-inline FBB::DateTime operator-(FBB::DateTime const &left,   // d_type
+inline DateTime const operator-(DateTime const &left,   // d_type
                                time_t right)
 {
-    return FBB::DateTime(left) -= right;
+    return DateTime(left) -= right;
 }   
 
-inline FBB::DateTime operator-(FBB::DateTime const &left,   // d_type
+inline DateTime const operator-(DateTime const &left,   // d_type
                                tm const &right)
 {
-    return FBB::DateTime(left) -= right;
+    return DateTime(left) -= right;
 }   
 
-inline FBB::DateTime operator+(FBB::DateTime const &left, 
-                               FBB::DateTime const &right)
-{
-    return FBB::DateTime(left) += right;
-}   
-
-inline FBB::DateTime operator+(FBB::DateTime const &left,   // d_type
+inline DateTime const operator+(DateTime const &left,   // d_type
                                time_t right)
 {
-    return FBB::DateTime(left) += right;
+    return DateTime(left) += right;
 }   
 
-inline FBB::DateTime operator+(FBB::DateTime const &left,   // d_type
+inline DateTime const operator+(DateTime const &left,   // d_type
                                tm const &right)
 {
-    return FBB::DateTime(left) += right;
+    return DateTime(left) += right;
 }   
 
+inline bool operator==(DateTime const &left, DateTime const &right)
+{
+    return left.d_time == right.d_time;
+}   
+
+inline bool operator!=(DateTime const &left, DateTime const &right)
+{
+    return left.d_time != right.d_time;
+}   
+
+inline bool operator<(DateTime const &left, DateTime const &right)
+{
+    return left.d_time < right.d_time;
+}   
+
+inline bool operator<=(DateTime const &left, DateTime const &right)
+{
+    return left.d_time <= right.d_time;
+}   
+
+inline bool operator>(DateTime const &left, DateTime const &right)
+{
+    return left.d_time > right.d_time;
+}   
+
+inline bool operator>=(DateTime const &left, DateTime const &right)
+{
+    return left.d_time >= right.d_time;
+}   
+
+}
 
 #endif

@@ -19,7 +19,8 @@ int main()
     getline(process, line);             // read its `cat' output
     cout << line << endl;               // show it
 
-    process = "`/bin/ls`";              // run another command
+    process = "`/bin/ls`";              // stop the existing command,
+                                        // start another command
                                         // (assignment implies
                                         // `stop()')
 

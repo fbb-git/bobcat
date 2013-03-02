@@ -4,38 +4,19 @@
 
 #include "driver.h"
 
-#ifndef _INCLUDED_MAILHEADERS_H_
-#include "../mailheaders.h"
-#endif
+#include "../mailheaders"
 
-#ifndef _SYSINC_ALGORITHM_
 #include <algorithm>
-#define _SYSINC_ALGORITHM_
-#endif
-
-#ifndef _SYSINC_ITERATOR_
 #include <iterator>
-#define _SYSINC_ITERATOR_
-#endif
 
-#ifndef _INCLUDED_ERRNO_H_
-#include <fbb/errno.h>
-#endif
+#include <bobcat/errno>
 
 using namespace std;
 using namespace FBB;
 
-MailHeaders *mp;
-
-void showFirst(MailHeaders::HdrLine const &lines)
-{
-    cout << mp->at(lines[0]) << endl;
-}
-
 int main(int argc, char **argv, char **envp)
 {
     MailHeaders mh(cin, MailHeaders::DONT_READ);
-    mp = &mh;
 
     try
     {
@@ -46,6 +27,7 @@ int main(int argc, char **argv, char **envp)
         cout << err.what() << endl;
     }
 
+    mh.setHeaderIterator("Received");  
 
     cout << "=================================== All mail headers:\n";
 
@@ -56,30 +38,19 @@ int main(int argc, char **argv, char **envp)
     cout << mh[0] << endl <<
             mh[mh.size() - 2] << endl;
 
-    cout << "====================== First lines of Received: headers:\n";
+    cout << "====================== Received: headers:\n";
 
-    mh.setHeaderIterator("Received:");
+    copy(mh.beginh(), mh.endh(),  ostream_iterator<string>(cout, "\n"));
 
-    for_each(mh.beginh(), mh.endh(), showFirst);
+    cout << "====================== Received: headers, reversed order:\n";
 
-    cout << "====================== All lines of Received: headers:\n";
+    copy(mh.rbeginh(), mh.rendh(),  ostream_iterator<string>(cout, "\n"));
 
-    for (MailHeaders::const_iterator it = mh.beginh(); it != mh.endh(); it++)
-    {
-        for 
-        (
-            vector<size_t>::const_iterator nr = it->begin(); 
-                nr != it->end();
-                    nr++
-        )
-            cout << mh[*nr] << endl;
+    cout << "====================== all From headers:\n";
 
-        cout << "+++++++++++++++++++++++++++++++" << endl;
-    }
+    mh.setHeaderIterator("From", MailHeaders::PARTIAL);  
 
-    cout << "===== reversed order:  First lines of Received: headers:\n";
-
-    for_each(mh.rbeginh(), mh.rendh(), showFirst);
+    copy(mh.beginh(), mh.endh(),  ostream_iterator<string>(cout, "\n"));
 
     return 0;
 }
