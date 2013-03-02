@@ -1,0 +1,216 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Log</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Log</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Log(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Log(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz Log messages</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Log - <strong>std::ostream</strong> handling log messages
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/log&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <strong>std::ostream</strong>
+<p>
+<h2>ENUMERATIONS</h2>
+<p>
+The enumeration <strong>TimeStamps</strong> is defined in the namespace <strong>FBB</strong>,
+primarily for initializing <strong>FBB::LogBuffer</strong> objects. It is used with
+<strong>FBB::Log</strong> members as well. It has the following values:
+    <ul>
+    <li> <strong>NOTIMESTAMPS</strong>:<br>
+        Log-messages will not have timestamps prepended to them.
+    <li> <strong>TIMESTAMPS</strong>:<br>
+        Log-messages will have timestamps prepended to them.
+    </ul>
+<p>
+The enumeration <strong>LogManipulator</strong> is used to handle special or
+exceptional situations through manipulators. It is defined in the namespace
+<strong>FBB</strong> and has the following two values:
+    <ul>
+    <li> <strong>FATAL</strong>:<br>
+        This value may be inserted into an <strong>FBB::Log</strong> object to throw an
+<strong>FBB::Errno</strong> exception (see <strong>operator&lt;&lt;()</strong> below);
+    <li> <strong>nl</strong>:<br>
+        This value may be inserted into an <strong>FBB::Log</strong> object to terminate
+the current line. It will <em>not</em> cause the next line to begin with a
+time stamp (if applicable) and the current <em>message level</em> cannot be
+modified using a <strong>level</strong>(3bobcat) manipulator. It is used to allow a single 
+log message to occupy multiple textual lines.
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Log(char const *delim = " ")</strong>:<br>
+        The default constructor creates a <strong>FBB::Log</strong> object which isn't yet
+associated with a stream to log messages on. The member <strong>open()</strong> (see below)
+may be used to define such a stream.  By default, all messages will have a
+time stamp prepended to them (see the description of the member
+<strong>setTimestamp()</strong> below). The parameter <strong>delim</strong> is inserted immediately
+beyond the time stamp. If a delimiter is inappropriate, an empty string or a
+0-pointer may be specified.
+    <li> <strong>Log(std::ostream &amp;out, char const *delim = " ")</strong>:<br>
+        This constructor creates a nbf(FBB::Log) object logging its messages
+to the provided <em>std::ostream</em> object. By default, all messages will have a
+time stamp prepended to them (see the description of the member
+<strong>setTimestamp()</strong> below).  The parameter <strong>delim</strong> is inserted immediately
+beyond the time stamp. If a delimiter is inappropriate, an empty string or a
+0-pointer may be specified.
+    <li> <strong>FBB::Log(std::string const &amp;filename,
+            std::ios::openmode mode = std::ios::out | std::ios::app, 
+            char const *delim = " ")</strong>:<br>
+        This constructor creates a <strong>FBB::Log</strong> object logging its messages to
+the named file. If <em>filename == "&amp;1"</em> the logmessages will be written to the
+standard output stream. If <em>filename == "&amp;2"</em> the logmessages will be
+written to the standard error stream.  By default the file is created if not
+existing, and all messages are appended to the stream.  By default, all
+messages will have a time stamp prepended to them (see the description of the
+member <strong>setTimestamp()</strong> below).  The parameter <strong>delim</strong> is inserted
+immediately beyond the time stamp. If a delimiter is inappropriate, an empty
+string or a 0-pointer may be specified.
+    </ul>
+    The copy constructor is not available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+     All members of <strong>std::ostream</strong> are available, as <strong>FBB::Log</strong> inherits
+from this class.
+    <ul>
+    <li> <strong>std::ostream &amp;level(unsigned useLevel)</strong>:<br>
+        This member defines a log-level. Messages will be inserted into
+the stream when <em>useLevel</em> is equal to or exceeds the level set by
+<strong>setLevel()</strong>. The maximum level which can be selected is <strong>UNIT_MAX</strong>. If
+not even such messages should be inserted into the <strong>ostream</strong>, then the
+stream should be deactivated, using <strong>off()</strong>, see below. The selected level
+remains active until redefined. Alternatively, the <strong>FBB::level</strong> manipulator
+may be inserted into an (empty) <strong>FBB::Log</strong> object (see <strong>level</strong>(3bobcat)).
+    <li> <strong>void off()</strong>:<br>
+        Prevents any log messages from being generated. It may be cancelled by
+<strong>setLevel()</strong> (see below).
+    <li> <strong>void open(std::string const &amp;filename,
+            std::ios::openmode mode = std::ios::out | std::ios::app, 
+            char const *delim = " ")</strong>:<br>
+        This member (re)associates an <strong>FBB::Log</strong> object with the named
+file. If <em>filename == "&amp;1"</em> the logmessages will be written to the standard
+output stream. If <em>filename == "&amp;2"</em> the logmessages will be written to the
+standard error stream.  By default the file is created if not existing, and
+all messages are appended to the stream.  By default, all messages will have a
+time stamp prepended to them (see the description of the member
+<strong>setTimestamp()</strong> below).  The parameter <strong>delim</strong> is inserted immediately
+beyond the time stamp. If a delimiter is inappropriate, an empty string or a
+0-pointer may be specified.
+    <li> <strong>void setLevel(unsigned newLevel)</strong>:<br>
+        Redefines the internal message level. Messages having at least
+level <em>newLevel</em> will be written. If the member is used without explicit
+argument, logging is suspended.
+    <li> <strong>void setTimestamp(FBB::TimeStamps stamp, char const *delim = " ")</strong>:<br>
+        The member function (de)activates time stamp prepending. Use the value
+<strong>FBB::TIMESTAMPS</strong> to prepend time stamps, <strong>FBB::NOTIMESTAMPS</strong> suppresses
+time stamps.  A timestamp consists of the month, the day number of the month
+and the (local) time of the current message, as usually appearing in messages
+in <em>/var/log</em> files. E.g., <em>Aug 5 13:52:23</em>. The parameter <strong>delim</strong> is
+inserted immediately beyond the time stamp. If a delimiter is inappropriate,
+an empty string or a 0-pointer may be specified. When <strong>stamps ==
+FBB::NOTIMESTAMPS delim</strong> is ignored.
+    </ul>
+<p>
+<h2>STATIC MEMBER</h2>
+    <ul>
+    <li> <strong>FBB::Log &amp;initialize(std::string const &amp;filename,
+            std::ios::openmode mode = std::ios::out | std::ios::app, 
+            char const *delim = " ")</strong>:<br>
+<p>
+Returns a reference to a static <strong>FBB::Log</strong> object. It may only be
+called once, or an <em>FBB::Errno</em> exception is thrown. It associates a static
+<strong>FBB::Log</strong> object with the named file. If <em>filename == "&amp;1"</em> the
+logmessages will be written to the standard output stream. If <em>filename ==
+"&amp;2"</em> the logmessages will be written to the standard error stream.  By
+default the file is created if not existing, and all messages are appended to
+the stream.  By default, all messages will have a time stamp prepended to them
+(see the description of the member <strong>setTimestamp()</strong> below).  The parameter
+<strong>delim</strong> is inserted immediately beyond the time stamp. If a delimiter is
+inappropriate, an empty string or a 0-pointer may be specified.
+    <li> <strong>FBB::Log &amp;getInstance()</strong>:<br>
+        Returns a reference to a static <strong>FBB::Log</strong> object, available after
+calling <strong>Log::initialize()</strong>. If called before <em>Log::initialize()</em>
+an <em>FBB::Errno</em> exception is thrown. 
+    </ul>
+<p>
+<h2>OVERLOADED OPERATOR</h2>
+    The following overloaded operator is defined outside of the <strong>FBB</strong>
+namespace. It may be used to insert an <strong>FBB::LogManipulator</strong> into an
+<strong>FBB::Log</strong> object. If the overloaded operator is used in combination with
+another type of object it performs no actions.
+    <ul>
+    <li> <strong>std::ostream &amp;::operator&lt;&lt;(std::ostream &amp;str, FBB::LogManipulator)</strong>:<br> 
+        When inserting <strong>FBB::FATAL</strong> an <strong>FBB::Errno</strong> exception is thrown;
+when inserting <strong>FBB::nl</strong> the line is terminated, but next insertions will
+not start with a time stamp (if applicable). 
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    To do
+<p>
+<h2>FILES</h2>
+    <em>bobcat/log</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>errno</strong>(3bobcat), <strong>level</strong>(3bobcat),
+    <strong>logbuffer</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None reported
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

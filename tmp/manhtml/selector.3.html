@@ -1,0 +1,148 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Selector</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Selector</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Selector(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Selector(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz Timed Delays, Multiple File I/O</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Selector - Timed delays, Alarms and Multiple File I/O.
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/selector&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    <strong>FBB::Selector</strong> objects are wrappers around the <strong>select()</strong>(2) system
+calls and allow timed delays, alarm functionality and/or multiple file I/O. It
+requires the use of <em>file descriptors</em>, which are not an official part of
+<strong>C++</strong>. However, most operating systems offer <em>file descriptors</em>. Sockets
+are well-known file descriptors.
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Selector()</strong>:<br>
+        This constructor initializes the object.
+    <li> <strong>Selector(Selector const &amp;other) throw()</strong>:<br> 
+        The standard copy constructor is available.
+    </ul>
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+    <ul>
+    <li> <strong>void addExceptFd(int fd)</strong>:<br>
+        Adds a filedescriptor to the set of file descriptors that are
+monitored for exceptions (note these are not <strong>C++</strong> exceptions. See <strong>man 2
+select</strong> for details).
+    <li> <strong>void addReadFd(int fd)</strong>:<br>
+        Adds a filedescriptor to the set of file descriptors that are
+monitored for reading.
+    <li> <strong>void addWriteFd(int fd)</strong>:<br>
+        Adds a filedescriptor to the set of file descriptors that are
+monitored for writing.
+    <li> <strong>int exceptFd()</strong>:<br>
+        Returns -1 of no more file descriptors are
+available in the <em>exception</em> category. Otherwise the next available file
+descriptor in the <em>exception</em> category is returned. Returning from
+<strong>wait()</strong>, this function can be called repeatedly until -1 is returned,
+servicing each available filedescriptor in turn.
+    <li> <strong>void noAlarm()</strong>:<br> 
+        This member prevents any timeout-alarm from occurring.
+    <li> <strong>int nReady()</strong>:<br>
+        Returns the number of available file descriptors.  0 is returned at a
+timeout, -1: is returned when <em>select</em>(2) itself failed.
+    <li> <strong>int readFd()</strong>:<br>
+        Returns -1 of no more file descriptors are available for
+reading. Otherwise the next available file descriptor for reading is
+returned. Returning from <strong>wait()</strong>, this function can be called repeatedly
+until -1 is returned, servicing each available filedescriptor in turn.
+    <li> <strong>void rmExceptFd(int fd)</strong>:<br> 
+        Removes a filedescriptor from the set of file descriptors that are
+monitored for exceptions (note these are not <strong>C++</strong> exceptions. See <strong>man 2
+select</strong> for details).
+    <li> <strong>void rmReadFd(int fd)</strong>:<br>
+        Removes a filedescriptor from the set of file descriptors that are
+monitored for reading.
+    <li> <strong>void rmWriteFd(int fd)</strong>:<br>
+        Removes a filedescriptor from the set of file descriptors that are
+monitored for writing.
+    <li> <strong>void setAlarm(int sec, int usec = 0)</strong>:<br>
+        This member sets the alarm at the indicated seconds and
+milli-seconds. If no action occurred on one of the monitored file
+descriptions, <em>wait()</em> will return with <em>nREady()</em> returning 0.
+    <li> <strong>int wait()</strong>:<br>
+        This member should be called to wait for activities on the installed
+file descriptors or timeout-period. The members <em>nReady()</em> and <em>get...()</em>
+show their defined behaviors only after <strong>wait()</strong> has returned.  It throws an
+<strong>FBB::Errno</strong> exception when <em>select()</em> fails, which may very well indicate
+the end of any available input.
+    <li> <strong>int writeFd()</strong>:<br>
+        Returns -1 of no more file descriptors are available for
+writing. Otherwise the next available file descriptor for writing is
+returned. Returning from <strong>wait()</strong>, this function can be called repeatedly
+until -1 is returned, servicing each available filedescriptor in turn.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    To do
+<p>
+<h2>FILES</h2>
+    <em>bobcat/selector</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>select</strong>(2)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

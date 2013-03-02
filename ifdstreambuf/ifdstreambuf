@@ -1,0 +1,77 @@
+#ifndef _INCLUDED_BOBCAT_IFDSTREAMBUF_
+#define _INCLUDED_BOBCAT_IFDSTREAMBUF_
+
+#include <streambuf>
+
+namespace FBB
+{    
+    class IFdStreambuf: public std::streambuf
+    {
+        public:
+                // Mode defines what to do with the file descriptor at
+                // destruction-time or when the default open is
+                // called. CLOSE_FD will close the fd, KEEP_FD will leave the
+                // fd as-is. When open is called with a Mode argument, then
+                // the provided argument is used for the actual fd. The Mode
+                // specified at the constructor is therefore only used for the
+                // mode-less open() call and for the destructor.
+            enum Mode
+            {
+                CLOSE_FD,
+                KEEP_FD,
+            };
+
+        private:
+            Mode        d_mode;
+            int         d_fd;
+            unsigned    d_n;
+            char*       d_buffer;
+
+        public:
+            IFdStreambuf()
+            :
+                d_mode(KEEP_FD),         // comply with old default
+                d_n(0),
+                d_buffer(0)
+            {}
+            IFdStreambuf(Mode mode)
+            :
+                d_mode(mode),
+                d_n(0),
+                d_buffer(0)
+            {}
+            IFdStreambuf(int fd, unsigned n = 1)
+            :
+                d_mode(KEEP_FD),        // comply with old default
+                d_buffer(0)
+            {
+                open(fd, KEEP_FD, n);
+            }
+            IFdStreambuf(int fd, Mode mode, unsigned n = 1)
+            :
+                d_mode(mode),
+                d_buffer(0)
+            {
+                open(fd, KEEP_FD, n);
+            }
+            ~IFdStreambuf()
+            {
+                cleanup(d_mode);
+            }
+            void open(int xfd, Mode mode, unsigned n = 1);
+            void open(int xfd, unsigned n = 1)
+            {
+                open(xfd, d_mode, n);
+            }
+            virtual int underflow();
+            virtual std::streamsize xsgetn(char *dest, std::streamsize n);
+
+        private:
+            IFdStreambuf(IFdStreambuf const &other);              // NI
+            IFdStreambuf &operator=(IFdStreambuf const &other);   // NI
+
+            void cleanup(Mode mode);
+    };
+}
+
+#endif

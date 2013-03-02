@@ -1,0 +1,167 @@
+.TH "FBB::LocalClientSocket" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Unix Domain client Socket"
+
+.PP 
+.SH "NAME"
+FBB::LocalClientSocket \- Client Socket connecting to a Server in the Unix Domain
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/localclientsocket>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+An \fBFBB::LocalClientSocket\fP may be constructed to connect to a server
+process in the Unix Domain\&. The socket made available by the
+\fBFBB:LocalClientSocket\fP may be used to initialize a \fBstd::istream\fP and/or
+\fBstd::ostream\fP\&. The \fBstd::istream\fP is used to read information from the
+server process to which the \fBFBB::LocalClientSocket\fP connects, The
+\fBstd::ostream\fP is used to send information to the server process to which
+the \fBFBB::LocalClientSocket\fP connects\&.  Since a socket may be considered a
+\fIfile descriptor\fP the avaiable \fBFBB::IFdStream\fP, \fBFBB::IFdStreamBuf\fP,
+\fBFBB::OFdStream\fP, and \fBFBB::OFdStreamBuf\fP classes may be used profitably
+here\&. Note that having available a socket does not mean that this defines the
+communication protocol\&. It is (still) the responsibility of the programmer to
+comply with an existing protocol or to implement a tailor-made protocol\&. The
+latter situation implies that the sequence of input- and output operations is
+defined by the programmer\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+\fBFBB::LocalSocketBase\fP
+.PP 
+.SH "CONSTRUCTOR"
+.IP o 
+\fBLocalClientSocket()\fP:
+.br 
+This constructor merely creates a \fBFBB::LocalClientSocket\fP
+object\&. Before it can be used, its \fIopen()\fP member must be called\&.
+.IP o 
+\fBLocalClientSocket(std::string const &name) throw (Errno)\fP:
+.br 
+This constructor initializes an \fBFBB::LocalClientSocket\fP object,
+using the named Unix Domain socket to connect to the server using the named
+Unix Domain socket\&. An \fBFBB::Errno\fP is thrown if the socket could not be
+constructed\&. The construction of the socket does not mean that a connection
+has actually been established\&. In order to connect to the server, the member
+\fBconnect()\fP (see below) should be used\&.
+The copy constructor is not available\&.
+.PP 
+.SH "MEMBER FUNCTION"
+.IP o 
+\fBint connect() throw (Errno)\fP:
+.br 
+This member returns a socket that can be used to communicate with the
+server process\&. An \fBFBB::Errno\fP exception is thrown if the connection could
+not be established\&.
+.IP o 
+\fBopen(std::string const &name) throw (Errno)\fP:
+.br 
+This member function prepares the \fBFBB::LocalClientSocket\fP object,
+constructed earlier using the default constructor, for use\&.  The named Unix
+Domain socket is used to connect to the server using the named Unix Domain
+socket\&. An \fBFBB::Errno\fP is thrown if the socket could not be
+constructed\&. The construction of the socket does not mean that a connection
+has actually been established\&. In order to connect to the server, the member
+\fBconnect()\fP should be used\&.
+
+.PP 
+.SH "EXAMPLE"
+See also the \fBlocalserversocket\fP(3bobcat) example\&.
+.nf 
+
+    #include <iostream>
+    #include <bobcat/localclientsocket>
+    #include <bobcat/ifdstream>
+    #include <bobcat/ofdstream>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main(int argc, char **argv)
+    try
+    {
+        if (argc == 1)
+        {
+            cerr << "Provide filename representing the unix domain socket\en";
+            return 1;
+        }
+    
+        LocalClientSocket client(argv[1]);
+        int fd = client\&.connect();
+        string line;
+    
+        cout << "Connecting to socket " << fd << endl;
+    
+        IFdStream in(fd);                 // stream to read from        
+        OFdStream out(fd);                // stream to write to
+    
+        while (true)
+        {
+                                    // Ask for a textline, stop if empty / none
+            cout << "? ";                   
+            if (!getline(cin, line) || line\&.length() == 0)
+                return 0;
+            cout << "Line read: " << line << endl;
+                                    // Return the line to the server
+            out << line\&.c_str() << endl;    
+            cout << "wrote line\en";
+    
+                                    // Wait for a reply from the server
+            getline(in, line);
+            cout << "Answer: " << line << endl;
+        }
+        return 0;
+    }
+    catch (Errno const &err)
+    {
+        cerr << err\&.what() << "\en" <<
+                "Can\&'t connect to " << argv[1] << ", port " << argv[2] << endl;
+        return 1;
+    }
+        
+.fi 
+
+.PP 
+.SH "FILES"
+\fIbobcat/localclientsocket\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBifdstream\fP(3bobcat), \fBifdstreambuf\fP(3bobcat),
+\fBclientsocket\fP(3bobcat), \fBlocalserversocket\fP(3bobcat),
+\fBlocalsocketbase\fP(3bobcat), \fBofdstream\fP(3bobcat), \fBofdstream\fP(3bobcat)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

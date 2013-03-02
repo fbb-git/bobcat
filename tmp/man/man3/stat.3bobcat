@@ -1,0 +1,283 @@
+.TH "FBB::Stat" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "File Characteristics"
+
+.PP 
+.SH "NAME"
+FBB::Stat \- Determines File Characteristics
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/stat>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+\fBFBB::Stat\fP is a wrapper around the \fBstat\fP(2) system function\&. In
+particular, it offers features to test directly for file
+characteristics offered by \fBstat\fP(2)\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "ENUMARATIONS"
+
+.PP 
+\fBFBB::Stat::Combine\fP: 
+.br 
+This enumeration has the following values:
+.IP o 
+\fBALL\fP: require all of the specified \fBMode\fP or 
+\fBSpecialMode\fP values to match;
+.IP o 
+\fBANY\fP: require any match of the specified \fBMode\fP or 
+\fBSpecialMode\fP values (one match suffices);
+
+.PP 
+\fBFBB::Stat::Mode\fP: 
+.br 
+This enumeration has the following values:
+.IP o 
+\fBUR\fP: the owner of the file has read permissions
+.IP o 
+\fBUW\fP: the owner of the file has write permissions
+.IP o 
+\fBUX\fP: the owner of the file has execute permissions
+.IP o 
+\fBGR\fP: the group to which the file belongs has read permissions
+.IP o 
+\fBGW\fP: the group to which the file belongs has write permissions
+.IP o 
+\fBGX\fP: the group to which the file belongs has execute
+permissions 
+.IP o 
+\fBOR\fP: others have read permissions
+.IP o 
+\fBOW\fP: others have write permissions
+.IP o 
+\fBOX\fP: others have execute permissions
+.IP o 
+\fBRWX\fP: all of the above\&.
+
+.PP 
+\fBFBB::Stat::SpecialMode\fP: 
+.br 
+This enumeration has the following values:
+.IP o 
+\fBSUID\fP: set UID bit is up
+.IP o 
+\fBSGID\fP: set GID bit is up
+.IP o 
+\fBSB\fP: sticky bit is up
+
+.PP 
+\fBFBB::Stat::Type\fP: 
+.br 
+This enumeration has the following values:
+.IP o 
+\fBBLOCK_DEVICE\fP: the object represents a block device
+.IP o 
+\fBCHARACTER_DEVICE\fP: the object represents a character device
+.IP o 
+\fBDIRECTORY\fP: the object represents a directory
+.IP o 
+\fBFIFO\fP: the object represents a named pipe (a queue)
+.IP o 
+\fBREGULAR_FILE\fP: the object represents a regular file
+.IP o 
+\fBSOCKET\fP: the object represents a socket
+.IP o 
+\fBSYMBOLIC_LINK\fP: the object represents a symbolic link
+
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBStat()\fP:
+.br 
+The default constructor, creating an empty \fBFBB::Stat\fP object\&.
+.IP o 
+\fBStat(std::string const &fname)\fP:
+.br 
+Initializes a \fBFBB::Stat\fP with a given file name\&.
+.IP o 
+\fBStat(std::string const &fname, std::string const &searchPath)\fP:
+.br 
+Initializes a \fBFBB::Stat\fP with a given file name, where the file is
+searched in the \fIsearchPath\fP directories, which is a colon-separated string
+of directory names\&. The filenames are constructed by appending \fIfname\fP to
+each of the elements of \fIsearchPath\fP until an existing file is found\&. This
+file is then used\&. If \fIfname\fP is an absolute path, \fIsearchPath\fP is
+ignored\&.
+.IP o 
+\fBStat(Stat const &other)\fP:
+.br 
+The copy constructor is available\&.
+
+.PP 
+.SH "MEMBER FUNCTIONS"
+All members of 
+.IP o 
+\fBstd::ostringstream\fP:
+.br 
+and 
+.IP o 
+\fB  std::exception\fP:
+.br 
+are
+available, as 
+.IP o 
+\fBFBB::Stat\fP:
+.br 
+inherits from these classes\&.
+.IP o 
+\fBunsigned blockSize() const\fP:
+.br 
+Returns the blocksize for filesystem I/O
+.IP o 
+\fBunsigned device() const\fP:
+.br 
+Returns the device number\&.
+.IP o 
+\fBunsigned deviceType() const\fP:
+.br 
+Returns the device type number, but only if the file type is
+\fBDEVICE\fP\&.
+.IP o 
+\fBunsigned errno() const\fP:
+.br 
+Returns the error number associated with an error, in cases where
+\fBoperator bool()\fP returns \fBfalse\fP\&.
+.IP o 
+\fBunsigned inode() const\fP:
+.br 
+Returns the inode number\&.
+.IP o 
+\fBunsigned gid() const\fP:
+.br 
+Returns the group ID of the file\&'s owner\&.
+.IP o 
+\fBFBB::DateTime lastAccess() const\fP:
+.br 
+Returns a \fBFBB::DateTime\fP object holding information about the
+file\&'s time of last access\&.
+.IP o 
+\fBFBB::DateTime lastChange() const\fP:
+.br 
+Returns a \fBFBB::DateTime\fP object holding information about the
+file\&'s time of last status change\&.
+.IP o 
+\fBFBB::DateTime lastModification() const\fP:
+.br 
+Returns a \fBFBB::DateTime\fP object holding information about the
+file\&'s last modification time\&.
+.IP o 
+\fBunsigned mode() const\fP:
+.br 
+Returns the file\&'s raw, uninterpreted mode 
+.IP o 
+\fBbool mode(Mode mode, Combine combine = ALL)\fP:
+.br 
+Returns true if the file has the indicated mode\&. Multiple modes may be
+set, which can be combined by the logical \fBbitor\fP operator\&. By default, if
+multiple modes are specified, the resulting pattern must exactly represent the
+file\&'s mode for the member function to return \fBtrue\fP\&. An optional argument
+\fIANY\fP may be specified if the function should return true if at least one
+specified mode matches the file\&'s actual mode\&.
+.IP o 
+\fBstd::string const &name() const\fP:
+.br 
+Returns the file\&'s name as specified in the constructor or \fBset()\fP
+member function\&.
+.IP o 
+\fBunsigned nBlocks() const\fP:
+.br 
+Returns the file\&'s number of allocated blocks\&.
+.IP o 
+\fBunsigned nLinks() const\fP:
+.br 
+Returns the file\&'s number of hard links\&.
+.IP o 
+\fBstd::string path() const\fP:
+.br 
+Returns the file\&'s full pathname\&. If the full pathname could not be
+determined, an empty string is returned\&.
+.IP o 
+\fBbool set(std::string const &name)\fP:
+.br 
+Redefine the \fB@CLASS\fP object to represent the information about the
+indicated filename\&.
+.IP o 
+\fBbool set(std::string const &name, std::string const &pathlist)\fP:
+.br 
+Redefine the \fB@CLASS\fP object to represent the information about the
+indicated filename, where the file is searched in the \fIpathlist\fP
+directories, which is a colon-separated string of directory names\&. The
+filenames are constructed by appending \fIfname\fP to each of the
+elements of \fIsearchPath\fP until an existing file is found\&. This file
+is then used\&. If \fIfname\fP is an absolute path, \fIsearchPath\fP is
+ignored\&.
+.IP o 
+\fBoff_t size() const\fP:
+.br 
+Returns the file\&'s size in number of bytes\&.
+.IP o 
+\fBbool specialMode(SpecialMode special, Combine combine = ALL)\fP:
+.br 
+Returns true if the file has the indicated special modes\&.  Multiple
+special modes may be specified, which can be combined by the logical \fBbitor\fP
+operator\&. By default, if multiple modes are specified, the resulting pattern
+must exactly represent the file\&'s mode for the member function to return
+\fBtrue\fP\&. An optional argument \fIANY\fP may be specified if the function should
+return true if at least one specified mode matches the file\&'s actual mode\&.
+.IP o 
+\fBStat::stat const &statStruct() const\fP:
+.br 
+Returns a reference to the object\&'s \fBstat struct\fP\&.
+.IP o 
+\fBunsigned uid() const\fP:
+.br 
+Returns the user ID of the file\&'s owner\&.
+
+.PP 
+.SH "EXAMPLE"
+To do
+.PP 
+.SH "FILES"
+\fIbobcat/stat\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBstat\fP(3)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

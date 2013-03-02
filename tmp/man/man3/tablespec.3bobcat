@@ -1,0 +1,148 @@
+.TH "FBB::TableSpec" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Table-baseclass"
+
+.PP 
+.SH "NAME"
+FBB::TableSpec \- Base class for the class \fBFBB::Table\fP
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/tablespec>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+Note: \fB#include <bobcat/tablespec>\fP is implied by 
+\fB#include <bobcat/table>\fP 
+.PP 
+.SH "DESCRIPTION"
+
+.PP 
+\fBFBB::TableSpec\fP is \fBFBB::Table\fP\&'s base class\&. See \fBtable\fP(3bobcat)
+for usage information\&. In this manual page only the specific characteristics
+of \fBFBB::TableSpec\fP are listed\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "ENUMERATIONS"
+The following enumerations are definedin th class \fBFBB::TableSpec\fP:
+.PP 
+\fBenum FillDirection\fP
+.br 
+This enumeration holds two values:
+.IP o 
+\fBHorizontal\fP:
+.br 
+Used to request row-wise storage of table elements in an 
+\fBFBB::Table\fP\&.
+.IP o 
+\fBVertical\fP:
+.br 
+Used to request column-wise storage of table elements in an
+\fBFBB::Table\fP\&. 
+
+.PP 
+\fBenum WidthType\fP
+.br 
+This enumeration holds two values:
+.IP o 
+\fBEqualWidth\fP:
+.br 
+Used to request equal width for all columns of an \fBFBB::Table\fP\&.
+.IP o 
+\fBColumnWidth\fP:
+.br 
+Used to request width-per-column for the columns of an \fBFBB::Table\fP\&.
+
+.PP 
+.SH "CONSTRUCTORS"
+
+.PP 
+There are no public constructors in this class\&. \fBFBB::TableSpec\fP objects
+are constructed when \fBFBB::Table\fP objects are constructed\&.
+.PP 
+.SH "OVERLOADED OPERATORS"
+
+.PP 
+.IP o 
+\fBstd::ostream &operator<<(std::ostream &, 
+FBB::TableSpec const &tableSpec)\fP:
+.br 
+This overloaded operator is normally used to insert an \fBFBB::Table\fP into
+a \fBstd::ostream\fP\&. See \fBtable\fP(3bobcat) for details\&.
+.IP 
+Note that this operator is not defined in the namespace \fBFBB\fP\&.
+The overloaded assignment operator is not available\&.
+.PP 
+.SH "MEMBER FUNCTION"
+.IP o 
+\fBvoid setWidth(FBB::TableSpec::WidthType type)\fP:
+.br 
+This member may be used to specify the width of indvidual or all
+columns of the tableSpec\&. Specify \fBTableSpec::EqualWidth\fP when all columns
+should have equal widths, specify \fBTableSpec::ColumnWidth\fP when each column
+should be as wide as its widest element\&. 
+
+.PP 
+.SH "MANPULATORS"
+.IP o 
+\fBFBB::equalWidth(FBB::TableSpec &tableSpec)\fP:
+.br 
+This manipulator is normally used to insert an \fBFBB::Table\fP object
+into a \fBstd::ostream\fP, enforcing equal column widths\&. To use this
+manipulator, the header file \fI<bobcat/equalwidth>\fP must be inserted\&.
+.IP o 
+\fBFBB::columnWidth(FBB::TableSpec &tableSpec)\fP:
+.br 
+This manipulator is normally used to insert an \fBFBB::Table\fP object
+into a \fBstd::ostream\fP, enforcing column widths which are as wide as their
+widest elements\&. To use this manipulator, the header file
+\fI<bobcat/columnwidth>\fP must be inserted\&.
+
+.PP 
+.SH "EXAMPLE"
+See \fBtable\fP(3bobcat)
+.PP 
+.SH "FILES"
+\fIbobcat/tableSpec\fP - defines \fBTable\fP\&'s baseclass interface;
+.br 
+
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBcolumnwidth\fP(3bobcat), \fBequalwidth\fP(3bobcat),
+\fBtable\fP(3bobcat)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

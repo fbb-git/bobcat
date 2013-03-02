@@ -1,0 +1,553 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Milter</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Milter</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Milter(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Milter(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz Milter interface</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Milter - Interface to the sendmail mail filter facilities
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/milter&gt;</strong><br>
+    Linking option: <em>-lmilter -lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+<strong>Milter</strong> defines an abtract base class interfacing to the sendmail mail
+filter (milter) facilities. It defines a <strong>C++</strong> interface, based on the
+assumption that a single mail filter program does not implement multiple mail
+filters. The traditional sendmail <strong>C</strong>-based Milter API uses a (<em>SMFICTX</em>)
+pointer representing a mail connection, and a pointer to connection-specific
+`private' data, requiring the Milter constructor to perform quite a few
+administrative tasks. While acceptable in a <strong>C</strong> environment these
+administratve tasks distract from the main task: the Milter's mail filtering
+functionality. The <strong>FBB::Milter</strong> class hides these administrative tasks from
+the programmer, who is then able to concentrate on filtering mail. The main
+benefits of <strong>Milter</strong> are therefore
+    <ul>
+    <li> Basic administration is performed by the <strong>Milter</strong> class
+    <li> The class' interface is more <strong>C++</strong> like than the raw <strong>C</strong>
+interface offered by the milter API.
+    <li> Administration, allocation and communicating of connection specific
+data is no longer required
+    <li> It is not normally necessary to use connection-specific data, like a
+pointer identifying the connection, anymore when implementing the Milter.
+    <li> <strong>Milter</strong> uses current-day design patterns enforcing principles of
+reuable software, thus simplifying the construction of the actual Milter.
+    </ul>
+    To activate a milter from the <em>sendmail.mc</em> configuration file, use,
+e.g., <em>INPUT_MAIL_FILTER(`name', `S=socket')</em>, where <em>name</em> is the
+milter's name, and <em>socket</em> is the name of the socket. See also the
+<em>setConnection()</em> member below.
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>ENUMERATIONS</h2>
+<p>
+The class defines four enumerations. One enumeration is used to indicate
+the callback-functions that need to be called, the second one renames the
+flags that can be passed to sendmail to indicate which actions the milter is
+allowed to perform. The third one defines status values that may be used to
+inform sendmail how to further process a message. The fourth one defines
+return values. The enumerations are:
+<p>
+<strong>enum CallBack</strong><br>
+    This enumeration holds the following values:
+    <ul>
+    <li> <strong>CONNECT</strong>:<br>
+        Indicates that the milter defines (overrides) the
+connection-functionality. This is the first callback function that can be
+called by sendmail.
+    <li> <strong>HELO</strong>:<br>
+        Indicates that the milter defines (overrides) the
+helo-functionality. This indicates that the <em>helo()</em> function should be
+called by sendmail, providing the milter with information about the connecting
+client. 
+    <li> <strong>SENDER</strong>:<br>
+        Indicates that the milter defines (overrides) the
+sender-functionality. This indicates that the <em>sender()</em> function should be
+called by sendmail, providing the milter with the sender's envelope
+information. 
+    <li> <strong>RECIPIENT</strong>:<br>
+        Indicates that the milter defines (overrides) the
+recipient-functionality. This indicates that the <em>recipient()</em> function
+should be called by sendmail, providing the milter with the recipient's
+envelope information.
+    <li> <strong>HEADER</strong>:<br>
+        Indicates that the milter defines (overrides) the
+header-functionality. This indicates that the <em>header()</em> function
+should be called by sendmail for each mail header that is used in the current
+mail message.
+    <li> <strong>EOH</strong>:<br>
+        Indicates that the milter defines (overrides) the
+end-of-header-functionality. This indicates that the <em>eoh()</em> function
+should be called by sendmail once all header lines have been processed.
+    <li> <strong>BODY</strong>:<br>
+        Indicates that the milter defines (overrides) the
+body-functionality. This indicates that the <em>body()</em> function
+should be called by sendmail, offering the mail-body to the milter.
+    <li> <strong>EOM</strong>:<br>
+        Indicates that the milter defines (overrides) the
+end-of-message-functionality. This indicates that the <em>eom()</em> function
+should be called by sendmail, once all elements of the e-mail message have
+been processed.
+    <li> <strong>ABORT</strong>:<br>
+        Indicates that the milter defines (overrides) the
+abort-functionality. The <em>abort()</em> function may be called by sendmail before
+<strong>eom()</strong> is called. It should reclaim all resources used by the message, but
+not delete any memory allocated by the milter, as this is <strong>close()</strong>'s job.
+    <li> <strong>CLOSE</strong>:<br>
+        Indicates that the milter defines (overrides) the
+close-functionality. The <em>close()</em> function should delete all (connection
+specific) memory allocated by the milter. It may be called `out-of-order',
+i.e. even before <strong>connect()</strong> is called and developers should anticipate this
+possibility when crafting their <strong>close()</strong> code. In particular, it is
+incorrect to assume the private context pointer will be something other than
+0 in this callback.
+    <li> <strong>UNKNOWN</strong>:<br>
+        Currently not used. Reserved for versions exceeding version 2 of the
+sendmail milter API
+    <li> <strong>DATA</strong>:<br>
+        Currently not used. Reserved for versions exceeding version 3 of the
+sendmail milter API
+    <li> <strong>ALL_CALLBACKS</strong>:<br>
+        Shortcut to indicate all callback facilities. The <strong>CallBack</strong> values
+are bit-flags. The <strong>bit_or</strong> operator may be used to combine them, and the
+<strong>bit_not</strong> operator may be used to remove a flag from <strong>ALL_CALLBACKS</strong>
+(e.g., <strong>ALL_CALLBACKS &amp;&amp; ~ABORT</strong>).
+    </ul>
+<p>
+<strong>enum Flags</strong><br>
+    This enumeration holds the following values:
+    <ul>
+    <li> <strong>NO_FLAGS</strong>:<br>
+        No flags are defined.
+    <li> <strong>ADD_HEADERS</strong>:<br>
+        This flag indicates that the milter is allowed to add headers to the
+current e-mail message.
+    <li> <strong>ADD_RECIPIENTS</strong>:<br>
+        This flag indicates that the milter is allowed to add recipients to the
+current e-mail message.
+    <li> <strong>CHANGE_BODY</strong>:<br>
+        This flag indicates that the milter is allowed to modify the message's
+body contents.
+    <li> <strong>CHANGE_HEADERS</strong>:<br>
+        This flag indicates that the milter is allowed to change headers of
+the current e-mail message.
+    <li> <strong>DELETE_RECIPIENTS</strong>:<br>
+        This flag indicates that the milter is allowed to remove recipients
+from the current e-mail message.
+    <li> <strong>QUARANTINE</strong>:<br>
+        This flag indicates that the milter is allowed to request sendmail to
+quarantine the current e-mail message.
+    <li> <strong>ALL_FLAGS</strong>:<br>
+        Shortcut to indicate all callback facilities. The <strong>Flags</strong> values
+are bit-flags. The <strong>bit_or</strong> operator may be used to combine them, and the
+<strong>bit_not</strong> operator may be used to remove a flag from <strong>ALL_FLAGS</strong>
+(e.g., <strong>ALL_FLAGS &amp;&amp; ~QUARANTINE</strong>).
+    </ul>
+<p>
+<strong>Status</strong><br>
+    This enumeration simplifies the extended <em>SMFIS_</em> values used by the
+<strong>C</strong> API. These values may be used to return  <em>sfsistat</em> values:
+    <ul>
+    <li> <strong>ACCEPT</strong>:<br>
+        This value is equal to <em>SMFIS_ACCEPT</em>, indicating that Sendmail
+should accept the message. For a connection-oriented callback (see below at
+<strong>PROTECTED VIRTUAL MEMBER FUNCTIONS</strong>), accept this connection without
+further filter processing, call <strong>close()</strong> (see below).  For other callbacks:
+accept this message without further filtering.
+    <li> <strong>CONTINUE</strong>:<br>
+        This value is equal to <em>SMFIS_CONTINUE</em>, indicating that Sendmail
+should continue processing. This is the default for all callback functions
+which are not overridden by the class derived from <strong>Milter</strong>.
+    <li> <strong>DISCARD</strong>:<br>
+        This value is equal to <em>SMFIS_DISCARD</em>, indicating that Sendmail
+should discard the mail message. It should not be returned by a
+connection-oriented callback. For other callbacks: the message is accepted,
+but silently discarded.
+    <li> <strong>REJECT</strong>:<br>
+        This value is equal to <em>SMFIS_REJECT</em>, indicating that Sendmail
+should reject the mail message. For a connection-oriented callback, reject
+this connection; call <strong>close()</strong>.  For a message-oriented callback (except
+for <strong>eom()</strong> or <strong>abort(), see below</strong>), reject this message.  For a
+recipient-oriented callback, reject the current recipient (but continue
+processing the current message).
+    <li> <strong>TEMPFAIL</strong>:<br>
+        This value is equal to <em>SMFIS_TEMPFAIL</em>, indicating that Sendmail
+should return a `temporary unavailable' message to the sender of the mail
+message. For a message-oriented callback (except <strong>sender()</strong>, see below),
+fail for this message.  For a connection-oriented callback, fail for this
+connection and call <strong>close()</strong>.  For a recipient-oriented callback, only fail
+for the current recipient and continue message processing.
+    </ul>
+<p>
+<strong>Return</strong><br>
+    This enumeration simplifies the extended <em>MI_</em> values used by the
+<strong>C</strong> API. Most return values used by the <strong>Milter</strong> class, however, are
+<strong>bool</strong> values. The <strong>Return</strong> values are:
+    <ul>
+    <li> <strong>FAILURE</strong>:<br>
+        This value is equal to <em>MI_FAILURE</em>, indicating that a <strong>C</strong>-api
+function failed to perform its task.
+    <li> <strong>SUCCESS</strong>:<br>
+        This value is equal to <em>MI_SUCCESS</em>, indicating that a <strong>C</strong>-api
+function succeeded in performing its task.
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+<p>
+The default- and copy constructors are available for derived classes. They
+perform no actions.
+<p>
+<h2>PUBLIC STATIC MEMBER FUNCTIONS</h2>
+<p>
+These functions form the heart of the <strong>Milter</strong> base-class. They can be
+called to initialize, start and stop the Milter.
+    <ul>
+    <li> <strong>void initialize(std::string const &amp;name, 
+                Milter &amp;milter,
+                callback_set callbacks = CONNECT, 
+                flag_set flags = NO_FLAGS)</strong>:<br>
+        This function initializes the Milter's administration. It expects the
+name of the mailfilter as its first argument. Its second argument is a
+reference to a <em>Milter</em> object. Since <strong>Milter</strong> is an abstract base class
+the actual object is always an object of a class derived from <strong>Milter</strong>.  Its
+third argument specifies the callbacks to call for this milter. By default the
+<strong>connect()</strong> callback will be called. Note that the <strong>close()</strong> callback is
+not called by default. This is ok, since the <strong>Milter</strong> object doesn't have to
+cleanup `private' data, as is normal with the <strong>C</strong> API. The last argument
+defines flags, specifying the Milter's capabilities.
+    <li> <strong>std::string const &amp;name()</strong>:<br>
+        This function returns the milter's name. 
+    <li> <strong>bool start()</strong>:<br>
+        This member function calls <em>smfi_main()</em>, controlling the milter's
+event loop. It returns <em>true</em> if the event-loop is successfully terminated. 
+    <li> <strong>void stop()</strong>:<br>
+        This member function terminates the milter's event loop, after
+finishing all threads. Following this call <em>start()</em> may be called again to
+continue the milter.
+    </ul>
+<p>
+<h2>PROTECTED VIRTUAL MEMBER FUNCTIONS</h2>
+<p>
+The remaining functionality of the class <em>Milter</em> is useful only for
+Milter-implementations in classes derived from <strong>Milter</strong>. The following
+members can be overridden by derived classes. Note that <strong>clone()</strong> <em>must</em>
+be overridden. Except for <strong>clone()</strong>, all the members in this sections are
+<em>callback</em> functions. I.e., the MTA will call them to process parts of the
+mail message. Recipient-, message-, and connection-oriented callbacks are
+distinguished.  
+<p>
+The recipient-oriented callback (<strong>recipient()</strong>, see below) may affect
+the processing of a single message to a single recipient. Connection-oriented
+callbacks (<strong>connect(), helo()</strong> and <strong>close()</strong> affect the processing of the
+entire connection (during which multiple messages may be delivered to multiple
+sets of recipients). The remaining callbacks are message-oriented, affecting 
+the processing of a single message to all its recipients.
+<p>
+<ul>
+    <li> <strong>virtual sfsistat abort()</strong>:<br>
+        This message-oriented member may be called at any time during message
+processing (i.e. between some message-oriented routine and
+<strong>eom()</strong>). <strong>abort()</strong> reclaim any resources allocated on a per-message basis
+(which are <em>not</em> the connection specific data, which should be handled by
+the derived class' destructor), and must be tolerant of being called between
+any two message-oriented callbacks. <strong>abort()</strong> is only called if the message
+is aborted outside the filter's control and the filter has not completed its
+message-oriented processing. For example, if a filter has already returned
+<em>ACCEPT, REJECT</em>, or <em>DISCARD</em> from a message-oriented routine,
+<strong>abort()</strong> will not be called even if the message is later aborted outside
+its control.
+    <li> <strong>virtual sfsistat body(unsigned char *text, size_t length)</strong>:<br>
+        This message-oriented member is called zero or more times between
+<strong>eoh()</strong> and <strong>eom()</strong>.  <em>text</em> points to a sequence of bytes. It is not
+necessarily a 0-terminated. Moreover, the sequence may contain 0-characters.
+Since message bodies can be very large, defining <strong>body()</strong> can significantly
+impact filter performance.  End-of-lines are represented as received from SMTP
+(normally CR/LF).  Later filters will see body changes made by earlier ones,
+and message bodies may be sent in multiple chunks, with one call to <strong>body()</strong>
+per chunk.
+<p>
+<li> <strong>virtual Milter *clone() const = 0</strong>:<br>
+        This pure virtual function must be implemented by derived classes to
+return a newly allocated copy of the derived object passed to the
+<strong>initialize()</strong> static member. It is used by the standard `virtual
+constructor' design pattern. The destruction of the allocated object is the
+responsibility of <strong>clone()</strong>'s caller.
+<p>
+<li> <strong>virtual sfsistat close()</strong>:<br>
+        This connection-oriented member is always called once at the end of
+each connection.  It may be called "out-of-order", i.e. before even the
+<strong>connect()</strong> is called. After a connection is established by the MTA to the
+filter, if the MTA decides this connection's traffic will be discarded
+(e.g. via an access_db result), no data will be passed to the filter from the
+MTA until the client closes down. At that time, <strong>close()</strong> is called. It can
+therefore be the only callback ever used for a given connection, and
+developers should anticipate this possibility when crafting their <strong>close()</strong>
+code. The member <strong>close()</strong> is called on close even if the previous mail
+transaction was aborted.
+<p>
+<li> <strong>virtual sfsistat connect(char *hostname, _SOCK_ADDR *hostaddr)</strong>:<br>
+        This connection-oriented member may be called once, at the start of
+each SMTP connection. The parameter <em>hostname</em> is he host name of the
+message sender, as determined by a reverse lookup on the host address. If the
+reverse lookup fails, hostname will contain the message sender's IP address
+enclosed in square brackets (e.g. <em>[a.b.c.d]</em>). The parameter <em>hostaddr</em>
+is the host address, as determined by a <strong>getpeername</strong>(2) call on the SMTP
+socket. It is 0 if the type is not supported in the current version or if the
+SMTP connection is made via stdin.
+<p>
+<li> <strong>virtual sfsistat data()</strong>:<br> 
+        Not yet supported. Will be available with libmilter versions beyond 3.
+<p>
+<li> <strong>virtual sfsistat eoh()</strong>:<br>
+        This message-oriented member is called once after all headers have
+been processed.
+<p>
+<li> <strong>virtual sfsistat eom()</strong>:<br>
+        This message-oriented member is called once after all calls to
+<strong>body()</strong> for a given message have been completed. <strong>Note</strong> that only in this
+function modifications to the message headers, body, and envelope can be made
+(see the <strong>add-, change-</strong> and <strong>delete-</strong> members listed below).
+    <li> <strong>virtual sfsistat header(char *headerf, char *headerv)</strong>:<br>
+        This message-oriented member is called zero or more times between
+<strong>recipient()</strong> and <strong>eoh()</strong>, once per message header. Details about header
+information is given in RFC 882.
+<p>
+<li> <strong>virtual sfsistat helo(char *helohost)</strong>:<br>
+        This connection-oriented member is called whenever the client sends a
+HELO/EHLO command. It may therefore be called between zero and three
+times. The <em>helohost</em> parameter should be the domain name of the sending
+host (but is, in practice, anything the sending host wants to send).
+<p>
+<li> <strong>virtual sfsistat recipient(char **argv)</strong>:<br>
+        This recipient-oriented member is called once per recipient, hence one
+or more times per message, immediately after <strong>sender</strong>. The parameter
+<em>argv</em> is a 0-terminated array of pointers to SMTP command arguments;
+argv[0] is guaranteed to be the recipient address. Later arguments are the
+ESMTP arguments. TEMPFAIL may be returned indicate that sendmail should return
+a temporary failure for this particular recipient; further recipients may
+still be sent, <strong>abort()</strong> is not called.  REJECT will reject this particular
+recipient; further recipients may still be sent, <strong>abort()</strong> is not called.
+DISCARD will accept (but discard) the message, <strong>abort()</strong> will be called.
+ACCEPT will accept recipient, <strong>abort()</strong> will not be called. More details on
+ESTMP responses, are described in RFC 1869.
+<p>
+<li> <strong>virtual sfsistat sender(char **argv)</strong>:<br>
+        This message-oriented member is called once at the beginning of each
+message, before <strong>recipient()</strong>.  TEMPFAIL may be returned indicate that
+sendmail should return a temporary failure for this particular message,
+<strong>abort()</strong> is not called.  REJECT will reject this message, <strong>abort()</strong> is
+not called.  DISCARD will accept (but discard) the message, <strong>abort()</strong> will
+be called.  ACCEPT will accept recipient, <strong>abort()</strong> will not be called. More
+details on ESTMP responses, are described in RFC 1869.
+    <li> <strong>virtual sfsistat unknown(char *ptr)</strong>:<br>
+        Not yet supported. Will be available with libmilter versions beyond 2.
+    </ul>
+<p>
+<h2>PROTECTED MEMBER FUNCTIONS</h2>
+<p>
+The following members are non-virtual. They can be called by members of
+classes derived from <strong>Milter</strong>:
+    <ul>
+    <li> <strong>bool addHeader(std::string const &amp;hdrName, 
+                        std::string const &amp;hdrValue)</strong>:<br>
+        This member may only be called from <strong>eom()</strong>, and the flag
+<strong>ADD_HEADERS</strong> must have been specified or it will fail.  The <em>hdrName</em> and
+<em>hdrValue</em> must be non-empty strings. Each line of the header must be under
+2048 characters and should be under 998 characters. If longer headers are
+needed, make them multi-line. To make a multi-line header, insert a line feed
+(<em>\n</em>) followed by at least one whitespace character such as a space or tab
+(<em>\t</em>). The line feed should <em>not</em> be preceded by a carriage return. It is
+the filter writer's responsibility to ensure that no standards are violated.
+    <li> <strong>bool addRecipient(std::string const &amp;rcptName)</strong>:<br>
+        This member may only be called from <strong>eom()</strong>, and the flag
+<strong>ADD_RECIPIENTS</strong> must have been specified or it will fail.
+    <li> <strong>bool changeHeader(std::string const &amp;hdrName, 
+                        unsigned headerNr, std::string const &amp;hdrValue)</strong>:<br>
+        This member may only be called from <strong>eom()</strong>, and the flag
+<strong>CHANGE_HEADERS</strong> must have been specified or it will fail. See
+<strong>addHeader()</strong> for the header-requirements. The <em>headerNr</em> parameter is a
+1-based header index value. A <em>headerNr</em> value of 1 will modify the first
+occurrence of a header named <em>hdrValue</em>. If <em>headerNr</em> is greater than the
+number of times <em>hdrName</em> appears, a new <em>hdrName</em>-header will be
+added. If <em>hdrValue</em> is empty, the header is deleted.
+    <li> <strong>bool deleteRecipient(std::string const &amp;rcptName)</strong>:<br>
+        This member may only be called from <strong>eom()</strong>, and the flag
+<strong>DELETE_RECIPIENTS</strong> must have been specified or it will fail.
+        This member removes the named recipient from the current message's
+envelope. 
+     <li> <strong>SMFICTX *id() const</strong>:<br>
+        This member may be called by the Milter object to obtain a pointer
+identifying its sendmail-connection. Normally it should not be necessary to
+call this member.
+    <li> <strong>bool insertHeader(unsigned hdrIdx, std::string const &amp;hdrName, 
+                          std::string const &amp;hdrValue)</strong>:<br>
+        This member may only be called from <strong>eom()</strong>, and the flag
+<strong>ADD_HEADERS</strong> must have been specified or it will fail. See
+<strong>addHeader()</strong> for the header-requirements. The <em>headerNr</em> parameter is a
+header index value. A <em>headerNr</em> value of 0 will insert this header as the
+first of the <em>hdrName</em> headers. If <em>headerNr</em> is greater than the
+number of times <em>hdrName</em> appears, a new <em>hdrName</em>-header will be
+added. 
+    <li> <strong>bool openSocket(bool removeIfTrue = true)</strong>:<br>
+        This member should be called before <strong>start()</strong> is called.
+        This member attempts to create the socket specified by
+<strong>setConnection()</strong> (see below). This allows the calling application to ensure
+that the socket can be created, possibly changing its protection (access
+rights) before the milter starts its work.  If this member is not called, it
+will be called implicitly when <strong>run()</strong> is started. It returns <em>true</em> if
+the socket could be created.
+    <li> <strong>bool quarantine(std::string const &amp;reason)</strong>:<br>
+         This member may only be called from <strong>eom()</strong> and causes the MTA to
+quarantines the message using the given reason.
+    <li> <strong>bool replaceBody(std::string const &amp;body)</strong>:<br>
+        This member may only be called from <strong>eom()</strong>, and the flag
+<strong>CHANGE_BODY</strong> must have been specified or it will fail. It may be called
+multiple times in which case the various body contents are concatenated in the
+final message. Newlines should be coded as CRLF.
+    <li> <strong>bool setBacklog(unsigned backlog = 5)</strong>:<br>
+        This member should be called before <strong>start()</strong> is called.
+        Sets the incoming socket backlog used by <strong>listen</strong>(2).  If
+<strong>setBacklog()</strong> is not called, the operating system default is used. The
+function returns <em>false</em> if the backlog could not be set as requested.  It
+is the responsibility of the programmer not to call this function with a 0
+argument.
+    <li> <strong>bool setConnection(std::string const &amp;name)</strong>:<br>
+        This member should be called before <strong>start()</strong> is called.
+        Sets the socket through which the filter communicates with sendmail. 
+The socket may be specified using one of the following variants:<br>
+    <em>{unix|local}:/path/to/file</em> - A named pipe;<br>
+    <em>net:port@{hostname|ip-address}</em> - An IPV4 socket;<br>
+    <em>inet6:port@{hostname|ip-address}</em> - An IPV6 socket.<br>
+<p>
+If possible, filters should not run as root when communicating over
+unix/local domain sockets.  
+<p>
+Unix/local sockets should have their permissions set to 0600 (read/write
+permission only for the socket's owner) or 0660 (read/write permission for the
+socket's owner and group) which is useful if the sendmail RunAsUser option is
+used. The permissions for a unix/local domain socket are determined as usual
+by umask, which should be set to 007 or 077.
+<p>
+Possible failure of this function cannot be determined from its return
+value. Rather, <em>run()</em> will fail.
+    <li> <strong>setReply(std::string const &amp;rcode, std::string const &amp;xcode = "",
+                      std::string const &amp;msg = "")</strong>:<br>
+        This member sets the default SMTP error reply code.  It may be called
+from any callback member, except <strong>connect()</strong>. The parameter <em>rcode</em> should
+be a he three-digit (RFC 821/2821) SMTP reply code and it must be a valid 4XX
+or 5XX reply code. The parameter <em>xcode</em>, when specified, must be a extended
+(RFC 1893/2034) reply code. The parameter <em>msg</em> may be an additional textual
+message. The <strong>Milter</strong> class has no member comparable to the libmilter API
+function <em>smfi_setmlreply()</em>.  the <strong>Milter</strong> class.
+    <li> <strong>void setTimeout(unsigned seconds = 7210)</strong>:<br>
+        This member should be called before <strong>start()</strong> is called.
+        Sets the number of seconds libmilter will wait for an MTA connection
+before timing out a socket. If <strong>setTimeout()</strong> is not called, a default
+timeout of 7210 seconds is used. It is the responsibility of the programmer
+not to call this function with an argument equal to  0.
+    <li> <strong>char const *symval(std::string const &amp;name) const</strong>:<br>
+        This member returns the value of a specific sendmail macro. The
+<em>name</em> parameter should be set to he name of a sendmail macro . Single letter
+macros can optionally be enclosed in braces (<em>{</em> and <em>}</em>), longer macro
+names must be enclosed in braces, just as in a sendmail.cf file.0 is returned
+if the macro is not defined.  By default, the following macros are valid in
+the given contexts:<br>
+    for <strong>connect()</strong>: <em>daemon_name, if_name, if_addr, j, _</em>;<br>
+    for <strong>helo()</strong>: <em>tls_version, cipher, cipher_bits, cert_subject,
+cert_issuer</em>;<br>
+    for <strong>sender()</strong>: <em>i, auth_type, auth_authen, auth_ssf, auth_author,
+mail_mailer, mail_host, mail_addr</em>;<br>
+    for <strong>recipient()</strong>: <em>rcpt_mailer, rcpt_host, rcpt_addr</em>.<br>
+    All macros stay in effect from the point they are received until the end
+of the connection for the first two sets, the end of the message for the third
+(<strong>sender()</strong>), and just for each recipient for the final set
+(<strong>recipient()</strong>).<br>
+    The following macros may be specified in the sendmail.mc configuration
+file:<br>
+    <em>define(`confMILTER_MACROS_CONNECT', `m1', ...)</em>,
+<em>define(`confMILTER_MACROS_HELO', ...)</em>,
+<em>define(`confMILTER_MACROS_ENVFROM', ...)</em>,
+<em>define(`confMILTER_MACROS_ENVRCPT', ...)</em>, where <em>`m1', ...</em> represents a
+comma separated list of returnable macros.  Single letter macros can
+optionally be enclosed in braces (<em>{</em> and <em>}</em>), longer macro names must be
+enclosed in braces.
+    <li> <strong>bool wait()</strong>:<br>
+        This member may only be called from <strong>eom()</strong> and tells the MTA that
+the filter is still working on a message, causing the MTA to re-start its
+timeouts. 
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    To do
+<p>
+<h2>FILES</h2>
+    <em>bobcat/milter</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>getpeername</strong>(2), <strong>listen</strong>(2), <br>
+    <em>http://www.milter.org/milter_api/</em><br>
+    <em>http://sendmail.org/m4/readme.html</em><br>
+    <em>http://rfc.net/rfc821.html</em><br>
+    <em>http://rfc.net/rfc822.html</em><br>
+    <em>http://rfc.net/rfc1869.html</em><br>
+    <em>http://rfc.net/rfc1893.html</em><br>
+    <em>http://rfc.net/rfc2034.html</em><br>
+    <em>http://rfc.net/rfc2821.html</em>
+<p>
+<h2>BUGS</h2>
+    Note that <em>-lmilter</em> must be specified before <em>-lbobcat</em>.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

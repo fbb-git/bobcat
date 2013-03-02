@@ -1,0 +1,103 @@
+.TH "FBB::LocalSocketBase" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Base class for Unix Domain sockets"
+
+.PP 
+.SH "NAME"
+FBB::LocalSocketBase \- Base class for Unix Domain socket-constructing classes
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/localsocketbase>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+This class is a base class for the \fBFBB::LocalServerSocket\fP and
+\fBFBB::LocalClientSocket\fP classes\&. Since it is designed as a base class, 
+its constructor is protected\&. All its remaining members are protected as well\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "PROTECTED CONSTRUCTOR"
+.IP o 
+\fBLocalSocketBase()\fP:
+.br 
+The default constructor merely constructs a \fIFBB::LocalSocketBase\fP
+object\&. Before the object can be used, its \fIopen()\fP member must be called
+first\&. 
+.IP o 
+\fBLocalSocketBase(string const &name) throw (FBB::Errno)\fP:
+.br 
+This constructor creates a \fBLocalSocketBase\fP using the file
+specified in \fIname\fP as the Unix domain socket interface\&.  If the socket
+could not be constructed, an \fBFBB::Errno\fP exception is thrown\&.
+The copy constructor is not available\&.
+.PP 
+.SH "PROTECTED MEMBER FUNCTIONS"
+.IP o 
+\fBopen(string const &name) throw (FBB::Errno)\fP:
+.br 
+This member initiaizes a \fBLocalSocketBase\fP object following its
+construction using the default constructor\&. The file specified in \fIname\fP is
+used as the Unix domain socket interface\&.  If the socket could not be
+constructed, an \fBFBB::Errno\fP exception is thrown\&.
+.IP o 
+\fBunsigned size() const\fP:
+.br 
+Accessor returning the size of the object\&'s \fBsockaddr_un\fP (address)
+.IP o 
+\fBint socket() const\fP:
+.br 
+This accessor returns the \fBFBB::LocalSocketBase\fP\&'s socket value\&.
+.IP o 
+\fBsockaddr const *sockaddrPtr() const\fP:
+.br 
+Accessor returning the pointer to the object\&'s \fBsockaddr\fP\&. 
+
+.PP 
+.SH "EXAMPLE"
+See the examples presented with the \fBlocalclientsocket\fP(3bobcat) and 
+\fBlocalserversocket\fP(3bobcat) classes\&.
+.PP 
+.SH "FILES"
+\fIbobcat/localsocketbase\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBlocalclientsocket\fP(3bobcat),
+\fBlocalserversocket\fP(3bobcat), \fBsocketbase\fP(3bobcat)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

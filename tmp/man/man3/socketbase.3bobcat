@@ -1,0 +1,119 @@
+.TH "FBB::SocketBase" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Base class for sockets"
+
+.PP 
+.SH "NAME"
+FBB::SocketBase \- Base class for socket-constructing classes
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/socketbase>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+This class is a base class for the \fBFBB::ServerSocket\fP and
+\fBFBB::ClientSocket\fP classes\&. Since it is designed as a base class, all its
+constructors are protected\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+\fBFBB::InetAddress\fP
+.PP 
+.SH "PROTECTED CONSTRUCTORS"
+.IP o 
+\fBSocketBase(unsigned port) throw (FBB::Errno)\fP:
+.br 
+This constructor creates a \fBSocketBase\fP to be used with
+\fBServerSocket\fP-objects, listening on \fIport\fP\&. If the socket could
+not be constructed, an \fBFBB::Errno\fP exception is thrown\&.
+.IP o 
+\fBSocketBase(std::string const &host, unit_16_t port)\fP:
+.br 
+This constructor creates a \fBFBB::SocketBase\fP to be used with a
+\fBClientSocket\fP-object, connecting to \fIhostname\fP, at port `\fIport\fP\&'\&.  If
+the socket could not be constructed or if the host\&'s address information could
+not be determined, an \fBFBB::Errno\fP exception is thrown\&.
+.IP o 
+\fBSocketBase(int socket, sockaddr_in const &address)\fP:
+.br 
+This constructor constructs a \fBFBB::SocketBase\fP object initializing
+its socket and \fBFBB::InetAddress\fP part from available external objects\&.
+The copy constructor is not available\&.
+.PP 
+.SH "MEMBER FUNCTIONS"
+All members of \fBFBB::InetAddress\fP are
+available, as \fBFBB::SocketBase\fP inherits from this class\&.
+.IP o 
+\fBbool debug() const throw(Errno)\fP:
+.br 
+This accessor returns \fBtrue\fP if the socket\&'s \fIdebug\fP
+(\fBSO_DEBUG\fP) socket option is active\&. It throws an \fBFBB::Errno\fP exception
+if the status of the debug option could not be determined\&.
+.IP o 
+\fBbool reuse() const throw(Errno)\fP:
+.br 
+This accessor returns \fBtrue\fP if the socket\&'s \fIreuse\fP
+(\fBSO_REUSEADDR\fP) socket option is active\&. It throws an \fBFBB::Errno\fP
+exception if the status of the reuse option could not be determined\&.
+.IP o 
+\fBvoid setDebug(bool trueIsOn) const throw(Errno)\fP:
+.br 
+This member may be used to modify the socket\&'s \fIdebug\fP
+(\fBSO_DEBUG\fP) socket option\&. It throws an \fBFBB::Errno\fP exception
+if the socket\&'s debug option could not be modified\&.
+.IP o 
+\fBvoid setReuse(bool trueIsOn) const throw(Errno)\fP:
+.br 
+This member may be used to modify the socket\&'s \fIreuse\fP
+(\fBSO_REUSEADDR\fP) socket option\&. It throws an \fBFBB::Errno\fP exception
+if the socket\&'s reuse option could not be modified\&.
+.IP o 
+\fBint socket() const\fP:
+.br 
+This accessor returns the \fBFBB::SocketBase\fP\&'s socket value\&.
+
+.PP 
+.SH "EXAMPLE"
+To do
+.PP 
+.SH "FILES"
+\fIbobcat/socketbase\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBclientsocket\fP(3bobcat), \fBinetaddress\fP(3bobcat),
+\fBlocalsocketbase\fP(3bobcat), \fBserversocket\fP(3bobcat)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

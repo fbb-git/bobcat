@@ -1,0 +1,429 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::RefCount</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::RefCount</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::RefCount(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::RefCount(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz Reference Counting</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::RefCount - Base class implementing reference counting.
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/refcount&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    <strong>RefCount</strong> implements a virtual base class implementing reference
+counting. When reference counting is used, objects share the memory of a
+(usually big or complex) data structure, until objects need to modify their
+data, in which case they obtain a copy of the data of their own. This approach
+is most useful with classes that seldomly alter their data, but consult their
+data most of the time. 
+<p>
+As an example, consider hidden structures as found in the <strong>regcomp</strong>(3)
+function: there is no documented way to copy an existing compiled regular
+expression, so if multiple objects must refer to the same regular expression,
+the expression should be compiled once. Thereafter, a reference count monitors
+the number of objects using the compiled expression. Only when the last object
+is destroyed the compiled expression is freed.
+<p>
+In general, objects using reference counting should obtain their own data
+if they need to alter their data. This situation is also called
+`copy-on-write'. Copy-on-write is implemented by obtaining a copy of the data
+before any modification of the data takes place. So, each non-const member
+function should first copy the data, and should only then modify its own
+data. Constant members may simply refer to the data, without the need to copy
+them first.
+<p>
+The class <strong>RefCount</strong> should be embedded in programs as follows:
+    <ul>
+    <li> <strong>RefCount</strong> defines a <em>virtual base class</em>, defining all members
+that are required to implement reference counting. The class is a virtual base
+class since it defines a member <strong>virtual RefCount *clone() const = 0</strong>, which
+must return a real copy of the derived class object (cf. Gamma et al.'s (1995)
+<em>proxy</em> Design Pattern).
+    <li> From <strong>RefCount</strong> a class (named <strong>Data</strong> in this man page) is derived
+defining the functionality that is required to manipulate the data:
+this class may contain constructors, overloaded operators, accessors,
+modifiers, etc.
+    <li> A third class (called <strong>Client</strong> in this man page) defines the actual
+interface to the program in which reference counting is required. In its
+purest form, <strong>Client</strong> only has a <strong>Data *</strong> data member referring to the
+(possibly shared) data. The functionality offered to the users of <strong>Client</strong>
+objects is normally defined by shadowing the functionality defined by
+<strong>Data</strong>, using simple one-line in-line functions.
+    </ul>
+<p>
+Except for <strong>clone()</strong>, there are several issues to bear in mind when
+using reference counting as defined by <strong>RefCount</strong>:
+    <ul>
+    <li> When <strong>Client</strong> share data (e.g., when using a copy constructor or an
+overloaded assignment operator), <strong>RefCount::share()</strong> should be called rather
+than <strong>operator new</strong>. Since at this point the data are shared with other
+objects, no copy is required, and the use of <strong>operator new</strong> should be
+avoided.
+    <li> When <strong>Client</strong> objects go out of scope, the destructor should call
+<strong>RefCount::release()</strong> rather than <strong>operator delete</strong> to disassociate itself
+from the object's data. The <strong>operator delete</strong> should not be called directly,
+since this might prematurely destroy data shared with other objects.
+    <li> All members modifying data (i.e., all non-const member functions)
+should call <strong>RefCount::modifying()</strong> prior to performing the
+modification. This ensures that the object operates on its own data, rather
+than modifying shared data.
+    </ul>
+    Except for the abovementioned items, all members of <strong>Client</strong> should be
+implemented as usual: constructors use <strong>new Data(argument list)</strong>,
+<strong>clone()</strong> returns a pointer to a clone of itself, etc.. Refer to the code 
+example for an actual implementation.
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>PROTECTED CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>RefCount()</strong>:<br>
+        This constructor implements the default constructor. 
+    <li> <strong>RefCount(RefCount const &amp;other)</strong>:<br>
+        This constructor implements the copy constructor, which is a
+convenience function for <strong>Data</strong>'s copy constructor, but otherwise acting
+identically as <strong>RefCount()</strong> itself.
+    </ul>
+<p>
+<h2>PROTECTED DESTRUCTOR</h2>
+    <ul>
+    <li> <strong>virtual ~RefCount()</strong>:<br>
+        The destructor is an empty virtual member, thus allowing <strong>RefCount *</strong>
+variables to destroy any derived class objects they point to.
+    </ul>
+<p>
+<h2>PUBLIC MEMBER FUNCTIONS</h2>
+    <ul>
+    <li> <strong>unsigned refcount() const</strong>:<br>
+        This member returns the current number of objects sharing the data.
+    <li> <strong>void release()</strong>:<br>
+        This member must be called by <strong>Client</strong> objects that must
+disassociate themselves from the (possibly shared) data. In practice it is
+called by the <strong>Client</strong>'s destructor and overloaded assignment operator. It
+will actually call <strong>Data</strong>'s destructor when the object was the only object
+still referring to the data.
+    </ul>
+<p>
+<h2>PUBLIC STATIC MEMBER FUNCTIONS</h2>
+    <ul>
+    <li> <strong>Data *RefCount::share(Data const *ptr)</strong>:<br>
+        This member should be called by the constructor of <strong>Client</strong> objects
+sharing another client's data. In practice it is called by the client's copy
+constructor and overloaded assignment operator. It receives the actual pointer
+to the data as its argument, and returns the new value of the pointer.
+<p>
+Note that <strong>Data</strong> is not a hard-coded class: the function is implemented
+as a template member, and so it can be used by every class derived from
+<strong>RefCount</strong>.
+<p>
+<li> <strong>Data &amp;RefCount::modifying(Data **ptr) throw (std::bad_cast)</strong>:<br>
+        This member should be called by <strong>Client</strong> objects' non-const members,
+just before modifying data. The function may alter the value of the client's
+<strong>Data *</strong> data member. It returns a <em>reference</em> to the data, allowing the
+client's member function to call the required <strong>Data</strong> modifier in one single
+statement, using the member selection operator (dot).
+<p>
+Note that <strong>Data</strong> is not a hard-coded class: the function is implemented
+as a template member, and so it can be used by every class derived from
+<strong>RefCount</strong>.
+<p>
+This function performs a <strong>dynamic_cast</strong>, which will always succeed if
+<strong>Data</strong> was indeed derived from <strong>RefCount</strong>. A <strong>bad_cast</strong> is thrown if the
+cast fails.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    The following example illustrates the use the class <strong>RefCount</strong>. A class
+<strong>Data</strong> is derived from <strong>RefCount</strong>, defining <strong>clone()</strong>, several standard
+members (copy constructor, overloaded assignment operator) as <em>private</em>
+members, and a default constructor, destructor, accessor and modifier member
+as public members.     
+<p>
+The class that is used directly by the program is <strong>Client</strong>, given
+next. It defines all standard constructors and members, and it shadows the
+accessor and modifier members of <strong>Data</strong>:
+<p>
+Finally, a small program using <strong>Client</strong> is shown.
+<p>
+<pre>
+/*
+                              driver.cc
+*/
+
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;sstream&gt;
+
+#include "../refcount.h"
+
+using namespace std;
+using namespace FBB;
+
+// The class Data uses reference counting. Data are shared until they are
+// modified. 
+
+class Data: public RefCount
+{
+    static unsigned s_n;        // count the number of objects in use
+
+    public:
+        Data()                  // all other constructors are built like this:
+        {                       // using RefCount's default constructor.
+            s_n++;
+            cout &lt;&lt; "Data(), " &lt;&lt; s_n &lt;&lt; " Data objects created\n";
+        }
+
+        virtual ~Data()
+        {
+            s_n--;
+            cout &lt;&lt; "~Data(), " &lt;&lt; s_n &lt;&lt; " Data objects left\n";
+        }
+
+        string accessor() const
+        {
+            ostringstream ostr;
+            ostr &lt;&lt; "calling Data::accessor(). Data at " &lt;&lt; this;
+            return ostr.str();
+        }
+
+        void modifier()             // a plain modifier
+        {
+            cout &lt;&lt; "calling Data::modifier(). Data at " &lt;&lt; this &lt;&lt; endl;
+        }
+
+                                    // support function for operator&gt;&gt;()
+        istream &amp;extract(istream &amp;istr) 
+        {
+            cout &lt;&lt; "extraction from istream. " &lt;&lt;
+                                    "Enter a non-empty line of text" &lt;&lt; endl;
+            string s;
+            getline(istr, s);
+
+            cout &lt;&lt; "Read: " &lt;&lt; s &lt;&lt; endl;
+
+            return istr;
+        }
+                                    // another modifier: operator+=()
+        Data &amp;operator+=(Data const &amp;rvalue)
+        {
+            cout &lt;&lt; "calling Data::operator+=(): @`" &lt;&lt; 
+                    this &lt;&lt; "' += @`" &lt;&lt; &amp;rvalue &lt;&lt; "'\n";
+            return *this;
+        }
+
+    private:
+        Data &amp;operator=(Data const &amp;other);   // NI
+
+        Data(Data const &amp;other) // The copy constructor MUST call RefCount's
+        :                       // CC. Data(Data) is a convenience function 
+                                // for clone() and should not be available to 
+            RefCount(other)     // clients, thus enforcing the use of 
+        {                           // clone() / share() / release()
+            s_n++;
+            cout &lt;&lt; "Data(Data const &amp;), " &lt;&lt; s_n &lt;&lt; " Data objects created\n";
+        }
+
+        virtual RefCount *clone() const
+        {
+            cout &lt;&lt; "Data::clone()\n";
+            return new Data(*this);
+        }
+};
+
+
+// Client: uses a pointer to a Data object. It is implemented in an 
+// almost standard way. Deviations are:
+//  *. Copy():       should call share() rather than new Data(*d_dataPtr)
+//  *. Destroy():    should call release() rather than delete d_dataPtr;
+//  *. non-const members modifying d_dataPtr's data"    
+//                   should call Data:modifying() first.
+class Client 
+{
+                                                     // modifying friend
+                                                     // see below at modifier()
+    friend istream &amp;operator&gt;&gt;(istream &amp;istr, Client &amp;c)
+    {   
+        return Data::modifying(&amp;c.d_dataPtr).extract(istr);
+    }
+
+    Data *d_dataPtr;   
+
+    public:
+            // Constructors, destructor, overloaded assignment operator: all
+            // follow my standard copy() / destroy() approach. 
+
+        Client()                    // new object, creates its own data
+        :                           // use new Data(...) to initialize.
+            d_dataPtr(new Data())
+        {}
+
+        ~Client()
+        {
+            destroy();
+        }
+
+        Client(Client const &amp;other)
+        {
+            copy(other);
+        }
+
+        Client &amp;operator=(Client const &amp;other)
+        {
+            if (this != &amp;other)
+            {
+                destroy();
+                copy(other);
+            }
+            return *this;
+        }
+
+        string accessor() const         // accessors shadow Data's members
+        {                               
+            return d_dataPtr-&gt;accessor();
+        }
+                                        // modifiers call modifying first
+
+        void modifier()                 // simple modifier
+        {                               
+            Data::modifying(&amp;d_dataPtr).modifier();
+        }
+                                        // arithmetic assignment modifier
+        Client &amp;operator+=(Client const &amp;other)
+        {                               
+            Data::modifying(&amp;d_dataPtr).operator+=(*other.d_dataPtr);
+            return *this;
+        }
+
+    private:
+        void copy(Client const &amp;other)  // copying is sharing: call share()
+        {
+            d_dataPtr = Data::share(other.d_dataPtr);
+        }
+        void destroy()                  // destroying is disassociation: call
+        {                               // release
+            d_dataPtr-&gt;release();
+        }
+};
+
+
+unsigned Data::s_n = 0;
+
+Client const operator+(Client const &amp;lvalue, Client const &amp;rvalue)
+{
+    return Client(lvalue) += rvalue;
+}
+
+int main()
+{
+    cout &lt;&lt; "Construction:\n";
+    Client c;
+
+    cout &lt;&lt; "Extraction c from cin:\n";
+    cin &gt;&gt; c;
+
+    cout &lt;&lt; "c's Modifier called:\n";
+    c.modifier();
+
+    cout &lt;&lt; "operator += :\n";
+    c += c;
+
+    cout &lt;&lt; "operator + :\n";
+    c + c;
+
+    cout &lt;&lt; "Copy construction:\n";
+    Client c2(c);
+
+    cout &lt;&lt; "Assignment:\n";
+    c = c2;
+
+    cout &lt;&lt; "Accessors:\n";
+    cout &lt;&lt; "access c:  " &lt;&lt; c.accessor() &lt;&lt; endl;
+    cout &lt;&lt; "access c2: " &lt;&lt; c2.accessor() &lt;&lt; endl;
+
+    cout &lt;&lt; "operator += :\n";
+    c += c;
+
+    cout &lt;&lt; "c's Modifier called:\n";
+    c.modifier();
+
+    cout &lt;&lt; "Accessors:\n";
+    cout &lt;&lt; "access c:  " &lt;&lt; c.accessor() &lt;&lt; endl;
+    cout &lt;&lt; "access c2: " &lt;&lt; c2.accessor() &lt;&lt; endl;
+
+    cout &lt;&lt; "c2's Modifier called:\n";
+    c2.modifier();
+
+    cout &lt;&lt; "resetting refcount to 2:\n";
+    c = c2;
+
+    
+    cout &lt;&lt; "Extraction c from cin:\n";
+    cin &gt;&gt; c;
+
+    cout &lt;&lt; "End of program:\n";
+}
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/refcount</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

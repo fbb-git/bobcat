@@ -1,0 +1,164 @@
+#ifndef _INCLUDED_BOBCAT_STAT_
+#define _INCLUDED_BOBCAT_STAT_
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <string>
+
+#include <bobcat/datetime>
+
+namespace FBB
+{
+
+class Stat
+{
+    struct stat d_stat;
+    bool d_errno;
+    std::string d_name;
+
+    static char const *s_specialMode[];
+    static char const *s_mode[];
+    static char const *s_type[];
+
+    public:
+        typedef struct stat stat;   // Defines Stat::stat for clients
+
+        enum Combine
+        {
+          ALL,
+          ANY,
+        };
+
+        enum SpecialMode
+        {
+          SUID = 04000,
+          SGID = 02000,
+            SB = 01000,
+        };
+
+        enum Mode
+        {
+            UR =  0400,
+            UW =  0200,
+            UX =  0100,
+
+            GR =   040,
+            GW =   020,
+            GX =   010,
+
+            OR =    04,
+            OW =    02,
+            OX =    01,
+
+           RWX =  0777,
+        };
+        enum Type
+        {
+            BLOCK_DEVICE        =  0140000,
+            CHARACTER_DEVICE    =  0020000,   
+            DIRECTORY           =  0040000,
+            FIFO                =  0010000,
+            REGULAR_FILE        =  0100000,
+            SOCKET              =  0140000,
+            SYMBOLIC_LINK       =  0120000,
+        };
+
+        Stat();
+        Stat(std::string const &name);
+        Stat(std::string const &name, std::string const &pathlist)
+        {
+            set(name, pathlist);
+        }
+        operator bool() const
+        {
+            return d_errno == 0;
+        }
+        unsigned blockSize() const
+        {
+            return d_stat.st_blksize;
+        }        
+        unsigned device() const
+        {
+            return d_stat.st_dev;
+        }        
+        unsigned deviceType() const
+        {
+            return d_stat.st_rdev;
+        }        
+        unsigned error() const
+        {
+            return d_errno;
+        }        
+        bool isType(Type probe)
+        {
+            return type() == probe;
+        }
+        unsigned gid() const
+        {
+            return d_stat.st_gid;
+        }        
+        unsigned inode() const
+        {
+            return d_stat.st_ino;
+        }        
+        DateTime lastAccess() const
+        {
+            return DateTime(d_stat.st_atime);
+        }
+        DateTime lastChange() const
+        {
+            return DateTime(d_stat.st_ctime);
+        }
+        DateTime lastModification() const
+        {
+            return DateTime(d_stat.st_mtime);
+        }
+        unsigned mode() const
+        {
+            return d_stat.st_mode & RWX;
+        }
+        bool mode(Mode mode, Combine combi = ALL) const;
+        std::string modeStr() const;
+        std::string const &name()
+        {
+            return d_name;
+        }
+        unsigned nBlocks() const
+        {
+            return d_stat.st_blocks;
+        }        
+        unsigned nLinks() const
+        {
+            return d_stat.st_nlink;
+        }        
+        std::string path();
+        bool set(std::string const &name);
+        bool set(std::string const &name, std::string const &pathlist);
+        off_t size() const
+        {
+            return d_stat.st_size;
+        }        
+        bool specialMode(SpecialMode specialMode, Combine combi = ALL) const;
+        std::string specialModeStr() const;
+        stat const &statStruct() const
+        {
+            return d_stat;
+        }
+        Type type() const
+        {
+            return static_cast<Type>(d_stat.st_mode & S_IFMT);
+        }
+        std::string typeStr() const;
+        unsigned uid() const
+        {
+            return d_stat.st_uid;
+        }        
+
+    private:
+        void init();
+};
+
+}
+        
+#endif

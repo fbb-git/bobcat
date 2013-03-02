@@ -1,0 +1,350 @@
+.TH "FBB::DateTime" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Date and Time"
+
+.PP 
+.SH "NAME"
+FBB::User \- Performs Date and Time Computations
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/datetime>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+This class allows the programmer to manipulate date and time
+values\&. \fBFBB::DateTime\fP objects can be added to each other or subtracted from
+each other, converting their sums to \fIUTC\fP values\&. It is also possible to
+add or subtract seconds or \fBtm\fP structures to or from \fBFBB::DateTime\fP
+objects\&. This operation keeps the current time zone (\fIUTC\fP or local)\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "ENUMS defined in DateTime"
+.IP o 
+\fBDateTime::Combine\fP:
+.br 
+This enumeration has the following values:
+.IP o 
+\fBALL\fP: require all of the specified \fBMode\fP or 
+\fBSpecialMode\fP values to match;
+.IP o 
+\fBANY\fP: require any match of the specified \fBMode\fP or 
+\fBSpecialMode\fP values (one match suffices);
+.IP o 
+\fBDateTime::Month\fP:
+.br 
+This enumeration has the following values:
+.IP o 
+\fBJANUARY\fP,
+.IP o 
+\fBFEBRUARY\fP,
+.IP o 
+\fBMARCH\fP,
+.IP o 
+\fBAPRIL\fP,
+.IP o 
+\fBMAY\fP,
+.IP o 
+\fBJUNE\fP,
+.IP o 
+\fBJULY\fP,
+.IP o 
+\fBAUGUST\fP,
+.IP o 
+\fBSEPTEMBER\fP,
+.IP o 
+\fBOCTOBER\fP,
+.IP o 
+\fBNOVEMBER\fP,
+.IP o 
+\fBDECEMBER\fP\&.
+.IP o 
+\fBDateTime::WeekDay\fP:
+.br 
+This enumeration has the following values:
+.IP o 
+\fBSUNDAY\fP,
+.IP o 
+\fBMONDAY\fP,
+.IP o 
+\fBTUESDAY\fP,
+.IP o 
+\fBWEDNESDAY\fP,
+.IP o 
+\fBTHIRSDAY\fP,
+.IP o 
+\fBFRIDAY\fP,
+.IP o 
+\fBSATURDAY\fP\&.
+.IP o 
+\fBDateTime::TimeType\fP:
+.br 
+This enumeration has the following values:
+.IP o 
+\fBLOCALTIME\fP: the time is broken down  as the local time,
+.IP o 
+\fBUTC\fP: the time is broken down as Universal Time Coordinated\&.
+.IP o 
+\fBDateTime::TriVal\fP:
+.br 
+This enumeration has the following values, returned by the \fBdst()\fP
+member (see below): 
+.IP o 
+\fBUNKNOWN\fP, returned when no information about the Daylight
+Saving Time is available,
+.IP o 
+\fBNO\fP, returned when Daylight Saving Time is active,
+.IP o 
+\fBYES\fP, returned when Daylight Saving Time is not active\&.
+
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBDateTime(TimeType type = LOCALTIME)\fP:
+.br 
+The default constructor, initialized to the current date and time\&. The
+default argument specifies that the conversion is performed to the machine\&'s 
+local time representation\&. Alternatively, \fIUTC\fP may be specified to
+represent the time as a Universal Time Coordinated time\&. 
+.IP o 
+\fBDateTime(time_t time, TimeType type = LOCALTIME)\fP:
+.br 
+Initializes a \fBFBB::DateTime\fP object with information stored in the
+provided \fItime_t\fP value\&. The second argument specifies that the conversion
+is performed to the machine\&'s local time representation\&. Alternatively,
+\fIUTC\fP may be specified to represent the time as a Universal Time Coordinated
+time\&.
+.IP o 
+\fBDateTime(tm *tm, TimeType type = LOCALTIME)\fP:
+.br 
+Initializes a \fBFBB::DateTime\fP object with information stored in the
+provided \fIstruct tm\fP value\&. The second argument specifies that the conversion
+is performed to the machine\&'s local time representation\&. Alternatively,
+\fIUTC\fP may be specified to represent the time as a Universal Time Coordinated
+time\&. The \fIstruct tm\fP is defined as follows:
+.nf 
+
+    struct tm 
+    {
+        int tm_sec;     // seconds
+        int tm_min;     // minutes
+        int tm_hour;    // hours
+        int tm_mday;    // day of the month
+        int tm_mon;     // month
+        int tm_year;    // year
+        int tm_wday;    // day of the week
+        int tm_yday;    // day in the year
+        int tm_isdst;   // daylight saving time
+    };
+        
+.fi 
+.IP o 
+\fBDateTime(DateTime const &other)\fP:
+.br 
+The standard copy constructor is available by default\&.
+
+.PP 
+.SH "OVERLOADED OPERATORS"
+.IP o 
+\fBoperator bool() const\fP:
+.br 
+Returns \fBtrue\fP if the time decomposition could be performed without
+error\&. \fBFBB::DateTime\fP object use \fBlocaltime_r\fP(3) or \fBgmtime_r\fP(3)
+functions to break down the \fItime_t\fP values into elements\&.  If the time
+could not be broken down, the \fBerror()\fP member returns the error number
+(\fIerrno\fP) associated with the error\&.
+.IP o 
+\fBostream &operator<<(ostream &str, FBB::DateTime) const &dt\fP:
+.br 
+Inserts a standard textual representation (without the trailing
+newline), of the time represented in the \fBFBB::DateTime\fP object into the
+indicated \fIostream\fP\&. If the time value was broken down as \fILOCALTIME\fP it
+is represented as local time, otherwise it\&'s inserted as the Universal Time
+Coordinated time\&.
+.IP o 
+\fBDateTime operator-(DateTime const &left, DateTime const &right)\fP:
+.br 
+Subtracts two \fBFBB::DateTime\fP objects, and returns their difference
+in \fIUTC\fP format\&.
+.IP o 
+\fBDateTime operator-(DateTime const &left, time_t seconds)\fP:
+.br 
+Subtracts the number of seconds from the \fBFBB::DateTime\fP object,
+keeping the current time format (\fIUTC\fP or localtime)\&.
+.IP o 
+\fBDateTime operator-(DateTime const &left, tm const &fields)\fP:
+.br 
+Subtracts the fields stored in the \fBtm\fP struct from the
+\fBFBB::DateTime\fP object, keeping the current time format (\fIUTC\fP or
+localtime)\&.
+.IP o 
+\fBDateTime &operator-=(DateTime const &right)\fP:
+.br 
+Subtracts the argument\&'s time values from the current \fBFBB::DateTime\fP
+object\&'s time values, returning the difference in \fIUTC\fP format\&.
+.IP o 
+\fBDateTime operator-=(time_t seconds)\fP:
+.br 
+Subtracts the number of seconds from the \fBFBB::DateTime\fP object,
+keeping the current time format (\fIUTC\fP or localtime)\&.
+.IP o 
+\fBDateTime operator+(tm const &fields)\fP:
+.br 
+Adds the fields stored in the \fBtm\fP struct to the \fBFBB::DateTime\fP
+object, keeping the current time format (\fIUTC\fP or localtime)\&.
+.IP o 
+\fBDateTime operator+(DateTime const &left, DateTime const &right)\fP:
+.br 
+Adds two \fBFBB::DateTime\fP objects, and returns their difference in
+\fIUTC\fP format\&.
+.IP 
+.IP o 
+\fBDateTime operator+(DateTime const &left, time_t seconds)\fP:
+.br 
+Adds the number of seconds to the \fBFBB::DateTime\fP object, keeping the
+current time format (\fIUTC\fP or localtime)\&.
+.IP o 
+\fBDateTime operator+(DateTime const &left, tm const &fields)\fP:
+.br 
+Adds the fields stored in the \fBtm\fP struct to the \fBFBB::DateTime\fP
+object, keeping the current time format (\fIUTC\fP or localtime)\&.
+.IP o 
+\fBDateTime &operator+=(DateTime const &right)\fP:
+.br 
+Adds the argument\&'s time values to the current \fBFBB::DateTime\fP
+object\&'s time values, returning the difference in \fIUTC\fP format\&.
+.IP o 
+\fBDateTime operator+=(time_t seconds)\fP:
+.br 
+Adds the number of seconds to the \fBFBB::DateTime\fP object, keeping the
+current time format (\fIUTC\fP or localtime)\&.
+.IP o 
+\fBDateTime operator+(tm const &fields)\fP:
+.br 
+Adds the fields stored in the \fBtm\fP struct to the \fBFBB::DateTime\fP
+object, keeping the current time format (\fIUTC\fP or localtime)\&.
+
+.PP 
+.SH "MEMBER FUNCTIONS"
+.IP o 
+\fBbool breakDown(TimeType type)\fP:
+.br 
+Breaks up the \fItime_t\fP value stored in the \fBFBB::DateTime\fP object 
+according to the specified time type\&. It returns \fItrue\fP if the time could be
+broken down, \fIfalse\fP otherwise\&. The member \fBerror()\fP returns the
+associated \fIerrno\fP value\&.
+.IP 
+Except for following function \fBerror()\fP, the members will not return
+meaningfull values if \fBoperator bool()\fP returns \fIfalse\fP\&. All members
+returning a time-element do so according to the latest time-representation
+(i\&.e\&., \fILOCALTIME\fP or \fIUTC\fP)\&. All members returning numerical values
+use 0 as their lowest return values, except for the \fB\&.\&.\&.Nr()\fP members, which
+start at 1\&.
+.IP o 
+\fBunsigned error() const\fP:
+.br 
+Returns the \fIerrno\fP value after the \fBFBB::DateTime\fP object
+construction\&.  It can be interpreted by, e\&.g\&., \fBFBB::Errno\fP\&.
+.IP o 
+\fBunsigned hours() const\fP:
+.br 
+Returns the number of hours of the time stored in a \fBFBB::DateTime\fP
+object (0-23)\&.
+.IP o 
+\fBunsigned minutes() const\fP:
+.br 
+Returns the number of minutes of the time stored in a \fBFBB::DateTime\fP
+object (0-59)\&.
+.IP o 
+\fBMonth month() const\fP:
+.br 
+Returns the \fIMonth\fP value of the time stored in a \fBFBB::DateTime\fP
+object\&.
+.IP o 
+\fBunsigned monthDayNr() const\fP:
+.br 
+Returns the number of the day in the month of the time stored in a
+\fBFBB::DateTime\fP object (1-31)\&.
+.IP o 
+\fBunsigned seconds() const\fP:
+.br 
+Returns the number of seconds of the time stored in a \fBFBB::DateTime\fP
+object (0-59, but 60 and 61 may occur due to possible leap seconds)\&.
+.IP o 
+\fBtime_t time() const\fP:
+.br 
+Returns the \fItime_t\fP values stored in the \fBFBB::DateTime\fP object
+itself\&.
+.IP o 
+\fBWeekDay weekday() const\fP:
+.br 
+Returns the \fIWeekDay\fP value of the time stored in a
+\fBFBB::DateTime\fP object\&.
+.IP o 
+\fBunsigned year() const\fP:
+.br 
+Returns the year element of the time stored in a \fBFBB::DateTime\fP
+object\&.
+.IP o 
+\fBunsigned yearDay() const\fP:
+.br 
+Returns the day within the year of the time stored in a
+\fBFBB::DateTime\fP object\&. January 1 is returned as 0\&.
+.IP o 
+\fBunsigned yearDayNr() const\fP:
+.br 
+Returns the day within the year of the time stored in a
+\fBFBB::DateTime\fP object\&. January 1 is returned as 1\&.
+.IP o 
+\fBFBB:DayTime::TriVal dst() const\fP:
+.br 
+Returns an indication of an active Daylight Saving Time (DST) state
+for the (local) time represented in the \fBFBB::DateTime\fP object\&. When DST is
+active, the local time is one hour later as compared to the situation where
+DST is not active\&.
+
+.PP 
+.SH "FILES"
+\fIbobcat/datetime\fP defines the class interface\&.
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBErrno\fP(3bobcat), \fBasctime_r\fP(3), 
+\fBgmtime_r\fP(3), \fBlocaltime_r\fP(3), \fBtime\fP(2),
+\fBmktime\fP(3),
+.PP 
+.SH "BUGS"
+No Reported Bugs\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

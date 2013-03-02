@@ -1,0 +1,150 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::TableSpec</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::TableSpec</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::TableSpec(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::TableSpec(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz Table-baseclass</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::TableSpec - Base class for the class <strong>FBB::Table</strong>
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/tablespec&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+Note: <strong>#include &lt;bobcat/tablespec&gt;</strong> is implied by 
+            <strong>#include &lt;bobcat/table&gt;</strong> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+<strong>FBB::TableSpec</strong> is <strong>FBB::Table</strong>'s base class. See <strong>table</strong>(3bobcat)
+for usage information. In this manual page only the specific characteristics
+of <strong>FBB::TableSpec</strong> are listed.
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>ENUMERATIONS</h2>
+    The following enumerations are definedin th class <strong>FBB::TableSpec</strong>:
+<p>
+<strong>enum FillDirection</strong><br>
+    This enumeration holds two values:
+    <ul>
+    <li> <strong>Horizontal</strong>:<br>
+        Used to request row-wise storage of table elements in an 
+        <strong>FBB::Table</strong>.
+    <li> <strong>Vertical</strong>:<br>
+        Used to request column-wise storage of table elements in an
+        <strong>FBB::Table</strong>. 
+    </ul>
+<p>
+<strong>enum WidthType</strong><br>
+    This enumeration holds two values:
+    <ul>
+    <li> <strong>EqualWidth</strong>:<br>
+        Used to request equal width for all columns of an <strong>FBB::Table</strong>.
+    <li> <strong>ColumnWidth</strong>:<br>
+        Used to request width-per-column for the columns of an <strong>FBB::Table</strong>.
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+<p>
+There are no public constructors in this class. <strong>FBB::TableSpec</strong> objects
+are constructed when <strong>FBB::Table</strong> objects are constructed.
+<p>
+<h2>OVERLOADED OPERATORS</h2>
+<p>
+<ul>
+    <li> <strong>std::ostream &amp;operator&lt;&lt;(std::ostream &amp;, 
+        FBB::TableSpec const &amp;tableSpec)</strong>:<br>
+    This overloaded operator is normally used to insert an <strong>FBB::Table</strong> into
+    a <strong>std::ostream</strong>. See <strong>table</strong>(3bobcat) for details.
+<p>
+Note that this operator is not defined in the namespace <strong>FBB</strong>.
+    </ul>
+    The overloaded assignment operator is not available.
+<p>
+<h2>MEMBER FUNCTION</h2>
+    <ul>
+    <li> <strong>void setWidth(FBB::TableSpec::WidthType type)</strong>:<br>
+        This member may be used to specify the width of indvidual or all
+columns of the tableSpec. Specify <strong>TableSpec::EqualWidth</strong> when all columns
+should have equal widths, specify <strong>TableSpec::ColumnWidth</strong> when each column
+should be as wide as its widest element. 
+    </ul>
+<p>
+<h2>MANPULATORS</h2>
+    <ul>
+    <li> <strong>FBB::equalWidth(FBB::TableSpec &amp;tableSpec)</strong>:<br>
+        This manipulator is normally used to insert an <strong>FBB::Table</strong> object
+into a <strong>std::ostream</strong>, enforcing equal column widths. To use this
+manipulator, the header file <em>&lt;bobcat/equalwidth&gt;</em> must be inserted.
+    <li> <strong>FBB::columnWidth(FBB::TableSpec &amp;tableSpec)</strong>:<br>
+        This manipulator is normally used to insert an <strong>FBB::Table</strong> object
+into a <strong>std::ostream</strong>, enforcing column widths which are as wide as their
+widest elements. To use this manipulator, the header file
+<em>&lt;bobcat/columnwidth&gt;</em> must be inserted.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    See <strong>table</strong>(3bobcat)
+<p>
+<h2>FILES</h2>
+    <em>bobcat/tableSpec</em> - defines <strong>Table</strong>'s baseclass interface;<br>
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>columnwidth</strong>(3bobcat), <strong>equalwidth</strong>(3bobcat),
+    <strong>table</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

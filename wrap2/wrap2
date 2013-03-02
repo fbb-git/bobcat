@@ -1,0 +1,65 @@
+#ifndef _INCLUDED_BOBCAT_WRAP2_
+#define _INCLUDED_BOBCAT_WRAP2_
+
+namespace FBB
+{
+    template <typename Type1, typename Type2,
+              typename ReturnType = void>
+    class Wrap2
+    {
+        union
+        {
+            ReturnType (*d_ref)(Type1 &, Type2 &);
+            ReturnType (*d_constref)(Type1 const &, Type2 const &);
+            ReturnType (*d_ptrs)(Type1 *, Type2 *);
+            ReturnType (*d_constptrs)(Type1 const *, Type2 const *);
+        };
+
+        public:
+            typedef Type1       first_argument_type;
+            typedef Type2       second_argument_type;
+            typedef ReturnType  result_type;
+
+            Wrap2(ReturnType (*fun)(Type1 &, Type2 &))  // references
+            :
+                d_ref(fun)
+            {}
+            ReturnType operator()(Type1 &param1, Type2 &param2) const
+            {
+                return (*d_ref)(param1, param2);
+            }
+
+                                                        // const references
+            Wrap2(ReturnType (*fun)(Type1 const &, Type2 const &))  
+            :
+                d_constref(fun)
+            {}
+            ReturnType operator()(Type1 const &param1, 
+                                  Type2 const &param2) const
+            {
+                return (*d_constref)(param1, param2);
+            }
+
+            Wrap2(ReturnType (*fun)(Type1 *, Type2 *))  // pointers
+            :
+                d_ptrs(fun)
+            {}
+            ReturnType operator()(Type1 *param1, Type2 *param2) const
+            {
+                return (*d_ptrs)(param1, param2);
+            }
+
+                                                        // const pointers
+            Wrap2(ReturnType (*fun)(Type1 const *, Type2 const *))  
+            :
+                d_constptrs(fun)
+            {}
+            ReturnType operator()(Type1 const *param1, 
+                                  Type2 const *param2) const
+            {
+                return (*d_constptrs)(param1, param2);
+            }
+    };
+}
+
+#endif

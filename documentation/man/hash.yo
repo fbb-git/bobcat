@@ -1,0 +1,129 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Hash)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Key hashing containers)
+
+manpagename(FBB::Hash)(Various mapping template classes using hashing)
+
+manpagesynopsis()
+    bf(#include <bobcat/hash>)nl()
+
+manpagedescription()
+    The bf(FBB:Hash) group of template classes offer hashing-based
+mapping. Various variants are availabe, all based on the facilities offered by
+the GNU bf(g++)(1) bf(ext/hash_map) header file. Hashing containers are not
+(yet) part of the ANSI-ISO bf(C++) standard, and an extension to the standard
+is offered by GNU's bf(g++)(1) compiler. GNU's hash map is defined in the
+bf(__gnu_cxx) namespace, indicating that this container is not one that is
+offered in the bf(C++) standard. 
+
+    Unfortunately, the hash-map offered in the bf(ext/hash_map) header file
+has a fairly complex interface, and bf(FBB::Hash) is an attempt to simplify
+this interface. In practice, hashing uses a textual key, which may be 
+bf(std::string) or tt(char *) based, and the keys may be used either case
+sensitively or case insensitively. bf(FBB::Hash) simplifies the use of the
+hash map offered in bf(ext/hash_map) by requiring its users to specify only
+the map's value type. 
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(__gnu_cxx::hash_map), using various instantiations.
+
+manpagesection(CONSTRUCTORS)
+    Using em(case sensitive) bf(char const *) keys:
+    itemization(
+    itb(HashCharPtr<Value>())
+        The default constructor creates an empty hash-map container, in which
+the keys are tt(char const *)s. The map contains value of template type
+tt(Value). 
+    itb(HashCharPtr<Value>(InputIterator begin, InputIterator end))
+        This constructor creates a hash-map container, using elements pointed
+to by a pair of iterators in the hash-map. The iterators must point to 
+tt(std::pair<char const *, Value>) objects.
+    )
+
+    Using em(case insensitive) bf(char const *) keys:
+    itemization(
+    itb(HashCharCasePtr<Value>())
+        The default constructor creates an empty hash-map container, in which
+the keys are tt(char const *)s. The map contains value of template type
+tt(Value). 
+    itb(HashCharCasePtr<Value>(InputIterator begin, InputIterator end))
+        This constructor creates a hash-map container, using elements pointed
+to by a pair of iterators in the hash-map. The iterators must point to 
+tt(std::pair<char const *, Value>) objects.
+    )
+
+    Using em(case sensitive) bf(std::string) keys:
+    itemization(
+    itb(HashString<Value>())
+        The default constructor creates an empty hash-map container, in which
+the keys are tt(std::string)s. The map contains value of template type
+tt(Value). 
+    itb(HashString<Value>(InputIterator begin, InputIterator end))
+        This constructor creates a hash-map container, using elements pointed
+to by a pair of iterators in the hash-map. The iterators must point to 
+tt(std::pair<std::string, Value>) objects.
+    )
+
+    Using em(case insensitive) bf(std::string) keys:
+    itemization(
+    itb(HashStringCase<Value>())
+        The default constructor creates an empty hash-map container, in which
+the keys are tt(std::string)s. The map contains value of template type
+tt(Value). 
+    itb(HashStringCase<Value>(InputIterator begin, InputIterator end))
+        This constructor creates a hash-map container, using elements pointed
+to by a pair of iterators in the hash-map. The iterators must point to 
+tt(std::pair<std::string, Value>) objects.
+    )
+    The copy constructor is available for all bf(FBB:Hash...) hash-map 
+containers.
+
+manpagesection(OVERLOADED OPERATOR)
+     The overloaded assignment operator is available for all bf(FBB:Hash)
+hash-map containers.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(__gnu_cxx::hash_map) are available, as bf(FBB::Hash)
+inherits from this template class. These members are (expected to be) the same
+members as available for the bf(std::map) container.
+
+manpagesection(EXAMPLE)
+        verb(
+    #include <iostream>
+    #include <bobcat/hash>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    pair<char const *, unsigned> ap[] =
+    {
+        pair<char const *, unsigned>("one", 1),
+        pair<char const *, unsigned>("two", 2),
+    };
+    
+    int main()
+    {
+        HashCharPtr<unsigned> hcp;
+        HashCharPtr<unsigned> hcp2(ap, ap + 2);
+        HashCharPtr<unsigned> hcp3(hcp2);
+
+        hcp = hcp2;
+    
+        cout << hcp2["one"] << endl;
+    }
+        )
+
+manpagefiles()
+    em(bobcat/hash) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(g++)(1), bf(ext/hash_map)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

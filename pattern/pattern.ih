@@ -1,0 +1,131 @@
+#include "pattern"
+
+/*
+    The PerlSetFSA is a Finite State Automaton converting the special
+character set characters as used by Perl to their corresponding
+set-notations. 
+
+    The special perl-set characters may be used inside and outside of
+character classes. When used in a class, it adds the set to the current
+set. If the class starts with a caret, then the meaning of the set is
+reversed:
+            \s <-> \S
+            \d <-> \D
+(etc).
+
+    The character sets s, d, and w are currently supported. \b and \B are 
+already part of the current regex implementation. 
+
+*/
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+namespace FBB
+{
+
+    class PerlSetFSA
+    {
+        class Validator;
+        friend class Validator;
+
+        enum State
+        {
+            Start,
+            Bs,
+            DQuote,
+            Apostrophy,
+            Set,
+            DQuoteBs,
+            ApostrophyBs,
+            NotSet,
+            SetBs,
+            SetNested,
+            InSet,
+            NotSetBs,
+            NotSetNested,
+            InNotSet,
+
+            _nStates
+        };
+     
+        struct TransitionMatrix
+        {
+            State   d_state;
+            int     d_input;
+            State   d_next;
+            void (PerlSetFSA::*d_action)();
+        };
+
+        static TransitionMatrix s_stateTransitions[];
+        static TransitionMatrix *s_stateTransitions_end;
+
+        class Validator
+        {
+            std::vector<bool> d_used;
+            int     d_last;
+            State   d_state;
+            bool    d_valid;
+            unsigned d_element;
+
+            public:
+                Validator()
+                :
+                    d_used(_nStates),
+                    d_last(0),
+                    d_state(_nStates),
+                    d_valid(true)
+                {}
+                void operator()(TransitionMatrix const &state);
+                operator bool() const
+                {
+                    return d_valid;
+                }
+        };
+
+            // s_transition holds as many elements as there are states,
+            // first: points to first element of corresponding state
+            //          in s_transition
+            // second: points just beyond the last element of corresponding
+            //          state in s_transition
+
+        typedef std::pair<TransitionMatrix *, 
+                          TransitionMatrix *> statePair;
+
+        static std::vector<statePair> s_transition;
+
+        std::string d_target;
+        std::string::iterator d_next;
+
+        public:
+            PerlSetFSA();
+
+            void convert(std::string &pattern);
+
+        private:
+            static void initialize(TransitionMatrix &stateDescription);
+
+            void nop() 
+            {};
+            void copy();
+            void copybs();
+            void w_Set();
+            void W_Set();
+            void d_Set();
+            void D_Set();
+            void s_Set();
+            void S_Set();
+            void w_Nest();
+            void d_Nest();
+            void s_Nest();
+    };
+};
+
+using namespace std;
+using namespace FBB;
+
+
+
+
+

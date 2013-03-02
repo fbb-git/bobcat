@@ -1,0 +1,257 @@
+.TH "FBB::Msg" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Message handler"
+
+.PP 
+.SH "NAME"
+FBB::Msg \- Generic message handler
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/msg>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "CONSTRUCTORS"
+The class \fBMsg\fP only has static members\&. There are no constructors\&.
+.PP 
+.SH "MEMBER FUNCTIONS"
+The class \fBMsg\fP only has static members\&. The member functions listed
+below are not frequently used\&. They exist primarily to control the output
+streams and to fine-tune the inner workings of the class\&' data members\&.
+Instead, the class-less members \fBmsg()\fP and \fBlineMsg()\fP (see below) and
+the manipulators (see below) are used to create messages\&.
+.PP 
+.IP o 
+\fBstatic unsigned count()\fP:
+.br 
+Returns the number of error messages generated so far\&.
+.IP o 
+\fBstatic bool display()\fP:
+.br 
+Returns \fItrue\fP if the currently accumulated message will be
+inserted into the message stream\&. This is the default case\&.
+.IP o 
+\fBstatic unsigned errors()\fP:
+.br 
+Returns the number of error messages generated so far\&. Synonym of
+\fBcount()\fP\&. 
+.IP o 
+\fBstatic std::streambuf *infoToWarning()\fP:
+.br 
+Following this call all `info\&'-messages will be written to the same
+stream as warning messages\&. The function returns the \fBstreambuf\fP used so
+far\&. 
+.IP o 
+\fBstatic void open(std::ifstream &in, std::string const &name)\fP:
+.br 
+Convenience function opening the object \fIifstream in\fP refers to\&. If
+opening the stream fails, a message is displayed and a fatal error message is
+generated\&. 
+.IP o 
+\fBstatic void open(std::ofstream &in, std::string const &name)\fP:
+.br 
+Convenience function opening the object \fIofstream in\fP refers to\&. If
+opening the stream fails, a message is displayed and a fatal error message is
+generated\&. 
+.IP o 
+\fBstatic bool setDisplay(bool mode)\fP:
+.br 
+Changes the setting of the `display\&' variable\&. At \fBtrue\fP (Note that
+the default is \fBfalse\fP) accumulated messages will be inserted into the
+message stream\&.
+.IP o 
+\fBstatic std::streambuf *setInfoBuf(std::streambuf *newBuffer,
+bool display = true)\fP:
+.br 
+Define a new \fBstreambuf\fP into which info-messages will be
+inserted\&. The passed \fBstreambuf\fP must remain in existence after the call\&. If
+\fBnewBuffer\fP is 0, the currently used \fBstreambuf\fP is not altered\&.
+The function returns the \fBstreambuf\fP used so far\&.
+.IP o 
+\fBstatic void setLine(unsigned linenr)\fP:
+.br 
+Set the value of the line-counter used with the \fBlineMsg\fP
+manipulator (see below)\&.
+.IP o 
+\fBstatic void setMaxCount(unsigned maxCount)\fP:
+.br 
+Define the maximum number of error messages (using the \fBerr\fP
+manipulator, see below), before a fatal \fImaximum number of error messsages
+reached\fP message is generated\&. The default value is the maximum unsigned
+value; not reached in any practical situation\&.
+.IP o 
+\fBstatic void setOstream(std::string const &name)\fP:
+.br 
+Define the name of the stream to which messages will be written\&.
+.IP o 
+\fBstatic void setWarning(char const *pre = "[Warning] ")\fP:
+.br 
+Define the text printed ahead of warning messages\&. The default value
+is equal to this member function\&'s default argument value\&.
+.IP o 
+\fBstatic unsigned warnings()\fP:
+.br 
+Returns the number of warning messages generated so far\&.
+
+.PP 
+.SH "FREE FUNCTIONS"
+Note that the following two functions are not members of the class
+\fBMsg\fP, but \fIare\fP defined in the namespace \fBFBB\fP\&.
+.IP o 
+\fBstd::ostringstream &linMsg()\fP:
+.br 
+Information inserted into this function is used to compose a
+message\&. Messages must be completed, using an appropriate manipulator, before
+another message can be constructed\&. The final message is prefixed by
+the text `\fILine <nr>: \fP\&', where \fI<nr>\fP is the value last set by the member
+function \fBsetLine()\fP\&. Note the blank trailing the colon\&.
+.IP o 
+\fBstd::ostringstream &msg()\fP:
+.br 
+Information inserted into this function is used to compose a
+message\&. Messages must be completed, using an appropriate manipulator, before
+another message can be constructed\&. 
+.IP o 
+\fBstd::ostringstream &msgstream()\fP:
+.br 
+Contrary to the function \fBmsg\fP, which will first clear the current
+contents of the message buffer, \fBmsgstream\fP returns the current stream `as
+is\&'\&. This allows the use of certain Template Library algorithms, like
+\fIcopy\fP\&. E\&.g\&., assuming that \fIstd::vector<std::string> d_words\fP has been
+defined, and using directives were specificied for the \fIstd\fP and \fIFBB\fP
+namespaces, then
+.nf 
+
+    copy(d_words\&.begin(), d_words\&.end(), ostream_iterator<string>(msg, " "));
+    msgstream() << info;
+        
+.fi 
+can be used to insert the contents of \fId_words\fP, separated by a blank
+space, into the \fIMsg\fP stream\&.
+
+.PP 
+.SH "MANIPULATORS"
+The following manipulators (which are \fInot\fP part of the \fBFBB::Msg\fP,
+class, but \fIare\fP defined in the \fBFBB\fP namespace) can be inserted into the
+\fBFBB::Msg\fP object\&. All messages are by default inserted into the standard
+output stream (\fIcout\fP)\&.
+.IP o 
+\fBerr\fP:
+.br 
+An error message is generated\&. Error messages are prefixed by the text
+`\fI[Error <count>] \fP\&', where \fI<count>\fP counts the number of error messages
+generated so far\&. If the maximum error count is exceeded (see
+\fBsetMaxCount()\fP above) a fatal message is generated as well\&. A newline is
+added to the message by the manipulator\&.
+.IP o 
+\fBfatal\fP:
+.br 
+A fatal message is generated\&. Fatal messages are prefixed by the text
+`\fI[Fatal] \fP\&'\&. Following a fatal message an \fBErrno(1)\fP exception is
+thrown\&.  A newline is added to the message by the manipulator\&.
+.IP o 
+\fBinfo\fP:
+.br 
+This manipulator generates an informational message\&. Information
+messages may be controlled by the \fBsetDisplay()\fP member (see above), and
+have no further characteristics\&.  A newline is added to the message by the
+manipulator\&.
+.IP o 
+\fBspool\fP:
+.br 
+This manipulator generates a (partial) informational message\&. 
+\fBspool\fP does not add a newline message, but merrely flushes the stream\&'s
+buffer\&.
+.IP o 
+\fBwarning\fP:
+.br 
+This manipulator generates a warning message\&. Warning
+messages may be controlled by the \fBsetDisplay()\fP member (see above)\&. By
+default the text `\fI[Warning] \fP\&' is prefixed to the message, but the prefixed
+message is configurable\&.  A newline is added to the message by the
+manipulator\&.
+
+.PP 
+.SH "OVERLOADED OPERATOR"
+The following insertion operator is \fInot\fP defined in the namespace
+\fBFBB\fP\&. It is part of the distribution to allow the manipulators to be
+inserted into a \fBostrstream\fP:
+.IP o 
+\fBvoid operator<<(std::ostream &ostrstream, void (*)(std::ostream &))\fP:
+.br 
+The second argument normally is one of the manipulators defined above\&.
+
+.PP 
+.SH "EXAMPLE"
+.nf 
+
+    #include <bobcat/msg>
+
+    using namespace FBB;
+
+    int main(int argc)
+    try
+    {
+        if (argc == 1)
+            msg() << "Need some arguments" << fatal;
+        else
+        {
+            Msg::setDisplay(true);
+            msg() << "Thanks for providing " << argc << 
+                                    " arguments " << info;
+        }
+    }            
+    catch(\&.\&.\&.)
+    {
+        msg() << "Got an Errno object, but ignoring it" << err;
+    }
+        
+.fi 
+
+.PP 
+.SH "FILES"
+\fIbobcat/msg\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBerrno\fP(3bobcat), \fBindent\fP(3bobcat)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

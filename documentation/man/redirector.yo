@@ -1,0 +1,114 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Redirector)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (System Level File Redirection)
+
+manpagename(FBB::Redirector)(Redirects a file descriptor to another descriptor)
+
+manpagesynopsis()
+    bf(#include <bobcat/redirector>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    Objects of the class bf(FBB::Redirector) set up a system level file
+redirection, using file descriptors rather than streams. bf(FBB::Redirector)
+objects are effectively em(wrappers) around the bf(dup2)(2) system
+call. System level redirection allows the programmer to send output to, e.g.,
+the standard output stream, which actually appears at another stream (e.g.,
+the standard output). It is a stronger form of redirection than the standard
+one offered by bf(C++), which uses tt(std::streambuf) redirection, and which
+is, because of that, bound to the program's scope. System level redirection,
+on the other hand, is applied at the system level, allowing the programmer to
+redirect standard streams when starting a program. For example, the standard
+error is commonly written to the standard output using an invocation like
+tt(program 2>&1).
+
+    When constructing bf(FBB::Redirector) objects a file descriptor is
+required, and another file descriptor is required when defining the
+redirection. Formally, file descriptors are not defined in bf(C++), but they
+are available in many types of operating systems. In those systems each `file'
+has an associated `file descriptor'. A file descriptor is an bf(int), which is
+an index into the program's file allocation table, maintained by the
+system. Another type of well-known entities which are file descriptors are
+em(sockets).
+
+    Well-known filedescriptors (defined in, e.g., tt(unistd.h)) 
+having fixed values are
+    itemization(
+    tt() 0 (tt(STDIN_FILENO)), representing the standard input stream
+(tt(std::cin));
+    tt() 1, (tt(STDOUT_FILENO)), representing the standard output stream
+(tt(std::cout));
+    tt() 2, (tt(STDERR_FILENO)), representing the standard error stream
+(tt(cerr));
+    )
+    Notes:
+    itemization(
+    it() System-level redirection outlives system calls from the bf(execl)(3)
+family.
+    it() Destroying a bf(FBB::Redirector) object does em(not) undo the
+redirection set up by that object.
+    )
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(ENUM)
+    The enumeration bf(StandardFileno) holds the following values:
+    itemization(
+    itt(STDIN) (0)
+    itt(STDOUT) (1)
+    itt(STDERR) (2)
+    )
+    These values may be used to set up a redirection instead of the plain
+numbers. 
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Redirector(int fd))
+        This constructor expects the file descriptor of the file that will be
+used in the program to access (read, write) another file.
+    itb(Redirector(Redirector const &other) throw()) 
+        The standard copy constructor is available.
+    )
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(void accessVia(int alternateFd) const throw (Errno))
+        This is the only available member function. It expects the file
+descriptor of the file that will be redirected. If the redirection fails an
+bf(FBB::Errno) object is thrown, whose tt(which()) member shows the
+system's tt(errno) value set by the failing bf(dup2)(2) function.
+    )
+
+manpagesection(EXAMPLE)
+    verb(
+    #include <iostream>
+    #include <bobcat/redirector>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main()
+    {
+        Redirector redirector(Redirector::STDOUT);
+        redirector.accessVia(Redirector::STDERR);
+    
+        cerr << "This appears at the standard output stream\n"
+                "use `a.out > /dev/null' to suppress this message" << endl;
+    }
+        )
+
+manpagefiles()
+    em(bobcat/redirector) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(errno)(3bobcat), bf(dup2)(2), bf(execl)(3)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

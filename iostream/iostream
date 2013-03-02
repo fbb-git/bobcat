@@ -1,0 +1,34 @@
+#ifndef _INCLUDED_BOBCAT_IOSTREAM_
+#define _INCLUDED_BOBCAT_IOSTREAM_
+
+#include <bobcat/iostreambuf>
+
+namespace FBB
+{
+
+class IOStream: private IOStreambuf, public std::istream, public std::ostream
+{
+    public:
+        IOStream(std::istream &in, std::ostream &out)
+        :
+            IOStreambuf(in, out),
+            std::istream(this),
+            std::ostream(this)
+        {}
+        IOStream()
+        :
+            std::istream(this),
+            std::ostream(this)
+        {}
+        void open(std::istream &in, std::ostream &out)
+        {
+            IOStreambuf::open(in, out);
+        }
+
+        void clear();
+};
+
+} // namespace FBB
+
+#endif
+

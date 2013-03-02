@@ -1,0 +1,184 @@
+.TH "FBB::Fork" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Template Design Pattern around fork(2)"
+
+.PP 
+.SH "NAME"
+FBB::Fork \- Implements \fBfork\fP(2) using the Template Design Pattern
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/fork>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+\fBFBB::Fork\fP objects may be used to implement the \fBfork\fP(2) call as part
+of the Template Algorithm Design Pattern\&. The class was designed as a virtual
+base class for classes implementing the essential parts of the forking
+process\&. The class is a virtual base class\&. Derived classes \fImust\fP implement
+the members \fBchildProcess()\fP and \fBparentProcess()\fP as part of the
+`Template Method Design Pattern\&' (see Gamma \fIet al\&.\fP, 1995)\&.
+.PP 
+Terminating child processes send \fBSIGCHLD\fP signals to their parents\&. The
+\fBC\fP library offers the following \fImacros\fP to analyze the \fIstatus\fP values
+received by the parent process using a \fBwait\fP(2) or \fBwaitpid\fP(2) system
+call: 
+.IP o 
+\fBint WIFEXITED(int status)\fP:
+.br 
+This macro returns a nonzero value if the child process terminated
+normally with `exit\&' or `_exit\&'\&.
+.IP o 
+\fBint WEXITSTATUS(int status)\fP:
+.br 
+If `WIFEXITED\&' is true of `\fIstatus\fP\&', this macro returns the
+low-order 8 bits of the exit status value from the child process\&.  
+.IP o 
+\fBint WIFSIGNALED(int status)\fP:
+.br 
+This macro returns a nonzero value if the child process terminated
+because it received a signal that was not handled\&.  
+.IP o 
+\fBint WTERMSIG(int status)\fP:
+.br 
+If `WIFSIGNALED\&' is true of `\fIstatus\fP\&', this macro returns the
+signal number of the signal that terminated the child process\&.
+.IP o 
+\fBint WCOREDUMP(int status)\fP:
+.br 
+This macro returns a nonzero value if the child process terminated
+and produced a core dump\&.
+.IP o 
+\fBint WIFSTOPPED(int status)\fP:
+.br 
+This macro returns a nonzero value if the child process is stopped\&.
+.IP o 
+\fBint WSTOPSIG(int status)\fP:
+.br 
+If `WIFSTOPPED\&' is true of `\fIstatus\fP\&', this macro returns the signal 
+number of the signal that caused the child process to stop\&.
+
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBFork()\fP:
+.br 
+This is the only available constructor\&. 
+Note that there is no copy constructor\&.
+.PP 
+.SH "DESTRUCTOR"
+.IP o 
+\fBvirtual ~Fork()\fP:
+.br 
+Derived classes may define their own destructor, which is called when
+the \fB~Fork()\fP destructor is activated\&.
+
+.PP 
+.SH "MEMBER FUNCTIONS"
+.IP o 
+\fBvoid fork() throw (Errno)\fP:
+.br 
+Performs the actual forking\&. It is implemented in such a way that the
+corresponding parent- and child- processes are activated from virtual members
+of \fBFBB::Fork\fP\&. If the forking operation fails, an \fBFBB::Errno\fP exception
+is thrown\&.
+
+.PP 
+.SH "PROTECTED MEMBER FUNCTIONS"
+.IP o 
+\fBvirtual void childProcess() = 0\fP:
+.br 
+This member \fImust\fP be implemented by derived classes\&. It defines the
+actions that are performed by the child process, following the \fBfork\fP(2)
+system call\&. Just before \fBchildProcess()\fP is called, \fBchildRedirections()\fP
+(see below) has been executed\&.
+.IP o 
+\fBvirtual void childRedirections()\fP:
+.br 
+This function \fImay\fP be redefined in derived classes to set up the
+redirections that are necessary to communicate with the parent process\&. See
+also the classes \fBredirector\fP(3bobcat), \fBpipe\fP(3bobcat),
+\fBipipe\fP(3bobcat) and \fBopipe\fP(3bobcat)\&. By default, \fBchildRedirections()\fP
+does nothing\&.
+.IP o 
+\fBvirtual void parentProcess() = 0\fP:
+.br 
+This member \fImust\fP be implemented by derived classes\&. It defines the
+actions that are performed by the parent process, following the \fBfork\fP(2)
+system call\&. Just before \fBparentProcess()\fP is called,
+\fBparentRedirections()\fP (see below) has been executed\&.
+.IP o 
+\fBvirtual void parentRedirections()\fP:
+.br 
+This function \fImay\fP be redefined in derived classes to set up the
+redirections that are necessary to communicate with, e\&.g\&., the parent\&. See,
+e\&.g\&., the classes \fBredirector\fP(3bobcat), \fBpipe\fP(3bobcat),
+\fBipipe\fP(3bobcat) and \fBopipe\fP(3bobcat)\&. By default,
+\fBparentRedirections()\fP does nothing\&.
+.IP o 
+\fBint pid() const\fP:
+.br 
+Returns the child\&'s process id in the parent\&'s code (i\&.e\&., in the
+\fBparent-\fPmembers below), and 0 in the child\&'s code (i\&.e\&., in the
+\fBchild-\fPmembers below)\&. Note that the value of \fBpid()\fP is \fBundefined\fP
+when called \fIbefore\fP the member \fBfork()\fP has been called\&.
+.IP o 
+\fBint waitForChild()\fP:
+.br 
+This memebr may be called by \fBparentProcess()\fP to wait for the
+completion of the child-process\&. The return value (exit-code) of the child
+process is returned as a value between 0 and 255\&. If the child process
+terminates before the completion of the parent process, then
+\fBwaitForChild()\fP should be called to prevent \fIzombies\fP from
+occurring\&. Alternatively, the parent process may terminate (e\&.g\&., using
+\fBexit\fP(2)) while the child process is still alive\&. This is the normal way to
+create a \fIdaemon\fP process\&.
+
+.PP 
+.SH "EXAMPLE"
+To do
+.PP 
+.SH "FILES"
+\fIbobcat/fork\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBipipe\fP(3bobcat), \fBfork\fP(2), \fBopipe\fP(3bobcat),
+\fBpipe\fP(3bobcat), \fBredirector\fP(3bobcat), \fBwait\fP(2), \fBwaitpid\fP(2)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

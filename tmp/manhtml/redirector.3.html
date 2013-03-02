@@ -1,0 +1,165 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Redirector</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Redirector</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Redirector(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Redirector(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz System Level File Redirection</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Redirector - Redirects a file descriptor to another descriptor
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/redirector&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    Objects of the class <strong>FBB::Redirector</strong> set up a system level file
+redirection, using file descriptors rather than streams. <strong>FBB::Redirector</strong>
+objects are effectively <em>wrappers</em> around the <strong>dup2</strong>(2) system
+call. System level redirection allows the programmer to send output to, e.g.,
+the standard output stream, which actually appears at another stream (e.g.,
+the standard output). It is a stronger form of redirection than the standard
+one offered by <strong>C++</strong>, which uses <em>std::streambuf</em> redirection, and which
+is, because of that, bound to the program's scope. System level redirection,
+on the other hand, is applied at the system level, allowing the programmer to
+redirect standard streams when starting a program. For example, the standard
+error is commonly written to the standard output using an invocation like
+<em>program 2&gt;&amp;1</em>.
+<p>
+When constructing <strong>FBB::Redirector</strong> objects a file descriptor is
+required, and another file descriptor is required when defining the
+redirection. Formally, file descriptors are not defined in <strong>C++</strong>, but they
+are available in many types of operating systems. In those systems each `file'
+has an associated `file descriptor'. A file descriptor is an <strong>int</strong>, which is
+an index into the program's file allocation table, maintained by the
+system. Another type of well-known entities which are file descriptors are
+<em>sockets</em>.
+<p>
+Well-known filedescriptors (defined in, e.g., <em>unistd.h</em>) 
+having fixed values are
+    <ul>
+    <em></em> 0 (<em>STDIN_FILENO</em>), representing the standard input stream
+(<em>std::cin</em>);
+    <em></em> 1, (<em>STDOUT_FILENO</em>), representing the standard output stream
+(<em>std::cout</em>);
+    <em></em> 2, (<em>STDERR_FILENO</em>), representing the standard error stream
+(<em>cerr</em>);
+    </ul>
+    Notes:
+    <ul>
+    <li> System-level redirection outlives system calls from the <strong>execl</strong>(3)
+family.
+    <li> Destroying a <strong>FBB::Redirector</strong> object does <em>not</em> undo the
+redirection set up by that object.
+    </ul>
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>ENUM</h2>
+    The enumeration <strong>StandardFileno</strong> holds the following values:
+    <ul>
+    <li> <em>STDIN</em> (0)
+    <li> <em>STDOUT</em> (1)
+    <li> <em>STDERR</em> (2)
+    </ul>
+    These values may be used to set up a redirection instead of the plain
+numbers. 
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Redirector(int fd)</strong>:<br>
+        This constructor expects the file descriptor of the file that will be
+used in the program to access (read, write) another file.
+    <li> <strong>Redirector(Redirector const &amp;other) throw()</strong>:<br> 
+        The standard copy constructor is available.
+    </ul>
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+    <ul>
+    <li> <strong>void accessVia(int alternateFd) const throw (Errno)</strong>:<br>
+        This is the only available member function. It expects the file
+descriptor of the file that will be redirected. If the redirection fails an
+<strong>FBB::Errno</strong> object is thrown, whose <em>which()</em> member shows the
+system's <em>errno</em> value set by the failing <strong>dup2</strong>(2) function.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    <pre>
+
+    #include &lt;iostream&gt;
+    #include &lt;bobcat/redirector&gt;
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main()
+    {
+        Redirector redirector(Redirector::STDOUT);
+        redirector.accessVia(Redirector::STDERR);
+    
+        cerr &lt;&lt; "This appears at the standard output stream\n"
+                "use `a.out &gt; /dev/null' to suppress this message" &lt;&lt; endl;
+    }
+        
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/redirector</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>errno</strong>(3bobcat), <strong>dup2</strong>(2), <strong>execl</strong>(3)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

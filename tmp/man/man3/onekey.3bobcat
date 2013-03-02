@@ -1,0 +1,163 @@
+.TH "FBB::OneKey" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "One keystroke input"
+
+.PP 
+.SH "NAME"
+FBB::OneKey \- Single keystroke input, not requiring `Return\&'
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/onekey>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+\fBOneKey\fP objects may be used to realize `direct keyboard input\&': a
+pressed key becomes available without the need for pressing \fIEnter\fP\&. The
+characters are obtained from the standard input stream\&. Direct key entry
+remains in effect for as long as the \fBOneKey\fP object exists\&. Once the object
+is destroyed the standard input stream will return to its default mode of
+operation, in which input is `confirmed\&' by a newline character\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "ENUMERATION"
+The \fBOneKey::Mode\fP enumeration is used to control echoing of returned
+characters\&. It has two values:
+.IP o 
+\fBOFF\fP: returned characters are \fInot\fP echoed to the standard
+output stream;
+.IP o 
+\fBON\fP: returned characters \fIare\fP echoed to the standard output
+stream\&. 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBOneKey(OneKey::Mode state = OneKey::OFF)\fP:
+.br 
+This constructor initializes the \fBOneKey\fP input object\&. By
+default, entered characters are not echoed\&. By constructing the object
+with the \fBOneKey::ON\fP argument, entered characters are echoed to
+the standard output stream\&. An \fBFBB::Errno\fP exception is thrown when
+.IP o 
+the standard input stream is not a tty (e\&.g\&., when the
+standard input stream is redirected to a file);
+.IP o 
+the current state of the standard input stream can\&'t be
+determined;
+.IP o 
+the standard input stream\&'s state can\&'t be changed to the
+`direct keyboard input\&' mode\&.
+.IP o 
+\fBNote\fP:
+.br 
+The copy constructor (and the overloaded assignement operator) are not
+available\&. 
+)
+.PP 
+.SH "MEMBER FUNCTIONS"
+.IP o 
+\fBint get() const\fP:
+.br 
+Returns the next character from the standard input stream, without the
+need for pressing \fIEnter\fP\&. 
+.IP o 
+\fBvoid setEcho(OneKey::Mode state)\fP:
+.br 
+Changes the echo-state of the \fBOneKey\fP object\&. The argument may be
+either \fBOneKey::ON\fP or \fBOneKey::OFF\fP\&.
+
+.PP 
+.SH "EXAMPLE"
+.nf 
+/*
+                              driver\&.cc
+*/
+
+#include <iostream>
+#include <string>
+#include <bobcat/onekey>
+
+using namespace std;
+using namespace FBB;
+
+int main()
+{
+    try
+    {
+        OneKey onekey;
+        cout << "Usage: 1: next chars are echoed, 0: no echo, q: quits\en";
+
+        while (true)
+        {
+            char c;
+    
+            cout << "ready\&.\&.\&.\en";
+            cout << "Got character \&'" << (c = onekey\&.get()) << "\&'\en";
+
+            switch (c)
+            {
+                case \&'1\&':    
+                    onekey\&.setEcho(OneKey::ON);
+                break;
+
+                case \&'0\&':    
+                    onekey\&.setEcho(OneKey::OFF);
+                break;
+
+                case \&'q\&':
+                return 0;    
+            }
+        }
+    }
+    catch (Errno const &e)
+    {
+        cout << e\&.what() << endl;
+        return e\&.which();
+    }
+}
+
+
+.fi 
+
+.PP 
+.SH "FILES"
+\fIbobcat/onekey\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

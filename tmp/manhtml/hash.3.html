@@ -1,0 +1,180 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Hash</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Hash</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Hash(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Hash(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz Key hashing containers</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Hash - Various mapping template classes using hashing
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/hash&gt;</strong><br>
+<p>
+<h2>DESCRIPTION</h2>
+    The <strong>FBB:Hash</strong> group of template classes offer hashing-based
+mapping. Various variants are availabe, all based on the facilities offered by
+the GNU <strong>g++</strong>(1) <strong>ext/hash_map</strong> header file. Hashing containers are not
+(yet) part of the ANSI-ISO <strong>C++</strong> standard, and an extension to the standard
+is offered by GNU's <strong>g++</strong>(1) compiler. GNU's hash map is defined in the
+<strong>__gnu_cxx</strong> namespace, indicating that this container is not one that is
+offered in the <strong>C++</strong> standard. 
+<p>
+Unfortunately, the hash-map offered in the <strong>ext/hash_map</strong> header file
+has a fairly complex interface, and <strong>FBB::Hash</strong> is an attempt to simplify
+this interface. In practice, hashing uses a textual key, which may be 
+<strong>std::string</strong> or <em>char *</em> based, and the keys may be used either case
+sensitively or case insensitively. <strong>FBB::Hash</strong> simplifies the use of the
+hash map offered in <strong>ext/hash_map</strong> by requiring its users to specify only
+the map's value type. 
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <strong>__gnu_cxx::hash_map</strong>, using various instantiations.
+<p>
+<h2>CONSTRUCTORS</h2>
+    Using <em>case sensitive</em> <strong>char const *</strong> keys:
+    <ul>
+    <li> <strong>HashCharPtr&lt;Value&gt;()</strong>:<br>
+        The default constructor creates an empty hash-map container, in which
+the keys are <em>char const *</em>s. The map contains value of template type
+<em>Value</em>. 
+    <li> <strong>HashCharPtr&lt;Value&gt;(InputIterator begin, InputIterator end)</strong>:<br>
+        This constructor creates a hash-map container, using elements pointed
+to by a pair of iterators in the hash-map. The iterators must point to 
+<em>std::pair&lt;char const *, Value&gt;</em> objects.
+    </ul>
+<p>
+Using <em>case insensitive</em> <strong>char const *</strong> keys:
+    <ul>
+    <li> <strong>HashCharCasePtr&lt;Value&gt;()</strong>:<br>
+        The default constructor creates an empty hash-map container, in which
+the keys are <em>char const *</em>s. The map contains value of template type
+<em>Value</em>. 
+    <li> <strong>HashCharCasePtr&lt;Value&gt;(InputIterator begin, InputIterator end)</strong>:<br>
+        This constructor creates a hash-map container, using elements pointed
+to by a pair of iterators in the hash-map. The iterators must point to 
+<em>std::pair&lt;char const *, Value&gt;</em> objects.
+    </ul>
+<p>
+Using <em>case sensitive</em> <strong>std::string</strong> keys:
+    <ul>
+    <li> <strong>HashString&lt;Value&gt;()</strong>:<br>
+        The default constructor creates an empty hash-map container, in which
+the keys are <em>std::string</em>s. The map contains value of template type
+<em>Value</em>. 
+    <li> <strong>HashString&lt;Value&gt;(InputIterator begin, InputIterator end)</strong>:<br>
+        This constructor creates a hash-map container, using elements pointed
+to by a pair of iterators in the hash-map. The iterators must point to 
+<em>std::pair&lt;std::string, Value&gt;</em> objects.
+    </ul>
+<p>
+Using <em>case insensitive</em> <strong>std::string</strong> keys:
+    <ul>
+    <li> <strong>HashStringCase&lt;Value&gt;()</strong>:<br>
+        The default constructor creates an empty hash-map container, in which
+the keys are <em>std::string</em>s. The map contains value of template type
+<em>Value</em>. 
+    <li> <strong>HashStringCase&lt;Value&gt;(InputIterator begin, InputIterator end)</strong>:<br>
+        This constructor creates a hash-map container, using elements pointed
+to by a pair of iterators in the hash-map. The iterators must point to 
+<em>std::pair&lt;std::string, Value&gt;</em> objects.
+    </ul>
+    The copy constructor is available for all <strong>FBB:Hash...</strong> hash-map 
+containers.
+<p>
+<h2>OVERLOADED OPERATOR</h2>
+     The overloaded assignment operator is available for all <strong>FBB:Hash</strong>
+hash-map containers.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+     All members of <strong>__gnu_cxx::hash_map</strong> are available, as <strong>FBB::Hash</strong>
+inherits from this template class. These members are (expected to be) the same
+members as available for the <strong>std::map</strong> container.
+<p>
+<h2>EXAMPLE</h2>
+        <pre>
+
+    #include &lt;iostream&gt;
+    #include &lt;bobcat/hash&gt;
+    
+    using namespace std;
+    using namespace FBB;
+    
+    pair&lt;char const *, unsigned&gt; ap[] =
+    {
+        pair&lt;char const *, unsigned&gt;("one", 1),
+        pair&lt;char const *, unsigned&gt;("two", 2),
+    };
+    
+    int main()
+    {
+        HashCharPtr&lt;unsigned&gt; hcp;
+        HashCharPtr&lt;unsigned&gt; hcp2(ap, ap + 2);
+        HashCharPtr&lt;unsigned&gt; hcp3(hcp2);
+
+        hcp = hcp2;
+    
+        cout &lt;&lt; hcp2["one"] &lt;&lt; endl;
+    }
+        
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/hash</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>g++</strong>(1), <strong>ext/hash_map</strong>
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

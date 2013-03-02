@@ -1,0 +1,124 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::IOStream</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::IOStream</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::IOStream(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::IOStream(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz std::istream and std::ostream</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::IOStream - Combines std::istream and std::ostream features
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/iostream&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+This class combines the features of the <strong>std::istream</strong> and
+<strong>std::ostream</strong> classes. The <strong>std::istream</strong> and <strong>std::ostream</strong> may be
+physically different streams. <strong>FBB:IOStream</strong> objects may, e.g., be
+associated with streams wrapped around <em>pipes</em> (see, e.g.,
+<strong>FBB::IfdStream</strong> and <strong>FBB::OFdStream</strong>, to construct bi-directional pipes.
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <strong>FBB::IOStreambuf</strong> (private inheritance),<br>
+    <strong>std::istream</strong>,<br>
+    <strong>std::ostream</strong>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>IOStream()</strong>:<br>
+        The default constructor constructs an empty <strong>FBB::IOStream</strong>
+objects. It should not be used before its <strong>open()</strong> member (see below) was
+called.
+    <li> <strong>IOStream(std::istream &amp;in, std::ostream &amp;out)</strong>:<br>
+        This constructor associates the <strong>IOStream</strong> object with a
+<strong>std::istream</strong> and a <strong>std::ostream</strong>. All output operations will be passed
+on to the <strong>std::ostream</strong>, all input operations to the <strong>std::istream</strong>. The
+streams passed to <strong>IOStream()</strong> should outlive the <strong>IOStream</strong> object.
+    </ul>
+    De copy constructor is available as well.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+     All members of <strong>std::istream</strong> and <strong>std::ostream</strong>  are
+available, as <strong>FBB::IOStream</strong> inherits from these classes. Furthermore, when
+switching between <strong>std::istream</strong> and <strong>std::ostream</strong> operations, no
+intermediate <strong>seekg()</strong> or <strong>seekp()</strong> operation will normally be required,
+since the base classes will normally be associated with physically different
+streams. 
+    <ul>
+    <li> <strong>void open(std::istream &amp;in, std::ostream &amp;out)</strong>:<br>
+        This member (re)associates the <strong>IOStream</strong> object with a
+<strong>std::istream</strong> and a <strong>std::ostream</strong>. All output operations will be passed
+on to the <strong>std::ostream</strong>, all input operations to the <strong>std::istream</strong>. The
+streams passed to <strong>IOStream()</strong> should outlive the <strong>IOStream</strong> object. If
+this member is called for an <strong>IOStream</strong> object already associated with an
+<strong>std::ostream</strong> object, the already associated <strong>std::ostream</strong> object is
+flushed before setting up the new association.
+    <li> <strong>void clear()</strong>:<br>
+        This member clears the error states of the associated <strong>std::istream</strong>
+and <strong>std::ostream</strong> objects.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    See the example provided with <strong>process</strong>(3bobcat).
+<p>
+<h2>FILES</h2>
+    <em>bobcat/iostream</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>ifdstream</strong>(3bobcat), <strong>iostreambuf</strong>(3bobcat), 
+    <strong>ofdstream</strong>(3bobcat), <strong>process</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

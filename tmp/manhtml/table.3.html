@@ -1,0 +1,182 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Table</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Table</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Table(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Table(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz Table-formatter</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Table - Generates row- or column-wise filled tables
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/table&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+<strong>FBB::Table</strong> objects may be used to create tables. The tables are filled
+either column-wise or row-wise. The class only has a minimal number of member
+functions and overloaded operators. Most of the table's characteristics may be
+find-tuned by a separate <strong>FBB::TableSupport</strong> object, described in a separate
+man-page (<strong>TableSupport</strong>(3bobcat)). When no <strong>FBB::TableSupport</strong> object is
+used, a plain row-wise or column-wise table will be inserted into a
+<strong>std::ostream</strong>. 
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <strong>FBB::TableSpec</strong> - The class <strong>FBB::TableSpec</strong> is a mere support class
+for <strong>FBB::Table</strong>. Because of this, its features are repeated below.
+<p>
+<h2>ENUMERATIONS</h2>
+    The following enumerations are defined in the class <strong>FBB::TableSpec</strong>,
+allowing the programmer to specifiy values like <strong>FBB::TableSpec::Vertical</strong>
+rather than <strong>FBB::Table&lt;std::istream_const_iterator&gt;::Vertical</strong>.
+<p>
+<strong>enum FillDirection</strong><br>
+    This enumeration holds two values:
+    <ul>
+    <li> <strong>Horizontal</strong>:<br>
+        When this value is specified at construction time, subequent elements
+will be stored row-wise in the table. I.e., the second element will normally
+be in the second column of the first row.
+    <li> <strong>Vertical</strong>:<br>
+        When this value is specified at construction time, subequent elements
+will be stored column-wise in the table. I.e., the second element will normally
+be in the second row of the first column.
+    </ul>
+<p>
+<strong>enum WidthType</strong><br>
+    This enumeration holds two values:
+    <ul>
+    <li> <strong>EqualWidth</strong>:<br>
+        This value may be specified when all the table's columns should have
+equal width (i.e., equal to the width of the widest table element), 
+    <li> <strong>ColumnWidth</strong>:<br>
+        This value may be specified when the columns should be allowed
+variable widths. In this case each column will be as wide as its widest
+element. 
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Table(Iterator const &amp;begin, Iterator const &amp;end, 
+                unsigned nColumns, TableSpec::FillDirection direction)</strong>:<br>
+        This constructor expects two `Input Iterators' defining the range of
+elements to be displayed by the table. The elements to which the iterators
+point must be insertable as text into <em>ostream</em> objects. The parameter
+<em>nColumns</em> may be initialized with the number of columns the table should
+have. The number of rows are implied by the combination of this parameter and
+the number of elements in the iterator-range. 
+    <li> <strong>Table(Iterator const &amp;begin, Iterator const &amp;end, 
+                TableSupport &amp;tableSupport,
+                unsigned nColumns, TableSpec::FillDirection direction)</strong>:<br>
+        This constructor operates identically to the previous constructor, but
+expects an additional reference to a <strong>FBB::TableSupport</strong> object. A
+<strong>FBB::TableSupport</strong> object offers additional formatting features used by the
+table to define elements like horizontal lines  between rows, additional
+separators between elements etc.
+    </ul>
+    The copy constructor is not available.
+<p>
+<h2>OVERLOADED OPERATORS</h2>
+    <ul>
+    <li> <strong>std::ostream &amp;::operator&lt;&lt;(std::ostream &amp;, 
+            FBB::Table&lt;Iterator&gt; const &amp;table)</strong>:<br>
+        This overloaded operator is actually an overloaded operator in the
+class <strong>FBB::TableSpec</strong>, but since <strong>FBB::TableSpec</strong> is the baseclass of
+<strong>FBB::Table</strong>, an <strong>FBB::Table&lt;Iterator&gt;</strong> object may be inserted into a
+<strong>std::ostream</strong>. Tables may be inserted repeatedly (e.g., using a sequence of
+insertions). 
+<p>
+Note that this operator is not defined in the namespace <strong>FBB</strong>.
+    </ul>
+    The overloaded assignment operator is not available.
+<p>
+<h2>MEMBER FUNCTION</h2>
+    <ul>
+    <li> <strong>void setWidth(FBB::TableSpec::WidthType type)</strong>:<br>
+        This member may be used to specify the width of indvidual or all
+columns of the table. Specify <strong>TableSpec::EqualWidth</strong> when all columns
+should have equal widths, specify <strong>TableSpec::ColumnWidth</strong> when each column
+should be as wide as its widest element. This member is actually a member of
+<strong>FBB::Table</strong>'s baseclass <strong>FBB::TableSpec</strong>.
+    </ul>
+<p>
+<h2>MANPULATORS</h2>
+    <ul>
+    <li> <strong>FBB::equalWidth(FBB::Table&lt;Iterator&gt; &amp;table)</strong>:<br>
+        This manipulator may be used to insert a table into a <em>std::ostream</em>
+object, enforcing equal column widths. To use this manipulator, the header
+file  <em>&lt;bobcat/equalwidth&gt;</em> must be inserted.
+    <li> <strong>FBB::columnWidth(FBB::Table&lt;Iterator&gt; &amp;table)</strong>:<br>
+        This manipulator may be used to insert a table into a <em>std::ostream</em>
+object, enforcing column widths which are as
+wide as their widest elements. To use this manipulator, the header
+file  <em>&lt;bobcat/columnwidth&gt;</em> must be inserted.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    To do
+<p>
+<h2>FILES</h2>
+    <em>bobcat/table</em> - defines the class interface;<br>
+    <em>bobcat/tablespec</em> - defines <strong>table</strong>'s baseclass interface;<br>
+    <em>bobcat/equalwidth</em> - defines the <strong>equalWidth</strong> manipulator;<br>
+    <em>bobcat/columnwidth</em> - defines the <strong>columnWidth</strong> manipulator;<br>
+    <em>bobcat/tablesupport</em> - defines the <strong>tableSupport</strong> class interface.
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>columnwidth</strong>(3bobcat), <strong>equalwidth</strong>(3bobcat),
+    <strong>tablespec</strong>(3bobcat), <strong>tablesupport</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

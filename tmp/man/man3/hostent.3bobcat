@@ -1,0 +1,182 @@
+.TH "FBB::Hostent" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "struct hostent wrapper"
+
+.PP 
+.SH "NAME"
+FBB::Hostent \- Wrapper around a \fBstruct hostent\fP
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/hostent>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+\fB@CLASS\fP objects are wrappers around \fBhostent\fP structs which may be
+used by other objects\&. A \fBstruct hostent\fP is defined as follows:
+.nf 
+
+    struct hostent 
+    {
+        char    *h_name;        // official name of host 
+        char    **h_aliases;    // alias list 
+        int     h_addrtype;     // host address type (always AF_INET)
+        int     h_length;       // length of address 
+        char    **h_addr_list;  // list of addresses 
+    }
+        
+.fi 
+The \fIaddress\fP fields are binary values of the addresses, each address
+requiring \fIh_length\fP bytes, the last address being equal to 0\&. The
+\fB@CLASS\fP objects offer a \fBC++\fP-like interface to this struct\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBHostent()\fP:
+.br 
+The default constructor is available\&.
+.IP o 
+\fBHostent(hostent const *hostentPtr)\fP:
+.br 
+This constructor initializes an \fB@CLASS\fP object from an existing
+\fBhostent\fP struct\&. Functions like \fBgethostbyname\fP(3) and
+\fBgethostbyaddress\fP(3) return pointers to \fBhostent\fP structs\&.
+.IP o 
+\fBHostent(Hostent const &other) throw()\fP:
+.br 
+The copy constructor is available\&.
+
+.PP 
+.SH "ACCESSOR MEMBER FUNCTIONS"
+All members are accessors\&. No members are provided that will modify an
+\fBFBB::Hostent\fP object\&'s data\&.
+.IP o 
+\fBunsigned addressLength() const\fP:
+.br 
+This member returns the length of the binary addresses in bytes\&.
+.IP o 
+\fBunsigned addressType() const\fP:
+.br 
+This member returns the type of the address\&. Currently this is always
+\fBAF_INET\fP\&.
+.IP o 
+\fBchar const *alias(unsigned index) const\fP:
+.br 
+This member returns alias `\fIindex\fP\&' of the host\&. The first alias has
+\fIindex 0\fP\&. If alias `\fIindex\fP\&' does not exist, 0 is returned\&.
+.IP o 
+\fBchar const * const *beginAlias() const\fP:
+.br 
+This member returns an iterator to the first alias\&. The hostname
+itself is not included in the list of aliases\&.
+.IP o 
+\fBchar const *binaryAddress(unsigned index) const\fP:
+.br 
+This member returns the binary address `\fIindex\fP\&' of the host\&.  The
+first address has \fIindex 0\fP\&. If address `\fIindex\fP\&' does not exist, 0 is
+returned\&. The pointer to the binary address points to a series of
+\fBaddressLength()\fP bytes\&. Note that the returned address is in \fInetwork
+byte order\fP\&. It can be converted to host byte order by the functions described
+in \fBbyteorder\fP(3)\&.
+.IP o 
+\fBstd::string dottedDecimalAddress(unsigned index) const\fP:
+.br 
+This member returns address `\fIindex\fP\&' as a dotted decimal address in
+a string\&. The first address has \fIindex 0\fP\&. If address `\fIindex\fP\&' does not
+exist, an empty string is returned\&.
+.IP o 
+\fBchar const * const *endAlias() const\fP:
+.br 
+This member returns an iterator pointing beyond the last alias\&.
+.IP o 
+\fBchar const *hostname() const\fP:
+.br 
+This member returns the standard (first) name of the host\&.
+.IP o 
+\fBunsigned nAddresses() const\fP:
+.br 
+This member returns the number of addresses that are available\&. When
+requesting a particular address, the requested index should be less than
+the value returned by this member\&.
+.IP o 
+\fBunsigned nAliases() const\fP:
+.br 
+This member returns the number of aliases that are available\&. When
+requesting a particular alias, the requested index should be less than the
+value returned by this member\&.
+
+.PP 
+.SH "EXAMPLE"
+.nf 
+
+    #include <iostream>
+    #include <algorithm>
+    #include <iterator>
+    #include <bobcat/hostent>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main(int argc, char **argv)
+    {
+        Hostent he(gethostbyname("localhost"));
+
+        cout << "The local hostname = " << he\&.hostname() << endl;
+
+        cout << "All aliases: " << endl;
+        copy(he\&.beginAlias(), he\&.endAlias(), 
+                    ostream_iterator<char const *>(cout, "\en"));
+
+        cout << "Addresses:\en";
+        for (unsigned idx = 0; idx < he\&.nAddresses(); idx++)
+            cout << he\&.dottedDecimalAddress(idx) << endl;
+
+        return 0;
+    }
+        
+.fi 
+
+.PP 
+.SH "FILES"
+\fIbobcat/hostent\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

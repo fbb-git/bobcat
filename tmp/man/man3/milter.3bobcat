@@ -1,0 +1,680 @@
+.TH "FBB::Milter" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Milter interface"
+
+.PP 
+.SH "NAME"
+FBB::Milter \- Interface to the sendmail mail filter facilities
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/milter>\fP
+.br 
+Linking option: \fI-lmilter -lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+
+.PP 
+\fBMilter\fP defines an abtract base class interfacing to the sendmail mail
+filter (milter) facilities\&. It defines a \fBC++\fP interface, based on the
+assumption that a single mail filter program does not implement multiple mail
+filters\&. The traditional sendmail \fBC\fP-based Milter API uses a (\fISMFICTX\fP)
+pointer representing a mail connection, and a pointer to connection-specific
+`private\&' data, requiring the Milter constructor to perform quite a few
+administrative tasks\&. While acceptable in a \fBC\fP environment these
+administratve tasks distract from the main task: the Milter\&'s mail filtering
+functionality\&. The \fBFBB::Milter\fP class hides these administrative tasks from
+the programmer, who is then able to concentrate on filtering mail\&. The main
+benefits of \fBMilter\fP are therefore
+.IP o 
+Basic administration is performed by the \fBMilter\fP class
+.IP o 
+The class\&' interface is more \fBC++\fP like than the raw \fBC\fP
+interface offered by the milter API\&.
+.IP o 
+Administration, allocation and communicating of connection specific
+data is no longer required
+.IP o 
+It is not normally necessary to use connection-specific data, like a
+pointer identifying the connection, anymore when implementing the Milter\&.
+.IP o 
+\fBMilter\fP uses current-day design patterns enforcing principles of
+reuable software, thus simplifying the construction of the actual Milter\&.
+To activate a milter from the \fIsendmail\&.mc\fP configuration file, use,
+e\&.g\&., \fIINPUT_MAIL_FILTER(`name\&', `S=socket\&')\fP, where \fIname\fP is the
+milter\&'s name, and \fIsocket\fP is the name of the socket\&. See also the
+\fIsetConnection()\fP member below\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "ENUMERATIONS"
+
+.PP 
+The class defines four enumerations\&. One enumeration is used to indicate
+the callback-functions that need to be called, the second one renames the
+flags that can be passed to sendmail to indicate which actions the milter is
+allowed to perform\&. The third one defines status values that may be used to
+inform sendmail how to further process a message\&. The fourth one defines
+return values\&. The enumerations are:
+.PP 
+\fBenum CallBack\fP
+.br 
+This enumeration holds the following values:
+.IP o 
+\fBCONNECT\fP:
+.br 
+Indicates that the milter defines (overrides) the
+connection-functionality\&. This is the first callback function that can be
+called by sendmail\&.
+.IP o 
+\fBHELO\fP:
+.br 
+Indicates that the milter defines (overrides) the
+helo-functionality\&. This indicates that the \fIhelo()\fP function should be
+called by sendmail, providing the milter with information about the connecting
+client\&. 
+.IP o 
+\fBSENDER\fP:
+.br 
+Indicates that the milter defines (overrides) the
+sender-functionality\&. This indicates that the \fIsender()\fP function should be
+called by sendmail, providing the milter with the sender\&'s envelope
+information\&. 
+.IP o 
+\fBRECIPIENT\fP:
+.br 
+Indicates that the milter defines (overrides) the
+recipient-functionality\&. This indicates that the \fIrecipient()\fP function
+should be called by sendmail, providing the milter with the recipient\&'s
+envelope information\&.
+.IP o 
+\fBHEADER\fP:
+.br 
+Indicates that the milter defines (overrides) the
+header-functionality\&. This indicates that the \fIheader()\fP function
+should be called by sendmail for each mail header that is used in the current
+mail message\&.
+.IP o 
+\fBEOH\fP:
+.br 
+Indicates that the milter defines (overrides) the
+end-of-header-functionality\&. This indicates that the \fIeoh()\fP function
+should be called by sendmail once all header lines have been processed\&.
+.IP o 
+\fBBODY\fP:
+.br 
+Indicates that the milter defines (overrides) the
+body-functionality\&. This indicates that the \fIbody()\fP function
+should be called by sendmail, offering the mail-body to the milter\&.
+.IP o 
+\fBEOM\fP:
+.br 
+Indicates that the milter defines (overrides) the
+end-of-message-functionality\&. This indicates that the \fIeom()\fP function
+should be called by sendmail, once all elements of the e-mail message have
+been processed\&.
+.IP o 
+\fBABORT\fP:
+.br 
+Indicates that the milter defines (overrides) the
+abort-functionality\&. The \fIabort()\fP function may be called by sendmail before
+\fBeom()\fP is called\&. It should reclaim all resources used by the message, but
+not delete any memory allocated by the milter, as this is \fBclose()\fP\&'s job\&.
+.IP o 
+\fBCLOSE\fP:
+.br 
+Indicates that the milter defines (overrides) the
+close-functionality\&. The \fIclose()\fP function should delete all (connection
+specific) memory allocated by the milter\&. It may be called `out-of-order\&',
+i\&.e\&. even before \fBconnect()\fP is called and developers should anticipate this
+possibility when crafting their \fBclose()\fP code\&. In particular, it is
+incorrect to assume the private context pointer will be something other than
+0 in this callback\&.
+.IP o 
+\fBUNKNOWN\fP:
+.br 
+Currently not used\&. Reserved for versions exceeding version 2 of the
+sendmail milter API
+.IP o 
+\fBDATA\fP:
+.br 
+Currently not used\&. Reserved for versions exceeding version 3 of the
+sendmail milter API
+.IP o 
+\fBALL_CALLBACKS\fP:
+.br 
+Shortcut to indicate all callback facilities\&. The \fBCallBack\fP values
+are bit-flags\&. The \fBbit_or\fP operator may be used to combine them, and the
+\fBbit_not\fP operator may be used to remove a flag from \fBALL_CALLBACKS\fP
+(e\&.g\&., \fBALL_CALLBACKS && ~ABORT\fP)\&.
+
+.PP 
+\fBenum Flags\fP
+.br 
+This enumeration holds the following values:
+.IP o 
+\fBNO_FLAGS\fP:
+.br 
+No flags are defined\&.
+.IP o 
+\fBADD_HEADERS\fP:
+.br 
+This flag indicates that the milter is allowed to add headers to the
+current e-mail message\&.
+.IP o 
+\fBADD_RECIPIENTS\fP:
+.br 
+This flag indicates that the milter is allowed to add recipients to the
+current e-mail message\&.
+.IP o 
+\fBCHANGE_BODY\fP:
+.br 
+This flag indicates that the milter is allowed to modify the message\&'s
+body contents\&.
+.IP o 
+\fBCHANGE_HEADERS\fP:
+.br 
+This flag indicates that the milter is allowed to change headers of
+the current e-mail message\&.
+.IP o 
+\fBDELETE_RECIPIENTS\fP:
+.br 
+This flag indicates that the milter is allowed to remove recipients
+from the current e-mail message\&.
+.IP o 
+\fBQUARANTINE\fP:
+.br 
+This flag indicates that the milter is allowed to request sendmail to
+quarantine the current e-mail message\&.
+.IP o 
+\fBALL_FLAGS\fP:
+.br 
+Shortcut to indicate all callback facilities\&. The \fBFlags\fP values
+are bit-flags\&. The \fBbit_or\fP operator may be used to combine them, and the
+\fBbit_not\fP operator may be used to remove a flag from \fBALL_FLAGS\fP
+(e\&.g\&., \fBALL_FLAGS && ~QUARANTINE\fP)\&.
+
+.PP 
+\fBStatus\fP
+.br 
+This enumeration simplifies the extended \fISMFIS_\fP values used by the
+\fBC\fP API\&. These values may be used to return  \fIsfsistat\fP values:
+.IP o 
+\fBACCEPT\fP:
+.br 
+This value is equal to \fISMFIS_ACCEPT\fP, indicating that Sendmail
+should accept the message\&. For a connection-oriented callback (see below at
+\fBPROTECTED VIRTUAL MEMBER FUNCTIONS\fP), accept this connection without
+further filter processing, call \fBclose()\fP (see below)\&.  For other callbacks:
+accept this message without further filtering\&.
+.IP o 
+\fBCONTINUE\fP:
+.br 
+This value is equal to \fISMFIS_CONTINUE\fP, indicating that Sendmail
+should continue processing\&. This is the default for all callback functions
+which are not overridden by the class derived from \fBMilter\fP\&.
+.IP o 
+\fBDISCARD\fP:
+.br 
+This value is equal to \fISMFIS_DISCARD\fP, indicating that Sendmail
+should discard the mail message\&. It should not be returned by a
+connection-oriented callback\&. For other callbacks: the message is accepted,
+but silently discarded\&.
+.IP o 
+\fBREJECT\fP:
+.br 
+This value is equal to \fISMFIS_REJECT\fP, indicating that Sendmail
+should reject the mail message\&. For a connection-oriented callback, reject
+this connection; call \fBclose()\fP\&.  For a message-oriented callback (except
+for \fBeom()\fP or \fBabort(), see below\fP), reject this message\&.  For a
+recipient-oriented callback, reject the current recipient (but continue
+processing the current message)\&.
+.IP o 
+\fBTEMPFAIL\fP:
+.br 
+This value is equal to \fISMFIS_TEMPFAIL\fP, indicating that Sendmail
+should return a `temporary unavailable\&' message to the sender of the mail
+message\&. For a message-oriented callback (except \fBsender()\fP, see below),
+fail for this message\&.  For a connection-oriented callback, fail for this
+connection and call \fBclose()\fP\&.  For a recipient-oriented callback, only fail
+for the current recipient and continue message processing\&.
+
+.PP 
+\fBReturn\fP
+.br 
+This enumeration simplifies the extended \fIMI_\fP values used by the
+\fBC\fP API\&. Most return values used by the \fBMilter\fP class, however, are
+\fBbool\fP values\&. The \fBReturn\fP values are:
+.IP o 
+\fBFAILURE\fP:
+.br 
+This value is equal to \fIMI_FAILURE\fP, indicating that a \fBC\fP-api
+function failed to perform its task\&.
+.IP o 
+\fBSUCCESS\fP:
+.br 
+This value is equal to \fIMI_SUCCESS\fP, indicating that a \fBC\fP-api
+function succeeded in performing its task\&.
+
+.PP 
+.SH "CONSTRUCTORS"
+
+.PP 
+The default- and copy constructors are available for derived classes\&. They
+perform no actions\&.
+.PP 
+.SH "PUBLIC STATIC MEMBER FUNCTIONS"
+
+.PP 
+These functions form the heart of the \fBMilter\fP base-class\&. They can be
+called to initialize, start and stop the Milter\&.
+.IP o 
+\fBvoid initialize(std::string const &name, 
+Milter &milter,
+callback_set callbacks = CONNECT, 
+flag_set flags = NO_FLAGS)\fP:
+.br 
+This function initializes the Milter\&'s administration\&. It expects the
+name of the mailfilter as its first argument\&. Its second argument is a
+reference to a \fIMilter\fP object\&. Since \fBMilter\fP is an abstract base class
+the actual object is always an object of a class derived from \fBMilter\fP\&.  Its
+third argument specifies the callbacks to call for this milter\&. By default the
+\fBconnect()\fP callback will be called\&. Note that the \fBclose()\fP callback is
+not called by default\&. This is ok, since the \fBMilter\fP object doesn\&'t have to
+cleanup `private\&' data, as is normal with the \fBC\fP API\&. The last argument
+defines flags, specifying the Milter\&'s capabilities\&.
+.IP o 
+\fBstd::string const &name()\fP:
+.br 
+This function returns the milter\&'s name\&. 
+.IP o 
+\fBbool start()\fP:
+.br 
+This member function calls \fIsmfi_main()\fP, controlling the milter\&'s
+event loop\&. It returns \fItrue\fP if the event-loop is successfully terminated\&. 
+.IP o 
+\fBvoid stop()\fP:
+.br 
+This member function terminates the milter\&'s event loop, after
+finishing all threads\&. Following this call \fIstart()\fP may be called again to
+continue the milter\&.
+
+.PP 
+.SH "PROTECTED VIRTUAL MEMBER FUNCTIONS"
+
+.PP 
+The remaining functionality of the class \fIMilter\fP is useful only for
+Milter-implementations in classes derived from \fBMilter\fP\&. The following
+members can be overridden by derived classes\&. Note that \fBclone()\fP \fImust\fP
+be overridden\&. Except for \fBclone()\fP, all the members in this sections are
+\fIcallback\fP functions\&. I\&.e\&., the MTA will call them to process parts of the
+mail message\&. Recipient-, message-, and connection-oriented callbacks are
+distinguished\&.  
+.PP 
+The recipient-oriented callback (\fBrecipient()\fP, see below) may affect
+the processing of a single message to a single recipient\&. Connection-oriented
+callbacks (\fBconnect(), helo()\fP and \fBclose()\fP affect the processing of the
+entire connection (during which multiple messages may be delivered to multiple
+sets of recipients)\&. The remaining callbacks are message-oriented, affecting 
+the processing of a single message to all its recipients\&.
+.PP 
+.IP o 
+\fBvirtual sfsistat abort()\fP:
+.br 
+This message-oriented member may be called at any time during message
+processing (i\&.e\&. between some message-oriented routine and
+\fBeom()\fP)\&. \fBabort()\fP reclaim any resources allocated on a per-message basis
+(which are \fInot\fP the connection specific data, which should be handled by
+the derived class\&' destructor), and must be tolerant of being called between
+any two message-oriented callbacks\&. \fBabort()\fP is only called if the message
+is aborted outside the filter\&'s control and the filter has not completed its
+message-oriented processing\&. For example, if a filter has already returned
+\fIACCEPT, REJECT\fP, or \fIDISCARD\fP from a message-oriented routine,
+\fBabort()\fP will not be called even if the message is later aborted outside
+its control\&.
+.IP o 
+\fBvirtual sfsistat body(unsigned char *text, size_t length)\fP:
+.br 
+This message-oriented member is called zero or more times between
+\fBeoh()\fP and \fBeom()\fP\&.  \fItext\fP points to a sequence of bytes\&. It is not
+necessarily a 0-terminated\&. Moreover, the sequence may contain 0-characters\&.
+Since message bodies can be very large, defining \fBbody()\fP can significantly
+impact filter performance\&.  End-of-lines are represented as received from SMTP
+(normally CR/LF)\&.  Later filters will see body changes made by earlier ones,
+and message bodies may be sent in multiple chunks, with one call to \fBbody()\fP
+per chunk\&.
+.IP 
+.IP o 
+\fBvirtual Milter *clone() const = 0\fP:
+.br 
+This pure virtual function must be implemented by derived classes to
+return a newly allocated copy of the derived object passed to the
+\fBinitialize()\fP static member\&. It is used by the standard `virtual
+constructor\&' design pattern\&. The destruction of the allocated object is the
+responsibility of \fBclone()\fP\&'s caller\&.
+.IP 
+.IP o 
+\fBvirtual sfsistat close()\fP:
+.br 
+This connection-oriented member is always called once at the end of
+each connection\&.  It may be called "out-of-order", i\&.e\&. before even the
+\fBconnect()\fP is called\&. After a connection is established by the MTA to the
+filter, if the MTA decides this connection\&'s traffic will be discarded
+(e\&.g\&. via an access_db result), no data will be passed to the filter from the
+MTA until the client closes down\&. At that time, \fBclose()\fP is called\&. It can
+therefore be the only callback ever used for a given connection, and
+developers should anticipate this possibility when crafting their \fBclose()\fP
+code\&. The member \fBclose()\fP is called on close even if the previous mail
+transaction was aborted\&.
+.IP 
+.IP o 
+\fBvirtual sfsistat connect(char *hostname, _SOCK_ADDR *hostaddr)\fP:
+.br 
+This connection-oriented member may be called once, at the start of
+each SMTP connection\&. The parameter \fIhostname\fP is he host name of the
+message sender, as determined by a reverse lookup on the host address\&. If the
+reverse lookup fails, hostname will contain the message sender\&'s IP address
+enclosed in square brackets (e\&.g\&. \fI[a\&.b\&.c\&.d]\fP)\&. The parameter \fIhostaddr\fP
+is the host address, as determined by a \fBgetpeername\fP(2) call on the SMTP
+socket\&. It is 0 if the type is not supported in the current version or if the
+SMTP connection is made via stdin\&.
+.IP 
+.IP o 
+\fBvirtual sfsistat data()\fP:
+.br 
+Not yet supported\&. Will be available with libmilter versions beyond 3\&.
+.IP 
+.IP o 
+\fBvirtual sfsistat eoh()\fP:
+.br 
+This message-oriented member is called once after all headers have
+been processed\&.
+.IP 
+.IP o 
+\fBvirtual sfsistat eom()\fP:
+.br 
+This message-oriented member is called once after all calls to
+\fBbody()\fP for a given message have been completed\&. \fBNote\fP that only in this
+function modifications to the message headers, body, and envelope can be made
+(see the \fBadd-, change-\fP and \fBdelete-\fP members listed below)\&.
+.IP o 
+\fBvirtual sfsistat header(char *headerf, char *headerv)\fP:
+.br 
+This message-oriented member is called zero or more times between
+\fBrecipient()\fP and \fBeoh()\fP, once per message header\&. Details about header
+information is given in RFC 882\&.
+.IP 
+.IP o 
+\fBvirtual sfsistat helo(char *helohost)\fP:
+.br 
+This connection-oriented member is called whenever the client sends a
+HELO/EHLO command\&. It may therefore be called between zero and three
+times\&. The \fIhelohost\fP parameter should be the domain name of the sending
+host (but is, in practice, anything the sending host wants to send)\&.
+.IP 
+.IP o 
+\fBvirtual sfsistat recipient(char **argv)\fP:
+.br 
+This recipient-oriented member is called once per recipient, hence one
+or more times per message, immediately after \fBsender\fP\&. The parameter
+\fIargv\fP is a 0-terminated array of pointers to SMTP command arguments;
+argv[0] is guaranteed to be the recipient address\&. Later arguments are the
+ESMTP arguments\&. TEMPFAIL may be returned indicate that sendmail should return
+a temporary failure for this particular recipient; further recipients may
+still be sent, \fBabort()\fP is not called\&.  REJECT will reject this particular
+recipient; further recipients may still be sent, \fBabort()\fP is not called\&.
+DISCARD will accept (but discard) the message, \fBabort()\fP will be called\&.
+ACCEPT will accept recipient, \fBabort()\fP will not be called\&. More details on
+ESTMP responses, are described in RFC 1869\&.
+.IP 
+.IP o 
+\fBvirtual sfsistat sender(char **argv)\fP:
+.br 
+This message-oriented member is called once at the beginning of each
+message, before \fBrecipient()\fP\&.  TEMPFAIL may be returned indicate that
+sendmail should return a temporary failure for this particular message,
+\fBabort()\fP is not called\&.  REJECT will reject this message, \fBabort()\fP is
+not called\&.  DISCARD will accept (but discard) the message, \fBabort()\fP will
+be called\&.  ACCEPT will accept recipient, \fBabort()\fP will not be called\&. More
+details on ESTMP responses, are described in RFC 1869\&.
+.IP o 
+\fBvirtual sfsistat unknown(char *ptr)\fP:
+.br 
+Not yet supported\&. Will be available with libmilter versions beyond 2\&.
+
+.PP 
+.SH "PROTECTED MEMBER FUNCTIONS"
+
+.PP 
+The following members are non-virtual\&. They can be called by members of
+classes derived from \fBMilter\fP:
+.IP o 
+\fBbool addHeader(std::string const &hdrName, 
+std::string const &hdrValue)\fP:
+.br 
+This member may only be called from \fBeom()\fP, and the flag
+\fBADD_HEADERS\fP must have been specified or it will fail\&.  The \fIhdrName\fP and
+\fIhdrValue\fP must be non-empty strings\&. Each line of the header must be under
+2048 characters and should be under 998 characters\&. If longer headers are
+needed, make them multi-line\&. To make a multi-line header, insert a line feed
+(\fI\en\fP) followed by at least one whitespace character such as a space or tab
+(\fI\et\fP)\&. The line feed should \fInot\fP be preceded by a carriage return\&. It is
+the filter writer\&'s responsibility to ensure that no standards are violated\&.
+.IP o 
+\fBbool addRecipient(std::string const &rcptName)\fP:
+.br 
+This member may only be called from \fBeom()\fP, and the flag
+\fBADD_RECIPIENTS\fP must have been specified or it will fail\&.
+.IP o 
+\fBbool changeHeader(std::string const &hdrName, 
+unsigned headerNr, std::string const &hdrValue)\fP:
+.br 
+This member may only be called from \fBeom()\fP, and the flag
+\fBCHANGE_HEADERS\fP must have been specified or it will fail\&. See
+\fBaddHeader()\fP for the header-requirements\&. The \fIheaderNr\fP parameter is a
+1-based header index value\&. A \fIheaderNr\fP value of 1 will modify the first
+occurrence of a header named \fIhdrValue\fP\&. If \fIheaderNr\fP is greater than the
+number of times \fIhdrName\fP appears, a new \fIhdrName\fP-header will be
+added\&. If \fIhdrValue\fP is empty, the header is deleted\&.
+.IP o 
+\fBbool deleteRecipient(std::string const &rcptName)\fP:
+.br 
+This member may only be called from \fBeom()\fP, and the flag
+\fBDELETE_RECIPIENTS\fP must have been specified or it will fail\&.
+This member removes the named recipient from the current message\&'s
+envelope\&. 
+.IP o 
+\fBSMFICTX *id() const\fP:
+.br 
+This member may be called by the Milter object to obtain a pointer
+identifying its sendmail-connection\&. Normally it should not be necessary to
+call this member\&.
+.IP o 
+\fBbool insertHeader(unsigned hdrIdx, std::string const &hdrName, 
+std::string const &hdrValue)\fP:
+.br 
+This member may only be called from \fBeom()\fP, and the flag
+\fBADD_HEADERS\fP must have been specified or it will fail\&. See
+\fBaddHeader()\fP for the header-requirements\&. The \fIheaderNr\fP parameter is a
+header index value\&. A \fIheaderNr\fP value of 0 will insert this header as the
+first of the \fIhdrName\fP headers\&. If \fIheaderNr\fP is greater than the
+number of times \fIhdrName\fP appears, a new \fIhdrName\fP-header will be
+added\&. 
+.IP o 
+\fBbool openSocket(bool removeIfTrue = true)\fP:
+.br 
+This member should be called before \fBstart()\fP is called\&.
+This member attempts to create the socket specified by
+\fBsetConnection()\fP (see below)\&. This allows the calling application to ensure
+that the socket can be created, possibly changing its protection (access
+rights) before the milter starts its work\&.  If this member is not called, it
+will be called implicitly when \fBrun()\fP is started\&. It returns \fItrue\fP if
+the socket could be created\&.
+.IP o 
+\fBbool quarantine(std::string const &reason)\fP:
+.br 
+This member may only be called from \fBeom()\fP and causes the MTA to
+quarantines the message using the given reason\&.
+.IP o 
+\fBbool replaceBody(std::string const &body)\fP:
+.br 
+This member may only be called from \fBeom()\fP, and the flag
+\fBCHANGE_BODY\fP must have been specified or it will fail\&. It may be called
+multiple times in which case the various body contents are concatenated in the
+final message\&. Newlines should be coded as CRLF\&.
+.IP o 
+\fBbool setBacklog(unsigned backlog = 5)\fP:
+.br 
+This member should be called before \fBstart()\fP is called\&.
+Sets the incoming socket backlog used by \fBlisten\fP(2)\&.  If
+\fBsetBacklog()\fP is not called, the operating system default is used\&. The
+function returns \fIfalse\fP if the backlog could not be set as requested\&.  It
+is the responsibility of the programmer not to call this function with a 0
+argument\&.
+.IP o 
+\fBbool setConnection(std::string const &name)\fP:
+.br 
+This member should be called before \fBstart()\fP is called\&.
+Sets the socket through which the filter communicates with sendmail\&. 
+The socket may be specified using one of the following variants:
+.br 
+\fI{unix|local}:/path/to/file\fP - A named pipe;
+.br 
+\fInet:port@{hostname|ip-address}\fP - An IPV4 socket;
+.br 
+\fIinet6:port@{hostname|ip-address}\fP - An IPV6 socket\&.
+.br 
+
+.IP 
+If possible, filters should not run as root when communicating over
+unix/local domain sockets\&.  
+.IP 
+Unix/local sockets should have their permissions set to 0600 (read/write
+permission only for the socket\&'s owner) or 0660 (read/write permission for the
+socket\&'s owner and group) which is useful if the sendmail RunAsUser option is
+used\&. The permissions for a unix/local domain socket are determined as usual
+by umask, which should be set to 007 or 077\&.
+.IP 
+Possible failure of this function cannot be determined from its return
+value\&. Rather, \fIrun()\fP will fail\&.
+.IP o 
+\fBsetReply(std::string const &rcode, std::string const &xcode = "",
+std::string const &msg = "")\fP:
+.br 
+This member sets the default SMTP error reply code\&.  It may be called
+from any callback member, except \fBconnect()\fP\&. The parameter \fIrcode\fP should
+be a he three-digit (RFC 821/2821) SMTP reply code and it must be a valid 4XX
+or 5XX reply code\&. The parameter \fIxcode\fP, when specified, must be a extended
+(RFC 1893/2034) reply code\&. The parameter \fImsg\fP may be an additional textual
+message\&. The \fBMilter\fP class has no member comparable to the libmilter API
+function \fIsmfi_setmlreply()\fP\&.  the \fBMilter\fP class\&.
+.IP o 
+\fBvoid setTimeout(unsigned seconds = 7210)\fP:
+.br 
+This member should be called before \fBstart()\fP is called\&.
+Sets the number of seconds libmilter will wait for an MTA connection
+before timing out a socket\&. If \fBsetTimeout()\fP is not called, a default
+timeout of 7210 seconds is used\&. It is the responsibility of the programmer
+not to call this function with an argument equal to  0\&.
+.IP o 
+\fBchar const *symval(std::string const &name) const\fP:
+.br 
+This member returns the value of a specific sendmail macro\&. The
+\fIname\fP parameter should be set to he name of a sendmail macro \&. Single letter
+macros can optionally be enclosed in braces (\fI{\fP and \fI}\fP), longer macro
+names must be enclosed in braces, just as in a sendmail\&.cf file\&.0 is returned
+if the macro is not defined\&.  By default, the following macros are valid in
+the given contexts:
+.br 
+for \fBconnect()\fP: \fIdaemon_name, if_name, if_addr, j, _\fP;
+.br 
+for \fBhelo()\fP: \fItls_version, cipher, cipher_bits, cert_subject,
+cert_issuer\fP;
+.br 
+for \fBsender()\fP: \fIi, auth_type, auth_authen, auth_ssf, auth_author,
+mail_mailer, mail_host, mail_addr\fP;
+.br 
+for \fBrecipient()\fP: \fIrcpt_mailer, rcpt_host, rcpt_addr\fP\&.
+.br 
+All macros stay in effect from the point they are received until the end
+of the connection for the first two sets, the end of the message for the third
+(\fBsender()\fP), and just for each recipient for the final set
+(\fBrecipient()\fP)\&.
+.br 
+The following macros may be specified in the sendmail\&.mc configuration
+file:
+.br 
+\fIdefine(`confMILTER_MACROS_CONNECT\&', `m1\&', \&.\&.\&.)\fP,
+\fIdefine(`confMILTER_MACROS_HELO\&', \&.\&.\&.)\fP,
+\fIdefine(`confMILTER_MACROS_ENVFROM\&', \&.\&.\&.)\fP,
+\fIdefine(`confMILTER_MACROS_ENVRCPT\&', \&.\&.\&.)\fP, where \fI`m1\&', \&.\&.\&.\fP represents a
+comma separated list of returnable macros\&.  Single letter macros can
+optionally be enclosed in braces (\fI{\fP and \fI}\fP), longer macro names must be
+enclosed in braces\&.
+.IP o 
+\fBbool wait()\fP:
+.br 
+This member may only be called from \fBeom()\fP and tells the MTA that
+the filter is still working on a message, causing the MTA to re-start its
+timeouts\&. 
+
+.PP 
+.SH "EXAMPLE"
+To do
+.PP 
+.SH "FILES"
+\fIbobcat/milter\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBgetpeername\fP(2), \fBlisten\fP(2), 
+.br 
+\fIhttp://www\&.milter\&.org/milter_api/\fP
+.br 
+\fIhttp://sendmail\&.org/m4/readme\&.html\fP
+.br 
+\fIhttp://rfc\&.net/rfc821\&.html\fP
+.br 
+\fIhttp://rfc\&.net/rfc822\&.html\fP
+.br 
+\fIhttp://rfc\&.net/rfc1869\&.html\fP
+.br 
+\fIhttp://rfc\&.net/rfc1893\&.html\fP
+.br 
+\fIhttp://rfc\&.net/rfc2034\&.html\fP
+.br 
+\fIhttp://rfc\&.net/rfc2821\&.html\fP
+.PP 
+.SH "BUGS"
+Note that \fI-lmilter\fP must be specified before \fI-lbobcat\fP\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

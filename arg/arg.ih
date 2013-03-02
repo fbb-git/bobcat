@@ -1,0 +1,36 @@
+#include "arg"
+#include <iostream>
+#include <functional>
+
+#include <bobcat/string>
+
+namespace FBB
+{
+    class OptStructArray
+    {
+        typedef struct option  OptStruct;
+
+        unsigned    d_n;
+        OptStruct *d_opt;
+        
+        public:
+            OptStructArray(unsigned n)
+            :
+                d_n(n),
+                d_opt(new OptStruct[n])
+            {}
+
+            ~OptStructArray()
+            {
+                delete [] d_opt;
+            }
+
+            OptStruct *get()
+            {
+                return d_opt;
+            }
+    };
+}
+
+using namespace FBB;
+using namespace std;

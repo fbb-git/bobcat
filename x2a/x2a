@@ -1,0 +1,40 @@
+#ifndef _INCLUDED_BOBCAT_X2A_
+#define _INCLUDED_BOBCAT_X2A_
+
+#include <sstream>
+#include <string>
+#include <ostream>
+
+namespace FBB
+{
+    class X2a: public std::ostringstream
+    {
+        public:
+            template <typename T>                   // initialize from 
+            X2a(T const &x)                         // (insertable) type
+            {
+                *this << x;
+            }
+
+            X2a(double x, unsigned behind);
+            X2a(double x, unsigned width, unsigned behind);
+
+            operator std::string const() const
+            {
+                return str();
+            }
+        private:
+
+
+    };
+}
+
+namespace std
+{
+    inline ostream &operator<<(ostream &ostr, FBB::X2a const &x2a)
+    {
+        return ostr << x2a.str();
+    }
+}
+
+#endif

@@ -1,0 +1,344 @@
+.TH "FBB::CmdFinder" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Command-function associations"
+
+.PP 
+.SH "NAME"
+FBB::CmdFinder \- Determine (member) function associated with a command
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/cmdfinder>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+
+.PP 
+Objects of the class \fBCmdFinder\fP determine which (member) function to
+call given a command\&. Although associations between commands and (member)
+functions are often defined in a switch, a switch is not the preferred way to
+define these associations because of the fect that the maintainability and
+clarity of switches suffer for even moderately large command sets\&. Moreover,
+the switch is hardly ever self-supporting, since usually 
+some command-processing is required to determine command/\fBcase\fP-value
+associations\&. 
+.PP 
+The alternative (and preferred) approach, which is also taken by
+\fBCmdFinder\fP is to define an array of pointers to (member) functions, and to
+define the associations between commands and member functions as a mapping of
+commands to array indices\&. Plain associations between (textual) commands and
+functions to be called can also easily be defined using a \fBstd::map\fP or
+other hash-type data structure\&. However, the syntactical requirements for such
+a \fBstd::map\fP structure are non-trivial, and besides: user-entered commands
+often require some preprocessing before a command can be used as an index in a
+\fBstd::map\fP\&.
+.PP 
+The class \fBCmdFinder\fP is an attempt to offer a versatile implementation
+of associations between commands and (member) functions\&.  In particular, the
+class offers the following features:
+.IP o 
+Associations between textual commands and (member) functions are
+defined in a simple array of pairs: the first element defining a command, the
+second element containing the address of the function associated with the
+command\&. The function addresses may either be addresses of free or static
+member functions or they may be defined as member function addresses\&.
+.IP o 
+Commands may be used `as-is\&', or the first word in a \fBstd::string\fP
+may be used as the command;
+.IP o 
+Commands may be specified case sensitively or case insensitively;
+.IP o 
+Commands may have to be specified in full, or unique abbreviations of
+the commands may be accepted;
+.IP o 
+Several types are defined by the class \fBCmdFinder\fP, further
+simplifying the deriviation of classes from \fBCmdFinder\fP\&.
+
+.PP 
+The class \fBCmdFinder\fP itself is defined as a template class\&. This
+template class should be used as a base class of a user-defined derived class
+defining the array of command-function associations\&. The class \fBCmdFinder\fP
+itself is a derived class of the class \fBCmdFinderBase\fP, defining some
+template-independent functionality that is used by \fBCmdFinder\fP\&. The
+enumeration and member functions sections below also contain the members that
+are available to classes derived from \fBCmdFinder\fP, but which are actually
+defined in the class \fBCmdFinderBase\fP\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+\fBFBB::CmdFinderBase\fP
+.PP 
+.SH "ENUMERATION"
+The enumeration \fBMode\fP is defined in the class \fBCmdFinderBase\fP\&. It
+contains the following values, which may be combined by the \fBbit_or\fP
+operator to specify the \fBCmdFinder\fP object\&'s required mode of operation:
+.IP o 
+\fBUSE_FIRST\fP:
+.br 
+This value can be specified when the first word (any white-space
+separated series of characters) of a provided textual command should be used
+as the command to find\&. Both the command that is used and any trailing
+information that may be present can be obtained from the \fBCmdFinder\fP
+object\&. By default, the complete contents of the a provided command is used\&.
+.IP o 
+\fBUNIQUE\fP:
+.br 
+This value can be specified when any unique abbreviation of a command
+may be accepted\&. Assuming that the commands \fIhelp\fP and \fIversion\fP are
+defined, then the following (non-exhaustive) series are all accepted as
+specifications of the \fIhelp\fP command if \fBUNIQUE\fP is specified: \fIh, he,
+el, p\fP\&. By default the command must match a command-key as found in the array
+of command-function associations exactly\&.
+.IP o 
+\fBINSENSITIVE\fP:
+.br 
+When this value is specified, commands may be specified disregarding
+letter-casing\&. E\&.g\&., when \fBINSENSITIVE\fP is specified, both \fIHelp\fP and
+\fIHELP\fP are recognized as \fIhelp\fP\&. By default, letter casing is obeyed\&.
+So, by default a full, literal match between provided command and
+predefined command-keys is required\&.
+.PP 
+.SH "TEMPLATE TYPE PARAMETER"
+The template class \fBCmdFinder\fP has one template type parameter, which is
+the prototype of the functions defined in the array of command-function
+associations\&. This type becomes available as the typename
+\fBFunctionPtr\fP (defined by the class \fBCmdFinder\fP in the class that is
+derived from \fBCmdFinder\fP\&.
+.PP 
+.SH "PROTECTED DEFINED TYPES"
+The following (\fBprotected\fP) types are defined by the template class
+\fBCmdFinder\fP: 
+.IP o 
+\fBFunctionPtr\fP:
+.br 
+This type represents a pointer to the functions whose addresses are
+stored in the array of command-function associations\&.
+.IP o 
+\fBEntry\fP:
+.br 
+This type represents the type \fBstd::pair<char const *,
+FunctionPtr>\fP\&. Its \fIfirst\fP field is the name of a command, its \fIsecond\fP
+field is the function address associated with the command name\&.
+
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBCmdFinder<FunctionPtr>(Entry const *begin, Entry const *end,
+unsigned mode = 0)\fP:
+.br 
+This constructor is defined in the \fBprotected\fP section of the
+\fBCmdFinder\fP class\&. Its parameters \fIbegin\fP and \fIend\fP define the half-open
+range of \fBEntry\fP objects, defining the associations between commands and
+functions\&. The parameter \fIbegin\fP should be initialized to the first element
+of an array of \fBEntry\fP objects, the parameter \fIend\fP must point just beyond
+the last element of the array\&. The parameter \fImode\fP may be speified using
+any combination of values of the \fBMode\fP enumeration, using the \fBbit_or\fP
+operator to combine multiple values\&. When a non-supported value is specified
+for \fImode\fP, an \fBFBB::Errno\fP exception is thrown\&.
+.IP o 
+\fBCmdFinder(CmdFinder const &other) throw()\fP:
+.br 
+The standard copy constructor is available\&.
+.IP o 
+\fBNote\fP:
+.br 
+There is no default constructor\&.
+
+.PP 
+.SH "PUBLIC MEMBER FUNCTION"
+.IP o 
+\fBsetMode(unsigned mode)\fP:
+.br 
+This member function (defined in the class \fBCmdFinderBase\fP) may be
+called to redefine the mode of the \fBCmdFinder\fP object\&. The \fImode\fP
+parameter should be initialized subject to the same restrictions as mentioned
+with the \fBCmdFinder\fP\&'s constructor\&.
+
+.PP 
+.SH "PROTECTED MEMBER FUNCTIONS"
+.IP o 
+\fBstd::string const &beyond() const\fP:
+.br 
+This member function returns the text that may have been entered
+beyond the command (if \fBMode\fP value \fBUSE_FIRST\fP was specified)\&. It is
+empty if no text beyond the command was encountered\&. It is initially empty,
+and will be redefined at each call of \fBfindCmd()\fP (see below)\&.
+.IP o 
+\fBstd::string const &cmd() const\fP:
+.br 
+This member returns the original (untransformed) command as
+encountered by the \fBCmdFinder\fP object\&.  It is initially empty, and will be
+redefined at each call of \fBfindCmd()\fP (see below)\&.  object\&.
+.IP o 
+\fBunsigned count() const\fP:
+.br 
+This member function returns the number of commands matching the
+command that is passed to the function \fBfindCmd()\fP (see below)\&. Its return
+value is 0 when \fBfindCmd()\fP hasn\&'t been called yet and is updated at each
+new call of \fBfindCmd()\fP\&.
+.IP o 
+\fBFunctionPtr findCmd(std::string const &cmd)\fP:
+.br 
+Regarding the \fBCmdFinder\fP object\&'s \fBmode\fP setting, this function
+returns the address of the function to call given the provided command\&. By
+default, if no match was found, the address of the function stored in the last
+element of the array of command-function associations is returned (i\&.e,
+element \fIend[-1]\fP)\&.
+
+.PP 
+.SH "PROTECTED DATA MEMBERS"
+The class \fBCmdFinder\fP has access to some protected data members of the
+class \fBCmdFinderBase\fP, which should not be used or modified by classes
+derived from \fBCmdFinder\fP\&.
+.PP 
+.SH "EXAMPLE"
+.nf 
+#include <iostream>
+#include <string>
+
+//#include <bobcat/cmdfinder>
+#include "\&.\&./cmdfinder"
+
+using namespace std;
+using namespace FBB;
+
+// Define a class `Command\&' in which the array s_action defines the
+// command-function associations\&. Command is derived from CmdFinder,
+// specifying the prototype of the member functions to be called
+
+class Command: public CmdFinder<bool (Command::*)() const> 
+{
+    static Entry s_action[];
+
+    bool add() const                       // some member functions
+    {
+        cout << "add called: command was `" << cmd() << "\&'\en";
+        if (beyond()\&.length())
+            cout << "Beyond " << cmd() << " `" << beyond() << "\&'\en"; 
+        return true;
+    }
+    bool error() const
+    {
+        cout << "unrecognized command: `" << cmd() << "\&' called\en" <<
+                count() << " matching alternatives found\en";
+        return true;
+    }
+    bool quit() const
+    {
+        cout << "quit called: quitting this series\en";
+        return false;
+    }
+
+    public:
+        Command();                      // Declare the default constructor
+
+        bool run(std::string const &cmd)    // run a command
+        {
+            return (this->*findCmd(cmd))(); // execute the command matching
+                                            // \&'cmd\&' 
+        }
+};
+
+// Define command-function associations\&. Note that the last is given an empty
+// command-text\&. This is not required, a command text could have been
+// specified for the last command as well\&.
+
+Command::Entry Command::s_action[] =
+{
+    Entry("add",    &Command::add),
+    Entry("quit",   &Command::quit),
+    Entry("",       &Command::error),
+};
+
+// Define the default constructor
+Command::Command()                       // Define the default constructor
+:                               // Note the use of `FunctionPtr\&'
+    CmdFinder<FunctionPtr>(s_action, s_action + 
+                                    sizeof(s_action) / sizeof(Entry))
+{}
+
+void run(Command &cmd, char const *descr, unsigned mode = 0)
+{
+    if (mode)
+        cmd\&.setMode(mode);
+
+    cout << "Enter 5 x a command using " << descr << "\&.\en";
+    for (unsigned idx = 0; idx++ < 5; )
+    {
+        cout << "Enter command " << idx << ": ";
+        string text;
+        getline(cin, text);
+        if (!cmd\&.run(text))     // run a command
+            break;
+    }
+}
+
+int main()
+{
+    Command cmd;                // define a command
+
+                                // enter 5 commands using the default mode
+    run (cmd, "the default mode");
+    run (cmd, "abbreviated commands", Command::UNIQUE);
+    run (cmd, "abbreviated case-insensitive commands", 
+                                   Command::UNIQUE | Command::INSENSITIVE);
+    run (cmd, "abbreviated command lines", 
+                                   Command::USE_FIRST | Command::UNIQUE);
+    run (cmd, "abbreviated case-insensitive command lines", 
+                                   Command::USE_FIRST | Command::UNIQUE |
+                                                        Command::INSENSITIVE);
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+.fi 
+
+.PP 
+.SH "FILES"
+\fIbobcat/cmdfinder\fP - defines the class interface
+.br 
+\fIbobcat/cmdfinderbase\fP - defines the base class of \fBCmdFinder\fP\&.
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBcmdfinderbase\fP(3bobcat), \fBerrno\fP(3bobcat)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

@@ -1,0 +1,20 @@
+#ifndef _INCLUDED_BOBCAT_IFDSTREAM_
+#define _INCLUDED_BOBCAT_IFDSTREAM_
+
+#include <istream>
+#include <bobcat/ifdstreambuf>
+
+namespace FBB
+{    
+    class IFdStream: private IFdStreambuf, public std::istream
+    {
+        public:
+            IFdStream(int fd, unsigned n = 1)
+            :
+                IFdStreambuf(fd, n),
+                std::istream(this)
+            {}
+    };
+}
+
+#endif

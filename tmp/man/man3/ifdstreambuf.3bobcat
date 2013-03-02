@@ -1,0 +1,156 @@
+.TH "FBB::IFdStreambuf" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "File Descriptor Input Stream Buffer"
+
+.PP 
+.SH "NAME"
+FBB::IFdStreambuf \- Input stream buffer initialized by a file descriptor
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/ifdstreambuf>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+\fBFBB::IFdStreambuf\fP objects may be used as a \fBstd::streambuf\fP of
+\fIstd::istream\fP objects to allow extractions from a file descriptor\&.
+.PP 
+File descriptors are not defined within the context of \fBC++\fP,
+but they can be used on operating systems that support the concept\&. Realize
+that using file descriptors introduces operating system dependencies\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+\fBstd::streambuf\fP
+.PP 
+.SH "ENUMERATION"
+The public enumeration \fBMode\fP defined in the class \fBFBB::IFdStreamBuf\fP
+has the following values:
+.IP o 
+\fBCLOSE_FD\fP, indicating that the file descriptor used by the object
+must be closed;
+.IP o 
+\fBKEEP_FD\fP (the default) indicating that the file descriptor used by
+the object must not be closed\&.
+
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBIfdstreambuf()\fP:
+.br 
+This constructor initializes the streambuf, without associating it to
+a file descriptor, and without using buffering\&. The member \fBopen()\fP can be
+used subsequently to associate the object with a file descriptor and
+optionally a buffer size\&. When the object is destroyed or if the mode-less
+overloaded version of the \fBopen\fP member is called, the file descriptor will
+not be closed\&.
+.IP 
+.IP o 
+\fBIfdstreambuf(Mode mode)\fP:
+.br 
+This constructor initializes the streambuf, without associating it to
+a file descriptor, and without using buffering\&. The member \fBopen()\fP can be
+used subsequently to associate the object with a file descriptor and
+optionally a buffer size\&. When the object is destroyed or if the mode-less
+overloaded version of the \fBopen\fP member is called, the \fBMode\fP argument
+determines whether the file descriptor will be closed or will remain open\&.
+.IP 
+.IP o 
+\fBIFdStreambuf(int fd, unsigned n = 1)\fP:
+.br 
+This constructor initializes the streambuf, associating it to file
+descriptor \fIfd\fP, and an optional unget buffer size (by default having size
+1)\&.  When the object is destroyed or if the mode-less overloaded version of
+the \fBopen\fP member is called, the file descriptor will not be closed\&.
+.IP 
+.IP o 
+\fBIFdStreambuf(int fd, Mode mode, unsigned n = 1)\fP:
+.br 
+This constructor initializes the streambuf, associating it to file
+descriptor \fIfd\fP, and an optional unget buffer size (by default having size
+1)\&.   When the object is destroyed or if the mode-less
+overloaded version of the \fBopen\fP member is called, the \fBMode\fP argument
+determines whether the file descriptor will be closed or will remain open\&.
+There is no copy constructor\&.
+.PP 
+.SH "MEMBER FUNCTIONS"
+All members of \fBstd::streambuf\fP are
+available, as \fBFBB::IFdStreambuf\fP inherits from this class\&. Some of the
+\fBstd::streambuf\fP\&'s member are overridden by \fBFBB::IFdStreambuf\fP, see
+below\&. 
+.IP o 
+\fBvoid open(int xfd, unsigned n = 1)\fP:
+.br 
+This member (re)initializes the streambuf, using file
+descriptor \fIfd\fP, and an optional unget buffer size (by default having size
+1)\&. When called repeatedly, the \fBMode\fP specification used whem the object
+was constructed determines whether the file descriptor will be closed or will
+remain open\&.
+.IP o 
+\fBvoid open(int xfd, Mode mode, unsigned n = 1)\fP:
+.br 
+This member (re)initializes the streambuf, using file descriptor
+\fIfd\fP, a file descriptor closing parameter and an optional unget buffer size
+(by default having size 1)\&. Depending on the \fBMode\fP argument the object\&'s
+currently used file descriptor will be closed or will remain open\&.
+.IP o 
+\fBint underflow()\fP:
+.br 
+This member \fIoverrides\fP the \fBstd::streambuf\fP member\&. It is called by
+\fIstd::istream\fP objects using \fBIFdStreambuf\fP\&. It produces the next
+available character\&. It returns \fIEOF\fP if no (more) characters are available\&.
+.IP o 
+\fBstd::streamsize xsgetn(char *dest, std::streamsize n)\fP:
+.br 
+This member \fIoverrides\fP the \fBstd::streambuf\fP member\&. It returns
+the \fIn\fP next available characters, storing them into \fIdest\fP\&. It returns
+the number of characters that were actually read\&.
+Note that there is no overloaded assignment operator available for this
+class\&. 
+.PP 
+.SH "EXAMPLE"
+To do
+.PP 
+.SH "FILES"
+\fIbobcat/ifdstreambuf\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBifdstream\fP(3bobcat)), \fBofdstreambuf\fP(3bobcat), 
+\fBstd::streambuf\fP
+.PP 
+.SH "BUGS"
+Note that by default the provided file descriptors will remain open\&. The
+complementary class \fBofdstreambuf\fP(3bobcat) \fIcloses\fP the file descriptor
+by default\&. This inconsistency was deliberately accepted to keep the classes
+interfaces backward compatible\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

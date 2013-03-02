@@ -1,0 +1,219 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Stat</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Stat</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Stat(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Stat(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz File Characteristics</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Stat - Determines File Characteristics
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/stat&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    <strong>FBB::Stat</strong> is a wrapper around the <strong>stat</strong>(2) system function. In
+particular, it offers features to test directly for file
+characteristics offered by <strong>stat</strong>(2).
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>ENUMARATIONS</h2>
+<p>
+<strong>FBB::Stat::Combine</strong>: <br> 
+        This enumeration has the following values:
+        <ul>
+        <li> <strong>ALL</strong>: require all of the specified <strong>Mode</strong> or 
+                <strong>SpecialMode</strong> values to match;
+        <li> <strong>ANY</strong>: require any match of the specified <strong>Mode</strong> or 
+                <strong>SpecialMode</strong> values (one match suffices);
+        </ul>
+<p>
+<strong>FBB::Stat::Mode</strong>: <br> 
+        This enumeration has the following values:
+        <ul>
+        <li> <strong>UR</strong>: the owner of the file has read permissions
+        <li> <strong>UW</strong>: the owner of the file has write permissions
+        <li> <strong>UX</strong>: the owner of the file has execute permissions
+        <li> <strong>GR</strong>: the group to which the file belongs has read permissions
+        <li> <strong>GW</strong>: the group to which the file belongs has write permissions
+        <li> <strong>GX</strong>: the group to which the file belongs has execute
+                     permissions 
+        <li> <strong>OR</strong>: others have read permissions
+        <li> <strong>OW</strong>: others have write permissions
+        <li> <strong>OX</strong>: others have execute permissions
+        <li> <strong>RWX</strong>: all of the above.
+        </ul>
+<p>
+<strong>FBB::Stat::SpecialMode</strong>: <br> 
+        This enumeration has the following values:
+        <ul>
+        <li> <strong>SUID</strong>: set UID bit is up
+        <li> <strong>SGID</strong>: set GID bit is up
+        <li> <strong>SB</strong>: sticky bit is up
+        </ul>
+<p>
+<strong>FBB::Stat::Type</strong>: <br> 
+        This enumeration has the following values:
+        <ul>
+        <li> <strong>BLOCK_DEVICE</strong>: the object represents a block device
+        <li> <strong>CHARACTER_DEVICE</strong>: the object represents a character device
+        <li> <strong>DIRECTORY</strong>: the object represents a directory
+        <li> <strong>FIFO</strong>: the object represents a named pipe (a queue)
+        <li> <strong>REGULAR_FILE</strong>: the object represents a regular file
+        <li> <strong>SOCKET</strong>: the object represents a socket
+        <li> <strong>SYMBOLIC_LINK</strong>: the object represents a symbolic link
+        </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Stat()</strong>:<br>
+        The default constructor, creating an empty <strong>FBB::Stat</strong> object.
+    <li> <strong>Stat(std::string const &amp;fname)</strong>:<br>
+        Initializes a <strong>FBB::Stat</strong> with a given file name.
+    <li> <strong>Stat(std::string const &amp;fname, std::string const &amp;searchPath)</strong>:<br>
+        Initializes a <strong>FBB::Stat</strong> with a given file name, where the file is
+searched in the <em>searchPath</em> directories, which is a colon-separated string
+of directory names. The filenames are constructed by appending <em>fname</em> to
+each of the elements of <em>searchPath</em> until an existing file is found. This
+file is then used. If <em>fname</em> is an absolute path, <em>searchPath</em> is
+ignored.
+    <li> <strong>Stat(Stat const &amp;other)</strong>:<br>
+        The copy constructor is available.
+    </ul>
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+     All members of <li> <strong>std::ostringstream</strong>:<br> and <li> <strong>  std::exception</strong>:<br> are
+available, as <li> <strong>FBB::Stat</strong>:<br> inherits from these classes.
+    <ul>
+    <li> <strong>unsigned blockSize() const</strong>:<br>
+        Returns the blocksize for filesystem I/O
+    <li> <strong>unsigned device() const</strong>:<br>
+        Returns the device number.
+    <li> <strong>unsigned deviceType() const</strong>:<br>
+        Returns the device type number, but only if the file type is
+<strong>DEVICE</strong>.
+    <li> <strong>unsigned errno() const</strong>:<br>
+        Returns the error number associated with an error, in cases where
+<strong>operator bool()</strong> returns <strong>false</strong>.
+    <li> <strong>unsigned inode() const</strong>:<br>
+        Returns the inode number.
+    <li> <strong>unsigned gid() const</strong>:<br>
+        Returns the group ID of the file's owner.
+    <li> <strong>FBB::DateTime lastAccess() const</strong>:<br>
+        Returns a <strong>FBB::DateTime</strong> object holding information about the
+        file's time of last access.
+    <li> <strong>FBB::DateTime lastChange() const</strong>:<br>
+        Returns a <strong>FBB::DateTime</strong> object holding information about the
+        file's time of last status change.
+    <li> <strong>FBB::DateTime lastModification() const</strong>:<br>
+        Returns a <strong>FBB::DateTime</strong> object holding information about the
+        file's last modification time.
+    <li> <strong>unsigned mode() const</strong>:<br>
+        Returns the file's raw, uninterpreted mode 
+    <li> <strong>bool mode(Mode mode, Combine combine = ALL)</strong>:<br>
+        Returns true if the file has the indicated mode. Multiple modes may be
+set, which can be combined by the logical <strong>bitor</strong> operator. By default, if
+multiple modes are specified, the resulting pattern must exactly represent the
+file's mode for the member function to return <strong>true</strong>. An optional argument
+<em>ANY</em> may be specified if the function should return true if at least one
+specified mode matches the file's actual mode.
+    <li> <strong>std::string const &amp;name() const</strong>:<br>
+        Returns the file's name as specified in the constructor or <strong>set()</strong>
+        member function.
+    <li> <strong>unsigned nBlocks() const</strong>:<br>
+        Returns the file's number of allocated blocks.
+    <li> <strong>unsigned nLinks() const</strong>:<br>
+        Returns the file's number of hard links.
+    <li> <strong>std::string path() const</strong>:<br>
+        Returns the file's full pathname. If the full pathname could not be
+        determined, an empty string is returned.
+    <li> <strong>bool set(std::string const &amp;name)</strong>:<br>
+        Redefine the <strong>@CLASS</strong> object to represent the information about the
+        indicated filename.
+    <li> <strong>bool set(std::string const &amp;name, std::string const &amp;pathlist)</strong>:<br>
+        Redefine the <strong>@CLASS</strong> object to represent the information about the
+        indicated filename, where the file is searched in the <em>pathlist</em>
+        directories, which is a colon-separated string of directory names. The
+        filenames are constructed by appending <em>fname</em> to each of the
+        elements of <em>searchPath</em> until an existing file is found. This file
+        is then used. If <em>fname</em> is an absolute path, <em>searchPath</em> is
+        ignored.
+    <li> <strong>off_t size() const</strong>:<br>
+        Returns the file's size in number of bytes.
+    <li> <strong>bool specialMode(SpecialMode special, Combine combine = ALL)</strong>:<br>
+        Returns true if the file has the indicated special modes.  Multiple
+special modes may be specified, which can be combined by the logical <strong>bitor</strong>
+operator. By default, if multiple modes are specified, the resulting pattern
+must exactly represent the file's mode for the member function to return
+<strong>true</strong>. An optional argument <em>ANY</em> may be specified if the function should
+return true if at least one specified mode matches the file's actual mode.
+    <li> <strong>Stat::stat const &amp;statStruct() const</strong>:<br>
+        Returns a reference to the object's <strong>stat struct</strong>.
+    <li> <strong>unsigned uid() const</strong>:<br>
+        Returns the user ID of the file's owner.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    To do
+<p>
+<h2>FILES</h2>
+    <em>bobcat/stat</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>stat</strong>(3)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

@@ -1,0 +1,164 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::MailHeaders)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (SMTP Mail Headers)
+
+manpagename(FBB::MailHeaders)(Handles SMTP Mail Headers)
+
+manpagesynopsis()
+    bf(#include <bobcat/mailheaders>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+
+    bf(FBB::MailHeaders) objects extract header lines from e-mail. Reading
+stops at (and including) the first blank line, which becomes the last element
+of the bf(FBB::MailHeaders) object, interpreted as a bf(vector). The actual
+e-mail content is therefore left unread on the file containing the e-mail.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    bf(std::vector<std::string>)
+
+manpagesection(ENUMERATIONS)
+    The following enumerations are defined in the class bf(FBB::MailHeaders):
+
+    bf(enum Mode)nl()
+    This enumeration holds two values:
+    itemization(
+    itb(READ)
+        When this value is specified at construction time, e-mail is
+immediately read by the constructor.
+    itb(DONT_READ)
+        When this value is specified at construction time, e-mail is read
+using the bf(read()) member (see below).
+    )
+
+    bf(enum Match)nl()
+    This enumeration holds four values:
+    itemization(
+    itb(FAIL)
+    Not to be used by public members.
+    itb(FULL)
+    Used by the bf(setHeaderIterator) (see below) to indicate that the headers
+must exactly match a specified header name.
+    itb(INITIAL)
+    Used by the bf(setHeaderIterator) (see below) to indicate that the initial
+part of the headers must match the specified header text.
+    itb(PARTIAL)
+    Used by the bf(setHeaderIterator) (see below) to indicate that the 
+headers must contain the specified header text.
+    )
+
+manpagesection(CONSTRUCTOR)
+    itemization(
+    itb(MailHeaders(std::istream &in, Mode mode = READ)) 
+    This constructor defines the file containing the e-mail to be
+processed. The second parameter is by default bf(MailHeaders::READ), causing
+the object to start reading the e-mail immediately. If set to
+bf(MailHeaders::DONT_READ), the e-mail is not read. In that case the member
+tt(read()) can be called to process the e-mail later.
+    )
+    The standard copy constructor is available.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::vector<std::string>) are available, as bf(FBB::MailHeaders)
+inherts from this class.
+
+    itemization(
+    itb(void read()) 
+    Reads the mail-headers from the file passed to the bf(FBB::MailHeaders) object's
+constructor. An bf(FBB::Errno) object is thrown if the mailheaders were
+already read or if the file is incomplete (i.e., the (obligatory) blank line
+wasn't found).
+     itb(void setHeaderIterator(char const *header, Match match = FULL))
+    Sets the header-iterators to the specified tt(header). The parameter
+tt(match) defines the match-type used for recognizing the header. By default
+it is bf(FBB::MailHeaders::FULL), meaning that the text provided in tt(header) must
+match exactly an e-mail header (e.g., tt(From) won't match a tt(From:)
+header). Other matching strategies are bf(FBB::MailHeaders::INITIAL), meaning that
+tt(header) must match the em(initial) text of an e-mail header (e.g., tt(From)
+matches a tt(From:) header); and bf(FBB::MailHeaders::PARTIAL), meaning that tt(header)
+must match the em(initial) text of an e-mail header (e.g., tt(om) matches
+matches a tt(From:) header (but also a tt(From) header)). An bf(FBB::Errno)
+exception is thrown if bf(setHeaderIterator()) is called when no mail headers
+are available.
+    itb(const_iterator beginh() const)
+    Returns the begin-iterator (a bf(FBB::MailHeaders:const_iterator) object)
+corresponding to the header and matching type defined by
+bf(setHeaderIterator()). bf(endh()) is returned if no such header is
+available. Note that the member function ends in tt(h), in order to
+distinguish it from the bf(vector<string>::begin()) member. The
+bf(FBB::MailHeaders:const_iterator) is an iterator to a tt(vector<unsigned>)
+object, containing the indices in the bf(FBB::MailHeaders) vector where the
+particular header information is found. If the header line consists of only
+one line, then the iterator points to a vector holding just one index. Headers
+extending over multiple lines have the indices of these lines stored in the
+returned vector.
+    itb(const_iterator endh() const)
+    Returns the end-iterator (a bf(FBB::MailHeaders:const_iterator) object)
+corresponding to the header and matching type defined by
+bf(setHeaderIterator()). Note that the member function ends in tt(h), in order
+to distinguish it from the bf(vector<string>::end()) member.
+    itb(const_reverse_iterator rbeginh() const)
+    Returns the reversed begin-iterator (a
+bf(FBB::MailHeaders:const_reverse_iterator) object) corresponding to the
+header and matching type defined by bf(setHeaderIterator()). bf(rendh()) is
+returned if no such header is available. Note that the member function ends in
+tt(h), in order to distinguish it from the bf(vector<string>::rbegin())
+member.
+    itb(const_iterator rendh() const) 
+    Returns the end-iterator (a bf(FBB::MailHeaders:const_reverse_iterator)
+object) corresponding to the header and matching type defined by
+bf(setHeaderIterator()). Note that the member function ends in tt(h), in order
+to distinguish it from the bf(vector<string>::rend()) member.
+    )
+
+manpagesection(EXAMPLE)
+    The following example shows the normal use of these manipulators:
+        verb(
+                // create a MailHeader object
+    MailHeaders mh(cin, MailHeaders::DONT_READ);
+
+    try
+    {           // read the headers
+        mh.read();
+    }
+    catch (Errno &err)
+    {
+        cout << err.what() << endl;
+    }
+
+    cout << "There are " << mh.size() << " header lines\n";
+
+                // look for the Received: headers    
+    mh.setHeaderIterator("Received:");
+
+                // iterators returning vectors of line numbers
+    for (MailHeaders::const_iterator it = mh.beginh(); it != mh.endh(); it++)
+    {
+        for 
+        (       // iterators returning line numbers
+            vector<unsigned>::const_iterator nr = it->begin(); 
+                nr != it->end();
+                    nr++
+        )       
+            cout << mh[*nr] << endl;    // print lines of MailHeader object
+
+                // separate each full Received header by +'s
+        cout << "+++++++++++++++++++++++++++++++" << endl;
+    }
+    )
+
+manpagefiles()
+    em(bobcat/mailheaders) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

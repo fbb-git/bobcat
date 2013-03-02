@@ -1,0 +1,72 @@
+#ifndef _INCLUDED_BOBCAT_STRING_
+#define _INCLUDED_BOBCAT_STRING_
+
+#include <string>
+#include <vector>
+
+namespace FBB
+{
+    class String: public std::string
+    {
+        public:
+            enum Type
+            {
+                DQUOTE_UNTERMINATED,    // unterminated d-quoted element
+                SQUOTE_UNTERMINATED,    // unterminated s-quoted element
+                ESCAPED_END,            // word with plain \ at the end
+                SEPARATOR, // separator encountered
+                NORMAL, // normal string-element in the original string
+                DQUOTE, // string-element originally surrounded by " chars
+                SQUOTE, // string-element originally surrounded by ' chars
+            };
+            typedef std::pair<std::string, Type> SplitPair;
+
+            String()
+            {}
+            String(std::string const &str)
+            :
+                std::string(str)
+            {}
+            String(char const *str)
+            :
+                std::string(str)
+            {}
+
+            static char const **argv(std::vector<std::string> const &lines);
+
+            int casecmp(std::string const &other) const
+            {
+                return strcasecmp(c_str(), other.c_str());
+            }
+            String lc() const;
+            unsigned split(std::vector<std::string> *words,
+                            char const *separators = " \t",
+                            bool addEmpty = false) const;
+            unsigned split(std::vector<SplitPair> *words,
+                            char const *separators = " \t",
+                            bool addEmpty = false) const;
+            String trim() const;
+            String uc() const;
+            String unescape() const;
+            String escape(char const *series = "'\"\\") const;
+        private:
+            Type nextField(const_iterator *until, const_iterator from,
+                           std::string const &separators) const;
+            const_iterator separator(const_iterator from, 
+                                     std::string const &separators) const;
+            const_iterator quoted(const_iterator from, int quote) const;
+            Type word(const_iterator *until, const_iterator from, 
+                              std::string const &separators) const;
+
+            static void tolower(char &chr)
+            {
+                chr = ::tolower(chr);
+            }
+            static void toupper(char &chr)
+            {
+                chr = ::toupper(chr);
+            }
+    };
+}
+
+#endif

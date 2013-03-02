@@ -1,0 +1,92 @@
+.TH "FBB::columnWidth" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Object Manipulator"
+
+.PP 
+.SH "NAME"
+FBB::columnWidth \- Manipulator class enforcing column specific Table column widths
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/columnwidth>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+An object of this class may be immediately inserted into an
+\fBstd::ostream\fP to insert a \fBFBB::Table\fP whose columns are as wide as
+necessary to fit their widest elements\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBcolumnWidth(FBB::Table &table)\fP:
+.br 
+The normal use of this constructor is within a insertion
+expression\&. 
+.IP o 
+\fBcolumnWidth(columnWidth const &other) throw()\fP:
+.br 
+The standard copy constructor is available, but is normally not used\&.
+
+.PP 
+.SH "MEMBER FUNCTIONS"
+There are no publicly available memberfunctions\&.
+.PP 
+.SH "OVERLOADED OPERATORS"
+.IP o 
+\fBstd::ostream &::operator<<(std::ostream &str, 
+FBB::columnWidth const &ew)\fP:
+.br 
+Tables may be inserted into \fIstd::ostream\fP objects using this
+overloaded operator, which sets the column width to
+\fBFBB::TableSpec::ColumnWidth\fP prior to inserting the table into the stream\&.
+.IP 
+Note that this operator is not defined in the namespace \fBFBB\fP\&.
+The overloaded assignment operator is available, but is normally not
+used\&. 
+.PP 
+.SH "EXAMPLE"
+See \fBtable\fP(3bobcat)
+.PP 
+.SH "FILES"
+\fIbobcat/columnwidth\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBequalwidth\fP(3bobcat), \fBtable\fP(3bobcat), 
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

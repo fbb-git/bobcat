@@ -1,0 +1,244 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Pattern</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Pattern</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Pattern(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Pattern(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz Pattern matcher</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Pattern - Performs RE pattern matching
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/pattern&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    <strong>FBB::Pattern</strong> objects may be used for Regular Expression (RE) pattern
+matching. The class is a wrapper around the <strong>regcomp</strong>(3) family of
+functions. 
+<p>
+Patterns may use: <br>
+        \b - indicating a word-boundary <br>
+        \d - indicating a digit         <br>
+        \s - indicating a white-space (<em>[:space:]</em>) char  <br>
+        \w - indicating a word (<em>[:alnum:]</em>) char
+<p>
+The corresponding capitals (e.g., <strong>\W</strong>) define the complementary
+character sets. The capital sets cannot be used in character-classes (<em>[
+... ]</em> constructions). 
+<p>
+As the <em>\</em> is treated as a special character it should be doubled in
+patterns that are passed to <em>Pattern</em> objects: When a <em>\s</em> must be
+matched, the pattern should therefore be written as <em>\\s</em>. More in general,
+stand-alone backslashes should be treated as follows:
+        <pre>
+
+    ------------------------------------------------------------
+    Required pattern        Provide Pattern()   Use as argument:
+                            internally with:
+    ------------------------------------------------------------
+    \\                      \\\\                \\\\\\\\    
+    \d                      \d                  \\d
+    ------------------------------------------------------------
+        
+</pre>
+
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>TYPEDEF</h2>
+    <ul>
+    <li> <strong>Pattern::Position</strong>:<br> 
+        A nested type representing the offsets of the first character and
+the offset beyond the last character of the matched text or indexed
+subexpression, defined as <em>std::pair&lt;std::string::size_type,
+std::string::size_type&gt;</em>.
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Pattern()</strong>:<br>
+        The default constructor defines no pattern, but is available as a
+placeholder for, e.g., containers requiring default constructors. A
+<strong>FBB::Pattern</strong> object thus constructed cannot be used to match patterns, but
+can be the <em>lvalue</em> in assignments where another <strong>FBB::Pattern</strong> object is
+the <em>rvalue</em>. However, it can receive a pattern using the member
+<strong>setPattern()</strong> (see below). An <strong>FBB::Errno</strong> object is thrown if the object
+could not be constructed.
+    <li> <strong>Pattern(std::string const &amp;pattern, 
+                            bool caseSensitive = true, 
+                            unsigned nSub = 10,
+                        int options = REG_EXTENDED | REG_NEWLINE)</strong>:<br>
+        This constructor compiles <em>pattern</em>, preparing the <strong>FBB::Pattern</strong>
+object for pattern matches. The second parameter determines whether case
+sensitive matching will be used (the default) or not. Subexpressions are
+defined by parentheses pairs. Each matching pair defines a subexpression,
+where the order-number of their opening parentheses determines the
+subexpression's index. By default at most 10 subexpressions are recognized.
+The <em>options</em> flags may be:
+<p>
+REG_EXTENDED: <br> 
+                   Use POSIX Extended Regular Expression syntax when
+                    interpreting regex.  If not set, POSIX Basic Regular
+                    Expression syntax is used.
+<p>
+REG_NOSUB: <br>
+                    Support for substring addressing of matches is  not
+                    required.   The  nmatch  and  pmatch  parameters to
+                    regexec are ignored if the pattern buffer  supplied
+                    was compiled with this flag set.
+<p>
+REG_NEWLINE: <br>
+                    Match-any-character  operators  don't  match a newline.
+<p>
+A non-matching list ([^...])  not containing a newline
+                    does not match a newline.
+<p>
+Match-beginning-of-line operator (^) matches the empty
+                    string immediately after a newline, regardless of whether
+                    eflags, the execution flags of regexec, contains
+                    REG_NOTBOL.
+<p>
+Match-end-of-line operator ($)  matches  the  empty
+                    string  immediately before a newline, regardless of
+                    whether eflags contains REG_NOTEOL.
+<p>
+An <strong>FBB::Errno</strong> object is thrown if the regular expression could not
+        be compiled.
+<p>
+<li> <strong>Pattern(Pattern const &amp;other)</strong>:<br> 
+        The standard copy constructor is available.
+    </ul>
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+     All members of <strong>std::ostringstream</strong> and <strong>  std::exception</strong> are
+available, as <strong>FBB::Pattern</strong> inherits from these classes.
+    <ul>
+    <li> <strong>std::string before() const</strong>:<br>  
+        Following a successful match, <strong>before()</strong> returns the text before the
+matched text.
+    <li> <strong>std::string beyond() const</strong>:<br>
+        Following a successful match, <strong>beyond()</strong> returns the text beyond the
+matched text.
+    <li> <strong>unsigned end() const</strong>:<br>
+        Returns the number of matched elements (text and
+subexpressions). <strong>end()</strong> is the lowest index value for which <strong>position()</strong>
+returns two <em>std::string::npos</em> values (see the <strong>position()</strong> member
+function, below).
+    <li> <strong>void match(std::string const &amp;text, int options = 0)</strong>:<br>
+       Match a string with a pattern.  If the text could not be matched, an
+<strong>Errno</strong> exception is thrown , using <strong>Pattern::match()</strong> as its prefix-text.
+<p>
+Options may be:
+<p>
+REG_NOTBOL: <br>
+                   The match-beginning-of-line operator always fails to match
+                    (but see the compilation flag REG_NEWLINE above) This flag
+                    may be used when different portions of a string are passed
+                    to regexec and the beginning of the string should not be
+                    interpreted as the beginning of the line.
+<p>
+REG_NOTEOL: <br>
+                    The  match-end-of-line  operator  always  fails  to
+                    match  (but  see  the  compilation flag REG_NEWLINE)
+    <li> <strong>std::string matched() const</strong>:<br>
+        Following a successful match, this function returns the matched text.
+    <li> <strong>Pattern::Position position(unsigned index) const</strong>:<br> 
+        With <em>index == 0</em> the fully matched text is returned (identical to
+<em>matched()</em>). Other index values return the corresponding
+subexpressions. <strong>std::string::npos, std::string::npos</strong> is returned if index
+is at least <strong>end()</strong> (which may happen at index value 0).
+    <li> <strong>void setPattern(std::string const &amp;pattern, 
+                            bool caseSensitive = true, 
+                            unsigned nSub = 10,
+                        int options = REG_EXTENDED | REG_NEWLINE)</strong>:<br>
+        This member function installs a new  compiled <em>pattern</em> in its
+<strong>FBB::Pattern</strong> object. This member's parameters are identical to the second
+constructor's parameters. Refer to that constructor for details about the
+parameters. Like the constructor, an <strong>FBB::Errno</strong> exception is thrown if the
+new pattern could not be compiled.
+    </ul>
+<p>
+<h2>OVERLOADED OPERATORS</h2>
+<p>
+<ul>
+    <li> <strong>Pattern &amp;operator=(Pattern &amp;other)</strong>:<br> 
+        A standard overloaded assignment operator.
+    <li> <strong>std::string operator[](unsigned index) const</strong>:<br>
+        Returns the matched text (for index 0) or the text of a
+subexpression. An empty string is returned for index values which are at least
+<strong>end()</strong>.
+    <li> <strong>Pattern &amp;operator&lt;&lt;(int matchOptions)</strong>:<br>
+        Defines match-options to be used with the following overloaded
+operator. 
+    <li> <strong>bool operator&lt;&lt;(std::string const &amp;text)</strong>:<br>
+        Performs a <strong>match(text, matchOptions)</strong> call, catching any exception
+that might be thrown. If no <em>matchOptions</em> were set using the above
+overloaded operator, none are used. The options set this way are not `sticky':
+when necessary, they have to be re-inserted before each new pattern
+matching. The function returns <strong>true</strong> if the matching was successful,
+<strong>false</strong> otherwise.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    To do
+<p>
+<h2>FILES</h2>
+    <em>bobcat/pattern</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

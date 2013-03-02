@@ -1,0 +1,197 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Pattern)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Pattern matcher)
+
+manpagename(FBB::Pattern)(Performs RE pattern matching)
+
+manpagesynopsis()
+    bf(#include <bobcat/pattern>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB::Pattern) objects may be used for Regular Expression (RE) pattern
+matching. The class is a wrapper around the bf(regcomp)(3) family of
+functions. 
+
+    Patterns may use: nl()
+        \b - indicating a word-boundary nl()
+        \d - indicating a digit         nl()
+        \s - indicating a white-space (tt([:space:])) char  nl()
+        \w - indicating a word (tt([:alnum:])) char
+
+    The corresponding capitals (e.g., bf(\W)) define the complementary
+character sets. The capital sets cannot be used in character-classes (tt([
+... ]) constructions). 
+
+    As the tt(\) is treated as a special character it should be doubled in
+patterns that are passed to tt(Pattern) objects: When a tt(\s) must be
+matched, the pattern should therefore be written as tt(\\s). More in general,
+stand-alone backslashes should be treated as follows:
+        verb(
+    ------------------------------------------------------------
+    Required pattern        Provide Pattern()   Use as argument:
+                            internally with:
+    ------------------------------------------------------------
+    \\                      \\\\                \\\\\\\\    
+    \d                      \d                  \\d
+    ------------------------------------------------------------
+        )
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(TYPEDEF)
+    itemization(
+    itb(Pattern::Position) 
+        A nested type representing the offsets of the first character and
+the offset beyond the last character of the matched text or indexed
+subexpression, defined as tt(std::pair<std::string::size_type,
+std::string::size_type>).
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Pattern())
+        The default constructor defines no pattern, but is available as a
+placeholder for, e.g., containers requiring default constructors. A
+bf(FBB::Pattern) object thus constructed cannot be used to match patterns, but
+can be the em(lvalue) in assignments where another bf(FBB::Pattern) object is
+the em(rvalue). However, it can receive a pattern using the member
+bf(setPattern()) (see below). An bf(FBB::Errno) object is thrown if the object
+could not be constructed.
+    itb(Pattern(std::string const &pattern, 
+                            bool caseSensitive = true, 
+                            unsigned nSub = 10,
+                        int options = REG_EXTENDED | REG_NEWLINE))
+        This constructor compiles tt(pattern), preparing the bf(FBB::Pattern)
+object for pattern matches. The second parameter determines whether case
+sensitive matching will be used (the default) or not. Subexpressions are
+defined by parentheses pairs. Each matching pair defines a subexpression,
+where the order-number of their opening parentheses determines the
+subexpression's index. By default at most 10 subexpressions are recognized.
+The em(options) flags may be:
+
+               REG_EXTENDED: nl() 
+                   Use POSIX Extended Regular Expression syntax when
+                    interpreting regex.  If not set, POSIX Basic Regular
+                    Expression syntax is used.
+
+                REG_NOSUB: nl()
+                    Support for substring addressing of matches is  not
+                    required.   The  nmatch  and  pmatch  parameters to
+                    regexec are ignored if the pattern buffer  supplied
+                    was compiled with this flag set.
+
+                REG_NEWLINE: nl()
+                    Match-any-character  operators  don't  match a newline.
+
+                    A non-matching list ([^...])  not containing a newline
+                    does not match a newline.
+
+                    Match-beginning-of-line operator (^) matches the empty
+                    string immediately after a newline, regardless of whether
+                    eflags, the execution flags of regexec, contains
+                    REG_NOTBOL.
+
+                    Match-end-of-line operator ($)  matches  the  empty
+                    string  immediately before a newline, regardless of
+                    whether eflags contains REG_NOTEOL.
+
+        An bf(FBB::Errno) object is thrown if the regular expression could not
+        be compiled.
+
+     itb(Pattern(Pattern const &other)) 
+        The standard copy constructor is available.
+    )
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::ostringstream) and bf(  std::exception) are
+available, as bf(FBB::Pattern) inherits from these classes.
+    itemization(
+    itb(std::string before() const)  
+        Following a successful match, bf(before()) returns the text before the
+matched text.
+    itb(std::string beyond() const)
+        Following a successful match, bf(beyond()) returns the text beyond the
+matched text.
+    itb(unsigned end() const)
+        Returns the number of matched elements (text and
+subexpressions). bf(end()) is the lowest index value for which bf(position())
+returns two tt(std::string::npos) values (see the bf(position()) member
+function, below).
+    itb(void match(std::string const &text, int options = 0))
+       Match a string with a pattern.  If the text could not be matched, an
+bf(Errno) exception is thrown , using bf(Pattern::match()) as its prefix-text.
+
+Options may be:
+
+    REG_NOTBOL: nl()
+                   The match-beginning-of-line operator always fails to match
+                    (but see the compilation flag REG_NEWLINE above) This flag
+                    may be used when different portions of a string are passed
+                    to regexec and the beginning of the string should not be
+                    interpreted as the beginning of the line.
+        
+    REG_NOTEOL: nl()
+                    The  match-end-of-line  operator  always  fails  to
+                    match  (but  see  the  compilation flag REG_NEWLINE)
+    itb(std::string matched() const)
+        Following a successful match, this function returns the matched text.
+    itb(Pattern::Position position(unsigned index) const) 
+        With em(index == 0) the fully matched text is returned (identical to
+tt(matched())). Other index values return the corresponding
+subexpressions. bf(std::string::npos, std::string::npos) is returned if index
+is at least bf(end()) (which may happen at index value 0).
+    itb(void setPattern(std::string const &pattern, 
+                            bool caseSensitive = true, 
+                            unsigned nSub = 10,
+                        int options = REG_EXTENDED | REG_NEWLINE))
+        This member function installs a new  compiled tt(pattern) in its
+bf(FBB::Pattern) object. This member's parameters are identical to the second
+constructor's parameters. Refer to that constructor for details about the
+parameters. Like the constructor, an bf(FBB::Errno) exception is thrown if the
+new pattern could not be compiled.
+    )
+
+manpagesection(OVERLOADED OPERATORS)
+
+    itemization(
+    itb(Pattern &operator=(Pattern &other)) 
+        A standard overloaded assignment operator.
+    itb(std::string operator[](unsigned index) const)
+        Returns the matched text (for index 0) or the text of a
+subexpression. An empty string is returned for index values which are at least
+bf(end()).
+    itb(Pattern &operator<<(int matchOptions))
+        Defines match-options to be used with the following overloaded
+operator. 
+    itb(bool operator<<(std::string const &text))
+        Performs a bf(match(text, matchOptions)) call, catching any exception
+that might be thrown. If no em(matchOptions) were set using the above
+overloaded operator, none are used. The options set this way are not `sticky':
+when necessary, they have to be re-inserted before each new pattern
+matching. The function returns bf(true) if the matching was successful,
+bf(false) otherwise.
+    )
+
+manpagesection(EXAMPLE)
+    To do
+
+manpagefiles()
+    em(bobcat/pattern) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)
+
+
+
+

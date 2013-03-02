@@ -1,0 +1,33 @@
+#!/bin/sh
+
+. make/parameters
+. VERSION
+
+req()
+{
+    echo "$*"
+    $* || exit 1
+}
+
+version=`echo $VERSION | sed 's/\..*//'`
+libso=lib${LIBRARY}.so
+libsomajor=${libso}.${version}
+
+req cd tmp/lib
+
+req ar x lib${LIBRARY}.a
+
+req ranlib lib${LIBRARY}.a
+
+echo "$GCC -shared -Wl,-soname,${libsomajor} -o ${libso}.${VERSION} \
+${LIBRARIES}" '*.o'
+#  $GCC -shared -Wl,-soname,${libsomajor} -o ${libso}.${VERSION} ${LIBRARIES} *.o
+$GCC -shared -Wl,-soname,${libsomajor},-rpath,/usr/lib -o ${libso}.${VERSION} ${LIBRARIES} *.o
+
+[ $? == 0 ] || exit 1
+
+req ln -sf ${libso}.${VERSION} $libsomajor
+req ln -sf $libsomajor $libso
+
+rm -rf *.o
+

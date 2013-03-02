@@ -1,0 +1,163 @@
+.TH "FBB::Glob" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Files matching a pattern"
+
+.PP 
+.SH "NAME"
+FBB::Glob \- Wrapper around \fBglob\fP(3) to find files matching a pattern
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/glob>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+The \fBFBB::Glob\fP class is a wrapper around the \fBC\fP function
+\fBglob\fP(3)\&. It returns a list of files matching a certain pattern provided to
+\fBFBB::Glob\fP\&'s constructors or members\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "ENUMERATIONS"
+
+.PP 
+\fBFlags\fP:
+.IP o 
+\fIERR\fP: Return on read errors;
+.IP o 
+\fIMARK\fP: Append a slash to each name\&.
+.IP o 
+\fINOSORT\fP: Don\&'t sort the names\&.
+.IP o 
+\fINOESCAPE\fP: Backslashes don\&'t quote metacharacters\&.
+.IP o 
+\fIPERIOD\fP: Leading \fI\&.\fP-characters can be matched by metachars\&.
+
+.PP 
+\fBDots\fP:
+.IP o 
+\fIFIRST\fP: Filenames starting with a dot will be listed first\&. Within
+this set and in the leftover-set the relative ordering is maintained\&.
+.IP o 
+\fIDEFAULT\fP: Return filenames as they appear in the globbing process\&.
+
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBGlob(std::string const &pattern = "*", Flags flags = PERIOD,
+Dots dots = FIRST)\fP:
+.br 
+This constructor (which can also be used as the default constructor)
+determines all elements in the current directory\&. The \fI\&.\fP and \fI\&.\&.\fP
+relative filenames are not part of the listings\&. Used as default
+constructor, other directory elements starting with a period will be the
+first elements in the series of detected directory elements\&.
+.IP o 
+\fBGlob(Glob const &other)\fP:
+.br 
+The copy constructor is available\&.
+
+.PP 
+.SH "OVERLOADED OPERATORS"
+.IP o 
+\fBGlob &operator=(Glob const &other)\fP:
+.br 
+The assignment operator is available\&.
+.IP o 
+\fBchar const *operator[](unsigned idx) const\fP:
+.br 
+The element at index position \fIidx\fP is returns as a \fBC\fP string\&. It
+returns an empty string if \fIidx\fP is or exceeds \fBsize()\fP\&.
+
+.PP 
+.SH "MEMBER FUNCTIONS"
+.IP o 
+\fBunsigned size() const\fP:
+.br 
+Returns the number of elements that were detected\&.
+.IP o 
+\fBchar const *const *begin() const\fP:
+.br 
+Returns a pointer to the first element that was detected\&. This pointer
+can be used in generic algorithms as an output-iterator supporting pointer
+arithmetic\&. 
+.IP o 
+\fBchar const *const *end() const\fP:
+.br 
+Returns a pointer beyond the last element that was detected\&. This
+pointer can be used in generic algorithms as an output-iterator supporting
+pointer arithmetic\&. 
+
+.PP 
+.SH "EXAMPLES"
+.nf 
+
+    int main(int argc, char **argv)
+    {
+        if (argc == 1)
+        {
+            cout << "Provide glob-expression as 1st arg\en";
+            return 1;
+        }
+    
+        cout << "General:\en";
+    
+        Glob general;
+    
+        for (unsigned idx = 0; idx < general\&.size(); idx++)
+            cout << idx << ": " << general[idx] << endl;
+    
+        cout << "Pattern: " << argv[1] << "\en";
+    
+        Glob pattern(argv[1], Glob::PERIOD, Glob::DEFAULT);
+    
+        for (unsigned idx = 0; idx < pattern\&.size(); idx++)
+            cout << idx << ": " << pattern[idx] << endl;
+    
+        return 0;
+    }
+        
+.fi 
+
+.PP 
+.SH "FILES"
+\fIbobcat/glob\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBstat\fP(3bobcat), \fBglob\fP(3)
+.PP 
+.SH "BUGS"
+No Reported Bugs\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

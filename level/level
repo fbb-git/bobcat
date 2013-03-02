@@ -1,0 +1,41 @@
+#ifndef _INCLUDED_BOBCAT_LEVEL_
+#define _INCLUDED_BOBCAT_LEVEL_
+
+#include <bobcat/log>
+
+namespace FBB
+{
+    class level;
+}
+
+std::ostream &operator<<(std::ostream &str, FBB::level const &lev);
+
+namespace FBB
+{
+class level
+{
+    friend std::ostream &::operator<<(std::ostream &, level const &);
+    unsigned d_level;
+
+    public:
+        level(unsigned lvel)
+        :
+            d_level(lvel)
+        {}
+    private:
+        std::ostream &insertInto(std::ostream &str, Log &lp) const;
+};
+
+}            
+
+        
+#endif
+
+
+
+
+
+
+
+
+

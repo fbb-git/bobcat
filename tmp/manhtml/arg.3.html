@@ -1,0 +1,302 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Arg</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Arg</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Arg(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Arg(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz Command Line Arguments</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Arg - An singleton class interfacing command line arguments
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/arg&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    Singleton class (see Gamma <em>et al.</em>, 1995) built around <strong>getopt()</strong>(3)
+and <strong>getopt_long()</strong>(3). The class handles short- and long command-line
+options,
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>ENUMERATION</h2>
+<p>
+The <strong>FBB::Arg::Type</strong> enumeration is defined by the <strong>FBB::Arg</strong>
+class. It has the following values intended for public use: <strong>None, Required,
+Optional</strong>. These values are used when constructing objects of the nested class
+<strong>FBB::Arg::LongOption</strong>, see below.
+<p>
+<h2>CONSTRUCTORS</h2>
+    Since the class is a <em>Singleton</em>, no public constructors are
+available. Instead, static members are offered to initialize and access the
+single <strong>FBB::Arg</strong> object. See below.
+<p>
+<h2>STATIC MEMBERS</h2>
+    <ul>
+    <li> <strong>FBB::Arg &amp;initialize(char const *optstring, int argc, char **argv)
+        throw (Errno)</strong>:<br>
+        Initializes the <strong>FBB::Arg</strong> singleton. Must be called only once.
+Throws an <strong>FBB::Errno</strong> exception if called repeatedly or if called with
+<em>argv</em> not containing a defined option (which is shown by the
+<strong>FBB::Errno</strong>'s <em>what()</em> member). Returns a reference to the singleton
+object, allowing code initializing <strong>Arg</strong> to use the initialized object
+immediately.
+    <li> <strong>FBB::Arg &amp;initialize(char const *optstring,
+                                LongOption const * const begin,
+                                LongOption const * const end,
+                                int argc, char **argv)</strong>:<br>
+        Initializes the <strong>FBB::Arg</strong> singleton. Accepts two iterators of an
+array of <strong>Arg::LongOption</strong> objects, holding long-options. Must be called
+only once. Throws an <strong>FBB::Errno</strong> exception if called repeatedly or if
+called with <em>argv</em> not containing a defined option (which is shown by the
+<strong>FBB::Errno</strong>'s <em>what()</em> member).  See the description of
+<strong>Arg::LongOption</strong> below.  Returns a reference to the singleton object,
+allowing code initializing <strong>Arg</strong> to use the initialized object immediately.
+<p>
+<em>optstring</em> should consist of letters, possibly postfixed by:
+        <ul>
+        <li> a colon (<em>:</em>), indicating that the option has a required
+            argument;
+        <li> a double colon (<em>::</em>), indicating that the option itself 
+            has an optional argument (in that case, the option's value 
+            will be empty, unless specified).
+        </ul>
+<p>
+<li> <strong>FBB::Arg &amp;instance()</strong>:<br> 
+        Returns the instance of the <strong>Arg</strong> object, available after calling
+one of the <strong>Arg::initialize()</strong> members.  If called before initialization, an
+<em>FBB::Errno</em> exception is thrown.
+    </ul>
+<p>
+<h2>OVERLOADED OPERATOR</h2>
+<p>
+<ul>
+    <li> <strong>char const *operator[](unsigned idx) const</strong>:<br>
+        Returns <em>argument[idx]</em>, after having removed all specified options.
+0 is returned if no <em>arg[x]</em> is available.  The program name (<em>argv[0]</em>)
+is NOT counted here: index 0 refers to the first ARGUMENT, e.g., the program's
+<em>argv[1]</em>.
+    </ul>
+<p>
+<h2>NON-STATIC MEMBER FUNCTIONS</h2>
+    <ul>
+    <li> <strong>std::string const &amp;basename() const</strong>:<br>
+        Returns the program's basename.
+    <li> <strong>unsigned nArgs() const</strong>:<br>
+        Returns the number of arguments left after option-removal.  The
+program name <strong>argv[0]</strong> is NOT counted here.
+    <li> <strong>unsigned nOptions() const</strong>:<br>
+        Returns the number of specified single character options. If short
+options have long option synonyms, then these long option synonyms are counted
+as if they were specified as single character options. If single character
+options (or their long option synonyms) are multiply specified, then each
+specification is counted.
+    <li> <strong>unsigned nLongOptions() const</strong>:<br>
+        Returns the number of long options for which no short option synonym
+exist. If long options are multiply specified, then each specification is
+counted. 
+    <li> <strong>unsigned option(int option) const</strong>:<br>
+        The number of times  `option' (or its long option synonym, if defined)
+were specified is returned.
+    <li> <strong>unsigned option(std::string const &amp;options) const</strong>:<br>
+        The number of times one of the options specified in the `option'
+argument (or their long option synonyms) were present is returned.
+    <li> <strong>unsigned option(string *value, int option) const</strong>:<br>
+        Returns the number of times the provided option (or its long option
+synonym) was present. If the return value is non-zero then the value of the
+first occurrence of this option is stored in <em>*value</em>, which is left
+untouched if `option' was not present. 0 may be specified for <strong>value</strong> if the
+option does not have a value or if the value should not be stored.
+    <li> <strong>unsigned option(unsigned idx, string *value, int option) const</strong>:<br>
+        Returns the number of times the provided option (or its long option
+synonym) was present. If the return value is non-zero then the value of the
+<em>idx</em>th occurrence (0-based offset) of this option is stored in <em>*value</em>,
+which is left untouched if `option' was not present or if <em>idx</em> is or
+exceeds the number of specifications of the provided option. 0 may be
+specified for <strong>value</strong> if the option does not have a value or if the value
+should not be stored. 
+    <li> <strong>unsigned option(unsigned *idx, string *value, int option) const</strong>:<br>
+        Returns the number of times the provided option (or its long option
+synonym) was present. If the return value is non-zero then the offset (within
+the series of <em>option</em> specifications) of the first option having a
+non-empty option value is returned in <em>*idx</em>, while its option value is
+stored in <em>*value</em>. Both <em>*value</em> and <em>*idx</em> are left untouched if
+`option' was not present. 0 may be specified for <strong>value</strong> if the option does
+not have a value or if the value should not be stored.
+    <li> <strong>unsigned option(string *value, char const *longOption) const</strong>:<br>
+        Returns the number of times the specified long option (not having a
+single-character synonym) was present. Its value is then stored in <em>*value</em>,
+which is left untouched if the long option was not present. 0 may be specified
+for <strong>value</strong> if the option does not have a value or if the value should not
+be stored.
+    <li> <strong>unsigned option(unsigned idx, string *value, 
+                                        char const * longOption) const</strong>:<br>
+        Returns the number of times the provided long option (not having a
+single-character synonym) was present. If the return value is non-zero then
+the value of the <em>idx</em>th occurrence (0-based offset) of this long option is
+stored in <em>*value</em>, which is left untouched if the long option was not
+present or if <em>idx</em> is or exceeds the number of specifications of the
+provided long option. 0 may be specified for <strong>value</strong> if the long option does
+not have a value or if the value should not be stored.
+    <li> <strong>unsigned option(unsigned *idx, string *value, int longOption) const</strong>:<br>
+        Returns the number of times the provided long option (not having a
+single-character synonym) was present. If the return value is non-zero then
+the offset (within the series of this long option specifications) of the first
+long option having a non-empty option value is returned in <em>*idx</em>, while its
+option value is stored in <em>*value</em>. Both <em>*value</em> and <em>*idx</em> are left
+untouched if long option was not present. 0 may be specified for <strong>value</strong> if
+the long option does not have a value or if the value should not be stored.
+    <li> <strong>void versionHelp(void (*usage)(std::string const &amp;progname), 
+        char const *version, unsigned minArgs, int helpFlag = 'h', 
+        int versionFlag = 'v') const throw (int) throw (int)</strong>:<br>
+    If <em>versionFlag</em> was specified, and the <em>helpFlag</em> was not specified
+the program's name (using <strong>basename()</strong>) and <em>version</em> is displayed to
+<em>std::cout</em>. Otherwise, if the <em>helpFlag</em> was provided or if there are
+fewer arguments than <em>minArgs</em> <em>usage()</em> is called with argument
+<strong>basename()</strong>. If either version- or help information is shown, the <strong>int</strong>
+value 1 is thrown as an exception.
+<p>
+The address of the <em>usage()</em> function, the current version and the
+minimum number of arguments must be specified. Default argument values are
+provided for the option flags.
+    <li> <strong>char const **argPointers()</strong>:<br>
+        Returns <em>argv</em>-like set of pointers to all remaining arguments. The
+last element is guaranteed to be a 0-pointer. The first <em>nArg()</em> elements
+point to the respective <strong>C</strong>-string values of the arguments.
+    </ul>
+<p>
+<h2>THE NESTED CLASS FBB::Arg::LongOption</h2>
+    Long options are defined using objects of the nested class
+<strong>FBB::Arg::LongOption</strong>. This class offers the following constructors:
+    <ul>
+    <li> <strong>FBB::Arg::LongOption(char const *name, FBB::Arg::Type type = None)</strong>:<br>
+        This constructor is used to define a long option for which no
+corresponding short option is defined. The parameter <em>name</em> is the name of
+the long option (without prefixing the <em>--</em> characters, which <em>are</em>
+required when specifying the long option). 
+    <li> <strong>FBB::Arg::LongOption(char const *name, int optionChar)</strong>:<br>
+        This constructor is used to define a long option for which a
+corresponding short option is defined. The parameter <em>name</em> is the name of
+the long option (without prefixing the <em>--</em> characters, which <em>are</em>
+required when specifying the long option). 
+    </ul>
+    In a program, long options may be specified as follows:
+    <ul>
+    <li> First, construct an array 
+        <pre>
+
+    FBB::Arg::LongOption longOptions[] = { c1, c2, ... cn }
+        
+</pre>
+
+    Where <em>c1, c2, ..., cn</em> are <strong>n</strong> constructor invocations of 
+            <strong>FBB::Arg::LongOption()</strong> constructors
+    <li> Next, pass <strong>longOptions, LongOptions + n</strong>
+                as 2nd and 3rd arguments to <strong>initialize()</strong>
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    The following example illustrates defining long options and shows an
+initialization. It is not a full-fletched example in the sense of a small 
+runnable program.
+        <pre>
+
+    #include &lt;bobcat/arg&gt;
+
+    using namespace FBB;
+
+    namespace   // the anonymous namespace can be used here
+    {
+        Arg::LongOption longOptions[] = 
+        {
+            Arg::LongOption("debug"),
+            Arg::LongOption("filenames", 'f'),
+            Arg::LongOption("help", 'h'),
+            Arg::LongOption("version", 'v'),
+        };
+    
+        Arg::LongOption const *const longEnd = 
+                        longOptions + 
+                        sizeof(longOptions) / sizeof(Arg::LongOption); 
+    }
+    
+    int main(int argc, char **argv)
+    try
+    {
+        Arg &amp;arg = Arg::initialize("df:hv", 
+                        longOptions, longEnd, argc, argv);
+
+        // code using arg, etc.
+    }
+    catch(Errno const &amp;err)     // handle exceptions
+    {
+        cerr &lt;&lt; err.what() &lt;&lt; endl;
+        return err.which();
+    }
+    catch(int x)
+    {
+        return x;
+    }
+        
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/arg</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

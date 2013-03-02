@@ -1,0 +1,165 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Glob</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Glob</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Glob(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Glob(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz Files matching a pattern</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Glob - Wrapper around <strong>glob</strong>(3) to find files matching a pattern
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/glob&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    The <strong>FBB::Glob</strong> class is a wrapper around the <strong>C</strong> function
+<strong>glob</strong>(3). It returns a list of files matching a certain pattern provided to
+<strong>FBB::Glob</strong>'s constructors or members.
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>ENUMERATIONS</h2>
+<p>
+<strong>Flags</strong>:
+    <ul>
+    <li> <em>ERR</em>: Return on read errors;
+    <li> <em>MARK</em>: Append a slash to each name.
+    <li> <em>NOSORT</em>: Don't sort the names.
+    <li> <em>NOESCAPE</em>: Backslashes don't quote metacharacters.
+    <li> <em>PERIOD</em>: Leading <em>.</em>-characters can be matched by metachars.
+    </ul>
+<p>
+<strong>Dots</strong>:
+    <ul>
+    <li> <em>FIRST</em>: Filenames starting with a dot will be listed first. Within
+    this set and in the leftover-set the relative ordering is maintained.
+    <li> <em>DEFAULT</em>: Return filenames as they appear in the globbing process.
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Glob(std::string const &amp;pattern = "*", Flags flags = PERIOD,
+             Dots dots = FIRST)</strong>:<br> 
+        This constructor (which can also be used as the default constructor)
+    determines all elements in the current directory. The <em>.</em> and <em>..</em>
+    relative filenames are not part of the listings. Used as default
+    constructor, other directory elements starting with a period will be the
+    first elements in the series of detected directory elements.
+    <li> <strong>Glob(Glob const &amp;other)</strong>:<br> 
+        The copy constructor is available.
+    </ul>
+<p>
+<h2>OVERLOADED OPERATORS</h2>
+    <ul>
+    <li> <strong>Glob &amp;operator=(Glob const &amp;other)</strong>:<br>
+        The assignment operator is available.
+    <li> <strong>char const *operator[](unsigned idx) const</strong>:<br>
+        The element at index position <em>idx</em> is returns as a <strong>C</strong> string. It
+    returns an empty string if <em>idx</em> is or exceeds <strong>size()</strong>.
+    </ul>
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+    <ul>
+    <li> <strong>unsigned size() const</strong>:<br>
+        Returns the number of elements that were detected.
+    <li> <strong>char const *const *begin() const</strong>:<br>
+        Returns a pointer to the first element that was detected. This pointer
+    can be used in generic algorithms as an output-iterator supporting pointer
+    arithmetic. 
+    <li> <strong>char const *const *end() const</strong>:<br>
+       Returns a pointer beyond the last element that was detected. This
+    pointer can be used in generic algorithms as an output-iterator supporting
+    pointer arithmetic. 
+    </ul>
+<p>
+<h2>EXAMPLES</h2>
+        <pre>
+
+    int main(int argc, char **argv)
+    {
+        if (argc == 1)
+        {
+            cout &lt;&lt; "Provide glob-expression as 1st arg\n";
+            return 1;
+        }
+    
+        cout &lt;&lt; "General:\n";
+    
+        Glob general;
+    
+        for (unsigned idx = 0; idx &lt; general.size(); idx++)
+            cout &lt;&lt; idx &lt;&lt; ": " &lt;&lt; general[idx] &lt;&lt; endl;
+    
+        cout &lt;&lt; "Pattern: " &lt;&lt; argv[1] &lt;&lt; "\n";
+    
+        Glob pattern(argv[1], Glob::PERIOD, Glob::DEFAULT);
+    
+        for (unsigned idx = 0; idx &lt; pattern.size(); idx++)
+            cout &lt;&lt; idx &lt;&lt; ": " &lt;&lt; pattern[idx] &lt;&lt; endl;
+    
+        return 0;
+    }
+        
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/glob</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>stat</strong>(3bobcat), <strong>glob</strong>(3)
+<p>
+<h2>BUGS</h2>
+    No Reported Bugs.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

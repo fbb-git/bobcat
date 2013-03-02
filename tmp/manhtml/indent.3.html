@@ -1,0 +1,144 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Indent</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Indent</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Indent(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Indent(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz Text Indentation</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Indent - Configurable text indentation
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/indent&gt;</strong><br>
+<p>
+<h2>DESCRIPTION</h2>
+    <strong>FBB::Indent</strong> and its various manipulators offer text-indentation. Text
+inserted into streams is indented over a fully configurable amount using a set
+of manipulators and (static) member functions.
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>STATIC MEMBER FUNCTIONS</h2>
+<p>
+<ul>
+    <li> <strong>void clear()</strong>:<br>
+        Resets the indentation level to zero. The <strong>indent</strong> manipulator will
+have no visible effect after calling this member.
+    <li> <strong>void dec()</strong>:<br>
+        Reduces the indentation level by the current increment (4 by
+default). The indentation level is never reduces to a negative value.
+    <li> <strong>void inc()</strong>:<br>
+        Increments the indentation level by the current increment (4 by
+default).        
+    <li> <strong>void setInc(unsigned inc)</strong>:<br>
+        Defines the increment value used with the <strong>dec</strong> and <strong>inc</strong>
+members. 
+    <li> <strong>void setWidth(unsigned width)</strong>:<br>
+        Defines the indentation to a specific value <strong>width</strong>.
+    </ul>
+<p>
+<h2>MANIPULATORS</h2>
+    The following manipulators (which are <em>not</em> part of the <strong>FBB::Indent</strong>,
+class, but <em>are</em> defined in the <strong>FBB</strong> namespace) can be inserted into the
+<strong>FBB::Indent</strong> object:
+    <ul>
+    <li> <strong>FBB::decindent</strong>:<br> 
+        This manipulator will first call <strong>Indent::dec</strong>. Then <strong>FBB::indent</strong>
+is called. The effect will be that the indentation level is reduced just
+before the indentation is inserted.
+    <li> <strong>FBB::incindent</strong>:<br> 
+        This manipulator will first call <strong>Indent::inc</strong>. Then <strong>FBB::indent</strong>
+is called. The effect will be that the indentation level is incremented just
+before the indentation is inserted.
+    <li> <strong>FBB::indent</strong>:<br> 
+        This manipulator will insert the currently defined number of
+indentation blanks into the <em>ostream</em> for which it it called.
+    <li> <strong>FBB::indentdec</strong>:<br> 
+        This manipulator will first call <strong>FBB::indent</strong>, Then <strong>Indent::dec</strong>
+is called. The effect will be that the indentation is inserted first,
+immediately followed by a reduction of the indentation level. 
+    <li> <strong>FBB::indentinc</strong>:<br> 
+        This manipulator will first call <strong>FBB::indent</strong>, Then <strong>Indent::inc</strong>
+is called. The effect will be that the indentation is inserted first,
+immediately followed by a increment of the indentation level. 
+    <li> <strong>FBB::nlindent</strong>:<br> 
+        This manipulator will insert a newline character (<em>\n</em>). Then 
+<strong>FBB::indent</strong> is called, indenting the next line over the currently defined
+number of blanks.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+        <pre>
+
+    using namespace std;
+    using namespace FBB;
+    int main()
+    {
+        cout &lt;&lt; indentinc &lt;&lt; "Not indented" &lt;&lt;
+                nlindent &lt;&lt; "Indenting with 4 blanks\n";
+        Indent::clear();
+        cout &lt;&lt; "No indentation\n";
+    }
+        
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/indent</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

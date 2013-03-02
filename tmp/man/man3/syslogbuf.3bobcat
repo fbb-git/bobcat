@@ -1,0 +1,246 @@
+.TH "FBB::SyslogBuf" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Stream Buffer for Syslog"
+
+.PP 
+.SH "NAME"
+FBB::SyslogBuf \- A streambuf object inserting syslog messages
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/syslogbuf>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+\fBFBB::SyslogBuf\fP objects may be used as a \fBstd::streambuf\fP of
+\fIstd::ostream\fP objects to write syslog messages using stream facilities\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+\fBstd::streambuf\fP
+.PP 
+.SH "ENUMERATIONS"
+
+.PP 
+The following enumerations are defined in the namespace \fBFBB\fP:
+.PP 
+\fBPriority\fP:
+.PP 
+The values of this enumeration match the corresponding priority
+\fBLOG_xxx\fP values used with \fBsyslog\fP(3):
+.IP o 
+\fBEMERG\fP:
+.br 
+system is unusable;
+.IP o 
+\fBALERT\fP:
+.br 
+action must be taken immediately;
+.IP o 
+\fBCRIT\fP:
+.br 
+critical conditions;
+.IP o 
+\fBERR\fP:
+.br 
+error conditions;
+.IP o 
+\fBWARNING\fP:
+.br 
+warning conditions;
+.IP o 
+\fBNOTICE\fP:
+.br 
+normal, but significant, condition;
+.IP o 
+\fBINFO\fP:
+.br 
+informational message;
+.IP o 
+\fBDEBUG\fP:
+.br 
+debug-level message;
+
+.PP 
+\fBFacility\fP:
+.PP 
+The values of this enumeration match the corresponding facility
+\fBLOG_xxx\fP values used with \fBsyslog\fP(3):
+.IP o 
+\fBAUTHPRIV\fP:
+.br 
+security/authorization messages (private)
+.IP o 
+\fBCRON\fP:
+.br 
+clock daemon (\fIcron\fP and \fIat\fP)
+.IP o 
+\fBDAEMON\fP:
+.br 
+other system daemons
+.IP o 
+\fBKERN\fP:
+.br 
+kernel messages
+.IP o 
+\fBLOCAL0\fP:
+.br 
+reserved for local use\&. \fBLOCAL1\fP through \fBLOCAL7\fP are
+available as well\&.
+.IP o 
+\fBLPR\fP:
+.br 
+line printer subsystem
+.IP o 
+\fBMAIL\fP:
+.br 
+mail subsystem
+.IP o 
+\fBNEWS\fP:
+.br 
+\fIUSENET\fP news subsystem
+.IP o 
+\fBSYSLOGBUF\fP:
+.br 
+messages generated internally by \fIsyslogbufd\fP
+.IP o 
+\fBUSER\fP:
+.br 
+:
+generic user-level messages
+.IP o 
+\fBUUCP\fP:
+.br 
+UUCP subsystem
+
+.PP 
+.SH "CONSTRUCTOR"
+.IP o 
+\fBSyslogBuf(char *ident,
+FBB::Priority priority = FBB::NOTICE, 
+FBB::Facility facility = FBB::USER,
+int option = 0)\fP:
+.br 
+This \fBSyslogbuf()\fP constructor initializes the streambuf\&.  The
+\fBident\fP parameter is usually the name of the program\&. Its contents are
+prepended to syslog messages\&. Use value 0 if no text needs to be prepended\&.
+.IP 
+The \fBpriority\fP parameter determines the importance of the message\&. By
+default \fBFBB::NOTICE\fP is used\&.
+.IP 
+The \fBfacility\fP parameter determines the type of program doing the
+logging\&. By default \fBFBB::USER\fP is used\&.
+.IP 
+The \fBoption\fP parameter may be used to specify various options (use the
+binary `\fIbitor\fP\&' (`\fI|\fP\&') operator to combine options):
+.IP 
+\fBLOG_CONS\fP:
+write directly to system console  if  there  is  an
+error while sending to system logger 
+.br 
+\fBLOG_NDELAY\fP:
+open the connection immediately (normally, the con-
+nection is opened when the first message is logged) 
+.br 
+\fBLOG_PERROR\fP:
+print to stderr as well 
+.br 
+\fBLOG__PID\fP:
+include PID with each message 
+.br 
+
+.IP 
+By default no options are used\&.
+
+.PP 
+The copy constructor is not available\&.
+.PP 
+.SH "MEMBER FUNCTIONS"
+All members of \fBstd::streambuf\fP are available, as \fBFBB::SyslogBuf\fP
+inherits from this class\&.
+.IP o 
+\fBPriority defaultPriority() const\fP:
+.br 
+Returns the default priority\&. I\&.e\&., the priority that will be used for
+the messages after inserting \fBendl\fP, unless altered by
+\fBsetDefaultPriority()\fP\&.
+.IP o 
+\fBPriority priority() const\fP:
+.br 
+Returns the next priority\&. I\&.e\&., the priority that will be used for
+the next message, unless altered by \fBsetPriority()\fP\&.
+.IP o 
+\fBPriority setDefaultPriority(Priority priority)\fP:
+.br 
+Changes the default priority of the next syslog-message after
+inserting \fBstd::eoln\fP\&. Initially, the priority is determined as the value
+passed to the constructor\&. The previously active default priority is returned\&.
+.IP o 
+\fBPriority setPriority(Priority priority)\fP:
+.br 
+Changes the priority for the next syslog message (after \fBstd::eoln\fP
+has been inserted)\&. Subsequent messages will use the default priority
+again\&. The previously active priority setting is returned\&.
+
+.PP 
+.SH "PROTECTED MEMBER FUNCTIONS"
+The following members of \fBstd::streambuf\fP were overridden:
+.IP o 
+\fBint overflow()\fP:
+.br 
+This function is called by \fIstd::ostream\fP objects using
+\fBSyslogbuf\fP\&. It calls \fIsync()\fP, an then it puts the next available
+character into the buffer\&. It returns the inserted character\&.
+.IP o 
+\fBint sync()\fP:
+.br 
+This function writes the syslog message\&. It is called by
+\fBoverflow()\fP when \fBoverflow()\fP must insert \fBEOF\fP\&. The \fBEOF\fP insertion
+is done automatically by \fBsyslogstream\fP(3bobcat) when a newline is inserted\&.
+
+.PP 
+.SH "EXAMPLE"
+To do (but see also \fBsyslogstream\fP(3bobcat)
+.PP 
+.SH "FILES"
+\fIbobcat/syslogbuf\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBopenlog\fP(3)), \fBsyslog\fP(3), \fBsyslogstream\fP(3bobcat)
+.PP 
+.SH "BUGS"
+The constructor\&'s \fIoption\fP parameter is an \fBint\fP\&. Because of this,
+\fBint\fP values rather than enumeration values are passed to the
+constructor\&. It is the responsibility of the programmer to pass defined option
+values only\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

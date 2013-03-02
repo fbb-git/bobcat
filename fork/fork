@@ -1,0 +1,45 @@
+#ifndef _INCLUDED_BOBCAT_FORK_
+#define _INCLUDED_BOBCAT_FORK_
+
+#include <bobcat/errno>
+
+namespace FBB
+{    
+    class Fork
+    {
+        int
+            d_pid;
+
+        public:
+            virtual ~Fork()
+            {}
+
+            void fork() throw (Errno);
+
+        protected:
+            int pid() const
+            {
+                return d_pid;
+            }
+
+            int getPid() const                  // DEPRECATED. USE `pid()'
+            {
+                return d_pid;
+            }
+
+            virtual void childRedirections()    // do child redirections
+            {}            
+            virtual void childProcess() = 0;    // must be implemented
+            
+
+            virtual void parentRedirections()   // do parent redirections
+            {}            
+            virtual void parentProcess() = 0;   // must be implemented
+
+            int waitForChild();                 // returns the status
+    };
+}
+
+#endif
+
+

@@ -1,0 +1,94 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Indent)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Text Indentation)
+
+manpagename(FBB::Indent)(Configurable text indentation)
+
+manpagesynopsis()
+    bf(#include <bobcat/indent>)nl()
+
+
+manpagedescription()
+    bf(FBB::Indent) and its various manipulators offer text-indentation. Text
+inserted into streams is indented over a fully configurable amount using a set
+of manipulators and (static) member functions.
+
+includefile(namespace.inc)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(STATIC MEMBER FUNCTIONS)
+
+    itemization(
+    itb(void clear())
+        Resets the indentation level to zero. The bf(indent) manipulator will
+have no visible effect after calling this member.
+    itb(void dec())
+        Reduces the indentation level by the current increment (4 by
+default). The indentation level is never reduces to a negative value.
+    itb(void inc())
+        Increments the indentation level by the current increment (4 by
+default).        
+    itb(void setInc(unsigned inc))
+        Defines the increment value used with the bf(dec) and bf(inc)
+members. 
+    itb(void setWidth(unsigned width))
+        Defines the indentation to a specific value bf(width).
+    )
+
+manpagesection(MANIPULATORS)
+    The following manipulators (which are em(not) part of the bf(FBB::Indent),
+class, but em(are) defined in the bf(FBB) namespace) can be inserted into the
+bf(FBB::Indent) object:
+    itemization(
+    itb(FBB::decindent) 
+        This manipulator will first call bf(Indent::dec). Then bf(FBB::indent)
+is called. The effect will be that the indentation level is reduced just
+before the indentation is inserted.
+    itb(FBB::incindent) 
+        This manipulator will first call bf(Indent::inc). Then bf(FBB::indent)
+is called. The effect will be that the indentation level is incremented just
+before the indentation is inserted.
+    itb(FBB::indent) 
+        This manipulator will insert the currently defined number of
+indentation blanks into the tt(ostream) for which it it called.
+    itb(FBB::indentdec) 
+        This manipulator will first call bf(FBB::indent), Then bf(Indent::dec)
+is called. The effect will be that the indentation is inserted first,
+immediately followed by a reduction of the indentation level. 
+    itb(FBB::indentinc) 
+        This manipulator will first call bf(FBB::indent), Then bf(Indent::inc)
+is called. The effect will be that the indentation is inserted first,
+immediately followed by a increment of the indentation level. 
+    itb(FBB::nlindent) 
+        This manipulator will insert a newline character (tt(\n)). Then 
+bf(FBB::indent) is called, indenting the next line over the currently defined
+number of blanks.
+    )
+
+manpagesection(EXAMPLE)
+        verb(
+    using namespace std;
+    using namespace FBB;
+    int main()
+    {
+        cout << indentinc << "Not indented" <<
+                nlindent << "Indenting with 4 blanks\n";
+        Indent::clear();
+        cout << "No indentation\n";
+    }
+        )
+
+manpagefiles()
+    em(bobcat/indent) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

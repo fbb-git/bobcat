@@ -1,0 +1,61 @@
+#ifndef _INCLUDED_BOBCAT_LOG_
+#define _INCLUDED_BOBCAT_LOG_
+
+#include <iosfwd>
+#include <ostream>
+#include <fstream>
+#include <climits>
+#include <memory>
+
+#include <bobcat/logbuffer>
+
+namespace FBB
+{
+    enum LogManipulator
+    {
+        FATAL,
+        nl,
+    };
+
+    class Log: private LogBuffer, public std::ostream
+    {
+        private:
+            static std::auto_ptr<Log> s_stream;
+
+            std::ofstream d_stream;
+            unsigned d_level;
+            unsigned d_activeLevel;
+
+        public:
+            static Log &getInstance();
+            static Log &initialize(std::string const &filename, 
+                    std::ios::openmode = std::ios::out | std::ios::app, 
+                    char const *delim = " ");
+
+            Log(char const *delim = " ");
+            Log(std::ostream &out,  char const *delim = " ");
+            Log(std::string const &filename, 
+                    std::ios::openmode = std::ios::out | std::ios::app, 
+                    char const *delim = " ");
+
+            void open(std::string const &filename, 
+                    std::ios::openmode = std::ios::out | std::ios::app, 
+                    char const *delim = " ");
+
+            std::ostream &level(unsigned useLevel);
+            void  setLevel(unsigned newLevel);
+            void  setTimestamp(TimeStamps timeStamp, char const *delim = " ");
+            void  off()
+            {
+                setActive(false);
+            }
+
+        private:
+            void init();
+    };
+
+}
+
+std::ostream &operator<<(std::ostream &str, FBB::LogManipulator);
+        
+#endif

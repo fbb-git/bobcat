@@ -1,0 +1,321 @@
+.TH "FBB::Arg" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Command Line Arguments"
+
+.PP 
+.SH "NAME"
+FBB::Arg \- An singleton class interfacing command line arguments
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/arg>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+Singleton class (see Gamma \fIet al\&.\fP, 1995) built around \fBgetopt()\fP(3)
+and \fBgetopt_long()\fP(3)\&. The class handles short- and long command-line
+options,
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "ENUMERATION"
+
+.PP 
+The \fBFBB::Arg::Type\fP enumeration is defined by the \fBFBB::Arg\fP
+class\&. It has the following values intended for public use: \fBNone, Required,
+Optional\fP\&. These values are used when constructing objects of the nested class
+\fBFBB::Arg::LongOption\fP, see below\&.
+.PP 
+.SH "CONSTRUCTORS"
+Since the class is a \fISingleton\fP, no public constructors are
+available\&. Instead, static members are offered to initialize and access the
+single \fBFBB::Arg\fP object\&. See below\&.
+.PP 
+.SH "STATIC MEMBERS"
+.IP o 
+\fBFBB::Arg &initialize(char const *optstring, int argc, char **argv)
+throw (Errno)\fP:
+.br 
+Initializes the \fBFBB::Arg\fP singleton\&. Must be called only once\&.
+Throws an \fBFBB::Errno\fP exception if called repeatedly or if called with
+\fIargv\fP not containing a defined option (which is shown by the
+\fBFBB::Errno\fP\&'s \fIwhat()\fP member)\&. Returns a reference to the singleton
+object, allowing code initializing \fBArg\fP to use the initialized object
+immediately\&.
+.IP o 
+\fBFBB::Arg &initialize(char const *optstring,
+LongOption const * const begin,
+LongOption const * const end,
+int argc, char **argv)\fP:
+.br 
+Initializes the \fBFBB::Arg\fP singleton\&. Accepts two iterators of an
+array of \fBArg::LongOption\fP objects, holding long-options\&. Must be called
+only once\&. Throws an \fBFBB::Errno\fP exception if called repeatedly or if
+called with \fIargv\fP not containing a defined option (which is shown by the
+\fBFBB::Errno\fP\&'s \fIwhat()\fP member)\&.  See the description of
+\fBArg::LongOption\fP below\&.  Returns a reference to the singleton object,
+allowing code initializing \fBArg\fP to use the initialized object immediately\&.
+.IP 
+\fIoptstring\fP should consist of letters, possibly postfixed by:
+.IP o 
+a colon (\fI:\fP), indicating that the option has a required
+argument;
+.IP o 
+a double colon (\fI::\fP), indicating that the option itself 
+has an optional argument (in that case, the option\&'s value 
+will be empty, unless specified)\&.
+
+.IP 
+.IP o 
+\fBFBB::Arg &instance()\fP:
+.br 
+Returns the instance of the \fBArg\fP object, available after calling
+one of the \fBArg::initialize()\fP members\&.  If called before initialization, an
+\fIFBB::Errno\fP exception is thrown\&.
+
+.PP 
+.SH "OVERLOADED OPERATOR"
+
+.PP 
+.IP o 
+\fBchar const *operator[](unsigned idx) const\fP:
+.br 
+Returns \fIargument[idx]\fP, after having removed all specified options\&.
+0 is returned if no \fIarg[x]\fP is available\&.  The program name (\fIargv[0]\fP)
+is NOT counted here: index 0 refers to the first ARGUMENT, e\&.g\&., the program\&'s
+\fIargv[1]\fP\&.
+
+.PP 
+.SH "NON-STATIC MEMBER FUNCTIONS"
+.IP o 
+\fBstd::string const &basename() const\fP:
+.br 
+Returns the program\&'s basename\&.
+.IP o 
+\fBunsigned nArgs() const\fP:
+.br 
+Returns the number of arguments left after option-removal\&.  The
+program name \fBargv[0]\fP is NOT counted here\&.
+.IP o 
+\fBunsigned nOptions() const\fP:
+.br 
+Returns the number of specified single character options\&. If short
+options have long option synonyms, then these long option synonyms are counted
+as if they were specified as single character options\&. If single character
+options (or their long option synonyms) are multiply specified, then each
+specification is counted\&.
+.IP o 
+\fBunsigned nLongOptions() const\fP:
+.br 
+Returns the number of long options for which no short option synonym
+exist\&. If long options are multiply specified, then each specification is
+counted\&. 
+.IP o 
+\fBunsigned option(int option) const\fP:
+.br 
+The number of times  `option\&' (or its long option synonym, if defined)
+were specified is returned\&.
+.IP o 
+\fBunsigned option(std::string const &options) const\fP:
+.br 
+The number of times one of the options specified in the `option\&'
+argument (or their long option synonyms) were present is returned\&.
+.IP o 
+\fBunsigned option(string *value, int option) const\fP:
+.br 
+Returns the number of times the provided option (or its long option
+synonym) was present\&. If the return value is non-zero then the value of the
+first occurrence of this option is stored in \fI*value\fP, which is left
+untouched if `option\&' was not present\&. 0 may be specified for \fBvalue\fP if the
+option does not have a value or if the value should not be stored\&.
+.IP o 
+\fBunsigned option(unsigned idx, string *value, int option) const\fP:
+.br 
+Returns the number of times the provided option (or its long option
+synonym) was present\&. If the return value is non-zero then the value of the
+\fIidx\fPth occurrence (0-based offset) of this option is stored in \fI*value\fP,
+which is left untouched if `option\&' was not present or if \fIidx\fP is or
+exceeds the number of specifications of the provided option\&. 0 may be
+specified for \fBvalue\fP if the option does not have a value or if the value
+should not be stored\&. 
+.IP o 
+\fBunsigned option(unsigned *idx, string *value, int option) const\fP:
+.br 
+Returns the number of times the provided option (or its long option
+synonym) was present\&. If the return value is non-zero then the offset (within
+the series of \fIoption\fP specifications) of the first option having a
+non-empty option value is returned in \fI*idx\fP, while its option value is
+stored in \fI*value\fP\&. Both \fI*value\fP and \fI*idx\fP are left untouched if
+`option\&' was not present\&. 0 may be specified for \fBvalue\fP if the option does
+not have a value or if the value should not be stored\&.
+.IP o 
+\fBunsigned option(string *value, char const *longOption) const\fP:
+.br 
+Returns the number of times the specified long option (not having a
+single-character synonym) was present\&. Its value is then stored in \fI*value\fP,
+which is left untouched if the long option was not present\&. 0 may be specified
+for \fBvalue\fP if the option does not have a value or if the value should not
+be stored\&.
+.IP o 
+\fBunsigned option(unsigned idx, string *value, 
+char const * longOption) const\fP:
+.br 
+Returns the number of times the provided long option (not having a
+single-character synonym) was present\&. If the return value is non-zero then
+the value of the \fIidx\fPth occurrence (0-based offset) of this long option is
+stored in \fI*value\fP, which is left untouched if the long option was not
+present or if \fIidx\fP is or exceeds the number of specifications of the
+provided long option\&. 0 may be specified for \fBvalue\fP if the long option does
+not have a value or if the value should not be stored\&.
+.IP o 
+\fBunsigned option(unsigned *idx, string *value, int longOption) const\fP:
+.br 
+Returns the number of times the provided long option (not having a
+single-character synonym) was present\&. If the return value is non-zero then
+the offset (within the series of this long option specifications) of the first
+long option having a non-empty option value is returned in \fI*idx\fP, while its
+option value is stored in \fI*value\fP\&. Both \fI*value\fP and \fI*idx\fP are left
+untouched if long option was not present\&. 0 may be specified for \fBvalue\fP if
+the long option does not have a value or if the value should not be stored\&.
+.IP o 
+\fBvoid versionHelp(void (*usage)(std::string const &progname), 
+char const *version, unsigned minArgs, int helpFlag = \&'h\&', 
+int versionFlag = \&'v\&') const throw (int) throw (int)\fP:
+.br 
+If \fIversionFlag\fP was specified, and the \fIhelpFlag\fP was not specified
+the program\&'s name (using \fBbasename()\fP) and \fIversion\fP is displayed to
+\fIstd::cout\fP\&. Otherwise, if the \fIhelpFlag\fP was provided or if there are
+fewer arguments than \fIminArgs\fP \fIusage()\fP is called with argument
+\fBbasename()\fP\&. If either version- or help information is shown, the \fBint\fP
+value 1 is thrown as an exception\&.
+.IP 
+The address of the \fIusage()\fP function, the current version and the
+minimum number of arguments must be specified\&. Default argument values are
+provided for the option flags\&.
+.IP o 
+\fBchar const **argPointers()\fP:
+.br 
+Returns \fIargv\fP-like set of pointers to all remaining arguments\&. The
+last element is guaranteed to be a 0-pointer\&. The first \fInArg()\fP elements
+point to the respective \fBC\fP-string values of the arguments\&.
+
+.PP 
+.SH "THE NESTED CLASS FBB::Arg::LongOption"
+Long options are defined using objects of the nested class
+\fBFBB::Arg::LongOption\fP\&. This class offers the following constructors:
+.IP o 
+\fBFBB::Arg::LongOption(char const *name, FBB::Arg::Type type = None)\fP:
+.br 
+This constructor is used to define a long option for which no
+corresponding short option is defined\&. The parameter \fIname\fP is the name of
+the long option (without prefixing the \fI--\fP characters, which \fIare\fP
+required when specifying the long option)\&. 
+.IP o 
+\fBFBB::Arg::LongOption(char const *name, int optionChar)\fP:
+.br 
+This constructor is used to define a long option for which a
+corresponding short option is defined\&. The parameter \fIname\fP is the name of
+the long option (without prefixing the \fI--\fP characters, which \fIare\fP
+required when specifying the long option)\&. 
+In a program, long options may be specified as follows:
+.IP o 
+First, construct an array 
+.nf 
+
+    FBB::Arg::LongOption longOptions[] = { c1, c2, \&.\&.\&. cn }
+        
+.fi 
+Where \fIc1, c2, \&.\&.\&., cn\fP are \fBn\fP constructor invocations of 
+\fBFBB::Arg::LongOption()\fP constructors
+.IP o 
+Next, pass \fBlongOptions, LongOptions + n\fP
+as 2nd and 3rd arguments to \fBinitialize()\fP
+
+.PP 
+.SH "EXAMPLE"
+The following example illustrates defining long options and shows an
+initialization\&. It is not a full-fletched example in the sense of a small 
+runnable program\&.
+.nf 
+
+    #include <bobcat/arg>
+
+    using namespace FBB;
+
+    namespace   // the anonymous namespace can be used here
+    {
+        Arg::LongOption longOptions[] = 
+        {
+            Arg::LongOption("debug"),
+            Arg::LongOption("filenames", \&'f\&'),
+            Arg::LongOption("help", \&'h\&'),
+            Arg::LongOption("version", \&'v\&'),
+        };
+    
+        Arg::LongOption const *const longEnd = 
+                        longOptions + 
+                        sizeof(longOptions) / sizeof(Arg::LongOption); 
+    }
+    
+    int main(int argc, char **argv)
+    try
+    {
+        Arg &arg = Arg::initialize("df:hv", 
+                        longOptions, longEnd, argc, argv);
+
+        // code using arg, etc\&.
+    }
+    catch(Errno const &err)     // handle exceptions
+    {
+        cerr << err\&.what() << endl;
+        return err\&.which();
+    }
+    catch(int x)
+    {
+        return x;
+    }
+        
+.fi 
+
+.PP 
+.SH "FILES"
+\fIbobcat/arg\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

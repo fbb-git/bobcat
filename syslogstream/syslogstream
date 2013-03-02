@@ -1,0 +1,174 @@
+#ifndef _INCLUDED_BOBCAT_SYSLOGSTREAM_
+#define _INCLUDED_BOBCAT_SYSLOGSTREAM_
+
+/*
+    options (default: none):
+
+       LOG_CONS
+              write directly to system console  if  there  is  an
+              error while sending to system logger
+
+       LOG_NDELAY
+              open the connection immediately (normally, the con-
+              nection is opened when the first message is logged)
+
+       LOG_PERROR
+              print to stderr as well
+
+       LOG_PID
+              include PID with each message
+
+
+    facility
+        type of program doing the logging. LOG_USER is used as default:
+
+       LOG_AUTHPRIV
+              security/authorization messages (private)
+
+       LOG_CRON
+              clock daemon (cron and at)
+
+       LOG_DAEMON
+              other system daemons
+
+       LOG_KERN
+              kernel messages
+
+       LOG_LOCAL0 through LOG_LOCAL7
+              reserved for local use
+
+       LOG_LPR
+              line printer subsystem
+
+       LOG_MAIL
+              mail subsystem
+
+       LOG_NEWS
+              USENET news subsystem
+
+       LOG_SYSLOG
+              messages generated internally by syslogd
+
+       LOG_USER(default)
+              generic user-level messages
+
+       LOG_UUCP
+              UUCP subsystem
+
+   level (priority):
+
+        LOG_NOTICE is used by default.
+        This determines the importance of the message.  The levels
+        are, in order of decreasing importance:
+
+       LOG_EMERG
+              system is unusable
+
+       LOG_ALERT
+              action must be taken immediately
+
+       LOG_CRIT
+              critical conditions
+
+       LOG_ERR
+              error conditions
+
+       LOG_WARNING
+              warning conditions
+
+       LOG_NOTICE   (Used as DEFAULT)
+              normal, but significant, condition
+
+       LOG_INFO
+              informational message
+
+       LOG_DEBUG
+              debug-level message
+
+*/
+
+#include <bobcat/syslogbuf>
+#include <ostream>
+#include <syslog.h>
+                        
+namespace FBB
+{
+    class SyslogStream: private Syslogbuf, public std::ostream
+    {
+        public:
+            SyslogStream(char const *ident,
+                Priority priority = NOTICE, Facility facility = USER,
+                int option = 0);
+
+            Priority priority()   const       
+            {
+                return Syslogbuf::priority();
+            }
+
+            Priority defaultPriority()   const
+            {
+                return Syslogbuf::defaultPriority();
+            }
+
+            Priority setPriority(Priority priority)
+            {
+                return Syslogbuf::setPriority(priority);
+            }        
+
+            Priority setDefaultPriority(Priority priority)
+            {
+                return Syslogbuf::setDefaultPriority(priority);
+            }        
+
+    // MANIPULATORS:
+
+            static std::ostream &emerg(std::ostream &str)
+            {
+                return setPriority(str, EMERG);
+            }
+
+            static std::ostream &alert(std::ostream &str)
+            {
+                return setPriority(str, ALERT);
+            }
+
+            static std::ostream &crit(std::ostream &str)
+            {
+                return setPriority(str, CRIT);
+            }
+
+            static std::ostream &err(std::ostream &str)
+            {
+                return setPriority(str, ERR);
+            }
+
+            static std::ostream &warning(std::ostream &str)
+            {
+                return setPriority(str, WARNING);
+            }
+
+            static std::ostream &notice(std::ostream &str)
+            {
+                return setPriority(str, NOTICE);
+            }
+
+            static std::ostream &info(std::ostream &str)
+            {
+                return setPriority(str, INFO);
+            }
+
+            static std::ostream &debug(std::ostream &str)
+            {
+                return setPriority(str, DEBUG);
+            }
+
+            static std::ostream &strerrno(std::ostream &str);
+
+        private:
+            static std::ostream &setPriority(std::ostream &str, 
+                                            Priority priority);
+
+    };
+}
+
+#endif

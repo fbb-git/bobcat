@@ -1,0 +1,236 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Msg</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Msg</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Msg(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Msg(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz Message handler</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Msg - Generic message handler
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/msg&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>CONSTRUCTORS</h2>
+    The class <strong>Msg</strong> only has static members. There are no constructors.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+    The class <strong>Msg</strong> only has static members. The member functions listed
+below are not frequently used. They exist primarily to control the output
+streams and to fine-tune the inner workings of the class' data members.
+Instead, the class-less members <strong>msg()</strong> and <strong>lineMsg()</strong> (see below) and
+the manipulators (see below) are used to create messages.
+<p>
+<ul>
+    <li> <strong>static unsigned count()</strong>:<br>
+        Returns the number of error messages generated so far.
+    <li> <strong>static bool display()</strong>:<br>
+        Returns <em>true</em> if the currently accumulated message will be
+inserted into the message stream. This is the default case.
+    <li> <strong>static unsigned errors()</strong>:<br>
+        Returns the number of error messages generated so far. Synonym of
+<strong>count()</strong>. 
+    <li> <strong>static std::streambuf *infoToWarning()</strong>:<br>
+        Following this call all `info'-messages will be written to the same
+stream as warning messages. The function returns the <strong>streambuf</strong> used so
+far. 
+    <li> <strong>static void open(std::ifstream &amp;in, std::string const &amp;name)</strong>:<br>
+        Convenience function opening the object <em>ifstream in</em> refers to. If
+opening the stream fails, a message is displayed and a fatal error message is
+generated. 
+    <li> <strong>static void open(std::ofstream &amp;in, std::string const &amp;name)</strong>:<br>
+        Convenience function opening the object <em>ofstream in</em> refers to. If
+opening the stream fails, a message is displayed and a fatal error message is
+generated. 
+    <li> <strong>static bool setDisplay(bool mode)</strong>:<br>
+        Changes the setting of the `display' variable. At <strong>true</strong> (Note that
+the default is <strong>false</strong>) accumulated messages will be inserted into the
+message stream.
+    <li> <strong>static std::streambuf *setInfoBuf(std::streambuf *newBuffer,
+                                          bool display = true)</strong>:<br>
+        Define a new <strong>streambuf</strong> into which info-messages will be
+inserted. The passed <strong>streambuf</strong> must remain in existence after the call. If
+<strong>newBuffer</strong> is 0, the currently used <strong>streambuf</strong> is not altered.
+The function returns the <strong>streambuf</strong> used so far.
+    <li> <strong>static void setLine(unsigned linenr)</strong>:<br>
+        Set the value of the line-counter used with the <strong>lineMsg</strong>
+manipulator (see below).
+    <li> <strong>static void setMaxCount(unsigned maxCount)</strong>:<br>
+        Define the maximum number of error messages (using the <strong>err</strong>
+manipulator, see below), before a fatal <em>maximum number of error messsages
+reached</em> message is generated. The default value is the maximum unsigned
+value; not reached in any practical situation.
+    <li> <strong>static void setOstream(std::string const &amp;name)</strong>:<br>
+        Define the name of the stream to which messages will be written.
+    <li> <strong>static void setWarning(char const *pre = "[Warning] ")</strong>:<br>
+        Define the text printed ahead of warning messages. The default value
+is equal to this member function's default argument value.
+    <li> <strong>static unsigned warnings()</strong>:<br>
+        Returns the number of warning messages generated so far.
+    </ul>
+<p>
+<h2>FREE FUNCTIONS</h2>
+    Note that the following two functions are not members of the class
+<strong>Msg</strong>, but <em>are</em> defined in the namespace <strong>FBB</strong>.
+    <ul>
+    <li> <strong>std::ostringstream &amp;linMsg()</strong>:<br>
+        Information inserted into this function is used to compose a
+message. Messages must be completed, using an appropriate manipulator, before
+another message can be constructed. The final message is prefixed by
+the text `<em>Line &lt;nr&gt;: </em>', where <em>&lt;nr&gt;</em> is the value last set by the member
+function <strong>setLine()</strong>. Note the blank trailing the colon.
+    <li> <strong>std::ostringstream &amp;msg()</strong>:<br>
+        Information inserted into this function is used to compose a
+message. Messages must be completed, using an appropriate manipulator, before
+another message can be constructed. 
+    <li> <strong>std::ostringstream &amp;msgstream()</strong>:<br>
+        Contrary to the function <strong>msg</strong>, which will first clear the current
+contents of the message buffer, <strong>msgstream</strong> returns the current stream `as
+is'. This allows the use of certain Template Library algorithms, like
+<em>copy</em>. E.g., assuming that <em>std::vector&lt;std::string&gt; d_words</em> has been
+defined, and using directives were specificied for the <em>std</em> and <em>FBB</em>
+namespaces, then
+        <pre>
+
+    copy(d_words.begin(), d_words.end(), ostream_iterator&lt;string&gt;(msg, " "));
+    msgstream() &lt;&lt; info;
+        
+</pre>
+
+    can be used to insert the contents of <em>d_words</em>, separated by a blank
+space, into the <em>Msg</em> stream.
+    </ul>
+<p>
+<h2>MANIPULATORS</h2>
+    The following manipulators (which are <em>not</em> part of the <strong>FBB::Msg</strong>,
+class, but <em>are</em> defined in the <strong>FBB</strong> namespace) can be inserted into the
+<strong>FBB::Msg</strong> object. All messages are by default inserted into the standard
+output stream (<em>cout</em>).
+    <ul>
+    <li> <strong>err</strong>:<br>
+        An error message is generated. Error messages are prefixed by the text
+`<em>[Error &lt;count&gt;] </em>', where <em>&lt;count&gt;</em> counts the number of error messages
+generated so far. If the maximum error count is exceeded (see
+<strong>setMaxCount()</strong> above) a fatal message is generated as well. A newline is
+added to the message by the manipulator.
+    <li> <strong>fatal</strong>:<br> 
+        A fatal message is generated. Fatal messages are prefixed by the text
+`<em>[Fatal] </em>'. Following a fatal message an <strong>Errno(1)</strong> exception is
+thrown.  A newline is added to the message by the manipulator.
+    <li> <strong>info</strong>:<br> 
+        This manipulator generates an informational message. Information
+messages may be controlled by the <strong>setDisplay()</strong> member (see above), and
+have no further characteristics.  A newline is added to the message by the
+manipulator.
+    <li> <strong>spool</strong>:<br> 
+        This manipulator generates a (partial) informational message. 
+<strong>spool</strong> does not add a newline message, but merrely flushes the stream's
+buffer.
+    <li> <strong>warning</strong>:<br> 
+        This manipulator generates a warning message. Warning
+messages may be controlled by the <strong>setDisplay()</strong> member (see above). By
+default the text `<em>[Warning] </em>' is prefixed to the message, but the prefixed
+message is configurable.  A newline is added to the message by the
+manipulator.
+    </ul>
+<p>
+<h2>OVERLOADED OPERATOR</h2>
+    The following insertion operator is <em>not</em> defined in the namespace
+<strong>FBB</strong>. It is part of the distribution to allow the manipulators to be
+inserted into a <strong>ostrstream</strong>:
+    <ul>
+    <li> <strong>void operator&lt;&lt;(std::ostream &amp;ostrstream, void (*)(std::ostream &amp;))</strong>:<br>
+        The second argument normally is one of the manipulators defined above.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+        <pre>
+
+    #include &lt;bobcat/msg&gt;
+
+    using namespace FBB;
+
+    int main(int argc)
+    try
+    {
+        if (argc == 1)
+            msg() &lt;&lt; "Need some arguments" &lt;&lt; fatal;
+        else
+        {
+            Msg::setDisplay(true);
+            msg() &lt;&lt; "Thanks for providing " &lt;&lt; argc &lt;&lt; 
+                                    " arguments " &lt;&lt; info;
+        }
+    }            
+    catch(...)
+    {
+        msg() &lt;&lt; "Got an Errno object, but ignoring it" &lt;&lt; err;
+    }
+        
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/msg</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>errno</strong>(3bobcat), <strong>indent</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

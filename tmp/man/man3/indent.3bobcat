@@ -1,0 +1,147 @@
+.TH "FBB::Indent" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Text Indentation"
+
+.PP 
+.SH "NAME"
+FBB::Indent \- Configurable text indentation
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/indent>\fP
+.br 
+
+.PP 
+.SH "DESCRIPTION"
+\fBFBB::Indent\fP and its various manipulators offer text-indentation\&. Text
+inserted into streams is indented over a fully configurable amount using a set
+of manipulators and (static) member functions\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "STATIC MEMBER FUNCTIONS"
+
+.PP 
+.IP o 
+\fBvoid clear()\fP:
+.br 
+Resets the indentation level to zero\&. The \fBindent\fP manipulator will
+have no visible effect after calling this member\&.
+.IP o 
+\fBvoid dec()\fP:
+.br 
+Reduces the indentation level by the current increment (4 by
+default)\&. The indentation level is never reduces to a negative value\&.
+.IP o 
+\fBvoid inc()\fP:
+.br 
+Increments the indentation level by the current increment (4 by
+default)\&.        
+.IP o 
+\fBvoid setInc(unsigned inc)\fP:
+.br 
+Defines the increment value used with the \fBdec\fP and \fBinc\fP
+members\&. 
+.IP o 
+\fBvoid setWidth(unsigned width)\fP:
+.br 
+Defines the indentation to a specific value \fBwidth\fP\&.
+
+.PP 
+.SH "MANIPULATORS"
+The following manipulators (which are \fInot\fP part of the \fBFBB::Indent\fP,
+class, but \fIare\fP defined in the \fBFBB\fP namespace) can be inserted into the
+\fBFBB::Indent\fP object:
+.IP o 
+\fBFBB::decindent\fP:
+.br 
+This manipulator will first call \fBIndent::dec\fP\&. Then \fBFBB::indent\fP
+is called\&. The effect will be that the indentation level is reduced just
+before the indentation is inserted\&.
+.IP o 
+\fBFBB::incindent\fP:
+.br 
+This manipulator will first call \fBIndent::inc\fP\&. Then \fBFBB::indent\fP
+is called\&. The effect will be that the indentation level is incremented just
+before the indentation is inserted\&.
+.IP o 
+\fBFBB::indent\fP:
+.br 
+This manipulator will insert the currently defined number of
+indentation blanks into the \fIostream\fP for which it it called\&.
+.IP o 
+\fBFBB::indentdec\fP:
+.br 
+This manipulator will first call \fBFBB::indent\fP, Then \fBIndent::dec\fP
+is called\&. The effect will be that the indentation is inserted first,
+immediately followed by a reduction of the indentation level\&. 
+.IP o 
+\fBFBB::indentinc\fP:
+.br 
+This manipulator will first call \fBFBB::indent\fP, Then \fBIndent::inc\fP
+is called\&. The effect will be that the indentation is inserted first,
+immediately followed by a increment of the indentation level\&. 
+.IP o 
+\fBFBB::nlindent\fP:
+.br 
+This manipulator will insert a newline character (\fI\en\fP)\&. Then 
+\fBFBB::indent\fP is called, indenting the next line over the currently defined
+number of blanks\&.
+
+.PP 
+.SH "EXAMPLE"
+.nf 
+
+    using namespace std;
+    using namespace FBB;
+    int main()
+    {
+        cout << indentinc << "Not indented" <<
+                nlindent << "Indenting with 4 blanks\en";
+        Indent::clear();
+        cout << "No indentation\en";
+    }
+        
+.fi 
+
+.PP 
+.SH "FILES"
+\fIbobcat/indent\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

@@ -1,0 +1,149 @@
+.TH "FBB::User" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "/etc/passwd user info"
+
+.PP 
+.SH "NAME"
+FBB::User \- Provides the \fI/etc/passwd\fP info of the current user
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/user>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+This class retrieves the information of the current user from the
+information in \fI/etc/passwd\fP\&. The class is a simple wrapper class around the
+\fBgetpwent\fP(3) function\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBUser() trow(FBB::Errno)\fP:
+.br 
+The default constructor determines the current user\&'s data\&. If
+these can\&'t be found, an \fBFBB::Errno\fP exception is thrown\&.
+.IP o 
+\fBUser(User const &other) throw()\fP:
+.br 
+The standard copy constructor is available\&.
+
+.PP 
+.SH "MEMBER FUNCTIONS"
+.IP o 
+\fBunsigned groupid() const\fP:
+.br 
+:
+.br 
+Returns the user\&'s group-id\&.
+.IP o 
+\fBunsigned homedir() const\fP:
+.br 
+:
+.br 
+Returns the user\&'s home directory (including a trailing \fI/\fP)\&.
+.IP o 
+\fBunsigned name() const\fP:
+.br 
+:
+.br 
+Returns the user\&'s user-name\&.
+.IP o 
+\fBunsigned password() const\fP:
+.br 
+:
+.br 
+Returns the user\&'s encrypted password\&. But see also the \fBBUGS\fP section\&. 
+.IP o 
+\fBunsigned realname() const\fP:
+.br 
+:
+.br 
+Returns the user\&'s real name, as listed in the \fI/etc/passwd\fP\&'s \fIgecos\fP field\&.
+.IP o 
+\fBunsigned shell() const\fP:
+.br 
+:
+.br 
+Returns the user\&'s shell\&.
+.IP o 
+\fBunsigned userid() const\fP:
+.br 
+:
+.br 
+Returns the user\&'s user-id\&.
+
+.PP 
+.SH "EXAMPLE"
+.nf 
+#include <bobcat/user>
+#include <iostream>
+
+using namespace std;
+using namespace FBB;
+
+int main()
+{
+    User  user;
+
+    cout << "\en"
+        "name       : " << user\&.name()      << "\en" <<
+        "password   : " << user\&.password()  << "\en" <<
+        "user id    : " << user\&.userid()    << "\en" <<
+        "group id   : " << user\&.groupid()   << "\en" <<
+        "real name  : " << user\&.realname()  << "\en" <<
+        "home dir   : " << user\&.homedir()   << "\en" <<
+        "shell      : " << user\&.shell()     << "\en" << endl;
+
+    return 0;
+}
+
+.fi 
+
+.PP 
+.SH "FILES"
+\fIbobcat/user\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBgetpwent\fP(3)
+.PP 
+.SH "BUGS"
+If the user is a member of multiple groups, only the group id listed in
+\fI/etc/passwd\fP is returned by \fBgroupid()\fP\&.
+.PP 
+If shadow passwording is used, the string returned by \fBpassword()\fP will
+probably not contain the encrypted password\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

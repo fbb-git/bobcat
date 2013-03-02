@@ -1,0 +1,261 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::ConfigFileile</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::ConfigFileile</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::ConfigFileile(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::ConfigFileile(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz Configuration File Processing</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::ConfigFileile - A class processing standard unix-like configuration files
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/configfile&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    <strong>FBB::ConfigFile</strong> objects read standard <em>unix</em>-style configuration
+files.  Lines are stored with initial white-space (blanks and tabs) removed.
+If a line ends in \, then the next line (initial white-space removed) is
+appended to the current line.
+<p>
+Information at and beyond the first <em>#</em> on individual lines is removed
+if the <em>rmComment</em> flag is set to <strong>true</strong>.  In that case, lines containing
+only blanks and tabs are not stored.
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <strong>std::vector&lt;std::string&gt;</strong>
+<p>
+<h2>ENUMERATIONS</h2>
+    The following enumerations are defined by the class <strong>FBB::ConfigFile</strong>:
+    <ul>
+    <li> <strong>Comment</strong>:<br>
+        This enumeration has two values: <br>
+        <strong>FBB::ConfigFile::KeepComment</strong> is used to indicate that comment on
+lines must be kept; <br>
+        <strong>FBB::ConfigFile::RemoveComment</strong> is used to indicate that comment on
+lines must be removed;
+    <li> <strong>SearchCasing</strong>:<br>
+        This enumeration also has two values:<br> 
+        <strong>FBB::ConfigFile::SearchCaseSensitive</strong> is used to do case sensitive
+searches for targets;<br>
+        <strong>FBB::ConfigFile::SearchCaseInsensitive</strong> is used to do case
+insensitive searches for targets.
+    <li> <strong>Indices</strong>:<br>
+        This enumeration also has two values:<br> 
+        <strong>FBB::ConfigFile::IgnoreIndices</strong> when used, the line numbers of the
+original configuration file will not be made available;<br>
+        <strong>FBB::ConfigFile::StoreIndices</strong> when used, the line numbers of the
+original configuration file will be made available;<br>
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Configfile(Comment cType = KeepComment, SearchCasing sType =
+            SearchCaseSensitive, Indices iType = IgnoreIndices)</strong>:<br>
+        This constructor is used to create an empty <strong>FBB::ConfigFile</strong>
+object. It is not associated with an input stream: the <strong>open()</strong> member can
+be used for that. The parameters can be used to specify specific handling of
+comment, letter-casing and storage of line numbers in the original
+configuration file.
+    <li> <strong>Configfile(std::string const &amp;fname, Comment cType = KeepComment,
+            SearchCasing sType = SearchCaseSensitive, 
+            Indices iType = IgnoreIndices)</strong>:<br>
+        This constructor is used to create a <strong>FBB::ConfigFile</strong> object, which
+is filled with the information from a file whose name is provided as the
+constructor's first argument. The other parameters are used as described with
+the first constructor.
+    <li> <strong>Configfile(FBB::ConfigFile const &amp;other)</strong>:<br>
+        The copy constructor is available.
+    </ul>
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+     All members of <strong>std::vector&lt;std::string&gt;</strong>  are
+available, as <strong>FBB::ConfigFile</strong> inherits from this class.
+    <ul>
+    <li> <strong>ConfigFile::const_RE_iterator beginRE(std::string const &amp;target) const</strong>:<br>
+        This member returns a <em>const</em> iterator to the first element (i.e.,
+line) of the <strong>FBB::ConfigFile</strong> object in which the regular expression
+<em>target</em> is found. <strong>FBB::Pattern</strong> is used to perform the pattern
+matching. If the <em>RemoveComment</em> flag was specified, then comment-text is
+not searched.  The returned iterator can be incremented until <strong>endRe()</strong> is
+reached; all iterators will point to lines matching the specified regular
+expression.  This member also interprets the <em>SearchCasing</em> flag.
+    <li> <strong>ConfigFile::const_RE_iterator endRE() const</strong>:<br>
+        This member returns a <em>const</em> iterator marking the end of the series
+of lines started at the the first line matching the regular expression
+specified by <strong>beginRE()</strong>
+    <li> <strong>ConfigFile::const_iterator find(std::string const &amp;target) const</strong>:<br>
+        This member will return an iterator to the first element (i.e., line)
+of the <strong>FBB::ConfigFile</strong> object in which <em>target</em> is found. Note that
+<em>target</em> may appear anywhere within a line. If the <em>RemoveComment</em> flag
+was specified, then comment-text is not searched. Use the
+<strong>FBB::ConfigFile::end()</strong> member to determine the end-iterator. It is not
+guaranteed that all lines between the returned iterator and <strong>end()</strong> will
+also contain <em>target</em>.  This member also interprets the <em>SearchCasing</em>
+flag.
+    <li> <strong>ConfigFile::const_iterator findRE(std::string const &amp;target) const</strong>:<br>
+        This member returns an iterator to the first element (i.e., line) of
+the <strong>FBB::ConfigFile</strong> object in which the regular expression <em>target</em> is
+found. <strong>FBB::Pattern</strong> is used to perform the pattern matching. If the
+<em>RemoveComment</em> flag was specified, then comment-text is not searched.  The
+inherited <strong>FBB::ConfigFile::end()</strong> member can be used to determine the
+end-iterator. It is not guaranteed that all lines between the returned
+iterator and <strong>end()</strong> will also contain <em>target</em>. If that is required, the
+members <strong>beginRE()</strong> and <strong>endRE()</strong> can be used.  This member also
+interprets the <em>SearchCasing</em> flag.
+    <li> <strong>unsigned index(unsigned idx)</strong>:<br>
+        This function should only be used when the parameter <em>StoreIndices</em>
+was specified at construction time. In that case it will return the original
+0-based line index in the configuration file associated with the <em>idx</em>sup(th)
+(0-based) index in the current <em>Configuration</em> object. 
+    <li> <strong>unsigned index(const_iterator const &amp;iter)</strong>:<br>
+        This function should only be used when the parameter <em>StoreIndices</em>
+was specified at construction time. In that case it will return the original
+0-based line index in the configuration file associated with the configuration
+line in the current <em>Configuration</em> object pointed to by <em>iter</em>. This may
+also be an (incremented version of the) iterator returned by the member
+<em>findRE</em> or <em>beginRE</em>, as long as the iterator's value is within the half
+open range <em>beginRE</em> to <em>endRE</em>.
+    <li> <strong>void open(std::string const &amp;fname) throw(FBB::Errno)</strong>:<br>
+        This member will read the configuration file having name <em>fname</em>.
+It will redefine the current contents of the <strong>FBB::ConfigFile</strong> object,
+destroying any information previously stored in it. The configuation file is
+read according to the latest setting of the comment-flag. It will throw an
+<em>FBB::Errno</em> exception if the file could not be opened.
+    <li> <strong>void setCommentHandling(Comment type)</strong>:<br>
+        This member can be used to change the comment-handling type originally
+set by the constructor, or set by earlier calls of this function. When called
+it won't affect the current contents of the <strong>FBB::ConfigFile</strong> object, but
+new calls of its <em>open()</em> member will read the configuation file according
+to the last setting of the comment flag.
+    <li> <strong>void setSearchCasing(SearchCasing type)</strong>:<br>
+        This member can be used to change the handling of the letter-casing
+originally set by the constructor, or set by earlier calls of this
+function. When called it won't affect the current contents of the
+<strong>FBB::ConfigFile</strong> object, but new calls of its <em>open()</em> member will read
+the configuation file according to the last setting of the letter-casing flag.
+<p>
+</ul>
+<p>
+<h2>EXAMPLE</h2>
+    Assume the configuration file is called <em>config.rc</em> and contains the
+following lines: 
+<p>
+
+    <pre>
+
+
+# this is ignored
+
+noline: this one too
+
+line: this is found
+
+this is not a line containing line: at the beginning of the line
+
+line: this one is
+
+    line: what about this one? \ 
+        it's extending over multiple lines
+
+and there may, of course, be more lines in this file
+    
+</pre>
+
+<p>
+The following program may be compiled and run as <em>a.out config.rc</em>:
+    <pre>
+
+#include &lt;iostream&gt;
+#include &lt;iterator&gt;
+#include &lt;algorithm&gt;
+#include &lt;string&gt;
+#include &lt;bobcat/configfile&gt;
+
+using namespace std;
+using namespace FBB;
+    
+int main(int argc, char **argv)
+{
+    ConfigFile cf(argv[1]);     
+
+    cout &lt;&lt; *cf.find("this one") &lt;&lt; endl; // find text within a line
+
+                                         // find all lines matching 
+                                         // `^line:'
+    copy(cf.beginRE("^line:"), cf.endRE(), 
+                    ostream_iterator&lt;string&gt;(cout, "\n"));
+}
+    
+</pre>
+
+<p>
+Producing the output:
+    <pre>
+
+noline: this one too
+line: this is found
+line: this one is
+line: what about this one? it's extending over multiple lines
+    
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/configfile</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>errno</strong>(3bobcat), <strong>pattern</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

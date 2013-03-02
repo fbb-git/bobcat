@@ -1,0 +1,48 @@
+To Install the bobcat library by hand instead of using the binary distribution
+perform the following steps:
+
+    1. Inspect the values of the variables in the file INSTALL.cf.  Modify
+       these when necessary.  In particular note the definition of the
+       COMPILER shell variable, which is set to Gnu's g++ compiler as used in
+       Debian's `unstable' distribution. Removing the definition using the
+       explicit version results in the definition of COMPILER as `g++', which
+       should be your default g++ compiler.
+
+    2. Run `./make/library' to compile the bobcat library
+
+        Note: it's NOT `make library'
+
+       ./make/library asks whether you want to compile the Milter and Xpointer
+       classes. 
+
+       To compile the Milter class you need the header libmilter/mfapi.h,
+       which is (in Debian) part of the libmilter-dev package. 
+
+       To compile Xpointer, you need X11/Xlib.h, which is (in Debian) part of
+       the libx11-dev package.
+
+       If you don't intend to write programs using these classes, it's ok not
+       to include these classes into the library, since no other classes
+       depend on these two (see README.class-setup). If you're sure that you
+       want to compile these classes (so, the headers are available), then
+       `./make library all' will compile the bobcat library with no questions
+       asked.
+    
+    3. Run (probably as root) ./make/install to install
+
+        Note: it's NOT `make install'
+
+    Following the installation nothing in this directory tree is required
+    for the proper functioning of the bobcat library, so consider removing it.
+
+
+Make sure that the library is found by the loader. By default it is installed
+in /usr/lib, which is in the loader's standard search path
+
+By default the headers are stored under /usr/include. Since this is part of
+the compiler's the standard include path the header files are included as,
+e.g., #include <bobcat/errno>. No `bobcat' headers have extenstions.
+
+By default the manual pages are stored under /usr/share/man/man3 and
+/usr/share/man/man7, which are normally in the `man' program's set of visited
+directories.

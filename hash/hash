@@ -1,0 +1,237 @@
+#ifndef _INCLUDED_BOBCAT_HASH_
+#define _INCLUDED_BOBCAT_HASH_
+
+#include <string>
+#include <cctype>
+#include <algorithm>
+#include <ext/hash_map>
+
+/*
+    Note that with the Gnu g++ compiler 3.2 (and beyond?) the ext/ header
+    uses the __gnu_cxx namespace for symbols defined in these header files.
+
+    When using compilers before version 3.2, do:    
+        #define __gnu_cxx   std
+    before including this file to circumvent problems that may occur 
+    because of these namespace conventions which were not yet used in versions
+    before 3.2.
+
+*/
+
+
+/*
+    This file is copyright (c) AFL, 2005
+    =========================================
+
+    With hash_maps using char const * for the keys:
+                         ============
+
+    * Use `Hash_CharPtr' as 3rd template argument for case-sensitive keys
+    * Use `Hash_CaseCharPtr' as 3rd template argument for case-insensitive 
+      keys
+    
+    * Use `Equal_CharPtr' as 4th template argument for case-sensitive keys
+    * Use `Equal_CaseCharPtr' as 4th template argument for case-insensitive
+      keys
+
+
+    With hash_maps using std::string for the keys:
+                         ===========
+
+    * Use `Hash_String' as 3rd template argument for case-sensitive keys
+    * Use `Hash_CaseString' as 3rd template argument for case-insensitive keys
+        
+    * OMIT the 4th template argument for case-sensitive keys
+    * Use `EqualCaseString' as 4th template argument for case-insensitive 
+        keys
+
+
+    Examples, using int as the value type. Any other type can be used instead
+              for the value type:
+
+                                    // key is char const *, case sensitive
+        __gnu_cxx::hash_map<char const *, int, FBB::Hash_CharPtr, 
+                            FBB::EqualCharPtr >
+            hashtab;
+
+                                    // key is char const *, case insensitive
+        __gnu_cxx::hash_map<char const *, int, FBB::Hash_CaseCharPtr, 
+                                         FBB::EqualCaseCharPtr >
+            hashtab;
+
+                                    // key is std::string, case sensitive
+        __gnu_cxx::hash_map<std::string, int, FBB::Hash_String>
+            hashtab;
+
+                                    // key is std::string, case insensitive
+        __gnu_cxx::hash_map<std::string, int, FBB::Hash_CaseString, 
+                                        FBB::EqualCaseString>
+            hashtab;
+
+    Instead of the above full typedeclarations, the following shortcuts should
+    work as well:
+
+        FBB::HashCharPtr<int>       // key is char const *, case sensitive
+            hashtab;
+                                    
+        FBB::HashCharCasePtr<int>   // key is char const *, case insensitive
+            hashtab;
+                                    
+        FBB::HashString<int>        // key is std::string, case sensitive
+            hashtab;
+
+        FBB::HashStringCase<int>    // key is std::string, case insensitive
+            hashtab;
+
+    With these template types iterators and other map-members are also
+    available. E.g.,
+
+    --------------------------------------------------------------------------
+    extern FBB::HashString<int> dh;
+
+    for (FBB::HashString<int>::iterator it = dh.begin(); it != dh.end(); it++)
+        std::cout << it->first << " - " << it->second << std::endl;
+    --------------------------------------------------------------------------
+
+    Feb. 2001 - April 2002
+    Frank B. Brokken (f.b.brokken@rug.nl)
+*/
+
+namespace FBB
+{
+    class Hash_CharPtr
+    {
+        public: 
+            size_t operator()(char const *str) const
+            { 
+                return __gnu_cxx::hash<char const *>()(str);
+            }
+    };
+    
+    class Equal_CharPtr
+    {
+        public: 
+            bool operator()(char const *x, char const *y) const 
+            { 
+                return !strcmp(x, y); 
+            }
+    };
+    
+    class Hash_CaseCharPtr
+    {
+        public: 
+            size_t operator()(char const *str) const
+            { 
+                std::string s = str;
+                for_each(s.begin(), s.end(), *this);
+                return __gnu_cxx::hash<char const *>()(s.c_str());
+            }
+            void operator()(char &c) const
+            {
+                c = tolower(c);
+            }
+    };
+    
+    class Equal_CaseCharPtr
+    {
+        public: 
+            bool operator()(char const *x, char const *y) const 
+            { 
+                return !strcasecmp(x, y); 
+            }
+    };
+    
+    class Hash_String
+    {
+        public: 
+            size_t operator()(std::string const &str) const
+            { 
+                return __gnu_cxx::hash<char const *>()(str.c_str());
+            }
+    };
+    
+    class Hash_CaseString: public Hash_CaseCharPtr
+    {
+        public: 
+            size_t operator()(std::string const &str) const
+            { 
+                return Hash_CaseCharPtr::operator()(str.c_str());
+            }
+    };
+    
+    class Equal_CaseString
+    {
+        public: 
+            bool operator()(std::string const &s1, std::string const &s2) const
+            { 
+                return !strcasecmp(s1.c_str(), s2.c_str()); 
+            }
+    };
+    
+    
+    template<typename Value>
+    class HashCharPtr: public 
+        __gnu_cxx::hash_map<char const *, Value, Hash_CharPtr, Equal_CharPtr >
+    {
+        public:
+            HashCharPtr()
+            {}
+            template <typename InputIterator>
+            HashCharPtr(InputIterator first, InputIterator beyond)
+            :
+                __gnu_cxx::hash_map<char const *, Value, Hash_CharPtr,
+                                    Equal_CharPtr>(first, beyond)
+            {}
+    };
+    
+    template<typename Value>
+    class HashCharCasePtr: public 
+        __gnu_cxx::hash_map<char const *, Value, Hash_CaseCharPtr, 
+                                                 Equal_CaseCharPtr >
+    {
+        public:
+            HashCharCasePtr()
+            {}
+            template <typename InputIterator>
+            HashCharCasePtr(InputIterator first, InputIterator beyond)
+            :
+                __gnu_cxx::hash_map<char const *, Value, 
+                            Hash_CaseCharPtr, Equal_CaseCharPtr>
+                            (first, beyond)
+            {}
+    };
+    
+    template<typename Value>
+    class HashString: public __gnu_cxx::hash_map<std::string, Value, 
+                                                 Hash_String>
+    {
+        public:
+            HashString()
+            {}
+            template <typename InputIterator>
+            HashString(InputIterator first, InputIterator beyond)
+            :
+                __gnu_cxx::hash_map<std::string, Value, Hash_String>
+                             (first, beyond)
+            {}
+    };
+
+
+    template<typename Value>
+    class HashStringCase: public 
+            __gnu_cxx::hash_map<std::string, int, Hash_CaseString, 
+                                Equal_CaseString>
+    {
+        public:
+            HashStringCase()
+            {}
+            template <typename InputIterator>
+            HashStringCase(InputIterator first, InputIterator beyond)
+            :
+                __gnu_cxx::hash_map<std::string, 
+                            int, Hash_CaseString, 
+                            Equal_CaseString>(first, beyond)
+            {}
+    };
+}
+#endif

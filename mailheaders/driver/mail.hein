@@ -1,0 +1,123 @@
+From frank@suffix.rc.rug.nl  Sun Mar  2 21:11:01 2003
+Return-Path: <frank@suffix.rc.rug.nl>
+Received: from suffix.rc.rug.nl (suffix.rc.rug.nl [129.125.3.162])
+	by knarfix.oostum.north (8.12.3/8.12.3/Debian -4) with ESMTP id h22KAvQp011565
+	(version=TLSv1/SSLv3 cipher=EDH-RSA-DES-CBC3-SHA bits=168 verify=FAIL)
+	for <frank@dial30.service.rug.nl>; Sun, 2 Mar 2003 21:10:59 +0100
+Received: from suffix.rc.rug.nl (localhost [127.0.0.1])
+	by suffix.rc.rug.nl (8.12.3/8.12.3/Debian -4) with ESMTP id h22KAqCb003128
+	(version=TLSv1/SSLv3 cipher=EDH-RSA-DES-CBC3-SHA bits=168 verify=FAIL)
+	for <frank@dial30.service.rug.nl>; Sun, 2 Mar 2003 21:10:52 +0100
+Received: (from frank@localhost)
+	by suffix.rc.rug.nl (8.12.3/8.12.3/Debian -4) id h22KAqvc003127
+	for frank@dial30.service.rug.nl; Sun, 2 Mar 2003 21:10:52 +0100
+Resent-Message-Id: <200303022010.h22KAqvc003127@suffix.rc.rug.nl>
+Received: from dep.rc.rug.nl (dep.rc.rug.nl [129.125.3.10])
+	by suffix.rc.rug.nl (8.12.3/8.12.3/Debian -4) with ESMTP id h1EJJ9Sj011249
+	for <frank@suffix.rc.rug.nl>; Fri, 14 Feb 2003 20:19:09 +0100
+Received: from mano.soest.hawaii.edu (mano.soest.hawaii.edu [128.171.151.45])
+	by dep.rc.rug.nl (8.9.3/8.9.3) with ESMTP id UAA18183
+	for <f.b.brokken@rc.rug.nl>; Fri, 14 Feb 2003 20:18:43 +0100 (MET)
+Received: from equator.soest.hawaii.edu (IDENT:root@equator [128.171.151.54])
+	by mano.soest.hawaii.edu (8.12.1/8.12.1) with ESMTP id h1EJJ1Jv003882
+	for <f.b.brokken@rc.rug.nl>; Fri, 14 Feb 2003 09:19:02 -1000 (HST)
+Received: (from hein@localhost)
+	by equator.soest.hawaii.edu (8.11.6/8.11.6) id h1EJJ0R01740
+	for f.b.brokken@rc.rug.nl; Fri, 14 Feb 2003 09:19:00 -1000
+Date: Fri, 14 Feb 2003 09:19:00 -1000
+From: Hein Zelle <hein@soest.hawaii.edu>
+To: "Frank B. Brokken" <f.b.brokken@rc.rug.nl>
+Subject: Re: iterators + annotations
+Message-ID: <20030214191900.GA1667@equator.soest.hawaii.edu>
+References: <20030207185644.GA1714@equator.soest.hawaii.edu> <20030213131606.GA7329@rc.rug.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20030213131606.GA7329@rc.rug.nl>
+Resent-From: frank@rc.rug.nl
+Resent-Date: Sun, 2 Mar 2003 21:10:52 +0100
+Resent-To: frank@dial30.service.rug.nl
+Status: RO
+Content-Length: 3503
+Lines: 79
+
+Hoi Frank,
+
+> moet-ie ook worden geinitialiseerd. Maar de volgende truuk leert je dat een
+> iterator normaliter op 0 is geinitialiseerd:
+> 
+>     int main(int argc, char *argv[])
+>     {
+>         vector<string>::iterator vi;
+>     
+>         cout << &*vi << endl;
+>     }
+
+Ah, dat dacht ik al maar ik wist het niet zeker. Ik heb dit misschien
+nodig, tenzij ik jouw truuk van een lege static member vector
+gebruik. Probleem is namelijk dat de class met de iterator niet weet
+naar welke vector hij wijst, en dus ook niet kan vergelijken met
+vector.end(). (Of dat wenselijk is is vraag 2, maar goed) Ik denk dat
+de static member oplossing het mooist is.
+
+> end() kan volgens mij prima, want end() wijst dan toch al voorbij het laatste
+> element. begin() is dan direct al end(): de volgende code levert `gelijk'
+
+Dat is goed om te weten. Misschien is dat iets om expliciet in de
+annotations te vermelden: het werd mij niet helemaal duidelijk welke
+members van een lege vector je nou wel en niet mag aanroepen.
+
+> Wb een eerdere mail, over Java: ik ben niet zo blij met Java. Er zitten een
+> paar onlogische constructies in ...
+[knip knip]
+
+Bedankt voor je uitleg, dat was ook mijn eerste indruk. Bevestigt mijn
+idee dat ik het niet hoef te leren totdat ik echt behoefte krijg aan
+web-applicaties of iets dergelijks. (Alhoewel de basis niet zo
+moeilijk lijkt, gaat er waarschijnlijk een hoop tijd zitten in het
+leren van die 2000 classes ...)
+
+> De basis gedachte is: er gebeuren dingen die ik niet beheers, en
+> waar ik mogelijk niet om heb gevraagd. Daar heb ik een grote hekel
+> aan in programmeertalen.
+
+Idem. Dat vind ik een goed argument om het niet te gebruiken, mits je
+een alternatief hebt natuurlijk. Helemaal nu ik de STL van C++ begin
+te kennen en begrijpen, zie ik het nut van java niet zo in (voor
+mij). De STL vult het voornaamste gat in wat er nog was: een standaard
+oplossing voor de dingen die je anders bij ieder project weer opnieuw
+maakt. Met name vector en list vind ik een fantastische
+uitvinding. (en de algoritmes als sort())
+
+> Verder heb ik wel eens gekeken naar 't verschil tussen een complex C++
+> programma en hetzelfde Java programma: Java runt 10 x zo traag en gebruikt 10
+> x zoveel geheugen. Ik kan aardig omgaan met Java, en leer KI-studenten hier
+> programmeren mbv Java, maar ik ben er bepaald niet juichend enthousiast
+> over. C/C++ vind ik nog steeds in hoge mate te prefereren boven Java.
+
+Over runtime performance van java: daar zijn ze bij sun nu blijkbaar
+ook achter gekomen. Als je tijd hebt vind je het volgende artikel
+misschien wel interessant: een intern memo van SUN over de redenen
+waarom java niet breed geaccepteerd wordt. (niet van de origine site,
+dit is een mirror, originele adres ben ik kwijt)
+
+http://www.misura.org/temp/JavaInternalMemo.html
+
+>     Sorry voor de late reactie(s), maar soms heb ik 't hier even een beetje
+> druk. Wellicht heb je (nog) iets aan mijn verlate reacties.
+
+Ben je mal, natuurlijk snap ik dat je het druk hebt. Mijn mail over
+java was bepaald niet dringend, en het helpt zeker om er van jou wat
+over te horen, omdat jij er daadwerkelijk mee gewerkt hebt.
+
+Bedankt en groeten (uit een druilerig Hawaii)
+	Hein
+
+>-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-< 
+ Unix is user friendly. It's just very particular about who 
+ it's friends are.
+
+ Hein Zelle                     hein@icce.rug.nl
+	                        http://www.icce.rug.nl/~hein
+>-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-<
+

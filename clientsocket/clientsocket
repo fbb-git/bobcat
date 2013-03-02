@@ -1,0 +1,22 @@
+#ifndef _INCLUDED_BOBCAT_CLIENTSOCKET_
+#define _INCLUDED_BOBCAT_CLIENTSOCKET_
+
+#include <bobcat/socketbase>
+#include <string>
+
+namespace FBB
+{
+    class ClientSocket: public SocketBase
+    {
+        public:
+                                        // host may be address or name
+            ClientSocket(std::string const &host, uint16_t port) 
+                                                        throw (Errno);   // 1
+
+            int connect() throw (Errno);    // returns fd (socket) to talk to
+                                            // the server
+    };
+
+}
+
+#endif

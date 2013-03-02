@@ -1,0 +1,61 @@
+#ifndef _INCLUDED_BOBCAT_WRAP1_
+#define _INCLUDED_BOBCAT_WRAP1_
+
+namespace FBB
+{
+    template <typename Type, typename ReturnType = void>
+    class Wrap1
+    {
+        union
+        {
+            ReturnType (*d_ref)(Type &);
+            ReturnType (*d_constref)(Type const &);
+            ReturnType (*d_ptr)(Type *);
+            ReturnType (*d_constptr)(Type const *);
+        };
+
+        public:
+            typedef Type        argument_type;
+            typedef ReturnType  result_type;
+
+
+            Wrap1(ReturnType (*fun)(Type &))  // references
+            :
+                d_ref(fun)
+            {}
+            ReturnType operator()(Type &param) const
+            {
+                return (*d_ref)(param);
+            }
+
+                                                        // const references
+            Wrap1(ReturnType (*fun)(Type const &))  
+            :
+                d_constref(fun)
+            {}
+            ReturnType operator()(Type const &param) const
+            {
+                return (*d_constref)(param);
+            }
+
+            Wrap1(ReturnType (*fun)(Type *))  // pointer
+            :
+                d_ptr(fun)
+            {}
+            ReturnType operator()(Type *param) const
+            {
+                return (*d_ptr)(param);
+            }
+
+                                                        // const pointer
+            Wrap1(ReturnType (*fun)(Type const *))  
+            :
+                d_constptr(fun)
+            {}
+            ReturnType operator()(Type const *param) const
+            {
+                return (*d_constptr)(param);
+            }
+    };
+} // namespace FBB ends
+#endif

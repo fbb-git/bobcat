@@ -1,0 +1,379 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Process</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Process</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Process(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Process(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz Running Child Processes</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Process - Runs external programs
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/process&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    The <strong>FBB::Process</strong> class offers a simple interface to call external
+programs and/or scripts from a <strong>C++</strong> program (so-called
+<em>child-processes</em>. The class offers a standard, stream-based interface to
+the child process' standard input, standard output and standard error streams.
+<p>
+Objects of the <strong>FBB::Process</strong> class use the standard process-executing
+functions, like <strong>system</strong>(1) and members of the <strong>execl</strong>(1) family to
+execute the child process, and allow <em>shell-scripts</em> to be executed as
+well. 
+<p>
+The standard input, output and error streams of executed child processes
+may be accessed using the <strong>FBB::Process</strong> object. When child processes
+themselves redirect their standard streams, then <strong>FBB::Process</strong> objects will
+not be able to access them anymore (of course).
+<p>
+The same <strong>FBB::Process</strong> object may be used repeatedly to execute child
+processes repeatedly. Before doing so, <strong>FBB::Process</strong>'s <strong>stop()</strong> member
+must be called.
+<p>
+Programs may be called directly from the constructor, or whenever
+appropriate using the <strong>start()</strong> member. Since some child processes will
+continue until their standard input stream is exhausted, the <strong>stop()</strong> member
+is provided to close these streams and to terminate child processes. The
+<strong>stop()</strong> member will first close the child process' standard input
+stream, followed by the sending of termination signals (<em>SIGTERM</em> and
+<em>SIGKILL</em>), to ensure that child processes terminate properly. 
+<p>
+The class <strong>FBB::Process</strong> offers no facilities to construct <em>daemon</em>
+processes, which may be constructed easily using the <strong>FBB::Fork</strong> class.
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <strong>FBB::Fork</strong>(3bobcat) (private) , <br>
+    <strong>FBB:IOStream</strong>(3bobcat)
+<p>
+<h2>ENUMERATIONS</h2>
+<p>
+<strong>enum Program</strong>:<br>
+       This enumeration has the following values:
+        <ul>
+        <li> <strong>NO_PATH</strong>:<br>
+            This value indicates that the external program should be called as
+        specified, without searching the elements in the <em>PATH</em> environment
+        variable. 
+        <li> <strong>USE_PATH</strong>:<br>
+            This value indicates that the <em>PATH</em> environment variable should
+        be used to locate the external program to be executed.
+        </ul>
+        <li> <strong>USE_SHELL</strong>:<br>
+            This value indicates that the external program should be called as
+        command to <strong>/bin/sh</strong>, using the <strong>system</strong>(3) system call.
+        )
+<p>
+<strong>enum IOMode</strong>:<br>
+       This enumeration has the following values:
+        <ul>
+        <li> <strong>CIN</strong>:<br>
+            This value is used to indicate that information written (inserted)
+to the <strong>FBB::Process</strong> object should be sent to its child process.
+        <li> <strong>COUT</strong>:<br>
+            This value is used to indicate that information read (extracted)
+from the <strong>FBB::Process</strong> object should be the information written by the
+child process to its standard output stream.
+        <li> <strong>CERR</strong>:<br>
+            This value is used to indicate that information written by the
+child process to its standard error stream should be accessible through the
+<strong>FBB::Process::cerr()</strong> member.
+        <li> <strong>MERGE_COUT_CERR</strong>:<br>
+            This value is used to indicate that information read (extracted)
+from the <strong>FBB::Process</strong> object should be the information written by the
+child process to its standard output and standard error streams. This
+<strong>IOMode</strong> will overrule an explicitly specified <strong>CERR</strong> mode., 
+        <li> <strong>IGNORE_COUT</strong>:<br>
+            This value is used to indicate that information written by the
+child process to its standard output stream should besent to <em>/dev/null</em>. It
+is ignored when either <strong>COUT</strong> or <strong>MERGE_COUT_CERR</strong> is specified.
+        <li> <strong>IGNORE_CERR</strong>:<br>
+            This value is used to indicate that information written by the
+child process to its standard error stream should be sent to <em>/dev/null</em>. It
+is ignored when either <strong>CERR</strong> or <strong>MERGE_COUT_CERR</strong> is specified.
+            </ul>
+<p>
+<h2>TYPE</h2>
+    <ul>
+    <li> <strong>iomode</strong>:<br>
+        Sets of values  of the <strong>enum IOMode</strong> (using the <em>bit_or</em> operator)
+may be used as value of a variable of this type. In functions expecting an
+<strong>iomode</strong> argument the empty set should not normally be specified.
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Process(std::string const &amp;cmd = "", iomode mode = CIN | COUT | CERR)</strong>:<br>
+       This constructor may also be used as default constructor. By default it
+defines a <strong>FBB::Process</strong> object without setting a command. By default the
+command's standard streams are accessible via the <strong>FBB::Process</strong> object.
+The string that is provided as its first argument may be (the initial part of)
+the external program to run. If the command starts and ends with a
+<em>back-tick</em> (<em>`</em>) then the back-ticks are removed, and the resulting
+contents are interpreted as a command that should directly be executed by the
+<strong>start(Program)</strong> member, using that member's default argument (see
+below). When the <em>FBB::Process</em> object goes out of scope or when its
+<strong>stop()</strong> member is called, the child is given one second to terminate. If
+the child didn't terminate within one second, it is twice sent a <em>SIG_TERM</em>
+signal, followed by a <em>SIG_KILL</em> signal.
+    <li> <strong>Process(unsigned waitSeconds, std::string const &amp;cmd = "", 
+            iomode mode = CIN | COUT | CERR)</strong>:<br>
+       By default this constructor defines a <strong>FBB::Process</strong> object without
+setting a command, while the command's standard streams are accessible via the
+<strong>FBB::Process</strong> object.  The string that is provided as its first argument
+may be (the initial part of) the external program to run. If the command
+starts and ends with a <em>back-tick</em> (<em>`</em>) then the back-ticks are removed,
+and the resulting contents are interpreted as a command that should directly
+be executed by the <strong>start(Program)</strong> member, using that member's default
+argument (see below). When the <em>FBB::Process</em> object goes out of scope or
+when its <strong>stop()</strong> member is called, the child is given <em>waitSeconds</em>
+seconds to terminate. If the child didn't terminate within one second, it is
+twice sent a <em>SIG_TERM</em> signal, followed by a <em>SIG_KILL</em> signal.
+    </ul>
+    The <strong>FBB::Process</strong> class does not offer a copy constructor.
+<p>
+<h2>OVERLOADED OPERATORS</h2>
+<p>
+<ul>
+    <li> <strong>std::ostream &amp;operator&lt;&lt;(FBB::Process &amp;, ...)</strong>:<br>
+        This operator may be used to insert information into the child
+process' standard input stream if <em>IOMode CIN</em> was specified. If <em>IOMODE
+CIN</em> was not specified the insertion is silently ignored. Note that
+information <em>inserted</em> into <strong>FBB::Process</strong> objects is <em>extracted</em> by
+their child processes. 
+<p>
+Note: this operator can only be used between <strong>start()</strong> and
+<strong>stop()</strong> calls (see below). It may produce unexpected results if used
+otherwise. Note that the <strong>FBB::Process</strong> constructor may imply a <strong>start()</strong>
+call. 
+    <li> <strong>std::istream &amp;operator&gt;&gt;(FBB::Process &amp;, ...)</strong>:<br>
+        This operator may be used to extract information from the child
+process' standard output stream or from both the standard output and standard
+error streams. Information from both streams is extracted if <em>IOMode
+MERGE_CIN_COUT</em> was specified. If <em>IOMODE COUT</em> was specified the
+information written by the child process to its standard output stream is
+extracted. Note that information <em>extracted</em> from <strong>FBB::Process</strong> objects
+is <em>inserted</em> by their child processes. If neither modes are specified, the
+default processing of the child's standard streams takes place.
+<p>
+Note: this operator can only be used between <strong>start()</strong> and
+<strong>stop()</strong> calls (see below). It may produce unexpected results if used
+otherwise. Note that the <strong>FBB::Process</strong> constructor may imply a <strong>start()</strong>
+call. 
+    <li> <strong>Process &amp;operator+=(std::string const &amp;)</strong>:<br>
+       This operator adds the provided <em>std::string</em> object to the command
+already stored in a <strong>FBB::Process</strong> object.  Note that this member does not
+add, e.g., a separating blank space between its argument and information that
+may already have been inserted. 
+<p>
+Note: this operator will not have an effect if used between <strong>start()</strong>
+and <strong>stop()</strong> calls (see below). 
+    <li> <strong>int operator=(std::string const &amp;)</strong>:<br>
+       The <strong>operator=()</strong> member (re)defines the command currently stored in
+an <strong>FBB::Process</strong> object.  If the command starts and ends with a
+<em>back-tick</em> (<em>`</em>) then the back-ticks are removed, and the resulting
+contents are interpreted as a command that should directly be executed by the
+<strong>start(Program)</strong> member, using that member's default argument (see below).
+This operator also calls <strong>stop()</strong> (see below). The return value is undefined
+if there was no child process that was stopped, otherwise it is the child
+process' exit value.
+       </ul>
+    The default overloaded assignment operator is not available.
+<p>
+<h2>MEMBERS</h2>
+<p>
+The function's return value is the return value of the used <strong>exec</strong>
+function. See also the member <strong>system</strong>, below. Arguments surrounded by
+double quotes will have their double quotes removed, interpreting any
+escape-sequences that may have been used within. Arguments surrounded by
+single quotes will have their single quotes removed, accepting their contents
+unmodified.
+    <ul>
+    <li> <strong>int available()</strong>:<br>
+        This member returns immediately. Its return value indicates whether
+any information can be obtained from the child process. 0 is returned if no
+information is ready for extraction. 1 is returned if information from the
+child process' standard output stream is available; 2 is returned if
+information from the child process' standard error stream is available (unless
+<em>MERGE_CIN_COUT</em> was specified, in which case both the standard output and
+the standard error streams are merged to the standard output stream); 3 is
+returned if information from both the standard output stream and the standard
+error stream is available.
+    <li> <strong>std::istream &amp;cerr()</strong>:<br>
+        This member may be used to extract the information written by the
+child process to its standard error stream. It can only be used for this when
+<strong>IOMode</strong> <em>CERR</em> was specified.
+    <li> <strong>int start(Program program = NO_PATH)</strong>:<br>
+        The current contents of the command buffer are executed using
+<strong>system</strong>(3) or a member of the <strong>execl</strong>(3) family. Before starting the
+child process, all redirections are set according to the current <strong>IOMode</strong>
+specification. This mode may be set or modified by the constructor, by
+<strong>start()</strong>'s overloaded version (see below) or by the <strong>system()</strong> member
+(see below).  By default (as a security measure), the <em>PATH</em> environment
+variable is <em>not</em> used to search the program to execute. If it is considered
+safe to use the <em>PATH</em> environment variable, <em>USE_PATH</em> may be
+specified. By default the first white-space delimited element of the defined
+command is used as the name of the program to execute. If the program should
+be called as a command to <strong>sh</strong>(1), specify <em>USE_SHELL</em>. If <em>USE_SHELL</em>
+is specified, the defined command is passed as argument to the <strong>system</strong>(3)
+member (see below). When the <em>FBB::Process</em> object goes out of scope or when
+its <strong>Process::stop()</strong> member is called, the child is given one second to
+terminate. If the child didn't terminate within one second, it is twice sent a
+<em>SIG_TERM</em> signal, followed by a <em>SIG_KILL</em> signal. The function has no
+effect if the command buffer is empty.
+    <li> <strong>int start(iomode mode, Program program = NO_PATH)</strong>:<br>
+        Before transferring control to the above <strong>start()</strong> member, the
+<strong>IOMode</strong> is set to <em>mode</em>. Having set <strong>IOMode</strong>, the child process is
+started according to the procedure described with the former <strong>start()</strong>
+member.
+    <li> <strong>int start(unsigned waitSeconds, iomode mode, 
+                  Program program = NO_PATH)</strong>:<br>
+        Before transferring control to the first <strong>start()</strong> member, the
+<strong>IOMode</strong> is set to <em>mode</em>. Having set <strong>IOMode</strong>, the child process is
+started according to the procedure described with the former <strong>start()</strong>
+member. However, when the <em>FBB::Process</em> object goes out of scope or when
+its <strong>stop()</strong> member is called, the child is given <em>waitSeconds</em> seconds to
+terminate. If the child didn't terminate within one second, it is twice sent a
+<em>SIG_TERM</em> signal, followed by a <em>SIG_KILL</em> signal.
+    <li> <strong>int stop()</strong>:<br>
+       This member closes the connections to the child's input, output and
+error streams (if any) and erases the contents of a <strong>FBB::Process</strong> object's
+command buffer. Next it will wait for at most one second or for the number of
+seconds specified at the <strong>FBB::Process</strong> object's construction (or as
+specified when its <strong>start()</strong> member was called) allowing the child to
+complete. If the child didn't terminate within one second, it is twice sent a
+<em>SIG_TERM</em> signal, followed by a <em>SIG_KILL</em> signal.  Following <strong>stop()</strong>
+a new command may be constructed. This member's return value is the child
+process' exit value. This member is also called when the <strong>FBB::Process</strong>
+object goes out of scope.
+    <li> <strong>void system()</strong>:<br>
+        This member executes the stored command using the <strong>system</strong>(3) system
+call (therefore executing the command as a shell command).  When using
+<strong>system</strong> redirections can be included in the command itself (although this
+might undo the previously set <strong>IOMode</strong>).
+    <li> <strong>void system(iomode mode)</strong>:<br>
+        This member sets a new <strong>IOMode</strong> set, and then executes the stored
+command using the <strong>system</strong>(3) system call (therefore executing the command
+as a shell command).  When using <strong>system</strong> redirections can be included in
+the command itself (although this might undo the just set <strong>IOMode</strong>).
+    <li> <strong>int wait()</strong>:<br>
+        This member waits for information written by the child process to its
+standard output or error streams.  1 is returned if information from the child
+process' standard output stream is available; 2 is returned if information
+from the child process' standard error stream is available (unless
+<em>MERGE_CIN_COUT</em> was specified, in which case both the standard output and
+the standard error streams are merged to the standard output stream); 3 is
+returned if information from both the standard output stream and the standard
+error stream is available.
+    <li> <strong>int wait(unsigned sec, unsigned msec = 0)</strong>:<br>
+        This member waits at most <em>sec</em> seconds plus <em>msec</em> milliseconds
+for information written by the child process to its standard output or error
+streams. 0 is returned if, following the delay, no information is ready for
+extraction.  1 is returned if information from the child process' standard
+output stream is available; 2 is returned if information from the child
+process' standard error stream is available (unless <em>MERGE_CIN_COUT</em> was
+specified, in which case both the standard output and the standard error
+streams are merged to the standard output stream); 3 is returned if
+information from both the standard output stream and the standard error stream
+is available.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+        <pre>
+
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;bobcat/process&gt;
+
+using namespace std;
+using namespace FBB;
+
+int main()
+{
+    string line;
+                                        // setup a command
+    Process process("/bin/cat", Process::CIN | 
+                                Process::COUT | 
+                                Process::IGNORE_CERR);
+
+    process.start();                    // start it
+
+    process &lt;&lt; "hello world" &lt;&lt; endl;   // insert this text
+    getline(process, line);             // read its `cat' output
+    cout &lt;&lt; line &lt;&lt; endl;               // show it
+
+    process = "`/bin/ls`";              // run another command 
+                                        // (assignment implies 
+                                        // `stop()')
+
+    while (getline(process, line))      // read all its output
+        cout &lt;&lt; line &lt;&lt; endl;
+
+    cout &lt;&lt; process.stop() &lt;&lt; endl;     // show the process' exit
+                                        // value
+    return 0;
+}
+        
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/process</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>execle</strong>(3), <strong>fork</strong>(3bobcat), <strong>iostream</strong>(3fork),
+    <strong>system</strong>(3)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

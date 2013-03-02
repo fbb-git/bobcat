@@ -1,0 +1,151 @@
+.TH "FBB::IOStreambuf" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Error handler"
+
+.PP 
+.SH "NAME"
+FBB::IOStreambuf \- streambuf allowing input and output operations
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/iostreambuf>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+This class implements a specialization of the \fBstd::streambuf\fP class,
+allowing input operations from and output operations to different files\&. It is
+intended to be used in combination with \fBFBB::IOStream\fP, thus allowing all
+stream-based input and output operations using the same object without the
+need to use \fIseek\fP-operations\&. Using an \fBFBB::IOStream\fP object it is,
+e\&.g\&., possible to construct two-way communications using pipes, much like the
+facilities offered by sockets\&.
+.PP 
+If the streams that will be associated with the \fBIOStreambuf\fP object
+support seeking, then the \fBIOStreambuf\fP will do so to\&. Seeking might also be
+availble for a single stream (either the \fBstd::istream\fP or the
+\fBstd::ostream\fP\&. 
+.PP 
+When the \fBIOStreambuf\fP object goes out of scope, its associated
+\fBstd::ostream\fP object is flushed\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+\fBstd::streambuf\fP
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBIOStreambuf()\fP:
+.br 
+The default constructor results in a \fBIOStreambuf\fP object that
+cannot be immediately used\&. Its member \fBopen()\fP must be called first\&.
+.IP o 
+\fBIOStreambuf(std::istream &in, std::ostream &out)\fP:
+.br 
+This constructor associates the \fBIOStreambuf\fP object with a
+\fBstd::istream\fP and a \fBstd::ostream\fP\&. All output operations will be passed
+on to the \fBstd::ostream\fP, all input operations to the \fBstd::istream\fP\&. The
+streams passed to \fBIOStreambuf()\fP should outlive the \fBIOStreambuf\fP
+object\&. 
+De copy constructor is available as well\&.
+.PP 
+.SH "MEMBER FUNCTIONS"
+All members of \fBstd::streambuf\fP are
+available, as \fBFBB::IOStreambuf\fP inherits from these classes\&.
+.IP o 
+\fBvoid open(std::istream &in, std::ostream &out)\fP:
+.br 
+This member (re)associates the \fBIOStreambuf\fP object with a
+\fBstd::istream\fP and a \fBstd::ostream\fP\&. All output operations will be passed
+on to the \fBstd::ostream\fP, all input operations to the \fBstd::istream\fP\&. The
+streams passed to \fBIOStreambuf()\fP should outlive the \fBIOStreambuf\fP
+object\&. If this member is called for an \fBIOStreambuf\fP object already
+associated with an \fBstd::ostream\fP object, the already associated 
+\fBstd::ostream\fP object is flushed before setting up the new association\&.
+
+.PP 
+.SH "VIRTUAL PROTECTED MEMBER FUNCTIONS"
+
+.PP 
+The following \fBstd::streambuf\fP member functions are overruled by
+\fBIOStreambuf\fP\&. They should only be called when the \fBFBB::Streambuf\fP object
+is associated with \fBstd::istream\fP and \fBstd::ostream\fP objects (i\&.e\&., they
+should not be called between the construction of a default \fBFBB:IOStreambuf\fP
+object and a subsequent call of \fBIOStreambuf::open()\fP:
+.IP o 
+\fBint overflow(int c)\fP:
+.br 
+Inserts the next character into the associated \fBstd::ostream\fP
+object\&. 
+.IP o 
+\fBint underflow()\fP:
+.br 
+Returns the next character from the associated \fBstd::istream\fP
+object\&. 
+.IP o 
+\fBpos_type seekoff(off_type offset, std::ios::seekdir way,
+std::ios::openmode mode = 
+std::ios::in | std::ios::out)\fP:
+.br 
+With seekable streams, repositions the associated \fBstd::istream\fP
+or \fBstd::ostream\fP is repositioned to offset \fIoffset\fP, relative to
+\fIway\fP\&.
+.IP o 
+\fBpos_type seekpos(off_type offset, std::ios::openmode mode = 
+std::ios::in | std::ios::out)\fP:
+.br 
+With seekable streams, repositions the associated \fBstd::istream\fP
+or \fBstd::ostream\fP is repositioned to offset \fIoffset\fP, relative to
+the beginning of the stream\&.
+.IP o 
+\fBint sync()\fP:
+.br 
+This member flushes the associated \fBstd::ostream\fP object\&.
+.IP o 
+\fBstd::streamsize xsputn(char const *buffer, std::streamsize n)\fP:
+.br 
+This member inserts \fIn\fP characters from \fIbuffer\fP into the
+associated \fBstd::ostream\fP stream\&.
+
+.PP 
+.SH "EXAMPLE"
+See the example provided with \fBprocess\fP(3bobcat)\&.
+.PP 
+.SH "FILES"
+\fIbobcat/iostreambuf\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBiostream\fP(3bobcat), \fBprocess\fP(3bobcat)
+.PP 
+.SH "BUGS"
+None reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

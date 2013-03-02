@@ -1,0 +1,64 @@
+#ifndef _INCLUDED_BOBCAT_TABLE_
+#define _INCLUDED_BOBCAT_TABLE_
+
+#include <sstream>
+
+#include <bobcat/tablespec>
+
+namespace FBB
+{
+
+    // By making this an Iterator rather than a data-type any kind of iterator
+    // may be used supporting the dereference and increment operators:
+    // istream_iterators, const_iterators, pointers etc.
+template <typename Iterator>
+class Table: public TableSpec
+{
+    public:
+        Table(Iterator const &begin, Iterator const &end, 
+                TableSupport &tableSupport,
+                unsigned nColumns, FillDirection direction);
+        Table(Iterator const &begin, Iterator const &end, 
+                unsigned nColumns, FillDirection direction);
+
+    private:
+        void fill(Iterator begin, Iterator const &end);
+
+        Table(Table<Iterator> const &other);                        // NI
+        Table<Iterator> &operator=(Table<Iterator> const &other);   // NI
+};
+
+template <typename Iterator>
+void Table<Iterator>::fill(Iterator it, Iterator const &end)
+{
+    while (it != end)
+    {
+        std::ostringstream str;
+        str << *it++;
+        d_string.push_back(str.str());
+    }
+    init();
+}
+
+template <typename Iterator>
+Table<Iterator>::Table(Iterator const &begin, Iterator const &end, 
+                TableSupport &tableSupport,
+                unsigned nColumns, FillDirection direction)
+:
+    TableSpec(tableSupport, nColumns, direction)
+{
+    fill(begin, end);
+}
+
+template <typename Iterator>
+Table<Iterator>::Table(Iterator const &begin, Iterator const &end, 
+                unsigned nColumns, FillDirection direction)
+:
+    TableSpec(nColumns, direction)
+{
+    fill(begin, end);
+}
+
+} // FBB
+
+#endif

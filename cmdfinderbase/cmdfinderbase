@@ -1,0 +1,80 @@
+#ifndef _INCLUDED_BOBCAT_CMDFINDERBASE_
+#define _INCLUDED_BOBCAT_CMDFINDERBASE_
+
+#include <string>
+
+namespace FBB
+{
+    // Key: the textual elements in the char */function * arrays (e.g., help)
+    // Cmd: what is entered interactively (e.g., h, hel, or help)
+
+    class CmdFinderBase
+    {
+                                        // mask testing the Mode-validity
+        static unsigned const s_all = (1 << 3) - 1;  
+
+        std::string d_cmd;
+        std::string d_beyond;
+
+        public:
+            // The default is:
+            //      Use the key as provided
+            //      Match case sensitively and exactly
+            //      The last function is the catch-all
+            enum Mode
+            {
+                USE_FIRST   =   1 << 0, // Use/rm the first word from the key
+                UNIQUE      =   1 << 1, // Unique cmd abbreviations are OK
+                INSENSITIVE =   1 << 2, // Key-cmd matched case insensitively
+            };
+
+            void setMode(unsigned mode);    // to change the mode afterwards
+
+        protected:
+            CmdFinderBase(unsigned mode = 0)
+            {
+                setMode(mode);
+            }
+
+            std::string const &beyond() const   // info beyond the command
+            {
+                return d_beyond;
+            }
+
+            std::string const &cmd() const      // the used command
+            {
+                return d_cmd;
+            }
+ 
+                                    // returns true if the cmd represents the
+                                    // key
+            bool (CmdFinderBase::*d_match)(std::string const &key) const;
+
+                                    // stores the command to use
+            void (CmdFinderBase::*d_useCmd)(std::string const &cmd);
+        private:
+            void useCmd(std::string const &key);
+            void useFirstCmd(std::string const &key);
+
+            bool matchExact(std::string const &key) const
+            {
+                return d_cmd == key && d_cmd.length();
+            }
+                                    // the command is found in the key
+            bool matchUnique(std::string const &key) const
+            {
+                return key.find(d_cmd) != std::string::npos && d_cmd.length();
+            }
+            bool matchInsensitive(std::string const &key) const
+            {
+                return 
+                    strcasecmp(d_cmd.c_str(), key.c_str()) == 0 
+                    &&
+                    d_cmd.length();
+            }
+            bool matchUniqueInsensitive(std::string const &key) const;
+    };
+}
+
+        
+#endif

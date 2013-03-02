@@ -1,0 +1,232 @@
+.TH "FBB::LocalServerSocket" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Unix Domain Server Socket"
+
+.PP 
+.SH "NAME"
+FBB::LocalServerSocket \- Unix Domain Server socket accepting connection requests
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/localserversocket>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+An \fBFBB::LocalServerSocket\fP defines a Unix Domain server socket,
+listening for connection requests from the local host using a Unix Domain
+socket\&. Connection requests may be accepted in either \fIblocking\fP or
+\fInon-blocking\fP modes\&. When a connection is accepted a socket is returned
+which may be used to read information from or write information to the client
+requesting the connection\&. The socket that is made available is a \fIfile
+descriptor\fP which may be used to initialize a \fBstd::istream\fP and/or
+\fBstd::ostream\fP\&. The \fBstd::istream\fP is used to read information from the
+client process; the \fBstd::ostream\fP is used to send information to the client
+process\&.  Since a socket may be considered a \fIfile descriptor\fP the avaiable
+\fBFBB::IFdStream\fP, \fBFBB::IFdStreamBuf\fP, \fBFBB::OFdStream\fP, and
+\fBFBB::OFdStreamBuf\fP classes may be used profitably here\&. Note that having
+available a socket does not mean that this defines the communication
+protocol\&. It is (still) the responsibility of the programmer to comply with an
+existing protocol or to implement a tailor-made protocol\&. The latter situation
+implies that the sequence of input- and output operations is defined by the
+programmer\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+\fBFBB::LocalSocketBase\fP
+.PP 
+.SH "ENUMERATION"
+The following enumeration is defined in th class
+\fBFBB::LocalServerSocket\fP:
+.PP 
+\fBenum Socket\fP
+.br 
+This enumeration holds two values:
+.IP o 
+\fBKEEP\fP:
+.br 
+When this value is specified at construction time, the file
+representing the Unix Domain Socket will not be removed when the
+\fBLocalServerSocket\fP is destroyed\&. This is the default value used with the
+\fBLocalServerSocket\fP constructor\&.
+.IP o 
+\fBUNLINK\fP:
+.br 
+When this value is specified at construction time, the file
+representing the Unix Domain Socket will be removed when the
+\fBLocalServerSocket\fP is destroyed\&.
+
+.PP 
+.SH "CONSTRUCTOR"
+.IP o 
+\fBLocalServerSocket()\fP:
+.br 
+This constructor creates an empty (non-functioning)
+\fIFBB::LocalServerSocket\fP object\&. Before it can be used, the \fIopen()\fP member
+must be called (see below)\&.
+.IP o 
+\fBLocalServerSocket(string const &name, Socket action = KEEP) 
+throw (Errno)\fP:
+.br 
+This constructor initializes an \fBFBB::LocalServerSocket\fP object,
+which will listen for connection requests using the named Unix Domain
+socket\&.  An \fBFBB::Errno\fP is thrown if the socket could not be
+constructed\&. If the constructor is given a second argument
+\fIFBB::LocalServerSocket::UNLINK\fP, the constructed socket will be unlinked
+when the \fBFBB::LocalServerSocket\fP object is destroyed\&.  The construction of
+the socket does not mean that the \fBFBB::LocalServerSocket\fP object is
+actually listening for connections\&. To start listening, the member
+\fBlisten()\fP should be called\&.
+The copy constructor is not available\&.
+.PP 
+.SH "MEMBER FUNCTIONS"
+.IP o 
+\fBunsigned accept() throw (Errno)\fP:
+.br 
+The \fBaccept()\fP member returns an \fIunsigned\fP which is a file
+descriptor (socket) that may be used to communicate with the client requesting
+the connection\&. In more complex programs the returned file descriptor (socket)
+could be passed to a class derived from \fBFBB::Fork\fP, handling the
+communication with the child as a separate (child) process\&.
+.IP 
+.IP o 
+\fBvoid listen(unsigned backlog = 5, bool blocking = true) throw (Errno)\fP:
+.br 
+The \fBlisten()\fP member defines the way the \fBFBB::LocalServerSocket\fP
+will listen for clients requesting a connection\&.  It can be used only once
+with a \fBFBB::LocalServerSocket\fP\&. An \fBFBB::Errno\fP object is thrown if
+listening fails\&.
+.IP 
+The \fBlisten()\fP member\&'s \fIbacklog\fP parameter defines the size of the
+\fBFBB::LocalServerSocket\fP\&'s internal queue in which connection requests may be
+stored waiting for their turn to be serviced\&. When \fIbacklog\fP requests are
+waiting and another request arrives, then that request is lost\&. 
+.IP 
+The member\&'s second parameter, \fIblocking\fP, is used to control the
+blocking mode\&. By default, blocking is used, and \fIlisten()\fP will wait until
+a connection is established\&. This is ok in situations where clients connect
+infrquently and for relatively short time intervals\&. Otherwise, in more
+complex programs, an \fBFBB::Selector\fP object can be used to sense input on
+the server socket and/or on various client sockets\&.
+.IP 
+.IP o 
+\fBvoid open(string const &name, Socket action = KEEP) throw (Errno)\fP:
+.br 
+This member prepares a \fBFBB::LocalServerSocket\fP object for use\&. It
+should only be used in combination with the default constructor\&. Following
+\fIopen()\fP the \fIFBB:::LocalServerSocket\fP object will be able to listen for
+connection requests using the named Unix Domain socket\&.  An \fBFBB::Errno\fP is
+thrown if the socket could not be constructed\&. If the a second argument
+\fIFBB::LocalServerSocket::UNLINK\fP, is provided the constructed socket will be
+unlinked when the \fBFBB::LocalServerSocket\fP object is destroyed\&.  The
+construction of the socket does not mean that the \fBFBB::LocalServerSocket\fP
+object is actually listening for connections\&. To start listening, the member
+\fBlisten()\fP should be called next\&.
+
+.PP 
+.SH "EXAMPLE"
+See also the \fBlocalclientsocket\fP(3bobcat) example\&.
+.nf 
+
+    #include <iostream>
+    #include <bobcat/localserversocket>
+    #include <bobcat/ifdstream>
+    #include <bobcat/ofdstream>
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main(int argc, char **argv)
+    try
+    {
+        if (argc == 1)
+        {
+            cerr << "Provide local filename, e\&.g\&., /tmp/uds\en";
+            return 1;
+        }
+    
+        LocalServerSocket server(argv[1]);
+    
+        cerr << "server using `" << argv[1] << "\&'" << endl;
+    
+        cout << 
+            "The server terminates when it receives a single `q\&' on a line\en"
+            "A connection is terminated when no input is received anymore\&.\en"
+            "Then another connection is possible" << endl;
+    
+        server\&.listen();                // listen in blocking mode
+    
+        while (true)
+        {
+            int fd = server\&.accept();
+    
+            cerr << "Client FD = " << fd << ", " << endl;
+    
+            IFdStream in(fd);           // stream to read from client
+            OFdStream out(fd);          // stream to write to client
+            string cmd;
+            
+            while (getline(in, cmd))
+            {
+                cout << "Got: " << cmd << endl;
+                out << "Got: " << cmd << "\er" << endl;
+    
+                if (cmd[0] == \&'q\&')
+                    return 0;
+            }
+            cout << "Ready for another connection\en";
+        }
+    }
+    catch (Errno const &err)
+    {
+        cerr <<
+            err\&.what() << endl <<
+            "Server socket on port " << argv[1] << 
+            " can\&'t be opened" << endl;
+        return -1;
+    }        
+        
+.fi 
+
+.PP 
+.SH "FILES"
+\fIbobcat/serversocket\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBlocalclientsocket\fP(3bobcat), \fBfork\fP(3bobcat),
+\fBifdstream\fP(3bobcat), \fBifdstreambuf\fP(3bobcat),
+\fBlocalsocketbase\fP(3bobcat), \fBofdstream\fP(3bobcat), \fBofdstream\fP(3bobcat),
+\fBselect\fP(2), \fBselector\fP(3bobcat), \fBserversocket\fP(3bobcat)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

@@ -1,0 +1,105 @@
+includefile(header.inc)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::A2x)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+                    (Error handler)
+
+manpagename(FBB::A2x)(Objects performing ascii-to-x (anything) conversions)
+
+manpagesynopsis()
+    bf(#include <bobcat/a2x>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB::A2x) objects offer the bf(C++) equivalent of the standard bf(C)
+conversion functions bf(atoi)(3), bf(atol)(3), bf(atof)(3) etc.  bf(FBB::A2x)
+objects generalize these bf(C) functions to em(any) type that can be extracted
+from an bf(istream) object. Since bf(FBB::A2x) represents the object-variant
+of the bf(C) functions, and is therefore em(type-safe) and em(extensible),
+their use is greatly preferred over using the standard bf(C) functions.
+
+manpagesection(NAMESPACE)
+    bf(FBB)nl()
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace bf(FBB).
+
+manpagesection(INHERITS FROM)
+    bf(std::istringstream)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(A2x())
+        This constructor constructs an empty bf(FBB::A2x) objects. No
+information can be converted from a bf(FBB::A2x) object, thus constructed.
+    itb(A2x(char const *text)) 
+        This constructor stores tt(text). If tt(text) represents a textual
+value of some type, the bf(FBB::A2x) object may be used to initialize or assign
+this value to a variable of that particular type. Extraction, however is also
+still possible.
+    itb(A2x(std::string const &str)) 
+        This constructor stores the text contained in tt(str). If this text
+represents a textual value of some type, the bf(FBB::A2x) object may be used to
+initialize or assign this value to a variable of that particular
+type. Extraction is also still possible.
+    itb(A2x(A2x const &other)) 
+        The standard copy constructor is available.
+    )
+
+manpagesection(MEMBER FUNCTIONS)
+    All members of the bf(istringstream) class are available.
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(operator Type()) 
+        Conversion to any type tt(Type) supporting
+extractions from tt(i[string]streams). If the extraction fails, the bf(FBB::A2x)
+object's tt(good()) member will return tt(false), and the tt(Type)'s default
+value is returned. This operator was implemented as a template member
+function.
+    itb(istream &operator>>(istream &, Type &)) 
+        Extraction to any type tt(Type) supporting extractions from
+tt(i[string]streams). If the extraction fails, the bf(FBB::A2x) object's
+tt(good()) member will return tt(false), and the tt(Type)'s default value is
+returned (this facility is implied by the fact that this class inherits from
+bf(istringstream), but it's probably useful to stress that the extraction
+operation is still available).
+    itb(A2x &operator=(char const *)) 
+        Stores new text in the bf(FBB::A2x) object, resets the status flags to
+tt(ios::good). If a 0-pointer is passed, an empty string is stored.
+    itb(A2x &operator=(std::string const &)) 
+        Stores the text stored in the tt(std::string) argument in the
+bf(FBB::A2x) object, resets the status flags to tt(ios::good).
+    itb(A2x &operator=(A2x const &)) 
+    The standard overloaded assignment operator is available
+    )
+
+manpagesection(EXAMPLE)
+         verb(
+    int x = A2x("12");
+
+    A2x a2x("12.50");
+
+    double d;
+
+    d = a2x;
+
+    a2x = "err";
+
+    d = a2x;        // d now 0
+
+    a2x = " a";
+
+    char c = a2x;   // c now 'a'
+        )
+
+manpagefiles()
+    em(bobcat/a2x) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(x2a)(3bobcat), bf(atoi)(3), bf(atol)(3), bf(atof)(3),
+    bf(strtod)(3), bf(strtol)(3), bf(strdoul)(3)
+
+manpagebugs()
+    None Reported.
+
+includefile(trailer.inc)

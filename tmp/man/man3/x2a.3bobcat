@@ -1,0 +1,118 @@
+.TH "FBB::X2a" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "X-to-ASCII conversions"
+
+.PP 
+.SH "NAME"
+FBB::X2a \- Objects performing x-to-Ascii conversions
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/x2a>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+\fBFBB:X2a\fP objects convert values of any (insertable) type to text\&. The
+returned text is automatically made available as a standard \fBC++\fP string\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+\fBstd::ostringstream\fP
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBX2a(T const &value)\fP:
+.br 
+In this constructor \fIT\fP may be any type that can be inserted into an
+\fIo[string]stream\fP\&.
+.IP o 
+\fBX2a(double value, unsigned behind)\fP:
+.br 
+Double \fIvalue\fP is truncated to \fIbehind\fP digits behind the decimal
+dot\&.  If a value doesn\&'t occupy \fIbehind\fP digits behind the decimal point,
+then missing digits are added as \fI0\fP\&. For example, a value of 7\&.1, will be
+displayed as 7\&.10 if two digits behind the decimal dot are requested\&. A value
+of 7 will be displayed as 7\&.00\&.
+.IP 
+.IP o 
+\fBX2a(double value, unsigned width, unsigned behind, std::ios::fmtflags
+flags = std::ios::right)\fP:
+.br 
+The value is displayed over \fIwidth\fP character positions, extending
+the amount if the value so requires\&. The converted value is placed
+right-aligned into the field of \fIwidth\fP characters\&.
+Note: no copy constructor
+.PP 
+.SH "MEMBER FUNCTIONS"
+All members of \fBstd::ostringstream\fP are
+available, as \fBFBB::X2a\fP inherits from this class\&.
+.PP 
+.SH "OVERLOADED OPERATORS"
+itbf(operator std::ostream &operator<<(std::ostream &ostr, X2a const &x2a))
+This conversion operator inserts the converted value in the \fIx2a\fP
+parameter into the provided \fIostream\fP\&.
+.IP o 
+\fBoperator std::string const() const\fP:
+.br 
+: this conversion operator returns
+the information stored inside the \fBFBB::X2a\fP object\&.
+Note: the overloaded assignment operator is not available\&.
+.PP 
+.SH "EXAMPLE"
+.nf 
+
+    string is(X2a(5));      // initializes `is\&' with "5"
+    string ds(X2a(5\&.25));   // initializes `ds\&' with "5\&.25"
+
+    cout << X2a(7\&.0 / 3, 4) << endl;
+                            // display a value using 4 digits behind the
+                            // decimal dot\&.
+    cout << X2a(7\&.0 / 3, 8, 4) << endl;
+                            // display a value over 8 positions, right
+                            // adjusted, 4 digits behind the decimal dot\&.
+    cout << X2a(7\&.0 / 3, 8, 4, std::ios::left) << endl;
+                            // display a value over 8 positions, left
+                            // adjusted, 4 digits behind the decimal dot\&.
+        
+.fi 
+
+.PP 
+.SH "FILES"
+\fIbobcat/x2a\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBa2x\fP(3bobcat)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

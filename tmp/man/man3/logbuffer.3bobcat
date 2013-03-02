@@ -1,0 +1,163 @@
+.TH "FBB::LogBuffer" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "log messages stream buffer"
+
+.PP 
+.SH "NAME"
+FBB::LogBuffer \-  \fBstd::streambuf\fP handling log messages
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/logbuffer>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+
+.PP 
+\fBFBB::LogBuffer\fP is a class derived from \fBstd::streambuf\fP handling log
+messages\&. The stream to log to, timestamps and log-levels can be configured
+both at construction time and beyond\&. The \fBFBB::LogBuffer\fP may be used to
+initialize a \fBstd::ostream\fP\&. 
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+\fBstd::streambuf\fP
+.PP 
+.SH "ENUMERATION"
+The enumeration \fBTimeStamps\fP is defined in the namespace \fBFBB\fP to be
+used when initializing \fBFBB::LogBuffer\fP objects\&. It has the following
+values:
+.IP o 
+\fBNOTIMESTAMPS\fP:
+.br 
+Log-messages will not have timestamps prepended to them\&.
+.IP o 
+\fBTIMESTAMPS\fP:
+.br 
+Log-messages will have timestamps prepended to them\&.
+
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBLogBuffer(TimeStamps timestamps = TIMESTAMPS,
+bool active = true,
+char const *delim = " ")\fP:
+.br 
+This constructor constructs an \fBFBB::LogBuffer\fP object writing its
+log-messages to \fBstd::cerr\fP\&. If the \fBactive\fP parameter is initialized to
+\fBfalse\fP no messages will be logged until the buffer\&'s activity is switched
+on (see \fBsetActive()\fP below)\&.  The parameter \fBdelim\fP is inserted
+immediately beyond the time stamp\&. If a delimiter is inappropriate, an empty
+string or a 0-pointer may be specified\&. When \fBstamps == FBB::NOTIMESTAMPS
+delim\fP is ignored\&. A time stamp consists of the month, the day number of the
+month and the (local) time of the current message, as usually appearing in
+messages in \fI/var/log\fP files\&. E\&.g\&., \fIAug 5 13:52:23\fP\&.
+.IP o 
+\fBLogBuffer(std::ostream &stream, 
+TimeStamps timestamps = TIMESTAMPS,
+bool active = true,
+char const *delim = " ")\fP:
+.br 
+This constructor constructs an \fBFBB::LogBuffer\fP object writing its
+log-messages to the stream used to initialize its \fBstream\fP parameter\&. If the
+\fBactive\fP parameter is initialized to \fBfalse\fP no messages will be logged
+until the buffer\&'s activity is switched on (see \fBsetActive()\fP below)\&. The
+parameter \fBdelim\fP is inserted immediately beyond the time stamp\&. If a
+delimiter is inappropriate, an empty string or a 0-pointer may be
+specified\&. When \fBstamps == FBB::NOTIMESTAMPS delim\fP is ignored\&. A time stamp
+consists of the month, the day number of the month and the (local) time of the
+current message, as usually appearing in messages in \fI/var/log\fP files\&. E\&.g\&.,
+\fIAug 5 13:52:23\fP\&.
+The copy constructor is not available\&.
+.PP 
+.SH "MEMBER FUNCTIONS"
+All members of \fBstd::streambuf\fP are available, as \fBFBB::LogBuffer\fP
+inherits from this class\&. 
+.IP o 
+\fBvoid setStream(std::ostream &stream)\fP:
+.br 
+This member may be used to switch the stream to log to\&. It is the
+responsibility of the programmer to ensure that the external stream remains
+available for as long as log-messages are inserted into it\&.
+.IP o 
+\fBint overflow(int c)\fP:
+.br 
+This member \fIoverrides\fP the \fBstd::streambuf\fP member\&. It is
+called by \fIstd::ostream\fP objects using \fBOFdStreambuf\fP\&. It calls
+\fIsync()\fP, an then it puts the next available character into the buffer\&. It
+returns the inserted character\&.
+.IP o 
+\fBint sync()\fP:
+.br 
+: 
+.br 
+This member \fIoverrides\fP the \fBstd::streambuf\fP member\&. It writes
+the buffer to the device associated with the file descriptor, and returns 0\&.
+.IP o 
+\fBvoid setStream(bool active)\fP:
+.br 
+The member function (de)activates logging\&. The argument \fBtrue\fP
+activates logging, the argument \fBfalse\fP deactivates it\&.
+.IP o 
+\fBvoid settimestamp(FBB::TimeStamps timestamps,
+char const *delim = " ")\fP:
+.br 
+The member function (de)activates time stamp prepending\&. Use the value
+\fBFBB::TIMESTAMPS\fP to prepend time stamps, \fBFBB::NOTIMESTAMPS\fP suppresses
+time stamps\&.   A time stamp consists of the month, the day number of the month
+and the (local) time of the current message, as usually appearing in messages
+in \fI/var/log\fP files\&. E\&.g\&., \fIAug 5 13:52:23\fP\&. The parameter \fBdelim\fP is
+inserted immediately beyond the time stamp\&. If a delimiter is inappropriate,
+an empty string or a 0-pointer may be specified\&. When \fBstamps ==
+FBB::NOTIMESTAMPS delim\fP is ignored\&.
+.IP o 
+\fBvoid setEmpty(bool empty)\fP:
+.br 
+This member may be called to ensure that a timestamp is inserted
+before the next insertion\&. It is called as \fBsetEmpty(true)\fP when a newline
+character (\fI\en\fP) is inserted, ensuring that another timestamp is prepended
+before the next insertion\&.
+
+.PP 
+.SH "EXAMPLE"
+To do
+.PP 
+.SH "FILES"
+\fIbobcat/logbuffer\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBlog\fP(3bobcat)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

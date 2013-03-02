@@ -1,0 +1,182 @@
+.TH "FBB::Table" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Table-formatter"
+
+.PP 
+.SH "NAME"
+FBB::Table \- Generates row- or column-wise filled tables
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/table>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+
+.PP 
+\fBFBB::Table\fP objects may be used to create tables\&. The tables are filled
+either column-wise or row-wise\&. The class only has a minimal number of member
+functions and overloaded operators\&. Most of the table\&'s characteristics may be
+find-tuned by a separate \fBFBB::TableSupport\fP object, described in a separate
+man-page (\fBTableSupport\fP(3bobcat))\&. When no \fBFBB::TableSupport\fP object is
+used, a plain row-wise or column-wise table will be inserted into a
+\fBstd::ostream\fP\&. 
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+\fBFBB::TableSpec\fP - The class \fBFBB::TableSpec\fP is a mere support class
+for \fBFBB::Table\fP\&. Because of this, its features are repeated below\&.
+.PP 
+.SH "ENUMERATIONS"
+The following enumerations are defined in the class \fBFBB::TableSpec\fP,
+allowing the programmer to specifiy values like \fBFBB::TableSpec::Vertical\fP
+rather than \fBFBB::Table<std::istream_const_iterator>::Vertical\fP\&.
+.PP 
+\fBenum FillDirection\fP
+.br 
+This enumeration holds two values:
+.IP o 
+\fBHorizontal\fP:
+.br 
+When this value is specified at construction time, subequent elements
+will be stored row-wise in the table\&. I\&.e\&., the second element will normally
+be in the second column of the first row\&.
+.IP o 
+\fBVertical\fP:
+.br 
+When this value is specified at construction time, subequent elements
+will be stored column-wise in the table\&. I\&.e\&., the second element will normally
+be in the second row of the first column\&.
+
+.PP 
+\fBenum WidthType\fP
+.br 
+This enumeration holds two values:
+.IP o 
+\fBEqualWidth\fP:
+.br 
+This value may be specified when all the table\&'s columns should have
+equal width (i\&.e\&., equal to the width of the widest table element), 
+.IP o 
+\fBColumnWidth\fP:
+.br 
+This value may be specified when the columns should be allowed
+variable widths\&. In this case each column will be as wide as its widest
+element\&. 
+
+.PP 
+.SH "CONSTRUCTORS"
+.IP o 
+\fBTable(Iterator const &begin, Iterator const &end, 
+unsigned nColumns, TableSpec::FillDirection direction)\fP:
+.br 
+This constructor expects two `Input Iterators\&' defining the range of
+elements to be displayed by the table\&. The elements to which the iterators
+point must be insertable as text into \fIostream\fP objects\&. The parameter
+\fInColumns\fP may be initialized with the number of columns the table should
+have\&. The number of rows are implied by the combination of this parameter and
+the number of elements in the iterator-range\&. 
+.IP o 
+\fBTable(Iterator const &begin, Iterator const &end, 
+TableSupport &tableSupport,
+unsigned nColumns, TableSpec::FillDirection direction)\fP:
+.br 
+This constructor operates identically to the previous constructor, but
+expects an additional reference to a \fBFBB::TableSupport\fP object\&. A
+\fBFBB::TableSupport\fP object offers additional formatting features used by the
+table to define elements like horizontal lines  between rows, additional
+separators between elements etc\&.
+The copy constructor is not available\&.
+.PP 
+.SH "OVERLOADED OPERATORS"
+.IP o 
+\fBstd::ostream &::operator<<(std::ostream &, 
+FBB::Table<Iterator> const &table)\fP:
+.br 
+This overloaded operator is actually an overloaded operator in the
+class \fBFBB::TableSpec\fP, but since \fBFBB::TableSpec\fP is the baseclass of
+\fBFBB::Table\fP, an \fBFBB::Table<Iterator>\fP object may be inserted into a
+\fBstd::ostream\fP\&. Tables may be inserted repeatedly (e\&.g\&., using a sequence of
+insertions)\&. 
+.IP 
+Note that this operator is not defined in the namespace \fBFBB\fP\&.
+The overloaded assignment operator is not available\&.
+.PP 
+.SH "MEMBER FUNCTION"
+.IP o 
+\fBvoid setWidth(FBB::TableSpec::WidthType type)\fP:
+.br 
+This member may be used to specify the width of indvidual or all
+columns of the table\&. Specify \fBTableSpec::EqualWidth\fP when all columns
+should have equal widths, specify \fBTableSpec::ColumnWidth\fP when each column
+should be as wide as its widest element\&. This member is actually a member of
+\fBFBB::Table\fP\&'s baseclass \fBFBB::TableSpec\fP\&.
+
+.PP 
+.SH "MANPULATORS"
+.IP o 
+\fBFBB::equalWidth(FBB::Table<Iterator> &table)\fP:
+.br 
+This manipulator may be used to insert a table into a \fIstd::ostream\fP
+object, enforcing equal column widths\&. To use this manipulator, the header
+file  \fI<bobcat/equalwidth>\fP must be inserted\&.
+.IP o 
+\fBFBB::columnWidth(FBB::Table<Iterator> &table)\fP:
+.br 
+This manipulator may be used to insert a table into a \fIstd::ostream\fP
+object, enforcing column widths which are as
+wide as their widest elements\&. To use this manipulator, the header
+file  \fI<bobcat/columnwidth>\fP must be inserted\&.
+
+.PP 
+.SH "EXAMPLE"
+To do
+.PP 
+.SH "FILES"
+\fIbobcat/table\fP - defines the class interface;
+.br 
+\fIbobcat/tablespec\fP - defines \fBtable\fP\&'s baseclass interface;
+.br 
+\fIbobcat/equalwidth\fP - defines the \fBequalWidth\fP manipulator;
+.br 
+\fIbobcat/columnwidth\fP - defines the \fBcolumnWidth\fP manipulator;
+.br 
+\fIbobcat/tablesupport\fP - defines the \fBtableSupport\fP class interface\&.
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7), \fBcolumnwidth\fP(3bobcat), \fBequalwidth\fP(3bobcat),
+\fBtablespec\fP(3bobcat), \fBtablesupport\fP(3bobcat)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 

@@ -1,0 +1,163 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::LogBuffer</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::LogBuffer</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::LogBuffer(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::LogBuffer(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz log messages stream buffer</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::LogBuffer -  <strong>std::streambuf</strong> handling log messages
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/logbuffer&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+<strong>FBB::LogBuffer</strong> is a class derived from <strong>std::streambuf</strong> handling log
+messages. The stream to log to, timestamps and log-levels can be configured
+both at construction time and beyond. The <strong>FBB::LogBuffer</strong> may be used to
+initialize a <strong>std::ostream</strong>. 
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <strong>std::streambuf</strong>
+<p>
+<h2>ENUMERATION</h2>
+    The enumeration <strong>TimeStamps</strong> is defined in the namespace <strong>FBB</strong> to be
+used when initializing <strong>FBB::LogBuffer</strong> objects. It has the following
+values:
+    <ul>
+    <li> <strong>NOTIMESTAMPS</strong>:<br>
+        Log-messages will not have timestamps prepended to them.
+    <li> <strong>TIMESTAMPS</strong>:<br>
+        Log-messages will have timestamps prepended to them.
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>LogBuffer(TimeStamps timestamps = TIMESTAMPS,
+                bool active = true,
+                char const *delim = " ")</strong>:<br>
+        This constructor constructs an <strong>FBB::LogBuffer</strong> object writing its
+log-messages to <strong>std::cerr</strong>. If the <strong>active</strong> parameter is initialized to
+<strong>false</strong> no messages will be logged until the buffer's activity is switched
+on (see <strong>setActive()</strong> below).  The parameter <strong>delim</strong> is inserted
+immediately beyond the time stamp. If a delimiter is inappropriate, an empty
+string or a 0-pointer may be specified. When <strong>stamps == FBB::NOTIMESTAMPS
+delim</strong> is ignored. A time stamp consists of the month, the day number of the
+month and the (local) time of the current message, as usually appearing in
+messages in <em>/var/log</em> files. E.g., <em>Aug 5 13:52:23</em>.
+        <li> <strong>LogBuffer(std::ostream &amp;stream, 
+                TimeStamps timestamps = TIMESTAMPS,
+                bool active = true,
+                char const *delim = " ")</strong>:<br>
+        This constructor constructs an <strong>FBB::LogBuffer</strong> object writing its
+log-messages to the stream used to initialize its <strong>stream</strong> parameter. If the
+<strong>active</strong> parameter is initialized to <strong>false</strong> no messages will be logged
+until the buffer's activity is switched on (see <strong>setActive()</strong> below). The
+parameter <strong>delim</strong> is inserted immediately beyond the time stamp. If a
+delimiter is inappropriate, an empty string or a 0-pointer may be
+specified. When <strong>stamps == FBB::NOTIMESTAMPS delim</strong> is ignored. A time stamp
+consists of the month, the day number of the month and the (local) time of the
+current message, as usually appearing in messages in <em>/var/log</em> files. E.g.,
+<em>Aug 5 13:52:23</em>.
+    </ul>
+    The copy constructor is not available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+     All members of <strong>std::streambuf</strong> are available, as <strong>FBB::LogBuffer</strong>
+inherits from this class. 
+    <ul>
+    <li> <strong>void setStream(std::ostream &amp;stream)</strong>:<br>
+        This member may be used to switch the stream to log to. It is the
+responsibility of the programmer to ensure that the external stream remains
+available for as long as log-messages are inserted into it.
+    <li> <strong>int overflow(int c)</strong>:<br>
+    This member <em>overrides</em> the <strong>std::streambuf</strong> member. It is
+called by <em>std::ostream</em> objects using <strong>OFdStreambuf</strong>. It calls
+<em>sync()</em>, an then it puts the next available character into the buffer. It
+returns the inserted character.
+    <li> <strong>int sync()</strong>:<br>: <br>
+        This member <em>overrides</em> the <strong>std::streambuf</strong> member. It writes
+the buffer to the device associated with the file descriptor, and returns 0.
+    <li> <strong>void setStream(bool active)</strong>:<br>
+        The member function (de)activates logging. The argument <strong>true</strong>
+activates logging, the argument <strong>false</strong> deactivates it.
+    <li> <strong>void settimestamp(FBB::TimeStamps timestamps,
+                char const *delim = " ")</strong>:<br>
+        The member function (de)activates time stamp prepending. Use the value
+<strong>FBB::TIMESTAMPS</strong> to prepend time stamps, <strong>FBB::NOTIMESTAMPS</strong> suppresses
+time stamps.   A time stamp consists of the month, the day number of the month
+and the (local) time of the current message, as usually appearing in messages
+in <em>/var/log</em> files. E.g., <em>Aug 5 13:52:23</em>. The parameter <strong>delim</strong> is
+inserted immediately beyond the time stamp. If a delimiter is inappropriate,
+an empty string or a 0-pointer may be specified. When <strong>stamps ==
+FBB::NOTIMESTAMPS delim</strong> is ignored.
+    <li> <strong>void setEmpty(bool empty)</strong>:<br>
+        This member may be called to ensure that a timestamp is inserted
+before the next insertion. It is called as <strong>setEmpty(true)</strong> when a newline
+character (<em>\n</em>) is inserted, ensuring that another timestamp is prepended
+before the next insertion.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    To do
+<p>
+<h2>FILES</h2>
+    <em>bobcat/logbuffer</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>log</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

@@ -1,0 +1,178 @@
+<a name="header.inc"></a><a name="../../release.yo"></a><html><head>
+<title>FBB::Hostent</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Hostent</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz</h2>
+<h2>2005-2006</h2>
+
+<html><head>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<html><head>
+<title>FBB::Hostent(3bobcat)</title>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Hostent(3bobcat)</h1>
+<h2>libbobcat1-dev_1.10.0-x.tar.gz struct hostent wrapper</h2>
+<h2>2005-2006</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Hostent - Wrapper around a <strong>struct hostent</strong>
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/hostent&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    <strong>@CLASS</strong> objects are wrappers around <strong>hostent</strong> structs which may be
+used by other objects. A <strong>struct hostent</strong> is defined as follows:
+        <pre>
+
+    struct hostent 
+    {
+        char    *h_name;        // official name of host 
+        char    **h_aliases;    // alias list 
+        int     h_addrtype;     // host address type (always AF_INET)
+        int     h_length;       // length of address 
+        char    **h_addr_list;  // list of addresses 
+    }
+        
+</pre>
+
+    The <em>address</em> fields are binary values of the addresses, each address
+requiring <em>h_length</em> bytes, the last address being equal to 0. The
+<strong>@CLASS</strong> objects offer a <strong>C++</strong>-like interface to this struct.
+<p>
+<a name="namespace.inc"></a><h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Hostent()</strong>:<br>
+        The default constructor is available.
+    <li> <strong>Hostent(hostent const *hostentPtr)</strong>:<br> 
+        This constructor initializes an <strong>@CLASS</strong> object from an existing
+<strong>hostent</strong> struct. Functions like <strong>gethostbyname</strong>(3) and
+<strong>gethostbyaddress</strong>(3) return pointers to <strong>hostent</strong> structs.
+    <li> <strong>Hostent(Hostent const &amp;other) throw()</strong>:<br> 
+        The copy constructor is available.
+    </ul>
+<p>
+<h2>ACCESSOR MEMBER FUNCTIONS</h2>
+     All members are accessors. No members are provided that will modify an
+<strong>FBB::Hostent</strong> object's data.
+    <ul>
+    <li> <strong>unsigned addressLength() const</strong>:<br>
+        This member returns the length of the binary addresses in bytes.
+    <li> <strong>unsigned addressType() const</strong>:<br>
+        This member returns the type of the address. Currently this is always
+<strong>AF_INET</strong>.
+    <li> <strong>char const *alias(unsigned index) const</strong>:<br>
+        This member returns alias `<em>index</em>' of the host. The first alias has
+<em>index 0</em>. If alias `<em>index</em>' does not exist, 0 is returned.
+    <li> <strong>char const * const *beginAlias() const</strong>:<br>
+        This member returns an iterator to the first alias. The hostname
+itself is not included in the list of aliases.
+    <li> <strong>char const *binaryAddress(unsigned index) const</strong>:<br>
+        This member returns the binary address `<em>index</em>' of the host.  The
+first address has <em>index 0</em>. If address `<em>index</em>' does not exist, 0 is
+returned. The pointer to the binary address points to a series of
+<strong>addressLength()</strong> bytes. Note that the returned address is in <em>network
+byte order</em>. It can be converted to host byte order by the functions described
+in <strong>byteorder</strong>(3).
+    <li> <strong>std::string dottedDecimalAddress(unsigned index) const</strong>:<br>
+        This member returns address `<em>index</em>' as a dotted decimal address in
+a string. The first address has <em>index 0</em>. If address `<em>index</em>' does not
+exist, an empty string is returned.
+    <li> <strong>char const * const *endAlias() const</strong>:<br>
+        This member returns an iterator pointing beyond the last alias.
+    <li> <strong>char const *hostname() const</strong>:<br>
+        This member returns the standard (first) name of the host.
+    <li> <strong>unsigned nAddresses() const</strong>:<br>
+        This member returns the number of addresses that are available. When
+requesting a particular address, the requested index should be less than
+the value returned by this member.
+    <li> <strong>unsigned nAliases() const</strong>:<br>
+        This member returns the number of aliases that are available. When
+requesting a particular alias, the requested index should be less than the
+value returned by this member.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+        <pre>
+
+    #include &lt;iostream&gt;
+    #include &lt;algorithm&gt;
+    #include &lt;iterator&gt;
+    #include &lt;bobcat/hostent&gt;
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main(int argc, char **argv)
+    {
+        Hostent he(gethostbyname("localhost"));
+
+        cout &lt;&lt; "The local hostname = " &lt;&lt; he.hostname() &lt;&lt; endl;
+
+        cout &lt;&lt; "All aliases: " &lt;&lt; endl;
+        copy(he.beginAlias(), he.endAlias(), 
+                    ostream_iterator&lt;char const *&gt;(cout, "\n"));
+
+        cout &lt;&lt; "Addresses:\n";
+        for (unsigned idx = 0; idx &lt; he.nAddresses(); idx++)
+            cout &lt;&lt; he.dottedDecimalAddress(idx) &lt;&lt; endl;
+
+        return 0;
+    }
+        
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/hostent</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+<a name="trailer.inc"></a>
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_1.10.0-x.dsc</em>: detached signature;
+    <li> <em>bobcat_1.10.0-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_1.10.0-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_1.10.0-x_i386.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    Academic Free Licence.
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

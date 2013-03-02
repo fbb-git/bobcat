@@ -1,0 +1,56 @@
+#!/usr/bin/icmake -qt/tmp/bobcat
+
+/*
+    Make all manpages
+*/
+
+void main()
+{
+    string class, dest, destbobcat;
+    list yo;
+    int idx;
+    
+
+    yo = makelist("*.yo");
+
+    yo -= (list)"bobcat.yo";
+
+    if 
+    (
+        "bobcat.yo" younger "bobcat.7"
+        ||
+        "../../release.yo" younger "bobcat.7"
+        ||
+        "header.inc" younger "bobcat.7"
+        ||
+        "trailer.inc" younger "bobcat.7"
+    )
+    {
+        system("yodl2man --no-warnings -o bobcat.7 bobcat.yo");
+        system("yodl2html --no-warnings bobcat.yo");
+    }
+
+    for(idx = 0; idx < sizeof(yo); idx++)
+    {
+        class = element(idx, yo);
+        dest = change_ext(class, "3");
+        destbobcat = dest + "bobcat";
+
+        if 
+        (
+            class younger destbobcat
+            ||
+            "../../release.yo" younger destbobcat
+            ||
+            "header.inc" younger destbobcat
+            ||
+            "trailer.inc" younger destbobcat
+        )
+        {
+            system("yodl2man --no-warnings -o "  + destbobcat + " " + class);
+            system("yodl2html --no-warnings -o " + dest + ".html "  + class);
+        }
+    }
+
+    exit(0);
+}

@@ -1,0 +1,424 @@
+.TH "FBB::RefCount" "3bobcat" "2005-2006" "libbobcat1-dev_1\&.10\&.0-x\&.tar\&.gz" "Reference Counting"
+
+.PP 
+.SH "NAME"
+FBB::RefCount \- Base class implementing reference counting\&.
+.PP 
+.SH "SYNOPSIS"
+\fB#include <bobcat/refcount>\fP
+.br 
+Linking option: \fI-lbobcat\fP 
+.PP 
+.SH "DESCRIPTION"
+\fBRefCount\fP implements a virtual base class implementing reference
+counting\&. When reference counting is used, objects share the memory of a
+(usually big or complex) data structure, until objects need to modify their
+data, in which case they obtain a copy of the data of their own\&. This approach
+is most useful with classes that seldomly alter their data, but consult their
+data most of the time\&. 
+.PP 
+As an example, consider hidden structures as found in the \fBregcomp\fP(3)
+function: there is no documented way to copy an existing compiled regular
+expression, so if multiple objects must refer to the same regular expression,
+the expression should be compiled once\&. Thereafter, a reference count monitors
+the number of objects using the compiled expression\&. Only when the last object
+is destroyed the compiled expression is freed\&.
+.PP 
+In general, objects using reference counting should obtain their own data
+if they need to alter their data\&. This situation is also called
+`copy-on-write\&'\&. Copy-on-write is implemented by obtaining a copy of the data
+before any modification of the data takes place\&. So, each non-const member
+function should first copy the data, and should only then modify its own
+data\&. Constant members may simply refer to the data, without the need to copy
+them first\&.
+.PP 
+The class \fBRefCount\fP should be embedded in programs as follows:
+.IP o 
+\fBRefCount\fP defines a \fIvirtual base class\fP, defining all members
+that are required to implement reference counting\&. The class is a virtual base
+class since it defines a member \fBvirtual RefCount *clone() const = 0\fP, which
+must return a real copy of the derived class object (cf\&. Gamma et al\&.\&'s (1995)
+\fIproxy\fP Design Pattern)\&.
+.IP o 
+From \fBRefCount\fP a class (named \fBData\fP in this man page) is derived
+defining the functionality that is required to manipulate the data:
+this class may contain constructors, overloaded operators, accessors,
+modifiers, etc\&.
+.IP o 
+A third class (called \fBClient\fP in this man page) defines the actual
+interface to the program in which reference counting is required\&. In its
+purest form, \fBClient\fP only has a \fBData *\fP data member referring to the
+(possibly shared) data\&. The functionality offered to the users of \fBClient\fP
+objects is normally defined by shadowing the functionality defined by
+\fBData\fP, using simple one-line in-line functions\&.
+
+.PP 
+Except for \fBclone()\fP, there are several issues to bear in mind when
+using reference counting as defined by \fBRefCount\fP:
+.IP o 
+When \fBClient\fP share data (e\&.g\&., when using a copy constructor or an
+overloaded assignment operator), \fBRefCount::share()\fP should be called rather
+than \fBoperator new\fP\&. Since at this point the data are shared with other
+objects, no copy is required, and the use of \fBoperator new\fP should be
+avoided\&.
+.IP o 
+When \fBClient\fP objects go out of scope, the destructor should call
+\fBRefCount::release()\fP rather than \fBoperator delete\fP to disassociate itself
+from the object\&'s data\&. The \fBoperator delete\fP should not be called directly,
+since this might prematurely destroy data shared with other objects\&.
+.IP o 
+All members modifying data (i\&.e\&., all non-const member functions)
+should call \fBRefCount::modifying()\fP prior to performing the
+modification\&. This ensures that the object operates on its own data, rather
+than modifying shared data\&.
+Except for the abovementioned items, all members of \fBClient\fP should be
+implemented as usual: constructors use \fBnew Data(argument list)\fP,
+\fBclone()\fP returns a pointer to a clone of itself, etc\&.\&. Refer to the code 
+example for an actual implementation\&.
+.PP 
+.SH "NAMESPACE"
+\fBFBB\fP
+.br 
+All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace \fBFBB\fP\&.
+.PP 
+.SH "INHERITS FROM"
+-
+.PP 
+.SH "PROTECTED CONSTRUCTORS"
+.IP o 
+\fBRefCount()\fP:
+.br 
+This constructor implements the default constructor\&. 
+.IP o 
+\fBRefCount(RefCount const &other)\fP:
+.br 
+This constructor implements the copy constructor, which is a
+convenience function for \fBData\fP\&'s copy constructor, but otherwise acting
+identically as \fBRefCount()\fP itself\&.
+
+.PP 
+.SH "PROTECTED DESTRUCTOR"
+.IP o 
+\fBvirtual ~RefCount()\fP:
+.br 
+The destructor is an empty virtual member, thus allowing \fBRefCount *\fP
+variables to destroy any derived class objects they point to\&.
+
+.PP 
+.SH "PUBLIC MEMBER FUNCTIONS"
+.IP o 
+\fBunsigned refcount() const\fP:
+.br 
+This member returns the current number of objects sharing the data\&.
+.IP o 
+\fBvoid release()\fP:
+.br 
+This member must be called by \fBClient\fP objects that must
+disassociate themselves from the (possibly shared) data\&. In practice it is
+called by the \fBClient\fP\&'s destructor and overloaded assignment operator\&. It
+will actually call \fBData\fP\&'s destructor when the object was the only object
+still referring to the data\&.
+
+.PP 
+.SH "PUBLIC STATIC MEMBER FUNCTIONS"
+.IP o 
+\fBData *RefCount::share(Data const *ptr)\fP:
+.br 
+This member should be called by the constructor of \fBClient\fP objects
+sharing another client\&'s data\&. In practice it is called by the client\&'s copy
+constructor and overloaded assignment operator\&. It receives the actual pointer
+to the data as its argument, and returns the new value of the pointer\&.
+.IP 
+Note that \fBData\fP is not a hard-coded class: the function is implemented
+as a template member, and so it can be used by every class derived from
+\fBRefCount\fP\&.
+.IP 
+.IP o 
+\fBData &RefCount::modifying(Data **ptr) throw (std::bad_cast)\fP:
+.br 
+This member should be called by \fBClient\fP objects\&' non-const members,
+just before modifying data\&. The function may alter the value of the client\&'s
+\fBData *\fP data member\&. It returns a \fIreference\fP to the data, allowing the
+client\&'s member function to call the required \fBData\fP modifier in one single
+statement, using the member selection operator (dot)\&.
+.IP 
+Note that \fBData\fP is not a hard-coded class: the function is implemented
+as a template member, and so it can be used by every class derived from
+\fBRefCount\fP\&.
+.IP 
+This function performs a \fBdynamic_cast\fP, which will always succeed if
+\fBData\fP was indeed derived from \fBRefCount\fP\&. A \fBbad_cast\fP is thrown if the
+cast fails\&.
+
+.PP 
+.SH "EXAMPLE"
+The following example illustrates the use the class \fBRefCount\fP\&. A class
+\fBData\fP is derived from \fBRefCount\fP, defining \fBclone()\fP, several standard
+members (copy constructor, overloaded assignment operator) as \fIprivate\fP
+members, and a default constructor, destructor, accessor and modifier member
+as public members\&.     
+.PP 
+The class that is used directly by the program is \fBClient\fP, given
+next\&. It defines all standard constructors and members, and it shadows the
+accessor and modifier members of \fBData\fP:
+.PP 
+Finally, a small program using \fBClient\fP is shown\&.
+.PP 
+.nf 
+/*
+                              driver\&.cc
+*/
+
+#include <iostream>
+#include <string>
+#include <sstream>
+
+#include "\&.\&./refcount\&.h"
+
+using namespace std;
+using namespace FBB;
+
+// The class Data uses reference counting\&. Data are shared until they are
+// modified\&. 
+
+class Data: public RefCount
+{
+    static unsigned s_n;        // count the number of objects in use
+
+    public:
+        Data()                  // all other constructors are built like this:
+        {                       // using RefCount\&'s default constructor\&.
+            s_n++;
+            cout << "Data(), " << s_n << " Data objects created\en";
+        }
+
+        virtual ~Data()
+        {
+            s_n--;
+            cout << "~Data(), " << s_n << " Data objects left\en";
+        }
+
+        string accessor() const
+        {
+            ostringstream ostr;
+            ostr << "calling Data::accessor()\&. Data at " << this;
+            return ostr\&.str();
+        }
+
+        void modifier()             // a plain modifier
+        {
+            cout << "calling Data::modifier()\&. Data at " << this << endl;
+        }
+
+                                    // support function for operator>>()
+        istream &extract(istream &istr) 
+        {
+            cout << "extraction from istream\&. " <<
+                                    "Enter a non-empty line of text" << endl;
+            string s;
+            getline(istr, s);
+
+            cout << "Read: " << s << endl;
+
+            return istr;
+        }
+                                    // another modifier: operator+=()
+        Data &operator+=(Data const &rvalue)
+        {
+            cout << "calling Data::operator+=(): @`" << 
+                    this << "\&' += @`" << &rvalue << "\&'\en";
+            return *this;
+        }
+
+    private:
+        Data &operator=(Data const &other);   // NI
+
+        Data(Data const &other) // The copy constructor MUST call RefCount\&'s
+        :                       // CC\&. Data(Data) is a convenience function 
+                                // for clone() and should not be available to 
+            RefCount(other)     // clients, thus enforcing the use of 
+        {                           // clone() / share() / release()
+            s_n++;
+            cout << "Data(Data const &), " << s_n << " Data objects created\en";
+        }
+
+        virtual RefCount *clone() const
+        {
+            cout << "Data::clone()\en";
+            return new Data(*this);
+        }
+};
+
+
+// Client: uses a pointer to a Data object\&. It is implemented in an 
+// almost standard way\&. Deviations are:
+//  *\&. Copy():       should call share() rather than new Data(*d_dataPtr)
+//  *\&. Destroy():    should call release() rather than delete d_dataPtr;
+//  *\&. non-const members modifying d_dataPtr\&'s data"    
+//                   should call Data:modifying() first\&.
+class Client 
+{
+                                                     // modifying friend
+                                                     // see below at modifier()
+    friend istream &operator>>(istream &istr, Client &c)
+    {   
+        return Data::modifying(&c\&.d_dataPtr)\&.extract(istr);
+    }
+
+    Data *d_dataPtr;   
+
+    public:
+            // Constructors, destructor, overloaded assignment operator: all
+            // follow my standard copy() / destroy() approach\&. 
+
+        Client()                    // new object, creates its own data
+        :                           // use new Data(\&.\&.\&.) to initialize\&.
+            d_dataPtr(new Data())
+        {}
+
+        ~Client()
+        {
+            destroy();
+        }
+
+        Client(Client const &other)
+        {
+            copy(other);
+        }
+
+        Client &operator=(Client const &other)
+        {
+            if (this != &other)
+            {
+                destroy();
+                copy(other);
+            }
+            return *this;
+        }
+
+        string accessor() const         // accessors shadow Data\&'s members
+        {                               
+            return d_dataPtr->accessor();
+        }
+                                        // modifiers call modifying first
+
+        void modifier()                 // simple modifier
+        {                               
+            Data::modifying(&d_dataPtr)\&.modifier();
+        }
+                                        // arithmetic assignment modifier
+        Client &operator+=(Client const &other)
+        {                               
+            Data::modifying(&d_dataPtr)\&.operator+=(*other\&.d_dataPtr);
+            return *this;
+        }
+
+    private:
+        void copy(Client const &other)  // copying is sharing: call share()
+        {
+            d_dataPtr = Data::share(other\&.d_dataPtr);
+        }
+        void destroy()                  // destroying is disassociation: call
+        {                               // release
+            d_dataPtr->release();
+        }
+};
+
+
+unsigned Data::s_n = 0;
+
+Client const operator+(Client const &lvalue, Client const &rvalue)
+{
+    return Client(lvalue) += rvalue;
+}
+
+int main()
+{
+    cout << "Construction:\en";
+    Client c;
+
+    cout << "Extraction c from cin:\en";
+    cin >> c;
+
+    cout << "c\&'s Modifier called:\en";
+    c\&.modifier();
+
+    cout << "operator += :\en";
+    c += c;
+
+    cout << "operator + :\en";
+    c + c;
+
+    cout << "Copy construction:\en";
+    Client c2(c);
+
+    cout << "Assignment:\en";
+    c = c2;
+
+    cout << "Accessors:\en";
+    cout << "access c:  " << c\&.accessor() << endl;
+    cout << "access c2: " << c2\&.accessor() << endl;
+
+    cout << "operator += :\en";
+    c += c;
+
+    cout << "c\&'s Modifier called:\en";
+    c\&.modifier();
+
+    cout << "Accessors:\en";
+    cout << "access c:  " << c\&.accessor() << endl;
+    cout << "access c2: " << c2\&.accessor() << endl;
+
+    cout << "c2\&'s Modifier called:\en";
+    c2\&.modifier();
+
+    cout << "resetting refcount to 2:\en";
+    c = c2;
+
+    
+    cout << "Extraction c from cin:\en";
+    cin >> c;
+
+    cout << "End of program:\en";
+}
+
+.fi 
+
+.PP 
+.SH "FILES"
+\fIbobcat/refcount\fP - defines the class interface
+.PP 
+.SH "SEE ALSO"
+\fBbobcat\fP(7)
+.PP 
+.SH "BUGS"
+None Reported\&.
+.PP 
+.SH "DISTRIBUTION FILES"
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.dsc\fP: detached signature;
+.IP o 
+\fIbobcat_1\&.10\&.0-x\&.tar\&.gz\fP: source archive;
+.IP o 
+\fIbobcat_1\&.10\&.0-x_i386\&.changes\fP: change log;
+.IP o 
+\fIlibbobcat1_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries;
+.IP o 
+\fIlibbobcat1-dev_1\&.10\&.0-x_i386\&.deb\fP: debian package holding the
+libraries, headers and manual pages;
+.IP o 
+\fIhttp://sourceforge\&.net/projects/bobcat\fP: public archive location;
+
+.PP 
+.SH "BOBCAT"
+Bobcat is an acronym of `Brokken\&'s Own Base Classes And Templates\&'\&.
+.PP 
+.SH "COPYRIGHT"
+This is free software, distributed under the terms of the 
+Academic Free Licence\&.
+.PP 
+.SH "AUTHOR"
+Frank B\&. Brokken (\fBf\&.b\&.brokken@rug\&.nl\fP)\&.
+.PP 
