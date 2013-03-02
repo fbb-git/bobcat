@@ -32,7 +32,7 @@ namespace
 
         ++pos;                                  // skip the 'x'
         size_t pos2 = min(pos + nHex, 
-                            src.find_first_not_of("01234567ABCDEF", pos));
+                            src.find_first_not_of("0123456789ABCDEF", pos));
 
         if (pos2 != pos + nHex)
         {
