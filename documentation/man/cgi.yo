@@ -22,6 +22,28 @@ from the type safety offered by bf(C++). The class tt(CGI) handles data
 submitted using the tt(GET) method as well as data submitted using the
 tt(POST) method automatically.
 
+    By default the class's constructor writes the customary tt(Content-type)
+header lines to the standard output stream. Additional (html) output of a
+reply page must be provided by other code. Therefore, a program processing an
+uploaded form will have an organization comparable to the following basic
+setup:
+        verb(
+    // assume includes and namespace std/FBB were defined
+    int main()
+    {
+        CGI cgi;
+        cout << "<html><body>\n";
+        if (parametersOK(cgi))
+        {
+            process(cgi);     
+            generateReplyPage();
+        }
+        else
+            generateErrorPage();
+        cout << "</body></html>\n;
+    }
+        )
+
     When errors in the received form-data are detected an error message is
 written to the standard output stream and an tt(FBB::Errno) exception is
 thrown.
