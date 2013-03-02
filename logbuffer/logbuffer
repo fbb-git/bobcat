@@ -47,8 +47,8 @@ class LogBuffer: public std::streambuf
 
     private:
         void insertTimestamp();
-        LogBuffer(LogBuffer const &other);              // NI
-        LogBuffer &operator=(LogBuffer const &other);   // NI
+        LogBuffer(LogBuffer const &other) = delete;
+        LogBuffer &operator=(LogBuffer const &other) = delete;
 };
 
 inline void LogBuffer::setStream(std::ostream &stream)

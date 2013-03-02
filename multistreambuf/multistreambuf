@@ -45,7 +45,7 @@ class MultiStreambuf: public std::streambuf
         std::vector<stream> d_os;
 
     public:
-        MultiStreambuf();
+        MultiStreambuf() = default;
         explicit MultiStreambuf(std::ostream &os, Mode mode = ON);
         explicit MultiStreambuf(std::vector<stream> const &osvector);
 
@@ -97,9 +97,6 @@ inline void MultiStreambuf::stream::setOnce(stream &os)
     if (os.d_mode == RESET)
         os.d_mode = ONCE;
 }
-
-inline MultiStreambuf::MultiStreambuf()
-{}
 
 inline MultiStreambuf::MultiStreambuf(std::ostream &os, Mode mode)
 {

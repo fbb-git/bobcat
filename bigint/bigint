@@ -95,7 +95,6 @@ class BigInt
 
             private:
                 Bit(BigInt &bi, size_t idx);
-                Bit(Bit const &other);          // NI
         };
 
         char *bigEndian() const;
@@ -242,14 +241,8 @@ class BigInt
 
 
         static void primeCallback(int reason, int primeNr, void *primeBase);
-
-        struct Context
-        {
-            BigInt &ret;
-            BigInt const &radix;
-            int (*pConv)(int);
-        };
-        static bool addDigit(char ch, Context &ctx);
+        static bool addDigit(char ch, BigInt &ret, BigInt const &radix, 
+                                                   int (*pConv)(int));
 };
 
 template<typename Type>
@@ -414,7 +407,8 @@ inline int BigInt::operator[](size_t idx) const
 
 inline BigInt::Bit BigInt::operator[](size_t idx)
 {
-    return Bit(*this, idx);
+    Bit bit(*this, idx);
+    return bit;
 }
 
 inline BigInt::Bit::operator bool() const

@@ -16,18 +16,13 @@ BigInt const BigInt::fromText(string const &text, int mode)
     BigInt radix(mode & ios::oct ?  8 : 
                  mode & ios::hex ? 16 : 10);
 
-    Context ctx = {ret,
-            radix,
-            mode & ios::oct ?   isoctdigit : 
-            mode & ios::hex ? ::isxdigit   :
-                              ::isdigit
-                  };
-
     bool negative = text[0] == '-';
     
-    string::const_iterator iter = 
-                    find_if(text.begin() + negative, text.end(), 
-                          FnWrap1c<char, Context &, bool>(addDigit, ctx));
+    auto iter = find_if(text.begin() + negative, text.end(), 
+                        FnWrap::unary(addDigit, ret, radix, 
+                                        mode & ios::oct ?   isoctdigit : 
+                                        mode & ios::hex ? ::isxdigit   :
+                                                          ::isdigit));
 
     if (iter - text.begin() <= negative)
         throw Errno("fromText: text does not represent a BigInt value");

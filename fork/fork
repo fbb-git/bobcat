@@ -12,7 +12,7 @@ class Fork
     pid_t d_pid;
 
     public:
-        virtual ~Fork();
+        virtual ~Fork() = default;
         void fork();
 
     protected:
@@ -28,10 +28,6 @@ class Fork
 
         int waitForChild();                 // returns the status
 };
-
-
-inline Fork::~Fork()
-{}
 
 inline pid_t Fork::pid() const
 {

@@ -89,6 +89,44 @@ still benefit from fast swapping operations: by implementing their own swap
 member they could first use fast swapping to swap the objects, followed by 
 another fast swap to unswap their `next' pointers.
 
+    The tt(fswap) function should also not be used for objects defining
+(back-)pointers to their own data. Consider the following objects using
+pointers to data and (back-)pointers to the original objects:
+        verb(
+    Before fswapping:
+        A                                  B                          
+       +--------+   +-----------+         +--------+   +-----------+  
+       |        |   |           |         |        |   |           |  
+     +--> *Aimp------> *A (back)--+     +--> *Bimp------> *B (back)--+
+     | |        |   |           | |     | |        |   |           | |
+     +--**Aimp  |   +-----------+ |     +--**Bimp  |   +-----------+ |
+       +--------+ <---------------+       +--------+ <---------------+
+
+    After fswapping:
+                     +-------------------------------+
+                  +--|-------------------------------|-+                
+    +-------------|--|-----------------+             | |                
+    |   A         |  v                 |   B         | v              
+    |  +--------+ | +-----------+      |  +--------+ | +-----------+  
+    |  |        | | |           |      |  |        | | |           |  
+  +-----> *Bimp---+ |  *A (back)--+    +---> *Aimp---+ |  *B (back)--+
+  | |  |        |   |           | |       |        |   |           | |
+  | +---**Bimp  |   +-----------+ |    +---**Aimp  |   +-----------+ |
+  |    +--------+ <---------------+    |  +--------+ <---------------+
+  +------------------------------------+
+        )
+    After the swap tt(**Bimp) should point to tt(Bimp)'s address (now at A),
+but in fact it points to tt(Aimp)'s address (now at B). Likewise, the back
+pointers still point at their original objects rather than at their swapped
+objects. 
+
+All tt(stream) classes define such pointers and can therefore not be swapped
+using tt(fswap).
+
+The bottom line being that tt(fswap) should only be used for self-defined
+classes for which it can be proven that fast-swapping does not corrupt the
+values of its pointer data.
+
 includefile(trailer.inc)
 
 
