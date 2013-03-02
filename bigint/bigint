@@ -3,7 +3,6 @@
 
 #include <iosfwd>
 #include <openssl/bn.h>
-#include <bobcat/fswap>
 
 namespace FBB
 {
@@ -414,11 +413,6 @@ inline BigInt::Bit BigInt::operator[](size_t idx)
 inline BigInt::Bit::operator bool() const
 {
     return d_bi.hasBit(d_idx);
-}
-
-inline void BigInt::swap(BigInt &other)
-{
-    fswap(*this, other);
 }
 
 BigInt const operator*(BigInt const &lhs, BigInt const &rhs);

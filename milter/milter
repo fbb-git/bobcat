@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <libmilter/mfapi.h>
-#include <map>
+#include <unordered_map>
 #include <string>
 
 
@@ -17,8 +17,8 @@ class Milter
     static Milter *s_mp;
     static bool s_callClose;
 
-    typedef std::map<SMFICTX *, Milter *>::iterator iterator;
-    static std::map<SMFICTX *, Milter *> s_map;
+    typedef std::unordered_map<SMFICTX *, Milter *>::iterator iterator;
+    static std::unordered_map<SMFICTX *, Milter *> s_map;
 
     SMFICTX *d_ctx;                 // for local use only
 
@@ -95,7 +95,7 @@ class Milter
         }
 
     protected:
-        virtual ~Milter();
+        virtual ~Milter();          // empty
 
         virtual sfsistat abort()
         {

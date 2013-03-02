@@ -3,7 +3,6 @@
 
 #include <netdb.h>
 #include <string>
-#include <bobcat/fswap>
 
 namespace FBB
 {
@@ -57,11 +56,6 @@ class Hostent: private hostent
         size_t countAddresses(char const * const *addresses, 
                                             size_t length) const;
 };
-
-inline void Hostent::swap(Hostent &other)
-{
-    fswap(*this, other);
-}
 
 inline Hostent &Hostent::operator=(Hostent const &&tmp)
 {

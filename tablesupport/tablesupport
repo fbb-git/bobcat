@@ -90,8 +90,12 @@ class TableSupport
 
     public:
         TableSupport();
+        TableSupport(TableSupport const &&tmp);
 
-        virtual ~TableSupport();
+
+        TableSupport &operator=(TableSupport const &&tmp);
+
+        virtual ~TableSupport();            // empty
 
         void setParam(std::ostream &ostr, size_t rows, size_t nColumns,
                         std::vector<Align> const &align);

@@ -18,8 +18,9 @@ class User
 
     public:
         User();
-        // ~User();     removed, as its implementation was empty and
-        //              it is not a virtual destructor
+        User(User const &&tmp);
+
+        User &operator=(User const &&tmp);
 
         void verify() const;        // kept for bacward compatibility
 

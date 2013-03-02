@@ -11,7 +11,7 @@ namespace
     ArgConfig::LongOption lo[] =
     {
         ArgConfig::LongOption("option", 'o'),
-        ArgConfig::LongOption("value-option", 'v')
+        ArgConfig::LongOption("option-value", 'v')
     };
 }
 
