@@ -1,3 +1,21 @@
+bobcat (2.17.00)
+
+  * In accordance with C++0x's prototype of move members Bobcat's move
+    constructors and move assignment operators now all use 'Class &&tmp'
+    parameter definitions (where Class should be replaced by the actual
+    class name). Previously defined members specifying 'Class const &&tmp'
+    were retained for backward compatibility, but also generate a `deprecated'
+    warning when used from, e.g., a dynamic library. If such a warning is
+    generated the program dynamically linking to the bobcat library only needs
+    to be recompiled to get rid of the message.
+
+  * Added new series of function templates in the bobcat/binops header file,
+    making available all binary arithmetic operators for classes already
+    defining (a subset of) the binary assignment operators. The command `man
+    -e bobcat binops' provides the details.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Mon, 06 Jun 2011 14:35:52 +0200
+
 bobcat (2.16.00)
 
   * Removed obsolete bobcatlcgen

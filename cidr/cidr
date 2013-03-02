@@ -26,10 +26,10 @@ class Cidr
         Cidr() = default;
         Cidr(std::string const &cidrPattern);       // 1 one pattern to check
         Cidr(std::istream &cidrStream);             // 2 stream of patterns
-        Cidr(Cidr const &&tmp);                     // 3
+        Cidr(Cidr &&tmp);                           // 3
 
         Cidr &operator=(Cidr const &rhs) = default;
-        Cidr &operator=(Cidr const &&tmp);
+        Cidr &operator=(Cidr &&tmp);
 
             // all lines of 'in' are inspected for ip addresses matching
             // any cidr-specification in d_cidr
@@ -52,6 +52,9 @@ class Cidr
         static size_t dotted2binary(std::string const &dotted);
                                                 // reverse operation
         static std::string binary2dotted(size_t binary);
+
+        Cidr(Cidr const &&tmp);                     // Deprecated
+        Cidr &operator=(Cidr const &&tmp);          // Deprecated
 
     private:
         static bool matchLine(std::string const &line, Cidr &cidr);

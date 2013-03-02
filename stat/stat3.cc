@@ -1,6 +1,6 @@
 #include "stat.ih"
 
-Stat::Stat(Stat const &&tmp)
+Stat::Stat(Stat &&tmp)
 :
     d_stat(tmp.d_stat),
     d_errno(tmp.d_errno),

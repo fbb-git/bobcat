@@ -63,16 +63,16 @@ class HashCharPtr: public std::unordered_map<
         typedef typename BaseClass::value_type value_type;
 
         HashCharPtr() = default;
-        HashCharPtr(HashCharPtr const &&tmp);
+        HashCharPtr(HashCharPtr &&tmp);
         HashCharPtr(std::initializer_list<value_type> iniValues);
 
         template <typename InputIterator>
         HashCharPtr(InputIterator first, InputIterator beyond);
 
-        HashCharPtr<Value> &operator=(HashCharPtr const &&tmp);
+        HashCharPtr<Value> &operator=(HashCharPtr &&tmp);
 };
 template<typename Value>
-inline HashCharPtr<Value>::HashCharPtr(HashCharPtr const &&tmp)
+inline HashCharPtr<Value>::HashCharPtr(HashCharPtr &&tmp)
 :
     BaseClass(std::move(tmp))
 {}
@@ -90,8 +90,7 @@ inline HashCharPtr<Value>::HashCharPtr(InputIterator first,
     BaseClass(first, beyond)
 {}
 template<typename Value>
-inline HashCharPtr<Value> &HashCharPtr<Value>::operator=(
-                                                    HashCharPtr const &&tmp)
+inline HashCharPtr<Value> &HashCharPtr<Value>::operator=(HashCharPtr &&tmp)
 {
     static_cast<BaseClass &>(*this) = std::move(tmp);
     return *this;
@@ -113,16 +112,16 @@ class HashCharCasePtr: public std::unordered_map<
         typedef typename BaseClass::value_type value_type;
 
         HashCharCasePtr() = default;
-        HashCharCasePtr(HashCharCasePtr const &&tmp);
+        HashCharCasePtr(HashCharCasePtr &&tmp);
         HashCharCasePtr(std::initializer_list<value_type> iniValues);
 
         template <typename InputIterator>
         HashCharCasePtr(InputIterator first, InputIterator beyond);
 
-        HashCharCasePtr<Value> &operator=(HashCharCasePtr const &&tmp);
+        HashCharCasePtr<Value> &operator=(HashCharCasePtr &&tmp);
 };
 template<typename Value>
-inline HashCharCasePtr<Value>::HashCharCasePtr(HashCharCasePtr const &&tmp)
+inline HashCharCasePtr<Value>::HashCharCasePtr(HashCharCasePtr &&tmp)
 :
     BaseClass(std::move(tmp))
 {}
@@ -141,7 +140,7 @@ inline HashCharCasePtr<Value>::HashCharCasePtr(InputIterator first,
 {}
 template<typename Value>
 inline HashCharCasePtr<Value> &HashCharCasePtr<Value>::operator=(
-                                                HashCharCasePtr const &&tmp)
+                                                HashCharCasePtr &&tmp)
 {
     static_cast<BaseClass &>(*this) = std::move(tmp);
     return *this;
@@ -161,16 +160,16 @@ class HashString: public std::unordered_map< std::string, Value>
         typedef typename BaseClass::value_type value_type;
 
         HashString() = default;
-        HashString(HashString const &&tmp);
+        HashString(HashString &&tmp);
         HashString(std::initializer_list<value_type> iniValues);
 
         template <typename InputIterator>
         HashString(InputIterator first, InputIterator beyond);
 
-        HashString<Value> &operator=(HashString const &&tmp);
+        HashString<Value> &operator=(HashString &&tmp);
 };
 template<typename Value>
-inline HashString<Value>::HashString(HashString const &&tmp)
+inline HashString<Value>::HashString(HashString &&tmp)
 :
     BaseClass(std::move(tmp)) 
 {}
@@ -188,7 +187,7 @@ inline HashString<Value>::HashString(InputIterator first,
     BaseClass(first, beyond)
 {}
 template<typename Value>
-inline HashString<Value> &HashString<Value>::operator=(HashString const &&tmp)
+inline HashString<Value> &HashString<Value>::operator=(HashString &&tmp)
 {
     static_cast<BaseClass &>(*this) = std::move(tmp);
     return *this;
@@ -210,16 +209,16 @@ class HashStringCase: public std::unordered_map<
         typedef typename BaseClass::value_type value_type;
 
         HashStringCase() = default;
-        HashStringCase(HashStringCase const &&tmp);
+        HashStringCase(HashStringCase &&tmp);
 
         template <typename InputIterator>
         HashStringCase(InputIterator first, InputIterator beyond);
         HashStringCase(std::initializer_list<value_type> iniValues);
 
-        HashStringCase<Value> &operator=(HashStringCase const &&tmp);
+        HashStringCase<Value> &operator=(HashStringCase &&tmp);
 };
 template<typename Value>
-inline HashStringCase<Value>::HashStringCase(HashStringCase const &&tmp)
+inline HashStringCase<Value>::HashStringCase(HashStringCase &&tmp)
 :
     BaseClass(std::move(tmp)) 
 {}
@@ -238,7 +237,7 @@ inline HashStringCase<Value>::HashStringCase(InputIterator first,
 {}
 template<typename Value>
 inline HashStringCase<Value> &HashStringCase<Value>::operator=(
-                                                HashStringCase const &&tmp)
+                                                HashStringCase &&tmp)
 {
     static_cast<BaseClass &>(*this) = std::move(tmp);
     return *this;

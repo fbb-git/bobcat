@@ -1,8 +1,8 @@
 #include "mailheaders.ih"
 
-MailHeaders &MailHeaders::operator=(MailHeaders const &&tmp)
+MailHeaders &MailHeaders::operator=(MailHeaders &&tmp)
 {
-    fswap(*this, const_cast<MailHeaders &>(tmp));
+    fswap(*this, tmp);
     return *this;
 }
 

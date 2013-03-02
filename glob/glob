@@ -39,12 +39,12 @@ class Glob
              Dots dots = FIRST);
 
         Glob(Glob const &other);
-        Glob(Glob const &&tmp);
+        Glob(Glob &&tmp);
 
         ~Glob();
 
         Glob &operator=(Glob const &other);
-        Glob &operator=(Glob const &&tmp);
+        Glob &operator=(Glob &&tmp);
 
         size_t size() const;
         char const *operator[](size_t idx) const;
@@ -54,6 +54,9 @@ class Glob
         void verify() const;        // no-op
 
         void swap(Glob &other);
+
+        Glob(Glob const &&tmp);             // Deprecated
+        Glob &operator=(Glob const &&tmp);  // Deprecated
 
     private:
         char const **mbegin() const;

@@ -34,10 +34,10 @@ class CmdFinderBase
 
     protected:
         explicit CmdFinderBase(size_t mode = 0);
-        CmdFinderBase(CmdFinderBase const &&tmp);
+        CmdFinderBase(CmdFinderBase &&tmp);
 
         CmdFinderBase &operator=(CmdFinderBase const &rhs);
-        CmdFinderBase &operator=(CmdFinderBase const &&tmp);
+        CmdFinderBase &operator=(CmdFinderBase &&tmp);
 
         std::string const &beyond() const;  // info beyond the command
         std::string const &cmd() const;     // the used command
@@ -48,6 +48,9 @@ class CmdFinderBase
 
                                 // stores the command to use
         void (CmdFinderBase::*d_useCmd)(std::string const &cmd);
+
+        CmdFinderBase(CmdFinderBase const &&tmp);               // Deprecated
+        CmdFinderBase &operator=(CmdFinderBase const &&tmp);    // Deprecated
 
     private:
         void useCmd(std::string const &key);

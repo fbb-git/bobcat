@@ -3,7 +3,7 @@
 // conversion stops at the first character outside of the expected range of
 // characters. 
 
-BigInt const BigInt::fromText(string const &text, int mode)
+BigInt BigInt::fromText(string const &text, int mode)
 {
     BigInt ret;
 

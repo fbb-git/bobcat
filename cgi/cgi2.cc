@@ -1,6 +1,6 @@
 #include "cgi.ih"
 
-CGI::CGI(CGI const &&tmp)
+CGI::CGI(CGI &&tmp)
 :
     d_method(tmp.d_method),
     d_escapeValue(tmp.d_escapeValue),

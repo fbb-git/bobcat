@@ -1,17 +1,16 @@
 #include "msg.ih"
 
+#include "../iuo/iuo"
+
 ostringstream &FBB::msg()
 {
-    static bool shown = false;
+    static bool called = false;
 
-    if (!shown)
+    if (not called)
     {
-        shown = true;
-        cerr << "\n"
-                "FBB::msg() is DEPRECATED and will be removed from BOBCAT in "
-                                                "a future release\n"
-                "Use FBB::Mstream objects instead\n"
-                "\n";
+        called = true;
+        cerr << "[Warning] FBB::msg() is deprecated.\n"
+                         "Use FBB::Mstream objects instead\n";
     }
 
     Msg::s_msg.clear();

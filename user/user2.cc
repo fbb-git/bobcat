@@ -1,6 +1,6 @@
 #include "user.ih"
 
-User::User(User const &&tmp)
+User::User(User &&tmp)
 :
     d_name( move(tmp.d_name) ),
     d_password( move(tmp.d_password) ),

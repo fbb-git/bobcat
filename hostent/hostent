@@ -21,13 +21,13 @@ class Hostent: private hostent
     public:
         Hostent();
         Hostent(Hostent const &other);
-        Hostent(Hostent const &&other);
+        Hostent(Hostent &&tmp);
         explicit Hostent(hostent const *other);
 
         ~Hostent();
 
         Hostent &operator=(Hostent const &other);
-        Hostent &operator=(Hostent const &&tmp);
+        Hostent &operator=(Hostent &&tmp);
 
         char const *alias(size_t nr) const;
         char const *binaryAddress(size_t nr) const;         // length bytes!
@@ -44,6 +44,8 @@ class Hostent: private hostent
 
         void swap(Hostent &other);
 
+        Hostent(Hostent const &&tmp);                   // Deprecated
+
     private:
         static char *xstrdup(char const *src);
 
@@ -57,9 +59,9 @@ class Hostent: private hostent
                                             size_t length) const;
 };
 
-inline Hostent &Hostent::operator=(Hostent const &&tmp)
+inline Hostent &Hostent::operator=(Hostent &&tmp)
 {
-    swap(const_cast<Hostent &>(tmp));
+    swap(tmp);
     return *this;
 }
 

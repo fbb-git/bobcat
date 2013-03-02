@@ -1,7 +1,7 @@
 #include "pattern.ih"
 
-Pattern &Pattern::operator=(Pattern const &&tmp)
+Pattern &Pattern::operator=(Pattern &&tmp)
 {
-    swap(const_cast<Pattern &>(tmp));
+    swap(tmp);
     return *this;    
 }
