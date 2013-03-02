@@ -5,16 +5,21 @@
 #include <glob.h>
 
 #include <bobcat/errno>
+#include <bobcat/gs>
 
 namespace FBB
 {
 
-class Glob
+class Glob: public GS__
 {
     struct GlobShare
     {
         glob_t      globStruct;
         size_t      users;
+        size_t      gsType;
+        char      **begin;
+        char      **end;
+        size_t      size;
     };
 
     GlobShare *d_share;
@@ -22,7 +27,7 @@ class Glob
     public:
         enum Flags
         {
-            // These flags are those used by glob.h
+            // These flags are equal to the ones used in <glob.h>
 
             ERR =       1 << 0, // Return on read errors.
             MARK =      1 << 1, // Append a slash to each name.
@@ -37,11 +42,12 @@ class Glob
             DEFAULT
         };
             
-        Glob(std::string const &pattern = "*", int flags = PERIOD,
+        Glob(std::string const &pattern = "*", int flags = PERIOD,  // 1
              Dots dots = FIRST);
-
-        Glob(Glob const &other);
-        Glob(Glob &&tmp);
+        Glob(Type type, std::string const &pattern = "*",           // 2
+                int flags = PERIOD, Dots dots = FIRST);
+        Glob(Glob &&tmp);                                           // 3
+        Glob(Glob const &other);                                    // 4
 
         ~Glob();
 
@@ -60,41 +66,11 @@ class Glob
     private:
         char const **mbegin() const;
         char const **mend() const;
-        void copy(Glob const &other);
-        void destroy();
+
+        void accept(Type type);
 
         static bool isDot(char const *cp);
 };
-
-inline Glob::Glob(Glob const &other)
-{
-    copy(other);
-}
-
-inline Glob::~Glob()
-{
-    destroy();
-}
-
-inline size_t Glob::size() const
-{
-    return d_share->globStruct.gl_pathc;
-}
-
-inline char const *Glob::operator[](size_t idx) const
-{
-    return idx < size() ? d_share->globStruct.gl_pathv[idx] : "";
-}
-
-inline char const *const *Glob::begin() const
-{
-    return d_share->globStruct.gl_pathv;
-}
-
-inline char const *const *Glob::end() const
-{
-    return d_share->globStruct.gl_pathv + size();
-}
 
 } // FBB
         

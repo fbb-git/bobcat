@@ -1,5 +1,7 @@
 includefile(include/header)
 
+COMMENT( see also getgroups )
+
 COMMENT(manpage, section, releasedate, archive, short name)
 manpage(FBB::Stat)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
                     (Characteristics of object in the filesystem)
@@ -24,7 +26,7 @@ manpagesection(INHERITS FROM)
 manpagesection(ENUMERATIONS)
 
     bf(Stat::Combine): nl() 
-        This enumeration has the following values:
+        This enumeration defines the following values:
         itemization(
         it() bf(ALL): require all of the specified bf(Mode) or 
                 bf(SpecialMode) values to match;
@@ -33,7 +35,7 @@ manpagesection(ENUMERATIONS)
         )
  
     bf(Stat::Mode): nl() 
-        This enumeration has the following values:
+        This enumeration defines the following values:
         itemization(
        it() bf(UR): the owner of the object has read permissions
        it() bf(UW): the owner of the object has write permissions
@@ -46,11 +48,14 @@ manpagesection(ENUMERATIONS)
        it() bf(OR): others have read permissions
        it() bf(OW): others have write permissions
        it() bf(OX): others have execute permissions
+       it() bf(READ): equal to tt(UR | GR | OR)
+       it() bf(WRITE): equal to tt(UW | GW | OW)
+       it() bf(EXEC): equal to tt(UX | GX | OX)
        it() bf(RWX): all of the above.
         )
  
     bf(Stat::SpecialMode): nl() 
-        This enumeration has the following values:
+        This enumeration defines the following values:
         itemization(
         it() bf(SUID): set UID bit is up
         it() bf(SGID): set GID bit is up
@@ -58,16 +63,9 @@ manpagesection(ENUMERATIONS)
         )
  
     bf(Stat::Type): nl() 
-        This enumeration has the following values:
-        itemization(
-        it() bf(BLOCK_DEVICE): the object represents a block device
-        it() bf(CHARACTER_DEVICE): the object represents a character device
-        it() bf(DIRECTORY): the object represents a directory
-        it() bf(FIFO): the object represents a named pipe (a queue)
-        it() bf(REGULAR_FILE): the object represents a regular file
-        it() bf(SOCKET): the object represents a socket
-        it() bf(SYMBOLIC_LINK): the object represents a symbolic link
-        )
+        This enumeration, which is identical to the bf(glob)(3bobcat) tt(Type)
+            enumeration),  defines the following values:
+        includefile(gs.inc)
 
 manpagesection(CONSTRUCTORS)
     itemization(
@@ -96,6 +94,20 @@ manpagesection(OVERLOADED OPERATORS)
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
+    itb(bool access(FBB::User const &user, size_t spec, bool useEffective =
+        true) const)
+       Returns tt(true) if tt(user) has the permissions as specified at
+        tt(spec) (of which only the defined tt(Mode) bits are interpreted). If
+        a combination of read, write and/or execute permissions are specified,
+        then at least one of the read permissions, one of the write
+        permissions and one of the execute permissions must be granted or the
+        function returns tt(false). E.g, when specifying tt(access(user, UW |
+        UR | GR)) then the user em(must) have write permissions, but either
+        the user or the user's group must have read permissions. If multiple
+        read, multiple write or multiple execute permissions are specified
+        (like tt(UR | GR)) then this member returns tt(true) if at least one
+        of the requested read, write, or execute permissions are granted for
+        tt(user).
     itb(size_t blockSize() const)
         Returns the blocksize (tt(st_blksize)) for filesystem I/O
     itb(size_t device() const)
@@ -195,7 +207,7 @@ manpagefiles()
     em(bobcat/stat) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(stat)(3)
+    bf(bobcat)(7), bf(glob)(3bobcat), bf(stat)(3)
 
 manpagebugs()
     None Reported.

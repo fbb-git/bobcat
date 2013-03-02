@@ -4,19 +4,18 @@
 #include <algorithm>
 
 #include <bobcat/fswap>
+#include <bobcat/stat>
 
 using namespace std;
 using namespace FBB;
 
 inline char const **Glob::mbegin() const
 {
-    return const_cast<char const **>
-            (d_share->globStruct.gl_pathv);
+    return const_cast<char const **>(d_share->begin);
 }
 
 inline char const **Glob::mend() const
 {
-    return const_cast<char const **>
-            (d_share->globStruct.gl_pathv + size());
+    return const_cast<char const **>(d_share->end);
 }
 
