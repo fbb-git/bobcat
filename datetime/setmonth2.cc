@@ -5,10 +5,10 @@ using namespace std;
 
 bool DateTime::setMonth(int month)
 {
-    struct tm tmStruct = d_tm;
-    tmStruct.tm_mon = month;
+    TimeStruct ts = d_tm;
+    ts.tm_mon = month;
 
-    return updateTime(&tmStruct);
+    return updateTime(ts);
 }
 
 

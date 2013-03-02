@@ -23,7 +23,7 @@ class Errno: public std::ostringstream, public std::exception
 
     public:
         Errno();
-        Errno(char const *prefix); 
+        explicit Errno(char const *prefix); 
         Errno(int errnr, char const *text = 0);
         Errno(Errno const &other);
         virtual ~Errno() throw();
@@ -52,11 +52,12 @@ inline Errno *throwable()
     return 0;
 }
 
+inline Errno &operator<<(std::ostream &str, Errno *(*)())
+{
+    return *static_cast<Errno *>(&(str << std::flush));
+}
+
 } // FBB
 
-inline FBB::Errno &operator<<(std::ostream &str, FBB::Errno *(*)())
-{
-    return *static_cast<FBB::Errno *>(&(str << std::flush));
-}
    
 #endif

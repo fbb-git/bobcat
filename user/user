@@ -15,13 +15,12 @@ class User
     std::string d_shell;
     size_t d_uid;
     size_t d_gid;
-    char const *d_msg;
 
     public:
         User();
         ~User();
 
-        void verify() const;
+        void verify() const;        // kept for bacward compatibility
 
         size_t groupid() const;
         size_t userid() const;
@@ -33,9 +32,7 @@ class User
 };
 
 inline User::~User()
-{
-    verify();
-}
+{}
 
 inline size_t User::groupid() const
 {

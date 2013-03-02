@@ -23,9 +23,9 @@ manpagesection(INHERITS FROM)
 manpagesection(CONSTRUCTORS)
     itemization(
     itb(User())
-        The default constructor determines the current user's data.  The
-proper completion of this constructor should be checked by calling the
-tt(User::verify()) member (see below).
+        The default constructor determines the current user's data.  
+        This constructor throws an tt(Errno) exception if it did not properly
+complete because the current user name could not be found in tt(/etc/passwd).
     )
     The copy constructor is available.
 
@@ -48,10 +48,7 @@ manpagesection(MEMBER FUNCTIONS)
     itb(size_t userid() const)
         Returns the user's user-id.
     itb(void verify() const)
-        This operator throws an tt(Errno) exception if the bf(User)
-constructor did not properly complete because the current user name could not
-be found in tt(/etc/passwd). It should be called before using any other
-bf(User) member (not required after using the copy constructor).
+        Obsoleted, will be removed in a future Bobcat release.
     )
 
 manpagesection(EXAMPLE)

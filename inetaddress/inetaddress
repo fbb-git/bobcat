@@ -22,14 +22,16 @@ class InetAddress
             // replaces the formerly available getAddress() member.
         std::string dottedDecimalAddress() const;
         sockaddr const *sockaddrPtr() const;
+        sockaddr_in const *sockaddr_inPtr() const;
         size_t size() const;
 
     protected:
         InetAddress(std::string const &host, uint16_t port);
-        InetAddress(uint16_t port);
-        InetAddress(sockaddr_in const &address);
+        explicit InetAddress(uint16_t port);
+        explicit InetAddress(sockaddr_in const &address);
 
         sockaddr *sockaddrPtr();
+        sockaddr_in *sockaddr_inPtr();
 
     private:
         void init(uint32_t addr, uint16_t port);    // host byte order !
@@ -44,6 +46,11 @@ inline uint16_t InetAddress::port() const
 inline sockaddr const *InetAddress::sockaddrPtr() const
 {
     return reinterpret_cast<sockaddr const *>(&d_address);
+}
+
+inline sockaddr_in const *InetAddress::sockaddr_inPtr() const
+{
+    return &d_address;
 }
 
 inline size_t InetAddress::size() const
@@ -65,6 +72,12 @@ inline sockaddr *InetAddress::sockaddrPtr()
 {
     return reinterpret_cast<sockaddr *>(&d_address);
 }
+
+inline sockaddr_in *InetAddress::sockaddr_inPtr()
+{
+    return &d_address;
+}
+
 
 } // FBB
 

@@ -6,15 +6,13 @@ Glob::Glob(string const &pattern, int flags, Dots dots)
 {
     d_share->users = 1;
 
-    d_share->err = 
-        (
-            (flags & ~(ERR | MARK | NOSORT | NOESCAPE | PERIOD))
-            ||
-            glob(pattern.c_str(), flags, 0, &d_share->globStruct)
-        );
+    if (flags & ~(ERR | MARK | NOSORT | NOESCAPE | PERIOD))
+        throw Errno(flags, "Glob: unknown Flag specified");
 
-    if (!d_share->err)
-        return;
+    int err = glob(pattern.c_str(), flags, 0, &d_share->globStruct);
+
+    if (err)
+        throw Errno(err, "Glob: glob() failed");
 
     if (dots == FIRST)
         stable_partition(mbegin(), mend(), 

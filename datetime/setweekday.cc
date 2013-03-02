@@ -2,9 +2,9 @@
 
 bool DateTime::setWeekday(Weekday weekday, Relative where)
 {
-    TimeStruct tmStruct = d_tm;
+    TimeStruct ts = d_tm;
 
-    int difference = static_cast<int>(weekday) - tmStruct.tm_wday;
+    int difference = static_cast<int>(weekday) - ts.tm_wday;
 
     switch (where)
     {
@@ -23,7 +23,10 @@ bool DateTime::setWeekday(Weekday weekday, Relative where)
         throw Errno(1, "DateTime::setWeekday(): invalid Relative spec.");
     }
 
-    tmStruct.tm_mday += difference;
+    ts.tm_mday += difference;
     
-    return updateTime(&tmStruct);
+    return updateTime(ts);
 }
+
+
+

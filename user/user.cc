@@ -19,10 +19,15 @@ User::User()
                 d_homedir += '/';
             d_shell     = pwd->pw_shell;
             endpwent();
-            d_msg = 0;
             return;
         }
     }
-    d_msg = "Unable to determine actual user information from `/etc/passwd'";
+
+    throw Errno(1, 
+        "Unable to determine actual user information from `/etc/passwd'");
 }
+
+
+
+
 

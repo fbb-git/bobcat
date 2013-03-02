@@ -2,8 +2,8 @@
 
 bool DateTime::setMinutes(int minutes)
 {
-    struct tm tmStruct = d_tm;
-    tmStruct.tm_min = minutes;
+    TimeStruct  ts = d_tm;
+    ts.tm_min = minutes;
 
-    return updateTime(&tmStruct);
+    return updateTime(ts);
 }

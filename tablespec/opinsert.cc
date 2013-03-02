@@ -1,7 +1,11 @@
 #include "tablespec.ih"
 
-std::ostream &operator<<(std::ostream &str, FBB::TableSpec const &tableType)
+namespace FBB
+{
+
+std::ostream &operator<<(std::ostream &str, TableSpec const &tableType)
 {
     return tableType.insert(str);
 }
         
+}

@@ -11,5 +11,5 @@ time_t DateTime::timeStruct2utcSec(TimeStruct *ts)
     }
 
     d_ok = true;
-    return time + s_currentZoneCorrection - d_displayZoneShift;// - d_dstShift;
+    return time;
 }

@@ -1,14 +1,14 @@
 #include "datetime.ih"
 
+//     struct tm ts = {0, 0, 10, 5, 6, 109, 0, 0, 1};
+//      dst and day-of-year fields ignored. With UTC ts represents UTC time
+//      with LOCALTIME ts represents local time
+
 DateTime::DateTime(TimeStruct const &ts, TimeType type)
 :
-    d_type(type),
-    d_dstShift(0)
+    d_type(type)
 {
-    zoneCorrection();
-
     d_tm = ts;
 
-    setDisplayZone();
-    updateTime(&d_tm);
+    d_tm2timeType();
 }

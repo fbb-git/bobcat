@@ -96,16 +96,19 @@ class Pattern
         //      string  immediately before a newline, regardless of
         //      whether eflags contains REG_NOTEOL.
 
-        Pattern();
+        Pattern();                                      // 0
 
-        Pattern(std::string const &pattern, 
+        explicit Pattern(std::string const &pattern,    // .cc
                         bool caseSensitive = true, 
                         size_t nSub = 10,
                         int options = REG_EXTENDED | REG_NEWLINE);
         Pattern(Pattern const &other);
+        Pattern(Pattern &&tmp);                         // 1
         ~Pattern();
 
         Pattern &operator=(Pattern const &other);
+        Pattern &operator=(Pattern &&tmp);
+
         Pattern &operator<<(int matchOption);
         bool operator<<(std::string const &text);
 
@@ -161,7 +164,8 @@ inline Pattern::Pattern(Pattern const &other)
 
 inline Pattern::~Pattern()
 {
-    destroy();
+    if (d_regex)
+        destroy();
 }    
 
 inline std::string Pattern::matched() const 

@@ -16,9 +16,9 @@ manpagedescription()
 tt(std::auto_ptr). Like bf(std::auto_ptr) ab() can be used to handle a pointer
 to an allocated data element, but unline bd(std::auto_ptr) ap() can also be
 used to handle a pointer to an array of data elements. Moreover, ap() supports
-non-destructive assignment and copy construction, therefore allowing ap()
-objects to be stored in, e.g., abstract containers. These latter
-characteristics are supported through the use of reference counting.
+non-destructive assignment copy- and move construction, therefore allowing
+ap() objects to be stored in, e.g., abstract containers. The class uses
+reference counting to share data among multiple objects.
 
 Since almost all operators and members provide access to (mutable) data stored
 in the ap() object, no members return or expect tt(const) references, pointers
@@ -46,11 +46,8 @@ ap() object.
 which is an array of tt(size) tt(Data) elements. The
 tt(data) pointer must have been dynamically allocated and is owned by the
 ap() object.
-
-    itb(AutoPtr<Type>(AutoPtr<Type> &other))
-        The copy constructor copies the information referred to by tt(other)
-to the current ap() using reference counting.
     )
+    itt(AutoPtr<Type>) offers copy and move constructors.
 
 manpagesection(OVERLOADED OPERATORS)
     Some of the following operators return references or pointers to data

@@ -42,10 +42,17 @@ class Process: private Fork, public IOStream
 
         std::string     d_command;
 
-        std::auto_ptr<Pipe> d_child_inp;    // cin read by the CHILD
-        std::auto_ptr<Pipe> d_child_outp;   // cout written by the CHILD
-        std::auto_ptr<Pipe> d_child_errp;   // cerr written by the CHILD    
-    
+// With g++4-4:
+//        std::unique_ptr<Pipe> d_child_inp;    // cin read by the CHILD
+//        std::unique_ptr<Pipe> d_child_outp;   // cout written by the CHILD
+//        std::unique_ptr<Pipe> d_child_errp;   // cerr written by the CHILD    
+
+// Defining 1 auto_ptr here is no problem, but multiple auto_ptrs generates a
+// deprecated warning...
+        std::shared_ptr<Pipe> d_child_inp;    // cin read by the CHILD
+        std::shared_ptr<Pipe> d_child_outp;   // cout written by the CHILD
+        std::shared_ptr<Pipe> d_child_errp;   // cerr written by the CHILD    
+
         int d_oldIn;                        // File Descriptors of previously 
         int d_oldOut;                       // used pipes
         int d_oldErr;
@@ -91,12 +98,17 @@ class Process: private Fork, public IOStream
             CHILD_CERR          = 1 << 1,
         };
             
-        Process(std::string const &command = "");                       // 1
-        Process(iomode mode, std::string const &command = "");          // 2
+        explicit Process(std::string const &command = "");              // 1
+        explicit Process(iomode mode, std::string const &command = ""); // 2
         Process(iomode mode, ProcessType type,                          // 3
                                     std::string const &command = "");
         Process(iomode mode, ProcessType type, size_t timeLimit,      // 4
                                     std::string const &command = "");
+
+
+// With g++4-4                                    
+//        Process(Process const &other) = delete;
+//        Process &operator=(Process const &other) = delete;
 
         virtual ~Process();                 // stop()s any ongoing process
 
@@ -156,6 +168,9 @@ class Process: private Fork, public IOStream
 
                                 
     private:
+        Process(Process const &other);              // NI
+        Process &operator=(Process const &other);   // NI
+
         virtual void childProcess();
         virtual void childRedirections();
         virtual void parentProcess();
@@ -182,9 +197,6 @@ class Process: private Fork, public IOStream
         static void execContext(String::SplitPair const &splitPair,
                                 ExecContext &ec);
         ExecContext analyzeCommand();
-                                    
-        Process(Process const &other);              // NI
-        Process &operator=(Process const &other);   // NI
 };
 
 inline Process::~Process()

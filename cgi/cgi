@@ -12,20 +12,10 @@
 
 namespace FBB
 {
-    class CGI;
-}
-
-namespace std
-{
-    ostream &operator<<(ostream &out, FBB::CGI const &cgi);
-}
-
-namespace FBB
-{
 
 class CGI
 {
-    friend std::ostream &std::operator<<(std::ostream &out, CGI const &cgi);
+    friend std::ostream &operator<<(std::ostream &out, CGI const &cgi);
 
     public:
         typedef std::map<std::string, std::vector<std::string> >
@@ -80,7 +70,7 @@ class CGI
         static size_t const s_nTries = 100;         // upload.cc
 
     public:
-        CGI(bool defaultEscape = true,
+        explicit CGI(bool defaultEscape = true,
             char const *header = "Content-type: text/html", 
             std::ostream &out = std::cout);
 

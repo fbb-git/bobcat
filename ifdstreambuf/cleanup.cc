@@ -6,5 +6,5 @@ void IFdStreambuf::cleanup(Mode mode)
         close(d_fd);
 
     if (d_buffer)
-        delete d_buffer;
+        delete [] d_buffer;
 }

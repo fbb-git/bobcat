@@ -10,7 +10,7 @@ size_t Process::whichStream()
         return NOTHING_AVAILABLE;
 
         case 1:
-        return d_selector.getReadFd() == d_child_outp->readFd() ? 
+        return d_selector.readFd() == d_child_outp->readFd() ? 
                     CHILD_COUT 
                 : 
                     CHILD_CERR;

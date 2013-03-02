@@ -6,6 +6,9 @@ Xpointer::Xpointer()
         return;         // One more object
 
     s_theDisplay = XOpenDisplay(0);
+
+    if (!s_theDisplay)
+        throw Errno(1, "Can't open the display");
 }
     
     
