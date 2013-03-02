@@ -6,7 +6,7 @@
 #include <string>
 #include <sstream>
 
-#include "../refcount.h"
+#include "../refcount"
 
 using namespace std;
 using namespace FBB;

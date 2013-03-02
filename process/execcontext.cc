@@ -32,7 +32,7 @@ void Process::execContext(String::SplitPair const &splitPair,
                     // allocated, and not deleted, but that's irrelevant,
                     // the arguments are used in the child process which is 
                     // performing an exec() anyway.
-            String *sp = new String(String(splitPair.first).unescape());
+            string *sp = new string(String::unescape(splitPair.first));
             ec.args[ec.argc++] = sp->c_str();
         }
         break;

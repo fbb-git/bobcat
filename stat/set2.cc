@@ -6,8 +6,7 @@ bool Stat::set(string const &name, string const &pathlist)
         return set(name);
 
     vector<string> element;
-    String paths(pathlist);
-    paths.split(&element, ":");
+    String::split(&element, pathlist, ":");
 
     for 
     (

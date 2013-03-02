@@ -7,27 +7,45 @@
 
 namespace FBB
 {
-    class X2a: public std::ostringstream
-    {
-        public:
-            template <typename T>                   // initialize from 
-            X2a(T const &x)                         // (insertable) type
-            {
-                *this << x;
-            }
+class X2a: public std::ostringstream
+{
+    public:
+        template <typename T>                   // initialize from 
+        X2a(T const &x);                        // (insertable) type
 
-            X2a(double x, size_t behind);
-            X2a(double x, size_t width, size_t behind);
+        X2a(X2a const &other);
 
-            operator std::string const() const
-            {
-                return str();
-            }
-        private:
+        X2a(double x, size_t behind);
+        X2a(double x, size_t width, size_t behind);
 
+        X2a &operator=(X2a const &rhs);
+        operator std::string const() const;
+};
 
-    };
+template <typename T>                   // initialize from 
+X2a::X2a(T const &x)                    // (insertable) type
+{
+    *this << x;
 }
+
+inline X2a::X2a(X2a const &other)
+:
+    std::ostringstream(other.str())
+{}
+
+inline X2a::operator std::string const() const
+{
+    return str();
+}
+
+inline X2a &X2a::operator=(X2a const &rhs)
+{
+    str(rhs.str());
+    return *this;
+}
+
+} // FBB
+
 
 namespace std
 {

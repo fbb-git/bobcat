@@ -44,149 +44,222 @@ namespace FBB
             // This allows for 16 combinations which are now all implemented
             // below
 
-                                                // reference
-            Wrap1c(ReturnType (*fun)(Type &, Context &), Context &context)
-            :
-                d_context(&context),
-                d_ref(fun)
-            {}
-                                                // reference const
+            Wrap1c(ReturnType (*fun)(Type &, Context &), Context &context);
             Wrap1c(ReturnType (*fun)(Type &, Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_refCref(fun)
-            {}
-
-                                                // const reference
+                   Context const &context);
             Wrap1c(ReturnType (*fun)(Type const &, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_crefRef(fun)
-            {}
-                                                // const reference const
+                   Context &context);
             Wrap1c(ReturnType (*fun)(Type const &, Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_cref2(fun)
-            {}
-
-                                                // pointer
+                   Context const &context);
             Wrap1c(ReturnType (*fun)(Type *, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_ptr(fun)
-            {}
-                                                // pointer const
+                   Context &context);
             Wrap1c(ReturnType (*fun)(Type *, Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_ptrCref(fun)
-            {}
-
-                                                // const pointer
+                   Context const &context);
             Wrap1c(ReturnType (*fun)(Type const *, Context &), 
-                   Context &context)
-            :
-                d_context(&context),
-                d_cptrRef(fun)
-            {}
-                                                // const pointer const
+                   Context &context);
             Wrap1c(ReturnType (*fun)(Type const *, Context const &), 
-                   Context const &context)
-            :
-                d_contextconst(&context),
-                d_cptrCref(fun)
-            {}
+                   Context const &context);
 
             // The following additional constructors are identical to the
             // constructors listed above, but they accept a pointer to a 
             // context in various forms.
 
-                                                // reference
-            Wrap1c(ReturnType (*fun)(Type &, Context *), Context *context)
-            :
-                d_context(context),
-                d_refPtr(fun)
-            {}
-                                                // reference const
+            Wrap1c(ReturnType (*fun)(Type &, Context *), Context *context);
             Wrap1c(ReturnType (*fun)(Type &, Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_refCptr(fun)
-            {}
-
-                                                // const reference
+                   Context const *context);
             Wrap1c(ReturnType (*fun)(Type const &, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_crefPtr(fun)
-            {}
-                                                // const reference const
+                   Context *context);
             Wrap1c(ReturnType (*fun)(Type const &, Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_crefCptr(fun)
-            {}
-
-                                                // pointer
-            Wrap1c(ReturnType (*fun)(Type *, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_ptr2(fun)
-            {}
-                                                // pointer const
+                   Context const *context);
+            Wrap1c(ReturnType (*fun)(Type *, Context *), Context *context);
             Wrap1c(ReturnType (*fun)(Type *, Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_ptrCptr(fun)
-            {}
-                                                // const pointer
+                   Context const *context);
             Wrap1c(ReturnType (*fun)(Type const *, Context *), 
-                   Context *context)
-            :
-                d_context(context),
-                d_cptrPtr(fun)
-            {}
-                                                // const pointer const
+                   Context *context);
             Wrap1c(ReturnType (*fun)(Type const *, Context const *), 
-                   Context const *context)
-            :
-                d_contextconst(context),
-                d_cptr2(fun)
-            {}
+                   Context const *context);
 
-            ReturnType operator()(Type &param) const
-            {
-                return (*d_ref)(param, *d_context);
-            }
-
-            ReturnType operator()(Type const &param) const
-            {
-                return (*d_crefRef)(param, *d_context);
-            }
-
-            ReturnType operator()(Type *param) const
-            {
-                return (*d_ref)(*param, *d_context);
-            }
-
-            ReturnType operator()(Type const *param) const
-            {
-                return (*d_crefRef)(*param, *d_context);
-            }
-
+            ReturnType operator()(Type &param) const;
+            ReturnType operator()(Type const &param) const;
+            ReturnType operator()(Type *param) const;
+            ReturnType operator()(Type const *param) const;
     };
-} // namespace FBB ends
+
+
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type &, Context &), Context &context)
+:
+    d_context(&context),
+    d_ref(fun)
+{}
+                                    // reference Wrap1c::const
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type &, Context const &), 
+                Context const &context)
+:
+    d_contextconst(&context),
+    d_refCref(fun)
+{}
+
+                                    // const reference
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type const &, Context &), 
+                Context &context)
+:
+    d_context(&context),
+    d_crefRef(fun)
+{}
+                                    // const reference const
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type const &, Context const &), 
+                Context const &context)
+:
+    d_contextconst(&context),
+    d_cref2(fun)
+{}
+
+                                    // pointer
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type *, Context &), 
+       Context &context)
+:
+    d_context(&context),
+    d_ptr(fun)
+{}
+                                    // pointer const
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type *, Context const &), 
+                Context const &context)
+:
+    d_contextconst(&context),
+    d_ptrCref(fun)
+{}
+
+                                    // const pointer
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type const *, Context &), 
+                Context &context)
+:
+    d_context(&context),
+    d_cptrRef(fun)
+{}
+                                    // const pointer const
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type const *, Context const &), 
+                Context const &context)
+:
+    d_contextconst(&context),
+    d_cptrCref(fun)
+{}
+
+                                    // reference
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type &, Context *), Context *context)
+:
+    d_context(context),
+    d_refPtr(fun)
+{}
+                                    // reference const
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type &, Context const *), 
+                Context const *context)
+:
+    d_contextconst(context),
+    d_refCptr(fun)
+{}
+
+                                    // const reference
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type const &, Context *), Context *context)
+:
+    d_context(context),
+    d_crefPtr(fun)
+{}
+                                    // const reference const
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type const &, Context const *), 
+                Context const *context)
+:
+    d_contextconst(context),
+    d_crefCptr(fun)
+{}
+
+                                    // pointer
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type *, Context *), Context *context)
+:
+    d_context(context),
+    d_ptr2(fun)
+{}
+                                    // pointer const
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type *, Context const *), 
+                Context const *context)
+:
+    d_contextconst(context),
+    d_ptrCptr(fun)
+{}
+                                    // const pointer
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type const *, Context *), Context *context)
+:
+    d_context(context),
+    d_cptrPtr(fun)
+{}
+                                    // const pointer const
+template <typename Type, typename Context, typename ReturnType>
+Wrap1c<Type, Context, ReturnType>::Wrap1c(
+                ReturnType (*fun)(Type const *, Context const *), 
+                Context const *context)
+:
+    d_contextconst(context),
+    d_cptr2(fun)
+{}
+
+template <typename Type, typename Context, typename ReturnType>
+ReturnType 
+        Wrap1c<Type, Context, ReturnType>::operator()(Type &param) const
+{
+    return (*d_ref)(param, *d_context);
+}
+
+template <typename Type, typename Context, typename ReturnType>
+ReturnType 
+        Wrap1c<Type, Context, ReturnType>::operator()(Type const &param) const
+{
+    return (*d_crefRef)(param, *d_context);
+}
+
+template <typename Type, typename Context, typename ReturnType>
+ReturnType
+        Wrap1c<Type, Context, ReturnType>::operator()(Type *param) const
+{
+    return (*d_ref)(*param, *d_context);
+}
+
+template <typename Type, typename Context, typename ReturnType>
+ReturnType
+        Wrap1c<Type, Context, ReturnType>::operator()(Type const *param) const
+{
+    return (*d_crefRef)(*param, *d_context);
+}
+
+} // FBB
 
 #endif
 

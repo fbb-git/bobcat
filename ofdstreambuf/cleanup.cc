@@ -7,7 +7,7 @@ void OFdStreambuf::cleanup(Mode mode)
         sync();
         if (d_mode == CLOSE_FD)
             close(d_fd);
-        delete d_buffer;
+        delete [] d_buffer;
     }
 }
     

@@ -1,8 +1,9 @@
 #include "string.ih"
 
-String::const_iterator String::quoted(const_iterator from, int quote) const
+String::const_iterator String::quoted(std::string const &str,
+                                    const_iterator from, int quote)
 {
-    const_iterator beyond = end();
+    const_iterator beyond = str.end();
 
     while (true)
     {

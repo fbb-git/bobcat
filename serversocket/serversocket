@@ -6,15 +6,15 @@
 
 namespace FBB
 {
-    class ServerSocket: public SocketBase
-    {
-        public:
-            ServerSocket(size_t port) throw (Errno);              // 1
-            void listen(size_t backlog = 5, bool blocking = true)  
-                                                                throw (Errno);
-            SocketBase accept() throw (Errno);
-    };
 
-}
+class ServerSocket: public SocketBase
+{
+    public:
+        ServerSocket(size_t port) throw (Errno);
+        void listen(size_t backlog = 5, bool blocking = true) throw (Errno);
+        SocketBase accept() throw (Errno);
+};
+
+} // FBB
 
 #endif

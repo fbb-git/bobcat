@@ -22,7 +22,9 @@ of bf(FBB::TableSpec) are listed.
 includefile(namespace.inc)
 
 manpagesection(INHERITS FROM)
-    -
+
+    bf(std::ostringstream) - allowing insertions into a bf(Table) object 
+defining elements to be added to the table.
 
 manpagesection(ENUMERATIONS)
     The following enumerations are definedin th class bf(FBB::TableSpec):
@@ -66,11 +68,31 @@ manpagesection(OVERLOADED OPERATORS)
 
 manpagesection(MEMBER FUNCTION)
     itemization(
+    itb(void clear())
+        This member clears the table. All existing elements are removed, and
+the table will be empty.
+    itb(void next())
+        This member may be used to add the current contents of the base
+class's bf(ostringstream) object to the table. After calling this member the
+base-class's contents are empty. Note that there's also a bf(FBB::next)
+manipulator doing the same.
+    itb(void push_back(std::string const &element))
+        This member can be used to add another element to the table. It is
+also called from a tt(back_inserter) adaptor.
     itb(void setWidth(FBB::TableSpec::WidthType type))
         This member may be used to specify the width of indvidual or all
 columns of the tableSpec. Specify bf(TableSpec::EqualWidth) when all columns
 should have equal widths, specify bf(TableSpec::ColumnWidth) when each column
 should be as wide as its widest element. 
+    itb(void tabulate())
+        This member may be used to prepare the bf(Table) object for insertions
+into a tt(std::ostream) object. Note that there's also a bf(FBB::tabulate)
+manipulator doing the same. This member is called automatically from bf(Table)
+constructors expecting iterators to a series of bf(std::string) objects to be
+inserted into the table. Following this call, the table will be `complete' in
+the sense that it defines a complete rectangular table. E.g., a table having
+two columns will contain six elements after inserting five elements followed
+by a bf(tabulate()) call.
     )
 
 

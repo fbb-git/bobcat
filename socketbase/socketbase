@@ -11,52 +11,60 @@
 
 namespace FBB
 {
-    class SocketBase: public InetAddress
-    {
-        int         d_sock;
 
-        public:
-            bool debug() const throw(Errno)
-            {
-                return boolOption(SO_DEBUG);
-            }
+class SocketBase: public InetAddress
+{
+    int         d_sock;
 
-            bool reuse() const throw(Errno)
-            {
-                return boolOption(SO_REUSEADDR);
-            }
+    public:
+        bool debug() const throw(Errno);
+        bool reuse() const throw(Errno);
+        int socket() const;
+        bool setDebug(bool trueIsOn) throw (Errno);
+        bool setReuse(bool trueIsOn) throw (Errno);
 
-            int socket() const
-            {
-                return d_sock;
-            }
+    protected:
+        SocketBase(uint16_t port) throw (Errno);            // 1
+        SocketBase(std::string const &host, uint16_t port) throw (Errno);
+        SocketBase(int socket, sockaddr_in const &address); // 2
 
+    private:
+        bool boolOption(int optname) const throw (Errno);
+        bool setBoolOption(int optname, bool newValue) throw (Errno);
+};
 
-            bool setDebug(bool trueIsOn) throw (Errno)
-            {
-                return setBoolOption(SO_DEBUG, trueIsOn);
-            }
-
-            bool setReuse(bool trueIsOn) throw (Errno)
-            {
-                return setBoolOption(SO_REUSEADDR, trueIsOn);
-            }
-
-        protected:
-            SocketBase(uint16_t port) throw (Errno);            // 1
-            SocketBase(std::string const &host, uint16_t port) throw (Errno);
-                                                                // 2
-            SocketBase(int socket, sockaddr_in const &address)
-            :
-                InetAddress(address),
-                d_sock(socket)
-            {}
-
-        private:
-            bool boolOption(int optname) const throw (Errno);
-            bool setBoolOption(int optname, bool newValue) throw (Errno);
-    };
+inline bool SocketBase::debug() const throw(Errno)
+{
+    return boolOption(SO_DEBUG);
 }
+
+inline bool SocketBase::reuse() const throw(Errno)
+{
+    return boolOption(SO_REUSEADDR);
+}
+
+inline int SocketBase::socket() const
+{
+    return d_sock;
+}
+
+inline bool SocketBase::setDebug(bool trueIsOn) throw (Errno)
+{
+    return setBoolOption(SO_DEBUG, trueIsOn);
+}
+
+inline bool SocketBase::setReuse(bool trueIsOn) throw (Errno)
+{
+    return setBoolOption(SO_REUSEADDR, trueIsOn);
+}
+
+inline SocketBase::SocketBase(int socket, sockaddr_in const &address)
+:
+    InetAddress(address),
+    d_sock(socket)
+{}
+
+} // FBB
 
 #endif
 

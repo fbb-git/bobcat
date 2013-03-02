@@ -5,5 +5,5 @@ bool CmdFinderBase::matchUniqueInsensitive(std::string const &key) const
     return 
         d_cmd.length()
         &&
-        String(key).lc().find(String(d_cmd).lc()) != string::npos;
+        String::lc(key).find(String::lc(d_cmd)) != string::npos;
 }

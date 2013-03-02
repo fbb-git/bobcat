@@ -33,22 +33,22 @@ situations are recognized:
        
 */
 
-size_t String::split(vector<SplitPair> *words, char const *sep,
-                       bool addEmpty) const
+size_t String::split(vector<SplitPair> *words, 
+                     string const &str, char const *sep, bool addEmpty)
 {
     words->clear();
 
-    const_iterator from = begin();
-    const_iterator beyond = end();
+    const_iterator from = str.begin();
+    const_iterator beyond = str.end();
     string separators(sep);
     
     const_iterator until;
 
     while (from != beyond)
     {
-        Type type = nextField(&until, from,     // get the from field, `until'
-                              separators);      // points beyond the field's
-                                                // last character
+        Type type = nextField(str, &until,    // get the from field, `until'
+                      from, separators);      // points beyond the field's
+                                              // last character
 
                                     // see if it is a quoted string
         bool quoted = (type == DQUOTE || type == SQUOTE);

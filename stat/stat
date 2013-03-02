@@ -66,99 +66,120 @@ class Stat
 
         Stat();
         Stat(std::string const &name);
-        Stat(std::string const &name, std::string const &pathlist)
-        {
-            set(name, pathlist);
-        }
-        operator bool() const
-        {
-            return d_errno == 0;
-        }
-        size_t blockSize() const
-        {
-            return d_stat.st_blksize;
-        }        
-        size_t device() const
-        {
-            return d_stat.st_dev;
-        }        
-        size_t deviceType() const
-        {
-            return d_stat.st_rdev;
-        }        
-        size_t error() const
-        {
-            return d_errno;
-        }        
-        bool isType(Type probe)
-        {
-            return type() == probe;
-        }
-        size_t gid() const
-        {
-            return d_stat.st_gid;
-        }        
-        size_t inode() const
-        {
-            return d_stat.st_ino;
-        }        
-        DateTime lastAccess() const
-        {
-            return DateTime(d_stat.st_atime);
-        }
-        DateTime lastChange() const
-        {
-            return DateTime(d_stat.st_ctime);
-        }
-        DateTime lastModification() const
-        {
-            return DateTime(d_stat.st_mtime);
-        }
-        size_t mode() const
-        {
-            return d_stat.st_mode & RWX;
-        }
+        Stat(std::string const &name, std::string const &pathlist);
+        DateTime lastAccess() const;
+        DateTime lastChange() const;
+        DateTime lastModification() const;
+        Type type() const;
+        bool isType(Type probe);
         bool mode(Mode mode, Combine combi = ALL) const;
-        std::string modeStr() const;
-        std::string const &name()
-        {
-            return d_name;
-        }
-        size_t nBlocks() const
-        {
-            return d_stat.st_blocks;
-        }        
-        size_t nLinks() const
-        {
-            return d_stat.st_nlink;
-        }        
-        std::string path();
         bool set(std::string const &name);
         bool set(std::string const &name, std::string const &pathlist);
-        off_t size() const
-        {
-            return d_stat.st_size;
-        }        
         bool specialMode(SpecialMode specialMode, Combine combi = ALL) const;
+        off_t size() const;
+        operator bool() const;
+        size_t blockSize() const;
+        size_t device() const;
+        size_t deviceType() const;
+        size_t error() const;
+        size_t gid() const;
+        size_t inode() const;
+        size_t mode() const;
+        size_t nBlocks() const;
+        size_t nLinks() const;
+        size_t uid() const;
+        stat const &statStruct() const;
+        std::string const &name();
+        std::string modeStr() const;
+        std::string path();
         std::string specialModeStr() const;
-        stat const &statStruct() const
-        {
-            return d_stat;
-        }
-        Type type() const
-        {
-            return static_cast<Type>(d_stat.st_mode & S_IFMT);
-        }
         std::string typeStr() const;
-        size_t uid() const
-        {
-            return d_stat.st_uid;
-        }        
 
     private:
         void init();
 };
 
+inline Stat::Stat(std::string const &name, std::string const &pathlist)
+{
+    set(name, pathlist);
 }
+inline Stat::operator bool() const
+{
+    return d_errno == 0;
+}
+inline size_t Stat::blockSize() const
+{
+    return d_stat.st_blksize;
+}        
+inline size_t Stat::device() const
+{
+    return d_stat.st_dev;
+}        
+inline size_t Stat::deviceType() const
+{
+    return d_stat.st_rdev;
+}        
+inline size_t Stat::error() const
+{
+    return d_errno;
+}        
+inline bool Stat::isType(Type probe)
+{
+    return type() == probe;
+}
+inline size_t Stat::gid() const
+{
+    return d_stat.st_gid;
+}        
+inline size_t Stat::inode() const
+{
+    return d_stat.st_ino;
+}        
+inline DateTime Stat::lastAccess() const
+{
+    return DateTime(d_stat.st_atime);
+}
+inline DateTime Stat::lastChange() const
+{
+    return DateTime(d_stat.st_ctime);
+}
+inline DateTime Stat::lastModification() const
+{
+    return DateTime(d_stat.st_mtime);
+}
+inline size_t Stat::mode() const
+{
+    return d_stat.st_mode & RWX;
+}
+inline std::string const &Stat::name()
+{
+    return d_name;
+}
+inline size_t Stat::nBlocks() const
+{
+    return d_stat.st_blocks;
+}        
+inline size_t Stat::nLinks() const
+{
+    return d_stat.st_nlink;
+}        
+inline off_t Stat::size() const
+{
+    return d_stat.st_size;
+}        
+inline Stat::stat const &Stat::statStruct() const
+{
+    return d_stat;
+}
+inline Stat::Type Stat::type() const
+{
+    return static_cast<Type>(d_stat.st_mode & S_IFMT);
+}
+inline size_t Stat::uid() const
+{
+    return d_stat.st_uid;
+}      
+  
+} // FBB
         
 #endif

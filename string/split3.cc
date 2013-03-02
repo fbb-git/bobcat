@@ -1,12 +1,12 @@
 #include "string.ih"
 
 size_t String::split(std::vector<std::string> *words, 
-                char const *sep, bool addEmpty) const
+                string const &str, char const *sep, bool addEmpty)
 {
     words->clear();
 
-    const_iterator from = begin();
-    const_iterator beyond = end();
+    const_iterator from = str.begin();
+    const_iterator beyond = str.end();
     string separators(sep);
     
     const_iterator until;
@@ -15,7 +15,7 @@ size_t String::split(std::vector<std::string> *words,
     {
 //cerr << "SCAN `" << string(from, beyond) << "'" << endl;
 
-        Type type = nextField(&until, from,     // get the from field, `until'
+        Type type = nextField(str, &until, from,// get the from field, `until'
                               separators);      // points beyond the field's
                                                 // last character
 //cerr << "\tFIELD: `" << string(from, until) << "'" << endl;
