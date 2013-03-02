@@ -7,7 +7,7 @@ MailHeaders::const_iterator MailHeaders::const_hdr_iterator::lookdown
             (
                 &*find_if(
                     const_reverse_iterator(begin), d_mh->rend(), 
-                    [&, d_comparator](std::string const &header)
+                    [&](std::string const &header)
                     {
                         return (*d_comparator)(header, d_key);
                     }

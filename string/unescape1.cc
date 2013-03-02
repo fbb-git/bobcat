@@ -97,32 +97,3 @@ string String::unescape(string const &str)
         prefix = pos; 
     }
 }
-
-//#include <string>
-//#include <iostream>
-//using namespace std;
-//using namespace FBB;
-//
-//void out(char ch)
-//{
-//    cout << static_cast<size_t>(static_cast<unsigned char>(ch)) << ", ";
-//}
-//
-//int main()
-//{
-//    while (true)
-//    {
-//        cout << "? ";
-//        string str;
-//
-//        if (!getline(cin, str))
-//            return(0);
-//
-//        cout << str << " -> ";
-//        str = String::unescape(str);
-//        cout << str << '\n';
-//
-//        for_each(str.begin(), str.end(), out);
-//        cout << '\n';
-//    }
-//}
