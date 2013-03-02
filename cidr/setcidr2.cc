@@ -6,7 +6,10 @@ void Cidr::setCidr(istream &fin)
 
     for_each(
         istream_iterator<StringLine>(fin), istream_iterator<StringLine>(),
-        FnWrap::unary(pushCidr, *this)
+        [this](string const &cidrPattern)
+        {
+            this->pushCidr(cidrPattern);
+        }
     );
 
     if (d_cidr.empty())

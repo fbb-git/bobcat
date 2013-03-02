@@ -7,6 +7,8 @@ manpage(binops)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
 manpagename(binops)(Template functions for class-type binary operators)
 
 manpagesynopsis()
+    bf(#include <utility>)nl()
+    bf(#include <bobcat/typetrait>)nl()
     bf(#include <bobcat/binops>)nl()
 
 manpagedescription()
@@ -49,24 +51,31 @@ tt(bobcat/binops). Since the binary function templates are not instantiated
 until used their definitions can be processed by the compiler even if a class
 implements only a subset of the available binary assignment operators.
 
+manpagesection(NAMESPACE)
+
     The binary operator functions templates in tt(bobcat/binops) are em(not)
-implemented in a particular namespace. Nor is the header file tt(utility),
-implementing tt(std::move), read by tt(bobcat/binops). This allows sources to
-include  tt(bobcat/binops) for multiple namespaces. If this is required the
-include safeguard (using the identifier tt(INCLUDED_BOBCAT_BINOPS_)) must be
+implemented in a particular namespace. Nor are the header files tt(utility)
+and tt(bobcat/typetrait), implementing functionality used by tt(bobcat/binops)
+included by tt(bobcat/binops). This allows sources to include
+tt(bobcat/binops) in multiple namespaces. 
+
+    If tt(bobcat/binops) is to be used in multiple namespaces then the include
+safeguard (using the identifier tt(INCLUDED_BOBCAT_BINOPS_)) must be
 suppressed between inclusions of tt(bobcat/binops) in different
-namespaces. Eg., to make the binary operator function templates available in
-a source file using the tt(namespace FBB) and the default namespace the
+namespaces. Eg., to make the binary operator function templates available in a
+source file using the tt(namespace FBB) and the default namespace the
 following scheme can be used:
         verb(
 #include <utility>              // ensure std::move is available
+#include <bobcat/typetrait>     // required by binops
 
-namespace FBB
+namespace MY_NAMESPACE
 {
-    #include "../binops"        // binary operators defined in FBB
+    #include <bobcat/binops>    // binary operators defined in MY_NAMESPACE
 }
 #undef INCLUDED_BOBCAT_BINOPS_  // suppress the include guard
-#include "../binops"            // read binops again so the binary
+
+#include <bobcat/binops>        // read binops again so the binary
                                 // operators can be used in the
                                 // default namespace as well
     )
@@ -122,19 +131,10 @@ manpageseealso()
 
 manpagebugs()
     itemization(
-    it() Function templates don't do promotions. If a class offers single
-argument constructors for arguments of type tt(Type) then tt(Type) arguments
-cannot directly be used as arguments for the overloaded binary operators. In
-that case the constructor for tt(Type) should explicitly be called. Example:
-        verb(
-Type value;
-Class object;
-
-Class result(object + Class(value));
-        )
-    it() The header file tt(utility), defining tt(std::move), is required by,
-but not included by tt(bobcat/binops). This was a design decision, see the
-bf(DESCRIPTION) section.
+    it() The header files tt(utility), defining tt(std::move), and
+tt(bobcat/typetrait) are required by, but are not included by
+tt(bobcat/binops). This was a design decision, see the bf(NAMESPACE)
+section.
     )
 
 includefile(include/trailer)

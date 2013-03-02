@@ -149,6 +149,36 @@ class TypeTrait
         typedef typename Type<T>::Plain Plain;
 };
 
+template <typename L, typename R>
+class LpromotesR
+{
+    struct Char2
+    {
+        char array[2];
+    };
+    static R const &makeR();
+    static char test(L const &);
+    static Char2 test(...);
+
+    public:
+        LpromotesR() = delete;
+        enum { yes = sizeof(test(makeR())) == sizeof(char) };
+};
+
+template <bool ifTrue, typename True, typename False>
+struct IfElse
+{
+    IfElse() = delete;
+    typedef False type;
+};
+
+template <typename True, typename False>
+struct IfElse<true, True, False>
+{
+    IfElse() = delete;
+    typedef True type;
+};
+
 } // FBB
 
 #endif

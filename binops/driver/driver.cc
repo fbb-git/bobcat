@@ -1,6 +1,8 @@
 #include <iostream>
 #include <utility>
-#include <binary/binops>
+
+#include "../../typetrait/typetrait"
+#include "../binops"
 
 class Demo
 {
@@ -12,6 +14,13 @@ class Demo
         :
             d_value(value)
         {}
+    
+        Demo(Demo const &other)
+        :
+            d_value(other.d_value)
+        {
+            std::cout << "Demo CC called\n";
+        }
     
         Demo &operator+=(Demo const &rhs)
         {
@@ -31,5 +40,7 @@ int main()
     Demo four(4);
     Demo five(5);
 
-    cout << four + five << '\n';
+    cout << four + five << '\n' <<
+            four + 5 << '\n' <<
+            4  + five << '\n';
 }

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "../typetrait"
 
 using namespace std;
@@ -32,4 +33,14 @@ int main()
     show<int const &>("int const &");   
     show<int &&>("int &&");   
     show<int const &&>("int const &&");   
+
+
+    cout << "=======================\n";
+
+    cout << "string promotes char const *: " << 
+                LpromotesR<string, char const *>::yes << '\n';
+    cout << "string promotes string " << 
+                LpromotesR<string, string>::yes << '\n';
+    cout << "char const * promotes string " << 
+                LpromotesR<char const *, string>::yes << '\n';
 }

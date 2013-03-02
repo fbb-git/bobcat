@@ -2,5 +2,5 @@
 
 bool Cidr::match(string const &line)
 {
-    return matchLine(line, *this);
+    return matchLine(line);
 }
