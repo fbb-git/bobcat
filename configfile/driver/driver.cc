@@ -2,7 +2,11 @@
 #include <iterator>
 
 #include <bobcat/errno>
-#include "../configfile"
+#ifdef BOBCAT
+    #include <bobcat/configfile>
+#else
+    #include "configfile"
+#endif
 
 using namespace std;
 using namespace FBB;
