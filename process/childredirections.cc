@@ -23,7 +23,7 @@ void Process::childRedirections()
             int fd = ::open("/dev/null", O_WRONLY);
 
             if (fd == -1)
-                throw Errno("Process ") << d_command << 
+                throw Exception() << "Process " << d_command << 
                                                     ": can't open /dev/null";
 
             Redirector redirector(fd);

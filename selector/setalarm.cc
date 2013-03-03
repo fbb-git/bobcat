@@ -7,5 +7,5 @@ void Selector::setAlarm(int sec, int usec)
 
     long long testTime = usec + 1000000LL * sec;
     if (testTime < 0 || testTime > numeric_limits<int>::max() * 1000000LL)
-        throw Errno(1, "Selector::setAlarm()");
+        throw Exception(1) << "Selector::setAlarm()";
 }

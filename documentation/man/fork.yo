@@ -70,7 +70,7 @@ manpagesection(MEMBER FUNCTIONS)
     itb(void fork())
         Performs the actual forking. It is implemented in such a way that the
 corresponding parent- and child- processes are activated from virtual members
-of bf(FBB::Fork). If the forking operation fails, an bf(FBB::Errno) exception
+of bf(FBB::Fork). If the forking operation fails, an bf(FBB::Exception) exception
 is thrown.
     )
 
@@ -114,7 +114,9 @@ points; that the child process starts a new session/process group to allow the
 parent (group leader) to kill all its processes without terminating the
 daemon; and makes sure that the child process closes and reopens the standard
 streams by associating them with tt(/dev/null) to prevent ghost input and
-output actions from interfering with the daemon's actions.
+output actions from interfering with the daemon's actions. An
+tt(FBB::Exception) is thrown if changing directory to the root directory
+fails.
     itb(int waitForChild()) 
         This member may be called by bf(parentProcess()) to wait for the
 completion of the child-process. The return value (exit-code) of the child

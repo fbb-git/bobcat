@@ -13,7 +13,7 @@ BigInt BigInt::prime(size_t nBits, BigInt const *mod, BigInt const *rem,
             0, 0)
         == 0
     )
-        throw Errno("BigInt::prime() failed");
+        throw Exception() << "BigInt::prime() failed";
 
     return ret;
 }

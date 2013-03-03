@@ -5,7 +5,7 @@ BigInt &BigInt::checked1(
                 BigInt const &rhs, char const *op)
 {
     if ((*BN_op)(&d_bn, &d_bn, &rhs.d_bn) != 1)
-        throw Errno("BigInt ") << op << " failed";
+        throw Exception() << "BigInt " << op << " failed";
 
     return *this;
 }

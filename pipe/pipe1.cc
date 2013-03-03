@@ -2,7 +2,9 @@
 
 Pipe::Pipe()
 {
-    if (int err = pipe(d_fd))
-        throw Errno(err, "Pipe::Pipe()");
+    if (pipe(d_fd))
+        throw Exception() << "Pipe::Pipe(): " << errnodescr;
 }
+
+
 

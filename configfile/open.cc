@@ -3,7 +3,7 @@
 void ConfigFile__::open(string const &fname)
 {
     ifstream stream;
-    Errno::open(stream, fname);
+    Exception::open(stream, fname);
 
     d_line.clear();                 // clear the vector
     d_index.clear();                // clear the line indices

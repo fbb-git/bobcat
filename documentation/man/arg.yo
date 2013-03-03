@@ -36,9 +36,9 @@ manpagesection(STATIC MEMBERS)
     itemization(
     itb(FBB::Arg &initialize(char const *optstring, int argc, char **argv))
         Initializes the bf(FBB::Arg) singleton. Must be called only once.
-Throws an bf(FBB::Errno) exception if called repeatedly or if called with
+Throws an bf(FBB::Exception) exception if called repeatedly or if called with
 tt(argv) not containing a defined option (which is shown by the
-bf(FBB::Errno)'s tt(what()) member). Returns a reference to the singleton
+bf(FBB::Exception)'s tt(what()) member). Returns a reference to the singleton
 object, allowing code initializing bf(Arg) to use the initialized object
 immediately.
     itb(FBB::Arg &initialize(char const *optstring,
@@ -47,9 +47,9 @@ immediately.
                                 int argc, char **argv))
        Initializes the bf(FBB::Arg) singleton. Accepts two iterators of an
         array of bf(Arg::LongOption) objects, holding long-options. Must be
-        called only once. Throws an bf(FBB::Errno) exception if called
+        called only once. Throws an bf(FBB::Exception) exception if called
         repeatedly or if called with tt(argv) not containing a defined option
-        (which is shown by the bf(FBB::Errno)'s tt(what()) member).  See the
+        (which is shown by the bf(FBB::Exception)'s tt(what()) member).  See the
         description of bf(Arg::LongOption) below.  Returns a reference to the
         singleton object, allowing code initializing bf(Arg) to use the
         initialized object immediately.
@@ -66,7 +66,7 @@ immediately.
     itb(FBB::Arg &instance()) 
        Returns the instance of the bf(Arg) object, available after calling one
         of the bf(Arg::initialize()) members.  If called before
-        initialization, an tt(FBB::Errno) exception is thrown.
+        initialization, an tt(FBB::Exception) exception is thrown.
     )
 
 manpagesection(OVERLOADED OPERATOR)
@@ -241,7 +241,7 @@ try
 
     // code using arg, etc.
 }
-catch(Errno const &err)     // handle exceptions
+catch(Exception const &err)     // handle exceptions
 {
     cerr << err.what() << endl;
     return err.which();

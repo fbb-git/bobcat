@@ -6,8 +6,8 @@ OFoldStreambuf::BufIt OFoldStreambuf::findOFoldStreambuf(streambuf const *buf)
                 dynamic_cast<OFoldStreambuf const *>(buf));
 
     if (it == s_buffers.end())
-        throw Errno(1, 
-                "Illegal cast from std::streambuf to FBB::OFoldStreambuf");
+        throw Exception(1) <<
+                "Illegal cast from std::streambuf to FBB::OFoldStreambuf";
 
     return it;
 }

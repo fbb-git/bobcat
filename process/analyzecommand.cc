@@ -16,10 +16,10 @@ Process::ExecContext Process::analyzeCommand()
         execContext(splitPair, ec);
     
     if (!ec.ok)
-        throw Errno("Process ") << d_command << ": " << ec.message;
+        throw Exception() << "Process " << d_command << ": " << ec.message;
     
     if (!ec.argc)
-        throw Errno("Process: can't execute ") << d_command;
+        throw Exception() << "Process: can't execute " << d_command;
 
     ec.args[ec.argc] = 0;
      

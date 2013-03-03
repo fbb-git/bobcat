@@ -14,7 +14,7 @@ Pattern::Regex::Regex(string pattern, int options)
 
         regerror(errcode, &d_regex, buffer.get(), 100);
 
-        throw Errno(errcode, "Pattern::Pattern(") << pattern << "): " << 
+        throw Exception(errcode) << "Pattern::Pattern(" << pattern << "): " << 
                                                                 buffer.get();
     }
 

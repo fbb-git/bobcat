@@ -3,11 +3,11 @@
 void DecryptBuf::setIv(string iv)
 {
     if (d_pimpl->active)
-        throw Errno(1, "Can't change IV during encryption");
+        throw Exception(1) << "Can't change IV during encryption";
 
     if (iv.empty())
-        throw Errno(1, 
-            "Decryptbuf::setIV: initialization vector cannot be empty");
+        throw Exception(1) << 
+            "Decryptbuf::setIV: initialization vector cannot be empty";
 
     iv.resize(EVP_MAX_IV_LENGTH);
 
@@ -16,5 +16,5 @@ void DecryptBuf::setIv(string iv)
         !EVP_EncryptInit_ex(&d_pimpl->ctx, 0, 0, 0,
             reinterpret_cast<unsigned char const *>(iv.data()))
     )
-        throw Errno(1, "Couldn't set IV");
+        throw Exception(1) << "Couldn't set IV";
 }

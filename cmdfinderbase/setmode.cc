@@ -3,7 +3,7 @@
 void CmdFinderBase::setMode(size_t mode)
 {
     if (mode & ~s_all)
-        throw Errno(1, "CmdFinder: ") << "mode 0x" << hex << mode << 
+        throw Exception(1) << "CmdFinder: " << "mode 0x" << hex << mode << 
                         " not recognized (allowed bits: 0x" << s_all << ")";
 
     d_useCmd = mode & USE_FIRST ? 

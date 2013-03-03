@@ -3,7 +3,7 @@
 BigInt &BigInt::maskBits(size_t lowerNBits)
 {
     if (!BN_mask_bits(&d_bn, lowerNBits))
-        throw Errno("BigInt::maskBits failed");
+        throw Exception() << "BigInt::maskBits failed";
     return *this;
 }
 

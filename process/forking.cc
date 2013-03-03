@@ -25,7 +25,7 @@ void Process::forking()
     {
         d_monitor.pid = 0;
         stop();
-        throw Errno("Process ") << d_command << 
+        throw Exception() << "Process " << d_command << 
                                         ": can't start the timeout monitor";
     }
     else if (d_monitor.pid == 0)    // actual monitoring process

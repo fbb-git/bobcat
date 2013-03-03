@@ -1,0 +1,124 @@
+#ifndef INCLUDED_BOBCAT_PRIMEFACTORS_
+#define INCLUDED_BOBCAT_PRIMEFACTORS_
+
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <memory>
+
+#include <bobcat/bigint>
+
+namespace FBB
+{
+
+struct PrimeFactors
+{
+    struct PrimePower
+    {
+        BigInt prime;
+        size_t power;
+    };
+
+    typedef std::vector<PrimePower> Factors;
+
+    private:
+        typedef std::vector<BigInt> BigIntVector;
+        typedef BigIntVector::const_iterator ConstIterator;
+    
+        class iterator
+        {
+            protected:
+                enum InputMode
+                {
+                    PRIMES,
+                    SENTINEL
+                };
+                int d_mode;
+
+                BigIntVector *d_primes;
+                ConstIterator d_iterator;
+                BigInt d_lastPrime;
+                BigIntVector d_sentinel;
+                    
+            public:
+                virtual ~iterator();
+                iterator();
+                iterator(BigIntVector &primes);     // 2
+
+                iterator &operator++();
+                void setSentinel(BigInt const &sentinel);
+                BigInt const &operator*() const;
+                void nextPrime();
+                BigInt const &lastPrime() const;
+                bool atSentinel() const;
+
+            protected:
+                void checkInitialPrimes(BigIntVector const &primes) const;
+                bool isComposite(BigInt const &candidate);
+    
+            private:
+                virtual iterator &operatorPreInc();
+                virtual void next();
+        };
+
+        class iteratorStream: public iterator
+        {
+            enum InputMode
+            {
+                STREAM_PRIMES,
+                NEW_PRIMES,
+                SENTINEL
+            };
+            std::string d_name;
+            std::fstream d_stream;
+            size_t d_blockSize;
+
+            BigIntVector d_streamPrimes;
+            BigIntVector d_newPrimes;
+
+            public:
+                iteratorStream(std::string const &name, size_t blockSize);
+                ~iteratorStream();
+
+            private:
+                iterator &operatorPreInc() override;
+                void next() override;
+
+                void openStream();
+                void resetPrimes();
+                bool readPrimes();
+
+                void writeNewPrimes();
+        };
+
+        BigInt d_value;
+        BigInt d_last;
+
+        std::shared_ptr<iterator> d_iterator;
+    
+        Factors d_factors;
+
+    public:
+        PrimeFactors(BigIntVector &primes);
+        PrimeFactors(std::string const &name = "", size_t blockSize = 1000);
+        PrimeFactors(PrimeFactors const &other) = delete;
+
+        Factors const &factorize(BigInt const &value);
+
+    private:
+        void reduce(BigInt const &prime);
+        void availablePrimes();
+        void addPrimes();
+};
+
+} // FBB        
+#endif
+
+
+
+
+
+
+
+
+
