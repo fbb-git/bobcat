@@ -62,7 +62,7 @@ binary-arch: build-arch install
 # archive downloaded from https://www.icce.rug.nl/debian/bobcat
 # (bobcat_x.y.z..tar.gz)
 
-MD5TRUSTED := 050c18bf9478ffba7119bb809f4d5dc8
+MD5TRUSTED := 2e316019e5f01ad86458f75a9ac41460
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
@@ -93,29 +93,36 @@ get-orig-source:
 	fi
 
 # call git-build from the project's base directory as `fakeroot debian/rules git-build'
-# it creates the ./build-area and runs dpkg-buildpackage in build-area/$(UPNAME)-$(UPVERSION)
-# which, if successful, creates the debian files in the build-area
+# it creates  ../${UPNAME}-build and runs dpkg-buildpackage in ../${UPNAME}-build/$(UPNAME)-$(UPVERSION)
+# which, if successful, creates the debian files in ${UPNAME}-build
 # Probably easier to use is `git-bl'
-git-build:
-	@@[ -d ./build-area/. ]||mkdir -p ./build-area
 
-	-@if [ ! -f ../tarballs/$(DEFILE) ] ; then \
-	    echo "Upstream source tarball ../tarballs/$(DEFILE) not found" ; \
+debian-area = $(shell pwd)
+build-base  = ../$(UPNAME)-build
+build-area  = $(UPNAME)-$(UPVERSION)
+tarball     = ../tarballs/$(DEFILE) 
+garbage     = ../$(UPNAME)-build/$(UPNAME)-$(UPVERSION) ../$(UPNAME)-build/run.lintian
+
+git-build:
+	@@[ -d $(build-base)/. ] || mkdir -p $(build-base)
+
+	-@if [ ! -f $(tarball) ] ; then \
+	    echo "Upstream source tarball $(tarball) not found" ; \
 	else \
-	    rm -rf build-area/$(UPNAME)-$(UPVERSION) build-area/run.lintian ; \
-	    cp ../tarballs/$(DEFILE) build-area ; \
-	    chdir build-area ; \
+	    rm -rf $(garbage) ; \
+	    cp $(tarball) $(build-base) ; \
+	    chdir $(build-base) ; \
 	    tar xzf $(DEFILE) ; \
-	    cp -r ../debian $(UPNAME)-$(UPVERSION) ; \
-	    chdir $(UPNAME)-$(UPVERSION) ; \
+	    chdir $(build-area) ; \
+	    cp -r $(debian-area)/debian ./ ; \
 	    dpkg-buildpackage $(DPKG_BUILDPACKAGE) ; \
 	    if [ "$$?" -eq 0 ] ; then \
 	        chdir .. ; \
 	        touch run.lintian ; \
-	        rm -rf $(UPNAME)-$(UPVERSION) ; \
+	        rm -rf $(build-area) ; \
 	    else \
 	        chdir .. ; \
-	        mv $(UPNAME)-$(UPVERSION) $(UPNAME)-$(UPVERSION)-obsolete-`date +%s` ; \
+	        mv $(build-area) $(build-area)-obsolete-`date +%s` ; \
 	    fi \
 	fi
 
@@ -125,3 +132,4 @@ print-version:
 
 binary: binary-indep binary-arch
 .PHONY: clean build build-indep build-arch binary-indep binary-arch binary install
+
