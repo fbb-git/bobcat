@@ -18,8 +18,8 @@ size_t Process::whichStream()
         return CHILD_COUT | CHILD_CERR;
 
         default:
-            throw Errno("Process::whichStream(): internal error. "
-                                        "d_selector.nReady() returns ") << 
+            throw Exception() << "Process::whichStream(): internal error. "
+                                        "d_selector.nReady() returns " << 
                          count << " (should be <= 2)";
     }
 }

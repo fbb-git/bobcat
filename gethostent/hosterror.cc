@@ -1,6 +1,6 @@
 #include "gethostent.ih"
 
-Errno GetHostent::hosterror(char const *text) 
+void GetHostent::hosterror(char const *text) 
 {
     string msg = text;
 
@@ -24,7 +24,7 @@ Errno GetHostent::hosterror(char const *text)
         break;
     }
 
-    return Errno(h_errno, msg.c_str());
+    throw Exception(h_errno) << msg;
 }
 
 

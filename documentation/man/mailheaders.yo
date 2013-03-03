@@ -136,7 +136,7 @@ selected by the tt(setHeaderIterator) member.
 
     itb(void read()) 
     Reads the mail-headers from the file passed to the bf(FBB::MailHeaders)
-object's constructor. An bf(FBB::Errno) object is thrown if the mailheaders
+object's constructor. An bf(FBB::Exception) object is thrown if the mailheaders
 were already read or if the file is incomplete (i.e., the (obligatory) blank
 line wasn't found).
 
@@ -157,8 +157,8 @@ em(not) be specified by tt(setHeaderIterator). nl()
     Alternative matching strategies are used when other values of 
 the enumeration bf(FBB::Match) are specified.nl()
     The member tt(setHeaderIterator) em(must) have been called at least once
-or the members tt(beginh) and tt(rendh) will throw an bf(FBB::Errno)
-exception. An bf(FBB::Errno) exception is also thrown if
+or the members tt(beginh) and tt(rendh) will throw an bf(FBB::Exception)
+exception. An bf(FBB::Exception) exception is also thrown if
 tt(setHeaderIterator) is called when no mail headers are available.
 
     itb(size_t size() const)
@@ -175,7 +175,7 @@ manpagesection(EXAMPLE)
     {           // read the headers
         mh.read();
     }
-    catch (Errno &err)
+    catch (Exception &err)
     {
         cout << err.what() << endl;
     }

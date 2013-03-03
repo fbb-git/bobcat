@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include <bobcat/errno>
-
 struct hostent;
 
 namespace FBB
@@ -19,7 +17,7 @@ class GetHostent
         static std::string addressToString(char const *errorprefix, 
                                            void const *ads);
     private:
-        static Errno hosterror(char const *prefix);
+        static void hosterror(char const *prefix);  // throws Exception()
 };
 
 } // FBB

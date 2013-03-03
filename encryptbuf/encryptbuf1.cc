@@ -15,7 +15,7 @@ EncryptBuf::EncryptBuf(ostream &outStream, char const *type,
             if (type == 0)
                 type = "** unspecified cipher type **";
     
-            throw Errno(1, "EncryptBuf `") << type << "' not available";
+            throw Exception(1) << "EncryptBuf `" << type << "' not available";
         }
 
         size_t keyLength = key.length();
@@ -33,7 +33,7 @@ EncryptBuf::EncryptBuf(ostream &outStream, char const *type,
                 0, // no key yet, is entered next
                 reinterpret_cast<unsigned char const *>(iv.data()))
         )
-            throw Errno(1, "EncryptBuf: initialization failed");
+            throw Exception(1) << "EncryptBuf: initialization failed";
 
         installKey(key, keyLength);
     

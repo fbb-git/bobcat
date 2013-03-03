@@ -24,9 +24,14 @@ hostent const *GetHostent::gethostent(char const *prefix, string const &host)
     }
 
     if (!hp)
-        throw hosterror(prefix);
+        hosterror(prefix);      // throws Exception
 
     return hp;
 }
+
+
+
+
+
 
 

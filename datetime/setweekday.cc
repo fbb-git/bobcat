@@ -20,7 +20,8 @@ bool DateTime::setWeekday(Weekday weekday, Relative where)
         break;
 
         default:
-        throw Errno(1, "DateTime::setWeekday(): invalid Relative spec.");
+        throw Exception(1) << 
+                            "DateTime::setWeekday(): invalid Relative spec.";
     }
 
     ts.tm_mday += difference;

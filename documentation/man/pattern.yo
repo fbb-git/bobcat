@@ -88,7 +88,7 @@ placeholder for, e.g., containers requiring default constructors. A
 bf(Pattern) object thus constructed cannot be used to match patterns, but
 can be the em(lvalue) in assignments where another bf(Pattern) object is
 the em(rvalue). However, it can receive a pattern using the member
-bf(setPattern()) (see below). An bf(FBB::Errno) object is thrown if the object
+bf(setPattern()) (see below). An bf(FBB::Exception) object is thrown if the object
 could not be constructed.
     itb(Pattern(std::string const &pattern, 
                             bool caseSensitive = true, 
@@ -148,7 +148,7 @@ returns two tt(std::string::npos) values (see the bf(position()) member
 function, below).
     itb(void match(std::string const &text, int options = 0))
        Match a string with a pattern.  If the text could not be matched, an
-bf(Errno) exception is thrown , using bf(Pattern::match()) as its prefix-text.
+bf(Exception) exception is thrown , using bf(Pattern::match()) as its prefix-text.
 
 Options may be:
 
@@ -181,7 +181,7 @@ is at least bf(end()) (which may happen at index value 0).
         This member function installs a new  compiled tt(pattern) in its
 bf(Pattern) object. This member's parameters are identical to the second
 constructor's parameters. Refer to that constructor for details about the
-parameters. Like the constructor, an bf(FBB::Errno) exception is thrown if the
+parameters. Like the constructor, an bf(FBB::Exception) exception is thrown if the
 new pattern could not be compiled.
     itb(void swap(Pattern &other))
         The contents of the current object and the tt(other) object are

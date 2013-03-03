@@ -56,7 +56,7 @@ initialization vector to use. The tt(iv)'s length cannot be zero. When using
 ECB modes no initialization vector is used. In those cases any non-empty
 initialization vector may be provided.
 
-    The constructor throws an tt(FBB::Errno) exception if an unknown
+    The constructor throws an tt(FBB::Exception) exception if an unknown
 encryption method was specified.
 
     The constructor's first parameter refers to the tt(std::ostream) to
@@ -85,7 +85,7 @@ inherited members will not be used by programs using tt(DecryptBuf) objects.
     itemization(
     itb(void done())
         This member can be called to indicate that all information to be
-decrypted has been received. It throws an tt(FBB::Errno) exception if
+decrypted has been received. It throws an tt(FBB::Exception) exception if
 decryption fails (resulting from providing the tt(DecryptBuf) object with
 incorrect (usually improperly padded) input). If not explicitly called it is
 called by tt(DecryptBuf)'s destructor, preventing its exception from leaving
@@ -94,7 +94,7 @@ the destructor.
         This member can be used to specify the initialization vector to use
 after construction time but before any data has been decrypted. When called
 after decryption has started or when specifying an empty intialization vector
-an tt(FBB::Errno) exception will be thrown.  When using ECB modes no
+an tt(FBB::Exception) exception will be thrown.  When using ECB modes no
 initialization vector is used. In those cases any non-empty initialization
 vector may be provided.
     itb(bool setRounds(size_t nRounds))

@@ -1,0 +1,113 @@
+#ifndef INCLUDED_BOBCAT_EXCEPTION_
+#define INCLUDED_BOBCAT_EXCEPTION_
+
+#include <string>
+#include <sstream>
+#include <exception>
+#include <iosfwd>
+
+namespace FBB
+{
+
+class Exception: public std::exception
+{
+    template <typename Type>
+    friend Exception &&operator<<(Exception &&tmp, Type const &value);
+
+    std::string d_what;
+    
+    public:
+        enum 
+        {
+            STRERROR_BUFSIZE = 100
+        };
+
+        Exception() = default;
+        explicit Exception(int errnoValue);              // exception1.cc
+
+        ~Exception() noexcept(true) override;
+
+        template <typename StreamType>
+        static void open(StreamType &stream, std::string const &name);
+
+        template <typename StreamType>
+        static void open(int errnoValue, StreamType &stream, 
+                         std::string const &name);
+
+        template <typename StreamType>
+        static void open(StreamType &stream, std::string const &name,
+                                std::ios::openmode mode);
+        template <typename StreamType>
+        static void open(int errnoValue, StreamType &stream, 
+                            std::string const &name, std::ios::openmode mode);
+    private:
+        char const *what() const noexcept(true) override;
+};
+
+template <typename StreamType>
+void Exception::open(StreamType &stream, std::string const &name)
+{
+    if (stream.is_open())
+        stream.close();
+
+    stream.open(name);
+    if (!stream)
+        throw Exception() << "Can't open `" << name << '\'';
+}
+
+template <typename StreamType>
+void Exception::open(int errnoValue, StreamType &stream, 
+                     std::string const &name)
+{
+    if (stream.is_open())
+        stream.close();
+
+    stream.open(name);
+    if (!stream)
+        throw Exception(errnoValue) << "Can't open `" << name << '\'';
+}
+
+template <typename StreamType>
+void Exception::open(StreamType &stream, std::string const &name,
+                                         std::ios::openmode mode)
+{
+    if (stream.is_open())
+        stream.close();
+
+    stream.open(name, mode);
+    if (!stream)
+        throw Exception() << "Can't open `" << name << '\'';
+}
+
+
+template <typename StreamType>
+void Exception::open(int errnoValue, StreamType &stream, 
+                        std::string const &name, std::ios::openmode mode)
+{
+    if (stream.is_open())
+        stream.close();
+
+    stream.open(name, mode);
+    if (!stream)
+        throw Exception(errnoValue) << "Can't open `" << name << '\'';
+}
+
+
+
+template <typename Type>
+inline Exception &&operator<<(Exception &&tmp, Type const &value)
+{
+    std::ostringstream out;
+    out << value;
+    tmp.d_what += out.str();
+
+    return std::move(tmp);
+}
+
+std::ostream &errnodescr(std::ostream &out);
+
+} // FBB
+
+   
+#endif
+

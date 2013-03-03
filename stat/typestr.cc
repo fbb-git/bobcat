@@ -27,6 +27,9 @@ string Stat::typeStr() const
         case SYMBOLIC_LINK:
             ret = "SYMBOLIC_LINK";
         break;
+
+        default:    // ANY intentionally not handled
+        break;
     }
 
     return ret;

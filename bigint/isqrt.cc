@@ -24,7 +24,7 @@ BigInt &BigInt::isqrt()
     BigInt *next = &tmp;
 
     if (isZero() || isNegative())
-        throw Errno(1, "BigInt::isqrt: BigInt must be positive");
+        throw Exception(1) << "BigInt::isqrt: BigInt must be positive";
 
     while (true)
     {

@@ -53,7 +53,7 @@ available, as bf(FBB::ServerSocket) inherits from bf(FBB::SocketBase).
     itb(void listen(size_t backlog = 5, bool blocking = true))
         The bf(listen()) member defines the way the bf(FBB::ServerSocket) will
 listen for clients requesting a connection.  It can be used only once with a
-bf(FBB::ServerSocket). An bf(FBB::Errno) object is thrown if listening fails,
+bf(FBB::ServerSocket). An bf(FBB::Exception) object is thrown if listening fails,
 if the constructor could not create a socket, or if the bf(SocketBase) base
 class could not properly be constructed.
 
@@ -148,7 +148,7 @@ manpagesection(EXAMPLE)
             cout << "Ready for another connection\n";
         }
     }
-    catch (Errno const &err)
+    catch (Exception const &err)
     {
         cerr <<
             err.what() << endl <<

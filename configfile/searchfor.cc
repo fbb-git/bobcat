@@ -7,7 +7,7 @@ string ConfigFile__::searchFor(string const &keyPat, size_t count)
     string ret;
 
     if (count == 0)
-        throw Errno("findKey/-Tail: count must be > 0");
+        throw Exception() << "findKey/-Tail: count must be > 0";
 
     beginRE(keyPat);
 
