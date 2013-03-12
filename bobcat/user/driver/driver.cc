@@ -7,7 +7,6 @@ using namespace FBB;
 int main()
 {
     User  user;
-    user.verify();
 
     cout << "\n"
         "name       : " << user.name()      << "\n" <<
@@ -17,6 +16,4 @@ int main()
         "real name  : " << user.realname()  << "\n" <<
         "home dir   : " << user.homedir()   << "\n" <<
         "shell      : " << user.shell()     << "\n" << endl;
-
-    return 0;
 }
