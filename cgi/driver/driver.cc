@@ -1,18 +1,14 @@
 #include "main.ih"
 
-void outstr(string const &str)
-{
-    cout << CGI::dos2unix(str) << "\n"
-            "    ";
-}
-
 void showParam(CGI::MapStringVector::value_type const &mapValue)
 {
-    cout << "Param: " << mapValue.first << "\n"
+    cout << "Param: " << mapValue.first << '\n';
+
+    for (auto &str: mapValue.second)
+        cout << "    " << CGI::dos2unix(str) << "\n"
             "    ";
 
-    FBB::for_each(mapValue.second.begin(), mapValue.second.end(), outstr);
-    cout << endl;
+    cout << '\n';
 }
 
 int main(int argc, char **argv)
@@ -20,53 +16,58 @@ try
 {
     Arg &arg = Arg::initialize("evhm:", argc, argv);
 
-    arg.versionHelp(usage, version, 2);
+    // usage and version are in the source archive in .../cgi/driver
+    // arg.versionHelp(usage, version, 2);
 
     ifstream in(arg[0]);
     string line;
     while (getline(in, line))
     {
         size_t pos = line.find('=');
+
         if (pos == string::npos)
             continue;
-        if (setenv(line.substr(0, pos).c_str(), 
+                            // set environment vars simulating
+                            // a GET form
+        if (setenv(line.substr(0, pos).c_str(),     
                line.substr(pos + 1).c_str(), true) == 0)
         {
             if (arg.option('e'))
                 cout << line.substr(0, pos).c_str() << '=' <<
-                       line.substr(pos + 1).c_str() << endl;
+                       line.substr(pos + 1).c_str() << '\n';
         }
         else
-            cout << "FAILED: setenv " << line << endl;
+            cout << "FAILED: setenv " << line << '\n';
     }
 
-    CGI cgi(false);             // by default no escapes
+    CGI cgi(false);             // chars are not escaped
 
     cgi << arg[1];
 
     if (arg.option(&line, 'm'))
         cgi.setMaxUploadSize(A2x(line), *line.rbegin());
 
-    cout << "Max upload size (b): " << cgi.maxUploadSize() << endl;
+    cout << "Max upload size (b): " << cgi.maxUploadSize() << '\n';
 
     CGI::Method method = cgi.method();
 
     cout << "To escape:\n" << 
             cgi << "\n"
-            "Method: " << (method == CGI::GET ? "GET" : "POST") <<
-            endl;
+            "Method: " << (method == CGI::GET ? "GET" : "POST") << 
+            '\n';
 
-    cout << "Query string: " << cgi.query() << endl;
+    cout << "Query string: " << cgi.query() << '\n';
 
-    cgi.param("submit");
+    cout << "Submit string: `" << cgi.param1("submit") << "'\n";
 
-    FBB::for_each(cgi.begin(), cgi.end(), &showParam);
+    for (auto &mapElement: cgi)
+        showParam(mapElement);
 
     cout << "END OF PROGRAM\n";
 }
-catch (Errno const &err)
+catch (exception const &err)
 {
-    cout << err.why() << endl;
+    cout << err.what() << '\n';
     return 1;
 }
 catch (...)
