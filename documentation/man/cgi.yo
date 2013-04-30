@@ -1,7 +1,7 @@
 includefile(include/header)
 
 COMMENT(manpage, section, releasedate, archive, short name)
-manpage(FBB::CGI)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+manpage(FBB::CGI)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
                     (CGI interface)
 
 manpagename(FBB::CGI)(handles GET and POST submitted form data)
@@ -17,10 +17,10 @@ data is sent to a script handling the data using a tt(<form
 action="/path/to/form/script">) stanza. Very often this is indeed a script,
 like a Perl script, but there is no need to use a scripting language. The
 class tt(CGI) allows bf(C++) programmers to process the form by an executable
-usually resulting in faster processing and in construction time benefits
-from the type safety offered by bf(C++). The class tt(CGI) handles data
-submitted using the tt(GET) method as well as data submitted using the
-tt(POST) method automatically.
+usually resulting in faster processing and in construction time benefits from
+the type safety offered by bf(C++). The class tt(CGI) automatically handles
+data submitted using the tt(GET) method as well as data submitted using the
+tt(POST) method.
 
     By default the class's constructor writes the customary tt(Content-type)
 header lines to the standard output stream. Additional (html) output of a
@@ -97,66 +97,87 @@ as header suppresses outputting the tt(Content-type) line. Otherwise the
 content type line is also followed by two tt(\r\n) character combinations. By
 default all characters in retrieved form-variables are escaped. The overloaded
 insertion operators (see below) can be used to modify the default set of
-characters which will be escaped. The backslash is the escape character. It
-will be used unescaped only if the tt(defaultEscape) value is specified as
-tt(false) and no insertions were performed.
+characters to escape. The backslash is used as the escape character. The
+escape-prefix is not used if the tt(defaultEscape) value is specified as
+tt(false) and if no insertions into the bf(CGI) object were performed.
     )
     The copy and move constructors are available.
 
 manpagesection(OERLOADED OPERATORS)
 
-    bf(Note:) the following three insertion operators defining sets of
-characters that should be escaped can only be used until the first time one of
-the tt(param(), begin()) or tt(end()) members is called. Once one of these
-latter three members has been called the set of characters to be escaped is
-fixed and attempts to modify them will fail silently.
+    bf(Note:) the following three insertion operators, defining sets of
+characters that should be escaped, can only be used before calling any of the
+tt(param, begin) or tt(end) members. As soon as one of these latter three
+members has been called the set of characters to be escaped is fixed and
+attempts to modify that set is silently ignored.
 
     itemization(
+    itb(char const *operator[](std::string const &key) const)
+        The index operator returns the value of the environment variable
+        specified as the index. An empty string is returned if the variable
+        specified at tt(key) is not defined.
+
     itb(CGI &operator<<(std::string const &accept))
-       This member's actions are suppressed once tt(param(), begin()) or
-        tt(end()) (see below) has been called.
+       This member's actions are suppressed once tt(param, begin) or
+        tt(end) (see below) has been called.
 
        The insertion operator can be used to fine-tune the set of characters
-        that will be shown escaped in strings returned by tt(param()) (see
+        that are escaped in strings returned by tt(param) (see
         below). Depending on the value of the constructor's tt(defaultEscape)
         parameter characters inserted into the tt(CGI) object will or will not
-        be escaped by a backslash. If the constructor's tt(defaultEscape)
-        parameter was specified as tt(true) then the insertion operator will
-        define a set of characters that will em(not) be escaped. If
-        tt(defaultEscape) was specified as tt(false) then the insertion
+        be escaped by a backslash. 
+
+        If the constructor's tt(defaultEscape) parameter was specified as
+        tt(true) then the insertion operator can be used to define a set of
+        characters that are em(not) escaped. 
+
+        If tt(defaultEscape) was specified as tt(false) then the insertion
         operator will define a set of characters that em(will) be
-        escaped. Once an insertion operator has been used the backlash itself
-        will always be escaped and a request to use it unescaped is silently
-        ignored. The tt(accept) string can be specified as a regular
-        expression character set without specifying the surrounding square
-        brackets. E.g., an insertion like tt(cgi << "-a-z0-9") will accept the
-        dash, lower case letters and the digits. Individual characters,
-        character ranges using the dash and all standard character classes
-        (tt([:alnum:], [:alpha:], [:cntrl:], [:digit:], [:graph:], [:lower:],
-        [:print:], [:punct:], [:space:], [:upper:]), and tt([:xdigit:])) can be
-        used to specify a set of characters. In addition to these standard
-        character classes the class tt([:cgi:]) is available representing the
-        set tt(" ' ` ;) and tt(\).  Note that standard character classes
-        em(do) require you to specify square brackets. When a series of
-        insertions are performed then the union of the sets defined by these
-        insertions are used. bf(Note): using unescaped single quotes, the
-        double quotes, backtick characters and semicolons in CGI-programs
-        might be risky and is not advised.
+        escaped. 
+
+        The backlash itself is always escaped and a request to use it
+        unescaped is silently ignored. 
+
+        The tt(accept) string can be specified as a regular expression
+        character set, without the usual surrounding square brackets. E.g., an
+        insertion like tt(cgi << "-a-z0-9") defines the set consisting of the
+        dash, the lower case letters and the digits.
+
+        Individual characters, character ranges (using the dash to specify a
+        range) and all standard character classes (tt([:alnum:], [:alpha:],
+        [:cntrl:], [:digit:], [:graph:], [:lower:], [:print:], [:punct:],
+        [:space:], [:upper:]), and tt([:xdigit:])) can be used to specify a
+        set of characters. In addition to these standard character classes the
+        class tt([:cgi:]) can be used to define the set consisting of the
+        characters tt(" ' ` ;) and tt(\).  
+
+        Note that standard and tt([:cgi:]) character classes em(do) require
+        square brackets. 
+
+        When a series of insertions are performed then the union of the sets
+        defined by these insertions are used. 
+
+        bf(Note): using unescaped single quotes, the double quotes, backtick
+        characters and semicolons in CGI-programs might be risky and is not
+        advised.
+
     itb(CGI &operator<<(int c))
-       This member's actions are suppressed once tt(param(), begin()) or
-        tt(end()) (see below) has been called.
+       This member's actions are suppressed once tt(param, begin) or
+        tt(end) (see below) has been called.
 
        This insertion operator is used to change the default escape handling
         of a single character tt(c). The tt(int) parameter is cast internally
         to a tt(char).
+
     itb(CGI &operator<<(std::pair<char, char> range))
-       This member's actions are suppressed once tt(param(), begin()) or
-        tt(end()) (see below) has been called.
+       This member's actions are suppressed once tt(param, begin) or
+        tt(end) (see below) has been called.
 
        This insertion operator can be used to change the default escape
         handling of a range of characters. The pair's second character must be
         equal to or exceed the position of the pair's first character in the
         ASCII collating sequence or the member will have no effect.
+
     itb(std::ostream &std::operator<<(std::ostream &out, CGI const &cgi))
        tt(CGI) objects can be inserted into tt(ostreams) to display the
         characters that will appear escaped in strings returned by the 
@@ -164,45 +185,44 @@ fixed and attempts to modify them will fail silently.
         returns tt(true) will be displayed as character, surrounded by single
         quotes. For all other characters their ASCII values are displayed.
         Each character is displayed on a line by itself.
-    itb(char const *operator[](std::string const &key) const)
-        The index operator returns the value of the environment variable
-        specified as the index. An empty string is returned if the variable
-        specified at tt(key) is not defined.
+
     )
 
     The copy and move assignment operators are available. 
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
-    itb(CGI::MapStringVector::const_iterator begin() const)
+    itb(CGI::MapStringVector::const_iterator begin())
        Returns the begin iterator of the form's parameter map. Iterator values
-        unequal tt(end()) (see below) point to a pair of values, the first of
+        unequal to tt(end) (see below) point to a pair of values, the first of
         which is the name of a field defined by the form, the second is a
         vector of strings containing the field's value(s). See also the
-        description of the tt(param()) member below.
+        description of the tt(param) member below.
 
-    itb(CGI::MapStringVector::const_iterator end() const)
+    itb(CGI::MapStringVector::const_iterator end())
        Returns the end iterator of the form's parameter map.
 
     itb(unsigned long long maxUploadSize() const)
        Returns the current maximum file upload size in bytes.
 
     itb(CGI::Method method() const) 
-       Returns the method used when submitting the form as either tt(CGI::GET)
-        or tt(CGI::POST).
+       Returns the method that was used when the form was submitted (either
+        tt(CGI::GET) or tt(CGI::POST)).
 
-    itb(std::vector<std::string> const &param(std::string const &variable)
-        const)
+    itb(std::vector<std::string> const &param(std::string const &variable))
        Returns the value of the form-variable specified by the function's
         argument. An empty vector is returned if the variable was not provided
-        by the form's data. If the same variable was specified multiple times
-        or if its value extends over multiple lines (only with
-        tt(multipart/form-data)) then the vector will contain multiple
-        strings. With tt(GET) and tt(POST) methods not using
-        tt(multipart/form-data) input fields extending over multiple lines are
-        stored in one string, using tt(\r\n) combinations between those
-        lines.
-       nl() When files are uploaded the vectors contain sets of four
+        by the form's data. 
+
+       If the same variable was specified multiple times or if its value
+        extends over multiple lines (only with tt(multipart/form-data)) then
+        the vector contains multiple strings. 
+
+       With tt(GET) and tt(POST) methods not using tt(multipart/form-data)
+        input fields extending over multiple lines are stored in one string,
+        using tt(\r\n) combinations between those lines.
+
+       When files are uploaded the vectors contain sets of four
         strings. The first string provides the path nme of the uploaded file;
         the second string provides the file name specified in the form itself
         (so it is the name of the file at the remote location); the third
@@ -211,6 +231,12 @@ manpagesection(MEMBER FUNCTIONS)
         the file was successfully uploaded and tt(truncated) if the file was
         truncated. Existing files will not be overwritten. When uploading a
         file a usable filename must be found within 100 trials.
+
+    itb(std::string param1(std::string const &variable) const)
+       Returns the first element of the tt(vector<string>) returned by the
+        tt(param) member or an empty string if tt(variable) was not defined by
+        the received form.
+       
 
     itb(std::string const &query() const) 
        Returns the query-string submitted with tt(CGI::GET) or tt(CGI::POST)
@@ -221,31 +247,36 @@ manpagesection(MEMBER FUNCTIONS)
     itb(report+CHAR(40)CHAR(41))
         The tt(report) member silently returns if no errors were encountered
         while processing form-data. Otherwise, the tt(html) file generated by
-        the tt(CGI) program will display a line starting with tt(FBB::CGI),
+        the tt(CGI) program displays a line starting with tt(FBB::CGI),
         followed by the status report. 
 
         The following status report messages are presently defined:
-        itemization( 
-       itt(Content-Disposition not recognized in:), which is followed by the
+
+       tt(Content-Disposition not recognized in:), which is followed by the
         line where the tt(Content-Disposition) was expected. This may occur
         when processing tt(multipart/form) data.
-       itt(Invalid multipart/form-data). This message can be generated when
+
+       tt(Invalid multipart/form-data). This message can be generated when
         readling lines while processing tt(multipart/form) data.
-       itt(GET/POST REQUEST_METHOD not found). This message is shown if the
+
+       tt(GET/POST REQUEST_METHOD not found). This message is shown if the
         program couldn't find the form's tt(REQUEST_METHOD) type (i.e.,
         tt(GET) or tt(POST)).
-       itt(Invalid CONTENT_LENGHT in POSTed form). This message is shown if
+
+       tt(Invalid CONTENT_LENGHT in POSTed form). This message is shown if
         the content-length header has an incorrect value.
-       itt(Content-Type not found for file-field), followed by the file's
+
+       tt(Content-Type not found for file-field), followed by the file's
         field name. This message is shown if no tt(Content-Type) specification
         was found in an uploaded form.
-       itt(Can't open a file to write an uploaded file). This message
+
+       tt(Can't open a file to write an uploaded file). This message
         indicates that the CGI program was unable to open a file to write an
         uploaded file to. This can be caused by an overfull disk or partition
         or by incorrect write-permissions.
-       itt(multipart/form-data: no end-boundary found). This message is shown
+
+       tt(multipart/form-data: no end-boundary found). This message is shown
         if the end-boundary was missing in a tt(multipart/form-data) form.
-        )
 
     itb(void setFileDestination(std::string const &path, 
                                 std::string const &prefix = "",
@@ -255,8 +286,8 @@ manpagesection(MEMBER FUNCTIONS)
         is an internally used number starting at one. When tt(CREATE_PATH) is
         specified tt(path) must be available or the bf(CGI) object must be
         able to create the path. If tt(DONT_CREATE_PATH) is specified the
-        specified path must be available. If not, an tt(FBB::Exception) exception
-        will be thrown.
+        specified path must be available. If not, an tt(FBB::Exception)
+        exception will be thrown.
 
     itb(void setMaxUploadSize(size_t maxSize, int unit = 'M'))
        This member can be used to change the maximum size of uploaded
@@ -284,12 +315,17 @@ manpagesection(STATIC MEMBERS)
     )    
 
 manpagesection(EXAMPLE)
-    verbinclude(../../cgi/driver/driver.cc)
 
-To test the program provide it, e.g., with the following file at its standard
-input: 
+verbinclude(../../cgi/driver/driver.cc)
 
+To test the program's tt(get) form processing, call it as tt(driver get
+'[:cgi:]'), with the file tt(get) containing:
     verbinclude(../../cgi/driver/get)
+
+To test the program's tt(post) form processing, call it as tt(driver post1
+'[:cgi:]'), using tt(post1) and tt(post1.cin) found in Bobcat's source archive
+under tt(../cgi/driver).
+
 
 manpagefiles()
     em(bobcat/cgi) - defines the class interface

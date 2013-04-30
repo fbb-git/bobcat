@@ -1,7 +1,7 @@
 includefile(include/header)
 
 COMMENT(manpage, section, releasedate, archive, short name)
-manpage(FBB::SocketBase)(3bobcat)(_CurYrs_)(libbobcat1-dev__CurVers_-x.tar.gz)
+manpage(FBB::SocketBase)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
                     (Base class for sockets)
 
 manpagename(FBB::SocketBase)(Base class for socket-constructing classes)
@@ -23,23 +23,24 @@ manpagesection(INHERITS FROM)
 manpagesection(PROTECTED CONSTRUCTORS)
     itemization(
     itb(SocketBase(size_t port)) 
-        This constructor creates a bf(SocketBase) to be used with
-bf(ServerSocket)-objects, listening on tt(port).  
+       This constructor creates a bf(SocketBase) to be used with
+        bf(ServerSocket)-objects, listening on tt(port).  
 
-        This constructor throws an tt(Exception) exception if it did not properly
-complete.
+       This constructor throws an tt(Exception) exception if it did not
+        properly complete.
 
-    itb(SocketBase(std::string const &host, unit_16_t port)) 
-        This constructor creates a bf(FBB::SocketBase) to be used with a
-bf(ClientSocket)-object, connecting to tt(hostname), at port `tt(port)'. 
+    itb(SocketBase(std::string const &host, uint16_t port)) 
+       This constructor creates a bf(FBB::SocketBase) to be used with a
+        bf(ClientSocket)-object, connecting to tt(hostname), at port
+        `tt(port)'.
 
-        This constructor throws an tt(Exception) exception if it did not properly
-complete.
-
+       This constructor throws an tt(Exception) exception if it did not
+        properly complete.
 
     itb(SocketBase(int socket, sockaddr_in const &address))
-        This constructor constructs a bf(FBB::SocketBase) object initializing
-its socket and bf(FBB::InetAddress) part from available external objects.
+       This constructor constructs a bf(FBB::SocketBase) object initializing
+        its socket and bf(FBB::InetAddress) part from available external
+        objects.
     )
     The (public) copy constructor is available.
 
