@@ -1,17 +1,17 @@
 includefile(include/header)
 
 COMMENT(manpage, section, releasedate, archive, short name)
-manpage(FBB::SyslogBuf)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+manpage(FBB::Syslogbuf)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
                     (Stream Buffer for Syslog)
 
-manpagename(FBB::SyslogBuf)(A streambuf object inserting syslog messages)
+manpagename(FBB::Syslogbuf)(A streambuf object inserting syslog messages)
 
 manpagesynopsis()
     bf(#include <bobcat/syslogbuf>)nl()
     Linking option: tt(-lbobcat) 
 
 manpagedescription()
-    bf(FBB::SyslogBuf) objects may be used as a bf(std::streambuf) of
+    bf(FBB::Syslogbuf) objects may be used as a bf(std::streambuf) of
 tt(std::ostream) objects to write syslog messages using stream facilities.
 
 includefile(include/namespace)
@@ -78,7 +78,7 @@ bf(LOG_xxx) values used with bf(syslog)(3):
 
 manpagesection(CONSTRUCTOR)
     itemization(
-    itb(SyslogBuf(char *ident,
+    itb(Syslogbuf(char *ident,
                 FBB::Priority priority = FBB::NOTICE, 
                 FBB::Facility facility = FBB::USER,
                 int option = 0))
@@ -112,7 +112,7 @@ binary `tt(bitor)' (`tt(|)') operator to combine options):
     The copy constructor is not available.
 
 manpagesection(MEMBER FUNCTIONS)
-     All members of bf(std::streambuf) are available, as bf(FBB::SyslogBuf)
+     All members of bf(std::streambuf) are available, as bf(FBB::Syslogbuf)
 inherits from this class.
     itemization(
     itb(Priority defaultPriority() const)
@@ -156,7 +156,7 @@ using namespace FBB;
 
 int main(int argc, char **argv)
 {
-    ostream sls(new SyslogBuf(argv[0]));
+    ostream sls(new Syslogbuf(argv[0]));
 
     sls << SyslogStream::debug << "Hello world" << endl;
     sls << SyslogStream::strerrno << endl;
