@@ -128,16 +128,32 @@ enum Facility
 
 class Syslogbuf: public std::streambuf
 {
+    struct Data
+    {
+        std::string buffer;
+        std::string ident;
+    };
+        
     Priority    d_priority;
     Priority    d_orgPriority;
-    std::string d_buffer;
+    Data       *d_data;
 
     public:
+        explicit Syslogbuf(std::string const &ident = "",
+            Priority priority = NOTICE, Facility facility = USER,
+            int option = 0);
+
         explicit Syslogbuf(char const *ident,
             Priority priority = NOTICE, Facility facility = USER,
             int option = 0);
 
         ~Syslogbuf();
+
+        void open(std::string const &ident,
+            Priority priority = NOTICE, Facility facility = USER,
+            int option = 0);
+
+        void close();
 
         Priority defaultPriority() const;
         Priority priority() const;
@@ -151,6 +167,8 @@ class Syslogbuf: public std::streambuf
     private:
         virtual int sync();
         virtual int overflow(int c);
+
+        void reset(std::string const &ident, Facility facility, int option);
 };
 
 inline Priority Syslogbuf::defaultPriority()   const

@@ -2,9 +2,6 @@
 
 Syslogbuf::~Syslogbuf()
 {
-    if (d_buffer.length())
-        sync();   
-                              
-    closelog();
+    close();
 }
     
