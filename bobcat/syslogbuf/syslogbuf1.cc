@@ -9,3 +9,16 @@ Syslogbuf::Syslogbuf(std::string const &ident,
 {
     reset(ident, facility, option);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

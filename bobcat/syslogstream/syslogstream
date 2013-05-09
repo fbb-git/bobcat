@@ -118,6 +118,12 @@ class SyslogStream: private Syslogbuf, public std::ostream
         static  Facility stoF(std::string const &name, 
                                                 Facility facility = USER);
 
+        static int setMask(Priority p1, bool upTo);
+        static int setMask(Priority p1);
+
+        template <typename ...Priorities>
+        static int setMask(Priority p1, Priorities ...ps);
+
 // MANIPULATORS:
         static std::ostream &emerg(std::ostream &str);
         static std::ostream &alert(std::ostream &str);
@@ -132,7 +138,30 @@ class SyslogStream: private Syslogbuf, public std::ostream
     private:
         static std::ostream &setPriority(std::ostream &str, 
                                         Priority priority);
+
+        static int maskValue(Priority p1);
+
+        template <typename ...Priorities>
+        static int maskValue(Priority p1, Priorities ...ps);
+
+        static int setMask(int maskValue, bool upTo);
 };
+
+inline int SyslogStream::setMask(Priority p1, bool upTo)
+{
+    return setMask(maskValue(p1), upTo);
+}
+
+inline int SyslogStream::setMask(Priority p1)
+{
+    return setMask(maskValue(p1), false);
+}
+
+template <typename ...Priorities>
+inline int SyslogStream::setMask(Priority p1, Priorities ...ps)
+{
+    return setMask(maskValue(p1, ps ...), false);
+}
 
 inline void SyslogStream::close()
 {
@@ -204,6 +233,26 @@ inline std::ostream &SyslogStream::info(std::ostream &str)
 inline std::ostream &SyslogStream::debug(std::ostream &str)
 {
     return setPriority(str, DEBUG);
+}
+
+// The following private inline members, must remain here as they are used by
+// the setMask member template
+
+inline int SyslogStream::maskValue(Priority p1)
+{
+    return 1 << p1;
+}
+
+template <typename ...Priorities>
+inline int SyslogStream::maskValue(Priority p1, Priorities ...ps)
+{
+    return ((1 << p1) | maskValue(ps ...));
+}
+
+inline int SyslogStream::setMask(int maskValue, bool upTo)
+{
+        // if upTo, maskValue is 2**x, and all its lower bits are also raised
+    return setlogmask(upTo ? maskValue |= (maskValue - 1) : maskValue);
 }
 
 } // FBB

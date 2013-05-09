@@ -12,7 +12,15 @@ manpagesynopsis()
 
 manpagedescription()
     bf(FBB::SyslogStream) objects may be used as a bf(std::ostream) to write
-syslog messages using stream facilities.
+syslog messages using stream facilities. 
+
+Multiple separate insertions can be used to create a single syslog message:
+the message is only sent to the syslog daemon after receiving a tt(flush)
+command (e.g., after inserting tt(std::flush) or tt(std::endl)). Non-printable
+characters (like tt('\n')) show up in the syslog message as octal values,
+preceded by tt(#) (e.g., tt(#012) for tt('\n')). The newline normally inserted
+by tt(std::endl) is ignored: bf(SyslogStream) objects interpret tt(std::endl)
+like tt(std::flush).
 
 includefile(include/namespace)
 
@@ -45,6 +53,9 @@ bf(LOG_xxx) values used with bf(syslog)(3):
     itb(DEBUG)
         debug-level message;
     )
+    tt(Priority) values can be combined using the tt(bitor) operator. This is
+mainly used with the tt(setMask) static member function.
+    
 
     bf(Facility):
 
@@ -76,19 +87,25 @@ bf(LOG_xxx) values used with bf(syslog)(3):
         UUCP subsystem
     )
 
-manpagesection(CONSTRUCTOR)
+manpagesection(CONSTRUCTORS)
     itemization(
-    itb(SyslogStream(char const *ident,
+    itb(SyslogStream(string const &ident = "",
                 FBB::Priority priority = FBB::NOTICE, 
                 FBB::Facility facility = FBB::USER,
                 int option = 0))
-        This bf(Syslogstream()) constructor initializes the streamstream.  The
-bf(ident) parameter is usually the name of the program. Its contents are
-prepended to syslog messages. Use value 0 if no text needs to be
-prepended.
+        This constructor initializes a bf(Syslogstream) object.  The
+tt(ident) parameter is usually the name of the program. Its contents are
+prepended to syslog messages. 
 
-The bf(priority) parameter determines the importance of the message. By
-default bf(FBB::NOTICE) is used.
+The bf(priority) parameter determines the default importance of the
+message sent to the syslog daemon. By default bf(FBB::NOTICE) is used. Syslog
+messages may be given different priority by inserting a
+bf(SyslogStream)(3bobcat) manipulator, and the priority set at construction
+time may be modified using the tt(setPriority) member.
+
+Which messages actually appear in log facilities is not determined by
+the messages' priorities, but by the em(log mask). The log mask can be set by
+the static member tt(setMask) (see below).
 
 The bf(facility) parameter determines the type of program doing the
 logging. By default bf(FBB::USER) is used.
@@ -109,9 +126,19 @@ binary `tt(bitor)' (`tt(|)') operator to combine options):
               include PID with each message nl()
 
     By default no options are used.
+
+    itb(SyslogStream(char const *ident,
+                FBB::Priority priority = FBB::NOTICE, 
+                FBB::Facility facility = FBB::USER,
+                int option = 0))
+        This constructor is kept for backward compatibility. Its parameters
+have the same meanings as those of the abovementioned constructor. A
+tt(nullptr) can be specified to indicate that no text needs to be
+prepended to syslog messages.
+
     )
 
-    The copy constructor is not available.
+    Copy and move constructors are not available.
 
 manpagesection(MEMBER FUNCTIONS)
      All members of bf(std::streamstream) are available, as
@@ -133,6 +160,12 @@ passed to the constructor. The previously active default priority is returned.
 has been inserted). Subsequent messages will use the default priority
 again. The previously active priority setting is returned.
     )
+
+manpagesection(STATIC MEMBER FUNCTION)
+
+    itemization(
+    itb(Priority setMask(Priority accept, bool upTo = false))
+        Syslog messages
 
 manpagesection(MANIPULATORS)
 
@@ -187,8 +220,6 @@ int main(int argc, char **argv)
 
     sls << SyslogStream::debug << "Hello world" << endl;
     sls << SyslogStream::strerrno << endl;
-    
-    return 0;
 }
     )
 
