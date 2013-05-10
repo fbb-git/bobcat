@@ -85,6 +85,7 @@
 //            debug-level message
 
 #include <bobcat/syslogbuf>
+
 #include <ostream>
 #include <syslog.h>
                         
@@ -94,6 +95,10 @@ namespace FBB
 class SyslogStream: private Syslogbuf, public std::ostream
 {
     public:
+        explicit SyslogStream(std::string const &ident = "",
+            Priority priority = NOTICE, Facility facility = USER,
+            int option = 0);
+
         explicit SyslogStream(char const *ident,
             Priority priority = NOTICE, Facility facility = USER,
             int option = 0);
@@ -102,6 +107,22 @@ class SyslogStream: private Syslogbuf, public std::ostream
         Priority defaultPriority()   const;
         Priority setPriority(Priority priority);
         Priority setDefaultPriority(Priority priority);
+
+        void open(std::string const &ident,
+            Priority priority = NOTICE, Facility facility = USER,
+            int option = 0);
+        void close();
+
+        static  Priority stoP(std::string const &name, 
+                                                Priority priority = NOTICE);
+        static  Facility stoF(std::string const &name, 
+                                                Facility facility = USER);
+
+        static int setMask(Priority p1, PriorityType upTo);
+        static int setMask(Priority p1);
+
+        template <typename ...Priorities>
+        static int setMask(Priority p1, Priorities ...ps);
 
 // MANIPULATORS:
         static std::ostream &emerg(std::ostream &str);
@@ -118,8 +139,40 @@ class SyslogStream: private Syslogbuf, public std::ostream
         static std::ostream &setPriority(std::ostream &str, 
                                         Priority priority);
 
+        static int maskValue(Priority p1);
+
+        template <typename ...Priorities>
+        static int maskValue(Priority p1, Priorities ...ps);
+
+        static int setMask(int maskValue, PriorityType upTo);
 };
 
+inline int SyslogStream::setMask(Priority p1, PriorityType upTo)
+{
+    return setMask(maskValue(p1), upTo);
+}
+
+inline int SyslogStream::setMask(Priority p1)
+{
+    return setMask(maskValue(p1), SINGLE);
+}
+
+template <typename ...Priorities>
+inline int SyslogStream::setMask(Priority p1, Priorities ...ps)
+{
+    return setMask(maskValue(p1, ps ...), SINGLE);
+}
+
+inline void SyslogStream::close()
+{
+    Syslogbuf::close();
+}
+
+inline void SyslogStream::open(std::string const &ident, Priority priority, 
+                               Facility facility, int option)
+{
+    Syslogbuf::open(ident, priority, facility, option);
+}
 
 inline Priority SyslogStream::priority()   const       
 {
@@ -180,6 +233,27 @@ inline std::ostream &SyslogStream::info(std::ostream &str)
 inline std::ostream &SyslogStream::debug(std::ostream &str)
 {
     return setPriority(str, DEBUG);
+}
+
+// The following private inline members, must remain here as they are used by
+// the setMask member template
+
+inline int SyslogStream::maskValue(Priority p1)
+{
+    return 1 << p1;
+}
+
+template <typename ...Priorities>
+inline int SyslogStream::maskValue(Priority p1, Priorities ...ps)
+{
+    return ((1 << p1) | maskValue(ps ...));
+}
+
+inline int SyslogStream::setMask(int maskValue, PriorityType upTo)
+{
+        // if upTo, maskValue is 2**x, and all its lower bits are also raised
+    return setlogmask(upTo == SINGLE ?  
+                        maskValue : maskValue |= (maskValue - 1));
 }
 
 } // FBB
