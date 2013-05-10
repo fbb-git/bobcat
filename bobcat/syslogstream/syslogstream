@@ -118,7 +118,7 @@ class SyslogStream: private Syslogbuf, public std::ostream
         static  Facility stoF(std::string const &name, 
                                                 Facility facility = USER);
 
-        static int setMask(Priority p1, bool upTo);
+        static int setMask(Priority p1, PriorityType upTo);
         static int setMask(Priority p1);
 
         template <typename ...Priorities>
@@ -144,23 +144,23 @@ class SyslogStream: private Syslogbuf, public std::ostream
         template <typename ...Priorities>
         static int maskValue(Priority p1, Priorities ...ps);
 
-        static int setMask(int maskValue, bool upTo);
+        static int setMask(int maskValue, PriorityType upTo);
 };
 
-inline int SyslogStream::setMask(Priority p1, bool upTo)
+inline int SyslogStream::setMask(Priority p1, PriorityType upTo)
 {
     return setMask(maskValue(p1), upTo);
 }
 
 inline int SyslogStream::setMask(Priority p1)
 {
-    return setMask(maskValue(p1), false);
+    return setMask(maskValue(p1), SINGLE);
 }
 
 template <typename ...Priorities>
 inline int SyslogStream::setMask(Priority p1, Priorities ...ps)
 {
-    return setMask(maskValue(p1, ps ...), false);
+    return setMask(maskValue(p1, ps ...), SINGLE);
 }
 
 inline void SyslogStream::close()
@@ -249,10 +249,11 @@ inline int SyslogStream::maskValue(Priority p1, Priorities ...ps)
     return ((1 << p1) | maskValue(ps ...));
 }
 
-inline int SyslogStream::setMask(int maskValue, bool upTo)
+inline int SyslogStream::setMask(int maskValue, PriorityType upTo)
 {
         // if upTo, maskValue is 2**x, and all its lower bits are also raised
-    return setlogmask(upTo ? maskValue |= (maskValue - 1) : maskValue);
+    return setlogmask(upTo == SINGLE ?  
+                        maskValue : maskValue |= (maskValue - 1));
 }
 
 } // FBB
