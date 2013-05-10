@@ -3,11 +3,22 @@
 # Uncomment this to turn on verbose mode.
 # export DH_VERBOSE=1
 
+# The following is for internal development usage only
+# Update that sum when new _upstream_ releases occur, this
+# catches silent file content forges at the upstream server side
+
+# archive downloaded from https://www.icce.rug.nl/debian/bobcat
+# (bobcat_x.y.z..tar.gz)
+
+MD5TRUSTED := 5792cc53f78261940ab452309aa1b898
+
+
 export DEB_BUILD_HARDENING=1
 export LDFLAGS = $(shell dpkg-buildflags --get LDFLAGS)
 export CPPFLAGS = $(shell dpkg-buildflags --get CPPFLAGS)
 export CXXFLAGS = $(shell dpkg-buildflags --get CXXFLAGS)
-export CXX = g++-4.7
+#export CXX = g++-4.7
+export CXX = g++
 
 CXXFLAGS += --std=c++0x -Wall
 
@@ -56,13 +67,6 @@ binary-arch: build-arch install
 	dh_builddeb
 
 # The following is for internal development usage only
-# Update that sum when new _upstream_ releases occur, this
-# catches silent file content forges at the upstream server side
-
-# archive downloaded from https://www.icce.rug.nl/debian/bobcat
-# (bobcat_x.y.z..tar.gz)
-
-MD5TRUSTED := bb3d04e7f25f6020ff84967a5deca4d6
 
 DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
 UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
@@ -92,39 +96,42 @@ get-orig-source:
 	echo "Upstream filename md5sum is trusted!" ; \
 	fi
 
-# call git-build from the project's base directory as `fakeroot debian/rules git-build'
-# it creates  ../${UPNAME}-build and runs dpkg-buildpackage in ../${UPNAME}-build/$(UPNAME)-$(UPVERSION)
-# which, if successful, creates the debian files in ${UPNAME}-build
-# Probably easier to use is `git-bl'
-
-debian-area = $(shell pwd)
-build-base  = ../$(UPNAME)-build
-build-area  = $(UPNAME)-$(UPVERSION)
-tarball     = ../tarballs/$(DEFILE) 
-garbage     = ../$(UPNAME)-build/$(UPNAME)-$(UPVERSION) ../$(UPNAME)-build/run.lintian
-
-git-build:
-	@@[ -d $(build-base)/. ] || mkdir -p $(build-base)
-
-	-@if [ ! -f $(tarball) ] ; then \
-	    echo "Upstream source tarball $(tarball) not found" ; \
-	else \
-	    rm -rf $(garbage) ; \
-	    cp $(tarball) $(build-base) ; \
-	    chdir $(build-base) ; \
-	    tar xzf $(DEFILE) ; \
-	    chdir $(build-area) ; \
-	    cp -r $(debian-area)/debian ./ ; \
-	    dpkg-buildpackage $(DPKG_BUILDPACKAGE) ; \
-	    if [ "$$?" -eq 0 ] ; then \
-	        chdir .. ; \
-	        touch run.lintian ; \
-	        rm -rf $(build-area) ; \
-	    else \
-	        chdir .. ; \
-	        mv $(build-area) $(build-area)-obsolete-`date +%s` ; \
-	    fi \
-	fi
+# This series of commented-out lines are probably superfluous. 
+# If so, they can be removed (FBB, May 10, 2013)
+#
+# # call git-build from the project's base directory as `fakeroot debian/rules git-build'
+# # it creates  ../${UPNAME}-build and runs dpkg-buildpackage in ../${UPNAME}-build/$(UPNAME)-$(UPVERSION)
+# # which, if successful, creates the debian files in ${UPNAME}-build
+# # Probably easier to use is `git-bl'
+# 
+# debian-area = $(shell pwd)
+# build-base  = ../$(UPNAME)-build
+# build-area  = $(UPNAME)-$(UPVERSION)
+# tarball     = ../tarballs/$(DEFILE) 
+# garbage     = ../$(UPNAME)-build/$(UPNAME)-$(UPVERSION) ../$(UPNAME)-build/run.lintian
+# 
+# git-build:
+# 	@@[ -d $(build-base)/. ] || mkdir -p $(build-base)
+# 
+# 	-@if [ ! -f $(tarball) ] ; then \
+# 	    echo "Upstream source tarball $(tarball) not found" ; \
+# 	else \
+# 	    rm -rf $(garbage) ; \
+# 	    cp $(tarball) $(build-base) ; \
+# 	    chdir $(build-base) ; \
+# 	    tar xzf $(DEFILE) ; \
+# 	    chdir $(build-area) ; \
+# 	    cp -r $(debian-area)/debian ./ ; \
+# 	    dpkg-buildpackage $(DPKG_BUILDPACKAGE) ; \
+# 	    if [ "$$?" -eq 0 ] ; then \
+# 	        chdir .. ; \
+# 	        touch run.lintian ; \
+# 	        rm -rf $(build-area) ; \
+# 	    else \
+# 	        chdir .. ; \
+# 	        mv $(build-area) $(build-area)-obsolete-`date +%s` ; \
+# 	    fi \
+# 	fi
 
 print-version:
 	@@echo "Debian version:   $(DEBVERSION)"
