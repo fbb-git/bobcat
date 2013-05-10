@@ -11,11 +11,14 @@ using namespace FBB;
 
 int main(int argc, char **argv, char **envp)
 {
-    SyslogStream sls(argv[0]);
+    Syslogbuf sbuf(argv[0]);        // via a separate Syslogbuf
 
-    sls << SyslogStream::debug << "Hello world" << endl;
+    ostream sls(0);
+    sls.rdbuf(&sbuf);
 
-    return 0;
+//    SyslogStream sls(argv[0]);      // via an explicit SyslogStream
+
+    sls << SyslogStream::notice << "Hello world" << endl;
 }
 
 
