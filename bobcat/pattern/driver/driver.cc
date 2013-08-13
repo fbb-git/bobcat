@@ -42,9 +42,9 @@ int main(int argc, char **argv)
         else
             cout << ": noot doesn't match\n";
     }
-    catch (Errno const &e)
+    catch (exception const &e)
     {
-        cout << e.why() << ": compilation failed" << endl;
+        cout << e.what() << ": compilation failed" << endl;
     }
         
     string pat = "\\d+";
@@ -98,16 +98,16 @@ int main(int argc, char **argv)
                         }
                     }
                 }
-                catch (Errno const &e)
+                catch (exception const &e)
                 {
-                    cout << e.why() << ": " << st << " doesn't match" << endl;
+                    cout << e.what() << ": " << st << " doesn't match" << endl;
                     continue;
                 }
             }
         }            
-        catch (Errno const &e)
+        catch (exception const &e)
         {
-            cout << e.why() << ": compilation failed" << endl;
+            cout << e.what() << ": compilation failed" << endl;
         }
 
         cout << "New pattern: ";

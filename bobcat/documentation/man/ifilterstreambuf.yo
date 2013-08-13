@@ -1,0 +1,116 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::IFilterStreambuf)(3bobcat)(_CurYrs_)
+        (libbobcat-dev__CurVers_-x.tar.gz)(Filtering Input Stream Buffer)
+
+manpagename(FBB::IFilterStreambuf)
+            (Filtering stream buffer initialized by a std::istream object)
+
+manpagesynopsis()
+    bf(#include <bobcat/ifdstreambuf>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB::IFilterStreambuf) objects may be used as a bf(std::streambuf) for
+tt(std::istream) objects, filtering the information produced by those objects.
+
+    The class tt(IFilterStreambuf) was designed with the bf(openSSL BIO)
+(cf. bf(bio)(3ssl)) in mind. Since the BIO concept was developed in the
+context of the bf(C) programming language, BIOs do not support bf(C++)
+streams. Nonetheless, the concept of a filtering device is an attractive one,
+and is offered by the bf(FBB::IFilterStreambuf) class.
+
+    In addition to filtering, bf(IFilterStreambuf) objects use split buffers,
+and thus, depending on the (configurable) size of buffer that is maintained by
+bf(IFilterStreambuf) objects, usually multiple characters read from the
+bf(IFilterStreambuf) can be pushed back again.
+
+    The class bf(IFilterStreambuf) is an abstract base class. It is used via
+classes that are derived from bf(IFilterStreambuf), implementing its pure
+virtual tt(load) member (see below at bf(PRIVATE VIRTUAL MEMBER FUNCTIONS)).
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    bf(std::streambuf)
+
+manpagesection(ENUMERATION)
+
+manpagesection(PROTECTED CONSTRUCTOR)
+    itemization(
+    itb(IFilterStreambuf(size_t bufSize = 1000))
+        This constructor initializes the streambuf, using a buffer of the
+indicated size. While the streambuf is being used its buffer is gradually
+filled. Eventually, when it is full the oldest characters are removed from the
+buffer, making room for more recent characters.
+
+    The copy- and move constructors are not available.
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::streambuf) are
+available, as bf(FBB::IFilterStreambuf) inherits from this class. Some of the
+bf(std::streambuf)'s member are overridden by bf(FBB::IFilterStreambuf), see
+the next section. 
+
+    This class does not offer overloaded move and/or copy assignment
+operators. 
+
+manpagesection(PRIVATE VIRTUAL MEMBER FUNCTIONS)
+
+    itemization(
+    itb(virtual bool filter(char **srcBegin, char **srcEnd) = 0)
+        The tt(filter) member is declared as a pure virtual member: derived
+classes must override tt(filter) with their own
+implementation. Implementations somehow should obtain information (in any
+amount), which is then passed on to the tt(IFilterStreambuf) via two pointers,
+pointing, respectively, to the first available character and beyond the last
+available character. These characters are subsequently transferred to
+bf(IFilterStreambuf)'s buffer, from where they can be retrieved (or to where
+they can be pushed back). The tt(filter) member allows implementations to
+filter and/or modify the information that is made available to this
+member. The bf(EXAMPLE) section provides an example filtering out a
+configurable set of characters from a provided tt(std::istream). 
+
+    The tt(filter) member should return tt(false) if no more information is
+available. It should return tt(true) if information is available, in which
+case tt(*srcBegin) and tt(*srcEnd) should be pointing to, respectively, the
+first available character and beyond the last available character;
+    itb(int pbackfail() final override)
+        The tt(pbackfail) member is final; derived classes cannot override
+it. It merely returns tt(EOF).
+    itb(std::streamsize showmanyc() final override)
+        The tt(showmanyc) member is final; derived classes cannot override
+it. It returns the current number of characters that are (still) waiting to
+be processed in the range of characters returned by the latest tt(filter)
+call. 
+    itb(int underflow() final override)
+        The tt(underflow) member is final; derived classes cannot override
+it. It calls tt(filter), and refreshes at most
+half the size of its internal buffer with characters from the range of
+characters that was returned by the most recent call of tt(filter).
+    )
+    The tt(final) attribute was added to the above three members to allow
+tt(IFilterStreambuf) objects full control over its own buffer. 
+
+
+manpagesection(EXAMPLE)
+
+    Here is a class, derived from tt(IFilterStreambuf), filtering out a
+predefined set of characters. It is used twice to filter digits and
+vowels, to illustrate chaining of bf(IFilterStreambuf) objects.
+
+    verbinclude(../../ifilterstreambuf/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/ifdstreambuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(ofilterstreambuf)(3bobcat) bf(std::streambuf)
+
+manpagebugs()
+    None reported.
+
+includefile(include/trailer)
+
+

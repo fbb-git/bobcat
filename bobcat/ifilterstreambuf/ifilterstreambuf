@@ -1,0 +1,47 @@
+#ifndef INCLUDED_BOBCAT_IFILTERSTREAMBUF_
+#define INCLUDED_BOBCAT_IFILTERSTREAMBUF_
+
+#include <streambuf>
+#include <memory>
+
+namespace FBB
+{
+
+class IFilterStreambuf: public std::streambuf
+{
+    size_t d_bufSize;
+    size_t d_maxRefresh;
+    size_t d_remaining;
+
+    char const *d_srcBegin = 0;
+    char const *d_srcEnd = 0;
+
+    std::unique_ptr<char> d_buffer;
+
+    char *d_begin;
+    char *d_next;
+    char *d_end;
+
+    
+    public:
+        virtual ~IFilterStreambuf();
+
+    protected:
+        IFilterStreambuf(size_t bufSize = 1000);
+
+    private:
+        virtual bool filter(char const **srcBegin, 
+                            char const **srcEnd) = 0;
+
+        int underflow()             final override;
+        std::streamsize showmanyc() final override;
+        int pbackfail(int ch)       final override;
+
+        void src2buffer(size_t nBytes);
+        void makeAvailable(size_t nBytes);
+};
+
+} // FBB        
+#endif
+
+
