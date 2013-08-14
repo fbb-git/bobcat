@@ -59,7 +59,7 @@ operators.
 manpagesection(PRIVATE VIRTUAL MEMBER FUNCTIONS)
 
     itemization(
-    itb(virtual bool filter(char **srcBegin, char **srcEnd) = 0)
+    itb(virtual bool filter(char const **srcBegin, char const **srcEnd) = 0)
         The tt(filter) member is declared as a pure virtual member: derived
 classes must override tt(filter) with their own
 implementation. Implementations somehow should obtain information (in any
@@ -70,7 +70,7 @@ bf(IFilterStreambuf)'s buffer, from where they can be retrieved (or to where
 they can be pushed back). The tt(filter) member allows implementations to
 filter and/or modify the information that is made available to this
 member. The bf(EXAMPLE) section provides an example filtering out a
-configurable set of characters from a provided tt(std::istream). 
+configurable set of characters from a provided tt(std::istream).
 
     The tt(filter) member should return tt(false) if no more information is
 available. It should return tt(true) if information is available, in which
