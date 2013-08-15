@@ -4,7 +4,6 @@
 
 #include <bobcat/ifilterstreambuf>
 
-
 class CharFilterStreambuf: public FBB::IFilterStreambuf
 {
     std::istream &d_in;         // stream to read from
@@ -25,7 +24,9 @@ CharFilterStreambuf::CharFilterStreambuf(std::istream &in,
 :
     d_in(in),
     d_rmChars(rmChars)
-{}
+{
+    setBuffer();        // required if peek() must return the 1st
+}                       // available character right from the start
 
 bool CharFilterStreambuf::filter(char const **srcBegin, 
                                  char const **srcEnd)

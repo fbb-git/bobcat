@@ -1,0 +1,44 @@
+#ifndef INCLUDED_BOBCAT_IBASE64STREAMBUF_
+#define INCLUDED_BOBCAT_IBASE64STREAMBUF_
+
+#include <bobcat/base64streambufbase>
+#include <bobcat/fbb>
+
+namespace FBB
+{
+
+template <CryptType>
+class IBase64Streambuf;
+
+template <>
+class IBase64Streambuf<ENCRYPT>: public IUO::Base64StreambufBase
+{
+    public:
+        IBase64Streambuf(std::istream &in);
+};
+
+template <>
+class IBase64Streambuf<DECRYPT>: public IUO::Base64StreambufBase
+{
+    public:
+        IBase64Streambuf(std::istream &in);
+};
+
+IBase64Streambuf<ENCRYPT>::IBase64Streambuf(std::istream &in)
+:
+    Base64StreambufBase(in)
+{
+    doEncrypt();
+}
+
+IBase64Streambuf<DECRYPT>::IBase64Streambuf(std::istream &in)
+:
+    Base64StreambufBase(in)
+{
+    doDecrypt();
+}
+
+} // FBB        
+#endif
+
+

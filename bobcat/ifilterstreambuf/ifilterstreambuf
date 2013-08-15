@@ -28,6 +28,7 @@ class IFilterStreambuf: public std::streambuf
 
     protected:
         IFilterStreambuf(size_t bufSize = 1000);
+        void setBuffer();
 
     private:
         virtual bool filter(char const **srcBegin, 
@@ -40,6 +41,11 @@ class IFilterStreambuf: public std::streambuf
         void src2buffer(size_t nBytes);
         void makeAvailable(size_t nBytes);
 };
+
+inline void IFilterStreambuf::setBuffer()
+{
+    underflow();
+}
 
 } // FBB        
 #endif

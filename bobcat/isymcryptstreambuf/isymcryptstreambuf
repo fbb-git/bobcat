@@ -1,22 +1,17 @@
 #ifndef INCLUDED_BOBCAT_ISYMCRYPTSTREAMBUF_
 #define INCLUDED_BOBCAT_ISYMCRYPTSTREAMBUF_
 
-#include "../symcryptstreambufbase/symcryptstreambufbase"
+#include <bobcat/symcryptstreambufbase>
+#include <bobcat/fbb>
 
 namespace FBB
 {
-
-enum CryptType
-{
-    DECRYPT,
-    ENCRYPT
-};
 
 template <CryptType>
 class ISymCryptStreambuf;
 
 template <>
-class ISymCryptStreambuf<ENCRYPT>: public SymCryptStreambufBase
+class ISymCryptStreambuf<ENCRYPT>: public IUO::SymCryptStreambufBase
 {
     public:
         ISymCryptStreambuf(
@@ -27,6 +22,18 @@ class ISymCryptStreambuf<ENCRYPT>: public SymCryptStreambufBase
                     std::string const &iv,
                     ENGINE *engine = 0
         );
+};
+
+
+template <>
+class ISymCryptStreambuf<DECRYPT>: public IUO::SymCryptStreambufBase
+{
+    public:
+        ISymCryptStreambuf(std::istream &in, EVP_CIPHER const *type,
+                           size_t bufSize, 
+                           std::string const &key,
+                           std::string const &iv,
+                           ENGINE *engine = 0);
 };
 
 
@@ -44,19 +51,6 @@ ISymCryptStreambuf<ENCRYPT>::ISymCryptStreambuf(
         in, type, bufSize, key, iv, engine
     )
 {}
-
-template <>
-class ISymCryptStreambuf<DECRYPT>: public SymCryptStreambufBase
-{
-    public:
-        ISymCryptStreambuf(std::istream &in, EVP_CIPHER const *type,
-                           size_t bufSize, 
-                           std::string const &key,
-                           std::string const &iv,
-                           ENGINE *engine = 0);
-};
-
-
 
 ISymCryptStreambuf<DECRYPT>::ISymCryptStreambuf(
         std::istream &in, EVP_CIPHER const *type,

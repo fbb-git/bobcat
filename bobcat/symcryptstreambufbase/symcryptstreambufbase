@@ -7,13 +7,17 @@
 
 #include <openssl/evp.h>
 
-//#include <bobcat/ifilterstreambuf>
-#include "../ifilterstreambuf/ifilterstreambuf"
+#include <bobcat/ifilterstreambuf>
 
 namespace FBB
 {
 
-class SymCryptStreambufBase: public IFilterStreambuf
+namespace IUO   // the facilities defined here are not further documented:
+{               // the SymCryptStreambufBase class defined below should be
+                // used by ISymCryptStreambuf only.
+
+
+class SymCryptStreambufBase: public FBB::IFilterStreambuf
 {
     EVP_CIPHER_CTX d_ctx;
 
@@ -52,10 +56,11 @@ class SymCryptStreambufBase: public IFilterStreambuf
         );
 
     private:
-
-        bool filter(char const **srcBegin, char const **srcEnd);
+        bool filter(char const **srcBegin, char const **srcEnd) override;
         void checkOutBufSize(size_t inputSize);
-
 };
-} // FBB        
+
+}   // IUO
+}   // FBB
+
 #endif

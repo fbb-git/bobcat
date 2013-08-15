@@ -44,7 +44,7 @@ manpagesection(PROTECTED CONSTRUCTOR)
 indicated size. While the streambuf is being used its buffer is gradually
 filled. Eventually, when it is full the oldest characters are removed from the
 buffer, making room for more recent characters.
-
+    )
     The copy- and move constructors are not available.
 
 manpagesection(MEMBER FUNCTIONS)
@@ -55,6 +55,23 @@ the next section.
 
     This class does not offer overloaded move and/or copy assignment
 operators. 
+
+manpagesection(PROTECTED MEMBER FUNCTION)
+
+    itemization(
+    itb(void setBuffer())
+        This member initializes the base class's buffer pointers (i.e.,
+tt(eback, gptr,) and tt(egptr)) with the initial range of characters retrieved
+by tt(filter) (see below). 
+
+    The member tt(setBuffer) should only once be called from the derived
+class's constructor. If it is called, the tt(peek) member of the
+tt(std::istream) that is initialized with the bf(IFilterStreambuf) will return
+the next available character, even if no other stream operation has as yet
+been performed. If it is not called, then tt(peek) returns 0 until at least
+one character has been retrieved from the tt(istream) object.
+    )
+
 
 manpagesection(PRIVATE VIRTUAL MEMBER FUNCTIONS)
 

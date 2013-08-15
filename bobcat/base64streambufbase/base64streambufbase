@@ -1,0 +1,56 @@
+#ifndef INCLUDED_BOBCAT_BASE64STREAMBUFBASE_
+#define INCLUDED_BOBCAT_BASE64STREAMBUFBASE_
+
+#include <istream>
+#include <string>
+
+#include <bobcat/ifilterstreambuf>
+
+namespace FBB
+{
+
+namespace IUO   // the facilities defined here are not further documented:
+{               // the Base64StreambufBase class defined below should be
+                // used by IBase64Streambuf only.
+
+class Base64StreambufBase: public FBB::IFilterStreambuf
+{
+    std::istream &d_in;
+    bool (Base64StreambufBase::*d_action)();
+    size_t d_bufSize;
+    std::string d_buffer;
+    bool d_allDone = false;
+
+    static std::string const s_tabStr;
+
+    public:
+        Base64StreambufBase(std::istream &in);
+
+    protected:
+        void doEncrypt();
+        void doDecrypt();
+
+    private:
+        bool filter(char const **srcBegin, char const **srcEnd) override;
+        bool encrypt(); // false means: don't call again, but there 
+                        // may still be input waiting in d_buffer
+        bool decrypt();
+
+        template <int from, int size, int shl = 0>
+        static int bits(int value);
+
+        static size_t indexOf(int ch);
+
+};
+
+template <int from, int size, int shl>
+inline int Base64StreambufBase::bits(int value)
+{
+    return value == EOF ? 0 :
+            (value & ((1 << (from + size)) - 1)) >> from << shl;
+}
+
+}   // IUO
+}   // FBB        
+
+#endif
