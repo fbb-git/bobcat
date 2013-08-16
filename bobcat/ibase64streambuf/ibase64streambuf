@@ -4,6 +4,9 @@
 #include <bobcat/base64streambufbase>
 #include <bobcat/fbb>
 
+// #include "../base64streambufbase/base64streambufbase"
+// #include "../fbb/fbb"
+
 namespace FBB
 {
 
@@ -14,26 +17,26 @@ template <>
 class IBase64Streambuf<ENCRYPT>: public IUO::Base64StreambufBase
 {
     public:
-        IBase64Streambuf(std::istream &in);
+        IBase64Streambuf(std::istream &in, size_t bufSize = 1000);
 };
 
 template <>
 class IBase64Streambuf<DECRYPT>: public IUO::Base64StreambufBase
 {
     public:
-        IBase64Streambuf(std::istream &in);
+        IBase64Streambuf(std::istream &in, size_t bufSize = 1000);
 };
 
-IBase64Streambuf<ENCRYPT>::IBase64Streambuf(std::istream &in)
+IBase64Streambuf<ENCRYPT>::IBase64Streambuf(std::istream &in, size_t bufSize)
 :
-    Base64StreambufBase(in)
+    Base64StreambufBase(in, bufSize)
 {
     doEncrypt();
 }
 
-IBase64Streambuf<DECRYPT>::IBase64Streambuf(std::istream &in)
+IBase64Streambuf<DECRYPT>::IBase64Streambuf(std::istream &in, size_t bufSize)
 :
-    Base64StreambufBase(in)
+    Base64StreambufBase(in, bufSize)
 {
     doDecrypt();
 }
