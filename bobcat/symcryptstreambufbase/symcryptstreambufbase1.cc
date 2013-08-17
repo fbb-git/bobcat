@@ -12,10 +12,11 @@ SymCryptStreambufBase::SymCryptStreambufBase(
                 unsigned char *out, int *outl), 
 
             std::istream &in, EVP_CIPHER const *type,
-            size_t bufSize, std::string const &keyParam, 
-            std::string const &ivParam, ENGINE *engine
+            std::string const &keyParam, std::string const &ivParam, 
+            size_t bufSize, size_t filterBufSize, ENGINE *engine
 )
 :
+    IFilterStreambuf(filterBufSize),
     d_inBufSize(bufSize < 8 ? 8 : bufSize),
     d_in(in),
     d_evpUpdate(evpUpdate),
