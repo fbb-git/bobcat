@@ -1,0 +1,32 @@
+#ifndef INCLUDED_BOBCAT_DIFFIEHELLMAN_
+#define INCLUDED_BOBCAT_DIFFIEHELLMAN_
+
+#include <memory>
+#include <openssl/dh.h>
+
+namespace FBB
+{
+
+class BigInt;
+
+class DiffieHellman
+{
+    std::shared_ptr<struct dh_st>   d_dh;       // the DH-parameters
+    std::shared_ptr<char>           d_secret;   // the shared secret
+
+    public:
+        enum
+        {
+            CHECK_FAILS = 
+                ~(DH_CHECK_P_NOT_PRIME | DH_CHECK_P_NOT_SAFE_PRIME | 
+                  DH_NOT_SUITABLE_GENERATOR | DH_UNABLE_TO_CHECK_GENERATOR)
+        };
+
+        DiffieHellman(size_t primeLength = 1024, size_t generator = 5);
+        
+        size_t check(BigInt const &prime, BigInt const &generator);
+
+    private:
+};
+} // FBB        
+#endif
