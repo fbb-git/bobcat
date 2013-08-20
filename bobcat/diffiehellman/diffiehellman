@@ -1,7 +1,9 @@
 #ifndef INCLUDED_BOBCAT_DIFFIEHELLMAN_
 #define INCLUDED_BOBCAT_DIFFIEHELLMAN_
 
-#include <string>
+#include <memory>
+#include <iosfwd>
+
 #include <bobcat/bigint>
 #include <openssl/dh.h>
 
@@ -10,11 +12,9 @@ namespace FBB
 
 class DiffieHellman
 {
-    BigInt  d_publicKey;
-    BigInt  d_prime;
-    BigInt  d_generator;
+    std::shared_ptr<DH> d_dh;
 
-    std::string  d_secret;   // the shared secret
+    static char const *s_header;
 
     public:
         enum SecretKey
@@ -30,7 +30,7 @@ class DiffieHellman
                   DH_NOT_SUITABLE_GENERATOR | DH_UNABLE_TO_CHECK_GENERATOR)
         };
 
-            // The initiator calls this constructor, to compute the common
+            // The initiator calls this constructor, which computes the common
             // DH parameters
         DiffieHellman(size_t primeLength = 1024, size_t generator = 5);
 
@@ -74,14 +74,18 @@ class DiffieHellman
             // last two key members to obtain the symmetric key.
 
 
-    // Probably obsolete:        
-        size_t check(BigInt const &prime, BigInt const &generator);
-
-        std::string publicKey() const;
-        std::string sharedKey(BigInt const &peersPublicKey
     private:
+        size_t checkDHparameters();
+        bool write(std::ostream &out, BIGNUM const *bn, char *buffer, 
+                                                        uint32_t nBytes);
 
-        DH *newDH();
+        bool read(std::istream &in, BIGNUM **dest);
+
+//        std::string publicKey() const;
+//        std::string sharedKey(BigInt const &peersPublicKey
+//    private:
+//
+//        DH *newDH();
 };
 } // FBB        
 #endif
