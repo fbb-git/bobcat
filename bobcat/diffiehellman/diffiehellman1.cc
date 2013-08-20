@@ -6,17 +6,18 @@ namespace
 }
 
 DiffieHellman::DiffieHellman(size_t primeLength, size_t generator)
-:
-    d_dh(0, DH_free)        // initialize the deleter for d_dh
 {
-    d_dh.reset(
-        DH_generate_parameters(primeLength, generator, 0, 0)
-    );
+    DH *dh = DH_generate_parameters(primeLength, generator, 0, 0);
 
-    size_t result = check(
-                        BigInt(const_cast<BIGNUM const *>(d_dh->p)), 
-                        BigInt(const_cast<BIGNUM const *>(d_dh->g))
-                    );
+    if (dh == 0)
+        throw Exception() << header << "generating parameters failed" << endl;
+
+    d_prime = BigInt(const_cast<BIGNUM const *>(dh->p));
+    d_generator = BigInt(const_cast<BIGNUM const *>(dh->g));
+
+    size_t result = check(d_prime, d_generator);
+
+    DH_free(dh);
 
     if (result == 0)
         return;
@@ -34,7 +35,13 @@ DiffieHellman::DiffieHellman(size_t primeLength, size_t generator)
 
     else if (result & CHECK_FAILS)
         throw Exception() << header << "parameter check fails" << endl; 
+
+    d_publicKey = BigInt(const_cast<BIGNUM const *>(dh->pub_key));
 }
+
+
+
+
 
 
 
