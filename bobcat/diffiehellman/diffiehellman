@@ -13,6 +13,7 @@ namespace FBB
 class DiffieHellman
 {
     std::shared_ptr<DH> d_dh;
+    std::shared_ptr<BIGNUM> d_otherPubKey;  // public key of the other party
 
     static char const *s_header;
 
@@ -32,7 +33,8 @@ class DiffieHellman
 
             // The initiator calls this constructor, which computes the common
             // DH parameters
-        DiffieHellman(size_t primeLength = 1024, size_t generator = 5);
+        DiffieHellman(size_t primeLength = 1024, size_t generator = 5,
+                      bool progress = false);
 
             // The initiator saves the public info on basename.pub
             // and, by providing 'SAVE_SECRET_KEY, the secret info on
@@ -67,19 +69,30 @@ class DiffieHellman
             // obtained. After receiving the peer's public parameters the
             // initiator calls either of these overloaded versions of key to
             // obtain the symmetric key:
-        std::string key(std::string const &peerPublicFileName) const;
-        std::string key(std::istream &peerPublicStream) const;
-            // Or the initiator creates another DiffieHellman object, using
-            // the second or third constructor, and then calls either of the
+        std::string key(std::string const &peerPublicFileName);
+        std::string key(std::istream &peerPublicStream);
+
+            // Otherwise the initiator creates another DiffieHellman object, 
+            // using the 4th or 5th constructor, and then calls either of the
             // last two key members to obtain the symmetric key.
+
+        DiffieHellman(std::string const &initiatorPublicFileName,
+                      std::string const &initiatorPrivateFileName);
+            // Alternatively, use this constructor expecting istreams:
+        DiffieHellman(std::istream &initiatorPublicStream,
+                      std::istream &initiatorPrivateStream);
 
 
     private:
-        size_t checkDHparameters();
-        bool write(std::ostream &out, BIGNUM const *bn, char *buffer, 
+        void checkDHparameters();
+        bool load(std::istream &publicData);
+        void write(std::ostream &out, BIGNUM const *bn, char *buffer, 
                                                         uint32_t nBytes);
 
         bool read(std::istream &in, BIGNUM **dest);
+
+        static void skip(std::istream &in, size_t count);
+        static void callback(int, int, void *);
 
 //        std::string publicKey() const;
 //        std::string sharedKey(BigInt const &peersPublicKey

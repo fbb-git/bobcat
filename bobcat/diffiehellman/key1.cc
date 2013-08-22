@@ -9,7 +9,7 @@ string DiffieHellman::key() const
     if 
     (
         DH_compute_key(reinterpret_cast<unsigned char *>(buffer), 
-                       d_dh->pub_key, d_dh.get()) 
+                       d_otherPubKey.get(), d_dh.get()) 
         == -1
     )
         throw Exception() << s_header << "could not compute the shared key";

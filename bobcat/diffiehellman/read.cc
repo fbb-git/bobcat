@@ -10,9 +10,14 @@ bool DiffieHellman::read(istream &in, BIGNUM **dest)
     char buffer[length];
     in.read(buffer, length);
 
+    BN_free(*dest);
+
     *dest = BN_bin2bn(
                 reinterpret_cast<unsigned char const *>(buffer), length, 0
             );
 
     return *dest;
 }
+
+
+

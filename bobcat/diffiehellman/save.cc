@@ -21,6 +21,10 @@ void DiffieHellman::save(string const &basename, SecretKey action)
     write(out, d_dh->g, dest.get(),         nBytes[1]);
     write(out, d_dh->pub_key, dest.get(),   nBytes[2]);
 
+    if (not out)
+        throw Exception() << "Could not write public DH info to `" << 
+                             basename + ".pub'";
+
     if (action == DONT_SAVE_SECRET_KEY)
         return;
 
@@ -28,6 +32,10 @@ void DiffieHellman::save(string const &basename, SecretKey action)
     Exception::open(out, basename + ".sec");
 
     write(out, d_dh->priv_key, dest.get(), nBytes[3]);
+
+    if (not out)
+        throw Exception() << "Could not write private DH info to `" << 
+                             basename + ".sec'";
 }
 
 

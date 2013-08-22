@@ -45,9 +45,10 @@ class BigInt
         explicit BigInt(BIGNUM const &bignum);  // 2 
         explicit BigInt(BIGNUM const *bignum);  // 4
 
-        BigInt(char const *bigEndian, size_t length);       // 5
-        explicit BigInt(std::string const &bigEndian);      // 6
-
+        BigInt(char const *bigEndian, size_t length, bool negative = false);
+                                                            // 5
+        explicit BigInt(std::string const &bigEndian, bool negative = false);
+                                                            // 6
         ~BigInt();
 
         BigInt &operator=(BigInt const &other);
