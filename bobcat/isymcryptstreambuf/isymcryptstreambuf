@@ -15,7 +15,7 @@ class ISymCryptStreambuf<ENCRYPT>: public IUO::SymCryptStreambufBase
 {
     public:
         ISymCryptStreambuf(
-                   std::istream &in,        EVP_CIPHER const *type,
+                   std::istream &in,        char const *type,
                    std::string const &key,  std::string const &iv,
                    size_t bufSize = 8,      size_t filterBufSize = 1000, 
                    ENGINE *engine = 0
@@ -27,15 +27,15 @@ class ISymCryptStreambuf<DECRYPT>: public IUO::SymCryptStreambufBase
 {
     public:
         ISymCryptStreambuf(
-                    std::istream &in,       EVP_CIPHER const *type,
+                    std::istream &in,       char const *type,
                     std::string const &key, std::string const &iv,
-                    size_t bufSize,         size_t filterBufSize,
-                    ENGINE *engine
+                    size_t bufSize = 8,     size_t filterBufSize = 1000,
+                    ENGINE *engine = 0
         );
 };
 
 ISymCryptStreambuf<ENCRYPT>::ISymCryptStreambuf(
-                    std::istream &in,       EVP_CIPHER const *type,
+                    std::istream &in,       char const *type,
                     std::string const &key, std::string const &iv,
                     size_t bufSize,         size_t filterBufSize,
                     ENGINE *engine
@@ -51,9 +51,10 @@ ISymCryptStreambuf<ENCRYPT>::ISymCryptStreambuf(
 {}
 
 ISymCryptStreambuf<DECRYPT>::ISymCryptStreambuf(
-        std::istream &in, EVP_CIPHER const *type,
-        size_t bufSize, size_t filterBufSize, std::string const &key, 
-        std::string const &iv, ENGINE *engine)
+        std::istream &in, char const *type,
+        std::string const &key, std::string const &iv, 
+        size_t bufSize, size_t filterBufSize, 
+        ENGINE *engine)
 :
     SymCryptStreambufBase(
         &EVP_DecryptInit_ex, &EVP_DecryptUpdate, &EVP_DecryptFinal_ex, 
