@@ -35,26 +35,24 @@ includefile(include/namespace)
 manpagesection(INHERITS FROM)
     bf(std::streambuf)
 
-manpagesection(ENUMERATION)
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::streambuf) are available, as bf(IFilterStreambuf)
+inherits from this class. Some of the bf(std::streambuf)'s member are
+overridden by bf(IFilterStreambuf), see the next section.
+
+    Overloaded move and/or copy assignment operators are not available.
 
 manpagesection(PROTECTED CONSTRUCTOR)
     itemization(
     itb(IFilterStreambuf(size_t bufSize = 1000))
         This constructor initializes the streambuf, using a buffer of the
-indicated size. While the streambuf is being used its buffer is gradually
+indicated size. While the streambuf is being used, its buffer is gradually
 filled. Eventually, when it is full the oldest characters are removed from the
-buffer, making room for more recent characters.
+buffer, making room for more recent characters. At most half the tt(bufSize)
+number of characters will be removed during a single refill. The constructor
+ensures that the size of the buffer will always be at least 100.
     )
-    The copy- and move constructors are not available.
-
-manpagesection(MEMBER FUNCTIONS)
-     All members of bf(std::streambuf) are
-available, as bf(FBB::IFilterStreambuf) inherits from this class. Some of the
-bf(std::streambuf)'s member are overridden by bf(FBB::IFilterStreambuf), see
-the next section. 
-
-    This class does not offer overloaded move and/or copy assignment
-operators. 
+    Copy- and move constructors are not available.
 
 manpagesection(PROTECTED MEMBER FUNCTION)
 
@@ -65,37 +63,44 @@ tt(eback, gptr,) and tt(egptr)) with the initial range of characters retrieved
 by tt(filter) (see below). 
 
     The member tt(setBuffer) should only once be called from the derived
-class's constructor. If it is called, the tt(peek) member of the
+class's constructor. Once it has been called, the tt(peek) member of the
 tt(std::istream) that is initialized with the bf(IFilterStreambuf) will return
 the next available character, even if no other stream operation has as yet
-been performed. If it is not called, then tt(peek) returns 0 until at least
-one character has been retrieved from the tt(istream) object.
+been performed. If it is not called by the derived class's constructor, then
+tt(peek) returns 0 until at least one character has been retrieved from the
+tt(istream) object.
     )
-
 
 manpagesection(PRIVATE VIRTUAL MEMBER FUNCTIONS)
 
     itemization(
     itb(virtual bool filter(char const **srcBegin, char const **srcEnd) = 0)
         The tt(filter) member is declared as a pure virtual member: derived
-classes must override tt(filter) with their own
-implementation. Implementations somehow should obtain information (in any
-amount), which is then passed on to the tt(IFilterStreambuf) via two pointers,
-pointing, respectively, to the first available character and beyond the last
-available character. These characters are subsequently transferred to
-bf(IFilterStreambuf)'s buffer, from where they can be retrieved (or to where
-they can be pushed back). The tt(filter) member allows implementations to
-filter and/or modify the information that is made available to this
-member. The bf(EXAMPLE) section provides an example filtering out a
-configurable set of characters from a provided tt(std::istream).
+classes em(must) override tt(filter) with their own implementation. 
 
-    The tt(filter) member should return tt(false) if no more information is
+    Derived class objects are responsible for obtaining information (in any
+amount) from the device with which they interact. This information is then
+passed on to the tt(IFilterStreambuf) via two pointers, pointing,
+respectively, to the first available character and beyond the last available
+character. The characters indicated by this range are subsequently transferred
+by the bf(IFilterStreambuf) object to its own buffer, from where they are then
+retrieved (or to where they can be pushed back) by the application. 
+
+    The tt(filter) member allows implementations to filter and/or modify the
+information that is obtained by this member. The bf(EXAMPLE) section below
+provides an example filtering out a configurable set of characters from a
+provided tt(std::istream). Bobcat's classes bf(ISymCryptStreambuf)(3bobcat)
+and bf(IBase64Streambuf)(3bobcat) provide additional examples of classes
+derived from  bf(IFilterStreambuf).
+
+    The tt(filter) member should return tt(false) if no (more) information is
 available. It should return tt(true) if information is available, in which
 case tt(*srcBegin) and tt(*srcEnd) should be pointing to, respectively, the
-first available character and beyond the last available character;
+first character and beyond the last character made available by tt(filter);
     itb(int pbackfail() final override)
         The tt(pbackfail) member is final; derived classes cannot override
-it. It merely returns tt(EOF).
+it. Currently it merely returns tt(EOF). This may change in future
+implementations. 
     itb(std::streamsize showmanyc() final override)
         The tt(showmanyc) member is final; derived classes cannot override
 it. It returns the current number of characters that are (still) waiting to
@@ -107,8 +112,8 @@ it. It calls tt(filter), and refreshes at most
 half the size of its internal buffer with characters from the range of
 characters that was returned by the most recent call of tt(filter).
     )
-    The tt(final) attribute was added to the above three members to allow
-tt(IFilterStreambuf) objects full control over its own buffer. 
+    The tt(final) attribute was added to the above three members to give
+tt(IFilterStreambuf) objects full control over their own buffers. 
 
 
 manpagesection(EXAMPLE)
@@ -123,7 +128,9 @@ manpagefiles()
     em(bobcat/ifdstreambuf) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(ofilterstreambuf)(3bobcat) bf(std::streambuf)
+    bf(bobcat)(7), bf(isymcryptstreambuf)(3bobcat),
+bf(ibase64streambuf)(3bobcat),
+bf(ofilterstreambuf)(3bobcat). bf(std::streambuf)
 
 manpagebugs()
     None reported.
