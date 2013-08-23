@@ -78,20 +78,25 @@ manpagesection(CONSTRUCTOR)
                    std::string const &key,  std::string const &iv,
                    size_t bufSize = 100,    size_t filterBufSize = 1000, 
                    ENGINE *engine = 0))
-        This constructor initializes the streambuf, internally using a
-tt(bufSize) buffer. The default value is the smallest value that is used. When
-a smaller tt(bufSize) value is specified, the default value is used. The
-tt(IFilterStreambuf) base class is initialized with a buffer of size
-tt(filterBufSize), which uses a lower bound of 100. tt(ISymCryptStreambuf)
-objects obtain the bytes to encrypt from tt(std::istream &in).  he parameter
-tt(ENGINE) can be used to specify a hardware accelleration engine, as
-supported by the used encryption/decryption method. Its default argument value
-indicates that no hardware accelleration is available.
-
-    The encryption method to use is specified by the tt(type)
+        This constructor initializes the streambuf.
+    itemization(
+    it() tt(ISymCryptStreambuf) objects obtain the bytes to encrypt from
+tt(std::istream &in);
+    it() The encryption method to use is specified by the tt(type)
 parameter. E.g., tt("bf-cbc") selects the Blowfish Cipher Block Chaining
-method. The symmetric key to use is specified by the tt(key) parameter while
-the initialization vector is specified by the tt(iv) parameter. 
+method;
+    it() The symmetric key to use is specified by the tt(key) parameter;
+    it() The initialization vector is specified by the tt(iv) parameter;
+    it() The size of the internally used buffer is specified by tt(bufSize).
+The default value is the smallest value that is used. When a smaller
+tt(bufSize) value is specified, the default value is used;
+    it() The tt(IFilterStreambuf) base class is initialized with a buffer of
+size tt(filterBufSize), using a lower bound of 100;
+    it() The parameter tt(ENGINE) can be used to specify a hardware
+accelleration engine, as supported by the used encryption/decryption
+method. Its default argument value indicates that no hardware accelleration is
+available.
+        )
     )
     Copy- and move constructors are not available.
 
