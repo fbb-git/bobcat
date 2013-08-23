@@ -17,12 +17,37 @@ been subject to symmetric encryption or decryption. The information to be
 encrypted or decrypted is made available to bf(ISymCryptStreambuf) object
 via tt(std::istream) objects.
 
-    All encryption methods defined by the OpenSSL library that can be
-selected by name may be used in combination with tt(EncryptBuf) objects. To
+    The tt(class ISymCryptStreambuf) is a class template, using a
+tt(FBB::CryptType) template non-type parameter. Objects of the class type
+tt(FBB::ISymCryptType<FBB::ENCRYPT>) encrypt the information they receive,
+objects of the class type tt(FBB::ISymCryptType<FBB::DECRYPT>) decrypt the
+information they receive. See also section bf(ENUMERATION) below.
+
+    All symmetric encryption methods defined by the OpenSSL library that can
+be selected by name may be used in combination with tt(EncryptBuf) objects. To
 select a particular encryption method an identifier is passed to the
 constructor. E.g., tt("aes-128-cbc") indicating the AES (Rijndael) method,
 using 128 bit sized keys and blocks using `cbc' mode (see below for an
-explanation). 
+explanation).
+
+    When providing shorter keys than expected by the method the provided key
+is extended by adding the required number of 0-bytes. (zero valued bytes,
+not tt('0') characters). 
+
+Most modes use an em(initialization vector). The initialization vector must be
+provided at construction time. The matching decrypting object needs to know
+the initialization vector that was used when encrypting the data: the
+application must ensure that the matching decryption object receives the same
+initialization vector as the one that was provided to the encryption
+object. Initialization vectors are not security sensitive in the sense that
+they can be sent in the clear to the decryption object. What em(is)
+important, though, is that they contain random data when used `for real'. When
+an initialization vector is specified that is shorter than expected by the
+method it will be extended with the required number of 0-bytes.
+
+includefile(blockciphers)
+
+includefile(symcryptciphers)
 
 
 includefile(include/namespace)
@@ -31,99 +56,63 @@ manpagesection(INHERITS FROM)
     bf(FBB::IFilterStreambuf)
 
 manpagesection(MEMBER FUNCTIONS)
-     All members of bf(FBB::IFilterStreambuf) are available, as bf(ISymCryptStreambuf).
+     All members of bf(FBB::IFilterStreambuf) are available, as
+bf(ISymCryptStreambuf) inherits from this class.
 
     Overloaded move and/or copy assignment operators are not available.
 
-manpagesection(PROTECTED CONSTRUCTOR)
+manpagesection(ENUMERATION)
+
+    bf(ISymCryptStreambuf) objects either encrypt or decrypt
+information. bf(ISymCryptStreambuf) objects of the class
+bf(FBB::ISymCryptStreambuf<FBB::ENCRYPT>) encrypt the data they receive,
+bf(ISymCryptStreambuf) objects of the class
+bf(FBB::ISymCryptStreambuf<FBB::DECRYPT>) decrypt the data they receive. 
+
+The values tt(ENCRYPT) and tt(DECRYPT) are defined in the tt(enum CryptType),
+which is defined in the tt(FBB) namespace.
+
+manpagesection(CONSTRUCTOR)
     itemization(
-    itb(ISymCryptStreambuf(size_t bufSize = 1000))
-        This constructor initializes the streambuf, using a buffer of the
-indicated size. While the streambuf is being used, its buffer is gradually
-filled. Eventually, when it is full the oldest characters are removed from the
-buffer, making room for more recent characters. At most half the tt(bufSize)
-number of characters will be removed during a single refill. The constructor
-ensures that the size of the buffer will always be at least 100.
+    itb(ISymCryptStreambuf(std::istream &in,        char const *type,
+                   std::string const &key,  std::string const &iv,
+                   size_t bufSize = 100,    size_t filterBufSize = 1000, 
+                   ENGINE *engine = 0))
+        This constructor initializes the streambuf, internally using a
+tt(bufSize) buffer. The default value is the smallest value that is
+used. When a smaller tt(bufSize) value is specified, the default value is
+used. The tt(IFilterStreambuf) base class is initialized with a buffer of size
+tt(filterBufSize), which uses a lower bound of 100. tt(ISymCryptStreambuf)
+objects obtain the bytes to encrypt from tt(std::istream &in). 
+
+    The encryption method to used is specified by the tt(type)
+parameter. E.g., tt("bf-cbc") selects the Blowfish Cipher Block Chaining
+method. The symmetric key to use is specified by the tt(key) parameter while
+the initialization vector is specified by the tt(iv) parameter. 
     )
     Copy- and move constructors are not available.
-
-manpagesection(PROTECTED MEMBER FUNCTION)
-
-    itemization(
-    itb(void setBuffer())
-        This member initializes the base class's buffer pointers (i.e.,
-tt(eback, gptr,) and tt(egptr)) with the initial range of characters retrieved
-by tt(filter) (see below). 
-
-    The member tt(setBuffer) should only once be called from the derived
-class's constructor. Once it has been called, the tt(peek) member of the
-tt(std::istream) that is initialized with the bf(ISymCryptStreambuf) will return
-the next available character, even if no other stream operation has as yet
-been performed. If it is not called by the derived class's constructor, then
-tt(peek) returns 0 until at least one character has been retrieved from the
-tt(istream) object.
-    )
-
-manpagesection(PRIVATE VIRTUAL MEMBER FUNCTIONS)
-
-    itemization(
-    itb(virtual bool filter(char const **srcBegin, char const **srcEnd) = 0)
-        The tt(filter) member is declared as a pure virtual member: derived
-classes em(must) override tt(filter) with their own implementation. 
-
-    Derived class objects are responsible for obtaining information (in any
-amount) from the device with which they interact. This information is then
-passed on to the tt(ISymCryptStreambuf) via two pointers, pointing,
-respectively, to the first available character and beyond the last available
-character. The characters indicated by this range are subsequently transferred
-by the bf(ISymCryptStreambuf) object to its own buffer, from where they are then
-retrieved (or to where they can be pushed back) by the application. 
-
-    The tt(filter) member allows implementations to filter and/or modify the
-information that is obtained by this member. The bf(EXAMPLE) section below
-provides an example filtering out a configurable set of characters from a
-provided tt(std::istream). Bobcat's classes bf(ISymCryptStreambuf)(3bobcat)
-and bf(IBase64Streambuf)(3bobcat) provide additional examples of classes
-derived from  bf(ISymCryptStreambuf).
-
-    The tt(filter) member should return tt(false) if no (more) information is
-available. It should return tt(true) if information is available, in which
-case tt(*srcBegin) and tt(*srcEnd) should be pointing to, respectively, the
-first character and beyond the last character made available by tt(filter);
-    itb(int pbackfail() final override)
-        The tt(pbackfail) member is final; derived classes cannot override
-it. Currently it merely returns tt(EOF). This may change in future
-implementations. 
-    itb(std::streamsize showmanyc() final override)
-        The tt(showmanyc) member is final; derived classes cannot override
-it. It returns the current number of characters that are (still) waiting to
-be processed in the range of characters returned by the latest tt(filter)
-call. 
-    itb(int underflow() final override)
-        The tt(underflow) member is final; derived classes cannot override
-it. It calls tt(filter), and refreshes at most
-half the size of its internal buffer with characters from the range of
-characters that was returned by the most recent call of tt(filter).
-    )
-    The tt(final) attribute was added to the above three members to give
-tt(ISymCryptStreambuf) objects full control over their own buffers. 
 
 
 manpagesection(EXAMPLE)
 
-    Here is a class, derived from tt(ISymCryptStreambuf), filtering out a
-predefined set of characters. It is used twice to filter digits and
-vowels, to illustrate chaining of bf(ISymCryptStreambuf) objects.
+    The example shows the construction of an tt(ISymCryptStreambuf<ENCRYPT>)
+object tt(ebuf) which is used to initialize a tt(std::istream) object. The
+information read from this tt(istream) is encrypted using the Blowfish CBC
+method. A tt(ISymCryptStreambuf<DECRYPT>) object (tt(dbuf) reads the
+information from that stream and decrypts it again. The tt(std::istream din)
+object is initialized with the tt(ISymCryptStreambuf<DECRYPT>) object, and its
+contents is sent to tt(std::cout). The information that is presented at
+tt(std::cin) and that appears at tt(std::cout) should be identical.
 
-    verbinclude(../../ifilterstreambuf/driver/driver.cc)
+    verbinclude(../../isymcryptstreambuf/driver/driver.cc)
 
 manpagefiles()
-    em(bobcat/ifdstreambuf) - defines the class interface
+    em(bobcat/isymcryptstreambuf) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(isymcryptstreambuf)(3bobcat),
-bf(ibase64streambuf)(3bobcat),
-bf(ofilterstreambuf)(3bobcat). bf(std::streambuf)
+    bf(bobcat)(7), bf(encryptbuf)(3bobcat), bf(isymcryptstreambuf)(3bobcat),
+bf(ibase64streambuf)(3bobcat), bf(ofilterstreambuf)(3bobcat),
+bf(std::streambuf).
 
 manpagebugs()
     None reported.

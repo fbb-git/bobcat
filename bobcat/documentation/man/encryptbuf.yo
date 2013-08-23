@@ -30,18 +30,20 @@ using 128 bit sized keys and blocks using `cbc' mode (see below for an
 explanation). 
 
     When providing shorter keys than expected by the method the provided key
-will be extended by adding the required number of 0-bytes. (zero valued bytes,
-not tt('0') characters). Most modes use an em(initialization vector). Unless
-provided at construction time or explicitly set thereafter an initialization
-vector containg randomly selected values will be used. The initialization
-vector that is actually used can be obtained from the tt(EncryptBuf)
-object. This is important, as the matching decrypting object needs to know the
-initialization vector that was used when encrypting the data. Initialization
-vectors are not security sensitive in the sense that they can be passed over
-in the clear to the decrypting method. What em(is) important, though, is that
-they contain random data when used `for real'. When an initialization vector
-is specified that is shorter than expected by the method it will be extended
-with the required number of 0-bytes.
+is extended by adding the required number of 0-bytes. (zero valued bytes,
+not tt('0') characters). 
+
+Most modes use an em(initialization vector). Unless provided at construction
+time or explicitly set thereafter an initialization vector containg randomly
+selected values will be used. The initialization vector that is actually used
+can be obtained from the tt(EncryptBuf) object. This is important, as the
+matching decrypting object needs to know the initialization vector that was
+used when encrypting the data. Initialization vectors are not security
+sensitive in the sense that they can be sent in the clear to the
+decryption object. What em(is) important, though, is that they contain random
+data when used `for real'. When an initialization vector is specified that is
+shorter than expected by the method it will be extended with the required
+number of 0-bytes.
 
 includefile(blockciphers)
 
