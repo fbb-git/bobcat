@@ -7,8 +7,9 @@
 namespace FBB
 {
 
-template <CryptType type>
-struct ISymCryptStream: private ISymCryptStreambuf<type>, public std::istream
+template <CryptType cryptType>
+struct ISymCryptStream: private ISymCryptStreambuf<cryptType>, 
+                        public std::istream
 {
     ISymCryptStream(
         std::istream &in,       char const *type,
@@ -18,14 +19,14 @@ struct ISymCryptStream: private ISymCryptStreambuf<type>, public std::istream
     );
 };
 
-template <CryptType type>
-ISymCryptStream<type>::ISymCryptStream(
+template <CryptType cryptType>
+ISymCryptStream<cryptType>::ISymCryptStream(
     std::istream &in,       char const *type,
     std::string const &key, std::string const &iv,
     size_t bufSize,         size_t filterBufSize,
     ENGINE *engine)
 :
-    ISymCryptStreambuf<type>(
+    ISymCryptStreambuf<cryptType>(
         in,      type, 
         key,     iv, 
         bufSize, filterBufSize, 

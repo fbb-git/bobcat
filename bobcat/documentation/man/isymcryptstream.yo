@@ -1,0 +1,82 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::ISymCryptStream)(3bobcat)(_CurYrs_)
+(libbobcat-dev__CurVers_-x.tar.gz)  
+                    (Symmetric en- and decryption)
+
+manpagename(FBB::ISymCryptStream)(Istream performing symmetric encryption)
+
+manpagesynopsis()
+    bf(#include <bobcat/isymcryptstream>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB::ISymCryptStream) objects may be used to encrypt or decrypt
+information that is available on a separate tt(std::istream).
+
+     The tt(class ISymCryptStream) is a class template, using a
+tt(FBB::CryptType) template non-type parameter. Objects of the class 
+tt(FBB::ISymCryptStream<FBB::ENCRYPT>) encrypt the information they receive,
+objects of the class tt(FBB::ISymCryptStream<FBB::DECRYPT>) decrypt the
+information they receive.
+
+    All symmetric encryption methods defined by the OpenSSL library that can
+be selected by name may be used in combination with tt(EncryptBuf) objects. To
+select a particular encryption method an identifier is passed to the
+constructor. E.g., tt("aes-128-cbc") indicating the AES (Rijndael) method,
+using 128 bit sized keys and blocks using `cbc' mode (see below for an
+explanation).
+
+    Refer to the bf(isymcryptstreambuf)(3bobcat) man-page for a descryption of
+available encryption methods.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::ISymCryptStreambuf) (private), nl()
+    bf(std::istream) 
+    
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(ISymCryptStream(std::istream &in,        char const *type,
+                   std::string const &key,  std::string const &iv,
+                   size_t bufSize = 100,    size_t filterBufSize = 1000, 
+                   ENGINE *engine = 0))
+        This constructor initializes the streambuf, internally using a
+tt(bufSize) buffer. The default value is the smallest value that is
+used. When a smaller tt(bufSize) value is specified, the default value is
+used. The tt(IFilterStreambuf) base class is initialized with a buffer of size
+tt(filterBufSize), which uses a lower bound of 100. tt(ISymCryptStreambuf)
+objects obtain the bytes to encrypt from tt(std::istream &in). The parameter
+tt(ENGINE) can be used to specify a hardware accelleration engine, as supported
+by the used encryption/decryption method. Its default argument value indicates
+that no hardware accelleration is available.
+
+    The encryption method to use is specified by the tt(type)
+parameter. E.g., tt("bf-cbc") selects the Blowfish Cipher Block Chaining
+method. The symmetric key to use is specified by the tt(key) parameter while
+the initialization vector is specified by the tt(iv) parameter. 
+    )
+
+manpagesection(INHERITED MEMBERS)
+
+    Since the class uses public derivation from bf(std::istream), all members
+of this class can be used.
+
+manpagesection(EXAMPLE)
+    verbinclude(../../isymcryptstream/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/isymcryptstream) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(isymcryptstreambuf)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
+
+

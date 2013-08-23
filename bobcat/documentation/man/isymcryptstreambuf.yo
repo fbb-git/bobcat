@@ -18,10 +18,10 @@ encrypted or decrypted is made available to bf(ISymCryptStreambuf) object
 via tt(std::istream) objects.
 
     The tt(class ISymCryptStreambuf) is a class template, using a
-tt(FBB::CryptType) template non-type parameter. Objects of the class type
-tt(FBB::ISymCryptType<FBB::ENCRYPT>) encrypt the information they receive,
-objects of the class type tt(FBB::ISymCryptType<FBB::DECRYPT>) decrypt the
-information they receive. See also section bf(ENUMERATION) below.
+tt(FBB::CryptType) template non-type parameter. Objects of the class
+tt(FBB::ISymCryptStreambuf<FBB::ENCRYPT>) encrypt the information they
+receive, objects of the class tt(FBB::ISymCryptStreambuf<FBB::DECRYPT>)
+decrypt the information they receive. See also section bf(ENUMERATION) below.
 
     All symmetric encryption methods defined by the OpenSSL library that can
 be selected by name may be used in combination with tt(EncryptBuf) objects. To
@@ -79,13 +79,16 @@ manpagesection(CONSTRUCTOR)
                    size_t bufSize = 100,    size_t filterBufSize = 1000, 
                    ENGINE *engine = 0))
         This constructor initializes the streambuf, internally using a
-tt(bufSize) buffer. The default value is the smallest value that is
-used. When a smaller tt(bufSize) value is specified, the default value is
-used. The tt(IFilterStreambuf) base class is initialized with a buffer of size
+tt(bufSize) buffer. The default value is the smallest value that is used. When
+a smaller tt(bufSize) value is specified, the default value is used. The
+tt(IFilterStreambuf) base class is initialized with a buffer of size
 tt(filterBufSize), which uses a lower bound of 100. tt(ISymCryptStreambuf)
-objects obtain the bytes to encrypt from tt(std::istream &in). 
+objects obtain the bytes to encrypt from tt(std::istream &in).  he parameter
+tt(ENGINE) can be used to specify a hardware accelleration engine, as
+supported by the used encryption/decryption method. Its default argument value
+indicates that no hardware accelleration is available.
 
-    The encryption method to used is specified by the tt(type)
+    The encryption method to use is specified by the tt(type)
 parameter. E.g., tt("bf-cbc") selects the Blowfish Cipher Block Chaining
 method. The symmetric key to use is specified by the tt(key) parameter while
 the initialization vector is specified by the tt(iv) parameter. 
