@@ -38,9 +38,10 @@ manpagesection(INHERITS FROM)
     bf(std::istream) 
     
 
-manpagesection(CONSTRUCTORS)
+manpagesection(CONSTRUCTOR)
     itemization(
-    itb(ISymCryptStream(std::istream &in,        char const *type,
+    itb(ISymCryptStream<CryptType>(
+                   std::istream &in,        char const *type,
                    std::string const &key,  std::string const &iv,
                    size_t bufSize = 100,    size_t filterBufSize = 1000, 
                    ENGINE *engine = 0))
@@ -48,8 +49,10 @@ manpagesection(CONSTRUCTORS)
 tt(FBB::ISymCryptStreambuf) stream buffer. The tt(ISymCryptStreambuf)'s
 constructor receives all arguments that are passed to this constructor.
     itemization(
-    it() tt(ISymCryptStream) objects obtain the bytes to encrypt from
-tt(std::istream &in). 
+    it() tt(ISymCryptStream<ENCRYPT>) objects perform encryption,
+        tt(ISymCryptStream<DECRYPT>) objects perform decryption;
+    it() tt(ISymCryptStream<CryptType>) objects obtain the bytes to encrypt
+or decrypt from tt(std::istream &in).
     it() The encryption method to use is specified by the tt(type)
 parameter. E.g., tt("bf-cbc") selects the Blowfish Cipher Block Chaining
 method. 

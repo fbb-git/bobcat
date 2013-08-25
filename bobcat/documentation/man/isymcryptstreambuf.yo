@@ -75,14 +75,17 @@ which is defined in the tt(FBB) namespace.
 
 manpagesection(CONSTRUCTOR)
     itemization(
-    itb(ISymCryptStreambuf(std::istream &in,        char const *type,
+    itb(ISymCryptStreambuf<CryptType>(
+                   std::istream &in,        char const *type,
                    std::string const &key,  std::string const &iv,
                    size_t bufSize = 100,    size_t filterBufSize = 1000, 
                    ENGINE *engine = 0))
         This constructor initializes the streambuf.
     itemization(
-    it() tt(ISymCryptStreambuf) objects obtain the bytes to encrypt from
-tt(std::istream &in);
+    it() tt(ISymCryptStreambuf<ENCRYPT>) objects perform encryption,
+        tt(ISymCryptStreambuf<DECRYPT>) objects perform decryption;
+    it() tt(ISymCryptStreambuf<CryptType>) objects obtain the bytes to encrypt
+or decrypt from tt(std::istream &in);
     it() The encryption method to use is specified by the tt(type)
 parameter. E.g., tt("bf-cbc") selects the Blowfish Cipher Block Chaining
 method;
