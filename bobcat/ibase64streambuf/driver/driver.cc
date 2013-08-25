@@ -1,7 +1,7 @@
-#include "../ibase64streambuf"
-
 #include <iostream>
 #include <istream>
+
+#include <bobcat/ibase64streambuf>
 
 using namespace std;
 using namespace FBB;
@@ -12,29 +12,35 @@ int main(int argc, char **argv)
     {
         case 'e':
         {
-            IBase64Streambuf<ENCRYPT> encrypt(cin);
-            istream ein(&encrypt);
+            IBase64Streambuf<ENCRYPT> encode(cin);
+            istream ein(&encode);
             cout << ein.rdbuf();
         }
         break;
 
         case 'd':
         {
-            IBase64Streambuf<DECRYPT> decrypt(cin);
-            istream din(&decrypt);
+            IBase64Streambuf<DECRYPT> decode(cin);
+            istream din(&decode);
             cout << din.rdbuf();
         }
         break;
     
-        default:
+        case 'b':
         {
-            IBase64Streambuf<ENCRYPT> encrypt(cin);
-            istream ein(&encrypt);
+            IBase64Streambuf<ENCRYPT> encode(cin);
+            istream ein(&encode);
 
-            IBase64Streambuf<DECRYPT> decrypt(ein);
-            istream din(&decrypt);
+            IBase64Streambuf<DECRYPT> decode(ein);
+            istream din(&decode);
             cout << din.rdbuf();
         }
         break;
+
+        default:
+            cout << "Usage: " << argv[0] << " [edb] < infile > outfile\n"
+                    "to base64 -e-ncode, -d-ecode or -b-oth\n";
+        break;
     }
 }
+

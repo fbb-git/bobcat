@@ -1,0 +1,92 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::IBase64Streambuf)(3bobcat)(_CurYrs_)
+        (libbobcat-dev__CurVers_-x.tar.gz)
+        (Base64 converting Stream Buffer)
+
+manpagename(FBB::IBase64Streambuf)
+            (Input Filtering stream buffer doing base64 conversion)
+
+manpagesynopsis()
+    bf(#include <bobcat/ibase64streambuf>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    The information made available by bf(IBase64Streambuf) objects has been
+subject to base64 encoding or decoding. The information to be converted is
+made available to bf(IBase64Streambuf) object via tt(std::istream) objects.
+
+    The tt(class IBase64Streambuf) is a class template, using a
+tt(FBB::CryptType) template non-type parameter. Objects of the class
+tt(FBB::IBase64Streambuf<FBB::ENCRYPT>) base64 encode the information they
+receive, objects of the class tt(FBB::IBase64Streambuf<FBB::DECRYPT>) base64
+decode the information they receive. See also section bf(ENUMERATION) below.
+
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::IFilterStreambuf)
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(FBB::IFilterStreambuf) are available, as
+bf(IBase64Streambuf) inherits from this class.
+
+    Overloaded move and/or copy assignment operators are not available.
+
+manpagesection(ENUMERATION)
+
+    bf(IBase64Streambuf) objects either base64 encode or decode
+information. bf(IBase64Streambuf) objects of the class
+bf(FBB::IBase64Streambuf<FBB::ENCRYPT>) base64 encode the data they receive,
+bf(IBase64Streambuf) objects of the class
+bf(FBB::IBase64Streambuf<FBB::DECRYPT>) base64 decode the data they receive.
+
+The values tt(ENCRYPT) and tt(DECRYPT) are defined in the tt(enum CryptType),
+which is defined in the tt(FBB) namespace.
+
+manpagesection(CONSTRUCTOR)
+    itemization(
+    itb(IBase64Streambuf(std::istream &in, size_t bufSize = 1000))
+        This constructor initializes the streambuf.
+    itemization(
+    it() tt(IBase64Streambuf) objects obtain the bytes to encode or decode
+from tt(std::istream &in);
+    it() The tt(IFilterStreambuf) base class is initialized with a buffer of
+size tt(bufSize), using a lower bound of 100;
+        )
+    )
+    Copy- and move constructors are not available.
+
+
+manpagesection(EXAMPLE)
+
+    The example shows the construction of tt(IBase64Streambuf<ENCRYPT>)
+objects tt(encode) which are used to initialize a tt(std::istream) object. The
+information read from this tt(istream) is base64 encoded. 
+
+tt(IBase64Streambuf<DECRYPT>) objects (tt(decode) reads base64 encoded
+information from tt(std::istream) objects and decodes it again. 
+
+The tt(std::istream din) object is initialized with the
+tt(IBase64Streambuf<DECRYPT>) object, and its contents is sent to
+tt(std::cout). The information that is presented at tt(std::cin) and that
+appears at tt(std::cout) should be identical.
+
+    verbinclude(../../ibase64streambuf/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/ibase64streambuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(isymcryptstreambuf)(3bobcat),
+bf(ibase64stream)(3bobcat), bf(ifilterstreambuf)(3bobcat),
+bf(ofilterstreambuf)(3bobcat), bf(std::streambuf).
+
+manpagebugs()
+    None reported.
+
+includefile(include/trailer)
+
+
