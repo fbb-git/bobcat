@@ -1,0 +1,140 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::IFilterStreambuf)(3bobcat)(_CurYrs_)
+        (libbobcat-dev__CurVers_-x.tar.gz)(Filtering Input Stream Buffer)
+
+manpagename(FBB::IFilterStreambuf)
+            (Filtering stream buffer initialized by a std::istream object)
+
+manpagesynopsis()
+    bf(#include <bobcat/ifilterstreambuf>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB::IFilterStreambuf) objects may be used as a bf(std::streambuf) for
+tt(std::istream) objects, filtering the information produced by those objects.
+
+    The class tt(IFilterStreambuf) was designed with the bf(openSSL BIO)
+(cf. bf(bio)(3ssl)) in mind. Since the BIO concept was developed in the
+context of the bf(C) programming language, BIOs do not support bf(C++)
+streams. Nonetheless, the concept of a filtering device is an attractive one,
+and is offered by the bf(FBB::IFilterStreambuf) class.
+
+    In addition to filtering, bf(IFilterStreambuf) objects use split buffers,
+and thus, depending on the (configurable) size of buffer that is maintained by
+bf(IFilterStreambuf) objects, usually multiple characters read from the
+bf(IFilterStreambuf) can be pushed back again.
+
+    The class bf(IFilterStreambuf) is an abstract base class. It is used via
+classes that are derived from bf(IFilterStreambuf), implementing its pure
+virtual tt(load) member (see below at bf(PRIVATE VIRTUAL MEMBER FUNCTIONS)).
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    bf(std::streambuf)
+
+manpagesection(MEMBER FUNCTIONS)
+     All members of bf(std::streambuf) are available, as bf(IFilterStreambuf)
+inherits from this class. Some of the bf(std::streambuf)'s member are
+overridden by bf(IFilterStreambuf), see the next section.
+
+    Overloaded move and/or copy assignment operators are not available.
+
+manpagesection(PROTECTED CONSTRUCTOR)
+    itemization(
+    itb(IFilterStreambuf(size_t bufSize = 1000))
+        This constructor initializes the streambuf, using a buffer of the
+indicated size. While the streambuf is being used, its buffer is gradually
+filled. Eventually, when it is full the oldest characters are removed from the
+buffer, making room for more recent characters. At most half the tt(bufSize)
+number of characters will be removed during a single refill. The constructor
+ensures that the size of the buffer will always be at least 100.
+    )
+    Copy- and move constructors are not available.
+
+manpagesection(PROTECTED MEMBER FUNCTION)
+
+    itemization(
+    itb(void setBuffer())
+        This member initializes the base class's buffer pointers (i.e.,
+tt(eback, gptr,) and tt(egptr)) with the initial range of characters retrieved
+by tt(filter) (see below). 
+
+    The member tt(setBuffer) should only once be called from the derived
+class's constructor. Once it has been called, the tt(peek) member of the
+tt(std::istream) that is initialized with the bf(IFilterStreambuf) will return
+the next available character, even if no other stream operation has as yet
+been performed. If it is not called by the derived class's constructor, then
+tt(peek) returns 0 until at least one character has been retrieved from the
+tt(istream) object.
+    )
+
+manpagesection(PRIVATE VIRTUAL MEMBER FUNCTIONS)
+
+    itemization(
+    itb(virtual bool filter(char const **srcBegin, char const **srcEnd) = 0)
+        The tt(filter) member is declared as a pure virtual member: derived
+classes em(must) override tt(filter) with their own implementation. 
+
+    Derived class objects are responsible for obtaining information (in any
+amount) from the device with which they interact. This information is then
+passed on to the tt(IFilterStreambuf) via two pointers, pointing,
+respectively, to the first available character and beyond the last available
+character. The characters indicated by this range are subsequently transferred
+by the bf(IFilterStreambuf) object to its own buffer, from where they are then
+retrieved (or to where they can be pushed back) by the application. 
+
+    The tt(filter) member allows implementations to filter and/or modify the
+information that is obtained by this member. The bf(EXAMPLE) section below
+provides an example filtering out a configurable set of characters from a
+provided tt(std::istream). Bobcat's classes bf(ISymCryptStreambuf)(3bobcat)
+and bf(IBase64Streambuf)(3bobcat) provide additional examples of classes
+derived from  bf(IFilterStreambuf).
+
+    The tt(filter) member should return tt(false) if no (more) information is
+available. It should return tt(true) if information is available, in which
+case tt(*srcBegin) and tt(*srcEnd) should be pointing to, respectively, the
+first character and beyond the last character made available by tt(filter);
+    itb(int pbackfail() final override)
+        The tt(pbackfail) member is final; derived classes cannot override
+it. Currently it merely returns tt(EOF). This may change in future
+implementations. 
+    itb(std::streamsize showmanyc() final override)
+        The tt(showmanyc) member is final; derived classes cannot override
+it. It returns the current number of characters that are (still) waiting to
+be processed in the range of characters returned by the latest tt(filter)
+call. 
+    itb(int underflow() final override)
+        The tt(underflow) member is final; derived classes cannot override
+it. It calls tt(filter), and refreshes at most
+half the size of its internal buffer with characters from the range of
+characters that was returned by the most recent call of tt(filter).
+    )
+    The tt(final) attribute was added to the above three members to give
+tt(IFilterStreambuf) objects full control over their own buffers. 
+
+
+manpagesection(EXAMPLE)
+
+    Here is a class, derived from tt(IFilterStreambuf), filtering out a
+predefined set of characters. It is used twice to filter digits and
+vowels, to illustrate chaining of bf(IFilterStreambuf) objects.
+
+    verbinclude(../../ifilterstreambuf/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/ifdstreambuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(isymcryptstreambuf)(3bobcat),
+bf(ibase64streambuf)(3bobcat),
+bf(ofilterstreambuf)(3bobcat). bf(std::streambuf)
+
+manpagebugs()
+    None reported.
+
+includefile(include/trailer)
+
+

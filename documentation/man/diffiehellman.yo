@@ -1,0 +1,218 @@
+includefile(include/header)
+
+COMMENT(replace 'classname' by the name of the new class)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::DiffieHellman)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+                    (Diffie Hellman key computations)
+
+manpagename(FBB::DiffieHellman)(Diffie-Hellman PKI, computing shared keys)
+
+manpagesynopsis()
+    bf(#include <bobcat/diffiehellman>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+
+The class bf(FBB::DiffieHellman) computes shared keys (shared secrets) using
+the Diffie-Hellman (1976) algorithm. The Diffie-Hellman algorithm uses public
+and private information. The public information consists of a em(prime) (e.g.,
+a prime number consisting of 1024 bits), a em(generator) (for which the value
+5 is commonly used), and the value tt(generator+sup(private) mod prime), where
+tt(private) is a randomly selected large number, which is the private
+information. 
+
+The Diffie-Hellman algorithm is commonly used to compute a shared key which
+can be used to encrypt information sent between two parties. One party, which
+in this man-page is called the em(initiator) computes the prime and defines
+the generator.  The prime is computed by bf(FBB::DiffieHellman)'s first
+constructor, while the generator is passed to this constructor as one of its
+arguments. For the generator the value 5 is often used.
+
+Next the initiator passes its public information, consisting of the prime, the
+generator, and the value tt(generator+sup(private) mod prime) to the other
+party, which in this man-page is called the tt(peer). The public information
+is written in binairy, big-endian form to file using the member tt(save). The
+initiator may optionally save the private information to a separate file as
+well. 
+
+The peer thereupon receives the initiator's public information. The
+initialor's public information is read by a bf(FBB::DiffieHellman) constructor
+either expecting the name of a file or a tt(std::istream) containining the
+initiator's public information. 
+
+Having obtained the prime and generator, the peer's public (and, optionally,
+private information) is saved by also calling tt(save). This results, among
+other things, in the value tt(generator+sup(private) mod prime), but now using
+the peer's private information. 
+
+At this point the peer is already able to compute the shared key. The key is
+returned by calling the tt(key) member, which returns the shared key as a
+series of bytes stored in a tt(std::string). 
+
+Before the initiator can compute the shared key the peer's
+tt(generator+sup(private) mod prime) value must be available. The peer sends
+the saved public data to the initiator. The initiator then passes the peer's
+public data either by file name or by tt(std::istream) to the tt(key) member,
+returning the shared key. 
+
+bf(Perfect Forward Secrecy and Ephemeral Diffie Hellman)
+
+If the initiator and peer decide not to save their private information
+em(Perfect Forward Secrecy) and em(Ephemeral Diffie Hellman) may be
+obtained. Here, the procedure is applied as follows:
+
+    itemization(
+    it() Initiator and peer have agreed upon and securely exchanged a
+long-lasting common secret, which may be used in combination with, e.g.,
+symmetric encryption methods.
+    it() Applying the abovementioned procedure, the private information is
+never saved on file. Consequently, the shared key, once computed, cannot be
+reconstructed anymore.
+    it() The value tt(generator+sup(private) mod prime) is not sent to either
+peer or initiator `in the clear', but encrypted using the long-lasting common
+secret. As the current implementation saves all public information on file,
+it's probably easiest to encrypt the file containing the public information.
+    it() The recipients, having recieved the other party's encrypted public
+information, decrypt it using the long-lasting shared secret and compute the
+the shared key.
+    it() As the secret information is not kept, the shared key cannot be
+reconstructed, while a Man-In-The-Middle attack is prevented by only
+exchanging encrypted public information.
+    it() The shared key can now be used to encrypt a communication session
+    )
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(PUBLIC ENUMERATION)
+
+    The enumeration tt(FBB::DiffieHellman::SecretKey) has two values:
+    itemization(
+    it() tt(DONT_SAVE_SECRET_KEY), indicating that the secret information
+should not be saved on file;
+    it() tt(SAVE_SECRET_KEY), indicating that the secret information
+should be saved on file;
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(DiffieHellman(size_t primeLength = 1024, size_t generator = 5,
+                      bool progress = false))
+        This constructor computes a prime of the specified length, and
+initializes the public information with the indicated generator. If
+tt(progress) is tt(true), the progress of the prime construction process is
+shown to tt(std::cout) by a series of dots, minuses and plusses. Generating a
+suitable prime may fail, resulting in an tt(FBB::Exception) being
+thrown. Unless the generator is specified as 2 or 5 the warning tt(cannot
+check the validity of generator ...) is inserted into the
+bf(mstream)(3bobcat)'s tt(wmsg) object. A warning is also inserted if the
+provided generator is not a generator for the computed prime.
+
+    This constructor should be called by the initiator to start the
+Diffie-Hellman shared key computation procedure.
+
+    itb(DiffieHellman(std::string const &initiatorPublicFileName))
+    This constructor should be called by the peer, after having received the
+initiator's public info. It makes the initiator's public information available
+to the peer, after which the peer's public and private information can be
+computed. 
+
+    itb(DiffieHellman(std::stream &initiatorPublicStream))
+    This constructor acts like the previous constructor, expecting a
+tt(std::istream) rather than a file name. It should be called by the peer,
+after having received the initiator's public info. It makes the initiator's
+public information available to the peer, after which the peer's public and
+private information can be computed.
+
+    itb(DiffieHellman(std::string const &initiatorPublicFileName, std::string
+const &initiatorPrivateFileName))
+    Unless the initiator's tt(DiffieHellman) object is still available,
+this constructor should again be called by the initiator, to load the
+initiator's public and private data.
+
+    itb(DiffieHellman(std::stream &initiatorPublicStream, std::stream
+&initiatorPrivateStream)) 
+    This constructor acts like the previous constructor, expecting 
+tt(std::istreams) rather than file names. It should be called by the
+initiator, to load the initiator's public and private info.
+    )
+    Copy and move constructors are available.
+
+manpagesection(OVERLOADED OPERATORS)
+    Copy and move assignment operators are available.
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(std::string key() const)
+    This member should be called by the peer. It returns the shared key. If
+the key cannot be computed, or if the key is not resistant to the small group
+attack (i.e., if the key equals 1, or is at least equal to the public prime
+value, or if tt(key+sup((prime - 1) / 2) mod prime != 1)), then an
+tt(FBB::Exception) is thrown.
+
+    itb(std::string key(std::string const &peerPublicFileName) const)
+    This member should be called by the initiator. It skips the data referring
+to the prime and generator found in tt(peerPublicFileName) and then reads the
+peer's tt(generator+sup(private) mod prime) value.  If this value cannot be
+read or if the key is not resistant to the small group attack (cf. the
+description of the previous tt(key) member) then an tt(FBB::Exception) is
+thrown. It returns the shared key.
+
+    itb(std::string key(std::istream const &peerPublicStream) const)
+    This member should be called by the initiator. It acts like the previous
+tt(key) member, reading the peer's tt(generator+sup(private) mod prime) value
+from tt(peerPublicStream). It returns the shared key.
+
+    itb(void save(std::string const &basename, SecretKey action = 
+                                                    DONT_SAVE_SECRET_KEY))
+    This member should be called by the initiator. It saves the public
+information on the file tt('basename'.pub). The information is written in
+binary, big-endian format, using the following organization:
+    
+    - the size of the prime in bytes;nl()
+    - the prime's bytes;nl()
+    - the size of the generator in bytes;nl()
+    - the generator's bytes;nl()
+    - the size of the public info (tt(generator+sup(private) mod prime)) in
+        bytes;nl()
+    - the public info's bytes.nl()
+
+    If tt(action) is specified as tt(SAVE_SECRET_KEY) then the private
+information is written in binary, big-endian format, using the following
+organization:
+
+    - the size of the private information in bytes;nl()
+    - the private information bytes.
+    )
+
+manpagesection(EXAMPLE)
+
+    When called without arguments, the example program generates
+Diffie-Hellman parameters writing the initiator's public and private
+information to, respectively, tt(init.pub) and tt(init.sec).
+
+    When called with one argument, tt(init.pub) is read, and the peer's public
+and private information is written to, respectively, tt(peer.pub) and
+tt(peer.sec). Next, the (peer's) shared key is written to tt(peerkey).
+
+    When called with two arguments, tt(init.pub) and tt(init.sec) are read,
+as well as the peer's public information (on the file tt(peer.pub)). Next, the
+(initiator's) shared key is written to tt(initkey). 
+
+    The files tt(peerkey) and tt(initkey) should be identical.
+
+verbinclude(../../diffiehellman/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/diffiehellman) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(bigint)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)

@@ -45,6 +45,10 @@ class BigInt
         explicit BigInt(BIGNUM const &bignum);  // 2 
         explicit BigInt(BIGNUM const *bignum);  // 4
 
+        BigInt(char const *bigEndian, size_t length, bool negative = false);
+                                                            // 5
+        explicit BigInt(std::string const &bigEndian, bool negative = false);
+                                                            // 6
         ~BigInt();
 
         BigInt &operator=(BigInt const &other);
@@ -99,7 +103,7 @@ class BigInt
         };
 
         char *bigEndian() const;
-
+        
         BigInt &operator+=(BigInt const &rhs);
         BigInt &addMod(BigInt const &rhs, BigInt const &mod);
         BigInt addModc(BigInt const &rhs, BigInt const &mod) const;

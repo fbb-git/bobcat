@@ -1,0 +1,75 @@
+#ifndef INCLUDED_BOBCAT_ISYMCRYPTSTREAMBUF_
+#define INCLUDED_BOBCAT_ISYMCRYPTSTREAMBUF_
+
+#include <bobcat/symcryptstreambufbase>
+#include <bobcat/fbb>
+
+namespace FBB
+{
+
+template <CryptType>
+class ISymCryptStreambuf;
+
+template <>
+class ISymCryptStreambuf<ENCRYPT>: public IUO::SymCryptStreambufBase
+{
+    public:
+        ISymCryptStreambuf(
+                   std::istream &in,        char const *type,
+                   std::string const &key,  std::string const &iv,
+                   size_t bufSize = 100,    size_t filterBufSize = 1000, 
+                   ENGINE *engine = 0
+        );
+};
+
+template <>
+class ISymCryptStreambuf<DECRYPT>: public IUO::SymCryptStreambufBase
+{
+    public:
+        ISymCryptStreambuf(
+                    std::istream &in,       char const *type,
+                    std::string const &key, std::string const &iv,
+                    size_t bufSize = 100,   size_t filterBufSize = 1000,
+                    ENGINE *engine = 0
+        );
+};
+
+ISymCryptStreambuf<ENCRYPT>::ISymCryptStreambuf(
+                    std::istream &in,       char const *type,
+                    std::string const &key, std::string const &iv,
+                    size_t bufSize,         size_t filterBufSize,
+                    ENGINE *engine
+        )
+:
+    SymCryptStreambufBase(
+        &EVP_EncryptInit_ex,  &EVP_EncryptUpdate, &EVP_EncryptFinal_ex,
+        in,      type, 
+        key,     iv,
+        bufSize, filterBufSize, 
+        engine
+    )
+{}
+
+ISymCryptStreambuf<DECRYPT>::ISymCryptStreambuf(
+        std::istream &in, char const *type,
+        std::string const &key, std::string const &iv, 
+        size_t bufSize, size_t filterBufSize, 
+        ENGINE *engine)
+:
+    SymCryptStreambufBase(
+        &EVP_DecryptInit_ex, &EVP_DecryptUpdate, &EVP_DecryptFinal_ex, 
+        in,      type, 
+        key,     iv,
+        bufSize, filterBufSize, 
+        engine
+    )
+{}
+
+} // FBB        
+#endif
+
+
+
+
+
+
