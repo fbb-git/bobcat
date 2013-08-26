@@ -1,0 +1,66 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::IBase64Stream)(3bobcat)(_CurYrs_)
+(libbobcat-dev__CurVers_-x.tar.gz)  
+                    (Base64 encoding/decoding std::istream)
+
+manpagename(FBB::IBase64Stream)
+                    (Std::istream performing base64 encoding and decoding)
+
+manpagesynopsis()
+    bf(#include <bobcat/ibase64stream>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB::IBase64Stream) objects may be used to base64 encode or decrypt
+information that is available on a separate tt(std::istream).
+
+     The tt(class IBase64Stream) is a class template, using a
+tt(FBB::CryptType) template non-type parameter. Objects of the class 
+tt(FBB::IBase64Stream<FBB::ENCODE>) base64 encode the information they receive,
+objects of the class tt(FBB::IBase64Stream<FBB::DECRYPT>) base64 decode the
+information they receive.
+
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::IBase64Streambuf) (private), nl()
+    bf(std::istream) 
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(IBase64Stream<CryptType>(std::istream &in, size_t bufSize = 100))
+        This constructor initializes a tt(std::istream) providing it with an
+tt(FBB::IBase64Streambuf) stream buffer. The tt(IBase64Streambuf)'s
+constructor receives all arguments that are passed to this constructor.
+
+    - tt(IBase64Stream<ENCRYPT>) objects perform base64 encoding;nl()
+    - tt(IBase64Stream<DECRYPT>) objects perform base64 decoding;nl()
+    - tt(IBase64Stream<CryptType>) objects obtain the bytes to encode or
+decode from tt(std::istream &in);nl()
+    - The internally used tt(IFilterStreambuf) is initialized with a buffer of
+size tt(bufSize), using a lower bound of 100.
+    )
+
+manpagesection(INHERITED MEMBERS)
+
+    Since the class uses public derivation from bf(std::istream), all members
+of this class can be used.
+
+manpagesection(EXAMPLE)
+    verbinclude(../../ibase64stream/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/ibase64stream) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(ibase64streambuf)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
+
+

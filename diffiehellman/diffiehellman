@@ -1,0 +1,104 @@
+#ifndef INCLUDED_BOBCAT_DIFFIEHELLMAN_
+#define INCLUDED_BOBCAT_DIFFIEHELLMAN_
+
+#include <memory>
+#include <iosfwd>
+
+#include <bobcat/bigint>
+#include <openssl/dh.h>
+
+namespace FBB
+{
+
+class DiffieHellman
+{
+    std::shared_ptr<DH> d_dh;
+    std::shared_ptr<BIGNUM> d_otherPubKey;  // public key of the other party
+
+    static char const *s_header;
+
+    public:
+        enum SecretKey
+        {
+            DONT_SAVE_SECRET_KEY,
+            SAVE_SECRET_KEY
+        };
+
+        enum
+        {
+            CHECK_FAILS = 
+                ~(DH_CHECK_P_NOT_PRIME | DH_CHECK_P_NOT_SAFE_PRIME | 
+                  DH_NOT_SUITABLE_GENERATOR | DH_UNABLE_TO_CHECK_GENERATOR)
+        };
+
+            // The initiator calls this constructor, which computes the common
+            // DH parameters
+        DiffieHellman(size_t primeLength = 1024, size_t generator = 5,
+                      bool progress = false);
+
+            // The initiator saves the public info on basename.pub
+            // and, by providing 'SAVE_SECRET_KEY, the secret info on
+            // basename.sec 
+        void save(std::string const &basename, SecretKey action = 
+                                                DONT_SAVE_SECRET_KEY) const;
+
+            // The initiator sends basename.pub to the peer, who reads
+            // basename.pub using this constructor:
+        DiffieHellman(std::string const &initiatorPublicFileName);
+            // Alternatively, use this constructor expecting an istream:
+        DiffieHellman(std::istream &initiatorPublicStream);
+
+            // The peer now saves *his/her* public and (optionally) private
+            // info: by calling save, providing a basename and optionally a
+            // SecretKey argument.  Next, the peer sends his/her public info
+            // to the initiator. 
+
+            // The peer can already now determine the symmetric encryption
+            // key, since he/she has 
+            //  - The DH prime and generator;
+            //  - The initiator's public key;
+            //  - His/her own secret key.
+            // The key is obtained by calling
+        std::string key() const;
+
+            // The initiator has two options: - After calling save and
+            // transmitting the public data to the peer the DiffieHellman
+            // object is kept, and the initiator waits for the peer's public
+            // key to become available. In that case the initiator's private
+            // key doesn't have to be saved, and ephemeral DH is
+            // obtained. After receiving the peer's public parameters the
+            // initiator calls either of these overloaded versions of key to
+            // obtain the symmetric key:
+        std::string key(std::string const &peerPublicFileName);
+        std::string key(std::istream &peerPublicStream);
+
+            // Otherwise the initiator creates another DiffieHellman object, 
+            // using the 4th or 5th constructor, and then calls either of the
+            // last two key members to obtain the symmetric key.
+
+        DiffieHellman(std::string const &initiatorPublicFileName,
+                      std::string const &initiatorPrivateFileName);
+            // Alternatively, use this constructor expecting istreams:
+        DiffieHellman(std::istream &initiatorPublicStream,
+                      std::istream &initiatorPrivateStream);
+
+
+    private:
+        void checkDHparameters();
+        bool load(std::istream &publicData);
+        void write(std::ostream &out, BIGNUM const *bn, char *buffer, 
+                                                    uint32_t nBytes) const;
+
+        bool read(std::istream &in, BIGNUM **dest);
+
+        static void skip(std::istream &in, size_t count);
+        static void callback(int, int, void *);
+
+//        std::string publicKey() const;
+//        std::string sharedKey(BigInt const &peersPublicKey
+//    private:
+//
+//        DH *newDH();
+};
+} // FBB        
+#endif

@@ -1,0 +1,67 @@
+#ifndef INCLUDED_BOBCAT_SYMCRYPTSTREAMBUFBASE_
+#define INCLUDED_BOBCAT_SYMCRYPTSTREAMBUFBASE_
+
+#include <memory>
+#include <iosfwd>
+#include <string>
+
+#include <openssl/evp.h>
+
+#include <bobcat/ifilterstreambuf>
+
+namespace FBB
+{
+
+namespace IUO   // the facilities defined here are not further documented:
+{               // the SymCryptStreambufBase class defined below should be
+                // used by ISymCryptStreambuf only.
+
+
+class SymCryptStreambufBase: public FBB::IFilterStreambuf
+{
+    EVP_CIPHER_CTX d_ctx;
+
+    size_t d_inBufSize;
+    size_t d_blockSize;
+    size_t d_outBufSize = 0;
+    bool d_allDone = false;
+
+    std::istream &d_in;
+    
+    int (*d_evpUpdate)(EVP_CIPHER_CTX *ctx, 
+                unsigned char *out, int *outl, 
+                unsigned char const *in, int inl);
+
+    int (*d_evpFinal_ex)(EVP_CIPHER_CTX *, unsigned char *out, int *outl);
+
+    std::unique_ptr<char> d_outBuf;
+    std::unique_ptr<char> d_inBuf;
+
+    public:
+        SymCryptStreambufBase(
+            int (*evpInit)(EVP_CIPHER_CTX *, EVP_CIPHER const *,
+                ENGINE *impl, 
+                unsigned char const *key, unsigned char const *iv),
+
+
+            int (*evpUpdate)(EVP_CIPHER_CTX *ctx, unsigned char *out,
+                int *outl, unsigned char const *in, int inl),
+
+            int (*evpFinal)(EVP_CIPHER_CTX *ctx, unsigned char *out,
+                int *outl),
+
+            std::istream &in,       char const *type,
+            std::string const &key, std::string const &iv,
+            size_t bufSize,         size_t filterBufSize, 
+            ENGINE *engine
+        );
+
+    private:
+        bool filter(char const **srcBegin, char const **srcEnd) override;
+        void checkOutBufSize(size_t inputSize);
+};
+
+}   // IUO
+}   // FBB
+
+#endif

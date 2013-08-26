@@ -78,9 +78,9 @@ manpagesection(CONSTRUCTORS)
     itemization(
     itb(BigInt())
         The default constructor initializes a tt(BigInt) value to 0.
-    itb(BigInt(BIGNUM const &value))
-        This constructor initializes a tt(BigInt) from a tt(BIGNUM). 
-    itb(BigInt(BIGNUM const *value))
+    itb(explicit BigInt(BIGNUM const &value))
+        This constructor initializes a tt(BigInt) from a tt(const BIGNUM). 
+    itb(explicit BigInt(BIGNUM const *value))
         This constructor initializes a tt(BigInt) from a pointer to a 
         tt(const BIGNUM).
     itb(BigInt(Type value))
@@ -88,9 +88,23 @@ manpagesection(CONSTRUCTORS)
 converted using a static cast to an tt(unsigned long) can be used as argument
 to this constructor. Promotion is allowed, so in many situations where
 tt(BigInt)s are expected a plain numerical value can be used as well.
+    itb(BigInt(char const *bigEndian, size_t length, bool negative = false))
+        This constructor initializes a tt(BigInt) from tt(length)
+big-endian encoded bytes stored in tt(bigEndian). This constructor interprets
+the tt(char) values pointed at by tt(bigEndian) as unsigned values. Use this
+constructor to reconstruct a tt(BigInt) object from the data made available by
+the tt(bigEndian) member. If the number represents a negative value, then
+provide a third argument tt(true).
+    itb(explicit BigInt(std::string const &bigEndian, bool negative = false))
+        This constructor initializes a tt(BigInt) from the bytes stored in
+tt(bigEndian), which must be big-endian encoded. This constructor interprets
+the tt(char) values stored in tt(bigEndian) as unsigned values. If the number
+that is stored in tt(bigEndian) represents a negative value, then provide a
+second argument tt(true).
     )
 
-    The standard copy constructor is available. 
+    The standard copy constructor is available, the move constructor is not
+available. 
 
 
 manpagesection(MEMBER FUNCTIONS)
@@ -504,16 +518,18 @@ tt(BigInt), possibly promoting the rhs operand.
         See also the tt(lshift) members.
     itb(BigInt &operator>>=(size_t nBits))
         See also the tt(rshift) members.
-    itb(BigInt &operator&(BigInt const &rhs)) 
+    itb(BigInt &operator&=(BigInt const &rhs)) 
         This operator tt(bit_and)s the bits and sign flags of the current
         object and the rhs operand.
-    itb(BigInt &operator|(BigInt const &rhs)) 
+    itb(BigInt &operator|=(BigInt const &rhs)) 
         This operator tt(bit_or)s the bits and sign flags of the current
         object and the rhs operand.
-    itb(BigInt &operator^(BigInt const &rhs)) 
+    itb(BigInt &operator^=(BigInt const &rhs)) 
         This operator tt(bit_xor)s the bits and sign flags of the current
         object and the rhs operand.
     )
+
+    Note that the move operator is not available
 
 manpagesection(STATIC MEMBERS)
 
@@ -550,17 +566,27 @@ not requiring an existing tt(BigInt) object are defined as static members.
         controlled by tt(lsb) (by default bf(ODD)). Before calling this
         member the random number generator must have been seeded.
 
+        From the bf(RAND_add)(3ssl) man-page:
+
+       OpenSSL makes sure that the PRNG state is unique for each thread. On
+        systems that provide tt(/dev/urandom), the randomness device is used
+        to seed the PRNG transparently. However, on all other systems, the
+        application is responsible for seeding the PRNG by calling
+        bf(RAND_add)(3ssl), bf(RAND_egd)(3ssl), bf(RAND_load_file)(3ssl), or
+        bf(RAND_seed)(3ssl).
+
     itb(BigInt randRange(BigInt const &max))
        This member returns a cryptographically strong pseudo-random
-       number in the range tt(0 <= number < max). Before calling this
-        member the random number generator must have been seeded.
+        number in the range tt(0 <= number < max). Before calling this
+        member the random number generator must have been seeded (see also
+        bf(rand), described above).
 
-    itb(BigInt setBigEndian(std::string const &bytes)) The
-        tt(bytes.length()) bytes of tt(bytes) are used to compute a tt(BigInt)
-        object which is returned by this function. The characters in tt(bytes)
-        are interpreted as a series of bytes in big-endian order. See also the
-        member function tt(bigEndian()) above. The returned tt(BigInt) has a
-        positive value.
+    itb(BigInt setBigEndian(std::string const &bytes)) 
+       The tt(bytes.length()) bytes of tt(bytes) are used to compute a
+        tt(BigInt) object which is returned by this function. The characters
+        in tt(bytes) are interpreted as a series of bytes in big-endian
+        order. See also the member function tt(bigEndian()) above. The
+        returned tt(BigInt) has a positive value.
 
     itb(BigInt prime(size_t nBits, 
                             BigInt const *mod = 0, BigInt const *rem = 0,
@@ -617,7 +643,7 @@ manpagesection(EXAMPLE)
 using namespace std;
 using namespace FBB;
 
-int main(int argc, char **argv)
+int main()
 {
     BigInt value(BigInt::prime(100));
     BigInt mod(BigInt::rand(50));
@@ -632,7 +658,9 @@ manpagefiles()
     em(bobcat/bigint) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(RAND_seed)(3)
+    bf(bobcat)(7), bf(diffiehellman)(3bobcat), 
+    bf(RAND_add)(3ssl), bf(RAND_egd)(3ssl),
+    bf(RAND_load_file)(3ssl), bf(RAND_seed)(3).
 
 manpagebugs()
     None Reported.
