@@ -1,5 +1,7 @@
 #include "ifilterstreambuf.ih"
 
+#include <iostream>
+
 int IFilterStreambuf::underflow()
 {
     if (d_srcBegin == d_srcEnd)                 // no source bytes, then

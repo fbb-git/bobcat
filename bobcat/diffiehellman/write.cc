@@ -1,7 +1,7 @@
 #include "diffiehellman.ih"
 
 void DiffieHellman::write(ostream &out, BIGNUM const *bn, char *buffer,
-                                                            uint32_t nBytes)
+                                                        uint32_t nBytes) const
 {
     uint32_t nBytesStd = htonl(nBytes);
 

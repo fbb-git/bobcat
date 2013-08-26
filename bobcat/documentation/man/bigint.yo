@@ -79,7 +79,7 @@ manpagesection(CONSTRUCTORS)
     itb(BigInt())
         The default constructor initializes a tt(BigInt) value to 0.
     itb(explicit BigInt(BIGNUM const &value))
-        This constructor initializes a tt(BigInt) from a tt(BIGNUM). 
+        This constructor initializes a tt(BigInt) from a tt(const BIGNUM). 
     itb(explicit BigInt(BIGNUM const *value))
         This constructor initializes a tt(BigInt) from a pointer to a 
         tt(const BIGNUM).
@@ -88,14 +88,14 @@ manpagesection(CONSTRUCTORS)
 converted using a static cast to an tt(unsigned long) can be used as argument
 to this constructor. Promotion is allowed, so in many situations where
 tt(BigInt)s are expected a plain numerical value can be used as well.
-    itb(BigInt(char const *bigEndian, size_t length, bool negative = false)
+    itb(BigInt(char const *bigEndian, size_t length, bool negative = false))
         This constructor initializes a tt(BigInt) from tt(length)
 big-endian encoded bytes stored in tt(bigEndian). This constructor interprets
 the tt(char) values pointed at by tt(bigEndian) as unsigned values. Use this
 constructor to reconstruct a tt(BigInt) object from the data made available by
 the tt(bigEndian) member. If the number represents a negative value, then
 provide a third argument tt(true).
-    itb(explicit BigInt(std::string const &bigEndian, bool negative = false)
+    itb(explicit BigInt(std::string const &bigEndian, bool negative = false))
         This constructor initializes a tt(BigInt) from the bytes stored in
 tt(bigEndian), which must be big-endian encoded. This constructor interprets
 the tt(char) values stored in tt(bigEndian) as unsigned values. If the number
@@ -658,7 +658,8 @@ manpagefiles()
     em(bobcat/bigint) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(RAND_add)(3ssl), bf(RAND_egd)(3ssl),
+    bf(bobcat)(7), bf(diffiehellman)(3bobcat), 
+    bf(RAND_add)(3ssl), bf(RAND_egd)(3ssl),
     bf(RAND_load_file)(3ssl), bf(RAND_seed)(3).
 
 manpagebugs()

@@ -1,6 +1,6 @@
 #include "diffiehellman.ih"
 
-void DiffieHellman::save(string const &basename, SecretKey action)
+void DiffieHellman::save(string const &basename, SecretKey action) const
 {
     if (DH_generate_key(d_dh.get()) == 0)
         throw Exception() << "DiffieHellman::save: could not generate "

@@ -82,21 +82,23 @@ manpagesection(CONSTRUCTOR)
                    ENGINE *engine = 0))
         This constructor initializes the streambuf.
     itemization(
-    it() tt(ISymCryptStreambuf<ENCRYPT>) objects perform encryption,
-        tt(ISymCryptStreambuf<DECRYPT>) objects perform decryption;
-    it() tt(ISymCryptStreambuf<CryptType>) objects obtain the bytes to encrypt
-or decrypt from tt(std::istream &in);
-    it() The encryption method to use is specified by the tt(type)
+    - tt(ISymCryptStreambuf<ENCRYPT>) objects perform encryption;nl()
+        tt(ISymCryptStreambuf<DECRYPT>) objects perform decryption;nl()
+    - tt(ISymCryptStreambuf<CryptType>) objects obtain the bytes to encrypt
+or decrypt from tt(std::istream &in);nl()
+    - The encryption method to use is specified by the tt(type)
 parameter. E.g., tt("bf-cbc") selects the Blowfish Cipher Block Chaining
-method;
-    it() The symmetric key to use is specified by the tt(key) parameter;
-    it() The initialization vector is specified by the tt(iv) parameter;
-    it() The size of the internally used buffer is specified by tt(bufSize).
-The default value is the smallest value that is used. When a smaller
-tt(bufSize) value is specified, the default value is used;
-    it() The tt(IFilterStreambuf) base class is initialized with a buffer of
-size tt(filterBufSize), using a lower bound of 100;
-    it() The parameter tt(ENGINE) can be used to specify a hardware
+method;nl()
+    - The symmetric key to use is specified by the tt(key) parameter;nl()
+    - The initialization vector is specified by the tt(iv) parameter;nl()
+    - The tt(FBB::ISymCryptStreambuf) internally used buffer will contain
+tt(bufSize) characters. The default value is the smallest value that is
+used. When a smaller tt(bufSize) value is specified, the default value is
+used;nl()
+    - tt(FBB::ISymCryptStreambuf)'s tt(IFilterStreambuf) base class is
+initialized with a buffer of size tt(filterBufSize), using a lower bound
+of 100;nl()
+    - The parameter tt(ENGINE) can be used to specify a hardware
 accelleration engine, as supported by the used encryption/decryption
 method. Its default argument value indicates that no hardware accelleration is
 available.

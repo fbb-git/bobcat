@@ -1,6 +1,6 @@
-#include "../isymcryptstreambuf"
-
 #include <iostream>
+
+#include <bobcat/isymcryptstreambuf>
 
 using namespace std;
 using namespace FBB;

@@ -40,7 +40,7 @@ class DiffieHellman
             // and, by providing 'SAVE_SECRET_KEY, the secret info on
             // basename.sec 
         void save(std::string const &basename, SecretKey action = 
-                                                    DONT_SAVE_SECRET_KEY);
+                                                DONT_SAVE_SECRET_KEY) const;
 
             // The initiator sends basename.pub to the peer, who reads
             // basename.pub using this constructor:
@@ -87,7 +87,7 @@ class DiffieHellman
         void checkDHparameters();
         bool load(std::istream &publicData);
         void write(std::ostream &out, BIGNUM const *bn, char *buffer, 
-                                                        uint32_t nBytes);
+                                                    uint32_t nBytes) const;
 
         bool read(std::istream &in, BIGNUM **dest);
 
