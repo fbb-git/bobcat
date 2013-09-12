@@ -1,42 +1,36 @@
+// Compile as, e.g., 
+//
+//          gx -o run callgenall.cc -lbobcat
+//
+// Run as, e.g.,
+//          run './genall 3' < genall.cc
 
-#include <unistd.h>
 #include <iostream>
-#include <thread>
-
 #include <bobcat/process>
-#include <bobcat/stringline>
 
 using namespace FBB;
 using namespace std;
 
-Process genall("./genall");
-
-
-void genout()
+int main(int argc, char **argv)
 {
-    string line;
-    while (getline(genall, line))
-        cout << line << '\n';
-}
+    if (argc == 1)
+    {
+        cout << "provide the path to the program to start as child process\n"
+                "provide input to that program on cin\n";
 
-int main()
-{
+        return 0;
+    }
+
+    Process genall(argv[1]);
     genall.start();
 
-//    thread outThread(genout);
-
-    string line;
-
-    while (getline(cin, line))
-        genall << line << endl;
+    genall << cin.rdbuf();
     genall.close();
 
-    while (getline(genall , line))
-        cout << "cout: " << line << endl;
+    cout << "Standard output:\n" <<
+            genall.rdbuf() << "\n"
+            "Standard error:\n" << 
+            genall.cerr().rdbuf() << '\n';
 
-    while (getline(genall.cerr() , line))
-        cout << "cerr: " << line << endl;
-
-    genall.stop();
     genall.waitForChild();
 }
