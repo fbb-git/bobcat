@@ -22,10 +22,19 @@ class Exception: public std::exception
             STRERROR_BUFSIZE = 100
         };
 
+        enum Protection
+        {
+            ANY,
+            EQUAL
+        };
+
         Exception() = default;
         explicit Exception(int errnoValue);              // exception1.cc
 
         ~Exception() noexcept(true) override;
+
+        static size_t protection(std::string const &name, size_t protect, 
+                          Protection type = EQUAL);
 
         template <typename StreamType>
         static void open(StreamType &stream, std::string const &name);
@@ -91,8 +100,6 @@ void Exception::open(int errnoValue, StreamType &stream,
     if (!stream)
         throw Exception(errnoValue) << "Can't open `" << name << '\'';
 }
-
-
 
 template <typename Type>
 inline Exception &&operator<<(Exception &&tmp, Type const &value)
