@@ -2,30 +2,23 @@
 
 Process::ExecContext Process::analyzeCommand()
 {
-    string args(d_command);                 // First, analyze the arguments
-     
-    vector<String::SplitPair> elements;     // destination for the command's
-                                            // elements,
-    
-    size_t count = String::split(&elements, args); // now extract the elements
-    
-                                            // set up a process struct
-    ExecContext ec = {true, 0, 0, new char const *[count + 1]};
+                                // split the elements in d_command
+    vector<string> elements(split(d_command.begin(), d_command.end()));
+        
 
-    for (auto &splitPair: elements)
-        execContext(splitPair, ec);
-    
-    if (!ec.ok)
-        throw Exception() << "Process " << d_command << ": " << ec.message;
-    
-    if (!ec.argc)
-        throw Exception() << "Process: can't execute " << d_command;
+    ExecContext ec = {0, new char const *[elements.size() + 1]};
 
-    ec.args[ec.argc] = 0;
+    for (auto str: elements)    // copy the elements to ec.args
+        ec.argv[ec.argc++] = 
+            (new string(str))->c_str();
+        // the allocated memory is never returned, but that's OK as the
+        // program's execution ends and the args are passed over to the child
+        // process. 
+
+    ec.argv[ec.argc] = 0;   // terminate in a null ptr
      
     return ec;
 }
-
 
 
 

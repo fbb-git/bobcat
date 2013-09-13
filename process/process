@@ -22,17 +22,16 @@
 namespace FBB
 {
 
-class Process: private Fork, public IOStream
+struct Process: private Fork, public IOStream
 {
     friend Process &operator|(Process &lhs, Process &rhs);
 
-    public:
-        enum ProcessType
-        {
-            NO_PATH,
-            USE_PATH,
-            USE_SHELL
-        };
+    enum ProcessType
+    {
+        NO_PATH,
+        USE_PATH,
+        USE_SHELL
+    };
 
     private:
         bool            d_active;
@@ -198,17 +197,20 @@ class Process: private Fork, public IOStream
         void newPipes();
         void closeChildInputOnExec();
 
+
+        typedef std::string::const_iterator ConstIter;
         struct ExecContext
         {
-            bool ok;                // true: status is ok
             size_t argc;            // must eventually be at least 1
-            char const *message;    // only set if !ok
-            char const **args;      // 0-terminated array of pointers to the 
+            char const **argv;      // 0-terminated array of pointers to the 
                                     // arguments
         };
-        static void execContext(String::SplitPair const &splitPair,
-                                ExecContext &ec);
         ExecContext analyzeCommand();
+        std::vector<std::string> split(ConstIter begin, 
+                                       ConstIter const &end);
+        std::string dquotedString(ConstIter &begin, ConstIter const &end);
+        std::string quotedString(ConstIter &begin, ConstIter const &end);
+        int escapedString(ConstIter &begin, ConstIter const &end);
 };
 
 inline void Process::start()

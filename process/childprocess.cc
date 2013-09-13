@@ -7,11 +7,11 @@ void Process::childProcess()
         ec = analyzeCommand();     // No system, so run execl() or execle()
     else
     {
-        ec.args = new char const *[4];
-        ec.args[0] = "/bin/sh";
-        ec.args[1] = "-c";
-        ec.args[2] = d_command.c_str();
-        ec.args[3] = 0;
+        ec.argv = new char const *[4];
+        ec.argv[0] = "/bin/sh";
+        ec.argv[1] = "-c";
+        ec.argv[2] = d_command.c_str();
+        ec.argv[3] = 0;
     }
 
 #ifdef BOBCAT_DIY_CLOEXEC_
@@ -20,14 +20,14 @@ void Process::childProcess()
 #endif
                           
     (*(d_processType == USE_PATH ? execvp : execv))
-        (ec.args[0], const_cast<char * const *>(ec.args));
+        (ec.argv[0], const_cast<char * const *>(ec.argv));
 
     throw Exception() << "Process: cannot execv[p] " << d_command;
 
 }
 
 //    std::cerr << "ChildProcess starts as:\n";
-//    for (char const **cp = ec.args; *cp; ++cp)
+//    for (char const **cp = ec.argv; *cp; ++cp)
 //        std::cerr << "  " << *cp << endl;
 //    std::cerr << "======================\n";
 

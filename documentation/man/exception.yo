@@ -67,6 +67,15 @@ man-page, are defined in the namespace bf(FBB).
 manpagesection(INHERITS FROM)
     bf(std::exception)
 
+manpagesection(ENUMERATION)
+    The enumeration tt(Protection) is used by the member tt(protection)
+described below. The enumeration has two values:
+    itemization(
+    itt(ANY): an existing file may have any set of protection bits;
+    itt(EQUAL): an existing file mut have exactly the set of protection bits
+        as specified when calling tt(Exception::protection).
+    )
+
 manpagesection(CONSTRUCTORS)
     itemization(
     itb(Exception())
@@ -126,6 +135,23 @@ tt(errnoValue) to tt(::errno).
        Opens the stream object, using its tt(open) member, passing tt(mode) to
         tt(open). If opening the stream fails, then the thrown
         bf(FBB::Exception) assigns tt(errnoValue) to tt(::errno).
+
+    itb(static size_t protection(std::string const &path, size_t protect, 
+                          Protection type = EQUAL))
+       Returns the protection bits (cf. bf(open)(2)) of tt(path). The
+        tt(protect) parameter is used to specify the requested protection
+        bits. This value is usually specified as an octal value. If the
+        specified value exceeds 0777 an exception is thrown. The third
+        parameter is only used in combination with already existing files. If
+        specified as tt(ANY) the file's actual permission bits are not
+        compared with tt(protect); if specified as tt(EQUAL) the file's
+        permission bits must be identical to tt(protect), or an exception is
+        thrown. If tt(path) does not yet exist a file tt(path) with permission
+        tt(protect) is created. This member returns tt(path)'s permission
+        bits. 
+
+        If tt(path) is created by tt(protection), then opening a stream for
+        tt(path) does not change tt(path)'s protection. 
     )
 
 manpagesection(MANIPULATOR)
