@@ -1,6 +1,6 @@
 // Compile as, e.g., 
 //
-//          gx -o run callgenall.cc -lbobcat
+//          g++ --std=c++11  -o run callgenall.cc -lbobcat
 //
 // Run as, e.g.,
 //          run './genall 3' < genall.cc

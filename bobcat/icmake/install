@@ -10,7 +10,7 @@ void rungzip9(string src, string dest)
     for (idx = sizeof(man); idx--; )
     {
         file = element(idx, man);
-        run("gzip -9 < " + src + file + " > " + dest + file + ".gz");
+        run("gzip -n -9 < " + src + file + " > " + dest + file + ".gz");
     }
 }
 
@@ -26,7 +26,7 @@ void reqzip(string dest, string src)
     for (idx = sizeof(files); idx--; )
     {
         file = element(idx, files);
-        run("gzip -9 < " + file + " > " + dest + file + ".gz");
+        run("gzip -n -9 < " + file + " > " + dest + file + ".gz");
     }
 }
     
@@ -59,7 +59,7 @@ void install(string rss, string dev)
 
     rungzip9("tmp/man/man3/", dev + MAN + "/man3/");
     
-    run("gzip -9 < tmp/man/man7/bobcat.7 > " +
+    run("gzip -n -9 < tmp/man/man7/bobcat.7 > " +
                    dev + MAN + "/man7/bobcat.7.gz");
 #endif
 

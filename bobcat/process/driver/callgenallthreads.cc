@@ -1,3 +1,10 @@
+// Compile as, e.g., 
+//
+//          g++ --std=c++11 -pthread -o run callgenallthreads.cc -lbobcat
+//
+// Run as, e.g.,
+//          run './genall 3' < genall.cc
+
 #include <iostream>
 #include <thread>
 
@@ -11,9 +18,17 @@ void collect(ostream *outStream, istream *inStream)
     *outStream << inStream->rdbuf();
 }
 
-int main()
+int main(int argc, char **argv)
 {
-    Process genall("./genall");
+    if (argc == 1)
+    {
+        cout << "provide the path to the program to start as child process\n"
+                "provide input to that program on cin\n";
+
+        return 0;
+    }
+
+    Process genall(argv[1]);
 
     genall.start();
 
