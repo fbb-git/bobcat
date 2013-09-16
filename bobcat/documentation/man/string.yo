@@ -2,23 +2,23 @@ includefile(include/header)
 
 COMMENT(manpage, section, releasedate, archive, short name)
 manpage(FBB::String)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
-                    (Error handler)
+                    (Operations on std::string objects)
 
-manpagename(FBB::String)(Several extensions to bf(std::string))
+manpagename(FBB::String)(Several operations on bf(std::string) objects)
 
 manpagesynopsis()
     bf(#include <bobcat/string>)nl()
     Linking option: tt(-lbobcat) 
 
 manpagedescription()
-    This class offers the same functionality as bf(std::string), adding
-facilities for often used transformations, currently missing in
-bf(std::string).  
+    This class offers facilities for often used transformations on
+tt(std::string) objects, but which are not supported by the tt(std::string)
+class itself. All members of bf(FBB::String) are static.
 
 manpagesection(NAMESPACE)
     bf(FBB)nl()
-    All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace bf(FBB).
+    All members, operators and manipulators, mentioned in this man-page, are
+defined in the namespace bf(FBB).
 
 manpagesection(INHERITS FROM)
     --
@@ -26,30 +26,33 @@ manpagesection(INHERITS FROM)
 manpagesection(ENUMERATION)
     itemization(
     itb(Type)
-       This enumeration has the following values, which are used in the second
-        variant of the bf(split) member (see below): 
+        This enumeration indicates the nature of the contents of an element in
+the array returned by the overloaded tt(split) members (see below).
 
-            bf(DQUOTE), a series of characters surrounded by double quotes
-in the original string; 
+            bf(DQUOTE), a subset of the characters in the matching tt(string)
+element was delimited by double quotes in the in the string that was parsed by
+the tt(split) members.
 
-            bf(DQUOTE_UNTERMINATED), a series of characters beginning with
-a double quote in the original string, but lacking the matching terminating
-double quote;
+            bf(DQUOTE_UNTERMINATED), the contents of the string that was
+parsed by the tt(split) members started at some point with a double quote, but
+the matching ending double quote was lacking.
 
-            bf(ESCAPED_END), a series of characters representing an
-otherwise normal string, but terminating in a plain backslash;
+            bf(ESCAPED_END),  the contents of the string that was
+parsed by the tt(split) members ended in a mere backslash.
 
             bf(NORMAL), a normal string; 
 
             bf(SEPARATOR), a separator;
 
-            bf(SQUOTE), a series of characters surrounded by single quotes
-in the original string; 
+            bf(SQUOTE), a subset of the characters in the matching tt(string)
+element was delimited by quotes in the in the string that was parsed by
+the tt(split) members.
 
-            bf(SQUOTE_UNTERMINATED), a series of characters beginning with
-a single quote in the original string, but lacking the matching terminating
-single quote.
+            bf(SQUOTE_UNTERMINATED), the contents of the string that was
+parsed by the tt(split) members started at some point with a quote, but
+the matching ending quote was lacking.
     )
+
 
 manpagesection(TYPEDEF)
 
@@ -59,36 +62,109 @@ below).
 
 manpagesection(HISTORY)
     Initially this class was derived from bf(std::string). Deriving from
-bf(std::string), however, is considerd bad design as tt(std::string) was
+tt(std::string), however, is considerd bad design as tt(std::string) was
 not designed as a base-class. 
 
-    Currently bf(String) offers a series of em(static) member functions
-providing the facilities originally implemented in non-static members.
+    bf(FBB::String) offers a series of em(static) member functions
+providing the facilities originally implemented as non-static members.
 
 manpagesection(STATIC MEMBER FUNCTIONS)
     itemization(
+
     itb(char const **argv(std::vector<std::string> const &words))
         Returns a pointer to an allocated series of pointers to the bf(C)
 strings stored in the vector tt(words). The caller is responsible for
 returning the array of pointers to the common pool, but should em(not) delete
 the bf(C)-strings to which the pointers point. The last element of the
 returned array is guaranteed to be a 0-pointer. 
+
     itb(int casecmp(std::string const &lhs, std::string const &rhs))
         Performs a case-insensitive comparison between the two tt(std::string)
 objects. A negative value is returned if tt(lhs) should be ordered before
 tt(rhs); 0 is returned if the two strings have identical contents; a
 positive value is returned if the tt(lhs) object should be ordered beyond
 tt(rhs).
+
     itb(std::string escape(std::string const &str, 
             char const *series = "'\"\\"))
         Returns a copy of the tt(str) object in which all characters in
 tt(series) are prefixed by a backslash character.
+
     itb(std::string lc(std::string const &str) const)
         Returns a copy of the tt(str) object in which all letters were
 transformed to lower case letters.
+
     itb(std::string trim(std::string const &str))
         Returns a copy of the tt(str) object from which the leading and
 trailing blanks have been removed.
+
+    itb(std::pair<std::vector<std::string>, Type> split(std::string const
+                &str, char const *separators = " \t", bool addEmpty = false))
+        Returns a pair whose tt(first) element is a vector containing the
+elements in tt(str) which are separated from each other by at least one of
+the characters found in tt(*separators), and whose tt(second) element contains
+tt(DQUOTE_UNTERMINATED, SQUOTE_UNTERMINATED,) or tt(ESCAPED_END) in cases
+where the contents of tt(str) are ill-formed, or tt(NORMAL) if tt(str)'s
+contents shows not syntactic errors (i.e., ill-formed strings or
+escape-sequences).
+
+If the parameter tt(addEmpty) is set to tt(true), then individual separators
+encountered in tt(str) are stored as empty strings in tt(words) (e.g., if two
+elements are separated by three blank spaces, then the returned vector
+contains three empty strings between the two elements).
+
+If an element in tt(str) contains a double quote (tt(")), then all characters
+from the initial double quote through the matching double quote character are
+processed as follows: the surrounding double quotes are removed, and the
+remaining characters are em(unescaped) using the tt(String::unescape)
+member. The resulting unescaped string is added to the element currently under
+construction. E.g., if tt(str) contains
+        verb(
+    string="\"hello world\""
+        ) 
+    then the element becomes 
+        verb(
+    string="hello world"
+        )
+
+If an element in tt(str) contains a single quote (tt(')), then all characters
+between the initial quote and the matching quote character are literally
+appended to the element currently under construction. E.g., if tt(str)
+contains
+        verb(
+    string='"hello\ world"'
+        ) 
+    then the element becomes 
+        verb(
+    string="hello\ world"
+        )
+
+Backslash characters encountered in tt(str) outside of single or double quoted
+strings are unescaped (using tt(String::unescape)) and the resulting character
+is appended to the element currently under construction. 
+
+E.g., if tt(str)
+contains
+        verb(
+    string=\"hello\ world\"
+        ) 
+    then the element becomes 
+        verb(
+    string="hello world"
+        )
+
+    itb(std::vector<SplitPair> split(std::string const &str,
+                    char const *separators = " \t", bool addEmpty = false))
+        Same functionality as the former member, but the tt(words) vector is
+filled with pairs, of which the first elements represent the recognized
+strings, and the second elements are values of the tt(String::Type)
+enumeration. If bf(addEmpty) is requested, then the bf(string) elements
+contain the actual contents of the separator, while the bf(Type) elements are
+set to bf(SEPARATOR). If the returned vector is not empty then the tt(second)
+member of the last element may be tt(DQUOTE_UNTERMINATED,
+SQUOTE_UNTERMINATED,) or tt(ESCAPED_END) in cases where the contents of
+tt(str) are ill-formed.
+
     itb(size_t split(std::vector<std::string> *words,
                     std::string const &str,
                     char const *separators = " \t", bool addEmpty = false))
@@ -100,6 +176,7 @@ matching terminating tt(") or tt(') at the end of a word are considered as one
 word.  The surrounding quotes are not stored. The function returns the number
 of elements in the vector pointed to by tt(words). This vector is initially
 cleared.
+
     itb(size_t  split(std::vector<SplitPair> *words,
                     std::string const &str,
                     char const *separators = " \t", bool addEmpty = false))
@@ -109,6 +186,7 @@ the second elements values of the tt(String::Type) enumeration. If
 bf(addEmpty) is requested, then the bf(string) elements contain the actual
 contents of the separator, while the bf(Type) elements are set to
 bf(SEPARATOR).
+
     itb(std::string unescape(std::string const &str))
         Returns a copy of the tt(str) object in which the escaped (i.e.,
 prefixed by a backslash) characters have been interpreted. All standard escape
@@ -118,6 +196,7 @@ characters are interpreted as a hexadecimal number. If an escape character is
 followed by an octal digit, then the next three characters following the
 backslash are interpreted as an octal number. In all other cases, the
 backslash is removed and the character following the backslash is kept.
+
     itb(std::string uc(std::string const &str))
         Returns a copy of the tt(str) object in which all letters were
 capitalized. 
