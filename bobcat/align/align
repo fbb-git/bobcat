@@ -8,10 +8,7 @@ namespace FBB
 
 typedef std::ios_base &(*Manipulator)(std::ios_base &);
 
-inline std::ios_base &center(std::ios_base &stream)
-{
-    return stream;
-}
+#include "center.i"
 
 class Align
 {
@@ -27,51 +24,24 @@ class Align
 
         bool hasRow() const;
 
-        operator size_t() const;
+        operator size_t() const;            // .i
 
-        size_t col() const;
-        size_t row() const;
+        size_t col() const;                 // .i
+        size_t row() const;                 // .i
 
-        Manipulator manip() const;
+        Manipulator manip() const;          // .i
 
-        void setWidth(size_t width);
-        void setManip(Manipulator manip);
+        void setWidth(size_t width);        // .i
+        void setManip(Manipulator manip);   // .i
 };
 
-inline Align::operator size_t() const
-{
-    return d_col;
-}
-
-inline size_t Align::col() const
-{
-    return d_col;
-}
-
-inline size_t Align::row() const
-{
-    return d_row;
-}
-
-inline bool Align::hasRow() const
-{
-    return d_row != -1;
-}
-
-inline Manipulator Align::manip() const
-{
-    return d_manip;
-}
-
-inline void Align::setManip(Manipulator manip)
-{
-    d_manip = manip;
-}
-
-inline void Align::setWidth(size_t size)
-{
-    d_col = size;
-}
+#include "opsizet.i"
+#include "col.i"
+#include "row.i"
+#include "hasrow.i"
+#include "manip.i"
+#include "setmanip.i"
+#include "setwidth.i"
 
 } // FBB
 

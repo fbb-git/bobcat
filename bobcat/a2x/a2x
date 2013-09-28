@@ -6,74 +6,40 @@
 
 namespace FBB
 {
-    class A2x: public std::istringstream
-    {
-        static bool s_lastFail;
 
-        public:
-            A2x() = default;
-            explicit A2x(char const *txt);          // initialize from text
-            explicit A2x(std::string const &str);
-            A2x(A2x const &other);
-
-            template <typename Type>
-            operator Type();
-
-            template <typename Type>
-            Type to();
-
-            A2x &operator=(char const *txt);
-    
-            A2x &operator=(std::string const &str);
-            A2x &operator=(A2x const &other);
-
-            static bool lastFail();
-    };
-
-inline A2x::A2x(char const *txt)                    // initialize from text
-:
-    std::istringstream(txt)
-{}
-
-inline A2x::A2x(std::string const &str)
-:
-    std::istringstream(str.c_str())
-{}
-
-inline A2x::A2x(A2x const &other)
-:
-    std::istringstream(other.str())
-{}
-
-template <typename Type>
-inline Type A2x::to()
+class A2x: public std::istringstream
 {
-    Type t;
+    static bool s_lastFail;
 
-    return (s_lastFail = (*this >> t).fail()) ? Type() : t;
-}
+    public:
+        A2x() = default;
+        explicit A2x(char const *txt);          // 1.i initialize from text
+        explicit A2x(std::string const &str);   // 2.i
+        A2x(A2x const &other);                  // 3.i
 
-template <typename Type>
-inline A2x::operator Type()
-{
-    return to<Type>();
-}
+        template <typename Type>
+        operator Type();                        // .i
 
-inline A2x &A2x::operator=(std::string const &str)
-{
-    return operator=(str.c_str());
-}            
+        template <typename Type>    
+        Type to();                              // .i
 
-inline A2x &A2x::operator=(A2x const &other)
-{
-    return operator=(other.str());
-}
+        A2x &operator=(char const *txt);        
 
-inline bool A2x::lastFail()
-{
-    return s_lastFail;
-}
+        A2x &operator=(std::string const &str); // 1.i
+        A2x &operator=(A2x const &other);       // 2.i
 
-}
+        static bool lastFail();                 // .i
+};
+
+#include "a2x1.i"
+#include "a2x2.i"
+#include "a2x3.i"
+#include "to.i"
+#include "optype.i"
+#include "opis1.i"
+#include "opis2.i"
+#include "lastfail.i"
+
+} // FBB
 
 #endif
