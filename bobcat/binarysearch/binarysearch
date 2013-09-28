@@ -4,42 +4,8 @@
 namespace FBB
 {
 
-template <typename Iterator, typename Type>
-Iterator binary_search(Iterator begin, Iterator end, Type const &value)
-{
-    Iterator ret = end;
-
-    while (begin != end)
-    {
-        Iterator mid = begin + (end - begin >> 1);
-        if (value < *mid)       // left half
-            end = mid;
-        else if (*mid < value)  // right half
-            begin = mid + 1;
-        else
-            return mid;
-    }
-    return ret;
-}
-    
-template <typename Iterator, typename Type, typename Comparator>
-Iterator binary_search(Iterator begin, Iterator end, Type const &value, 
-                       Comparator comparator)
-{
-    Iterator ret = end;
-
-    while (begin != end)
-    {
-        Iterator mid = begin + (end - begin >> 1);
-        if (comparator(value, *mid))        // left half
-            end = mid;
-        else if (comparator(*mid, value))   // right half
-            begin = mid + 1;
-        else
-            return mid;
-    }
-    return ret;
-}
+#include "binarysearch1.i" // Iterator begin, Iterator end, Type const &value
+#include "binarysearch2.i" // (... same ...), Comparator comparator
 
 } // FBB
 
