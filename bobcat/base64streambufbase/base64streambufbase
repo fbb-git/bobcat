@@ -45,12 +45,7 @@ class Base64StreambufBase: public FBB::IFilterStreambuf
 
 };
 
-template <int from, int size, int shl>
-inline int Base64StreambufBase::bits(int value)
-{
-    return value == EOF ? 0 :
-            (value & ((1 << (from + size)) - 1)) >> from << shl;
-}
+#include "bits.i"
 
 }   // IUO
 }   // FBB        
