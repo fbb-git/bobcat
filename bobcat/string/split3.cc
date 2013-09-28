@@ -8,9 +8,9 @@ vector<String::SplitPair> String::split(string const &str,
                                 // visit all chars of str
     for (ConstIter begin = str.begin(), end = str.end(); begin != end; )
     {
-        SplitPair const &next = split(begin, str.end(), separators);
+        SplitPair next = split(begin, str.end(), separators);
 
-        if (not (addEmpty && next.second == SEPARATOR))
+        if (next.second == SEPARATOR && not addEmpty)
             continue;
     
         ret.push_back(next);

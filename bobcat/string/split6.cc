@@ -8,8 +8,8 @@ String::SplitPair String::split(ConstIter &begin, ConstIter const &end,
     bool empty = true;
 
     for (; begin != end; )
-    {
-        if (separators.find(*begin))    // saw a separator
+    {                                   // saw a separator
+        if (separators.find(*begin) != string::npos)    
         {
                                         // non-empty strings: keep the sep. 
                                         // for the next call
@@ -57,7 +57,7 @@ String::SplitPair String::split(ConstIter &begin, ConstIter const &end,
 
             case '\\':          // unescape a lone escape sequence
             {
-                SplitPair part(quotedString(begin, end));
+                IntType part(escapedString(begin, end));
 
                 ret.first += part.first;
                 if (part.second == ESCAPED_END)

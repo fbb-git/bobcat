@@ -13,6 +13,7 @@ String::IntType String::escapedString(ConstIter &begin, ConstIter const &end)
     if (begin + 1 == end)           // at least one char. should follow
     {
         ret = IntType('\\', ESCAPED_END);
+        ++begin;
         return ret;
     }
 

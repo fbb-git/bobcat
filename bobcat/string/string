@@ -25,14 +25,14 @@ struct String
 
     static char const **argv(std::vector<std::string> const &lines);
 
-    static int casecmp(std::string const &lhs, std::string const &rhs);
+    static int casecmp(std::string const &lhs, std::string const &rhs); // .i
     static std::string lc(std::string const &str);
 
-    std::vector<std::string>                                    // 1
+    static std::vector<std::string>                             // 1
         split(Type *type, std::string const &str, 
                 std::string const &separators, bool addEmpty = false);
 
-    std::vector<SplitPair>                                      // 3
+    static std::vector<SplitPair>                              // 3
         split(std::string const &str, std::string const &separators, 
               bool addEmpty = false);
 
@@ -73,14 +73,11 @@ struct String
                             ConstIter *until, ConstIter from, 
                             std::string const &separators);
 
-        static void tolower(char &chr);
-        static void toupper(char &chr);
+        static void tolower(char &chr);             // .i
+        static void toupper(char &chr);             // .i
 };
 
-inline int String::casecmp(std::string const &lhs, std::string const &rhs)
-{
-    return strcasecmp(lhs.c_str(), rhs.c_str());
-}
+#include "casecmp.i"
 
 } // FBB
 
