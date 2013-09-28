@@ -98,15 +98,16 @@ transformed to lower case letters.
         Returns a copy of the tt(str) object from which the leading and
 trailing blanks have been removed.
 
-    itb(std::pair<std::vector<std::string>, Type> split(std::string const
+    itb(std::vector<std::string> split(Type *type, std::string const
                 &str, char const *separators = " \t", bool addEmpty = false))
-        Returns a pair whose tt(first) element is a vector containing the
-elements in tt(str) which are separated from each other by at least one of
-the characters found in tt(*separators), and whose tt(second) element contains
-tt(DQUOTE_UNTERMINATED, SQUOTE_UNTERMINATED,) or tt(ESCAPED_END) in cases
-where the contents of tt(str) are ill-formed, or tt(NORMAL) if tt(str)'s
-contents shows not syntactic errors (i.e., ill-formed strings or
-escape-sequences).
+        Returns a vector containing the elements in tt(str) which are
+separated from each other by at least one of the characters found in
+tt(*separators). The member's first parameter points to a tt(Type) variable,
+which will show tt(DQUOTE_UNTERMINATED, SQUOTE_UNTERMINATED,) or
+tt(ESCAPED_END) in cases where the contents of tt(str) are ill-formed, or
+tt(NORMAL) if tt(str)'s contents shows not syntactic errors (i.e., ill-formed
+strings or escape-sequences). If the corresponding argument equals 0 then no
+tt(Type) indication is provided.
 
 If the parameter tt(addEmpty) is set to tt(true), then individual separators
 encountered in tt(str) are stored as empty strings in tt(words) (e.g., if two
@@ -155,9 +156,9 @@ contains
 
     itb(std::vector<SplitPair> split(std::string const &str,
                     char const *separators = " \t", bool addEmpty = false))
-        Same functionality as the former member, but the tt(words) vector is
-filled with pairs, of which the first elements represent the recognized
-strings, and the second elements are values of the tt(String::Type)
+        Same functionality as the previous tt(split) member, but the tt(words)
+vector is filled with pairs, of which the first elements represent the
+recognized strings, and the second elements are values of the tt(String::Type)
 enumeration. If bf(addEmpty) is requested, then the bf(string) elements
 contain the actual contents of the separator, while the bf(Type) elements are
 set to bf(SEPARATOR). If the returned vector is not empty then the tt(second)

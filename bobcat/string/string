@@ -9,51 +9,68 @@
 namespace FBB
 {
 
-class String
+struct String
 {
-    public:
-        enum Type
-        {
-            DQUOTE_UNTERMINATED,    // unterminated d-quoted element
-            SQUOTE_UNTERMINATED,    // unterminated s-quoted element
-            ESCAPED_END,            // word with plain \ at the end
-            SEPARATOR, // separator encountered
-            NORMAL, // normal string-element in the original string
-            DQUOTE, // string-element originally surrounded by " chars
-            SQUOTE, // string-element originally surrounded by ' chars
-        };
-        typedef std::pair<std::string, Type> SplitPair;
-        typedef std::string::const_iterator const_iterator;
+    enum Type
+    {
+        DQUOTE_UNTERMINATED,    // unterminated d-quoted element
+        SQUOTE_UNTERMINATED,    // unterminated s-quoted element
+        ESCAPED_END,            // word with plain \ at the end
+        SEPARATOR, // separator encountered
+        NORMAL, // normal string-element in the original string
+        DQUOTE, // string-element originally surrounded by " chars
+        SQUOTE, // string-element originally surrounded by ' chars
+    };
+    typedef std::pair<std::string, Type> SplitPair;
 
-        static char const **argv(std::vector<std::string> const &lines);
+    static char const **argv(std::vector<std::string> const &lines);
 
-        static int casecmp(std::string const &lhs, std::string const &rhs);
-        static std::string lc(std::string const &str);
-        static size_t split(std::vector<std::string> *words,
-                        std::string const &str,
-                        char const *separators = " \t",
-                        bool addEmpty = false);
-        static size_t split(std::vector<SplitPair> *words,
-                        std::string const &str,
-                        char const *separators = " \t",
-                        bool addEmpty = false);
-        static std::string trim(std::string const &str);
-        static std::string uc(std::string const &str);
-        static std::string unescape(std::string const &str);
-        static std::string escape(std::string const &str, 
-                            char const *series = "'\"\\");
+    static int casecmp(std::string const &lhs, std::string const &rhs);
+    static std::string lc(std::string const &str);
+
+    std::vector<std::string>                                    // 1
+        split(Type *type, std::string const &str, 
+                std::string const &separators, bool addEmpty = false);
+
+    std::vector<SplitPair>                                      // 3
+        split(std::string const &str, std::string const &separators, 
+              bool addEmpty = false);
+
+    static size_t split(std::vector<std::string> *words,        // 4
+                    std::string const &str, char const *separators = " \t",
+                    bool addEmpty = false);
+                                                                // 5
+    static size_t split(std::vector<SplitPair> *words, std::string const &str,
+                    char const *separators = " \t", bool addEmpty = false);
+
+    static std::string trim(std::string const &str);
+    static std::string uc(std::string const &str);
+    static std::string unescape(std::string const &str);
+    static std::string escape(std::string const &str, 
+                        char const *series = "'\"\\");
 
     private:
+        typedef std::string::const_iterator ConstIter;
+        typedef std::pair<int, Type> IntType;
+
+                            // used by split1..3.cc
+        static SplitPair split(ConstIter &begin, ConstIter const &end, // 6
+                                    std::string const &separators);
+        static SplitPair dquotedString(ConstIter &begin, 
+                                       ConstIter const &end);
+        static SplitPair quotedString(ConstIter &begin, ConstIter const &end);
+        static IntType escapedString(ConstIter &begin, ConstIter const &end);
+
         static Type nextField(std::string const &str,
-                        const_iterator *until, const_iterator from,
+                        ConstIter *until, ConstIter from,
                         std::string const &separators);
-        static const_iterator separator(std::string const &str,
-                                const_iterator from, 
+        static ConstIter separator(std::string const &str,
+                                ConstIter from, 
                                 std::string const &separators);
-        static const_iterator quoted(std::string const &str,
-                                const_iterator from, int quote);
+        static ConstIter quoted(std::string const &str,
+                                ConstIter from, int quote);
         static Type word(std::string const &str,
-                            const_iterator *until, const_iterator from, 
+                            ConstIter *until, ConstIter from, 
                             std::string const &separators);
 
         static void tolower(char &chr);

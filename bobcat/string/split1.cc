@@ -1,9 +1,10 @@
 #include "string.ih"
 
-vector<String::SplitPair> String::split(string const &str,
+vector<string> String::split(Type *type, string const &str,
                                     string const &separators, bool addEmpty)
 {
-    vector<SplitPair> ret;
+    vector<string> ret;
+    Type localType = NORMAL;
 
                                 // visit all chars of str
     for (ConstIter begin = str.begin(), end = str.end(); begin != end; )
@@ -13,8 +14,15 @@ vector<String::SplitPair> String::split(string const &str,
         if (not (addEmpty && next.second == SEPARATOR))
             continue;
     
-        ret.push_back(next);
+        ret.push_back(next.first);
+        localType = next.second;
     }
+
+    if (type)
+        *type = localType == DQUOTE ||
+                localType == SQUOTE ||
+                localType == SEPARATOR  ? NORMAL : localType;
 
     return ret;
 }
+
