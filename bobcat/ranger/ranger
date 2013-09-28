@@ -12,49 +12,19 @@ class Ranger
     Iter d_end;
 
     public:
-        Ranger(Iter const &begin, Iter const &end)
-        :
-            d_begin(begin),
-            d_end(end)
-        {}
+        Ranger(Iter const &begin, Iter const &end);     // .i
 
-        Iter const &begin() const
-        {
-            return d_begin;
-        }
-
-        Iter const &end() const
-        {
-            return d_end;
-        }
+        Iter const &begin() const;                      // .i
+        Iter const &end() const;                        // .i
 };
 
-template <typename Iter>
-Ranger<Iter> ranger(Iter &&begin, Iter &&end)
-{
-    return Ranger<Iter>(begin, end);
-}
+#include "ranger1.i"        // ranger(Iter &&begin, Iter &&end)
+#include "ranger2.i"        // ranger(Data *begin, Data *end)
+#include "ranger3.i"        // ranger(Iter &&begin, size_t count)
+#include "ranger4.i"        // ranger(Data *begin, size_t count)
 
-template <typename Data>
-Ranger<Data *> ranger(Data *begin, Data *end)
-{
-    return Ranger<Data *>(begin, end);
-}
+} // FBB
 
-template <typename Iter>
-Ranger<Iter> ranger(Iter &&begin, size_t count)
-{
-    return Ranger<Iter>(begin, begin + count);
-}
-
-template <typename Data>
-Ranger<Data *> ranger(Data *begin, size_t count)
-{
-    return Ranger<Data *>(begin, begin + count);
-}
-
-
-} // FBB        
 #endif
 
 
