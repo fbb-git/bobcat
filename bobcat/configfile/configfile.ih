@@ -57,15 +57,15 @@ class ConfigFile__: public CFEnums__
         ConfigFile__ &operator=(ConfigFile__ &&tmp) = default;
         ConfigFile__ &operator=(ConfigFile__ const &rhs) = default;
 
-        void setCommentHandling(Comment type);
-        void setSearchCasing(SearchCasing type);
+        void setCommentHandling(Comment type);                          // .i
+        void setSearchCasing(SearchCasing type);                        // .i
         void open(std::string const &fname);
 
-        const_iterator begin() const;
-        const_iterator end() const;
+        const_iterator begin() const;                                   // .i
+        const_iterator end() const;                                     // .i
 
         const_RE_iterator beginRE(std::string const &re);
-        const_RE_iterator endRE() const;
+        const_RE_iterator endRE() const;                                // .i
 
         std::pair<const_RE_iterator, const_RE_iterator> 
                             beginEndRE(std::string const &re);
@@ -73,15 +73,15 @@ class ConfigFile__: public CFEnums__
         const_iterator find(std::string const &target) const;
         const_iterator findRE(std::string const &re) const;
 
-        std::string findKey(std::string const &key, size_t count);
-        std::string findKeyTail(std::string const &key, size_t count);
+        std::string findKey(std::string const &key, size_t count);      // .i
+        std::string findKeyTail(std::string const &key, size_t count);  // .i
 
-        size_t index(size_t lineNr);
-        size_t index(const_iterator const &iterator);
+        size_t index(size_t lineNr);                            // 1.i
+        size_t index(const_iterator const &iterator);           // 2.i
 
-        std::string const &operator[](size_t idx) const;
+        std::string const &operator[](size_t idx) const;        // opindex.i
 
-        size_t size() const;
+        size_t size() const;                                    // .i
 
     private:
         static void trimLeft(std::string &line);
@@ -92,79 +92,27 @@ class ConfigFile__: public CFEnums__
         void resetVsIter(std::string const &re);
         std::string searchFor(std::string const &keyPattern, size_t count);
 
-        static bool finder(std::string const &haystack, 
+        static bool finder(std::string const &haystack,             // .i
                            std::string const &needle);
-        static bool casefinder(std::string const &haystack, 
+        static bool casefinder(std::string const &haystack,         // .i
                                std::string const &needle);
 };
 
 } // FBB
 
-inline bool ConfigFile__::finder(string const &haystack, string const &needle)
-{
-    return haystack.find(needle) != string::npos;
-}
-
-inline bool ConfigFile__::casefinder(string const &haystack, 
-                                    string const &needle)
-{
-    return strcasestr(haystack.c_str(), needle.c_str()) != 0;
-}
-
-inline size_t ConfigFile__::size() const
-{
-    return d_line.size();
-}
-
-inline std::string const &ConfigFile__::operator[](size_t idx) const
-{
-    return d_line[idx];
-}
-
-inline size_t ConfigFile__::index(const_iterator const &iterator)
-{
-    return d_index[iterator - begin()];
-}
-
-inline size_t ConfigFile__::index(size_t lineNr)
-{
-    return d_index[lineNr];
-}
-
-inline string ConfigFile__::findKeyTail(string const &keyPattern, size_t count)
-{
-    return searchFor("^\\s*" + keyPattern + "\\s+(.*)\\s*$", count);
-}
-
-inline string ConfigFile__::findKey(string const &keyPattern, size_t count)
-{
-    return searchFor("^\\s*" + keyPattern + "\\s+(\\S+)", count);
-}
-
-inline ConfigFile__::const_RE_iterator ConfigFile__::endRE() const
-{
-    return RE_iterator(d_vsIter, d_vsIter.size());
-}
-
-inline ConfigFile__::const_iterator ConfigFile__::begin() const
-{
-    return d_line.begin();
-}
-   
-inline ConfigFile__::const_iterator ConfigFile__::end() const
-{
-    return d_line.end();
-}
-   
-inline void ConfigFile__::setSearchCasing(SearchCasing type)
-{
-    d_caseSensitive = type == SearchCaseSensitive;
-}
-
-inline void ConfigFile__::setCommentHandling(Comment type)
-{
-    d_rmComment = type == RemoveComment;
-}
+#include "begin.i"
+#include "casefinder.i"
+#include "end.i"   
+#include "endre.i"
+#include "finder.i"
+#include "findkey.i"
+#include "findkeytail.i"
+#include "index1.i"
+#include "index2.i"
+#include "opindex.i"
+#include "setcommenthandling.i"
+#include "setsearchcasing.i"   
+#include "size.i"
 
 
 

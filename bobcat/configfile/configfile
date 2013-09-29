@@ -19,7 +19,9 @@ class RE_iterator: public std::iterator<std::input_iterator_tag, std::string>
 {
     friend class ConfigFile__;
 
-    friend int operator-(RE_iterator const &lhs, RE_iterator const &rhs);
+    friend int operator-(RE_iterator const &lhs,        // opneg.i
+                         RE_iterator const &rhs);
+
     friend bool operator==(RE_iterator const &lhs, RE_iterator const &rhs);
 
                             // contains iterators to lines matching REs
@@ -32,8 +34,8 @@ class RE_iterator: public std::iterator<std::input_iterator_tag, std::string>
     public:
         RE_iterator &operator++();
 
-        std::string const &operator*() const;
-        std::string const *operator->() const;
+        std::string const &operator*() const;           // opstar.i
+        std::string const *operator->() const;          // oparrow.i
 
     private:
         RE_iterator(VsIterVector const &vsIter, size_t idx);
@@ -115,25 +117,13 @@ class ConfigFile: public CFEnums__
         size_t size() const;
 };
 
-inline std::string const &RE_iterator::operator*() const
-{
-    return *d_vsIter[d_idx];
-}
+#include "opstar.i"
+#include "oparrow.i"
+#include "opneg.i"
 
-inline std::string const *RE_iterator::operator->() const
-{                     
-    return &*d_vsIter[d_idx];
-}
+    // Free members:
 
-inline int operator-(RE_iterator const &lhs, RE_iterator const &rhs)
-{
-    return lhs.d_idx - rhs.d_idx;
-}
-
-inline bool operator!=(RE_iterator const &lhs, RE_iterator const &rhs)
-{
-    return not (lhs == rhs);
-}
+#include "opneq.i"                      // operator!=
 
 bool operator==(RE_iterator const &lhs, RE_iterator const &rhs);
 
