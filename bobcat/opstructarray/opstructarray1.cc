@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "opstructarray.ih"
 
 OptStructArray::OptStructArray(size_t n)
 :
