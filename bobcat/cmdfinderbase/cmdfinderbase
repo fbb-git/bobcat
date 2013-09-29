@@ -1,10 +1,8 @@
 #ifndef INCLUDED_BOBCAT_CMDFINDERBASE_
 #define INCLUDED_BOBCAT_CMDFINDERBASE_
 
-#include <strings.h>
-#include <string>
-
-#include <bobcat/errno>
+#include <bobcat/string>
+#include <bobcat/exception>
 
 namespace FBB
 {
@@ -37,10 +35,10 @@ class CmdFinderBase
         void setMode(size_t mode);    // to change the mode afterwards
 
     protected:
-        explicit CmdFinderBase(size_t mode = 0);
+        explicit CmdFinderBase(size_t mode = 0);            // 1.i
 
-        std::string const &beyond() const;  // info beyond the command
-        std::string const &cmd() const;     // the used command
+        std::string const &beyond() const;  // .i   info beyond the command
+        std::string const &cmd() const;     // .i   the used command
 
                                 // returns true if the cmd represents the
                                 // key
@@ -53,30 +51,18 @@ class CmdFinderBase
         void useCmd(std::string const &key);
         void useFirstCmd(std::string const &key);
 
-        bool matchExact(std::string const &key) const;
+        bool matchExact(std::string const &key) const;              // .i
 
                                 // the command is found in the key
-        bool matchUnique(std::string const &key) const;
+        bool matchUnique(std::string const &key) const;             // .i
         bool matchInsensitive(std::string const &key) const;
         bool matchUniqueInsensitive(std::string const &key) const;
 };
 
-inline CmdFinderBase::CmdFinderBase(size_t mode)
-{
-    setMode(mode);
-}
-                                                    
-inline std::string const &CmdFinderBase::beyond() const   
-{
-    return d_beyond;
-}
-
-inline std::string const &CmdFinderBase::cmd() const
-{
-    return d_cmd;
-}
+#include "cmdfinderbase1.i"
+#include "beyond.i"                                                    
+#include "cmd.i"
 
 } // FBB
-
         
 #endif
