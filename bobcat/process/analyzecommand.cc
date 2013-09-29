@@ -3,8 +3,11 @@
 Process::ExecContext Process::analyzeCommand()
 {
                                 // split the elements in d_command
-    vector<string> elements(split(d_command.begin(), d_command.end()));
-        
+    String::Type type;
+    vector<string> elements(String::split(&type, d_command));
+
+    if (type != String::NORMAL)
+        throw Exception() << "Process: " << command << ": ill-formed";
 
     ExecContext ec = {0, new char const *[elements.size() + 1]};
 
