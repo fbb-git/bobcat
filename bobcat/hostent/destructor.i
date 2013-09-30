@@ -1,0 +1,5 @@
+inline Hostent::~Hostent()
+{
+    destroy();
+}
+

@@ -20,27 +20,27 @@ class Hostent: private hostent
             
     public:
         Hostent();
-        Hostent(Hostent const &other);
+        Hostent(Hostent const &other);                      // hostent1.i
         Hostent(Hostent &&tmp);
         explicit Hostent(hostent const *other);
 
-        ~Hostent();
+        ~Hostent();                                         // destructor.i
 
         Hostent &operator=(Hostent const &other);
-        Hostent &operator=(Hostent &&tmp);
+        Hostent &operator=(Hostent &&tmp);                  // opis.i
 
-        char const *alias(size_t nr) const;
-        char const *binaryAddress(size_t nr) const;         // length bytes!
-        char const * const *beginAlias() const;
+        char const *alias(size_t nr) const;                 // .i
+        char const *binaryAddress(size_t nr) const;         // .i length bytes!
+        char const * const *beginAlias() const;             // .i
 
         std::string dottedDecimalAddress(size_t nr) const;
 
-        char const * const *endAlias() const;
-        char const *hostname() const;
-        size_t nAliases() const;
-        size_t nAddresses() const;
-        size_t addressLength() const;
-        size_t addressType() const;
+        char const * const *endAlias() const;               // .i
+        char const *hostname() const;                       // .i
+        size_t nAliases() const;                            // .i
+        size_t nAddresses() const;                          // .i
+        size_t addressLength() const;                       // .i
+        size_t addressType() const;                         // .i
 
         void swap(Hostent &other);
 
@@ -57,66 +57,18 @@ class Hostent: private hostent
                                             size_t length) const;
 };
 
-inline Hostent &Hostent::operator=(Hostent &&tmp)
-{
-    swap(tmp);
-    return *this;
-}
-
-inline Hostent::Hostent(Hostent const &other)
-{
-    copy(&other, other.d_nAliases, other.d_nAddresses);
-}
-
-inline Hostent::~Hostent()
-{
-    destroy();
-}
-
-inline char const *Hostent::alias(size_t nr) const
-{
-    return nr >= d_nAliases ? 0 : h_aliases[nr];
-}
-
-inline char const *Hostent::binaryAddress(size_t nr) const
-{
-    return nr >= nAddresses() ? 0 : h_addr_list[nr];
-}
-
-inline char const * const *Hostent::beginAlias() const
-{
-    return h_aliases;
-}
-
-inline char const * const *Hostent::endAlias() const
-{
-    return h_aliases + nAliases();
-}
-
-inline char const *Hostent::hostname() const
-{
-    return h_name;
-}
-
-inline size_t Hostent::nAliases() const
-{
-    return d_nAliases - 1;
-}
-
-inline size_t Hostent::nAddresses() const
-{
-    return d_nAddresses - 1;
-}
-
-inline size_t Hostent::addressLength() const
-{
-    return h_length;
-}
-
-inline size_t Hostent::addressType() const
-{
-    return h_addrtype;
-}
+#include "addresslength.i"
+#include "addresstype.i"
+#include "alias.i"
+#include "beginalias.i"
+#include "binaryaddress.i"
+#include "destructor.i"
+#include "endalias.i"
+#include "hostent1.i"
+#include "hostname.i"
+#include "naddresses.i"
+#include "naliases.i"
+#include "opis.i"
 
 }   // FBB
 
