@@ -47,24 +47,11 @@ class FSwap
 #include "fswap1.i"
 #include "fswap2.i"
 #include "fswap3.i"
+#include "fswap4.i"
+#include "fswap5.i"
 
-template <typename Tp>
-inline void FSwap::Xch<Tp, 4>::fswap(Tp &lhs, Tp &rhs)
-{
-    tswap<int32_t>(lhs, rhs);
-}
-
-template <typename Tp>
-inline void FSwap::Xch<Tp, 8>::fswap(Tp &lhs, Tp &rhs)
-{
-    tswap<int64_t>(lhs, rhs);
-}
-
-template <typename Type>
-void fswap(Type &lhs, Type &rhs)
-{
-    FSwap::Xch<Type, sizeof(Type)>::fswap(lhs, rhs);
-}
+    // Free function
+#include "fswap.i"              // fswap(Type &, Type &
 
 } // FBB
 
