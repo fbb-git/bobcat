@@ -9,31 +9,16 @@ namespace FBB
 class IOStream: private IOStreambuf, public std::istream, public std::ostream
 {
     public:
-        IOStream();
-        IOStream(std::istream &in, std::ostream &out);
+        IOStream();                                         // 1.i
+        IOStream(std::istream &in, std::ostream &out);      // 2.i
 
         void clear();
-        void open(std::istream &in, std::ostream &out);
+        void open(std::istream &in, std::ostream &out);     // .i
 };
 
-inline IOStream::IOStream()
-:
-    std::istream(this),
-    std::ostream(this)
-{}
-
-inline IOStream::IOStream(std::istream &in, std::ostream &out)
-:
-    std::istream(this),
-    std::ostream(this)
-{
-    open(in, out);
-}
-
-inline void IOStream::open(std::istream &in, std::ostream &out)
-{
-    IOStreambuf::open(in, out);
-}
+#include "iostream1.i"
+#include "iostream2.i"
+#include "open.i"
 
 } // namespace FBB
 
