@@ -1,5 +1,5 @@
-template <typename Iter>
-Iter const &Ranger::begin() const
+    template <typename Iter>
+Iter const &Ranger<Iter>::begin() const
 {
     return d_begin;
 }
