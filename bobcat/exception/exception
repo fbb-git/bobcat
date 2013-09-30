@@ -37,81 +37,34 @@ class Exception: public std::exception
                           Protection type = EQUAL);
 
         template <typename StreamType>
-        static void open(StreamType &stream, std::string const &name);
-
-        template <typename StreamType>
-        static void open(int errnoValue, StreamType &stream, 
+        static void open(StreamType &stream,                    // open1.i
                          std::string const &name);
 
         template <typename StreamType>
-        static void open(StreamType &stream, std::string const &name,
-                                std::ios::openmode mode);
+        static void open(int errnoValue, StreamType &stream,    // open2.i
+                         std::string const &name);
+
         template <typename StreamType>
-        static void open(int errnoValue, StreamType &stream, 
+        static void open(StreamType &stream,                    // open3.i
+                            std::string const &name, std::ios::openmode mode);
+
+        template <typename StreamType>
+        static void open(int errnoValue, StreamType &stream,    // open4.i
                             std::string const &name, std::ios::openmode mode);
     private:
         char const *what() const noexcept(true) override;
 };
 
-template <typename StreamType>
-void Exception::open(StreamType &stream, std::string const &name)
-{
-    if (stream.is_open())
-        stream.close();
+#include "open1.i"
+#include "open2.i"
+#include "open3.i"
+#include "open4.i"
 
-    stream.open(name);
-    if (!stream)
-        throw Exception() << "Can't open `" << name << '\'';
-}
-
-template <typename StreamType>
-void Exception::open(int errnoValue, StreamType &stream, 
-                     std::string const &name)
-{
-    if (stream.is_open())
-        stream.close();
-
-    stream.open(name);
-    if (!stream)
-        throw Exception(errnoValue) << "Can't open `" << name << '\'';
-}
-
-template <typename StreamType>
-void Exception::open(StreamType &stream, std::string const &name,
-                                         std::ios::openmode mode)
-{
-    if (stream.is_open())
-        stream.close();
-
-    stream.open(name, mode);
-    if (!stream)
-        throw Exception() << "Can't open `" << name << '\'';
-}
-
-
-template <typename StreamType>
-void Exception::open(int errnoValue, StreamType &stream, 
-                        std::string const &name, std::ios::openmode mode)
-{
-    if (stream.is_open())
-        stream.close();
-
-    stream.open(name, mode);
-    if (!stream)
-        throw Exception(errnoValue) << "Can't open `" << name << '\'';
-}
-
-template <typename Type>
-inline Exception &&operator<<(Exception &&tmp, Type const &value)
-{
-    std::ostringstream out;
-    out << value;
-    tmp.d_what += out.str();
-
-    return std::move(tmp);
-}
+    // Free functions
 
 std::ostream &errnodescr(std::ostream &out);
+
+#include "opinsert.i"           // Exception << Type
 
 } // FBB
 
