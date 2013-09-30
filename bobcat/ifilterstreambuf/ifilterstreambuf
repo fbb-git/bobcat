@@ -28,7 +28,7 @@ class IFilterStreambuf: public std::streambuf
 
     protected:
         IFilterStreambuf(size_t bufSize = 1000);
-        void setBuffer();
+        void setBuffer();                                   // .i
 
     private:
         virtual bool filter(char const **srcBegin, 
@@ -42,10 +42,7 @@ class IFilterStreambuf: public std::streambuf
         void makeAvailable(size_t nBytes);
 };
 
-inline void IFilterStreambuf::setBuffer()
-{
-    underflow();
-}
+#include "setbuffer.i"
 
 } // FBB        
 #endif
