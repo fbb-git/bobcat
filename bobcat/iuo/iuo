@@ -1,9 +1,31 @@
 #ifndef INCLUDED_BOBCAT_IUO_
 #define INCLUDED_BOBCAT_IUO_
 
+#include <cstddef>
+#include <getopt.h>
+
 namespace FBB
 {
-    void deprecated__(bool &called, char const *msg);
-}
+
+void deprecated__(bool &called, char const *msg);
+
+class OptStructArray
+{
+    typedef struct option  OptStruct;
+
+    size_t    d_n;
+    OptStruct *d_opt;
+    
+    public:
+        OptStructArray(size_t n);
+        ~OptStructArray();
+
+        OptStruct *get();
+};
+
+#include "destructor.i"
+#include "get.i"
+
+} // FBB
 
 #endif

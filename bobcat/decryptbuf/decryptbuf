@@ -25,7 +25,7 @@ class DecryptBuf: public std::streambuf
         bool setRounds(size_t nRounds);             // RC5 8, 12 or 16
 
         void done();
-        static bool lastOK();
+        static bool lastOK();                       // .i
 
     protected:
         EVP_CIPHER_CTX *cipherCtx();
@@ -37,10 +37,7 @@ class DecryptBuf: public std::streambuf
         virtual int overflow(int c);
 };
 
-inline bool DecryptBuf::lastOK()
-{
-    return s_completed;
-}
+#include "lastok.i"
 
 }   // FBB
         
