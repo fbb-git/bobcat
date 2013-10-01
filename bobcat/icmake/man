@@ -23,7 +23,7 @@ void man()
         }
     }
 
-    yo = makelist("*.yo") - (list)"bobcat.yo";
+    yo = makelist("*.yo") - (list)LIBRARY ".yo";
 
     for (idx = sizeof(yo); idx--; )
     {
@@ -34,18 +34,19 @@ void man()
             base = get_base(yodl);
     
             run("yodl2man  --no-warnings -r 3 -o ../../tmp/man/man3/" + 
-                                                    base + ".3bobcat " + yodl);
+                                            base + ".3" LIBRARY " " + yodl);
             run("yodl2html --no-warnings -r 3 -o ../../tmp/manhtml/" + 
-                                                    base + ".3.html " + yodl);
+                                            base + ".3.html " + yodl);
         }
     }
 
-    if (forced || "bobcat.yo" younger "man-stamp")
+    if (forced || LIBRARY ".yo" younger "man-stamp")
     {
-        run("yodl2man  --no-warnings  -r 3 -o ../../tmp/man/man7/bobcat.7 "
-                                                                "bobcat.yo");
+        run("yodl2man  --no-warnings  -r 3 -o ../../tmp/man/man7/" 
+                                                LIBRARY ".7 " LIBRARY ".yo");
         run("yodl2html --no-warnings  -r 3 "
-                        "-o ../../tmp/manhtml/bobcat.7.html bobcat.yo");
+                        "-o ../../tmp/manhtml/" LIBRARY ".7.html " 
+                                                            LIBRARY ".yo");
     }
 
     run("touch man-stamp");
