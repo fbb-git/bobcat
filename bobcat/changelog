@@ -15,6 +15,19 @@ bobcat (3.17.00)
 
   * All class-specific icmconf files were standardized (and cleaned)
 
+  * NOTE: 
+        the way the linker handles required libraries has changed
+        See, e.g., 
+
+            http://fedoraproject.org/wiki/UnderstandingDSOLinkChange
+
+        Due to this change programs depending on the bobcat may now require
+        explicit specifications of libraries. Most likely the linke will come
+        with a suggestion. The library libcrypto is a likely candidate for
+        explicit inclusion. If so, use -lcrypto when linking such 
+        depending programs.
+
+    
     NOTE: DURING THE TRANSITION TO 3.17.00 INSTALL.im SPECIFIES STATIC LIBRARY
     CONSTRUCTION
 

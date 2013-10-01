@@ -14,7 +14,7 @@ template <>
 class ISymCryptStreambuf<ENCRYPT>: public IUO::SymCryptStreambufBase
 {
     public:
-        ISymCryptStreambuf(
+        ISymCryptStreambuf(                                     // 1.if
                    std::istream &in,        char const *type,
                    std::string const &key,  std::string const &iv,
                    size_t bufSize = 100,    size_t filterBufSize = 1000, 
@@ -26,7 +26,7 @@ template <>
 class ISymCryptStreambuf<DECRYPT>: public IUO::SymCryptStreambufBase
 {
     public:
-        ISymCryptStreambuf(
+        ISymCryptStreambuf(                                     // 2.if
                     std::istream &in,       char const *type,
                     std::string const &key, std::string const &iv,
                     size_t bufSize = 100,   size_t filterBufSize = 1000,
@@ -34,36 +34,8 @@ class ISymCryptStreambuf<DECRYPT>: public IUO::SymCryptStreambufBase
         );
 };
 
-ISymCryptStreambuf<ENCRYPT>::ISymCryptStreambuf(
-                    std::istream &in,       char const *type,
-                    std::string const &key, std::string const &iv,
-                    size_t bufSize,         size_t filterBufSize,
-                    ENGINE *engine
-        )
-:
-    SymCryptStreambufBase(
-        &EVP_EncryptInit_ex,  &EVP_EncryptUpdate, &EVP_EncryptFinal_ex,
-        in,      type, 
-        key,     iv,
-        bufSize, filterBufSize, 
-        engine
-    )
-{}
-
-ISymCryptStreambuf<DECRYPT>::ISymCryptStreambuf(
-        std::istream &in, char const *type,
-        std::string const &key, std::string const &iv, 
-        size_t bufSize, size_t filterBufSize, 
-        ENGINE *engine)
-:
-    SymCryptStreambufBase(
-        &EVP_DecryptInit_ex, &EVP_DecryptUpdate, &EVP_DecryptFinal_ex, 
-        in,      type, 
-        key,     iv,
-        bufSize, filterBufSize, 
-        engine
-    )
-{}
+#include "isymcryptstreambuf1.if"
+#include "isymcryptstreambuf2.if"
 
 } // FBB        
 #endif

@@ -11,7 +11,7 @@ template <CryptType cryptType>
 struct ISymCryptStream: private ISymCryptStreambuf<cryptType>, 
                         public std::istream
 {
-    ISymCryptStream(
+    ISymCryptStream(                                            // 1.i
         std::istream &in,       char const *type,
         std::string const &key, std::string const &iv,
         size_t bufSize = 100,   size_t filterBufSize = 1000,
@@ -19,22 +19,7 @@ struct ISymCryptStream: private ISymCryptStreambuf<cryptType>,
     );
 };
 
-template <CryptType cryptType>
-ISymCryptStream<cryptType>::ISymCryptStream(
-    std::istream &in,       char const *type,
-    std::string const &key, std::string const &iv,
-    size_t bufSize,         size_t filterBufSize,
-    ENGINE *engine)
-:
-    ISymCryptStreambuf<cryptType>(
-        in,      type, 
-        key,     iv, 
-        bufSize, filterBufSize, 
-        engine
-    ),
-    std::istream(this)
-{}
-
+#include "isymcryptstream1.if"
 
 } // FBB        
 #endif
