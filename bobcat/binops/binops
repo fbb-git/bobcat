@@ -12,155 +12,27 @@
 //      #include <bobcat/binops>
 //  }
 
-template <typename Class>
-inline Class operator*(Class &&lhs, Class const &rhs)
-{
-    return std::move(lhs *= rhs);
-}
 
-template <typename Class>
-inline Class operator/(Class &&lhs, Class const &rhs)
-{
-    return std::move(lhs /= rhs);
-}
-
-template <typename Class>
-inline Class operator%(Class &&lhs, Class const &rhs)
-{
-    return std::move(lhs %= rhs);
-}
-
-template <typename Class>
-inline Class operator+(Class &&lhs, Class const &rhs)
-{
-    return std::move(lhs += rhs);
-}
-
-template <typename Class>
-inline Class operator-(Class &&lhs, Class const &rhs)
-{
-    return std::move(lhs -= rhs);
-}
-
-template <typename Class>
-inline Class operator^(Class &&lhs, Class const &rhs)
-{
-    return std::move(lhs ^= rhs);
-}
-
-template <typename Class>
-inline Class operator&(Class &&lhs, Class const &rhs)
-{
-    return std::move(lhs &= rhs);
-}
-
-template <typename Class>
-inline Class operator|(Class &&lhs, Class const &rhs)
-{
-    return std::move(lhs |= rhs);
-}
-
-template <typename Class>
-inline Class operator<<(Class &&lhs, Class const &rhs)
-{
-    return std::move(lhs <<= rhs);
-}
-
-template <typename Class>
-inline Class operator>>(Class &&lhs, Class const &rhs)
-{
-    return std::move(lhs >>= rhs);
-}
-
-template <typename LHS, typename RHS>
-inline typename FBB::Use<LHS, RHS>::type operator*(LHS const &lhs, 
-                                                   RHS const &rhs)
-{
-    typename FBB::Use<LHS, RHS>::type tmp(lhs);
-    tmp *= rhs;
-    return tmp;
-}
-
-template <typename LHS, typename RHS>
-inline typename FBB::Use<LHS, RHS>::type operator/(LHS const &lhs, 
-                                                   RHS const &rhs)
-{
-    typename FBB::Use<LHS, RHS>::type tmp(lhs);
-    tmp /= rhs;
-    return tmp;
-}
-
-template <typename LHS, typename RHS>
-inline typename FBB::Use<LHS, RHS>::type operator%(LHS const &lhs, 
-                                                   RHS const &rhs)
-{
-    typename FBB::Use<LHS, RHS>::type tmp(lhs);
-    tmp %= rhs;
-    return tmp;
-}
-
-template <typename LHS, typename RHS>
-inline typename FBB::Use<LHS, RHS>::type operator+(LHS const &lhs, 
-                                                   RHS const &rhs)
-{
-    typename FBB::Use<LHS, RHS>::type tmp(lhs);
-    tmp += rhs;
-    return tmp;
-}
-
-template <typename LHS, typename RHS>
-inline typename FBB::Use<LHS, RHS>::type operator-(LHS const &lhs, 
-                                                   RHS const &rhs)
-{
-    typename FBB::Use<LHS, RHS>::type tmp(lhs);
-    tmp -= rhs;
-    return tmp;
-}
-
-template <typename LHS, typename RHS>
-inline typename FBB::Use<LHS, RHS>::type operator&(LHS const &lhs, 
-                                                   RHS const &rhs)
-{
-    typename FBB::Use<LHS, RHS>::type tmp(lhs);
-    tmp &= rhs;
-    return tmp;
-}
-
-template <typename LHS, typename RHS>
-inline typename FBB::Use<LHS, RHS>::type operator^(LHS const &lhs, 
-                                                   RHS const &rhs)
-{
-    typename FBB::Use<LHS, RHS>::type tmp(lhs);
-    tmp ^= rhs;
-    return tmp;
-}
-
-template <typename LHS, typename RHS>
-inline typename FBB::Use<LHS, RHS>::type operator|(LHS const &lhs, 
-                                                   RHS const &rhs)
-{
-    typename FBB::Use<LHS, RHS>::type tmp(lhs);
-    tmp |= rhs;
-    return tmp;
-}
-
-template <typename LHS, typename RHS>
-inline typename FBB::Use<LHS, RHS>::type operator>>(LHS const &lhs, 
-                                                   RHS const &rhs)
-{
-    typename FBB::Use<LHS, RHS>::type tmp(lhs);
-    tmp >>= rhs;
-    return tmp;
-}
-
-template <typename LHS, typename RHS>
-inline typename FBB::Use<LHS, RHS>::type operator<<(LHS const &lhs, 
-                                                   RHS const &rhs)
-{
-    typename FBB::Use<LHS, RHS>::type tmp(lhs);
-    tmp <<= rhs;
-    return tmp;
-}
+#include "opadd1.f"             // Class && + Class
+#include "opadd2.f"             // LHS + RHS
+#include "opbitand1.f"          // Class && & Class
+#include "opbitand2.f"          // LHS & RHS
+#include "opbitor1.f"           // Class && | Class
+#include "opbitor2.f"           // LHS | RHS
+#include "opbitxor1.f"          // Class && ^ Class
+#include "opbitxor2.f"          // LHS ^ RHS
+#include "opdiv1.f"             // Class && / Class
+#include "opdiv2.f"             // LHS / RHS
+#include "opmod1.f"             // Class && % Class
+#include "opmod2.f"             // LHS % RHS
+#include "opshl1.f"             // Class && << Class
+#include "opshl2.f"             // LHS << RHS
+#include "opshr1.f"             // Class && >> Class
+#include "opshr2.f"             // LHS >> RHS
+#include "opsub1.f"             // Class && - Class
+#include "opsub2.f"             // LHS - RHS
+#include "optimes1.f"           // Class && * Class
+#include "optimes2.f"           // LHS * RHS
 
 #endif
 
