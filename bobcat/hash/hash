@@ -15,19 +15,19 @@ namespace FBB
 
 struct CaseHash
 {
-    size_t operator()(std::string const &key) const;        // opfun1.i
+    size_t operator()(std::string const &key) const;        // opfun1.f
 };
 
 struct CaseEqual
 {
-    bool operator()(char const *s1, char const *s2) const;  // opfun2.i
-    bool operator()(std::string const &s1,                  // opfun3.i
+    bool operator()(char const *s1, char const *s2) const;  // opfun2.f
+    bool operator()(std::string const &s1,                  // opfun3.f
                     std::string const &s2) const;           
 };
 
 struct CharPtrEqual
 {
-    bool operator()(char const *s1, char const *s2) const;  // opfun4.i
+    bool operator()(char const *s1, char const *s2) const;  // opfun4.f
 };
 
 // HashCharPtr: case sensitive char const *keys
@@ -47,13 +47,13 @@ class HashCharPtr: public std::unordered_map<
         typedef typename BaseClass::value_type value_type;
 
         HashCharPtr()                   = default;
-        HashCharPtr(HashCharPtr &&tmp);                             // 1.i
-        HashCharPtr(std::initializer_list<value_type> iniValues);   // 2.i
+        HashCharPtr(HashCharPtr &&tmp);                             // 1.f
+        HashCharPtr(std::initializer_list<value_type> iniValues);   // 2.f
 
         template <typename InputIterator>
-        HashCharPtr(InputIterator first, InputIterator beyond);     // 3.i
+        HashCharPtr(InputIterator first, InputIterator beyond);     // 3.f
 
-        HashCharPtr<Value> &operator=(HashCharPtr &&tmp);           // 4.i
+        HashCharPtr<Value> &operator=(HashCharPtr &&tmp);           // 4.f
 };
 
 
@@ -72,13 +72,13 @@ class HashCharCasePtr: public std::unordered_map<
         typedef typename BaseClass::value_type value_type;
 
         HashCharCasePtr()                       = default;
-        HashCharCasePtr(HashCharCasePtr &&tmp);                         // 1.i
-        HashCharCasePtr(std::initializer_list<value_type> iniValues);   // 2.i
+        HashCharCasePtr(HashCharCasePtr &&tmp);                         // 1.f
+        HashCharCasePtr(std::initializer_list<value_type> iniValues);   // 2.f
 
         template <typename InputIterator>
-        HashCharCasePtr(InputIterator first, InputIterator beyond);     // 3.i
+        HashCharCasePtr(InputIterator first, InputIterator beyond);     // 3.f
 
-        HashCharCasePtr<Value> &operator=(HashCharCasePtr &&tmp);       // 4.i
+        HashCharCasePtr<Value> &operator=(HashCharCasePtr &&tmp);       // 4.f
 };
 
 
@@ -94,13 +94,13 @@ class HashString: public std::unordered_map<std::string, Value>
         typedef typename BaseClass::value_type value_type;
 
         HashString()                            = default;
-        HashString(HashString &&tmp);                               // 1.i
-        HashString(std::initializer_list<value_type> iniValues);    // 2.i
+        HashString(HashString &&tmp);                               // 1.f
+        HashString(std::initializer_list<value_type> iniValues);    // 2.f
 
         template <typename InputIterator>
-        HashString(InputIterator first, InputIterator beyond);      // 3.i
+        HashString(InputIterator first, InputIterator beyond);      // 3.f
 
-        HashString<Value> &operator=(HashString &&tmp);             // 4.i
+        HashString<Value> &operator=(HashString &&tmp);             // 4.f
 };
 
 
@@ -119,40 +119,40 @@ class HashStringCase: public std::unordered_map<
         typedef typename BaseClass::value_type value_type;
 
         HashStringCase()                        = default;
-        HashStringCase(HashStringCase &&tmp);                           // 1.i
+        HashStringCase(HashStringCase &&tmp);                           // 1.f
 
-        HashStringCase(std::initializer_list<value_type> iniValues);    // 2.i
+        HashStringCase(std::initializer_list<value_type> iniValues);    // 2.f
 
         template <typename InputIterator>
-        HashStringCase(InputIterator first, InputIterator beyond);      // 3.i
+        HashStringCase(InputIterator first, InputIterator beyond);      // 3.f
 
-        HashStringCase<Value> &operator=(HashStringCase &&tmp);         // 4.i
+        HashStringCase<Value> &operator=(HashStringCase &&tmp);         // 4.f
 };
 
-#include "opfun1.if"
-#include "opfun2.if"
-#include "opfun3.if"
-#include "opfun4.if"
+#include "opfun1.f"
+#include "opfun2.f"
+#include "opfun3.f"
+#include "opfun4.f"
 
-#include "hashcharptr1.if"
-#include "hashcharptr2.if"
-#include "hashcharptr3.if"
-#include "hashcharptr4.if"
+#include "hashcharptr1.f"
+#include "hashcharptr2.f"
+#include "hashcharptr3.f"
+#include "hashcharptr4.f"
 
-#include "hashcharcaseptr1.if"
-#include "hashcharcaseptr2.if"
-#include "hashcharcaseptr3.if"
-#include "hashcharcaseptr4.if"
+#include "hashcharcaseptr1.f"
+#include "hashcharcaseptr2.f"
+#include "hashcharcaseptr3.f"
+#include "hashcharcaseptr4.f"
 
-#include "hashstring1.if"
-#include "hashstring2.if"
-#include "hashstring3.if"
-#include "hashstring4.if"
+#include "hashstring1.f"
+#include "hashstring2.f"
+#include "hashstring3.f"
+#include "hashstring4.f"
 
-#include "hashstringcase1.if"
-#include "hashstringcase2.if"
-#include "hashstringcase3.if"
-#include "hashstringcase4.if"
+#include "hashstringcase1.f"
+#include "hashstringcase2.f"
+#include "hashstringcase3.f"
+#include "hashstringcase4.f"
 
 } // FBB
 

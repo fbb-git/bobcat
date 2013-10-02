@@ -148,10 +148,10 @@ class DateTime
         DateTime &operator+=(time_t seconds);           // 1.
         DateTime &operator+=(TimeStruct const &tm);     // 2. 
 
-        DateTime &operator-=(time_t seconds);           // opsubis1.i
+        DateTime &operator-=(time_t seconds);           // opsubis1.f
         DateTime &operator-=(TimeStruct const &tm);
 
-        operator bool() const;                          // opbool.i
+        operator bool() const;                          // opbool.f
 
         bool setDay(int day);           // 'int' values may be negative or 
         bool setHours(int hours);       // postive.
@@ -164,33 +164,33 @@ class DateTime
         bool setWeekday(Weekday weekday, Relative where = NEXT);
         bool setYear(size_t year);
         bool setFields(TimeStruct const &tmStruct, int fields);
-        void setValid();                                            // .i
+        void setValid();                                            // .f
 
-        int displayZoneShift() const;                               // .i
-        TriVal dst() const;                                         // .i
-        size_t error() const;                                       // .i
-        size_t hours() const;                                       // .i
-        size_t minutes() const;                                     // .i
-        Month month() const;                                        // .i
-        size_t monthDayNr() const;                                  // .i
+        int displayZoneShift() const;                               // .f
+        TriVal dst() const;                                         // .f
+        size_t error() const;                                       // .f
+        size_t hours() const;                                       // .f
+        size_t minutes() const;                                     // .f
+        Month month() const;                                        // .f
+        size_t monthDayNr() const;                                  // .f
         std::string rfc2822() const;
         std::string rfc3339() const;
-        size_t seconds() const;                                     // .i
-        time_t time() const;                                        // .i
+        size_t seconds() const;                                     // .f
+        time_t time() const;                                        // .f
         TimeStruct const *timeStruct() const;
-        bool valid() const;                                         // .i
-        Weekday weekday() const;                                    // .i
-        size_t year() const;                                        // .i
-        size_t yearDay() const;             // starts counting at 0    .i
-        size_t yearDayNr() const;           // starts counting at 1    .i
+        bool valid() const;                                         // .f
+        Weekday weekday() const;                                    // .f
+        size_t year() const;                                        // .f
+        size_t yearDay() const;             // starts counting at 0    .f
+        size_t yearDayNr() const;           // starts counting at 1    .f
         size_t weekNr() const;              // starts counting at 1
 
         
-        DateTime utc() const;                                       // .i
-        DateTime localTime() const;                                 // .i
+        DateTime utc() const;                                       // .f
+        DateTime localTime() const;                                 // .f
         DateTime to(TimeType type) const;
 
-        DateTime timeZoneShift(int displayZoneShift) const;         // .i
+        DateTime timeZoneShift(int displayZoneShift) const;         // .f
 
     private:
             // used by constructors
@@ -208,7 +208,7 @@ class DateTime
         std::ostream &timeStr(std::ostream &out) const;
 
         time_t timeStruct2utcSec(TimeStruct *ts);           // sets d_ok
-        void utcSec2timeStruct(TimeStruct *ts,              // sets d_ok    .i
+        void utcSec2timeStruct(TimeStruct *ts,              // sets d_ok    .f
                                             time_t time);    
         
         int dstCorrection(bool *ok) const;
@@ -216,44 +216,44 @@ class DateTime
 
         time_t defaultDisplayZoneShift() const;     // seconds
 
-        static int zoneShiftSeconds(int shiftMinutes);              // .i
+        static int zoneShiftSeconds(int shiftMinutes);              // .f
                                                 // shifts multiples of 30'
                                                 // at most +/-12 hours away
 };
 
-#include "displayzoneshift.if"
-#include "dst.if"
-#include "error.if"
-#include "hours.if"
-#include "localtime.if"
-#include "minutes.if"
-#include "month.if"
-#include "monthdaynr.if"
-#include "opbool.if"
-#include "opsubis1.if"
-#include "seconds.if"
-#include "setvalid.if"
-#include "time.if"
-#include "timezoneshift.if"
-#include "utc.if"
-#include "valid.if"
-#include "weekday.if"
-#include "year.if"
-#include "yearday.if"
-#include "yeardaynr.if"
+#include "displayzoneshift.f"
+#include "dst.f"
+#include "error.f"
+#include "hours.f"
+#include "localtime.f"
+#include "minutes.f"
+#include "month.f"
+#include "monthdaynr.f"
+#include "opbool.f"
+#include "opsubis1.f"
+#include "seconds.f"
+#include "setvalid.f"
+#include "time.f"
+#include "timezoneshift.f"
+#include "utc.f"
+#include "valid.f"
+#include "weekday.f"
+#include "year.f"
+#include "yearday.f"
+#include "yeardaynr.f"
 
 // Free functions
 
-#include "opadd1.if"     // DateTime + time_t
-#include "opadd2.if"     // DateTime + tm
-#include "opeq.if"       // DateTime == DateTime
-#include "opgeq.if"      // DateTime >= DateTime
-#include "opgreater.if"  // DateTime > DateTime
-#include "opleq.if"      // DateTime <= DateTime
-#include "opless.if"     // DateTime < DateTime
-#include "opneq.if"      // DateTime != DateTime
-#include "opsub1.if"     // DateTime - time_t
-#include "opsub2.if"     // DateTime - tm
+#include "opadd1.f"     // DateTime + time_t
+#include "opadd2.f"     // DateTime + tm
+#include "opeq.f"       // DateTime == DateTime
+#include "opgeq.f"      // DateTime >= DateTime
+#include "opgreater.f"  // DateTime > DateTime
+#include "opleq.f"      // DateTime <= DateTime
+#include "opless.f"     // DateTime < DateTime
+#include "opneq.f"      // DateTime != DateTime
+#include "opsub1.f"     // DateTime - time_t
+#include "opsub2.f"     // DateTime - tm
 
 }   // FBB
 

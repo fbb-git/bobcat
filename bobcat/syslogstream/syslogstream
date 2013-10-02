@@ -118,11 +118,11 @@ class SyslogStream: private Syslogbuf, public std::ostream
         static  Facility stoF(std::string const &name, 
                                                 Facility facility = USER);
 
-        static int setMask(Priority p1, PriorityType upTo);     // 1.i
-        static int setMask(Priority p1);                        // 2.i
+        static int setMask(Priority p1, PriorityType upTo);     // 1.f
+        static int setMask(Priority p1);                        // 2.f
 
         template <typename ...Priorities>
-        static int setMask(Priority p1, Priorities ...ps);      // 3.i
+        static int setMask(Priority p1, Priorities ...ps);      // 3.f
 
 // MANIPULATORS:
         static std::ostream &emerg(std::ostream &str);
@@ -157,7 +157,7 @@ inline int SyslogStream::setMask(Priority p1)
     return setMask(maskValue(p1), SINGLE);
 }
 
-#include "setmask.if"
+#include "setmask.f"
 
 inline void SyslogStream::close()
 {
@@ -239,7 +239,7 @@ inline int SyslogStream::maskValue(Priority p1)
     return 1 << p1;
 }
 
-#include "maskvalue.if"
+#include "maskvalue.f"
 
 inline int SyslogStream::setMask(int maskValue, PriorityType upTo)
 {

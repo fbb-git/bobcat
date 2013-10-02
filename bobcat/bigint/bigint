@@ -59,7 +59,7 @@ class BigInt
         BigInt &setNegative(bool negative);
         BigInt setNegativec(bool negative) const;
 
-        bool isNegative() const;                        // .i
+        bool isNegative() const;                        // .f
 
 
         BigInt &tildeBits();
@@ -68,20 +68,20 @@ class BigInt
         BigInt &tildeInt();
         BigInt tildeIntc() const;
 
-        BigInt &operator--();                   // opdec.i
+        BigInt &operator--();                   // opdec.f
         BigInt operator--(int);
 
-        BigInt &operator++();                   // opinc.i
+        BigInt &operator++();                   // opinc.f
         BigInt operator++(int);
 
 
         class Bit;
 
-        Bit operator[](size_t idx);             // opindex.i
+        Bit operator[](size_t idx);             // opindex.f
                                                 //  non-const BigInts:
                                                 //  distinguishes lhs/rhs
 
-        int operator[](size_t idx) const;       // opindexc.i 
+        int operator[](size_t idx) const;       // opindexc.f 
                                                 //  only rhs for const BigInts
 
         class Bit
@@ -105,16 +105,16 @@ class BigInt
 
         char *bigEndian() const;
         
-        BigInt &operator+=(BigInt const &rhs);                  // opaddis.i
-        BigInt &addMod(BigInt const &rhs, BigInt const &mod);   // .i
+        BigInt &operator+=(BigInt const &rhs);                  // opaddis.f
+        BigInt &addMod(BigInt const &rhs, BigInt const &mod);   // .f
         BigInt addModc(BigInt const &rhs, BigInt const &mod) const;
 
-        BigInt &operator-=(BigInt const &rhs);                  // opsubis.i
-        BigInt &subMod(BigInt const &rhs, BigInt const &mod);   // .i
+        BigInt &operator-=(BigInt const &rhs);                  // opsubis.f
+        BigInt &subMod(BigInt const &rhs, BigInt const &mod);   // .f
         BigInt subModc(BigInt const &rhs, BigInt const &mod) const;
 
         BigInt &operator*=(BigInt const &rhs);
-        BigInt &mulMod(BigInt const &rhs, BigInt const &mod);   // .i
+        BigInt &mulMod(BigInt const &rhs, BigInt const &mod);   // .f
         BigInt mulModc(BigInt const &rhs, BigInt const &mod) const;
 
         BigInt &operator%=(BigInt const &rhs);
@@ -128,25 +128,25 @@ class BigInt
         BigInt &sqr();
         BigInt sqrc() const;
 
-        BigInt &sqrMod(BigInt const &mod);                      // .i
+        BigInt &sqrMod(BigInt const &mod);                      // .f
         BigInt sqrModc(BigInt const &mod) const;
 
         BigInt &operator&=(BigInt const &rhs);
         BigInt &operator|=(BigInt const &rhs);
         BigInt &operator^=(BigInt const &rhs);
 
-        bool isZero() const;                                    // .i
-        bool isOne() const;                                     // .i
-        bool isOdd() const;                                     // .i
+        bool isZero() const;                                    // .f
+        bool isOne() const;                                     // .f
+        bool isOdd() const;                                     // .f
 
-        unsigned long ulong() const;                            // .i
-        BIGNUM const &bignum() const;                           // .i
+        unsigned long ulong() const;                            // .f
+        BIGNUM const &bignum() const;                           // .f
 
-        size_t sizeInBytes() const;                     // .i
-        size_t size() const;                            // .i
+        size_t sizeInBytes() const;                     // .f
+        size_t size() const;                            // .f
 
-        int compare(BigInt const &other) const;         // .i
-        int uCompare(BigInt const &other) const;        // .i
+        int compare(BigInt const &other) const;         // .f
+        int uCompare(BigInt const &other) const;        // .f
 
         long long diophantus(long long *factor1, long long *factor2, 
                              long long const &value1, 
@@ -189,7 +189,7 @@ class BigInt
         BigInt &clearBit(size_t index);
         BigInt clearBit(size_t index) const;
 
-        bool hasBit(size_t index) const;                        // .i
+        bool hasBit(size_t index) const;                        // .f
 
         BigInt &maskBits(size_t lowerNBits);
         BigInt maskBitsc(size_t lowerNBits) const;
@@ -206,7 +206,7 @@ class BigInt
         BigInt &lshift(size_t nBits);
         BigInt lshiftc(size_t nBits) const;
 
-        BigInt &operator<<=(size_t nBits);                  // opshlis.i
+        BigInt &operator<<=(size_t nBits);                  // opshlis.f
 
         BigInt &rshift();
         BigInt rshiftc() const;
@@ -214,7 +214,7 @@ class BigInt
         BigInt &rshift(size_t nBits);
         BigInt rshiftc(size_t nBits) const;
 
-        BigInt &operator>>=(size_t nBits);                  // opshris.i
+        BigInt &operator>>=(size_t nBits);                  // opshris.f
 
         void swap(BigInt &other);
 
@@ -265,29 +265,29 @@ BigInt::BigInt(Type value)
         negate();
 }    
 
-#include "addmod.if"
-#include "bignum.if"
-#include "compare.if"
-#include "hasbit.if"
-#include "isnegative.if"
-#include "isodd.if"
-#include "isone.if"
-#include "iszero.if"
-#include "mulmod.if"
-#include "opaddis.if"
-#include "opbool.if"
-#include "opdec.if"
-#include "opinc.if"
-#include "opindex.if"
-#include "opindexc.if"
-#include "opshlis.if"
-#include "opshris.if"
-#include "opsubis.if"
-#include "size.if"
-#include "sizeinbytes.if"
-#include "sqrmod.if"
-#include "submod.if"
-#include "ucompare.if"
+#include "addmod.f"
+#include "bignum.f"
+#include "compare.f"
+#include "hasbit.f"
+#include "isnegative.f"
+#include "isodd.f"
+#include "isone.f"
+#include "iszero.f"
+#include "mulmod.f"
+#include "opaddis.f"
+#include "opbool.f"
+#include "opdec.f"
+#include "opinc.f"
+#include "opindex.f"
+#include "opindexc.f"
+#include "opshlis.f"
+#include "opshris.f"
+#include "opsubis.f"
+#include "size.f"
+#include "sizeinbytes.f"
+#include "sqrmod.f"
+#include "submod.f"
+#include "ucompare.f"
 
 // Free functions
 
@@ -309,13 +309,13 @@ std::istream &operator>>(std::istream &out, BigInt &bn);
 
 int isoctdigit(int ch);
 
-#include "opgreater.if"              // >
-#include "opgreaterequal.if"         // >=
-#include "opinsert.if"               // ostream <<
-#include "opisequal.if"              // ==
-#include "opisunequal.if"            // !=
-#include "opless.if"                 // <
-#include "oplessequal.if"            // <=
+#include "opgreater.f"              // >
+#include "opgreaterequal.f"         // >=
+#include "opinsert.f"               // ostream <<
+#include "opisequal.f"              // ==
+#include "opisunequal.f"            // !=
+#include "opless.f"                 // <
+#include "oplessequal.f"            // <=
 
 
 }   // namespace FBB

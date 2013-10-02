@@ -40,12 +40,12 @@ class IFdStreambuf: public std::streambuf
 
         IFdStreambuf &operator=(IFdStreambuf const &other) = delete;
 
-        void close();                                           // .i
+        void close();                                           // .f
 
         void open(int xfd, Mode mode, size_t n = 1);
-        void open(int xfd, size_t n = 1);                       // .i
+        void open(int xfd, size_t n = 1);                       // .f
         
-        int fd() const;                                         // .i
+        int fd() const;                                         // .f
 
     private:
         virtual int underflow();
@@ -54,9 +54,9 @@ class IFdStreambuf: public std::streambuf
         void cleanup(Mode mode);
 };
 
-#include "open.if"
-#include "close.if"
-#include "fd.if"
+#include "open.f"
+#include "close.f"
+#include "fd.f"
 
 } // FBB
 

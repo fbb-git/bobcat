@@ -14,22 +14,22 @@ class IOStreambuf: public std::streambuf
     std::ostream *d_out;
 
     public:
-        IOStreambuf();                                          // 1.i
-        IOStreambuf(std::istream &in, std::ostream &out);       // 2.i
+        IOStreambuf();                                          // 1.f
+        IOStreambuf(std::istream &in, std::ostream &out);       // 2.f
 
         virtual ~IOStreambuf();
 
         void open(std::istream &in, std::ostream &out);
 
     protected:
-        std::streamsize pXsputn(char const *buffer,             // .i
+        std::streamsize pXsputn(char const *buffer,             // .f
                                 std::streamsize n);
         int pSync();
         pos_type pSeekoff(off_type offset, std::ios::seekdir way,
                                  std::ios::openmode mode = 
                                                 std::ios::in | std::ios::out);
 
-        pos_type pSeekpos(pos_type offset,                      // .i
+        pos_type pSeekpos(pos_type offset,                      // .f
                                  std::ios::openmode mode = 
                                                 std::ios::in | std::ios::out);
 
@@ -46,10 +46,10 @@ class IOStreambuf: public std::streambuf
         virtual std::streamsize xsputn(char const *buffer, std::streamsize n);
 };
 
-#include "iostreambuf1.if"
-#include "iostreambuf2.if"
-#include "pseekpos.if"
-#include "pxsputn.if"
+#include "iostreambuf1.f"
+#include "iostreambuf2.f"
+#include "pseekpos.f"
+#include "pxsputn.f"
 
 } // namespace FBB
 

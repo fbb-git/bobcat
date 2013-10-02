@@ -37,34 +37,34 @@ class Exception: public std::exception
                           Protection type = EQUAL);
 
         template <typename StreamType>
-        static void open(StreamType &stream,                    // open1.i
+        static void open(StreamType &stream,                    // open1.f
                          std::string const &name);
 
         template <typename StreamType>
-        static void open(int errnoValue, StreamType &stream,    // open2.i
+        static void open(int errnoValue, StreamType &stream,    // open2.f
                          std::string const &name);
 
         template <typename StreamType>
-        static void open(StreamType &stream,                    // open3.i
+        static void open(StreamType &stream,                    // open3.f
                             std::string const &name, std::ios::openmode mode);
 
         template <typename StreamType>
-        static void open(int errnoValue, StreamType &stream,    // open4.i
+        static void open(int errnoValue, StreamType &stream,    // open4.f
                             std::string const &name, std::ios::openmode mode);
     private:
         char const *what() const noexcept(true) override;
 };
 
-#include "open1.if"
-#include "open2.if"
-#include "open3.if"
-#include "open4.if"
+#include "open1.f"
+#include "open2.f"
+#include "open3.f"
+#include "open4.f"
 
     // Free functions
 
 std::ostream &errnodescr(std::ostream &out);
 
-#include "opinsert.if"           // Exception << Type
+#include "opinsert.f"           // Exception << Type
 
 } // FBB
 
