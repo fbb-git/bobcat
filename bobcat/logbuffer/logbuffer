@@ -32,13 +32,13 @@ class LogBuffer: public std::streambuf
                 bool active = true,
                 char const *delim = " ");
 
-        void setStream(std::ostream &stream);
-        bool empty() const;
+        void setStream(std::ostream &stream);               // .f
+        bool empty() const;                                 // .f
 
-        void setActive(bool active);
+        void setActive(bool active);                        // .f
         void settimestamp(TimeStamps timestamps, char const *delim = " ");
 
-        void setEmpty(bool empty);
+        void setEmpty(bool empty);                          // .f
 
     protected:
         virtual int pSync();
@@ -52,28 +52,11 @@ class LogBuffer: public std::streambuf
         LogBuffer &operator=(LogBuffer const &other) = delete;
 };
 
-inline void LogBuffer::setStream(std::ostream &stream)
-{
-    d_stream = &stream;
-}
-inline bool LogBuffer::empty() const
-{
-    return d_empty;
-}
-
-inline void LogBuffer::setActive(bool active)
-{
-    d_active = active;
-}
-
-inline void LogBuffer::setEmpty(bool empty)
-{
-    d_empty = empty;
-}
+#include "empty.f"
+#include "setactive.f"
+#include "setempty.f"
+#include "setstream.f"
 
 } // FBB
         
 #endif
-
-
-
