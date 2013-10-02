@@ -29,12 +29,12 @@ class MultiStreambuf: public std::streambuf
             Mode          d_mode;
 
             public:
-                stream(std::ostream &os, Mode mode = ON);
-                void setMode(Mode mode);
-                Mode mode() const;
-                std::ostream &ostream();
+                stream(std::ostream &os, Mode mode = ON);   // 1.f
+                void setMode(Mode mode);                    // .f
+                Mode mode() const;                          // .f
+                std::ostream &ostream();                    // .f
             private:
-                static void setOnce(stream &os);
+                static void setOnce(stream &os);            // .f
         };
 
         typedef std::vector<stream>::iterator iterator;
@@ -45,16 +45,16 @@ class MultiStreambuf: public std::streambuf
         std::vector<stream> d_os;
 
     public:
-        MultiStreambuf() = default;
-        explicit MultiStreambuf(std::ostream &os, Mode mode = ON);
-        explicit MultiStreambuf(std::vector<stream> const &osvector);
+        MultiStreambuf()    = default;
+        explicit MultiStreambuf(std::ostream &os, Mode mode = ON);      // 1.f
+        explicit MultiStreambuf(std::vector<stream> const &osvector);   // 2.f
 
-        void insert(std::ostream &os, Mode mode = ON);
-        void insert(std::vector<stream> const &os);
-        iterator begin();
-        iterator end();
-        const_iterator begin() const;
-        const_iterator end() const;
+        void insert(std::ostream &os, Mode mode = ON);                  // 1.f
+        void insert(std::vector<stream> const &os);                     // 2.f
+        iterator begin();                                               // 1.f
+        iterator end();                                                 // 1.f
+        const_iterator begin() const;                                   // 2.f
+        const_iterator end() const;                                     // 2.f
         void setOnce();             // reset all `RESET' modes to `ONCE'
         
     protected:
@@ -73,72 +73,21 @@ class MultiStreambuf: public std::streambuf
         static void insertStruct(stream &os, Insert &insert); 
 };
 
-inline MultiStreambuf::stream::stream(std::ostream &os, Mode mode)
-:
-    d_os(&os),
-    d_mode(mode)
-{}
+#include "mode.f"
+#include "ostream.f"
+#include "setmode.f"
+#include "setonce.f"
+#include "stream1.f"
 
-inline void MultiStreambuf::stream::setMode(Mode mode)
-{
-    d_mode = mode;
-}
+#include "multistreambuf1.f"
+#include "multistreambuf2.f"
 
-inline MultiStreambuf::Mode MultiStreambuf::stream::mode() const
-{
-    return d_mode;
-}
-
-inline std::ostream &MultiStreambuf::stream::ostream()
-{
-    return *d_os;
-}
-
-inline void MultiStreambuf::stream::setOnce(stream &os)
-{
-    if (os.d_mode == RESET)
-        os.d_mode = ONCE;
-}
-
-inline MultiStreambuf::MultiStreambuf(std::ostream &os, Mode mode)
-{
-    insert(os, mode);
-}
-
-inline MultiStreambuf::MultiStreambuf(std::vector<stream> const &osvector)
-{
-    insert(osvector);
-}
-
-inline void MultiStreambuf::insert(std::ostream &os, Mode mode)
-{
-    d_os.push_back(stream(os, mode));
-}
-
-inline void MultiStreambuf::insert(std::vector<stream> const &os)
-{
-    d_os.insert(d_os.end(), os.begin(), os.end());
-}
-
-inline MultiStreambuf::iterator MultiStreambuf::begin()
-{
-    return d_os.begin();
-}
-
-inline MultiStreambuf::iterator MultiStreambuf::end()
-{
-    return d_os.end();
-}
-
-inline MultiStreambuf::const_iterator MultiStreambuf::begin() const
-{
-    return d_os.begin();
-}
-
-inline MultiStreambuf::const_iterator MultiStreambuf::end() const
-{
-    return d_os.end();
-}
+#include "begin1.f"
+#include "begin2.f"
+#include "end1.f"
+#include "end2.f"
+#include "insert1.f"
+#include "insert2.f"
 
 } // namespace FBB
         
