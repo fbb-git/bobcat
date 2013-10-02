@@ -40,25 +40,18 @@ class Log: private LogBuffer, public std::ostream
                 std::ios::openmode = std::ios::out | std::ios::app, 
                 char const *delim = " ");
 
-        size_t level() const;
+        size_t level() const;                                           // .f
         std::ostream &level(size_t useLevel);
         void  setLevel(size_t newLevel);
         void  setTimestamp(TimeStamps timeStamp, char const *delim = " ");
-        void  off();
+        void  off();                                                    // .f
 
     private:
         void init();
 };
 
-inline void  Log::off()
-{
-    setActive(false);
-}
-
-inline size_t Log::level() const
-{
-    return d_level;
-}
+#include "level.f"
+#include "off.f"
 
 std::ostream &operator<<(std::ostream &str, LogManipulator);
         
