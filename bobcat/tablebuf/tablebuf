@@ -9,7 +9,8 @@ namespace FBB
 
 class TableBuf: public TableBase, public std::streambuf
 {
-    friend std::ostream &operator<<(std::ostream &str, TableBuf &table); 
+    friend std::ostream &operator<<(std::ostream &str,              // 1.f
+                                    TableBuf &table); 
 
     friend std::ostream &fs(std::ostream &out);
     friend std::ostream &rs(std::ostream &out);
@@ -28,13 +29,13 @@ class TableBuf: public TableBase, public std::streambuf
                 size_t nColumns, FillDirection direction,             
                 WidthType widthType = COLUMNWIDTH);
 
-        TableBuf &def();                    // fillup an incomplete table
-        TableBuf &setAlign(Align const &align);    // set an alignment
+        TableBuf &def();                // fillup an incomplete table  1.f
+        TableBuf &setAlign(Align const &align);    // set alignment    .f
 
-        void setFieldSeparator(char fs);
-        void setRowSeparator(char rs);
-        void setFieldSeparator();
-        void setRowSeparator();
+        void setFieldSeparator();                                   // 1.f
+        void setFieldSeparator(char fs);                            // 2.f
+        void setRowSeparator();                                     // 1.f
+        void setRowSeparator(char rs);                              // 2.f
 
     protected:
         virtual int pSync();
@@ -51,47 +52,18 @@ class TableBuf: public TableBase, public std::streambuf
 std::ostream &fs(std::ostream &out);
 std::ostream &rs(std::ostream &out);
 
-inline void TableBuf::setFieldSeparator()
-{
-    d_fs = -1;
-}
+#include "setalign.f"
+#include "setfieldseparator1.f"
+#include "setfieldseparator2.f"
+#include "setrowseparator1.f"
+#include "setrowseparator2.f"
 
-inline void TableBuf::setFieldSeparator(char fs)
-{
-    d_fs = fs;
-}
+    // Free Members
 
-inline void TableBuf::setRowSeparator()
-{
-    d_rs = -1;
-}
+#include "def2.f"       // TableBuf &def(TableBuf &table)
 
-inline void TableBuf::setRowSeparator(char rs)
-{
-    d_rs = rs;
-}
-
-inline TableBuf &TableBuf::setAlign(Align const &align)
-{
-    TableBase::setAlign(align);
-    return *this;
-}
                         // Insert column or element alignments
-inline TableBuf &operator<<(TableBuf &tab, Align const &align)
-{
-    return tab.setAlign(align);
-}
-
-inline TableBuf &TableBuf::def()
-{
-    TableBase::def();
-    return *this;
-}
-
-inline TableBuf &def(TableBuf &table)
-{
-    return table.def();
-}
+#include "opinsert2.f"  // TableBuf << Align
 
 } // FBB
         
