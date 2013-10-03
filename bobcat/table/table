@@ -31,19 +31,19 @@ class Table: public TableBase, public std::ostringstream
                             bool addEmpty = false);
 
         template <typename InputIterator>
-        void fill(InputIterator begin, InputIterator end);
+        void fill(InputIterator begin, InputIterator end);              // .f
 
-        void push_back(Element const &element); // add an element to the
-                                                // table, using the 
+        void push_back(Element const &element); // add an element to       .f
+                                                // the table, using the 
                                                 // default alignment. 
 
-        Table &setAlign(Align const &align);    // set an alignment
+        Table &setAlign(Align const &align);    // set an alignment        .f
 
-        Table &def();                       // fillup an incomplete table
-                                            // automatically at insertions
+        Table &def();                   // fillup an incomplete table      .f
+                                        // automatically at insertions
 
         using TableBase::clear;
-        void clearStr();                    // clear the ostringstream part
+        void clearStr();                // clear the ostringstream part    .f
 
     private:
         Table &flush();                     // insert the text currently
@@ -51,63 +51,24 @@ class Table: public TableBase, public std::ostringstream
                                             // as ostringstream into the table 
 };
 
-template <typename Iter>
-void Table::fill(Iter it, Iter end)
-{
-    TableBase::clear();
+#include "clearstr.f"
+#include "def1.f"
+#include "fill.f"
+#include "pushback.f"
+#include "setalign.f"
 
-    while (it != end)
-    {
-        std::ostringstream str;
-        str << *it++;
-        push_back(str.str());
-    }
-}
+    // Free Functions
 
-inline void Table::push_back(Element const &element)
-{
-    d_tabulated = false;
-    d_string.push_back(element);
-}
-
-inline Table &Table::setAlign(Align const &align)
-{
-    TableBase::setAlign(align);
-    return *this;
-}
                         // Insert column or element alignments
-inline Table &operator<<(Table &tab, Align const &align)
-{
-    return tab.setAlign(align);
-}
+#include "opinsert1.f"   // Table << Align
 
-inline Table &Table::def()
-{
-    TableBase::def();
-    return *this;
-}
+#include "def2.f"       // Table &def(Table &def)
 
-inline Table &def(Table &table)
-{
-    return table.def();
-}
                         // For def
-inline Table &operator<<(Table &table, Table &(*fun)(Table &))
-{
-    return (*fun)(table);
-}
+#include "opinsert2.f"  // Table << Table &(*fun)(Table &)
 
-inline void Table::clearStr()
-{
-    std::ostringstream::clear();
-}
-
-template <typename Type>    // Insert any other insertable type into a Table
-Table &operator<<(Table &table, Type const &ref)
-{
-    reinterpret_cast<std::ostringstream &>(table) << ref;
-    return table.flush();
-}
+                        // Insert any other insertable type into a Table
+#include "opinsert3.f"  // Table << Type const &
 
 } // FBB
 
