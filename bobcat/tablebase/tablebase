@@ -29,9 +29,9 @@ class TableBase
             EQUALWIDTH,
         };
 
-        void clear();                       // clear the table-elements
+        void clear();                       // clear the table-elements    .f
 
-        size_t nRows() const;               // Number of rows currently
+        size_t nRows() const;               // Number of rows currently    .f
                                             // in the table (following def)
     protected:
         struct Element
@@ -39,9 +39,9 @@ class TableBase
             std::string d_text;
             std::ios_base &(*d_manip)(std::ios_base &);
     
-            Element(std::string text = "", 
+            Element(std::string text = "",                              // .f
                     std::ios_base &(*manip)(std::ios_base &) = 0);
-            size_t length() const;
+            size_t length() const;                                      // .f
         };
         bool                    d_tabulated;
 
@@ -71,73 +71,35 @@ class TableBase
         void def();                         // fillup an incomplete table
                                             // automatically called at 
                                             // insertions into ostreams
-        size_t columnWidth(size_t col) const;
-        Manipulator columnManip(size_t col) const;
-        Element &hIndex(size_t row, size_t col);
-        Element &vIndex(size_t row, size_t col);
+        size_t columnWidth(size_t col) const;                       // .f
+        Manipulator columnManip(size_t col) const;                  // .f
+        Element &hIndex(size_t row, size_t col);                    // .f
+        Element &vIndex(size_t row, size_t col);                    // .f
 
     private:
         std::ostream &insert(std::ostream &ostr);
 
                                     // returns element at particular location
-        Element &elementAt(size_t row, size_t col);
+        Element &elementAt(size_t row, size_t col);                 // .f
 
 };
 
-inline void TableBase::clear()
-{
-    d_tabulated = false;
-    d_string.clear();
-}
+#include "clear.f"
+#include "columnmanip.f"
+#include "columnwidth.f"
+#include "hindex.f"
+#include "nrows.f"
+#include "vindex.f"
 
-inline size_t TableBase::nRows() const
-{
-    return d_nRows;
-}
+    // Element members
 
-inline TableBase::Element::Element(std::string text, 
-                                   std::ios_base &(*manip)(std::ios_base &))
-:
-    d_text(text),
-    d_manip(manip)
-{}
+#include "element1.f"
+#include "length.f"
+
+    // Free Functions
 
                         // display the table
-inline std::ostream &operator<<(std::ostream &str, TableBase &table)
-{
-    return table.insert(str);
-}
-            
-inline size_t TableBase::Element::length() const
-{
-    return d_text.length();
-}
-
-inline size_t TableBase::columnWidth(size_t col) const
-{
-    return d_align[col];
-}
-
-inline Manipulator TableBase::columnManip(size_t col) const
-{
-    Manipulator manip = d_align[col].manip();
-    return manip ? manip : std::right;
-}
-
-inline TableBase::Element &TableBase::hIndex(size_t row, size_t col)
-{
-    return d_string[row * d_nColumns + col];
-}
-
-inline TableBase::Element &TableBase::vIndex(size_t row, size_t col)
-{
-    return d_string[col * d_nRows + row];
-}
-
-inline TableBase::Element &TableBase::elementAt(size_t row, size_t col)
-{
-    return (this->*d_indexFun)(row, col);
-}
+#include "opinsert.f"   // ostream >> TableBase
 
 } // FBB        
 #endif
