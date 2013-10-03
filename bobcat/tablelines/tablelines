@@ -10,10 +10,10 @@ namespace FBB
 class TableLines: public TableSupport
 {
     public:
-        TableLines() = default;
-        TableLines(TableLines &&tmp);
+        TableLines()     = default;
+        TableLines(TableLines &&tmp);               // 1.f
     
-        TableLines &operator=(TableLines &&tmp);
+        TableLines &operator=(TableLines &&tmp);    // opassign.f
 
     private:
         virtual void v_hline(size_t row) const;
@@ -21,16 +21,8 @@ class TableLines: public TableSupport
         static void outLine(Field const &field,  std::ostream &out);
 };
 
-inline TableLines::TableLines(TableLines &&tmp)
-:
-    TableSupport(std::move(tmp))
-{}
-
-inline TableLines &TableLines::operator=(TableLines &&tmp)
-{
-    *this = std::move(tmp);
-    return *this;
-}
+#include "tablelines1.f"
+#include "opassign.f"
 
 } // FBB        
 #endif
