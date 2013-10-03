@@ -19,16 +19,11 @@ class OneKey
         };
 
         explicit OneKey(Mode state = OFF);    
-//  with g++4-4
-//        OneKey(OneKey const &other) = delete;
 
         ~OneKey();
 
-//  with g++4-4
-//        OneKey const &operator=(OneKey const &other) = delete;
-        
         int get() const;                // get the next char
-        void setEcho(Mode state);
+        void setEcho(Mode state);                                   // .f
 
         void verify() const;            // kept for backward compat.
 
@@ -38,10 +33,7 @@ class OneKey
 
 };
 
-inline void OneKey::setEcho(Mode state)
-{
-    d_useEcho = (state == ON);
-}
+#include "setecho.f"
 
 } // FBB
 

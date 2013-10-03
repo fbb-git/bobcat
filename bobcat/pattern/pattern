@@ -47,7 +47,7 @@ class Pattern
         static std::string  s_converted;
 
         Regex(std::string pattern, int options);
-        ~Regex();
+        ~Regex();                                       // destructor.f
 
         private:
             Regex(Regex const &other) = delete;
@@ -95,14 +95,15 @@ class Pattern
         //      string  immediately before a newline, regardless of
         //      whether eflags contains REG_NOTEOL.
 
-        Pattern();                                      // 0
+        Pattern();                                      // 1
 
-        explicit Pattern(std::string const &pattern,    // .cc
+        Pattern(Pattern const &other);                  // 2.f
+
+        explicit Pattern(std::string const &pattern,    // 3.cc
                         bool caseSensitive = true, 
                         size_t nSub = 10,
                         int options = REG_EXTENDED | REG_NEWLINE);
-        Pattern(Pattern const &other);
-        Pattern(Pattern &&tmp);                         // 1
+        Pattern(Pattern &&tmp);                         // 4
         ~Pattern();
 
         Pattern &operator=(Pattern const &other);
@@ -134,7 +135,7 @@ class Pattern
         void match(std::string const &text, int options = 0);
 
         std::string before() const;  // text before the matched text
-        std::string matched() const;   // the matched text
+        std::string matched() const;   // the matched text              .f
         std::string beyond() const;  // text beyond the matched text
 
             // (0) is complete matching part. Remaining are subexpressions.
@@ -146,43 +147,22 @@ class Pattern
 
             // subexpression itself
         std::string operator[](size_t index) const; 
-        size_t end() const;           // index beyond the last available
+        size_t end() const;           // index beyond the last available    .f
 
         std::string const &pattern() const; // compiled pattern
 
         void swap(Pattern &other);
 
     private:
-        void newRegex(std::string const &pattern, int options);
+        void newRegex(std::string const &pattern, int options);         // .f
         void destroy();
         void copy(Pattern const &other);    
 };
 
-inline Pattern::Pattern(Pattern const &other)
-{
-    copy(other);
-}
-
-inline Pattern::~Pattern()
-{
-    if (d_regex)
-        destroy();
-}    
-
-inline std::string Pattern::matched() const 
-{
-    return (*this)[0];
-}
-
-inline std::string const &Pattern::pattern() const 
-{
-    return Regex::s_converted;
-}
-
-inline size_t Pattern::end() const
-{
-    return d_beyondLast;
-}
+#include "pattern2.f"
+#include "matched.f"
+#include "pattern.f"
+#include "end.f"
 
 } // FBB
 

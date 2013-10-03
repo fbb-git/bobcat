@@ -18,7 +18,7 @@ class OHexStreambuf: public OFilterStreambuf
     public:
         OHexStreambuf(std::ostream &out, size_t width = 0);
         virtual ~OHexStreambuf();
-        size_t size() const;
+        size_t size() const;                                // .f
 
         static std::string text2bin(std::string const &in); // length and 
                                                             // contents not
@@ -31,10 +31,7 @@ class OHexStreambuf: public OFilterStreambuf
         virtual int sync();
 };
 
-inline size_t OHexStreambuf::size() const
-{
-    return d_count;
-}
+#include "size.f"
 
 } // FBB        
 #endif
