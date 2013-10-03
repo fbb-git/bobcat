@@ -42,13 +42,13 @@ class OFdStreambuf: public std::streambuf
 
 
         void open(int fd, Mode mode, size_t n = 1);
-        void open(int fd, size_t n = 1);
+        void open(int fd, size_t n = 1);                    // .f
 
-        int fd() const;
-        void close();
+        int fd() const;                                     // .f
+        void close();                                       // .f
 
     protected:
-        int pSync();
+        int pSync();                                        // .f
 
     private:
         int sync() override;
@@ -57,25 +57,10 @@ class OFdStreambuf: public std::streambuf
         void cleanup(Mode mode);
 };
 
-inline void OFdStreambuf::open(int fd, size_t n)
-{
-    open(fd, d_mode, n);
-}
-
-inline void OFdStreambuf::close()
-{
-    cleanup(CLOSE_FD);
-}
-
-inline int OFdStreambuf::fd() const
-{
-    return d_fd;
-}
-
-inline int OFdStreambuf::pSync()
-{
-    return sync();
-}
+#include "close.f"
+#include "fd.f"
+#include "open.f"
+#include "psync.f"
 
 } // FBB
 
