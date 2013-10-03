@@ -15,55 +15,31 @@ class OFilterStreambuf: public std::streambuf
     std::ostream *d_out;
 
     public:
-        OFilterStreambuf();
+        OFilterStreambuf();                                 // 1.f
+        OFilterStreambuf(char const *fname,                 // 2.f
+                         openmode mode = std::ios::out);
+        OFilterStreambuf(std::ostream &out);                // 3.f
         OFilterStreambuf(std::string const &fname, 
-                                            openmode mode = std::ios::out);
-        OFilterStreambuf(char const *fname, openmode mode = std::ios::out);
-        OFilterStreambuf(std::ostream &out);
+                         openmode mode = std::ios::out);
         virtual ~OFilterStreambuf();
 
         void open(char const *fname, openmode mode = std::ios::out);
         void open(std::string const &fname, openmode mode = std::ios::out);
-        void open(std::ostream &out);
+        void open(std::ostream &out);                       // .f
 
-        void close();
+        void close();                                       // .f
 
     protected:
-        std::ostream &out() const;
+        std::ostream &out() const;                          // .f
 };
 
-inline OFilterStreambuf::OFilterStreambuf()
-:
-    d_out(&d_dest)
-{}
+#include "ofilterstreambuf1.f"
+#include "ofilterstreambuf2.f"
+#include "ofilterstreambuf3.f"
 
-inline std::ostream &OFilterStreambuf::out() const
-{
-    return *d_out;
-}
-
-inline OFilterStreambuf::OFilterStreambuf(char const *fname, openmode mode)
-:
-    d_dest(fname, mode),
-    d_out(&d_dest)
-{}
-
-inline OFilterStreambuf::OFilterStreambuf(std::ostream &out)
-:
-    d_out(&out)
-{}
-
-inline void OFilterStreambuf::open(std::ostream &out)
-{
-    close();
-    d_out = &out;
-}
-
-inline void OFilterStreambuf::close()
-{
-    sync();
-    d_dest.close();
-}
+#include "close.f"
+#include "open.f"
+#include "out.f"
 
 } // FBB
         
