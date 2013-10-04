@@ -27,14 +27,10 @@ class Xpointer
         bool get(int *x, int *y) const;
 
     private:
-        static void deleter(Display *dsp);
+        static void deleter(Display *dsp);                      // .f
 };
 
-inline void Xpointer::deleter(Display *dsp)
-{
-    if (dsp)
-        XCloseDisplay(dsp);
-}
+#include "deleter.f"
 
 }   // FBB
 
