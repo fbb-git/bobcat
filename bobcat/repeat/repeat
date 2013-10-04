@@ -1,6 +1,7 @@
 #ifndef INCLUDED_BOBCAT_REPEAT_
 #define INCLUDED_BOBCAT_REPEAT_
 
+#include <utility>
 #include <bobcat/typetrait>
 
 namespace FBB
@@ -13,37 +14,28 @@ template <>
 struct Repeat__<false>
 {
     template <typename Fun, typename ...Params>
-    static void call(Fun fun, Params &&...params)
-    {
-        fun(std::forward<Params>(params)...);
-    }
+    static void call(Fun fun, Params &&...params);                      // 1.f
 };
 
 template <>
 struct Repeat__<true>
 {
     template <typename Class, typename Member, typename ...Params>
-    static void call(Class &obj, Member member, Params &&...params)
-    {
-        (obj.*member)(std::forward<Params>(params)...);
-    }
+    static void call(Class &obj, Member member, Params &&...params);    // 2.f
 
     template <typename Class, typename Member, typename ...Params>
-    static void call(Class const &obj, Member member, Params &&...params)
-    {
-        (obj.*member)(std::forward<Params>(params)...);
-    }
+    static void call(Class const &obj, Member member,                   // 3.f
+                                                Params &&...params);
 };
 
-
 template <typename Counter, typename First, typename ...Params>
-inline void repeat(Counter counter, First &&first, Params &&...params)
-{
-    for (; counter; --counter)
-        Repeat__<TypeTrait<First>::isClass>::call(
-                                std::forward<First>(first), 
-                                std::forward<Params>(params)...);
-}    
+inline void repeat(Counter counter, First &&first, Params &&...params); // .f
+
+#include "call1.f"
+#include "call2.f"
+#include "call3.f"
+
+#include "repeat.f"
 
 } // FBB
 
