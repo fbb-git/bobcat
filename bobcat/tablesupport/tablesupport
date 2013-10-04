@@ -61,11 +61,11 @@ class TableSupport
                 const_iterator(TableSupport const &support, size_t row, 
                                                             bool begin);
 
-                const_iterator &operator++();
-                bool operator==(const_iterator const &other) const;
-                bool operator!=(const_iterator const &other) const;
+                const_iterator &operator++();                           // .f
+                bool operator==(const_iterator const &other) const;     // .f
+                bool operator!=(const_iterator const &other) const;     // .f
 
-                Field const &operator*() const;
+                Field const &operator*() const;                         // .f
                 Field const *operator->() const;
         };
 
@@ -99,31 +99,35 @@ class TableSupport
         void setParam(std::ostream &ostr, size_t rows, size_t nColumns,
                         std::vector<Align> const &align);
 
+        void hline() const;         // called after the last data row      1.f
+
             // called by Table/TableBuf for each row (0: before 1st data row)
-        void hline(size_t row) const;
-        void hline() const;         // called after the last data row
+        void hline(size_t row) const;                                   // 2.f
 
             // same for columns
-        void vline(size_t col) const;
-        void vline() const;
+        void vline() const;                                             // 1.f
+        void vline(size_t col) const;                                   // 2.f
 
-        size_t width() const;               // total width of the table
+        size_t width() const;               // total width of the table     .f
 
     protected:
                                             
-        const_iterator begin(size_t row) const;
-        const_iterator end(size_t row) const;
+        const_iterator begin(size_t row) const;                         // .f
+        const_iterator end(size_t row) const;                           // .f
 
-        size_t colWidth(size_t col) const;  // width of a column and:
-        size_t sepWidth(size_t col) const;  // of a separator (0: leftmost)
-        size_t nColumns() const;            // number of columns
-        size_t nRows() const;               // number of rows
+        size_t colWidth(size_t col) const;  // width of a column and:      .f
+        size_t sepWidth(size_t col) const;  // of a separator              .f
+                                            // (0: leftmost)
 
-        std::ostream &out() const;          // stream to insert into the tab.
+        size_t nColumns() const;            // number of columns           .f
+        size_t nRows() const;               // number of rows              .f
+
+        std::ostream &out() const;          // stream to insert into       .f
+                                            // the table
 
                                             // col. alignmnts (not separators)
-        std::vector<Align> const &align() const;
-        std::vector<std::string> const &sep() const;    // separators
+        std::vector<Align> const &align() const;                        // .f
+        std::vector<std::string> const &sep() const;    // separators      .f
 
     private:
             // called for each row (0: before 1st data row)
@@ -156,118 +160,33 @@ class TableSupport
                                                     HLine const &hline);
 };
 
+#include "align.f"
+#include "begin.f"
+#include "colwidth.f"
+#include "end.f"
+#include "hline1.f"
+#include "hline2.f"
+#include "ncolumns.f"
+#include "nrows.f"
+#include "opeq.f"
+#include "opinc.f"
+#include "opneq.f"
+#include "opstar.f"
+#include "out.f"
+#include "sep.f"
+#include "sepwidth.f"
+#include "vline1.f"
+#include "vline2.f"
+#include "width.f"
 
-inline void TableSupport::hline(size_t row) const
-{
-    v_hline(row);
-}
+    // Free Functions
 
-
-inline void TableSupport::hline() const
-{
-    v_hline();
-}
-
-
-inline void TableSupport::vline(size_t col) const
-{
-    v_vline(col);
-}
-
-inline void TableSupport::vline() const
-{
-    v_vline();
-}
-
-inline size_t TableSupport::colWidth(size_t col) const
-{
-    return col < d_align->size() ? (*d_align)[col].col() : 0;
-}
-
-inline size_t TableSupport::sepWidth(size_t col) const
-{
-    return col < d_sep.size() ? d_sep[col].length() : 0;
-}
-
-inline TableSupport::const_iterator TableSupport::begin(size_t row) const
-{
-    const_iterator ret(*this, row, true);
-    return ret;
-}
-
-inline TableSupport::const_iterator TableSupport::end(size_t row) const
-{
-    const_iterator ret(*this, row, false);
-    return ret;
-}
-
-inline size_t TableSupport::width() const
-{
-    return d_tableWidth;
-}
-
-inline std::ostream &TableSupport::out() const
-{
-    return *d_streamPtr;
-}
-
-inline std::vector<std::string> const &TableSupport::sep() const
-{
-    return d_sep;
-}
-
-inline size_t TableSupport::nColumns() const
-{
-    return d_nColumns;
-}
-
-inline size_t TableSupport::nRows() const
-{
-    return d_nRows;
-}
-
-inline std::vector<Align> const &TableSupport::align() const
-{
-    return *d_align;
-}
-
-inline bool TableSupport::const_iterator::operator==(
-        TableSupport::const_iterator const &other) const
-{
-    return d_iter == other.d_iter;
-}
-
-inline bool TableSupport::const_iterator::operator!=(
-    TableSupport::const_iterator const &other) const
-{
-    return not (*this == other);
-}
-
-inline TableSupport::Field const &TableSupport::const_iterator::operator*() 
-                                                                        const
-{
-    return *operator->();
-}
-
-inline 
-TableSupport::const_iterator &TableSupport::const_iterator::operator++()
-{
-    ++d_iter;
-    return *this;
-}
+#include "opbitor.f"        // ColumnType | ColumnType
 
 TableSupport &operator<<(TableSupport &support, size_t);
 TableSupport &operator<<(TableSupport &support, std::string const &sep);
 TableSupport &operator<<(TableSupport &support, 
                                         TableSupport::HLine const &hline);
-
-inline TableSupport::ColumnType operator|(TableSupport::ColumnType lhs,
-                                          TableSupport::ColumnType rhs)
-{
-    return static_cast<TableSupport::ColumnType>(
-                    static_cast<int>(lhs) | static_cast<int>(rhs));
-}
-
 } // FBB
 
 
