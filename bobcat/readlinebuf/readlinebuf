@@ -50,11 +50,11 @@ class ReadLineBuf: public HistoryExpansion, public std::streambuf
 
         virtual ~ReadLineBuf();
 
-        void setPrompt(std::string const &prompt = "");
+        void setPrompt(std::string const &prompt = "");             // .f
         bool setExpansion(Type type);
 
-        Expansion expansion() const;
-        std::string const &expansionError() const;
+        Expansion expansion() const;                                // .f
+        std::string const &expansionError() const;                  // .f
 
         bool useTimestamps(std::string (*timestamp)() = 0);
 
@@ -72,21 +72,9 @@ class ReadLineBuf: public HistoryExpansion, public std::streambuf
         char *nextLine(char *buf);
 };
 
-inline void ReadLineBuf::setPrompt(std::string const &prompt)
-{
-    d_prompt = prompt;
-}
-
-inline ReadLineBuf::Expansion ReadLineBuf::expansion() const
-{
-    return d_expansion;
-}
-        
-inline std::string const &ReadLineBuf::expansionError() const
-{
-    return d_expansionError;
-}
-
+#include "setprompt.f"
+#include "expansion.f"
+#include "expansionerror.f"        
 
 } // FBB        
 #endif
