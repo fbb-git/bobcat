@@ -33,11 +33,11 @@ class ReadLineHistory
             char const *d_timestamp;
 
             public:
-                char const *line() const;
-                char const *timestamp() const;
+                char const *line() const;                               // .f
+                char const *timestamp() const;                          // .f
 
             private:
-                HistoryElement();
+                HistoryElement();                                       // 1.f
                 HistoryElement const &set(HIST_ENTRY const *element);
         };
 
@@ -52,19 +52,20 @@ class ReadLineHistory
             mutable HistoryElement d_element;
 
             public:
-                const_iterator &operator++();
-                const_iterator operator++(int);
-                bool operator==(const_iterator const &rhs) const;
-                bool operator!=(const_iterator const &rhs) const;
+                const_iterator &operator++();                   //     opinc.f
+                const_iterator operator++(int);                 // opincpost.f
+                bool operator==(const_iterator const &rhs) const;   //  opeq.f
+                bool operator!=(const_iterator const &rhs) const;   // opneq.f
                 HistoryElement const &operator*() const;
-                HistoryElement const *operator->() const;
+                HistoryElement const *operator->() const;       //   oparrow.f
 
             private:
-                const_iterator();                   // inline, last element
-                const_iterator(size_t idx);         // 2
+                const_iterator();                   // last element        1.f
+                const_iterator(size_t idx);         //                     2.f
 
-                const_iterator &operator--();       // for the reverse iter.
-                const_iterator operator--(int);
+                                                // for the reverse iter. 
+                const_iterator &operator--();                       // opdec.f
+                const_iterator operator--(int);                 // opdecpost.f
         };
 
         typedef std::reverse_iterator<const_iterator> 
@@ -73,21 +74,21 @@ class ReadLineHistory
         ReadLineHistory(ReadLineHistory const &other)           = delete;
         ReadLineHistory &operator=(ReadLineHistory const &rhs)  = delete;
 
-        const_iterator begin() const;               // begin of the history
-        const_iterator end() const;                 // end of the history
-        const_reverse_iterator rbegin() const;
-        const_reverse_iterator rend() const;
+        const_iterator begin() const;       // begin of the history    .f
+        const_iterator end() const;         // end of the history      .f
+        const_reverse_iterator rbegin() const;                      // .f    
+        const_reverse_iterator rend() const;                        // .f
 
-        ReadLineHistory &setTimestampsIO(bool useTimestamps);
-        size_t size() const;
-        size_t maxSize() const;
-        bool timestamps() const;
+        ReadLineHistory &setTimestampsIO(bool useTimestamps);       // .f
+        size_t size() const;                                        // .f
+        size_t maxSize() const;                                     // .f
+        bool timestamps() const;                                    // .f
 
-        static ReadLineHistory &instance();
-        static ReadLineHistory &instance(bool useTimestamps);
+        static ReadLineHistory &instance();                         // 1.f
+        static ReadLineHistory &instance(bool useTimestamps);       // 2.f
 
     private:
-        ReadLineHistory();
+        ReadLineHistory();                                          // .f
         static void insertHistoryElement(HistoryElement const &he,
                                          std::ostream &out);
         static void insertLine(HistoryElement const &he, std::ostream &out);
@@ -96,133 +97,36 @@ class ReadLineHistory
         static std::istream &extractLines(std::istream &in);
 };
 
-inline ReadLineHistory::ReadLineHistory()
-{}
+#include "readlinehistory1.f"
 
-inline ReadLineHistory &ReadLineHistory::setTimestampsIO(bool useTimestamps)
-{
-    d_timestamps = useTimestamps;
-    return *this;
-}
-
-inline ReadLineHistory::const_iterator ReadLineHistory::begin() const
-{
-    return const_iterator(0);
-}
-
-inline ReadLineHistory::const_iterator ReadLineHistory::end() const
-{
-    return const_iterator();
-}
-
-inline ReadLineHistory::const_reverse_iterator ReadLineHistory::rbegin() const
-{
-    return const_reverse_iterator(end());
-}
-
-inline ReadLineHistory::const_reverse_iterator ReadLineHistory::rend() const
-{
-    return const_reverse_iterator(begin());
-}
-
-inline ReadLineHistory &ReadLineHistory::instance()
-{
-    return s_readLineHistory;
-}
-
-inline ReadLineHistory &ReadLineHistory::instance(bool useTimestamps)
-{
-    return s_readLineHistory.setTimestampsIO(useTimestamps);
-}
-
-inline size_t ReadLineHistory::size() const
-{
-    return history_length;
-}
-
-inline bool ReadLineHistory::timestamps() const
-{
-    return d_timestamps;
-}
-
-inline size_t ReadLineHistory::maxSize() const
-{
-    return history_max_entries;
-}
+#include "begin.f"
+#include "end.f"
+#include "instance1.f"
+#include "instance2.f"
+#include "maxsize.f"
+#include "rbegin.f"
+#include "rend.f"
+#include "settimestampsio.f"
+#include "size.f"
+#include "timestamps.f"
 
 //  ======= HistoryElement members ============
 
-inline ReadLineHistory::HistoryElement::HistoryElement()
-:
-    d_line(0),
-    d_timestamp(0)
-{}
+#include "historyelement1.f"
 
-inline char const *ReadLineHistory::HistoryElement::line() const
-{
-    return d_line;
-}
-
-inline char const *ReadLineHistory::HistoryElement::timestamp() const
-{
-    return d_timestamp;
-}
+#include "line.f"
+#include "timestamp.f"
 
 // ======== const_iterator members
 
-inline ReadLineHistory::const_iterator::const_iterator()
-:
-    d_idx(history_length)
-{}
+#include "constiterator1.f"
+#include "constiterator2.f"
 
-inline ReadLineHistory::const_iterator::const_iterator(size_t idx)
-:
-    d_idx(idx)
-{}
-
-inline ReadLineHistory::const_iterator 
-    &ReadLineHistory::const_iterator::operator++()
-{
-    ++d_idx;
-    return *this;
-}
-
-inline ReadLineHistory::const_iterator 
-    ReadLineHistory::const_iterator::operator++(int)
-{
-    return const_iterator(d_idx++);
-}
-
-inline ReadLineHistory::const_iterator 
-    &ReadLineHistory::const_iterator::operator--()
-{
-    --d_idx;
-    return *this;
-}
-
-inline ReadLineHistory::const_iterator 
-    ReadLineHistory::const_iterator::operator--(int)
-{
-    return const_iterator(d_idx--);
-}
-
-inline bool ReadLineHistory::const_iterator::operator==(
-                                            const_iterator const &rhs) const
-{
-    return d_idx == rhs.d_idx;
-}
-
-inline bool ReadLineHistory::const_iterator::operator!=(
-                                            const_iterator const &rhs) const
-{
-    return not (*this == rhs);
-}
-
-inline ReadLineHistory::HistoryElement const 
-    *ReadLineHistory::const_iterator::operator->() const
-{
-    return &operator*();
-}
+#include "oparrow.f"
+#include "opeq.f"
+#include "opinc.f"
+#include "opincpost.f"
+#include "opneq.f"
 
 } // FBB        
 #endif
