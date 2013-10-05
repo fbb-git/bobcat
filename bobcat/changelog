@@ -4,8 +4,16 @@ bobcat (3.17.00)
     facility from Process, which are now superfluous, as they are covered by
     String's split facilities.
 
+  * The class BigInt has received several new members and defines a type:
+        - BigInt::Word, is equal to the OpenSSL BN_ULONG type, defining the
+          unsigned long type that is used for storing BIGNUM values;
+        - sizeOfWord() returning the size in bytes of a BigInt::Word;
+        - nWords() returning the number of Words used by the current BigInt
+          value;
+          new at() member;
+        - Word at(size_t index) returns the Word at 'index'. 
   * The source header file of classes defining function templates and
-    inline-members now have their template definitions in .i files, one .i
+    inline-members now have their template definitions in .f files, one .f
     file per function.
     This change was implemented to simplify function template and inline
     function maintenance, and to have source clas header files representing 

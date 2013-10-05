@@ -16,6 +16,8 @@ class BigInt
     BIGNUM d_bn;
  
     public:
+        typedef BN_ULONG Word;
+
         enum Msb
         {
             MSB_UNKNOWN = -1,
@@ -142,11 +144,17 @@ class BigInt
         unsigned long ulong() const;                            // .f
         BIGNUM const &bignum() const;                           // .f
 
-        size_t sizeInBytes() const;                     // .f
-        size_t size() const;                            // .f
+        size_t sizeInBytes() const;                             // .f
+        size_t size() const;                                    // .f
 
-        int compare(BigInt const &other) const;         // .f
-        int uCompare(BigInt const &other) const;        // .f
+        size_t nWords() const;                                  // .f
+        static size_t constexpr sizeOfWord();                   // .f
+
+        Word at(size_t index) const;
+        void setWord(size_t index, Word value);
+
+        int compare(BigInt const &other) const;                 // .f
+        int uCompare(BigInt const &other) const;                // .f
 
         long long diophantus(long long *factor1, long long *factor2, 
                              long long const &value1, 
@@ -226,6 +234,8 @@ class BigInt
 
         void copy(BIGNUM *lhs, BIGNUM const &rhs);
 
+        void nWordsCheck(size_t index) const;
+
         BigInt &checked1(
                 int (*BN_op)(BIGNUM *, 
                              BIGNUM const *, BIGNUM const *), 
@@ -265,6 +275,7 @@ BigInt::BigInt(Type value)
         negate();
 }    
 
+#include "nwords.f"
 #include "addmod.f"
 #include "bignum.f"
 #include "compare.f"
@@ -285,6 +296,7 @@ BigInt::BigInt(Type value)
 #include "opsubis.f"
 #include "size.f"
 #include "sizeinbytes.f"
+#include "sizeofword.f"
 #include "sqrmod.f"
 #include "submod.f"
 #include "ucompare.f"
