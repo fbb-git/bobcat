@@ -12,50 +12,28 @@ class X2a: public std::ostringstream
 
     public:
         template <typename T>                   // initialize from 
-        X2a(T const &x);                        // (insertable) type
+        X2a(T const &x);                        // (insertable) type       1.f
 
-        X2a(X2a const &other);
+        X2a(X2a const &other);                                          // 2.f
 
         X2a(double x, size_t behind);
         X2a(double x, size_t width, size_t behind);
 
-        X2a &operator=(X2a const &rhs);
-        operator std::string const() const;
+        X2a &operator=(X2a const &rhs);                         // opassign.f
+        operator std::string const() const;                     // opstring.f
 
-        bool lastFail();
+        bool lastFail();                                                // .f
 };
 
-template <typename T>                   // initialize from 
-inline X2a::X2a(T const &x)             // (insertable) type
-{
-    s_lastFail = (*this << x).fail();
-}
+#include "x2a1.f"
+#include "x2a2.f"
+#include "opstring.f"
+#include "opassign.f"
+#include "lastfail.f"
 
-inline X2a::X2a(X2a const &other)
-:
-    std::ostringstream(other.str())
-{}
+    // Free Functions
 
-inline X2a::operator std::string const() const
-{
-    return str();
-}
-
-inline X2a &X2a::operator=(X2a const &rhs)
-{
-    str(rhs.str());
-    return *this;
-}
-
-inline bool X2a::lastFail()
-{
-    return s_lastFail;
-}
-
-inline std::ostream &operator<<(std::ostream &ostr, X2a const &x2a)
-{
-    return ostr << x2a.str();
-}
+#include "opinsert.f"       // ostream << X2a
 
 } // FBB
 
