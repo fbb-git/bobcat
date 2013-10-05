@@ -20,52 +20,31 @@ class SocketBase: public InetAddress
 
         void verify() const;
 
-        bool debug() const;
-        bool reuse() const;
-        int socket() const;
-        bool setDebug(bool trueIsOn);
-        bool setReuse(bool trueIsOn);
+        bool debug() const;                                         // .f
+        bool reuse() const;                                         // .f
+        int socket() const;                                         // .f
+
+        bool setDebug(bool trueIsOn);                               // .f
+        bool setReuse(bool trueIsOn);                               // .f
 
     protected:
-        explicit SocketBase(uint16_t port);
-        SocketBase(std::string const &host, uint16_t port);
-        SocketBase(int socket, sockaddr_in const &address);
+        explicit SocketBase(uint16_t port);                         // 1
+        SocketBase(std::string const &host, uint16_t port);         // 2
+        SocketBase(int socket, sockaddr_in const &address);         // 1.f
 
     private:
         bool boolOption(int optname) const;
         bool setBoolOption(int optname, bool newValue);
 };
 
-inline bool SocketBase::debug() const
-{
-    return boolOption(SO_DEBUG);
-}
+#include "socketbase1.f"
 
-inline bool SocketBase::reuse() const
-{
-    return boolOption(SO_REUSEADDR);
-}
+#include "debug.f"
+#include "reuse.f"
+#include "setdebug.f"
+#include "setreuse.f"
+#include "socket.f"
 
-inline int SocketBase::socket() const
-{
-    return d_sock;
-}
-
-inline bool SocketBase::setDebug(bool trueIsOn)
-{
-    return setBoolOption(SO_DEBUG, trueIsOn);
-}
-
-inline bool SocketBase::setReuse(bool trueIsOn)
-{
-    return setBoolOption(SO_REUSEADDR, trueIsOn);
-}
-
-inline SocketBase::SocketBase(int socket, sockaddr_in const &address)
-:
-    InetAddress(address),
-    d_sock(socket)
-{}
 
 } // FBB
 
