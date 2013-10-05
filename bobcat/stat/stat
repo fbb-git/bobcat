@@ -57,39 +57,39 @@ class Stat: public GS__
            RWX =  0777,
         };
 
-        Stat();
-        explicit Stat(std::string const &name);
-        Stat(std::string const &name, std::string const &pathlist);
-        Stat(Stat &&tmp);
+        Stat();                                                         // 1
+        explicit Stat(std::string const &name);                         // 2
+        Stat(std::string const &name, std::string const &pathlist);     // 1.f
+        Stat(Stat &&tmp);                                               // 3
 
         Stat &operator=(Stat const &other) = default;
         Stat &operator=(Stat &&tmp);
 
         bool access(User const &user, size_t mode, 
                                        bool useEffective = true) const;
-        DateTime lastAccess() const;
-        DateTime lastChange() const;
-        DateTime lastModification() const;
-        Type type() const;
-        bool isType(Type probe);
+        DateTime lastAccess() const;                                    // .f
+        DateTime lastChange() const;                                    // .f
+        DateTime lastModification() const;                              // .f
+        Type type() const;                                              // .f
+        bool isType(Type probe);                                        // .f
         bool mode(size_t mode, Combine combi = ALL) const;
         bool set(std::string const &name);
         bool set(std::string const &name, std::string const &pathlist);
         bool specialMode(size_t specialMode, Combine combi = ALL) const;
-        off_t size() const;
-        operator bool() const;
-        size_t blockSize() const;
-        size_t device() const;
-        size_t deviceType() const;
-        size_t error() const;
-        size_t gid() const;
-        size_t inode() const;
-        size_t mode() const;
-        size_t nBlocks() const;
-        size_t nLinks() const;
-        size_t uid() const;
-        stat const &statStruct() const;
-        std::string const &name();
+        off_t size() const;                                             // .f
+        operator bool() const;                                          // .f
+        size_t blockSize() const;                                       // .f
+        size_t device() const;                                          // .f
+        size_t deviceType() const;                                      // .f
+        size_t error() const;                                           // .f
+        size_t gid() const;                                             // .f
+        size_t inode() const;                                           // .f
+        size_t mode() const;                                            // .f
+        size_t nBlocks() const;                                         // .f
+        size_t nLinks() const;                                          // .f
+        size_t uid() const;                                             // .f
+        stat const &statStruct() const;                                 // .f
+        std::string const &name();                                      // .f
         std::string modeStr() const;
         std::string path();
         std::string typeStr() const;
@@ -98,86 +98,27 @@ class Stat: public GS__
         void init();
 };
 
-inline Stat::Stat(std::string const &name, std::string const &pathlist)
-{
-    set(name, pathlist);
-}
-inline Stat::operator bool() const
-{
-    return d_errno == 0;
-}
-inline size_t Stat::blockSize() const
-{
-    return d_stat.st_blksize;
-}        
-inline size_t Stat::device() const
-{
-    return d_stat.st_dev;
-}        
-inline size_t Stat::deviceType() const
-{
-    return d_stat.st_rdev;
-}        
-inline size_t Stat::error() const
-{
-    return d_errno;
-}        
-inline bool Stat::isType(Type probe)
-{
-    return type() == probe;
-}
-inline size_t Stat::gid() const
-{
-    return d_stat.st_gid;
-}        
-inline size_t Stat::inode() const
-{
-    return d_stat.st_ino;
-}        
-inline DateTime Stat::lastAccess() const
-{
-    return DateTime(d_stat.st_atime, DateTime::UTC);
-}
-inline DateTime Stat::lastChange() const
-{
-    return DateTime(d_stat.st_ctime, DateTime::UTC);
-}
-inline DateTime Stat::lastModification() const
-{
-    return DateTime(d_stat.st_mtime, DateTime::UTC);
-}
-inline size_t Stat::mode() const
-{
-    return d_stat.st_mode & RWX;
-}
-inline std::string const &Stat::name()
-{
-    return d_name;
-}
-inline size_t Stat::nBlocks() const
-{
-    return d_stat.st_blocks;
-}        
-inline size_t Stat::nLinks() const
-{
-    return d_stat.st_nlink;
-}        
-inline off_t Stat::size() const
-{
-    return d_stat.st_size;
-}        
-inline Stat::stat const &Stat::statStruct() const
-{
-    return d_stat;
-}
-inline Stat::Type Stat::type() const
-{
-    return static_cast<Type>(d_stat.st_mode & S_IFMT);
-}
-inline size_t Stat::uid() const
-{
-    return d_stat.st_uid;
-}      
+#include "stat1.f"
+
+#include "blocksize.f"
+#include "device.f"
+#include "devicetype.f"
+#include "error.f"
+#include "gid.f"
+#include "inode.f"
+#include "istype.f"
+#include "lastaccess.f"
+#include "lastchange.f"
+#include "lastmodification.f"
+#include "mode.f"
+#include "name.f"
+#include "nblocks.f"
+#include "nlinks.f"
+#include "opbool.f"
+#include "size.f"
+#include "statstruct.f"
+#include "type.f"
+#include "uid.f"
 
 } // FBB
         
