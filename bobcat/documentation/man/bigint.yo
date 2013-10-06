@@ -8,7 +8,7 @@ manpagename(FBB::BigInt)(Arithmetic on Integers of Unlimited Size)
 
 manpagesynopsis()
     bf(#include <bobcat/bigint>)nl()
-    Linking option: tt(-lbobcat) 
+    Linking option: tt(-lbobcat -lcrypto) 
 
 manpagedescription()
 
@@ -697,6 +697,12 @@ manpageseealso()
     bf(RAND_load_file)(3ssl), bf(RAND_seed)(3).
 
 manpagebugs()
-    None Reported.
+
+    Sep/Oct 2013: due to a change in library handling by the linker
+(cf. lurl(http://fedoraproject.org/wiki/UnderstandingDSOLinkChange) and
+lurl(https://wiki.debian.org/ToolChain/DSOLinking)) libraries that are
+indirectly required are no longer automatically linked to your program. With
+bf(BigInt) this is tt(libcrypto), which requires programs to link to both
+tt(bobcat) and tt(crypto).
 
 includefile(include/trailer)
