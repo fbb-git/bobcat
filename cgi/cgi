@@ -95,16 +95,17 @@ class CGI
         void report() const;                // also called by param()
 
     // accessors:
-        char const *operator[](std::string const &key) const;
+        char const *operator[](std::string const &key) const;   // opindex.f
 
-        unsigned long long maxUploadSize() const;
+        unsigned long long maxUploadSize() const;   // .f
 
-        Method method() const;
-        std::string const &query() const;   // empty with multipart/form-data
+        Method method() const;                      // .f
+        std::string const &query() const;           // .f 
+                                            // empty with multipart/form-data
 
         std::vector<std::string> const &param(std::string const &variable);
-        MapStringVector::const_iterator begin();
-        MapStringVector::const_iterator end();
+        MapStringVector::const_iterator begin();    // .f
+        MapStringVector::const_iterator end();      // .f
 
         std::string param1(std::string const &variable);
 
@@ -137,39 +138,12 @@ class CGI
         void upload(std::string *line);
 };
 
-inline char const *CGI::operator[](std::string const &key) const
-{
-    return getenv(key.c_str());
-}
-
-inline std::string const &CGI::query() const
-{
-    return d_query;
-}
-
-inline CGI::Method CGI::method() const
-{
-    return d_method;
-}
-
-inline CGI::MapStringVector::const_iterator CGI::begin()
-{
-    setParam();
-    return d_param.begin();
-}
-
-inline CGI::MapStringVector::const_iterator CGI::end()
-{
-    setParam();
-    return d_param.end();
-}
-
-inline unsigned long long CGI::maxUploadSize() const
-{
-    return d_maxUploadSize;
-}
+#include "opindex.f"
+#include "query.f"
+#include "method.f"
+#include "begin.f"
+#include "end.f"
 
 }   // namespace
-
 
 #endif

@@ -8,18 +8,23 @@ whenhtml(center(htmlcommand(<img src="bobcat.jpg">)))
 manpagename(Bobcat)(Overview of classes in the Bobcat library)
 
 manpagedescription()      
-    The classes of the bf(Bobcat) library may be used after including 
-    bf(bobcat/classname) in sources. 
 
-    All classes and other elements are defined in the bf(FBB) namespace. For
-some classes  em(manipulators) are available, which are defined in the bf(FBB)
+The classes of the bf(Bobcat) library may be used after including
+bf(bobcat/classname) in sources. 
+
+Generally, programs using the bf(Bobcat) library must be at least linked
+against the bf(Bobcat) library. Refer to section bf(LINKING) for more
+informatin about linking programs to required libraries.
+
+All classes and other elements are defined in the bf(FBB) namespace. For some
+classes em(manipulators) are available, which are defined in the bf(FBB)
 namespace. An overview of all manipulators defined in the bf(FBB) namespace is
 provided by bf(man -e bobcat manipulators).
 
-    Next to this section the section bf(CATEGORIES) groups classes that
-    somehow belong together in various categories.
+Beyond this section the section bf(CATEGORIES) groups classes that
+somehow belong together in various categories.
 
-    The following classes and template functions are available:
+The following classes and template functions are available:
 
     bf(FBB::Align): Specifies bf(Table(Buf)) column and element
     alignments.nl()
@@ -791,6 +796,48 @@ categories are offered:
     bf(FBB::RefCount): replacement: bf(C++-11) tt(std::shared_ptr) and
         tt(unique_ptr).nl()
     )
+
+manpagesection(LINKING)
+
+    To link programs against the shared bf(Bobcat) library (e.g.,
+tt(libbobcat3.so)) it is usually sufficient to merely specify
+tt(-lbobcat). E.g.,
+        verb(
+    g++ --std=c++11 main.cc -lbobcat
+        )
+
+    Due to a change in library handling by the linker
+(cf. lurl(http://fedoraproject.org/wiki/UnderstandingDSOLinkChange) and
+lurl(https://wiki.debian.org/ToolChain/DSOLinking)), implemented in 2013,
+libraries that are indirectly required are no longer automatically linked to
+your program. With some classes (e.g., bf(BigInt)) the tt(libcrypto) library
+must also be specified, and programs using such classes must be linked against
+tt(bobcat) and tt(crypto):
+        verb(
+    g++ --std=c++11 main.cc -lbobcat -lcrypto
+        )
+    Man-pages of classes requiring additional libraries mention these
+additional libraries in their bf(SYNOPSIS) sections. 
+
+    When using em(static) linking, the situation is slightly more problematic,
+and no general rule can be provided here. To create a statically linked
+program the flag tt(-static) must be provided, but in addition the
+tt(-pthread) flag must often be specified as well. If, when statically linking
+your program, undefined references to tt(pthread_...) identifiers are
+reported, then that is a sure sign that you need to provide the tt(-pthread)
+flag as well.
+
+    When using static linking additional libraries, not specified at the
+man-pages, may also be required. E.g., when using the bf(Xpointer) class and
+using static linking, the command becomes:
+        verb(
+    g++  main.cc -static -pthread -lbobcat -lX11 -lxcb  -lXdmcp -lXau 
+        )
+    When encountering undefined references when using static linking missing 
+libraries may be suggested by the linker or by its error
+messages. Alternatively, the missing libraries may be found by searching the
+Internet. 
+
 
 manpagefiles()
     itemization(

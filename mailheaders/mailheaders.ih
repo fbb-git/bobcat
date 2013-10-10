@@ -8,45 +8,10 @@
 using namespace std;
 using namespace FBB;
 
-inline bool MailHeaders::const_hdr_iterator::fail(
-                                    string const &hdr, string const &key)
-{
-    throw Exception(1) << "MailHeaders: setHeaderIterator() not called";
-    return false;       // not reached
-}
-
-inline bool MailHeaders::const_hdr_iterator::initial(
-                                    string const &hdr, string const &key)
-{
-    return hdr.substr(0, hdr.find(':')).find(key) == 0;
-}
-
-inline bool MailHeaders::const_hdr_iterator::partial(
-                                    string const &hdr, string const &key)
-{
-    return hdr.substr(0, hdr.find(':')).find(key) != string::npos;
-}
-
-inline bool MailHeaders::const_hdr_iterator::full(
-                                    string const &hdr, string const &key)
-{
-    return hdr.substr(0, hdr.find(':')) == key;
-}
-
-inline bool MailHeaders::const_hdr_iterator::caseInitial(
-                                    string const &hdr, string const &key)
-{
-    return String::lc(hdr.substr(0, hdr.find(':'))).find(key) == 0;
-}
-
-inline bool MailHeaders::const_hdr_iterator::casePartial(
-                                    string const &hdr, string const &key)
-{
-    return String::lc(hdr.substr(0, hdr.find(':'))).find(key) != string::npos;
-}
-
-inline bool MailHeaders::const_hdr_iterator::caseFull(
-                                    string const &hdr, string const &key)
-{
-    return String::lc(hdr.substr(0, hdr.find(':'))) == key;
-}
+#include "casefull.f"
+#include "caseinitial.f"
+#include "casepartial.f"
+#include "fail.f"
+#include "full.f"
+#include "initial.f"
+#include "partial.f"

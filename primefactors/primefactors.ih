@@ -10,32 +10,9 @@
 using namespace std;
 using namespace FBB;
 
-inline PrimeFactors::iterator &PrimeFactors::iterator::operator++()
-{
-    return operatorPreInc();
-}
-
-inline BigInt const &PrimeFactors::iterator::operator*() const
-{
-    return *d_iterator;
-}
-
-inline BigInt const &PrimeFactors::iterator::lastPrime() const
-{
-    return d_lastPrime;
-}
-
-inline void PrimeFactors::iterator::nextPrime()
-{
-    next();
-}
-
-inline bool PrimeFactors::iterator::atSentinel() const
-{
-    return d_iterator == d_sentinel.begin();
-}
-
-inline void PrimeFactors::iterator::setSentinel(BigInt const &value)
-{
-    d_sentinel[0] = value;
-}
+#include "opinc.f"
+#include "opstar.f"
+#include "lastprime.f"
+#include "nextprime.f"
+#include "atsentinel.f"
+#include "setsentinel.f"

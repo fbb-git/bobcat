@@ -28,20 +28,20 @@ namespace FBB
 class Mstream: private Mbuf, public std::ostream
 {
     public:
-        Mstream();                            // initializes to cout
+        Mstream();                                  // 1.f initializes to cout 
 
-        explicit Mstream(std::ostream &ostr,  // writes to ostr
+        explicit Mstream(std::ostream &ostr,        // 2.f writes to ostr
                             size_t maxCount = UINT_MAX, 
                             std::string const &tag = "", 
                             bool throwing = false);
 
-        explicit Mstream(std::streambuf *buf, // writes to buf
+        explicit Mstream(std::streambuf *buf,       // 3.f writes to buf
                             size_t maxCount = UINT_MAX, 
                             std::string const &tag = "", 
                             bool throwing = false);
 
                                                 // uses a named ofstream,
-        explicit Mstream(std::string const &name,
+        explicit Mstream(std::string const &name,   // 4.f
                             size_t maxCount = UINT_MAX, 
                             std::string const &tag = "", 
                             bool throwing = false);
@@ -50,29 +50,29 @@ class Mstream: private Mbuf, public std::ostream
         // the kind of stream the streambuf handles. Except for one if the
         // reset members below Mstream assumes an Mbuf 
 
-        long id() const;
+        long id() const;                                        // .f
 
-        void reset(std::ostream &ostr);                                 // inl
-        void reset(std::string const &name);                            // inl
-        void reset(std::streambuf *mbuf);                               // inl
+        void reset(std::ostream &ostr);                         // 1.f
+        void reset(std::string const &name);                    // 2.f
+        void reset(std::streambuf *mbuf);                       // 3.f
 
         void reset(Mstream const &mstream);
 
-        void reset(std::ostream &ostr, size_t maxCount,                 // inl
+        void reset(std::ostream &ostr, size_t maxCount,         // 4.f
                      std::string const &tag, bool throwing);
 
-        void reset(std::string const &name, size_t maxCount,            // inl
+        void reset(std::string const &name, size_t maxCount,    // 5.f
                      std::string const &tag,
                      bool throwing);            // opens the ofstream
                                                 // and uses that stream for
                                                 // Mstream's output
 
-        void reset(std::streambuf *mbuf, size_t maxCount,              // inl
+        void reset(std::streambuf *mbuf, size_t maxCount,       // 6.f
                         std::string const &tag, bool throwing);
 
-        void on();
-        void off();
-        bool isActive() const;
+        void on();                                              // .f
+        void off();                                             // .f
+        bool isActive() const;                                  // .f
         bool setActive(bool ifTrue);
 
         using Mbuf::count;          // size_t count() const;
@@ -90,84 +90,21 @@ class Mstream: private Mbuf, public std::ostream
         using Mbuf::throwing;       // bool throwing(bool ifTrue);
 };
 
-inline Mstream::Mstream()
-:
-    std::ostream(this)
-{}
+#include "mstream1.f"
+#include "mstream2.f"
+#include "mstream3.f"
+#include "mstream4.f"
 
-inline Mstream::Mstream(std::ostream &ostr, size_t maxCount, 
-                             std::string const &tag, bool throwing)
-:
-    Mbuf(ostr.rdbuf(), maxCount, tag, throwing),
-    std::ostream(this)
-{}
-
-inline Mstream::Mstream(std::streambuf *buf, size_t maxCount, 
-                             std::string const &tag, bool throwing)
-:
-    Mbuf(buf, maxCount, tag, throwing),
-    std::ostream(this)
-{}
-
-inline Mstream::Mstream(std::string const &name, size_t maxCount, 
-                             std::string const &tag, bool throwing)
-:
-    Mbuf(name, maxCount, tag, throwing),
-    std::ostream(this)
-{}
-
-inline bool Mstream::isActive() const
-{
-    return good();
-}
-
-inline void Mstream::on()
-{
-    clear();
-}
-
-inline void Mstream::off()
-{
-    setstate(std::ios::badbit);
-}
-
-inline long Mstream::id() const
-{
-    return reinterpret_cast<long>(this);
-}
-
-inline void Mstream::reset(std::string const &name, size_t maxCount,
-                           std::string const &tag, bool throwing)
-{
-    Mbuf::reset(name, maxCount, tag, throwing);
-}
-
-inline void Mstream::reset(std::string const &name)
-{
-    Mbuf::reset(name, maxCount(), tag(), throws());
-}
-
-inline void Mstream::reset(std::ostream &ostr, size_t maxCount,
-                           std::string const &tag, bool throwing)
-{
-    Mbuf::reset(ostr.rdbuf(), maxCount, tag, throwing);
-}
-
-inline void Mstream::reset(std::ostream &ostr)
-{
-    Mbuf::reset(ostr.rdbuf(), maxCount(), tag(), throws());
-}
-
-inline void Mstream::reset(std::streambuf *buf, size_t maxCount,
-                           std::string const &tag, bool throwing)
-{
-    Mbuf::reset(buf, maxCount, tag, throwing);
-}
-
-inline void Mstream::reset(std::streambuf *buf)
-{
-    Mbuf::reset(buf, maxCount(), tag(), throws());
-}
+#include "id.f"
+#include "isactive.f"
+#include "off.f"
+#include "on.f"
+#include "reset1.f"
+#include "reset2.f"
+#include "reset3.f"
+#include "reset4.f"
+#include "reset5.f"
+#include "reset6.f"
 
 extern Mstream emsg;
 extern Mstream fmsg;

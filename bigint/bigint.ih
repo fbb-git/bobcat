@@ -16,31 +16,20 @@ class BNCTX
     BN_CTX *d_ctx;
 
     public:
-        BNCTX();
-        ~BNCTX();
+        BNCTX();                                    // .i
+        ~BNCTX();                                   // destructor.i
         void verify();
 
-        operator BN_CTX *();
+        operator BN_CTX *();                        // opbnctxptr.i
 
     private:
         BNCTX(BNCTX const &other) = delete;
         BNCTX &operator=(BNCTX const &other) = delete;
 };
 
-inline BNCTX::BNCTX()
-{
-    d_ctx = BN_CTX_new();
-}
-
-inline BNCTX::~BNCTX()
-{
-    BN_CTX_free(d_ctx);
-}
-
-inline BNCTX::operator BN_CTX *()
-{
-    return d_ctx;
-}
+#include "bnctx.f"
+#include "destructor.f"
+#include "opbnctxptr.f"
 
 } // namespace FBB
         

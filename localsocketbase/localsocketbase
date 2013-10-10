@@ -16,37 +16,20 @@ class LocalSocketBase
 
     protected:
         LocalSocketBase();                                      // 1
-        explicit LocalSocketBase(std::string const &name);
+        explicit LocalSocketBase(std::string const &name);      // 1.f
 
         void open(std::string const &name);
-        int socket() const;
-        size_t size() const;
-        sockaddr const *sockaddrPtr() const;
+        int socket() const;                                     // .f
+        size_t size() const;                                    // .f
+        sockaddr const *sockaddrPtr() const;                    // .f
 };
 
-inline LocalSocketBase::LocalSocketBase(std::string const &name)
-{
-    open(name);
-}
+#include "localsocketbase1.f"
 
-inline int LocalSocketBase::socket() const
-{
-    return d_socket;
-}
-
-inline size_t LocalSocketBase::size() const
-{
-    return d_length;
-}
-
-inline sockaddr const *LocalSocketBase::sockaddrPtr() const
-{
-    return reinterpret_cast<sockaddr const *>(&d_address);
-}
+#include "size.f"
+#include "sockaddrptr.f"
+#include "socket.f"
 
 } // FBB
 
 #endif
-
-
-

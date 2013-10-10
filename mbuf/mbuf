@@ -51,19 +51,19 @@ class Mbuf: public std::streambuf
         void reset(std::string const &name, size_t maxCount,    // 3
                     std::string const &tag, bool throwing);
 
-        bool throws() const;
-        void throwing(bool ifTrue);
-        size_t count() const;
-        size_t maxCount() const;
-        std::string const &tag() const;
-        std::string const &lineTag() const;
-        void noLineNr();
+        bool throws() const;                                    // .f
+        void throwing(bool ifTrue);                             // .f    
+        size_t count() const;                                   // .f
+        size_t maxCount() const;                                // .f
+        std::string const &tag() const;                         // .f
+        std::string const &lineTag() const;                     // .f
+        void noLineNr();                                        // .f
         void setLineNr(size_t lineNr);
-        void setCount(size_t count);
-        void setMaxCount(size_t maxCount);
+        void setCount(size_t count);                            // .f
+        void setMaxCount(size_t maxCount);                      // .f
         void setTag(std::string const &tag);
-        void setLineTag(std::string const &lineTag);
-        bool lineExcess() const;
+        void setLineTag(std::string const &lineTag);            // .f
+        bool lineExcess() const;                                // .f
 
     private:
         void atFirstChar();
@@ -76,60 +76,17 @@ class Mbuf: public std::streambuf
         virtual int sync();
 };
 
-inline size_t Mbuf::maxCount() const
-{
-    return d_maxCount;
-}
-        
-inline bool Mbuf::lineExcess() const
-{
-    return d_lineExcess;
-}
-        
-inline std::string const &Mbuf::tag() const
-{
-    return d_tag;
-}
-
-inline std::string const &Mbuf::lineTag() const
-{
-    return d_lineTag;
-}
-
-inline void Mbuf::noLineNr()
-{
-    d_showLineNr = false;
-}
-
-inline void Mbuf::throwing(bool ifTrue)
-{
-    d_throw = ifTrue;
-}
-
-inline bool Mbuf::throws() const
-{
-    return d_throw;
-}
-
-inline void Mbuf::setMaxCount(size_t maxCount)
-{
-    d_maxCount = maxCount;
-}
-
-inline void Mbuf::setLineTag(std::string const &lineTag)
-{
-    d_lineTag = lineTag;
-}
-
-inline void Mbuf::setCount(size_t count)
-{
-    d_count = count;
-}
-
-inline size_t Mbuf::count() const
-{
-    return d_count;
-}
+#include "count.f"
+#include "lineexcess.f"        
+#include "linetag.f"
+#include "maxcount.f"
+#include "nolinenr.f"
+#include "setcount.f"
+#include "setlinetag.f"
+#include "setmaxcount.f"
+#include "tag.f"        
+#include "throwing.f"
+#include "throws.f"
 
 } // FBB
 

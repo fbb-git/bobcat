@@ -103,159 +103,81 @@ class SyslogStream: private Syslogbuf, public std::ostream
             Priority priority = NOTICE, Facility facility = USER,
             int option = 0);
 
-        Priority priority()   const;
-        Priority defaultPriority()   const;
-        Priority setPriority(Priority priority);
-        Priority setDefaultPriority(Priority priority);
+        Priority priority()   const;                            // .f
+        Priority defaultPriority()   const;                     // .f
+        Priority setPriority(Priority priority);                // .f
+        Priority setDefaultPriority(Priority priority);         // .f
 
-        void open(std::string const &ident,
+        void open(std::string const &ident,                     // .f
             Priority priority = NOTICE, Facility facility = USER,
             int option = 0);
-        void close();
+        void close();                                           // .f
 
         static  Priority stoP(std::string const &name, 
                                                 Priority priority = NOTICE);
         static  Facility stoF(std::string const &name, 
                                                 Facility facility = USER);
 
-        static int setMask(Priority p1, PriorityType upTo);
-        static int setMask(Priority p1);
+        static int setMask(Priority p1, PriorityType upTo);     // 1.f
+        static int setMask(Priority p1);                        // 2.f
 
         template <typename ...Priorities>
-        static int setMask(Priority p1, Priorities ...ps);
+        static int setMask(Priority p1, Priorities ...ps);      // 3.f
 
 // MANIPULATORS:
-        static std::ostream &emerg(std::ostream &str);
-        static std::ostream &alert(std::ostream &str);
-        static std::ostream &crit(std::ostream &str);
-        static std::ostream &err(std::ostream &str);
-        static std::ostream &warning(std::ostream &str);
-        static std::ostream &notice(std::ostream &str);
-        static std::ostream &info(std::ostream &str);
-        static std::ostream &debug(std::ostream &str);
-        static std::ostream &strerrno(std::ostream &str);
+        static std::ostream &emerg(std::ostream &str);          // .f
+        static std::ostream &alert(std::ostream &str);          // .f
+        static std::ostream &crit(std::ostream &str);           // .f
+        static std::ostream &err(std::ostream &str);            // .f
+        static std::ostream &warning(std::ostream &str);        // .f
+        static std::ostream &notice(std::ostream &str);         // .f
+        static std::ostream &info(std::ostream &str);           // .f
+        static std::ostream &debug(std::ostream &str);          // .f
+        static std::ostream &strerrno(std::ostream &str);       // .f
 
     private:
         static std::ostream &setPriority(std::ostream &str, 
                                         Priority priority);
 
-        static int maskValue(Priority p1);
+        static int maskValue(Priority p1);                          // 1.f
 
         template <typename ...Priorities>
-        static int maskValue(Priority p1, Priorities ...ps);
+        static int maskValue(Priority p1, Priorities ...ps);        // 2.f
 
         static int setMask(int maskValue, PriorityType upTo);
 };
 
-inline int SyslogStream::setMask(Priority p1, PriorityType upTo)
-{
-    return setMask(maskValue(p1), upTo);
-}
-
-inline int SyslogStream::setMask(Priority p1)
-{
-    return setMask(maskValue(p1), SINGLE);
-}
-
-template <typename ...Priorities>
-inline int SyslogStream::setMask(Priority p1, Priorities ...ps)
-{
-    return setMask(maskValue(p1, ps ...), SINGLE);
-}
-
-inline void SyslogStream::close()
-{
-    Syslogbuf::close();
-}
-
-inline void SyslogStream::open(std::string const &ident, Priority priority, 
-                               Facility facility, int option)
-{
-    Syslogbuf::open(ident, priority, facility, option);
-}
-
-inline Priority SyslogStream::priority()   const       
-{
-    return Syslogbuf::priority();
-}
-
-inline Priority SyslogStream::defaultPriority()   const
-{
-    return Syslogbuf::defaultPriority();
-}
-
-inline Priority SyslogStream::setPriority(Priority priority)
-{
-    return Syslogbuf::setPriority(priority);
-}        
-
-inline Priority SyslogStream::setDefaultPriority(Priority priority)
-{
-    return Syslogbuf::setDefaultPriority(priority);
-}        
-
-
-inline std::ostream &SyslogStream::emerg(std::ostream &str)
-{
-    return setPriority(str, EMERG);
-}
-
-inline std::ostream &SyslogStream::alert(std::ostream &str)
-{
-    return setPriority(str, ALERT);
-}
-
-inline std::ostream &SyslogStream::crit(std::ostream &str)
-{
-    return setPriority(str, CRIT);
-}
-
-inline std::ostream &SyslogStream::err(std::ostream &str)
-{
-    return setPriority(str, ERR);
-}
-
-inline std::ostream &SyslogStream::warning(std::ostream &str)
-{
-    return setPriority(str, WARNING);
-}
-
-inline std::ostream &SyslogStream::notice(std::ostream &str)
-{
-    return setPriority(str, NOTICE);
-}
-
-inline std::ostream &SyslogStream::info(std::ostream &str)
-{
-    return setPriority(str, INFO);
-}
-
-inline std::ostream &SyslogStream::debug(std::ostream &str)
-{
-    return setPriority(str, DEBUG);
-}
+#include "alert.f"
+#include "close.f"
+#include "crit.f"
+#include "debug.f"
+#include "defaultpriority.f"
+#include "emerg.f"
+#include "err.f"
+#include "info.f"
+#include "notice.f"
+#include "open.f"
+#include "priority.f"
+#include "setdefaultpriority.f"
+#include "setmask1.f"
+#include "setmask2.f"
+#include "setmask3.f"
+#include "setpriority.f"
+#include "warning.f"
 
 // The following private inline members, must remain here as they are used by
 // the setMask member template
 
-inline int SyslogStream::maskValue(Priority p1)
-{
-    return 1 << p1;
-}
-
-template <typename ...Priorities>
-inline int SyslogStream::maskValue(Priority p1, Priorities ...ps)
-{
-    return ((1 << p1) | maskValue(ps ...));
-}
-
-inline int SyslogStream::setMask(int maskValue, PriorityType upTo)
-{
-        // if upTo, maskValue is 2**x, and all its lower bits are also raised
-    return setlogmask(upTo == SINGLE ?  
-                        maskValue : maskValue |= (maskValue - 1));
-}
+#include "maskvalue1.f"
+#include "maskvalue2.f"
+#include "setmask4.f"
 
 } // FBB
 
 #endif
+
+
+
+
+
+

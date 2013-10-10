@@ -21,7 +21,7 @@ class LocalServerSocket: public LocalSocketBase
         };
 
         LocalServerSocket() = default;
-        explicit LocalServerSocket(std::string const &name, 
+        explicit LocalServerSocket(std::string const &name,     // 1.f
                                    Socket action = KEEP);
         ~LocalServerSocket();
 
@@ -33,11 +33,7 @@ class LocalServerSocket: public LocalSocketBase
         LocalServerSocket(LocalServerSocket const &other) = delete;
 };
 
-inline LocalServerSocket::LocalServerSocket(std::string const &name, 
-                                           Socket action)
-{
-    open(name, action);
-}
+#include "localserversocket1.f"
 
 } // FBB
 

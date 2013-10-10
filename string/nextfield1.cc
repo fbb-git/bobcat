@@ -1,7 +1,7 @@
 #include "string.ih"
 
 String::Type String::nextField(string const &str, 
-                    const_iterator *until, const_iterator from,
+                    ConstIter *until, ConstIter from,
                     string const &separators)
 {
     if (separators.find(*from) != string::npos) // saw a separator

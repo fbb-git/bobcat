@@ -10,14 +10,10 @@ namespace FBB
 class IFdStream: private IFdStreambuf, public std::istream
 {
     public:
-        explicit IFdStream(int fd, size_t n = 1);
+        explicit IFdStream(int fd, size_t n = 1);       // 1.f
 };
 
-inline IFdStream::IFdStream(int fd, size_t n)
-:
-    IFdStreambuf(fd, n),
-    std::istream(this)
-{}
+#include "ifdstream1.f"
 
 } // FBB
 

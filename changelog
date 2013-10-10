@@ -1,3 +1,43 @@
+bobcat (3.17.00)
+
+  * New split members added to the String class, removing the private split
+    facility from Process, which are now superfluous, as they are covered by
+    String's split facilities.
+
+  * The class BigInt has received several new members and defines a type:
+        - BigInt::Word, is equal to the OpenSSL BN_ULONG type, defining the
+          unsigned long type that is used for storing BIGNUM values;
+        - sizeOfWord() returning the size in bytes of a BigInt::Word;
+        - nWords() returning the number of Words used by the current BigInt
+          value;
+          new at() member;
+        - Word at(size_t index) returns the Word at 'index'. 
+
+  * The source header file of classes defining function templates and
+    inline-members now have their template definitions in .f files, one .f
+    file per function.
+    This change was implemented to simplify function template and inline
+    function maintenance, and to have source clas header files representing 
+    class interfaces as cleanly as possible.
+
+  * Removed the man-page of the deprecated class Errno
+
+  * All class-specific icmconf files were standardized (and cleaned)
+
+  * NOTE: 
+        the way the linker handles required libraries has changed
+        See, e.g., 
+
+            http://fedoraproject.org/wiki/UnderstandingDSOLinkChange
+
+        Due to this change programs depending on the bobcat may now require
+        explicit specifications of libraries. Most likely the linke will come
+        with a suggestion. The library libcrypto is a likely candidate for
+        explicit inclusion. If so, use -lcrypto when linking such 
+        depending programs.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Wed, 09 Oct 2013 17:50:04 +0200
+
 bobcat (3.16.00)
 
   * Re-implemented process/analyzecommand.cc, improving the wait it handles

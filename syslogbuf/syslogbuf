@@ -162,8 +162,8 @@ class Syslogbuf: public std::streambuf
 
         void close();
 
-        Priority defaultPriority() const;
-        Priority priority() const;
+        Priority defaultPriority() const;                           // .f
+        Priority priority() const;                                  // .f
 
         Priority setDefaultPriority(Priority priority);
         Priority setPriority(Priority priority);
@@ -178,15 +178,8 @@ class Syslogbuf: public std::streambuf
         void reset(std::string const &ident, Facility facility, int option);
 };
 
-inline Priority Syslogbuf::defaultPriority()   const
-{
-    return d_orgPriority;
-}
-
-inline Priority Syslogbuf::priority()   const
-{
-    return d_priority;
-}
+#include "defaultpriority.f"
+#include "priority.f"
 
 } // FBB
 

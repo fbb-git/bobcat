@@ -13,15 +13,10 @@ namespace FBB
 template <CryptType type>
 struct IBase64Stream: private IBase64Streambuf<type>, public std::istream
 {
-    IBase64Stream(std::istream &in, size_t bufSize = 1000);
+    IBase64Stream(std::istream &in, size_t bufSize = 1000);     // 1.f
 };
 
-template <CryptType type>
-IBase64Stream<type>::IBase64Stream(std::istream &in, size_t bufSize)
-:
-    IBase64Streambuf<type>(in, bufSize),
-    std::istream(this)
-{}
+#include "ibase64stream1.f"
 
 } // FBB        
 #endif

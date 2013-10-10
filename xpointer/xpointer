@@ -11,11 +11,8 @@ class Xpointer
 {
     typedef void (*DeleterType)(Display *);
 
-        static size_t s_counter;
-        static Display *s_theDisplay;
-// From g++4.4: see tags/2.03.00-g++4-4
-//    static std::unique_ptr<Display, DeleterType> s_theDisplay;
-
+    static size_t s_counter;
+    static Display *s_theDisplay;
 
     public:
         Xpointer();
@@ -27,14 +24,10 @@ class Xpointer
         bool get(int *x, int *y) const;
 
     private:
-        static void deleter(Display *dsp);
+        static void deleter(Display *dsp);                      // .f
 };
 
-inline void Xpointer::deleter(Display *dsp)
-{
-    if (dsp)
-        XCloseDisplay(dsp);
-}
+#include "deleter.f"
 
 }   // FBB
 

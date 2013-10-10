@@ -1,0 +1,2 @@
+inline void Process::parentProcess()
+{}
