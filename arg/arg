@@ -10,8 +10,6 @@
 #include <vector>
 #include <getopt.h>
 
-#include <bobcat/errno>
-
 namespace FBB
 {
 
@@ -45,8 +43,8 @@ class LongOption__: public ArgTypes__
         LongOption__(char const *name, Type type);
         LongOption__(char const *name, int optionChar);
 
-        std::string const &getName() const;
-        int optionChar() const;
+        std::string const &getName() const;     // .f
+        int optionChar() const;                 // .f
 };
 
 class Arg__;
@@ -82,14 +80,16 @@ class Arg: public ArgTypes__
         size_t option(std::string const &optchars) const;       // 2
         size_t option(size_t idx, 
                         std::string *value, int option) const;  // 3
-        size_t option(std::string *value, int optChar) const;
         size_t option(size_t *idx, 
                         std::string *value, int option) const;  // 4
         size_t option(size_t idx, std::string *value, 
                         char const *longOption) const;          // 5
-        size_t option(std::string *value, char const *longOption) const;
         size_t option(size_t *idx, std::string *value, 
                 char const *longOption) const;                  // 6
+
+        size_t option(std::string *value, int optChar) const;   // 1.f
+                                                                // 2.f
+        size_t option(std::string *value, char const *longOption) const;
 
         char const *operator[](size_t idx) const;
 
@@ -111,25 +111,10 @@ class Arg: public ArgTypes__
             int argc, char **argv);
 };
 
-inline size_t Arg::option(std::string *value, int optChar) const
-{
-    return option(static_cast<size_t>(0), value, optChar);
-}
-
-inline size_t Arg::option(std::string *value, char const *longOption) const
-{
-    return option(static_cast<size_t>(0), value, longOption);
-}
-
-inline int LongOption__::optionChar() const
-{
-    return d_optionChar;
-}
-
-inline std::string const &LongOption__::getName() const
-{
-    return d_name;
-}
+#include "getname.f"
+#include "optionchar.f"
+#include "option1.f"
+#include "option2.f"
 
 } // FBB
 

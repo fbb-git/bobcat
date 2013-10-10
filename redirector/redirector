@@ -16,22 +16,15 @@ class Redirector
             STDERR
         };
 
-        explicit Redirector(int fd);
+        explicit Redirector(int fd);                            // 1.f
 
-        void accessVia(int alternateFd) const;
+        void accessVia(int alternateFd) const;                  // .f
         void swallow(int alternateFd) const;
         void through(int alternateFd) const;
 };            
 
-inline Redirector::Redirector(int fd)
-:
-    d_fd(fd)
-{}
-
-inline void Redirector::accessVia(int alternateFd) const
-{
-    swallow(alternateFd);
-}
+#include "redirector1.f"
+#include "accessvia.f"
 
 } // FBB
 

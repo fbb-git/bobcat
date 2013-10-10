@@ -30,11 +30,12 @@ class CmdFinder: public CmdFinderBase
         Entry const *d_end;
 
     protected:
-        CmdFinder(Entry const *begin, Entry const *end, size_t mode = 0);
-        CmdFinder(CmdFinder &&tmp);
+        CmdFinder(Entry const *begin, Entry const *end,                 // 1
+                                                    size_t mode = 0);   
+        CmdFinder(CmdFinder &&tmp);                                     // 2
 
-        CmdFinder &operator=(CmdFinder const &rhs) = default;
-        CmdFinder &operator=(CmdFinder &&tmp);
+        CmdFinder &operator=(CmdFinder const &rhs)  = default;
+        CmdFinder &operator=(CmdFinder &&tmp);                  // opis1
 
         FP findCmd(std::string const &cmd);
         size_t count() const;
@@ -46,85 +47,22 @@ class CmdFinder: public CmdFinderBase
             CmdFinder<FP> *d_cmdFinder;
 
             public:
-                MatchKey(FunctionPtr *fp, CmdFinder<FP> *cmdFinder);
-                bool operator()(CmdFinder::Entry const &entry);
+                MatchKey(FunctionPtr *fp, CmdFinder<FP> *cmdFinder);    // 1
+                bool operator()(CmdFinder::Entry const &entry);     // opfun
         };
 
         bool match(std::string const &key) const;
 };
 
-template <typename FP>
-CmdFinder<FP>::CmdFinder(CmdFinder &&tmp)
-:
-    CmdFinderBase(move(tmp)),
-    d_count(tmp.d_count),
-    d_begin(tmp.d_begin),
-    d_end(tmp.d_end)
-{}
+#include "cmdfinder1.f"
+#include "cmdfinder2.f"
+#include "count.f"
+#include "findcmd.f"
+#include "opis1.f"
 
-template <typename FP>
-inline CmdFinder<FP> &CmdFinder<FP>::operator=(CmdFinder &&tmp)
-{
-    FBB::fswap(*this, tmp);
-    return *this;
-}
-
-template <typename FP>
-CmdFinder<FP>::MatchKey::MatchKey(FunctionPtr *fp, CmdFinder<FP> *cmdFinder)
-:
-    d_fp(fp),
-    d_cmdFinder(cmdFinder)
-{}
-
-template <typename FP>
-bool CmdFinder<FP>::MatchKey::operator()(CmdFinder::Entry const &entry)
-{
-    if (!d_cmdFinder->match(entry.first))
-        return false;
-
-    *d_fp = entry.second;
-    return true;
-}
-
-template <typename FP>
-inline bool CmdFinder<FP>::match(std::string const &key) const
-{
-    return (this->*d_match)(key);
-}
-
-template <typename FP>
-CmdFinder<FP>::CmdFinder(Entry const *begin, Entry const *end, size_t mode)
-:
-    CmdFinderBase(mode),
-    d_count(0),
-    d_begin(begin),
-    d_end(end)
-{}
-
-template <typename FP>
-FP CmdFinder<FP>::findCmd(std::string const &cmd)
-{
-    (this->*d_useCmd)(cmd);     // store the cmd to use
-
-    FunctionPtr fp;
-    MatchKey matchKey(&fp, this);   // create an object matching 
-                                    // a cmd with a key
-
-                                // count the number of occurrences
-    d_count = std::count_if(d_begin, d_end, matchKey);
-
-                         
-    return d_count == 1 ?   
-                fp              // return fp if cmd found
-            :                   // otherwise return the last fptr
-                (d_end - 1)->second;
-}
-
-template <typename FP>
-inline size_t CmdFinder<FP>::count() const
-{
-    return d_count;
-}
+#include "match.f"
+#include "matchkey1.f"
+#include "opfun.f"
 
 } // FBB
         

@@ -50,7 +50,7 @@ void install(string rss, string dev)
 #ifdef HEADERS
     printf("\n  installing the headers\n");
     md(dev + INC);
-    run("cp tmp/bobcat/* " + dev + INC);
+    run("cp tmp/" LIBRARY "/* " + dev + INC);
 #endif
 
 #ifdef MANPAGES
@@ -59,8 +59,8 @@ void install(string rss, string dev)
 
     rungzip9("tmp/man/man3/", dev + MAN + "/man3/");
     
-    run("gzip -n -9 < tmp/man/man7/bobcat.7 > " +
-                   dev + MAN + "/man7/bobcat.7.gz");
+    run("gzip -n -9 < tmp/man/man7/" LIBRARY ".7 > " +
+                   dev + MAN + "/man7/" LIBRARY ".7.gz");
 #endif
 
 #ifdef MANHTML
@@ -71,8 +71,8 @@ void install(string rss, string dev)
 //    rungzip9("tmp/manhtml/", dev + DOCDEV + "/man/");
     run("cp -r tmp/manhtml/* " + dev + DOCDEV + "/man/");
 
-    run("ln -sf bobcat.7.html " + dev + DOCDEV + "/man/index.html");
-    run("cp documentation/man/bobcat.jpg " + dev + DOCDEV + "/man");
+    run("ln -sf " LIBRARY ".7.html " + dev + DOCDEV + "/man/index.html");
+    run("cp documentation/man/" LIBRARY ".jpg " + dev + DOCDEV + "/man");
 #endif
 
 #ifdef DOCOTHER

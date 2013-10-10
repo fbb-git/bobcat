@@ -28,82 +28,39 @@ class Selector
                                 // perform defined behavior only after 
                                 // wait() returns.
 
-        int nReady();           // number of available fd's. 0: timeout
+        int nReady();           // number of available fd's. 0: timeout    .f
                                 // occurred, -1: select() failed.
 
-        int exceptFd();
-        int readFd();               // -1 if no more available descriptors
-                                    // otherwise the next available fd    
-                                    // in each category
-        int writeFd();
+        int exceptFd();                                                 // .f
+        int readFd();               // -1 if no more available             .f
+                                    // descriptors otherwise the next 
+                                    // available fd in each category
+        int writeFd();                                                  // .f
         void setAlarm(int sec, int usec = 0);
-        void noAlarm();
-        void addReadFd(int fd);
-        void addWriteFd(int fd);
-        void addExceptFd(int fd);
-        void rmReadFd(int fd);
-        void rmWriteFd(int fd);
-        void rmExceptFd(int fd);
+        void noAlarm();                                                 // .f
+        void addReadFd(int fd);                                         // .f
+        void addWriteFd(int fd);                                        // .f
+        void addExceptFd(int fd);                                       // .f
+        void rmReadFd(int fd);                                          // .f
+        void rmWriteFd(int fd);                                         // .f
+        void rmExceptFd(int fd);                                        // .f
 
     private:
         int checkSet(int *index, fd_set &set);
         void addFd(fd_set *set, int fd);
 };
 
-inline int Selector::nReady()
-{
-    return d_ret;
-}
-
-inline int Selector::exceptFd()
-{                
-    return checkSet(&d_exceptidx, d_ret_except);
-}
-
-inline int Selector::readFd()
-{
-    return checkSet(&d_readidx, d_ret_read);
-}
-
-inline int Selector::writeFd()
-{               
-    return checkSet(&d_writeidx, d_ret_write);
-}
-
-inline void Selector::noAlarm()
-{
-    d_alarm.tv_sec = d_alarm.tv_usec = -1;
-}
-
-inline void Selector::addReadFd(int fd)
-{
-    addFd(&d_read, fd);
-}
-
-inline void Selector::addWriteFd(int fd)
-{
-    addFd(&d_write, fd);
-}
-
-inline void Selector::addExceptFd(int fd)
-{
-    addFd(&d_except, fd);
-}
-
-inline void Selector::rmReadFd(int fd)
-{
-    FD_CLR(fd, &d_read);
-}
-
-inline void Selector::rmWriteFd(int fd)
-{
-    FD_CLR(fd, &d_write);
-}
-
-inline void Selector::rmExceptFd(int fd)
-{
-    FD_CLR(fd, &d_except);
-}
+#include "addexceptfd.f"
+#include "addreadfd.f"
+#include "addwritefd.f"
+#include "exceptfd.f"
+#include "noalarm.f"
+#include "nready.f"
+#include "readfd.f"
+#include "rmexceptfd.f"
+#include "rmreadfd.f"
+#include "rmwritefd.f"
+#include "writefd.f"
 
 } // FBB
 

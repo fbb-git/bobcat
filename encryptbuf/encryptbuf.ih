@@ -25,17 +25,13 @@ struct EncryptBufImp
 
     EncryptBufImp(std::ostream &outStream, std::string const &iv, 
                   size_t bufsize);
-    ~EncryptBufImp();
+    ~EncryptBufImp();                       // destructor.i
 
     static void setChar(char &ch, IRandStream &irs);
 
 };
 
-inline EncryptBufImp::~EncryptBufImp()
-{
-    delete [] buffer;
-    delete [] out;
-}
+#include "destructor.f"
 
 } // FBB
 

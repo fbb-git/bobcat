@@ -1,6 +1,6 @@
 #include "process.ih"
 
-void Process::showMode(char const *lab)
+void Process::showMode(char const *lab) const
 {
     std::cerr << lab << ' ' << getpid() << ' ' << d_child.pid << " IOMode: ";
 

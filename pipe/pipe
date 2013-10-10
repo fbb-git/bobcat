@@ -26,8 +26,8 @@ class Pipe
 
         void verify() const;        // SF, now empty
 
-        int readFd() const;
-        int writeFd() const;
+        int readFd() const;                                     // .f
+        int writeFd() const;                                    // .f
 
         void readFrom(int filedescriptor);   
 
@@ -40,16 +40,8 @@ class Pipe
         int writeOnly();
 };
 
-inline int Pipe::readFd() const
-{
-    return d_fd[READ];
-}
-
-inline int Pipe::writeFd() const
-{
-    return d_fd[WRITE];
-}
-
+#include "readfd.f"
+#include "writefd.f"
 
 } // FBB
 

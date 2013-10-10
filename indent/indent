@@ -14,37 +14,23 @@ class Indent
     static size_t s_inc;
 
     public:
-        static void setWidth(size_t width);
-        static void setInc(size_t inc);
-        static void clear();
-        static void inc();
+        static void setWidth(size_t width);             // .f
+        static void setInc(size_t inc);                 // .f
+        static void clear();                            // .f
+        static void inc();                              // .f
         static void dec();
 };
 
-inline void Indent::setWidth(size_t width)
-{
-    s_width = width;
-}
-inline void Indent::setInc(size_t inc)
-{
-    s_inc = inc;
-}
-inline void Indent::clear()
-{
-    s_width = 0;
-}
-inline void Indent::inc()
-{
-    s_width += s_inc;
-}
+#include "clear.f"
+#include "inc.f"
+#include "setinc.f"
+#include "setwidth.f"
 
+    // Free functions
 
 std::ostream &indent(std::ostream &out);
 
-inline std::ostream &nlindent(std::ostream &out)
-{
-    return out << "\n" << indent;
-}
+#include "nlindent.f"
 
 std::ostream &incindent(std::ostream &out);
 std::ostream &indentinc(std::ostream &out);

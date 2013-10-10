@@ -1,17 +1,72 @@
+void buildHeader(string destination, string class, list iFiles)
+{
+    list record;
+    string line;
+
+    echo(OFF);
+
+    run("rm -f " + g_cwd + g_tmphdr + class);
+    printf("Header ", g_tmphdr, class, "\n");
+
+    while (1)
+    {
+        record = fgets(class, (int)record[1]);
+        if (!record)
+            break;
+
+        line = record[0];
+
+        if (strfind(line, "#include \"") != 0)
+            fprintf(destination, line);
+        else
+            exec("cat " + strtok(line, "\"")[1] + " >> " + destination);
+    }
+
+    echo(ECHO_COMMANDS);
+}
+
+void iFiles(string class)
+{
+    int idx;
+    string destination;
+    list iFiles;
+    int recreate = 0;
+
+    destination = g_cwd + g_tmphdr + class;     
+
+    chdir(class);
+                                        // the destination file name
+
+    iFiles = makelist("*.f");           // create list of all f-files
+
+    if (class newer destination)
+        recreate = 1;
+    else
+    {
+        for (idx = sizeof(iFiles); idx--; )
+        {
+            if (iFiles[idx] newer destination)
+            {
+                recreate = 1;
+                break;
+            }
+        }
+    }
+
+    if (recreate)
+        buildHeader(destination, class, iFiles);
+
+    chdir(g_cwd);
+}    
+    
 void cpHeaders()
 {
     int idx;
     string file;
     string class;
-
-    for (idx = g_nClasses; idx--; )
-    {
-        class = element(idx, g_classes);
-        file = class + "/" + class;
     
-        if (file newer g_tmphdr + class)
-            run("cp " + file + " " + g_tmphdr);
-    }
+    for (idx = g_nClasses; idx--; )
+        iFiles(g_classes[idx]);
 }
 
 void static_library(string library)
@@ -84,12 +139,11 @@ void libraries(string libname, int all, int strip)
 
     g_copt += " -isystem tmp";
 
-
     library("oa", staticLib);               // compile for static lib.
     static_library(staticLib);              // build static library
 
 #ifndef STATIC
-    libso = "libbobcat.so";
+    libso = "lib" LIBRARY ".so";
     libsoshared = libso + "." + g_version;
 
     g_copt += " -fPIC";

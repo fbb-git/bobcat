@@ -8,7 +8,7 @@ manpagename(FBB::BigInt)(Arithmetic on Integers of Unlimited Size)
 
 manpagesynopsis()
     bf(#include <bobcat/bigint>)nl()
-    Linking option: tt(-lbobcat) 
+    Linking option: tt(-lbobcat -lcrypto) 
 
 manpagedescription()
 
@@ -47,6 +47,13 @@ constructor) throw tt(Exception) exceptions on failure.
 
 manpagesection(INHERITS FROM)
     -
+
+manpagesection(TYPE)
+
+    The class bf(BigInt) defines the type tt(Word), which is equal to the type
+tt(BN_ULONG) used by tt(OpenSSL) to store integral values of unlimited
+precision. A tt(Word) is an tt(unsigned long), which is, depending on the
+architecture, usually 64 or 32 bits long. 
 
 manpagesection(ENUMERATIONS)
     bf(Msb)nl()
@@ -114,6 +121,12 @@ manpagesection(MEMBER FUNCTIONS)
 
     itb(BigInt addModc(BigInt const &rhs, BigInt const &mod) )
        The sum (modulo tt(mod)) of the current object and tt(rhs) is returned.
+
+    itb(BigInt::Word at(size_t index) const)
+       Returns the tt(Word) at tt(index). E.g., on a 32 bit architecture, if
+        the bf(BigInt) value equals 2+sups(33), then tt(at(0)) returns 0, and
+        tt(at(1)) returns 2. If tt(index) equals or exceeds the value returned
+        by tt(nWords) an tt(FBB::Exception) is thrown.
 
     itb(BIGNUM const &bignum() const)
        A reference to the tt(BIGNUM) value maintained by the current
@@ -267,6 +280,10 @@ manpagesection(MEMBER FUNCTIONS)
         tt(lowerNBits) lower bits cleared. The sign of the returned object
         will be equal to the current object's sign.
 
+    itb(size_t maxWordIndex() const)
+       Returns the maximum tt(Word)-index that can be used with the tt(at)
+        and tt(setWord) members for the current bf(BigInt) value.
+
     itb(BigInt &mulMod(BigInt const &rhs, BigInt const &mod)) 
        The current object is multiplied  (modulo tt(mod)) by tt(rhs).
 
@@ -321,15 +338,32 @@ manpagesection(MEMBER FUNCTIONS)
         function's argument is tt(true) and a positive sign if the function's
         argument is tt(false).
 
+    itb(void setWord(size_t index, BigInt::Word value))
+       Assigns tt(value) to the tt(Word) at tt(index). E.g., on a 32 bit
+        architecture, if the bf(BigInt) value equals 2+sups(33), then
+        after tt(setWord(1, 1)) the value has become 2+sups(32). If tt(index)
+        exceeds the value returned by tt(nWords) an tt(FBB::Exception) is
+        thrown.
+
     itb(size_t size() const)
        The number of bytes required to store the current tt(BIGNUM) value is
         returned. 
 
     itb(size_t sizeInBits() const)
        The number of bits required to represent the current tt(BIGNUM) value
-        is returned. If you want to know the key size of RSA, DH or DSA keys
-        functions like tt(RSA_size(), DH_size(),) or tt(DSA_size()) should be
-        used.
+        is returned. 
+
+    itb(size_t sizeInBytes() const)
+       The number of bytes required to store the current tt(BIGNUM) value is
+        returned (returns the same value as the tt(size) memeber does).
+
+    itb(size_t constexpr sizeOfWord() const)
+       bf(BigInt) values are stored in units of `words', which are unsigned
+        long values. These values may consist of, e.g., 32 or 64 bits. The
+        number of bytes occupied by a `word' is returned: 4 for a 32 bit
+        value, 8 for a 64 bit value, and possibly other values, depending on
+        specific architecture peculiarities. The value returned by this
+        member, therefore, is architecture dependent.
 
     itb(BigInt &sqr())
       The current object's value is squared.
@@ -663,6 +697,12 @@ manpageseealso()
     bf(RAND_load_file)(3ssl), bf(RAND_seed)(3).
 
 manpagebugs()
-    None Reported.
+
+    Sep/Oct 2013: due to a change in library handling by the linker
+(cf. lurl(http://fedoraproject.org/wiki/UnderstandingDSOLinkChange) and
+lurl(https://wiki.debian.org/ToolChain/DSOLinking)) libraries that are
+indirectly required are no longer automatically linked to your program. With
+bf(BigInt) this is tt(libcrypto), which requires programs to link to both
+tt(bobcat) and tt(crypto).
 
 includefile(include/trailer)

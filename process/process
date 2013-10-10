@@ -66,7 +66,7 @@ struct Process: private Fork, public IOStream
             int     ret;
             pid_t   pid;
     
-            RetPid();
+            RetPid();                       //  1.f
         };
         RetPid d_child;
         RetPid d_monitor;
@@ -117,50 +117,55 @@ struct Process: private Fork, public IOStream
 
         virtual ~Process();                 // stop()s any ongoing process
 
-        iomode ioMode() const;              // returns default IOMode
-        ProcessType processType() const;    // returns default ProcessType
-        size_t timeLimit() const;           // returns default time limit
+        iomode ioMode() const;              // returns default IOMode       .f
+        ProcessType processType() const;    // returns default ProcessType  .f
+        size_t timeLimit() const;           // returns default time limit   .f
 
-        void setIOMode(iomode mode);            // change IOMode
+        void setIOMode(iomode mode);            // change IOMode        .f
 
-        void setProcessType(ProcessType type);
+        void setProcessType(ProcessType type);                      //  .f
 
-        void setTimeLimit(size_t timeLimit);    // for the next cmd to start
+        void setTimeLimit(size_t timeLimit);                        //  .f
+                                                // for the next cmd to start
                                                 // 0 means: no time monitor
 
-        void setCommand(std::string const &command);    // sets cmd,
+        void setCommand(std::string const &command);    // sets cmd,    .f
                                                         // eats backticks
-        Process &operator+=(std::string const &text);   // adds to the command
+
+        Process &operator+=(std::string const &text);   //       opaddis.f
+                                                        // adds to the command
         
-        void start();
-        void start(iomode mode);
-        void start(iomode mode, ProcessType type);
+        void start();                                   // 1.f
+        void start(iomode mode);                        // 2.f
+        void start(iomode mode, ProcessType type);      // 3.f
+
         void start(iomode mode, ProcessType type, size_t timeLimit);
 
-        void system();              // calls /bin/sh -c cmd; shell redirs OK
-        void system(iomode mode);   
-        void system(iomode mode, size_t timeLimit);  
+        void system();              // calls /bin/sh -c cmd;            1.f
+                                    //      shell redirs OK
+        void system(iomode mode);                                   //  2.f
+        void system(iomode mode, size_t timeLimit);                 //  3.1
 
 
         int operator=(std::string const &cmd);  // sets and starts a command
 
 
-        std::string const &str() const; // current command
+        std::string const &str() const; // current command              .f    
 
         int stop();                     // terminate a running childprocess
 
         template <typename Type>
-        Process &operator<<(Type const &value);
+        Process &operator<<(Type const &value);                 // opinsert.f
 
         Process &operator<<(std::ostream &(*pf)(std::ostream &));
 
         template <typename Type>
-        Process &operator>>(Type &value);
+        Process &operator>>(Type &value);                       // opextract.f
 
         bool active();
 
-        Process &operator()(iomode mode);
-        Process &operator()(iomode mode, ProcessType type);
+        Process &operator()(iomode mode);                       // opfun1.f
+        Process &operator()(iomode mode, ProcessType type);     // opfun2.f
         Process &operator()(iomode mode, ProcessType type, size_t timeLimit);
 
         void close();                           // closes input to the child
@@ -170,7 +175,7 @@ struct Process: private Fork, public IOStream
         size_t available();                     // returns ChildOutput bit_or
                                                 // (cf. manpage)
 
-        void showMode(char const *lab);
+        void showMode(char const *lab) const;
 
         using Fork::waitForChild;
                                 
@@ -180,7 +185,7 @@ struct Process: private Fork, public IOStream
 
         virtual void childProcess();
         virtual void childRedirections();
-        virtual void parentProcess();
+        virtual void parentProcess();                       // .f
         virtual void parentRedirections();
 
         void newPipe(Pipe &pipe);
@@ -206,120 +211,34 @@ struct Process: private Fork, public IOStream
                                     // arguments
         };
         ExecContext analyzeCommand();
-        std::vector<std::string> split(ConstIter begin, 
-                                       ConstIter const &end);
-        std::string dquotedString(ConstIter &begin, ConstIter const &end);
-        std::string quotedString(ConstIter &begin, ConstIter const &end);
-        int escapedString(ConstIter &begin, ConstIter const &end);
+
+//        std::vector<std::string> split(ConstIter begin, 
+//                                       ConstIter const &end);
+//        std::string dquotedString(ConstIter &begin, ConstIter const &end);
+//        std::string quotedString(ConstIter &begin, ConstIter const &end);
+//        int escapedString(ConstIter &begin, ConstIter const &end);
+
 };
 
-inline void Process::start()
-{   
-    start(d_setMode, d_setProcessType, d_setTimeLimit);
-}
-
-inline void Process::start(iomode mode)
-{
-    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
-                                        d_setProcessType, d_setTimeLimit);
-}
-
-inline void Process::start(iomode mode, ProcessType type)
-{
-    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), type, d_setTimeLimit);
-}
-
-template <typename Type>
-Process &Process::operator<<(Type const &value)
-{
-    if (active())
-        dynamic_cast<std::ostream &>(*this) << value;
-
-    return *this;
-}
-
-template <typename Type>
-Process &Process::operator>>(Type &value)
-{
-    if ((available() & CHILD_COUT) || active())
-        dynamic_cast<std::istream &>(*this) >> value;
-
-    return *this;
-}
-
-inline std::string const &Process::str() const
-{
-    return d_command;
-}
-
-inline void Process::system()
-{
-    start(d_mode, USE_SHELL, d_timeLimit);
-}
-
-inline void Process::system(iomode mode)
-{
-    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
-                                                USE_SHELL, d_timeLimit);
-}
-
-inline void Process::system(iomode mode, size_t timeLimit)
-{
-    start(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), USE_SHELL, timeLimit);
-}
-
-inline Process &Process::operator+=(std::string const &command)
-{
-    d_command += command;
-    return *this;
-}
-
-inline void Process::setCommand(std::string const &command)
-{
-    d_command = command;
-}
-
-inline void Process::setProcessType(ProcessType type)
-{
-    d_setProcessType = d_processType = type;
-}
-
-inline void Process::setTimeLimit(size_t timeLimit)
-{
-    d_setTimeLimit = d_timeLimit = timeLimit;
-}
-
-inline void Process::setIOMode(iomode mode)
-{
-    d_setMode = sanitizeIOMode(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC));
-}
-
-inline Process &Process::operator()(iomode mode)
-{
-    return operator()(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
-                                            d_setProcessType, d_setTimeLimit);
-}
-
-inline Process &Process::operator()(iomode mode, ProcessType type)
-{
-    return operator()(mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC), 
-                                                    type, d_setTimeLimit);
-}
-
-inline Process::iomode Process::ioMode() const
-{
-    return d_mode & ~(IN_PIPE | OUT_PIPE | CLOSE_ON_EXEC);
-}
-
-inline Process::ProcessType Process::processType() const
-{
-    return d_setProcessType;
-}
-
-inline size_t Process::timeLimit() const
-{
-    return d_setTimeLimit;
-}
+#include "iomode.f"
+#include "opaddis.f"
+#include "opextract.f"
+#include "opfun1.f"
+#include "opfun2.f"
+#include "opinsert.f"
+#include "processtype.f"
+#include "setcommand.f"
+#include "setiomode.f"
+#include "setprocesstype.f"
+#include "settimelimit.f"
+#include "start1.f"
+#include "start2.f"
+#include "start3.f"
+#include "str.f"
+#include "system1.f"
+#include "system2.f"
+#include "system3.f"
+#include "timelimit.f"
 
 
 } // FBB        

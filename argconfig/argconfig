@@ -51,17 +51,17 @@ class ArgConfig: public Arg, public ConfigFile
         size_t option(std::string *value, int optChar);                  // 3
         size_t option(std::string *value, char const *longOption);       // 4
 
-        size_t option(size_t idx,                               
-                        std::string *value, int option) const;  
-        size_t option(size_t *idx, 
-                        std::string *value, int option) const;  
-        size_t option(size_t idx, std::string *value, 
-                        char const *longOption) const;          
-        size_t option(size_t *idx, std::string *value, 
-                char const *longOption) const;                  
+        size_t option(size_t idx,                                   // 1.f
+                        std::string *value, int option) const;      
+        size_t option(size_t *idx,                                  // 2.f
+                        std::string *value, int option) const;      
+        size_t option(size_t idx, std::string *value,               // 3.f
+                        char const *longOption) const;              
+        size_t option(size_t *idx, std::string *value,              // 4.f
+                      char const *longOption) const;                
 
-        char const *operator[](size_t idx) const;           // Arg's []
-        std::string const &line(size_t idx) const;          // ConfigFile's []
+        char const *operator[](size_t idx) const;   // Arg's []         .f
+        std::string const &line(size_t idx) const;  // ConfigFile's []  .f
 
     private:
         ArgConfig(ArgConfig const &other) = delete;
@@ -97,39 +97,12 @@ class ArgConfig: public Arg, public ConfigFile
         RE_iteratorPair longConfigOpt(std::string const &longOpt);
 };
 
-inline size_t ArgConfig::option(size_t idx, std::string *value, 
-                                                    int optChar) const
-{
-    return Arg::option(idx, value, optChar);
-}
-
-inline size_t ArgConfig::option(size_t *idx, std::string *value, 
-                                                    int optChar) const
-{
-    return Arg::option(idx, value, optChar);
-}
-
-inline size_t ArgConfig::option(size_t idx, std::string *value, 
-                                            char const *longOption) const
-{
-    return Arg::option(idx, value, longOption);
-}
-
-inline size_t ArgConfig::option(size_t *idx, std::string *value, 
-                                            char const *longOpt) const
-{
-    return Arg::option(idx, value, longOpt);
-}
-
-inline char const *ArgConfig::operator[](size_t idx) const
-{
-    return Arg::operator[](idx);
-}
-
-inline std::string const &ArgConfig::line(size_t idx) const
-{
-    return ConfigFile::operator[](idx);
-}
+#include "option1.f"
+#include "option2.f"
+#include "option3.f"
+#include "option4.f"
+#include "opindex.f"
+#include "line.f"
 
 } // FBB
 

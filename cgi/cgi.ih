@@ -99,29 +99,16 @@ class CGIFSA
 
         size_t tokenIdx();
 
-        void setEscape(size_t idx);
+        void setEscape(size_t idx);                 // .i
     
         size_t charToken();
         size_t wordToken();
 
         static void setFsa(Record const &record);
-        static int iscgi(int ch);
+        static int iscgi(int ch);                   // .i
 };
 
-inline int CGIFSA::iscgi(int ch)
-{
-    return s_cgi.find(ch) != string::npos;
-}
-
-inline void CGIFSA::setEscape(size_t idx)
-{
-    d_escape[idx] = d_setEscape;
-}
-
-//inline void CGI::init(bool &target)
-//{
-//    target = d_escapeValue;
-//}
-
+#include "iscgi.f"
+#include "setescape.f"
 
 }   // namespace

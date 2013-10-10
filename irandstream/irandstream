@@ -15,23 +15,9 @@ class IRandStream: private Randbuffer, public std::istream
         IRandStream(int min, int max, int seed);
 };
 
-inline IRandStream::IRandStream(int max)
-:
-    Randbuffer(1, max, 1),
-    std::istream(this)
-{}
-
-inline IRandStream::IRandStream(int min, int max)
-:
-    Randbuffer(min, max, 1),
-    std::istream(this)
-{}
-
-inline IRandStream::IRandStream(int min, int max, int seed)
-:
-    Randbuffer(min, max, seed),
-    std::istream(this)
-{}
+#include "irandstream1.f"
+#include "irandstream2.f"
+#include "irandstream3.f"
 
 } // FBB
 

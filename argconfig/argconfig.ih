@@ -6,33 +6,10 @@
 
 #include <bobcat/string>
 #include <bobcat/exception>
+#include <bobcat/iuo>
 
 namespace FBB
 {
-    class OptStructArray
-    {
-        typedef struct option  OptStruct;
-
-        size_t    d_n;
-        OptStruct *d_opt;
-        
-        public:
-            OptStructArray(size_t n)
-            :
-                d_n(n),
-                d_opt(new OptStruct[n])
-            {}
-
-            ~OptStructArray()
-            {
-                delete [] d_opt;
-            }
-
-            OptStruct *get()
-            {
-                return d_opt;
-            }
-    };
 
 class ArgConfig__
 {
@@ -42,24 +19,16 @@ class ArgConfig__
         
     public:
         ArgConfig__(LongOption__ const *begin, LongOption__ const *const end);
-        std::unordered_map<int, std::string>::const_iterator 
-                                                    find(int optChar) const;
+
+        std::unordered_map<int, std::string>::const_iterator        
+                                        find(int optChar) const;    // .i
         
-        std::unordered_map<int, std::string>::const_iterator findEnd() const;
+        std::unordered_map<int, std::string>::const_iterator 
+                                        findEnd() const;            // .i
 };
 
-inline std::unordered_map<int, std::string>::const_iterator 
-    ArgConfig__::find(int optChar) const
-{
-    return d_longOption.find(optChar);
-}
-
-inline std::unordered_map<int, std::string>::const_iterator 
-    ArgConfig__::findEnd() const
-{
-    return d_longOption.end();
-}
-
+#include "find.f"
+#include "findend.f"
 
 } // FBB
 

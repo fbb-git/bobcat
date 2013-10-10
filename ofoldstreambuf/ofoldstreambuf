@@ -15,8 +15,8 @@ class lm
     size_t d_value;
     
     public:
-        lm(int value);
-        std::ostream &modify(std::ostream &out) const;
+        lm(int value);                                  // 1.f
+        std::ostream &modify(std::ostream &out) const;  // 1.f
 };
 
 class mlm
@@ -24,8 +24,8 @@ class mlm
     int d_value;
     
     public:
-        mlm(int value);
-        std::ostream &modify(std::ostream &out) const;
+        mlm(int value);                                 // 1.f
+        std::ostream &modify(std::ostream &out) const;  // 2.f
 };
 
 struct OFoldStreambufEnums
@@ -96,9 +96,9 @@ class OFoldStreambuf: virtual public OFoldStreambufEnums,
         virtual ~OFoldStreambuf();
 
         void setMargins(size_t leftMargin, size_t rightMargin);
-        void setTrailingBlanks(TrailingBlanks tb);
-        void useBlanks();
-        void useTabs(size_t tabWidth = 8);
+        void setTrailingBlanks(TrailingBlanks tb);                  // .f
+        void useBlanks();                                           // .f
+        void useTabs(size_t tabWidth = 8);                          // .f
 
         static size_t leftMargin(std::streambuf const *buffer);
         static size_t rightMargin(std::streambuf const *buffer);
@@ -118,108 +118,40 @@ class OFoldStreambuf: virtual public OFoldStreambufEnums,
 
         void iniBlankTabs(TabsOrBlanks tob);
         void newline();
-        void addNonWs(int c);
+        void addNonWs(int c);                           // .f
         void addWs(int c);
         void indent();
         void flush();
         void clearWs();
 
         void modifyIndent(int delta);
-        void setIndent(int value);
+        void setIndent(int value);                      // .f
 
-        void writeWs() const;
-        void writeNonWs() const;
-        void put(int ch) const;
+        void writeWs() const;                           // .f    
+        void writeNonWs() const;                        // .f
+        void put(int ch) const;                         // .f
 
         static BufIt findOFoldStreambuf(std::streambuf const *buffer);
 };
 
-inline void OFoldStreambuf::setIndent(int value)
-{
-    d_indent = value;
-}
+#include "lm1.f"
+#include "modify1.f"
 
-inline void OFoldStreambuf::setTrailingBlanks(TrailingBlanks tb)
-{
-    d_handleTrailingBlanks =  tb ==  HANDLE_TRAILING_BLANKS;
-}
+#include "mlm1.f"
+#include "modify2.f"
 
-inline void OFoldStreambuf::writeWs() const
-{
-    out().write(d_ws.data(), d_ws.length());
-}
+#include "leftmargin.f"
+#include "rightmargin.f"
+#include "setindent.f"
+#include "settrailingblanks.f"
+#include "useblanks.f"
+#include "usetabs.f"
 
-inline void OFoldStreambuf::put(int ch) const
-{
-    out().put(ch);
-}
+    // Free functions
 
-inline void OFoldStreambuf::writeNonWs() const
-{
-    out().write(d_nonWs.data(), d_nonWs.length());
-}
-
-inline void OFoldStreambuf::addNonWs(int c)
-{
-    d_nonWs += c;
-}
-
-inline lm::lm(int value)
-:
-    d_value(value < 0 ? 0 : value)
-{}
-
-inline std::ostream &lm::modify(std::ostream &out) const
-{
-    dynamic_cast<OFoldStreambuf &>(*out.rdbuf()).setIndent(d_value);
-    return out;
-}        
-
-inline mlm::mlm(int value)
-:
-    d_value(value)
-{}
-
-inline std::ostream &mlm::modify(std::ostream &out) const
-{
-    dynamic_cast<OFoldStreambuf &>(*out.rdbuf()).modifyIndent(d_value);
-    return out;
-}        
-
-inline void OFoldStreambuf::useBlanks()
-{
-    d_indentChar = ' ';
-    d_indentWidth = 1;
-}
-
-inline void OFoldStreambuf::useTabs(size_t tabWidth)
-{
-    d_indentChar = '\t';
-    d_indentWidth = tabWidth;
-}
-
-inline size_t OFoldStreambuf::leftMargin(std::streambuf const *buffer)
-{
-    return (*findOFoldStreambuf(buffer))->d_indent;
-}
-
-inline size_t OFoldStreambuf::rightMargin(std::streambuf const *buffer)
-{
-    return (*findOFoldStreambuf(buffer))->d_rightMargin;
-}
-
-inline std::ostream &operator<<(std::ostream &out, lm const &idt)
-{
-    return idt.modify(out);
-}
-
-inline std::ostream &operator<<(std::ostream &out, mlm const &idt)
-{
-    return idt.modify(out);
-}
+#include "opinsert1.f"      // ostream << lm
+#include "opinsert2.f"      // ostream << mlm
 
 } // FBB
 
-
 #endif
-

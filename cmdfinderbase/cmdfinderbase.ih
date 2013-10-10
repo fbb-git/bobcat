@@ -1,29 +1,13 @@
 #include "cmdfinderbase"
 
 #include <sstream>
-#include <bobcat/exception>
-#include <bobcat/string>
 #include <bobcat/fswap>
 
 using namespace std;
 using namespace FBB;
 
+#include "matchexact.f"
+#include "matchunique.f"
+#include "matchinsensitive.f"
 
-inline bool CmdFinderBase::matchExact(string const &key) const
-{
-    return d_cmd == key && d_cmd.length();
-}
-
-inline bool CmdFinderBase::matchUnique(string const &key) const
-{
-    return key.find(d_cmd) != string::npos && d_cmd.length();
-}
-
-inline bool CmdFinderBase::matchInsensitive(string const &key) const
-{
-    return 
-        strcasecmp(d_cmd.c_str(), key.c_str()) == 0 
-        &&
-        d_cmd.length();
-}
 

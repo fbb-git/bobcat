@@ -67,29 +67,36 @@ class MailHeaders
             const_iterator lookup(const_iterator const &old) const;
             const_iterator lookdown(const_iterator const &old) const;
 
-            static bool fail(std::string const &hdr, 
+            static bool fail(std::string const &hdr,            // .f
                                 std::string const &key);
-            static bool initial(std::string const &hdr, 
+            static bool initial(std::string const &hdr,         // .f
                                 std::string const &key);
-            static bool partial(std::string const &hdr, 
+            static bool partial(std::string const &hdr,         // .f
                                 std::string const &key);
-            static bool full(std::string const &hdr, 
+            static bool full(std::string const &hdr,            // .f
                                 std::string const &key);
-            static bool caseInitial(std::string const &hdr, 
+            static bool caseInitial(std::string const &hdr,     // .f
                                 std::string const &key);
-            static bool casePartial(std::string const &hdr, 
+            static bool casePartial(std::string const &hdr,     // .f
                                 std::string const &key);
-            static bool caseFull(std::string const &hdr, 
+            static bool caseFull(std::string const &hdr,        // .f
                                 std::string const &key);
             public:
-                const_hdr_iterator &operator++();
-                const_hdr_iterator &operator--();
-                const_hdr_iterator operator++(int);
-                const_hdr_iterator operator--(int);
-                bool operator==(const_hdr_iterator const &other) const;
-                bool operator!=(const_hdr_iterator const &other) const;
-                std::string const &operator*() const;
-                std::string const *operator->() const;
+                const_hdr_iterator &operator++();               // opinc.f
+                const_hdr_iterator &operator--();               // opdec.f
+                const_hdr_iterator operator++(int);             // oppostinc.f
+
+                // not used, but potentially available in consthdropdec.cc
+                // const_hdr_iterator operator--(int);       
+
+                bool operator==(const_hdr_iterator const &other)    // opeq.f
+                                                            const; 
+
+                bool operator!=(const_hdr_iterator const &other)    // opneq.f
+                                                            const;
+
+                std::string const &operator*() const;           // opstar.f
+                std::string const *operator->() const;          // oparrow.f
         };
 
     public:
@@ -102,126 +109,45 @@ class MailHeaders
         MailHeaders &operator=(MailHeaders &&tmp);
 
         void read();
-        void setHeaderIterator(char const *header, Match match = FULL);
+        void setHeaderIterator(char const *header, Match match = FULL); // .f
 
-        const_hdr_iterator beginh() const;
-        const_hdr_iterator endh() const;
+        const_hdr_iterator beginh() const;                      // .f
+        const_hdr_iterator endh() const;                        // .f
 
-        const_reverse_hdr_iterator rbeginh() const;
-        const_reverse_hdr_iterator rendh() const;
+        const_reverse_hdr_iterator rbeginh() const;             // .f
+        const_reverse_hdr_iterator rendh() const;               // .f
 
         // available from vector<string>:
 
-        size_t size() const;
-        std::string const &operator[](size_t idx) const;
+        size_t size() const;                                    // .f
+        std::string const &operator[](size_t idx) const;        // opindex.f
 
-        const_iterator begin() const;
-        const_iterator end() const;
+        const_iterator begin() const;                           // .f
+        const_iterator end() const;                             // .f
 
-        const_reverse_iterator rbegin() const;
-        const_reverse_iterator rend() const;
+        const_reverse_iterator rbegin() const;                  // .f
+        const_reverse_iterator rend() const;                    // .f
 };
 
-inline MailHeaders::const_iterator MailHeaders::begin() const
-{
-    return d_lines.begin();
-}
+#include "begin.f"
+#include "beginh.f"
+#include "end.f"
+#include "endh.f"
+#include "opindex.f"
+#include "rbegin.f"
+#include "rbeginh.f"
+#include "rend.f"
+#include "rendh.f"
+#include "setheaderiterator.f"
+#include "size.f"
 
-inline MailHeaders::const_iterator MailHeaders::end() const
-{
-    return d_lines.end();
-}
-
-inline MailHeaders::const_reverse_iterator MailHeaders::rbegin() const
-{
-    return d_lines.rbegin();
-}
-
-inline MailHeaders::const_reverse_iterator MailHeaders::rend() const
-{
-    return d_lines.rend();
-}
-
-inline size_t MailHeaders::size() const
-{
-    return d_lines.size();
-}
-
-inline std::string const &MailHeaders::operator[](size_t idx) const
-{
-    return d_lines[idx];
-}
-
-inline void MailHeaders::setHeaderIterator(char const *header, Match match)
-{
-    d_hdr = header;
-    d_match = match;
-}
-
-inline MailHeaders::const_hdr_iterator MailHeaders::beginh() const
-{
-    return const_hdr_iterator(this, begin()); 
-                                        // returns iterator over all headers
-                                        // matching d_hdr by the d_match type
-}
-
-inline MailHeaders::const_hdr_iterator MailHeaders::endh() const
-{
-                                        // returns address of the sentinel
-    return const_hdr_iterator(this, end()); 
-}
-
-inline MailHeaders::const_reverse_hdr_iterator MailHeaders::rbeginh() const
-{
-    return const_reverse_hdr_iterator(endh());
-}
-
-inline MailHeaders::const_reverse_hdr_iterator MailHeaders::rendh() const
-{
-    return const_reverse_hdr_iterator(beginh());
-}
-
-inline MailHeaders::const_hdr_iterator 
-&MailHeaders::const_hdr_iterator::operator++()
-{
-    d_current = lookup(++d_current);
-    return *this;
-}
-
-inline MailHeaders::const_hdr_iterator 
-&MailHeaders::const_hdr_iterator::operator--()
-{
-    d_current = lookdown(d_current);
-    return *this;
-}
-
-inline MailHeaders::const_hdr_iterator 
-MailHeaders::const_hdr_iterator::operator++(int)
-{
-    return const_hdr_iterator(d_mh, d_current++);
-}
-
-inline bool MailHeaders::const_hdr_iterator::operator==(
-                                    const_hdr_iterator const &other) const
-{
-    return d_current == other.d_current;
-}
-
-inline bool MailHeaders::const_hdr_iterator::operator!=(
-                                    const_hdr_iterator const &other) const
-{
-    return d_current != other.d_current;
-}
-
-inline std::string const &MailHeaders::const_hdr_iterator::operator*() const
-{
-    return *d_current;
-}
-
-inline std::string const *MailHeaders::const_hdr_iterator::operator->() const
-{
-    return &*d_current;
-}
+#include "oparrow.f"
+#include "opdec.f"
+#include "opeq.f"
+#include "opinc.f"
+#include "opneq.f"
+#include "oppostinc.f"
+#include "opstar.f"
 
 } // FBB
         

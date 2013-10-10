@@ -1,39 +1,20 @@
 #include "string.ih"
 
-size_t String::split(std::vector<string> *words, 
-                string const &str, char const *sep, bool addEmpty)
+vector<String::SplitPair> String::split(string const &str,
+                                    string const &separators, bool addEmpty)
 {
-    words->clear();
+    vector<SplitPair> ret;
 
-    const_iterator from = str.begin();
-    const_iterator beyond = str.end();
-    string separators(sep);
-    
-    const_iterator until;
-
-    while (from != beyond)
+                                // visit all chars of str
+    for (ConstIter begin = str.begin(), end = str.end(); begin != end; )
     {
-//cerr << "SCAN `" << string(from, beyond) << "'" << endl;
+        SplitPair next = split(begin, str.end(), separators);
 
-        Type type = nextField(str, &until, from,// get the from field, `until'
-                              separators);      // points beyond the field's
-                                                // last character
-//cerr << "\tFIELD: `" << string(from, until) << "'" << endl;
-//cerr << "\tBEYOND: `" << string(until, beyond) << "'" << endl;
-
-                                    // see if it is a quoted string
-        bool quoted = (type == DQUOTE || type == SQUOTE);
-
-        from += quoted;             // skip the quote of quoted strings
-
-                                    // add the field to `words'
-        if (type != SEPARATOR || addEmpty)
-            words->push_back(string(from, until));
-
-                                    // update from: skip the quote of quoted
-        from = until + quoted;      // strings 
+        if (next.second == SEPARATOR && not addEmpty)
+            continue;
+    
+        ret.push_back(next);
     }
 
-    return words->size();
+    return ret;
 }
-

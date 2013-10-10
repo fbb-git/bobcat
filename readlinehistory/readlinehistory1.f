@@ -1,0 +1,2 @@
+inline ReadLineHistory::ReadLineHistory()
+{}
