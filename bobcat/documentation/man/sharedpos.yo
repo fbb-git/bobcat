@@ -1,0 +1,145 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Sharedpos)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+                    (Shared Memory Offsets)
+
+manpagename(FBB::Sharedpos)(Shared Memory offset controller)
+
+manpagesynopsis()
+    bf(#include <bobcat/sharedpos>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+
+    The class bf(SharedPos) is a support class for Bobcat's shared memory
+handling classes. It controls the shared memory read/write ofset and ensures
+that shared memory operations never exceed the shared memory's maximum offset.
+
+    The class bf(SharedPos) has several public members, but they are primarily
+useful for other tt(Shared*) classes offered by Bobcat. There is probably
+little use for a stand-alone bf(SharedPos) object.
+
+    In the descriptions of the class's member functions tt(offset) refers to
+the read/write offset within the available shared memory.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(TYPEDEFS AND ENUMS)
+
+manpagesection(CONSTRUCTORS)
+    
+    Default, copy and move constructors are available. The default constructor
+        does not yet monitor the offsets for a shared memory segment. The
+        member tt(reset) is used to start monitoring offsets.
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(void operator++()) 
+       The offset is incremented. If this member is called when the offset is
+        equal to the shared memory's maximum offset an tt(FBB::Exception) is
+        thrown.
+
+    itb(void operator+=(size_t len)) 
+       The offset is incremented by tt(len). If tt(offset + len) exceeds the
+        shared memory's maximum offset then the offset is set to the maximum
+        offset and an tt(FBB::Exception) is thrown.
+
+    itb(std::ostream &operator<<(std::ostream &out, SharedPos const &pos)) 
+       Inserts information about the bf(FBB::SharedPos) object into tt(out).
+    )
+
+    The copy and move assignment operators are available.
+
+manpagesection(MEMBER FUNCTIONS)
+
+    itemization(
+    itb(bool atMaxOffset() const)
+       Returns tt(true) if offset equals the maximum offset that can be used
+        for the current shared memory segment.nl()
+       The behavior of this member is undefined until tt(setup) has been
+        called. 
+
+    itb(size_t blockIdx() const)
+       The index of the shared segment data block in which offset is located
+        is returned. 
+
+    itb(size_t blockOffset() const)
+       The index within the shared segment data block matching offset is
+        returned.  
+
+    itb(bool eof() const)
+       Returns tt(true) if offset exceeds the maximum offset of any character
+        ever written to the shared memory pointed at by
+        tt(sharedData). If tt(eof) returns tt(true) information may still 
+        be em(written) to the shared memory: writting is possible until the
+        maximum shared memory segment offset has been reached.nl()
+       The behavior of this member is undefined until tt(setup) has been
+        called. 
+
+    itb(std::streamsize eos() const)
+       The offset just beyond the maximum offset for the current shared
+        segment data block is returned.nl()
+       The behavior of this member is undefined until tt(setup) has been
+        called. 
+
+    itb(std::streamsize maxOffset() const)
+       The maximum possible offset that can be used for the currently
+        monitored shared memory segment is returned. Zero is returned until
+        tt(setup) has been called.
+
+    itb(std::streamsize offset() const)
+       The offset within the currently monitored shared memory segment is
+        returned. Zero is returned until tt(setup) has been called.
+
+    itb(void setup(SharedData *sharedData))
+       The tt(SharedPos) object is reset to monitor the offset of a new
+        tt(FBB::SharedData) object. The tt(SharedData *) must point to a
+        tt(SharedData) segment (cf. bf(shareddata)(3bobcat)) that must exist
+        until the end of the bf(FBB::SharedPos) object's lifetime or until the
+        next tt(reset) call. Immediately after calling tt(reset) offset has
+        the value 0. 
+
+    itb(std::streamsize showmanyc() const)
+       The number of characters that can be read from the current shared
+        segment data block is returned.  This member interrogates the number
+        of readable characters in the shared memory segment. This number may
+        change while this member is being executed. In order to receive a
+        stable return value, calling functions should have obtained a lock on
+        the shared memory segment before calling this member. See also the
+        bf(shareddata)(3bobcat) man-page.nl()
+       The behavior of this member is undefined until tt(setup) has been
+        called. 
+
+    itb(std::ios::pos_type seek(std::ios::off_type offset, 
+                                std::ios::seekdir way = std::ios::beg))
+       The monitored offset is changed to this member's tt(offset) argument,
+        relative to tt(way). Seeking beyond tt(eof) is OK; -1 is returned when
+        seeking beyond tt(maxOffset) or seeking before the shared segment's
+        offset 0.
+    )
+
+manpagesection(EXAMPLE)
+    See the bf(sharedstream)(3bobcat) man page.
+
+manpagefiles()
+    em(bobcat/sharedpos) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), 
+        bf(isharedstream)(3bobcat),
+        bf(osharedstream)(3bobcat),
+        bf(shareddata)(3bobcat), 
+        bf(sharedmemory)(3bobcat),
+        bf(sharedmutex)(3bobcat), 
+        bf(sharedstream)(3bobcat), 
+        bf(sharedstreambuf)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
+

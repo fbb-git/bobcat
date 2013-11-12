@@ -1,0 +1,167 @@
+includefile(include/header)
+
+COMMENT(replace 'shareddata' by the name of the new class)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::SharedData)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+                    (Shared Memory Data)
+
+manpagename(FBB::SharedData)(Shared Memory data structure)
+
+manpagesynopsis()
+    bf(#include <bobcat/shareddata>)nl()
+    Linking option: tt(-lbobcat ) 
+
+manpagedescription()
+
+    The class bf(FBB::SharedData) implements the shared memory 
+data structure which is used by Bobcat's shared memory classes. Bobcat's
+tt(SharedMemory) class accesses or defines a shared memory segment which 
+is interpreted as an tt(FBB::SharedData) object. The bf(FBB::SharedData) class
+acts as a mold, structuring the attached shared memory segment. Its important
+parts are
+    itemization(
+    it() a tt(SharedMutex), controlling access to the shared memory
+    it() a table of tt(int) values, containing IDs of shared
+        data segments, containing the actual information written to
+        the shared memory. These IDs are either -1, meaning that no shared
+        memory data segments are available, or they contain the IDs of
+        existing shared memory segments. 
+    )
+
+    The class bf(FBB::SharedData)'s only responsibility is to offer the mold
+as described. It is the responsibility of other classes (notably
+tt(FBB::SharedMemory) to correctly use the information made available through
+bf(FBB::SharedData).
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+
+    itemization(
+    itb(SharedData(size_t access, size_t nBlocks, size_t segmentSize))
+       This constructor initializes an bf(FBB::SharedData) object, setting its
+        access rights (tt(access), using the well-known (bf(chmod)(1)) way to
+        define the access rights for the owner, the group and others), the
+        number of data blocks (tt(nBlocks)) and the size of these data blocks
+        (tt(segmentSize)).
+
+       All elements in the table of shared memory data block IDs are
+        initialized to the value -1.
+
+       This constructor is normally used to initialize a tt(SharedData) object
+        inside a shared memory segment using placement new. 
+    )
+
+    The default, copy and move constructors are not available. 
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(std::ostream &operator<<(std::ostream &out, 
+                                    SharedData const &sharedData))
+       The overloaded insertion operator inserts basic statistics of the
+        shared memory data into the tt(ostream) object. Information about the
+        IDs of the shared segments, their sizes, the maximum number of shared
+        data segments and the number of bytes that can be read from the shared
+        memory are displayed.
+    )
+    The overloaded move and copy assignment operators are not available.
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(size_t access() const)
+       The access rights of the shared memory segment are returned as a number
+        which is usually interpreted as an octal value, using the well-known
+        (bf(chmod)(1)) way to define the access rights for the owner, the
+        group and others.
+    
+    itb(int *block())
+       The address of the first element of the table of shared memory data
+        block IDs is returned. 
+
+    itb(int *blockEnd())
+       The address just beyond the last element of the table of shared memory
+        data block IDs is returned. The following relationship holds true:
+       verb(
+    nBlocks() == blockEnd() - block()
+       )
+    
+    itb(int *blockId(size_t idx))
+       The address of table element tt(idx) of the table of shared memory data
+        block IDs is returned. The behavior of the program is undefined if
+        tt(idx) is or exceeds tt(nBlocks()).
+
+    itb(void lock() const)
+       When returning from this member function the shared memory is locked by
+        the calling process. The calling process may repeatedly call tt(lock)
+        without a matching tt(unlock). At each nested tt(lock) call an
+        internal lock count is incremented.
+
+    itb(size_t lockCount() const)
+       The tt(SharedMutex) object's lock count is returned.
+
+    itb(size_t nBlocks() const)
+       The number of shared memory data blocks that can be used by the
+        bf(FBB::SharedData) object is returned.
+
+    itb(std::streamsize nReadable() const)
+       The number of characters (bytes) that can be read from the beginning of
+        the shared memory is returned.
+    
+    itb(void release() const)
+       If the current process has locked the shared memory, the lock
+        count is reset to zero, and the shared memory segment is unlocked.
+
+    itb(size_t segmentSize() const)
+        The size (in bytes) of the shared memory data blocks is returned. The
+        bf(FBB::SharedData) object can accomodate at most tt(segmentSize() *
+        nBlocks()) bytes.
+
+    itb(bool try_lock() const)
+       When returning tt(true) the current process has obtained the lock, and
+        the object's lock count is set to 1. Otherwise, tt(false) is returned
+        (which includes the case where the process already has obtained the
+        lock).
+
+    itb(void unlock() const)
+       If the object's lock count is zero, the function immediately
+        returns. Otherwise, the object's lock count is decremented. Once the
+        lock count has decremented to zero the lock of the shared memory
+        segment is released.
+
+    itb(void updateNreadable(std::streamsize offset))
+       The number of bytes that can be retrieved from the shared memory is
+        updated to tt(max(nReadable(), offset)). This is a bf(FBB::SharedData)
+        member, rather than a tt(FBB::SharedPos) member because it is a
+        characteristic of the shared memory itself. Different processes may
+        write bytes to different offsets, and each process must be able 
+        to update the number of readable bytes, requiring this number to be
+        stored in the the shared memory itself.
+    )
+
+manpagesection(EXAMPLE)
+    See the bf(sharedstream)(3bobcat) man page.
+
+
+manpagefiles()
+    em(bobcat/shareddata) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(chmod)(1),
+        bf(isharedstream)(3bobcat),
+        bf(osharedstream)(3bobcat),
+        bf(sharedmemory)(3bobcat),
+        bf(sharedmutex)(3bobcat), 
+        bf(sharedpos)(3bobcat), 
+        bf(sharedstream)(3bobcat), 
+        bf(sharedstreambuf)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
+
+

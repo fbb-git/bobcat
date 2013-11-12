@@ -38,17 +38,18 @@ used.
        |             |                                     |                
        |       +-----+---------+------+----------+         |
        |       |     |         |      |          |         |
-       |      User Signal      |      |          +----+----+
-       |       |               |      |               |
-       |       |     +---------+     Mbuf        EncryptBuf
-       |       |     |         |      |                              
-       |       |  BigInt       |    Mstream               
-       |       |     |         |                                  
-       |       +-----+         |                                  
-       |       |     |         |                                  
-       +-------+     |         |             
-       |             |         |                  
-       |        PrimeFactors   |                  
+       |      User Signal      |      |          +----+----+------+
+       |       |               |      |               |           |
+       |       |     +---------+     Mbuf        EncryptBuf  SharedMutex
+       |       |     |         |      |                           |
+       |       |  BigInt       |    Mstream                   SharedData
+       |       |     |         |                                  |
+       |       +-----+         |                              SharedPos
+       |       |     |         |                                  |
+       |       |     |         |                                  |
+       +-------+     |         |                       SharedEnum |         
+       |             |         |                             |    |
+       |        PrimeFactors   |                            SharedMemory
        |                       |                  
        |   GS__                |                  
        |    |                  |                                  
