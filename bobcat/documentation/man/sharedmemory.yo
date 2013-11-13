@@ -89,7 +89,7 @@ manpagesection(OVERLOADED OPERATORS)
     itb(std::ostream &operator<<(std::ostream &out, 
                                     SharedMemory const &sharedMemory))
        The overloaded insertion operator inserts information about the
-        tt(SharedMemory) object into the provide tttt(ostream) object. The IDs
+        tt(SharedMemory) object into the provide tt(ostream) object. The IDs
         of the shared segments, their sizes, the maximum number of shared
         memory segments, the number of bytes that can be read from the shared
         memory, and its actual storage capacity, etc., are displayed.
@@ -104,6 +104,13 @@ manpagesection(OVERLOADED OPERATORS)
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
+    itb(void clear())
+       The shared memory is first locked. Next, all shared data segment are
+        returned to the operating system, after which the shared memory
+        segment is unlocked again. Returning from tt(clear) the shared memory
+        The bf(FBB::SharedMemory) object is effectively re-initialized, with
+        tt(offset) and tt(nReadable) returning 0.
+
     itb(int get())
        First the bf(FBB::SharedMemory) object calls tt(lock) to lock the
         shared memory segment. Next the character at tt(offset) is retrieved
@@ -113,6 +120,12 @@ manpagesection(MEMBER FUNCTIONS)
 
     itb(int id() const)
        The ID of the shared memory segment is returned.
+
+    itb(void kill())
+       Without locking the shared memory first,  all shared memory is returned
+        to the operating system. The bf(FBB::SharedMemory) object is unusable
+        after returning from tt(kill). Other processes that were using the
+        shared memory can continue to do so.
 
     itb(void lock() const)
        When returning from this member function the shared memory is locked by
@@ -158,6 +171,12 @@ manpagesection(MEMBER FUNCTIONS)
        If the current process has locked the shared memory, the lock
         count is reset to zero, and the shared memory segment is unlocked.
 
+    itb(void remove())
+       The shared memory is first locked. Next, all shared memory is returned
+        to the operating system. The bf(FBB::SharedMemory) object is unusable
+        after returning from tt(remove). Other processes that were using the
+        shared memory can continue to do so.
+
     itb(std::ios::pos_type seek(std::ios::off_type offset, 
                             std::ios::seekdir way = std::ios::beg))
        Moves the tt(offset) position relative to tt(way). The value -1 is
@@ -170,6 +189,9 @@ manpagesection(MEMBER FUNCTIONS)
         change while this member is being executed. In order to receive a
         stable return value, calling functions should have obtained a lock on
         the shared memory segment before calling this member.
+
+    itb(void swap(SharedMemory &other))
+       The current and other bf(FBB::SharedMemory) objects are swapped.
 
     itb(bool try_lock() const)
        When returning tt(true) the current process has obtained the lock, and
@@ -189,24 +211,10 @@ manpagesection(MEMBER FUNCTIONS)
         starting at tt(offset). Next, tt(unlock) is called. The number of
         bytes actually written is returned. The member function returns -1 if
         initially tt(offset) is equal to tt(maxOffset).
-              
-
-    void kill();                    // kill all shared segments w/o locks
-                                    // the object is unusable hereafter
-
-    void remove();                  // remove all shared segments.
-                                    // the object is unusable hereafter
-
-    void clear();                   // clear all existing data and reduce
-                                    // until only the segment at 
-                                    // d_sharedData
-
-    void swap(SharedMemory &other);
     )
 
 manpagesection(EXAMPLE)
     See the bf(sharedstream)(3bobcat) man page.
-
 
 manpagefiles()
     em(bobcat/sharedmemory) - defines the class interface

@@ -1,0 +1,139 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::OSharedStream)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+                    (std::ostream on shared memory)
+
+manpagename(FBB::OSharedStream)(std::ostream operations on shared memory)
+
+manpagesynopsis()
+    bf(#include <bobcat/osharedstream>)nl()
+    Linking option: tt(-lpthread -lbobcat) 
+
+
+manpagedescription()
+
+    This class offers the features of the bf(std::ostream) class, operating on
+shared memory. 
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::OSharedStreambuf) (private inheritance),nl()
+    bf(std::ostream),nl()
+    bf(FBB::SharedEnum__) (cf. bf(sharedmemory(3bobcat)) for a description of
+        this last base class).
+
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(OSharedStream())
+       The default constructor defines a stub a bf(OSharedStream) object that
+        cannot immediately be used to access shared memory. To use it, its
+        member tt(open) must first be called.
+
+    itb(OSharedStream(size_t maxSize, SizeUnit sizeUnit, 
+            std::ios::openmode openMode = std::ios::out,
+            size_t access = 0600))
+       This constructor creates a shared memory segment having a capacity of
+        at least tt(maxSize * sizeUnit) bytes. By default, the shared memory
+        segment is opened for writing. The shared memory's access rights are
+        defined by the tt(access) parameter, using the well-known
+        (bf(chmod)(1)) way to define the access rights for the owner, the
+        group and others, using octal digits. If construction succeeds the
+        shared memory is ready for use. If construction fails, an
+        tt(FBB::Exception) is thrown.
+
+    itb(OSharedStreambuf(int id, std::ios::openmode openMode = std::ios::out |
+        std::ios::in)) 
+       This constructor connects to a shared memory segment having ID
+        tt(id). If construction succeeds the shared memory is ready for
+        use. If construction fails (e.g., no shared memory segment having ID
+        tt(id) exists, an tt(FBB::Exception) is thrown.
+    )
+    Copy and move constructors are not available.
+
+manpagesection(OVERLOADED OPERATORS)
+
+    The overloaded move and copy assignment operators are not available.
+
+manpagesection(MEMBER FUNCTIONS)
+
+     All members of tt(std::istream) and tt(std::ostream) and the tt(enum)
+values tt(kB, MB), and tt(GB), defined by tt(FBB::OSharedEnum__) are available. 
+
+    itemization(
+    itb(void clear())
+       This member clears the error states of the tt(std::istream) base class
+        object.
+
+    itb(int id() const)
+       The ID of the shared memory segment is returned.
+
+    itb(void kill())
+       Without locking the shared memory first,  all shared memory is returned
+        to the operating system. The bf(FBB::OSharedStream) object is unusable
+        after returning from tt(kill). Other processes that were using the
+        shared memory can continue to do so.
+
+    itb(void remove())
+       The shared memory is first locked. Next, all shared memory is returned
+        to the operating system. The bf(FBB::OSharedStream) object is unusable
+        after returning from tt(remove). Other processes that were using the
+        shared memory can continue to do so.
+
+    itb(void memInfo(std::ostream &out, char const *end = "\n"))
+       Information about the tt(OSharedMemory) object is inserted into the
+        provide tt(ostream) object. The IDs of the shared segments, their
+        sizes, the maximum number of shared memory segments, the number of
+        bytes that can be read from the shared memory, and its actual storage
+        capacity, etc., are displayed. Following the information about the
+        shaed memory, tt(end) is inserted into tt(out).
+
+    itb(void open(size_t maxSize, SizeUnit sizeUnit,
+            std::ios::openmode openMode = std::ios::out,
+            size_t access = 0600))
+       This member creates a shared memory segment having a capacity of at
+        least tt(maxSize * sizeUnit) bytes, and connects the shared memory
+        segment to the bf(FBB::OSharedStream). A matching tt(close) member
+        does not exist and is not required. By default, the shared memory
+        segment is opened for reading. Different from the open modes used for
+        file streams, creating a shared memory stream with open modes
+        tt(ios::in) is OK. In this case the shared memory segment is created
+        and once information has been written to the shared memory by another
+        process it can be read. The shared memory's access rights are defined
+        by the tt(access) parameter, using the well-known (bf(chmod)(1)) way
+        to define the access rights for the owner, the group and others, using
+        octal digits. If opening succeeds the shared memory is ready for
+        use. If opening fails, an tt(FBB::Exception) is thrown.
+
+    itb(void open(int id, std::ios::openmode openMode = std::ios::in |
+        std::ios::out))
+       This member connects the bf(FBB::OSharedStream) object to a shared
+        memory segment having ID tt(id). A matching tt(close) member does
+        not exist and is not required. If opening succeeds the shared
+        memory is ready for use. If opening fails (e.g., no shared memory
+        segment having ID tt(id) exists, an tt(FBB::Exception) is
+        thrown.
+    )
+
+manpagesection(EXAMPLE)
+    See the bf(sharedstream)(3bobcat) man page.
+
+manpagefiles()
+    em(bobcat/osharedstream) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7),  bf(chmod)(1),
+        bf(osharedstream)(3bobcat),
+        bf(shareddata)(3bobcat),
+        bf(sharedmemory)(3bobcat)
+        bf(sharedmutex)(3bobcat), 
+        bf(sharedpos)(3bobcat), 
+        bf(sharedstream)(3bobcat),
+        bf(sharedstreambuf)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
