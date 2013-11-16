@@ -13,7 +13,6 @@ class SharedSegment
 {
     friend std::ostream &operator<<(std::ostream &out, 
                                     SharedSegment const &sharedData);
-
     size_t      d_access;
     size_t      d_segmentSize;
 
@@ -21,12 +20,14 @@ class SharedSegment
     std::streamsize d_nReadable;    // number of readable characters
                                     // (just beyond offset of last character
                                     // ever written)
-
     size_t      d_nBlocks;
     SharedBlock d_block[1];         // Mutexes and IDs of shared data blocks
                                     // in fact SharedBlock block[nBlocks]   
 
     public:
+        SharedSegment(SharedSegment const &other) = delete;
+        SharedSegment &operator=(SharedSegment const &rhs) = delete;
+
         static SharedSegment *create(int *id, 
                                      size_t nBlocks, size_t segmentSize,
                                      size_t access);
@@ -50,26 +51,22 @@ class SharedSegment
                                             // but detaching fails.
                                             // always returns 0
 
-        SharedSegment(SharedSegment const &other) = delete;
-        SharedSegment &operator=(SharedSegment const &rhs) = delete;
-
-
         int newData(size_t idx);
 
         std::streamsize nReadable() const;
         void lock(size_t idx);
         void unlock(size_t idx);
 
-        void lock();                // d_nReadableMutex
-        void unlock();
+\       void nReadableLock();
+\       void nReadableUnlock();
 
-        size_t nBlocks() const;
+\       size_t nBlocks() const;
         size_t segmentSize() const;
 
         void updateNreadable(std::streamsize offset);
         void clear();               // clear all data, nReadable = 0
 
-        size_t access() const;
+\       size_t access() const;
 
         SharedBlock &operator[](size_t idx);
 
@@ -105,12 +102,12 @@ inline void SharedSegment::unlock(size_t idx)
     d_block[idx].unlock();
 }
 
-inline void SharedSegment::lock()
+inline void SharedSegment::nReadableLock()
 {
     d_nReadableMutex.lock();
 }
 
-inline void SharedSegment::unlock()
+inline void SharedSegment::nReadableUnlock()
 {
     d_nReadableMutex.unlock();
 }

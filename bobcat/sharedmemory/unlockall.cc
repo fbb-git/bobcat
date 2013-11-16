@@ -10,6 +10,6 @@ void SharedMemory::unlockAll()
         unlock(idx);
 
 //cerr << "UNlocking shared segment\n";    
-    d_sharedSegment->unlock();
+    d_sharedSegment->nReadableUnlock();
 //cerr << "UNlockAll done\n";    
 }

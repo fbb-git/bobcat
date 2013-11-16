@@ -12,6 +12,6 @@ void SharedMemory::lockAll()
         lock(idx);
 
 //cerr << "locking shared segment\n";    
-    d_sharedSegment->lock();
+    d_sharedSegment->nReadableLock();
 //cerr << "lockAll done\n";    
 }
