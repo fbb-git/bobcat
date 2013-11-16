@@ -37,15 +37,13 @@ class SharedMemory: public virtual SharedEnum__
                                         // the attached shared data segment
     SharedPos d_pos;
 
-        // d_blockIdx may be obtained w/o locking, but when loading/using a 
-        // block (which includes using d_block[idx].setID or d_block[idx].id)
-        // d_block[d_blockIdx] must be locked.
-//    size_t d_blockIdx = 0;              // block[] idx to which d_data refers
     size_t d_lockCount = 0;             // # of nested locks
     char *d_data = 0;                   // pointer to shared memory data
 
     public:
         SharedMemory() = default;
+
+        SharedMemory(SharedMemory const &other) = delete;
 
         SharedMemory(size_t maxSize, SizeUnit sizeUnit,
                      size_t access = 0600);             // 2: creation mode;
@@ -109,12 +107,6 @@ class SharedMemory: public virtual SharedEnum__
         void clearAll();                // clear without locking
 
         bool blockAvailable(size_t idx);
-
-//        int newDataSegment();           // also does attach(), segment cleared
-//                                        // to 0-bytes
-
-
-//        size_t segmentSize() const;
 
         void map();                     // 1    maps shared data to d_data
         void map(size_t idx);           // 2    only called by load

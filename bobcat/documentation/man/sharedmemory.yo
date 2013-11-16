@@ -15,7 +15,7 @@ manpagesynopsis()
 manpagedescription()
 
     The class bf(FBB::SharedMemory) implements a usable interface to a shared
-memory segment made available by tt(FBB::SharedData) and monitored by
+memory segment made available by tt(FBB::SharedSegment) and monitored by
 tt(FBB::SharedPos). It is the main building block for
 tt(FBB::SharedStreambuf), defining the `device' to which
 tt(FBB::SharedStreambuf) interfaces. All shared memory related I/O should be
@@ -40,8 +40,6 @@ includefile(include/namespace)
 manpagesection(INHERITS FROM)
     bf(FBB::SharedEnum__)
 
-manpagesection(SharedEnum__)
-
     The bf(struct SharedEnum__) is a wrapper struct around bf(enum SizeUnit),
 which is available through inheritance in several bf(FBB::Shared*) classes,
 and offers symbolic constants defining standard memory sizes. The bf(enum
@@ -52,7 +50,7 @@ SizeUnit) defines the following symbolic constants:
         itb(GB), representing 2+sups(30) bytes of memory
         )
 
-manpagesection(CONSTRUCTORS and DESTRUCTOR)
+manpagesection(CONSTRUCTORS, DESTRUCTOR)
 
     itemization(
     itb(SharedMemory())
@@ -82,7 +80,7 @@ manpagesection(CONSTRUCTORS and DESTRUCTOR)
         removed.
     )
 
-    The copy and move constructors are not available.
+    copy and move constructors are not available.
 
 manpagesection(OVERLOADED OPERATORS)
     itemization(
@@ -100,15 +98,16 @@ manpagesection(OVERLOADED OPERATORS)
         is interfacing with.
     )
 
-    The overloaded copy assignment operator is not available.
+    The overloaded copy assignement operator is not available.
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
     itb(void clear())
-       The shared memory is first locked. Next, all shared data segment are
-        returned to the operating system, after which the shared memory
-        segment is unlocked again. Returning from tt(clear) the shared memory
-        The bf(FBB::SharedMemory) object is effectively re-initialized, with
+       First, the shared memory is locked. Next, all shared data segment are
+        deleted, and the shared memory's own data are reset to indicate it is
+        completely empty. Following this the shared memory segment is unlocked
+        again. Returning from tt(clear) the shared memory The
+        bf(FBB::SharedMemory) object is effectively re-initialized, with
         tt(offset) and tt(nReadable) returning 0.
 
     itb(int get())
@@ -122,23 +121,13 @@ manpagesection(MEMBER FUNCTIONS)
        The ID of the shared memory segment is returned.
 
     itb(void kill())
-       Without locking the shared memory first,  all shared memory is returned
-        to the operating system. The bf(FBB::SharedMemory) object is unusable
-        after returning from tt(kill). Other processes that were using the
-        shared memory can continue to do so.
-
-    itb(void lock() const)
-       When returning from this member function the shared memory is locked by
-        the calling process. The calling process may repeatedly call tt(lock)
-        without a matching tt(unlock). At each nested tt(lock) call an
-        internal lock count is incremented.
-
-    itb(size_t lockCount() const)
-       The tt(SharedMutex) object's lock count is returned.
+       Without locking the shared memory all shared memory controlled by the
+        bf(FBB::SharedMemory) object is deleted. The bf(FBB::SharedMemory)
+        object is unusable after returning from tt(kill).
 
     itb(std::streamsize maxOffset() const)
        The maximum possible offset that can be used with the shared memory
-        segment is returned. The members tt(offset) and tt(nReadable) will
+        segment is returned. The members tt(offset) and tt(nReadable)
         never exceed the value returned by tt(maxOffset).
 
     itb(std::streamsize nReadable() const)
@@ -154,28 +143,22 @@ manpagesection(MEMBER FUNCTIONS)
         segment.
 
     itb(int put(int ch))
-       First the bf(FBB::SharedMemory) object calls tt(lock) to lock the
-        shared memory segment. Then tt(ch) is written at position tt(offset),
-        incrementing tt(offset) thereafter. Finally tt(unlock) is called.  If
-        tt(ch == EOF, EOF) is immediately returned.
+       After locking the appropriate shared data segment, tt(ch) is written at
+        position tt(offset), incrementing tt(offset) thereafter. If tt(ch ==
+        EOF, EOF) is immediately returned.
 
     itb(int read(char *data, std::streamsize len))
-       The bf(FBB::SharedMemory) object calls tt(lock) to lock the shared
-        memory, then at most tt(len) bytes are read from the shared memory,
-        starting at tt(offset), and are stored at tt(data). Next, tt(unlock)
-        is called. The number of bytes actually written is returned. The
-        member function returns -1 if initially tt(offset) was at least equal
-        to tt(nReadable).
+       While locking the appropriate shared data segment(s) at most tt(len)
+        bytes are read from the shared memory, starting at tt(offset). The
+        bytes read from shared memory are stored at tt(data).  The number of
+        bytes actually written is returned. This member returns -1 if
+        initially tt(offset) was at least equal to tt(nReadable).
               
-    itb(void release() const)
-       If the current process has locked the shared memory, the lock
-        count is reset to zero, and the shared memory segment is unlocked.
-
     itb(void remove())
-       The shared memory is first locked. Next, all shared memory is returned
-        to the operating system. The bf(FBB::SharedMemory) object is unusable
-        after returning from tt(remove). Other processes that were using the
-        shared memory can continue to do so.
+       The shared memory is locked, after which all shared memory controlled
+        by the bf(FBB::SharedMemory) object is deleted. The
+        bf(FBB::SharedMemory) object is unusable after returning from
+        tt(remove).
 
     itb(std::ios::pos_type seek(std::ios::off_type offset, 
                             std::ios::seekdir way = std::ios::beg))
@@ -223,7 +206,7 @@ manpageseealso()
     bf(bobcat)(7), bf(chmod)(1),
         bf(isharedstream)(3bobcat),
         bf(osharedstream)(3bobcat),
-        bf(shareddata)(3bobcat),
+        bf(sharedsegment)(3bobcat),
         bf(sharedmutex)(3bobcat), 
         bf(sharedpos)(3bobcat), 
         bf(sharedstream)(3bobcat), 

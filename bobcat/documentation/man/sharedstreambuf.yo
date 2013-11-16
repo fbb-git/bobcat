@@ -79,16 +79,14 @@ tt(GB), defined by tt(FBB::SharedEnum__) are available.
        The ID of the shared memory segment is returned.
 
     itb(void kill())
-       Without locking the shared memory first, all shared memory is returned
-        to the operating system. The bf(FBB::SharedStreambuf) object is
-        unusable after returning from tt(kill). Other processes that were
-        using the shared memory can continue to do so.
+       Without locking the shared memory the bf(FBB::SharedStreambuf)'s shared
+        memory is deleted. The bf(FBB::SharedStreambuf) object is
+        unusable after returning from tt(kill). 
 
     itb(void remove())
-       The shared memory is first locked. Next, all shared memory is returned
-        to the operating system. The bf(FBB::SharedStreambuf) object is
-        unusable after returning from tt(remove). Other processes that were
-        using the shared memory can continue to do so.
+       The shared memory is locked, and the bf(FBB::SharedStreambuf)'s shared
+        memory is deleted. The bf(FBB::SharedStreambuf) object is unusable
+        after returning from tt(remove). 
 
     itb(void setMemory(SharedMemory &&tmp))
        The anonymous temporary tt(SharedMemory) object that is passed to
@@ -106,6 +104,15 @@ tt(GB), defined by tt(FBB::SharedEnum__) are available.
         terminated by a final newline character.
     )
 
+manpagesection(PROTECTED MEMBER FUNCTION)
+
+    itb(void setOpenMode(std::ios::openmode flag))
+       The streambuf's tt(openmode) is changed to the settings defined by
+        tt(flag). This member is used by, e.g., tt(SharedStream::open), to
+        adapt the bf(FBB::SharedStreambuf)'s tt(openmode) to the flags that
+        are passed to tt(open).
+    )
+
 
 manpagesection(EXAMPLE)
     See the bf(sharedstream)(3bobcat) man page.
@@ -117,10 +124,10 @@ manpageseealso()
     bf(bobcat)(7),  bf(chmod)(1),
         bf(isharedstream)(3bobcat),
         bf(osharedstream)(3bobcat),
-        bf(shareddata)(3bobcat),
         bf(sharedmemory)(3bobcat)
         bf(sharedmutex)(3bobcat), 
         bf(sharedpos)(3bobcat), 
+        bf(sharedsegment)(3bobcat),
         bf(sharedstream)(3bobcat)
 
 manpagebugs()

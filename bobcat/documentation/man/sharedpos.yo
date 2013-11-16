@@ -95,10 +95,10 @@ manpagesection(MEMBER FUNCTIONS)
        The offset within the currently monitored shared memory segment is
         returned. Zero is returned until tt(setup) has been called.
 
-    itb(void setup(SharedData *sharedData))
+    itb(void setup(SharedSegment *sharedData))
        The tt(SharedPos) object is reset to monitor the offset of a new
-        tt(FBB::SharedData) object. The tt(SharedData *) must point to a
-        tt(SharedData) segment (cf. bf(shareddata)(3bobcat)) that must exist
+        tt(FBB::SharedSegment) object. The tt(SharedSegment *) must point to a
+        tt(SharedSegment) segment (cf. bf(sharedsegment)(3bobcat)) that must exist
         until the end of the bf(FBB::SharedPos) object's lifetime or until the
         next tt(reset) call. Immediately after calling tt(reset) offset has
         the value 0. 
@@ -110,7 +110,7 @@ manpagesection(MEMBER FUNCTIONS)
         change while this member is being executed. In order to receive a
         stable return value, calling functions should have obtained a lock on
         the shared memory segment before calling this member. See also the
-        bf(shareddata)(3bobcat) man-page.nl()
+        bf(sharedsegment)(3bobcat) man-page.nl()
        The behavior of this member is undefined until tt(setup) has been
         called. 
 
@@ -132,7 +132,7 @@ manpageseealso()
     bf(bobcat)(7), 
         bf(isharedstream)(3bobcat),
         bf(osharedstream)(3bobcat),
-        bf(shareddata)(3bobcat), 
+        bf(sharedsegment)(3bobcat), 
         bf(sharedmemory)(3bobcat),
         bf(sharedmutex)(3bobcat), 
         bf(sharedstream)(3bobcat), 
