@@ -1,0 +1,111 @@
+#ifndef INCLUDED_BOBCAT_SHAREDSTREAMBUF_
+#define INCLUDED_BOBCAT_SHAREDSTREAMBUF_
+
+#include <ios>
+#include <streambuf>
+
+#include "../sharedmemory/sharedmemory"
+
+namespace FBB
+{
+
+class SharedStreambuf: public std::streambuf, public virtual SharedEnum__
+{
+    std::ios::openmode d_openMode;
+    std::ios::openmode d_currentMode;       // initially openMode, thereafter
+                                            // either ::in or ::out
+    SharedMemory d_memory;
+
+    public:
+        SharedStreambuf();
+
+        SharedStreambuf(
+                size_t maxSize, SizeUnit sizeUnit,
+                std::ios::openmode openMode = std::ios::in | std::ios::out,
+                size_t access = 0600);
+
+        SharedStreambuf(
+                int id,
+                std::ios::openmode openMode = std::ios::in | std::ios::out);
+
+        virtual ~SharedStreambuf();
+
+        int id() const;                 // id of the shared Memory segment
+
+        void kill();                    // kill all shared segments w/o locks
+                                        // the object is unusable hereafter
+
+        void remove();                  // remove all shared segments.
+                                        // the object is unusable hereafter
+
+        void clear();                   // clear all existing data and reduce
+                                        // until only the segment at 
+                                        // d_sharedData
+
+        void setMemory(SharedMemory &&tmp);
+
+        void memInfo(std::ostream &out) const;
+
+    protected:
+        void setOpenMode(std::ios::openmode openMode);        
+        
+    private:
+        bool mode(std::ios::openmode flag);
+
+        int pbackfail(int ch) override;
+        std::streamsize showmanyc() override;
+        int underflow() override;
+        std::streamsize xsgetn(char *buf, std::streamsize n) override;
+  
+        int overflow(int c) override;
+        std::streamsize xsputn(char const *buf, std::streamsize n) override;
+
+        std::ios::pos_type seekoff(
+            std::ios::off_type offset, 
+            std::ios::seekdir way = std::ios::beg,
+            std::ios::openmode mode = std::ios::in | std::ios::out) override;
+
+        std::ios::pos_type seekpos(
+            std::ios::pos_type offset, 
+            std::ios::openmode mode = std::ios::in | std::ios::out) override;
+};
+
+inline void SharedStreambuf::setOpenMode(std::ios::openmode openMode)
+{
+    d_openMode = openMode;
+    d_currentMode = openMode;
+}
+
+inline int SharedStreambuf::id() const
+{
+    return d_memory.id();
+}
+
+inline void SharedStreambuf::remove()
+{
+    d_memory.remove();
+}
+
+inline void SharedStreambuf::kill()
+{
+    d_memory.kill();
+}
+
+inline void SharedStreambuf::clear()
+{
+    d_memory.clear();
+}
+
+inline void SharedStreambuf::setMemory(SharedMemory &&tmp)
+{
+    d_memory = std::move(tmp);
+}
+
+inline void SharedStreambuf::memInfo(std::ostream &out) const
+{
+    out << d_memory;
+}
+
+
+} // FBB        
+#endif

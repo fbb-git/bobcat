@@ -1,0 +1,50 @@
+#ifndef INCLUDED_BOBCAT_SHAREDBLOCK_
+#define INCLUDED_BOBCAT_SHAREDBLOCK_
+
+#include "../sharedmutex/sharedmutex"
+
+namespace FBB
+{
+
+class SharedBlock
+{
+    SharedMutex d_mutex;
+    int         d_id = -1;
+
+    public:
+        void lock();
+        bool try_lock();
+        void unlock();
+
+        int id() const;
+        void setID(int id);
+};
+
+inline int SharedBlock::id() const
+{
+    return d_id;
+}
+
+inline void SharedBlock::setID(int id)
+{
+    d_id = id;
+}
+
+inline void SharedBlock::lock()
+{
+    d_mutex.lock();
+}
+
+inline void SharedBlock::unlock()
+{
+    d_mutex.unlock();
+}
+
+inline bool SharedBlock::try_lock()
+{
+    return d_mutex.try_lock();
+}
+
+
+} // FBB        
+#endif
