@@ -28,16 +28,30 @@ class SharedSegment
         SharedSegment(SharedSegment const &other) = delete;
         SharedSegment &operator=(SharedSegment const &rhs) = delete;
 
-        static SharedSegment *create(int *id, 
+\       int newData(size_t idx);
+
+\       void lock(size_t idx);
+\       void unlock(size_t idx);
+
+\       void nReadableLock();
+\       void nReadableUnlock();
+\       void updateNreadable(std::streamsize offset);
+        std::streamsize nReadable() const;
+
+\       size_t nBlocks() const;
+\       size_t segmentSize() const;
+
+\       void clear();               // clear all data, nReadable = 0
+
+\       size_t access() const;
+
+        SharedBlock &operator[](size_t idx);
+
+\       static SharedSegment *create(int *id, 
                                      size_t nBlocks, size_t segmentSize,
                                      size_t access);
 
-        static size_t size(int id);
-
-                                    // new/delete refer to the shared memory
-                                    // itself
-        static int newSegment(size_t segmentSize, size_t access);
-        static void deleteSegment(int id);  // delete segment having ID id
+        static void deleteSegment(int id);  // delete shared segment `id'
 
                                     // attach/detach refer to the mapping 
                                     // on the current process's memory space
@@ -50,34 +64,18 @@ class SharedSegment
                                             // exception if requireOK == true 
                                             // but detaching fails.
                                             // always returns 0
-
-        int newData(size_t idx);
-
-        std::streamsize nReadable() const;
-        void lock(size_t idx);
-        void unlock(size_t idx);
-
-\       void nReadableLock();
-\       void nReadableUnlock();
-
-\       size_t nBlocks() const;
-        size_t segmentSize() const;
-
-        void updateNreadable(std::streamsize offset);
-        void clear();               // clear all data, nReadable = 0
-
-\       size_t access() const;
-
-        SharedBlock &operator[](size_t idx);
-
     private:
+        SharedSegment(size_t access, size_t nBlocks, size_t segmentSize);
+        std::ostream &insert(std::ostream &out) const;
+
+        static size_t size(int id);
         static void rawDetach(void *sharedPtr, bool requireOK);  // detaches
                                             // throws exception if 
                                             // requireOK == true 
                                             // but detaching fails
 
-        SharedSegment(size_t access, size_t nBlocks, size_t segmentSize);
-        std::ostream &insert(std::ostream &out) const;
+                                    // returns the ID of new shared memory
+        static int newSegment(size_t segmentSize, size_t access);
 };
 
 template <typename Type>

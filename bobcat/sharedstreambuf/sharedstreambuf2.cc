@@ -7,7 +7,4 @@ SharedStreambuf::SharedStreambuf(
     d_openMode(openMode),
     d_currentMode(openMode & (ios::in | ios::out)),
     d_memory(maxSize, sizeUnit, access)
-{
-    if (openMode & ios::trunc)
-        d_memory.clear();
-}
+{}

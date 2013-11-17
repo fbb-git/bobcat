@@ -19,25 +19,26 @@ structure which is used by Bobcat's shared memory classes. Bobcat's
 tt(SharedMemory) class accesses or defines a shared memory segment which is
 interpreted as an tt(FBB::SharedSegment) object. The total amount of requested
 shared memory is always a lower bound to the actual amount of shared memory
-that eventually may become available. As a non-realistic example: assume 10 kB
-of memory is requested, then 1 kB may be used by the bf(FBB::SharedSegment)
-object, maintaining a table of 10 entries, each controlling the access to a
-shared memory block of 1 kB. These 1 kB blocks aren't immediately available,
-but become available when a program reads or writes from addresses located in
-these data segments.
+that eventually may become available. As a fictitious example: assume 100 kB
+of memory is requested, then the bf(FBB::SharedSegment) object, maintains a
+table of, e.g., 10 entries, each controlling the access to a shared memory
+block of 10 kB. These 10 kB blocks aren't immediately allocated, but become
+available once the program reads from or writes to addresses located in these
+data segments.
 
-Objects of the bf(FBB::SharedSegment) class therefore act as molds,
-controlling access to and structuring the shared memory data segment. The
-mentioned table consists of tt(nBlocks SharedBlock values, containing mutexes
-and IDs of shared data segments. As always, the mutexes control which process
-has access to a particular block of shared data memory, and the IDs are either
--1, meaning that their shared memory data segments has as yet not been
-defined, or they contain the IDs of defined shared memory data segments.
+The class bf(FBB::SharedSegment) therefore defines a gateway, controlling
+access to and allocating the shared memory data segment. The mentioned table
+consists of tt(nBlocks SharedBlock) (bf(sharedblock)(3bobcat)) values,
+offering mutexes and IDs of shared data segments. As always, the mutexes
+control which process has access to a particular block of shared data memory,
+and the IDs are either -1, meaning that their shared memory data segments has
+as not yet been defined, or they contain the IDs of defined shared memory data
+segments.
 
-    The class bf(FBB::SharedSegment)'s only responsibility is to offer the
-mold as described. When used by a tt(FBB::SharedMemory) object different
+    The class bf(FBB::SharedSegment)'s sole responsibility is to offer the
+framework as described. When used by a tt(FBB::SharedMemory) object different
 processes may gain access to different parts of the shared memory data without
-interfering each other read and write actions.
+interfering each other's read and write actions.
 
 includefile(include/namespace)
 
@@ -77,9 +78,23 @@ manpagesection(MEMBER FUNCTIONS)
         (bf(chmod)(1)) way to define the access rights for the owner, the
         group and others.
     
+    itb(void clear())
+       All the shared memory data blocks are unconditionally deleted and
+        tt(nReadable) returns 0 (the shared memory data blocks are not locked
+        prior to deleting them).
+
+    itb(void lock(size_t idx) const)
+       Access to shared data segment tt(idx) is locked. This member itself
+        does not support recursive locking.
+
     itb(size_t nBlocks() const)
        The number of shared memory data blocks that can be used by the
         bf(FBB::SharedSegment) object is returned.
+
+    itb(int newData(size_t idx))
+       The ID of a newly created shared memory data segment is returned. The
+        ID is also stored in the table of shared memory data segments that is
+        maintained by the bf(FBB::SharedSegment) object.        
 
     itb(std::streamsize nReadable() const)
        The number of characters (bytes) that can be read from the beginning of
@@ -95,51 +110,53 @@ manpagesection(MEMBER FUNCTIONS)
        This member function releases the lock previously acquired by
         tt(nReadableLock).
 
-    itb(void release() const)
-       If the current process has locked the shared memory, the lock
-        count is reset to zero, and the shared memory segment is unlocked.
-
     itb(size_t segmentSize() const)
         The size (in bytes) of the shared memory data blocks is returned. The
         bf(FBB::SharedSegment) object can accomodate at most tt(segmentSize() *
         nBlocks()) bytes.
 
-    itb(bool try_lock() const)
-       When returning tt(true) the current process has obtained the lock, and
-        the object's lock count is set to 1. Otherwise, tt(false) is returned
-        (which includes the case where the process already has obtained the
-        lock).
-
-    itb(void unlock() const)
-       If the object's lock count is zero, the function immediately
-        returns. Otherwise, the object's lock count is decremented. Once the
-        lock count has decremented to zero the lock of the shared memory
-        segment is released.
+    itb(void unlock(size_t idx) const)
+       Releases the lock on the shared memory data segment tt(idx). If the
+        current process does not own the lock of shared memory data block
+        tt(idx) nothing happens and the function immediately returns.
 
     itb(void updateNreadable(std::streamsize offset))
        The number of bytes that can be retrieved from the shared memory is
-        updated to tt(max(nReadable(), offset)). This is a bf(FBB::SharedSegment)
-        member, rather than a tt(FBB::SharedPos) member because it is a
-        characteristic of the shared memory itself. Different processes may
-        write bytes to different offsets, and each process must be able 
-        to update the number of readable bytes, requiring this number to be
-        stored in the the shared memory itself.
+        updated to tt(max(nReadable(), offset)). 
     )
 
 manpagesection(STATIC MEMBER FUNCTIONS)
 
-    itb(SharedSegment *create(size_t access, size_t nBlocks, size_t segmentSize))
-       This constructor initializes an bf(FBB::SharedSegment) object, setting
-        its access rights (tt(access), using the well-known (bf(chmod)(1)) way
-        to define the access rights for the owner, the group and others), the
-        number of data blocks (tt(nBlocks)) and the size of these data blocks
-        (tt(segmentSize)).
+    itemization(
+    itb(void *attach(int id))
+       The address of shared memory segment tt(id), mapped to the calling
+        process's memory area, is returned.
 
-       All elements in the table of shared memory data block IDs are
-        initialized to the value -1.
+    itb(SharedSegment *create(int *id, size_t nBlocks, size_t segmentSize, 
+                              size_t access)) 
+       This member returns a pointer to a new bf(FBB::SharedSegment) object,
+        defined in the computer's shared memory, storing the shared memory's
+        ID at tt(*id), and expecting the number of data blocks (tt(nBlocks)),
+        the size of these data blocks (tt(segmentSize)), and the shared
+        memory's access rights (tt(access), using the well-known
+        (bf(chmod)(1)) way to define the access rights for the owner, the
+        group and others) as its arguments.
 
-       This constructor is normally used to initialize a tt(SharedSegment) object
-        inside a shared memory segment using placement new. 
+    itb(void deleteSegment(int id))
+       The shared memory segment having ID tt(id) is deleted from memory.
+
+    itb(Type *detach(Type *sharedPtr, bool requireOK = true))
+       This member is defined as a member template. It expects a pointer to a
+        shared memory segment, previously mapped on the calling process's
+        memory space by tt(attach), and detaches it from the process's memory
+        space, returning 0. By default, detaching the memory must succeed or a
+        bf(FBB::Exception) is thrown. Throwing an exception on failure can be
+        prevented by passing tt(false) as the member's second argument.
+
+    itb(size_t segmentSize() const)
+       The size (in bytes) of the shared memory data blocks is returned. The
+        bf(FBB::SharedSegment) object can accomodate at most tt(segmentSize() *
+        nBlocks()) bytes.
     )
 
 manpagesection(EXAMPLE)
@@ -153,6 +170,7 @@ manpageseealso()
     bf(bobcat)(7), bf(chmod)(1),
         bf(isharedstream)(3bobcat),
         bf(osharedstream)(3bobcat),
+        bf(sharedblock)(3bobcat),
         bf(sharedmemory)(3bobcat),
         bf(sharedmutex)(3bobcat), 
         bf(sharedpos)(3bobcat), 

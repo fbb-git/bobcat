@@ -53,7 +53,8 @@ manpagesection(CONSTRUCTORS)
         tt(id). If construction succeeds the shared memory is ready for
         use. If construction fails (e.g., no shared memory segment having ID
         tt(id) exists, an tt(FBB::Exception) is thrown. Specifying the
-        tt(ios::trunc) flag immediately clears the contents of the shared
+        tt(ios::trunc) flag or specifying tt(ios::out) without also specifying
+        tt(ios::in) immediately clears the contents of the shared
         memory.
     )
     Copy and move constructors are not available.
@@ -124,6 +125,7 @@ manpageseealso()
     bf(bobcat)(7),  bf(chmod)(1),
         bf(isharedstream)(3bobcat),
         bf(osharedstream)(3bobcat),
+        bf(sharedblock)(3bobcat), 
         bf(sharedmemory)(3bobcat)
         bf(sharedmutex)(3bobcat), 
         bf(sharedpos)(3bobcat), 
@@ -131,6 +133,12 @@ manpageseealso()
         bf(sharedstream)(3bobcat)
 
 manpagebugs()
-    None reported.
+    Note that by default exceptions thrown from within a bf(std::stream)
+object are caught by the stream object, setting its tt(ios::failbit) flag. To
+allow exceptions to leave a stream object, its tt(exceptions) member can be
+called, e.g., using:
+        verb(
+    myStream.exceptions(ios::failbit | ios::badbit | ios::eofbit);
+        )
 
 includefile(include/trailer)

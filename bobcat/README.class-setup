@@ -42,25 +42,27 @@ used.
        |       |               |      |               |           |
        |       |     +---------+     Mbuf        EncryptBuf  SharedMutex
        |       |     |         |      |                           |
-       |       |  BigInt       |    Mstream                   SharedData
+       |       |  BigInt       |    Mstream                   SharedBlock
        |       |     |         |                                  |
-       |       +-----+         |                              SharedPos
+       |       +-----+         |                              SharedSegment
        |       |     |         |                                  |
-       |       |     |         |                                  |
-       +-------+     |         |                       SharedEnum |         
-       |             |         |                             |    |
-       |        PrimeFactors   |                            SharedMemory
-       |                       |                  
-       |   GS__                |                  
-       |    |                  |                                  
-       +----+                  |                                  
-       |                       |                                  
-      Stat                     |                                            
-       |                       |                                  LogBuffer
-      Glob                     |                                      |
-              +--------+-------+------+------+-----+-------------+    |
-              |        |       |      |      |     |             |    |
-              |     Pattern  OneKey   |      |     |             +--+-+
+       |       |     |         |             SharedEnum__     SharedPos
+       +-------+     |         |                  |               |
+       |             |         |                  +------+--------+     
+       |        PrimeFactors   |                         |
+       |                       |                    SharedMemory
+       |   GS__                |                         |
+       |    |                  |                   SharedStreambuf   
+       +----+                  |                         |        
+       |                       |            +------------+-------------+
+       |                       |            |            |             |
+       |                       |     ISharedStream OSharedStream  SharedStream
+      Stat                     |     
+       |                       |
+      Glob                     |                                    LogBuffer
+              +--------+-------+------+------+-----+-------------+     |
+              |        |       |      |      |     |             |     |
+              |     Pattern  OneKey   |      |     |             +--+--+
               |        |              |      |     |                |
               +--------+          DecryptBuf |     |               Log
               |        |                     |     |   Hostent      |  

@@ -17,14 +17,14 @@ class SharedStreambuf: public std::streambuf, public virtual SharedEnum__
     SharedMemory d_memory;
 
     public:
-        SharedStreambuf();
+        SharedStreambuf();                                      // 1
 
         SharedStreambuf(
-                size_t maxSize, SizeUnit sizeUnit,
+                size_t maxSize, SizeUnit sizeUnit,              // 2
                 std::ios::openmode openMode = std::ios::in | std::ios::out,
                 size_t access = 0600);
 
-        SharedStreambuf(
+        SharedStreambuf(                                        // 3
                 int id,
                 std::ios::openmode openMode = std::ios::in | std::ios::out);
 

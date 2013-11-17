@@ -6,7 +6,7 @@ COMMENT(manpage, section, releasedate, archive, short name)
 manpage(FBB::SharedMutex)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
                     (Shared Memory Mutex)
 
-manpagename(FBB::SharedMutex)(Recursive Mutex for shared memory)
+manpagename(FBB::SharedMutex)(Mutex for shared memory)
 
 manpagesynopsis()
     bf(#include <bobcat/sharedmutex>)nl()
@@ -20,11 +20,9 @@ segment before reading or writing its contents. E.g., the Bobcat class
 tt(FBB::SharedSegment) defines a tt(SharedMutex) in its shared memory segment.
 
     The bf(FBB::SharedMutex) class uses the facilities offered by the
-tt(PThread) library to implement shared memory locking. In particular, it
-implements recursive locking, allowing functions to request a lock even if an
-outer function has already locked the shared memory segment. To force
-unlocking a (possibly) locked shared memory segment, destroy its
-bf(FBB::SharedMutex) object, or call its tt(release) member.
+tt(PThread) library to implement shared memory locking. To force
+unlocking a (possibly) locked shared memory segment, its destructor can be
+called. 
 
 includefile(include/namespace)
 
@@ -61,28 +59,12 @@ manpagesection(CONSTRUCTORS)
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
-    itb(size_t count() const)
-       The bf(FBB::SharedMutex) object's lock count is returned.
-
     itb(void lock() const)
        When returning from this member, the current process has locked the
-        shared memory segment. The current process may issue multiple (nested)
-        tt(lock). At each tt(lock) call the object's lock count is
-        incremented. 
-
-    itb(void release() const)
-       If the current process has locked the shared memory, the object's lock
-        count is reset to zero, and the shared memory segment is unlocked.
-
-    itb(bool try_lock() const)
-       When returning tt(true) the current process has obtained the lock, and
-        the object's lock count is set to 1. Otherwise, tt(false) is returned.
+        shared memory segment.
 
     itb(void unlock() const)
-       If the object's lock count is zero, the function immediately
-        returns. Otherwise, the object's lock count is decremented. Once the
-        lock count has decremented to zero the object's lock of the shared
-        memory segment is released.
+       The object's lock of the shared memory segment is released.
     )
 
 manpagesection(EXAMPLE)
@@ -96,9 +78,10 @@ manpageseealso()
     bf(bobcat)(7)
         bf(isharedstream)(3bobcat),
         bf(osharedstream)(3bobcat),
-        bf(sharedsegment)(3bobcat), 
+        bf(sharedblock)(3bobcat), 
         bf(sharedmemory)(3bobcat),
         bf(sharedpos)(3bobcat), 
+        bf(sharedsegment)(3bobcat), 
         bf(sharedstream)(3bobcat), 
         bf(sharedstreambuf)(3bobcat)
 

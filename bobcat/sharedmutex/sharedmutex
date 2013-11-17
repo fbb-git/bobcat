@@ -19,18 +19,12 @@ class SharedMutex
         SharedMutex &operator=(SharedMutex const &rhs) = delete;
 
         void lock();
-        bool try_lock();
         void unlock();
 };
 
 inline void SharedMutex::unlock()
 {
     pthread_mutex_unlock(&d_mutex);
-}
-
-inline bool SharedMutex::try_lock()
-{
-    return pthread_mutex_trylock(&d_mutex) == 0;
 }
 
 } // FBB        

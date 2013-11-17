@@ -13,7 +13,6 @@ class SharedBlock
 
     public:
         void lock();
-        bool try_lock();
         void unlock();
 
         int id() const;
@@ -39,12 +38,6 @@ inline void SharedBlock::unlock()
 {
     d_mutex.unlock();
 }
-
-inline bool SharedBlock::try_lock()
-{
-    return d_mutex.try_lock();
-}
-
 
 } // FBB        
 #endif

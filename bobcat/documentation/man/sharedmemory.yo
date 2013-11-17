@@ -26,6 +26,15 @@ memory operations. In addition to the class bf(FBB::SharedMemory) the header
 file tt(bobcat/sharedmemory) also defines a bf(struct SharedEnum__) defining
 an bf(enum SizeUnit). 
 
+The total amount of requested shared memory is always a lower bound to the
+actual amount of shared memory that eventually may become available. As a
+fictitious example: assume 100 kB of memory is requested, then a table of,
+e.g., 10 entries is maintained, each entry controlling the access to a shared
+memory block of, 10 kB. These 10 kB blocks aren't immediately allocated,
+but become available once the program reads from or writes to addresses
+located in these data blocks. Whenever a data block is created it is
+initialized to 0-bytes.
+
     Caveat: when constructing a shared memory segment make sure the segment's
 ID is stored at a retrievable location. This allows other processes to access
 the shared segment. The shared segment ID is also required to delete a shared
@@ -71,7 +80,7 @@ manpagesection(CONSTRUCTORS, DESTRUCTOR)
        This constructor connects to a shared memory segment having ID
         tt(id). If construction succeeds the shared memory is ready for
         use. If construction fails (e.g., no shared memory segment having ID
-        tt(id) exists, an tt(FBB::Exception) is thrown.
+        tt(id) exists), an tt(FBB::Exception) is thrown.
 
     itb(~SharedMemory())
        The destructor detaches any attached shared memory segments from
@@ -206,9 +215,10 @@ manpageseealso()
     bf(bobcat)(7), bf(chmod)(1),
         bf(isharedstream)(3bobcat),
         bf(osharedstream)(3bobcat),
-        bf(sharedsegment)(3bobcat),
+        bf(sharedblock)(3bobcat), 
         bf(sharedmutex)(3bobcat), 
         bf(sharedpos)(3bobcat), 
+        bf(sharedsegment)(3bobcat),
         bf(sharedstream)(3bobcat), 
         bf(sharedstreambuf)(3bobcat)
 
