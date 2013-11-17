@@ -28,26 +28,26 @@ class SharedSegment
         SharedSegment(SharedSegment const &other) = delete;
         SharedSegment &operator=(SharedSegment const &rhs) = delete;
 
-\       int newData(size_t idx);
+        int newData(size_t idx);
 
-\       void lock(size_t idx);
-\       void unlock(size_t idx);
+        void lock(size_t idx);
+        void unlock(size_t idx);
 
-\       void nReadableLock();
-\       void nReadableUnlock();
-\       void updateNreadable(std::streamsize offset);
+        void nReadableLock();
+        void nReadableUnlock();
+        void updateNreadable(std::streamsize offset);
         std::streamsize nReadable() const;
 
-\       size_t nBlocks() const;
-\       size_t segmentSize() const;
+        size_t nBlocks() const;
+        size_t segmentSize() const;
 
-\       void clear();               // clear all data, nReadable = 0
+        void clear();               // clear all data, nReadable = 0
 
-\       size_t access() const;
+        size_t access() const;
 
         SharedBlock &operator[](size_t idx);
 
-\       static SharedSegment *create(int *id, 
+        static SharedSegment *create(int *id, 
                                      size_t nBlocks, size_t segmentSize,
                                      size_t access);
 
@@ -64,11 +64,13 @@ class SharedSegment
                                             // exception if requireOK == true 
                                             // but detaching fails.
                                             // always returns 0
+
+        static size_t size(int id);         // size of shared data segment id
+
     private:
         SharedSegment(size_t access, size_t nBlocks, size_t segmentSize);
         std::ostream &insert(std::ostream &out) const;
 
-        static size_t size(int id);
         static void rawDetach(void *sharedPtr, bool requireOK);  // detaches
                                             // throws exception if 
                                             // requireOK == true 
