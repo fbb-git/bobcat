@@ -70,42 +70,13 @@ class SharedStreambuf: public std::streambuf, public virtual SharedEnum__
             std::ios::openmode mode = std::ios::in | std::ios::out) override;
 };
 
-inline void SharedStreambuf::setOpenMode(std::ios::openmode openMode)
-{
-    d_openMode = openMode;
-    d_currentMode = openMode;
-}
-
-inline int SharedStreambuf::id() const
-{
-    return d_memory.id();
-}
-
-inline void SharedStreambuf::remove()
-{
-    d_memory.remove();
-}
-
-inline void SharedStreambuf::kill()
-{
-    d_memory.kill();
-}
-
-inline void SharedStreambuf::clear()
-{
-    d_memory.clear();
-}
-
-inline void SharedStreambuf::setMemory(SharedMemory &&tmp)
-{
-    d_memory = std::move(tmp);
-}
-
-inline void SharedStreambuf::memInfo(std::ostream &out) const
-{
-    out << d_memory;
-}
-
+#include "setopenmode.f"
+#include "id.f"
+#include "remove.f"
+#include "kill.f"
+#include "clear.f"
+#include "setmemory.f"
+#include "meminfo.f"
 
 } // FBB        
 #endif
