@@ -34,24 +34,24 @@ manpagesection(CONSTRUCTORS)
     itb(ISharedStream(size_t maxSize, SizeUnit sizeUnit, 
             std::ios::openmode openMode = std::ios::in,
             size_t access = 0600))
-       This constructor creates a shared memory segment having a capacity of
-        at least tt(maxSize * sizeUnit) bytes. By default, the shared memory
-        segment is opened for reading. Different from the open modes used for
-        file streams, creating a shared memory stream with open modes
-        tt(ios::in) is OK. In this case the shared memory segment is created
-        and once information has been written to the shared memory by another
-        process (or object) the information can be read. The shared memory's
-        access rights are defined by the tt(access) parameter, using the
-        well-known (bf(chmod)(1)) way to define the access rights for the
-        owner, the group and others, using octal digits. If construction
-        succeeds the shared memory is ready for use. If construction fails, an
-        tt(FBB::Exception) is thrown.
+       This constructor creates an tt(std::istream) that interfaces to a
+        shared memory segment having a capacity of at least tt(maxSize *
+        sizeUnit) bytes. By default, the shared memory segment is opened for
+        reading. Different from the open modes used for file streams, creating
+        a shared memory stream with open modes tt(ios::in) is OK. In this case
+        the shared memory segment is created and once information has been
+        written to the shared memory by another process (or object) the
+        information can be read. The shared memory's access rights are defined
+        by the tt(access) parameter, using the well-known (bf(chmod)(1)) way
+        to define the access rights for the owner, the group and others, using
+        octal digits. If construction succeeds the shared memory is ready for
+        use. If construction fails, an tt(FBB::Exception) is thrown.
 
     itb(ISharedStream(int id, std::ios::openmode openMode = std::ios::in)) 
-       This constructor connects to a shared memory segment having ID
-        tt(id). If construction succeeds the shared memory is ready for
-        use. If construction fails (e.g., no shared memory segment having ID
-        tt(id) exists), an tt(FBB::Exception) is thrown.
+       This constructor creates an tt(std::istream) that connects to a shared
+        memory segment having ID tt(id). If construction succeeds the shared
+        memory is ready for use. If construction fails (e.g., no shared memory
+        segment having ID tt(id) exists), an tt(FBB::Exception) is thrown.
     )
     Copy and move constructors are not available.
 

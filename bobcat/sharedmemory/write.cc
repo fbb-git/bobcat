@@ -28,7 +28,7 @@ int SharedMemory::write(char const *data, streamsize len)
 //cerr << "Next offset: " << d_pos.offset() << ", len = " << len << '\n';
     }
 
-cerr << ".write wrote " << (d_pos.offset() - begin) << " chars\n";
+//cerr << ".write wrote " << (d_pos.offset() - begin) << " chars\n";
 
     return d_pos.offset() - begin;
 }
