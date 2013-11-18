@@ -33,17 +33,12 @@ struct OSharedStream: private SharedStreambuf, public std::ostream,
 
     using std::ostream::clear;
 
-    void memInfo(std::ostream &out) const;
+    void memInfo(std::ostream &out, char const *end = "\n") const;
 
     using SharedStreambuf::id;
     using SharedStreambuf::remove;
     using SharedStreambuf::kill;
 };
-
-inline void OSharedStream::memInfo(std::ostream &out) const
-{
-    out << *this;
-}
 
 } // FBB        
 #endif

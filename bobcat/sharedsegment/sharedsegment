@@ -80,64 +80,17 @@ class SharedSegment
         static int newSegment(size_t segmentSize, size_t access);
 };
 
-template <typename Type>
-Type *SharedSegment::detach(Type *sharedPtr, bool requireOK)
-{
-    rawDetach(sharedPtr, requireOK);
-    return 0;
-}
-
-inline SharedBlock &SharedSegment::operator[](size_t idx)
-{
-    return d_block[idx];
-}
-
-inline void SharedSegment::lock(size_t idx)
-{
-    d_block[idx].lock();
-}
-
-inline void SharedSegment::unlock(size_t idx)
-{
-    d_block[idx].unlock();
-}
-
-inline void SharedSegment::nReadableLock()
-{
-    d_nReadableMutex.lock();
-}
-
-inline void SharedSegment::nReadableUnlock()
-{
-    d_nReadableMutex.unlock();
-}
-
-inline std::streamsize SharedSegment::nReadable() const
-{
-    return d_nReadable;
-}
-
-inline size_t SharedSegment::nBlocks() const
-{
-    return d_nBlocks;
-}
-
-inline size_t SharedSegment::access() const
-{
-    return d_access;
-}
-
-inline size_t SharedSegment::segmentSize() const
-{
-    return d_segmentSize;
-}
-
-inline std::ostream &operator<<(std::ostream &out, 
-                                SharedSegment const &sharedData)
-{
-    return sharedData.insert(out);
-}
-
+#include "access.f"
+#include "detach.f"
+#include "lock.f"
+#include "nblocks.f"
+#include "nreadable.f"
+#include "nreadablelock.f"
+#include "nreadableunlock.f"
+#include "operatorindex.f"
+#include "operatorinsert.f"
+#include "segmentsize.f"
+#include "unlock.f"
 
 } // FBB        
 #endif

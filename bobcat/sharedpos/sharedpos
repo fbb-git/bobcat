@@ -55,56 +55,16 @@ class SharedPos
         std::streamsize nReadable() const;
 };
 
-inline std::streamsize SharedPos::eos() const
-{
-    return static_cast<std::streamsize>(blockIdx() + 1) * segmentSize();
-}
-
-
-inline bool SharedPos::eof() const
-{
-    return d_offset >= d_sharedData->nReadable();
-}
-
-inline std::streamsize SharedPos::maxOffset() const
-{
-    return d_maxOffset;
-}
-
-inline bool SharedPos::atMaxOffset() const
-{
-    return d_offset == d_maxOffset;
-}
-
-inline size_t SharedPos::blockIdx() const
-{
-    return d_blockIdx;
-}
-
-inline size_t SharedPos::blockOffset() const
-{
-    return d_blockOffset;
-}
-
-inline std::streamsize SharedPos::offset() const
-{
-    return d_offset;
-}
-
-inline std::streamsize SharedPos::nReadable() const
-{
-    return d_sharedData->nReadable();
-}
-
-inline size_t SharedPos::segmentSize() const
-{
-    return d_sharedData->segmentSize();
-}
-
-inline std::ostream &operator<<(std::ostream &out, SharedPos const &sharedPos)
-{
-    return sharedPos.insert(out);
-}
+#include "atmaxoffset.f"
+#include "blockidx.f"
+#include "blockoffset.f"
+#include "eof.f"
+#include "eos.f"
+#include "maxoffset.f"
+#include "nreadable.f"
+#include "offset.f"
+#include "operatorinsert.f"
+#include "segmentsize.f"
 
 } // FBB        
 #endif

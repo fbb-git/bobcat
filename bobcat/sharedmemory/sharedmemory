@@ -120,48 +120,15 @@ class SharedMemory: public virtual SharedEnum__
         static size_t computeSegmentSize(
                             size_t *nBlocks, 
                             long long maxMemory, SizeUnit sizeUnit);
-
-
-            
-
 };
 
-
-inline std::streamsize SharedMemory::nReadable() const
-{
-    return d_sharedSegment->nReadable();
-}
-
-inline std::streamsize SharedMemory::offset() const
-{
-    return d_pos.offset();
-}
-
-inline std::streamsize SharedMemory::maxOffset() const
-{
-    return d_pos.maxOffset();
-}
-
-inline int SharedMemory::id() const
-{
-    return d_id;
-}
-
-inline void SharedMemory::swap(SharedMemory &other)
-{
-    FBB::fswap(*this, other);
-}
-
-inline SharedMemory &SharedMemory::operator=(SharedMemory &&tmp)
-{
-    swap(tmp);
-    return *this;
-}
-
-inline std::ostream &operator<<(std::ostream &out, SharedMemory const &mem)
-{
-    return mem.insert(out);
-}
+#include "id.f"
+#include "maxoffset.f"
+#include "nreadable.f"
+#include "offset.f"
+#include "operatorassign.f"
+#include "operatorinsert.f"
+#include "swap.f"
 
 } // FBB        
 #endif
