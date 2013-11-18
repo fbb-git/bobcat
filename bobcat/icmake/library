@@ -40,11 +40,15 @@ void c_compile(string dstDir, int prefix, string srcDir, list cfiles)
 {
     int idx;
     string compdest;
+    string pthread;
 
     printf("\n"
            "Compiling ", srcDir, "\n");
 
-    compdest = g_cxx + " " + g_copt + 
+    if (strfind(PTHREAD, srcDir) != -1)
+        pthread = " -pthread";
+
+    compdest = g_cxx + " " + g_copt + pthread +
                 " -c -o " + srcDir + "/" + dstDir + "/" + (string)prefix;
     md(srcDir + "/" + dstDir);
 
