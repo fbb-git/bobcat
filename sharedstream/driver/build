@@ -1,0 +1,22 @@
+#!/bin/bash
+
+sed 's?<bobcat/sharedstream>?"../sharedstream"?' driver.cc > localdriver.cc
+
+for x in sharedstream sharedmutex sharedstreambuf sharedmemory \
+         sharedpos sharedsegment
+do
+    echo $x
+    cd ../../$x
+    g++ --std=c++11 -Wall -pthread -c *.cc
+    cd ../sharedstream/driver
+done
+
+echo driver
+
+g++ -o driver --std=c++11 -Wall localdriver.cc ../../shared*/*.o \
+                                                        -lpthread -lbobcat
+
+rm ../../shared*/*.o localdriver.cc
+
+echo Start ./driver for an interactive menu. 
+echo Optionally remove ./driver after the demo-run

@@ -1,0 +1,144 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::SharedStreambuf)(3bobcat)(_CurYrs_)
+        (libbobcat-dev__CurVers_-x.tar.gz)
+        (Error handler)
+
+manpagename(FBB::SharedStreambuf)(streambuf interfacing to shared memory)
+
+manpagesynopsis()
+    bf(#include <bobcat/sharedstreambuf>)nl()
+    Linking option: tt(-lpthread -lbobcat) 
+
+manpagedescription()
+    This class implements a specialization of the bf(std::streambuf) class,
+allowing stream classes (tt(std::istream, std::ostream, FBB::ISharedStream,
+FBB::OSharedStream) and tt(FBB::SharedStream) to perform I/O operations on
+shared memory. bf(FBB::SharedStreambuf) objects interface to an
+tt(FBB::SharedStream) objects.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    bf(std::streambuf, FBB::SharedEnum__) (cf. bf(sharedmemory(3bobcat)) for
+a description of the latter class).
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(SharedStreambuf())
+       The default constructor defines a stub bf(SharedStreambuf) object that
+        cannot immediately be used to access shared memory. To use it, its
+        member tt(setMemory) must first be called.
+
+    itb(SharedStreambuf(size_t maxSize, SizeUnit sizeUnit, 
+            std::ios::openmode openMode = std::ios::in | std::ios::out,
+            size_t access = 0600))
+       This constructor creates a shared memory segment having a capacity of
+        at least tt(maxSize * sizeUnit) bytes. By default, the shared memory
+        segment is opened for reading and writing. Different from the open
+        modes used for file streams, creating a shared memory stream with open
+        modes tt(ios::in | ios::out) is OK. In this case the shared memory
+        segment is created and once information has been written to the shared
+        memory it can also be read again. The shared memory's access rights
+        are defined by the tt(access) parameter, using the well-known
+        (bf(chmod)(1)) way to define the access rights for the owner, the
+        group and others, using octal digits. If construction succeeds the
+        shared memory is ready for use. If construction fails, an
+        tt(FBB::Exception) is thrown.
+
+    itb(SharedStreambuf(int id, std::ios::openmode openMode = std::ios::in |
+        std::ios::out)) 
+       This constructor connects to a shared memory segment having ID
+        tt(id). If construction succeeds the shared memory is ready for
+        use. If construction fails (e.g., no shared memory segment having ID
+        tt(id) exists, an tt(FBB::Exception) is thrown. Specifying the
+        tt(ios::trunc) flag or specifying tt(ios::out) without also specifying
+        tt(ios::in) immediately clears the contents of the shared
+        memory.
+    )
+    Copy and move constructors are not available.
+
+manpagesection(OVERLOADED OPERATORS)
+
+    The overloaded move and copy assignment operators are not available.
+
+manpagesection(MEMBER FUNCTIONS)
+
+     All members of bf(std::streambuf) and the tt(enum) values tt(kB, MB), and
+tt(GB), defined by tt(FBB::SharedEnum__) are available.
+
+    itemization(
+    itb(void clear())
+       The shared memory is first locked. Next, all shared data segment are
+        returned to the operating system, after which the shared memory
+        segment is unlocked again. Returning from tt(clear) the shared memory
+        The bf(FBB::SharedMemory) object is effectively re-initialized, with
+        tt(offset) and tt(nReadable) returning 0.
+
+    itb(int id() const)
+       The ID of the shared memory segment is returned.
+
+    itb(void kill())
+       Without locking the shared memory the bf(FBB::SharedStreambuf)'s shared
+        memory is deleted. The bf(FBB::SharedStreambuf) object is
+        unusable after returning from tt(kill). 
+
+    itb(void remove())
+       The shared memory is locked, and the bf(FBB::SharedStreambuf)'s shared
+        memory is deleted. The bf(FBB::SharedStreambuf) object is unusable
+        after returning from tt(remove). 
+
+    itb(void setMemory(SharedMemory &&tmp))
+       The anonymous temporary tt(SharedMemory) object that is passed to
+        tt(setMemory) defines the new shared memory segment to which the
+        bf(FBB::SharedStreambuf) object interfaces. It can also be called
+        to reuse a bf(FBB::SharedStreambuf) object again after calling
+        tt(kill) or tt(remove).
+
+    itb(void memInfo(std::ostream &out))
+       Information about the tt(SharedMemory) object is inserted into the
+        provide tt(ostream) object. The IDs of the shared segments, their
+        sizes, the maximum number of shared memory segments, the number of
+        bytes that can be read from the shared memory, and its actual storage
+        capacity, etc., are displayed. The inserted information is not
+        terminated by a final newline character.
+    )
+
+manpagesection(PROTECTED MEMBER FUNCTION)
+
+    itb(void setOpenMode(std::ios::openmode flag))
+       The streambuf's tt(openmode) is changed to the settings defined by
+        tt(flag). This member is used by, e.g., tt(SharedStream::open), to
+        adapt the bf(FBB::SharedStreambuf)'s tt(openmode) to the flags that
+        are passed to tt(open).
+    )
+
+
+manpagesection(EXAMPLE)
+    See the bf(sharedstream)(3bobcat) man page.
+
+manpagefiles()
+    em(bobcat/sharedstreambuf) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7),  bf(chmod)(1),
+        bf(isharedstream)(3bobcat),
+        bf(osharedstream)(3bobcat),
+        bf(sharedblock)(3bobcat), 
+        bf(sharedmemory)(3bobcat)
+        bf(sharedmutex)(3bobcat), 
+        bf(sharedpos)(3bobcat), 
+        bf(sharedsegment)(3bobcat),
+        bf(sharedstream)(3bobcat)
+
+manpagebugs()
+    Note that by default exceptions thrown from within a bf(std::stream)
+object are caught by the stream object, setting its tt(ios::failbit) flag. To
+allow exceptions to leave a stream object, its tt(exceptions) member can be
+called, e.g., using:
+        verb(
+    myStream.exceptions(ios::failbit | ios::badbit | ios::eofbit);
+        )
+
+includefile(include/trailer)

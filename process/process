@@ -65,9 +65,10 @@ struct Process: private Fork, public IOStream
         {
             int     ret;
             pid_t   pid;
-    
+        
             RetPid();                       //  1.f
         };
+
         RetPid d_child;
         RetPid d_monitor;
 
@@ -204,20 +205,8 @@ struct Process: private Fork, public IOStream
 
 
         typedef std::string::const_iterator ConstIter;
-        struct ExecContext
-        {
-            size_t argc;            // must eventually be at least 1
-            char const **argv;      // 0-terminated array of pointers to the 
-                                    // arguments
-        };
+        struct ExecContext;
         ExecContext analyzeCommand();
-
-//        std::vector<std::string> split(ConstIter begin, 
-//                                       ConstIter const &end);
-//        std::string dquotedString(ConstIter &begin, ConstIter const &end);
-//        std::string quotedString(ConstIter &begin, ConstIter const &end);
-//        int escapedString(ConstIter &begin, ConstIter const &end);
-
 };
 
 #include "iomode.f"

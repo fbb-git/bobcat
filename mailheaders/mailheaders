@@ -46,6 +46,7 @@ class MailHeaders
         std::string             d_hdr;
         Match                   d_match;
 
+    public:
         class const_hdr_iterator:
             public std::iterator<std::input_iterator_tag, 
                                 std::string const>
@@ -81,6 +82,7 @@ class MailHeaders
                                 std::string const &key);
             static bool caseFull(std::string const &hdr,        // .f
                                 std::string const &key);
+
             public:
                 const_hdr_iterator &operator++();               // opinc.f
                 const_hdr_iterator &operator--();               // opdec.f
@@ -99,7 +101,7 @@ class MailHeaders
                 std::string const *operator->() const;          // oparrow.f
         };
 
-    public:
+
         typedef std::reverse_iterator<const_hdr_iterator>
                                             const_reverse_hdr_iterator; 
 

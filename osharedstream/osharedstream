@@ -1,0 +1,49 @@
+#ifndef INCLUDED_BOBCAT_OSHAREDSTREAM_
+#define INCLUDED_BOBCAT_OSHAREDSTREAM_
+
+#include <ostream>
+
+#include "../sharedstreambuf/sharedstreambuf"
+
+namespace FBB
+{
+
+struct OSharedStream: private SharedStreambuf, public std::ostream, 
+                      public virtual SharedEnum__
+{
+    OSharedStream();
+
+    OSharedStream(
+            size_t maxSize, SizeUnit sizeUnit,
+            std::ios::openmode openMode = std::ios::out,
+            size_t access = 0600);
+
+    OSharedStream(
+            size_t id, 
+            std::ios::openmode openMode = std::ios::out | std::ios::in);
+
+    void open(
+            size_t maxSize, SizeUnit sizeUnit,
+            std::ios::openmode openMode = std::ios::out,
+            size_t access = 0600);
+
+    void open(
+            int id,
+            std::ios::openmode openMode = std::ios::in | std::ios::out);
+
+    using std::ostream::clear;
+
+    void memInfo(std::ostream &out, char const *end = "\n") const;
+
+    using SharedStreambuf::id;
+    using SharedStreambuf::remove;
+    using SharedStreambuf::kill;
+};
+
+} // FBB        
+#endif
+
+
+
+
+

@@ -1,0 +1,135 @@
+#ifndef INCLUDED_BOBCAT_SHAREDMEMORY_
+#define INCLUDED_BOBCAT_SHAREDMEMORY_
+
+#include <ios>
+#include <bobcat/fswap>
+
+#include "../sharedpos/sharedpos"
+
+namespace FBB
+{
+
+class SharedSegment;
+
+struct SharedEnum__
+{
+    enum SizeUnit
+    {
+        kB = 10,
+        MB = 20,
+        GB = 30
+    };
+};
+
+class SharedMemory: public virtual SharedEnum__
+{
+    friend std::ostream &operator<<(std::ostream &out, 
+                                    SharedMemory const &mem);
+
+    enum { PAGESIZE = 1 << 12 };
+
+        // updated by the non-default constructors.
+    int d_id = -1;                      // id of SharedSegment
+    SharedSegment *d_sharedSegment = 0; // points to the attached shared
+                                        //  memory. This is NOT a pointer
+                                        // to dynamically allocated memory
+                                        // but a static_cast pointer to
+                                        // the attached shared data segment
+    SharedPos d_pos;
+
+    size_t d_lockCount = 0;             // # of nested locks
+    char *d_data = 0;                   // pointer to shared memory data
+
+    public:
+        SharedMemory() = default;
+
+        SharedMemory(SharedMemory const &other) = delete;
+
+        SharedMemory(size_t maxSize, SizeUnit sizeUnit,
+                     size_t access = 0600);             // 2: creation mode;
+
+        SharedMemory(int id);                           // 3
+
+        ~SharedMemory();
+
+        SharedMemory &operator=(SharedMemory &&tmp);
+
+        std::streamsize showmanyc();
+
+        std::streamsize nReadable() const;  // beyond last readable byte
+        std::streamsize offset() const;     // read/write offset
+        std::streamsize maxOffset() const;  
+
+
+        char *ptr();                        // 0 if at maxOffset
+
+                                        // returns -1 if inaccessible
+        std::ios::pos_type seek(std::ios::off_type offset, 
+                                std::ios::seekdir way = std::ios::beg);
+
+        int id() const;                 // id of the d_sharedSegment segment
+
+        int put(int ch);                // put char at d_offset (locks),
+                                        // ch == EOF immediately returns EOF 
+
+                                        // write len bytes at d_offset
+                                        // locks, returns #written or -1
+        int write(char const *data, std::streamsize len);
+                  
+        int get();                      // get char from d_segmentData 
+                                        // locks), or EOF
+
+                                        // read len chars, return nRead, locks
+        std::streamsize read(char *data, std::streamsize len);    
+
+
+        void clear();                   // clear all existing data and reduce
+                                        // until only the segment at 
+                                        // d_sharedSegment
+
+        void swap(SharedMemory &other);
+
+                // after kill/remove: shared segment is unusable
+        void kill();                    // delete all shared segments w/o locks
+        void remove();                  // delete all shared segments.
+
+    private:
+        std::ostream &insert(std::ostream &out) const;
+
+
+                                        // lockAll: d_lockCount should be 0.
+        void lockAll();                 // lock all block[] mutexes
+        void unlockAll();               // unlock all block[] mutexes
+
+        void lock(size_t idx);          // (recursively) lock block idx
+        void unlock(size_t idx);        // unlock block idx
+
+        void clearAll();                // clear without locking
+
+        bool blockAvailable(size_t idx);
+
+        void map();                     // 1    maps shared data to d_data
+        void map(size_t idx);           // 2    only called by load
+
+
+        int writeBlock(char const *data, size_t len);   // locks, returns 
+                                                        // #written or -1
+        int readBlock(char *data, size_t len);          // same, but now reads
+                                                        // both update offset
+
+        static size_t computeSegmentSize(
+                            size_t *nBlocks, 
+                            long long maxMemory, SizeUnit sizeUnit);
+};
+
+#include "id.f"
+#include "maxoffset.f"
+#include "nreadable.f"
+#include "offset.f"
+#include "operatorassign.f"
+#include "operatorinsert.f"
+#include "swap.f"
+
+} // FBB        
+#endif
+
