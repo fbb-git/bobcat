@@ -1,0 +1,65 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::SharedBlock)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+                    (Shared Memory Block)
+
+manpagename(FBB::SharedBlock)(Shared memory data block info)
+
+manpagesynopsis()
+    bf(#include <bobcat/sharedblock>)nl()
+    Linking option: tt(-lpthread, -lbobcat ) 
+
+manpagedescription()
+    bf(FBB::SharedBlock) objects are used by tt(FBB::SharedSegment) to access
+the IDs and shared memory locks of shared memory data segments.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+
+    Only the default constructor is available.
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(size_t id() const)
+       The object's stored ID value is returned.
+
+    itb(void lock() const)
+       When returning from this member, the current process has obtained the
+        bf(FBB::SharedBlock)'s shared memory mutex lock.
+
+    itb(void setID(size_t id))
+       The object's stored ID value is set to tt(id).
+
+    itb(void unlock() const)
+       The shared memory segment's mutex lock is released.
+    )
+
+manpagesection(EXAMPLE)
+    See the bf(sharedstream)(3bobcat) man page.
+
+
+manpagefiles()
+    em(bobcat/sharedblock) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+        bf(isharedstream)(3bobcat),
+        bf(osharedstream)(3bobcat),
+        bf(sharedmemory)(3bobcat),
+        bf(sharedmutex)(3bobcat),
+        bf(sharedpos)(3bobcat), 
+        bf(sharedsegment)(3bobcat), 
+        bf(sharedstream)(3bobcat), 
+        bf(sharedstreambuf)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
+
+

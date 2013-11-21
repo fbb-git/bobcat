@@ -38,28 +38,31 @@ used.
        |             |                                     |                
        |       +-----+---------+------+----------+         |
        |       |     |         |      |          |         |
-       |      User Signal      |      |          +----+----+
-       |       |               |      |               |
-       |       |     +---------+     Mbuf        EncryptBuf
-       |       |     |         |      |                              
-       |       |  BigInt       |    Mstream               
-       |       |     |         |                                  
-       |       +-----+         |                                  
-       |       |     |         |                                  
-       +-------+     |         |             
-       |             |         |                  
-       |        PrimeFactors   |                  
-       |                       |                  
-       |   GS__                |                  
-       |    |                  |                                  
-       +----+                  |                                  
-       |                       |                                  
-      Stat                     |                                            
-       |                       |                                  LogBuffer
-      Glob                     |                                      |
-              +--------+-------+------+------+-----+-------------+    |
-              |        |       |      |      |     |             |    |
-              |     Pattern  OneKey   |      |     |             +--+-+
+       |      User Signal      |      |          +----+----+------+
+       |       |               |      |               |           |
+       |       |     +---------+     Mbuf        EncryptBuf  SharedMutex
+       |       |     |         |      |                           |
+       |       |  BigInt       |    Mstream                   SharedBlock
+       |       |     |         |                                  |
+       |       +-----+         |                              SharedSegment
+       |       |     |         |                                  |
+       |       |     |         |             SharedEnum__     SharedPos
+       +-------+     |         |                  |               |
+       |             |         |                  +------+--------+     
+       |        PrimeFactors   |                         |
+       |                       |                    SharedMemory
+       |   GS__                |                         |
+       |    |                  |                   SharedStreambuf   
+       +----+                  |                         |        
+       |                       |            +------------+-------------+
+       |                       |            |            |             |
+       |                       |     ISharedStream OSharedStream  SharedStream
+      Stat                     |     
+       |                       |
+      Glob                     |                                    LogBuffer
+              +--------+-------+------+------+-----+-------------+     |
+              |        |       |      |      |     |             |     |
+              |     Pattern  OneKey   |      |     |             +--+--+
               |        |              |      |     |                |
               +--------+          DecryptBuf |     |               Log
               |        |                     |     |   Hostent      |  

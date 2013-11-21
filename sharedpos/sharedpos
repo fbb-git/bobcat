@@ -1,0 +1,70 @@
+#ifndef INCLUDED_BOBCAT_SHAREDPOS_
+#define INCLUDED_BOBCAT_SHAREDPOS_
+
+#include <iosfwd>
+#include <ios>
+
+#include "../sharedsegment/sharedsegment"
+
+namespace FBB
+{
+
+class SharedPos
+{
+    friend std::ostream &operator<<(std::ostream &out, SharedPos const &pos);
+
+    SharedSegment *d_sharedData = 0;       // setup must have been called to
+                                        // initialize data members
+                                        
+    std::streamsize d_maxOffset = 0;    // max. possible offset, given nBlocks
+                                        
+    std::streamsize d_offset = 0;       // next location to write
+
+    size_t d_blockIdx = 0;
+    size_t d_blockOffset = 0;
+
+    public:
+        void reset(SharedSegment *sharedData);
+        bool eof() const;               // true if no char can be read
+                                        // because offset >= writeoffset
+        bool atMaxOffset() const;
+        std::streamsize showmanyc() const;
+
+        std::streamsize maxOffset() const;  // abs. max. possible offset
+        std::streamsize offset() const;     // current abs. offset
+        std::streamsize eos() const;        // abs. offset just past
+                                            // block[blockIdx()] 
+
+        size_t blockIdx() const;
+        size_t blockOffset() const;
+
+                                                // returns -1 if inaccessible
+        std::ios::pos_type seek(std::ios::off_type offset, 
+                                std::ios::seekdir way = std::ios::beg);
+
+        void operator++();              // caller must have locked the shared
+                                        // data
+        void operator+=(size_t len);    // caller must have locked the shared
+                                        // data
+    private:
+        std::ostream &insert(std::ostream &out) const;
+
+        size_t segmentSize() const;
+
+        void update();
+        std::streamsize nReadable() const;
+};
+
+#include "atmaxoffset.f"
+#include "blockidx.f"
+#include "blockoffset.f"
+#include "eof.f"
+#include "eos.f"
+#include "maxoffset.f"
+#include "nreadable.f"
+#include "offset.f"
+#include "operatorinsert.f"
+#include "segmentsize.f"
+
+} // FBB        
+#endif

@@ -1,0 +1,29 @@
+#ifndef INCLUDED_BOBCAT_SHAREDMUTEX_
+#define INCLUDED_BOBCAT_SHAREDMUTEX_
+
+#include <pthread.h>
+
+namespace FBB
+{
+
+class SharedMutex
+{
+    pthread_mutex_t d_mutex;
+
+    public:
+        SharedMutex();
+        SharedMutex(SharedMutex const &other) = delete;
+
+        ~SharedMutex();                 // does unlock
+
+        SharedMutex &operator=(SharedMutex const &rhs) = delete;
+
+        void lock();
+        void unlock();
+};
+
+#include "unlock.f"
+
+} // FBB        
+#endif
+

@@ -61,35 +61,7 @@ struct PrimeFactors
                 virtual void next();
         };
 
-        class iteratorStream: public iterator
-        {
-            enum InputMode
-            {
-                STREAM_PRIMES,
-                NEW_PRIMES,
-                SENTINEL
-            };
-            std::string d_name;
-            std::fstream d_stream;
-            size_t d_blockSize;
-
-            BigIntVector d_streamPrimes;
-            BigIntVector d_newPrimes;
-
-            public:
-                iteratorStream(std::string const &name, size_t blockSize);
-                ~iteratorStream();
-
-            private:
-                iterator &operatorPreInc() override;
-                void next() override;
-
-                void openStream();
-                void resetPrimes();
-                bool readPrimes();
-
-                void writeNewPrimes();
-        };
+        class iteratorStream;
 
         BigInt d_value;
         BigInt d_last;
