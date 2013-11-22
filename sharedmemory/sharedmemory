@@ -2,9 +2,9 @@
 #define INCLUDED_BOBCAT_SHAREDMEMORY_
 
 #include <ios>
-#include <bobcat/fswap>
 
-#include "../sharedpos/sharedpos"
+#include <bobcat/fswap>
+#include <bobcat/sharedpos>
 
 namespace FBB
 {
@@ -80,7 +80,7 @@ class SharedMemory: public virtual SharedEnum__
                                         // locks), or EOF
 
                                         // read len chars, return nRead, locks
-        std::streamsize read(char *data, std::streamsize len);    
+        int read(char *data, std::streamsize len);    
 
 
         void clear();                   // clear all existing data and reduce
