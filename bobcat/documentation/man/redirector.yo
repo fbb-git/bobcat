@@ -12,24 +12,46 @@ manpagesynopsis()
 
 manpagedescription()
     Objects of the class bf(FBB::Redirector) set up a system level file
-redirection, using file descriptors rather than streams. bf(FBB::Redirector)
+redirection, using file descriptors rather than streams. tt(Redirector)
 objects are effectively em(wrappers) around the bf(dup2)(2) system
 call. System level redirection allows the programmer to send output to, e.g.,
 the standard output stream, which actually appears at another stream (e.g.,
-the standard error). It is a stronger form of redirection than the standard
-one offered by bf(C++), which uses tt(std::streambuf) redirection, and which
-is, because of that, bound to the program's scope. System level redirection,
-on the other hand, is applied at the system level, allowing the programmer to
-redirect standard streams when starting a program. For example, the standard
-error is commonly written to the standard output using an invocation like
-tt(program 2>&1).
+the standard error). 
 
-    When constructing bf(FBB::Redirector) objects a file descriptor is
-required, and another file descriptor is required when defining the
-redirection. Formally, file descriptors are not defined in bf(C++), but they
-are available in many types of operating systems. In those systems each `file'
-has an associated `file descriptor'. A file descriptor is an bf(int), which is
-an index into the program's file allocation table, maintained by the
+
+    tt(Redirector) objects are used to redirect the output sent to a stream
+having file descriptor tt(x) to another stream having file descriptor tt(y),
+much like the shell's tt(>) operator redirects the standard output to some
+file. 
+
+    tt(Redirector) objects can also be used to extract the information from a
+stream having file descriptor tt(x) in fact from another stream having file
+descriptor tt(y), much like the shell's tt(<) operator is used to read the
+information in some file from the standard input.
+
+Redirection using tt(Redirector) objects represents a stronger form of
+redirection than redirection offered by bf(C++) itself, which uses
+tt(std::streambuf) redirection, and which is, because of that, bound to the
+program's scope. System level redirection, on the other hand, is applied at
+the system level, allowing the programmer to redirect standard streams when
+starting a program. For example, the standard error is commonly written to the
+standard output using an invocation like tt(program 2>&1).
+
+    When constructing tt(Redirector) objects a file descriptor is
+required. The file descriptor specified at the constructor is the file
+descriptor that is used by the program to read information from or to write
+information to.  Another file descriptor is required to set up the
+redirection: the file descriptor used here is the file descriptor of the
+stream that actually holds the information which is extracted from the file
+descriptor that was passed to the tt(Redirector)'s constructor; or it is the
+file descriptor of the stream receiving the information which is written to
+the stream having the file descriptor that was passed to the tt(Redirector)'s
+constructor. 
+
+    Formally, file descriptors are not defined in bf(C++), but they are
+available in many types of operating systems. In those systems each `file' has
+an associated `file descriptor'. A file descriptor is an bf(int), which is an
+index into the program's file allocation table, maintained by the
 system. Another type of well-known entities which are file descriptors are
 em(sockets).
 
@@ -45,9 +67,9 @@ having fixed values are
     )
     Notes:
     itemization(
-    it() System-level redirection outlives system calls from the bf(execl)(3)
-family.
-    it() Destroying a bf(FBB::Redirector) object does em(not) undo the
+    it() System-level redirections are kept during system calls of the
+bf(exec)(3) family.
+    it() Destroying a tt(Redirector) object does em(not) undo the
 redirection set up by that object.
     )
 
@@ -70,7 +92,11 @@ manpagesection(CONSTRUCTORS)
     itemization(
     itb(Redirector(int fd))
         This constructor expects the file descriptor of the file that will be
-used in the program to access (read, write) another file.
+used in the program to access (read, write) another file. The file descriptor
+that is passed to the constructor will often be tt(STDIN, STDOUT), or
+tt(STDERR), allowing the program to use tt(cin, cout), or tt(cerr) to extract
+information from, or insert information into other streams using the standard
+input and output streams.
     )
         The copy constructor is available.
 
@@ -78,11 +104,14 @@ manpagesection(MEMBER FUNCTIONS)
     itemization(
     itb(void swallow(int otherFd) const)
         This member function expects the file descriptor of the file that will
-be redirected. Redirection means that the descriptor provided to the
+be redirected. 
+
+        Redirection means that the descriptor provided to the
 constructor will be used when referring to the file descriptor provided to the
 bf(swallow()) member (see the example below).  If the redirection fails an
 bf(FBB::Exception) object is thrown, whose tt(which()) member shows the system's
 tt(errno) value set by the failing bf(dup2)(2) function.
+
     itb(void through(int otherFd) const)
         This member function also redirects tt(otherFd) to the file descriptor
 provided to the constructor, but will also close the constructor's file
