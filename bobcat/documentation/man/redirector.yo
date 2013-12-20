@@ -92,11 +92,11 @@ manpagesection(CONSTRUCTORS)
     itemization(
     itb(Redirector(int fd))
         This constructor expects the file descriptor of the file that will be
-used in the program to access (read, write) another file. The file descriptor
-that is passed to the constructor will often be tt(STDIN, STDOUT), or
-tt(STDERR), allowing the program to use tt(cin, cout), or tt(cerr) to extract
-information from, or insert information into other streams using the standard
-input and output streams.
+used by the program to access (read, write) another file. The file descriptor
+that is passed to the constructor is used by the program, and will often be
+tt(STDIN, STDOUT), or tt(STDERR), allowing the program to use tt(cin, cout),
+or tt(cerr) to extract information from, or insert information into other
+streams using its standard input and output streams.
     )
         The copy constructor is available.
 
@@ -104,13 +104,15 @@ manpagesection(MEMBER FUNCTIONS)
     itemization(
     itb(void swallow(int otherFd) const)
         This member function expects the file descriptor of the file that will
-be redirected. 
+be redirected. With tt(swallow) the file having file descriptor tt(otherFd) is
+`swallowed' by the file descriptor passed to the tt(Redirector's)
+constructor: information written to tt(otherFd) will be received at the
+tt(Redirector's) file descriptor. The tt(otherFd) file descriptor often is
+tt(STDOUT) or tt(STDERR).
 
-        Redirection means that the descriptor provided to the
-constructor will be used when referring to the file descriptor provided to the
-bf(swallow()) member (see the example below).  If the redirection fails an
-bf(FBB::Exception) object is thrown, whose tt(which()) member shows the system's
-tt(errno) value set by the failing bf(dup2)(2) function.
+    If the redirection fails an bf(FBB::Exception) object is thrown, whose
+tt(which()) member shows the system's tt(errno) value set by the failing
+bf(dup2)(2) function.
 
     itb(void through(int otherFd) const)
         This member function also redirects tt(otherFd) to the file descriptor
