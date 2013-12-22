@@ -57,7 +57,7 @@ objects.
 
     The signal is now handled by an object, whose class must define a member 
         verb(
-    virtual void signalHandler(size_t signum) override;
+    void signalHandler(size_t signum) override;
         )
     and this function is responsible for handling the received signal. Since
 it is a member function it may affect its object's local variables and it may
@@ -108,6 +108,12 @@ program's single tt(Signal) object:
         sequence as their respective tt(Signal::add) calls. If one of the
         earlier tt(signalHandler) members terminates the program then later
         tt(signalHandler) members are not activated anymore.
+    itb(void remove(size_t signum, SignalHandler &object))nl() 
+       tt(SignalHandler object) for signal tt(signum) is removed from the
+        tt(Signal) object. It is the responsibility of tt(object) to
+        deregister itself from tt(Signal) just before tt(object) goes out of
+        scope. Objects can only deregister themselves if they've previously
+        registered themselves using tt(add).
     itb(void ignore(size_t signum))nl()
        Any previously installed tt(SignalHandler) object is no longer
         activated on arrival of signal tt(signum). In addition, if possible,

@@ -16,16 +16,23 @@ objects offer a simple interface to the reading and writing ends of
 pipes. tt(Pipe) objects are object-wrappers around the bf(pipe)(2) system
 call. 
 
-    A tt(Pipe) which is created just before a program forks can be used to
-set up a line of communication between the parent and child
-process. Information which is written by the child process to its standard
-output stream can be redirected to the writing end of the pipe (using the
-tt(writtenBy) member). The information appearing at the 
-reading end of the pipe can then be extracted using, e.g., an tt(IFdStream)
-object, initialized with the tt(Pipe)'s reading file descriptor, or the
-reading end of the pipe can be redirected to an existing stream whose file
-descriptor is known, like tt(cin) (which uses the tt(STDIN_FILENO) file
-descriptor). 
+    A tt(Pipe) which is created just before a program forks can be used to set
+up a line of communication between the parent and child process. Information
+which is written by the child process to its standard output stream can be
+redirected to the writing end of the pipe (using the tt(writtenBy)
+member). The information appearing at the reading end of the pipe can then be
+extracted using, e.g., an tt(IFdStream) object, initialized with the
+tt(Pipe)'s reading file descriptor, or the reading end of the pipe can be
+redirected to an existing stream whose file descriptor is known, like tt(cin)
+(which uses the tt(STDIN_FILENO) file descriptor).
+
+    When a tt(Pipe) object goes out of scope, no bf(close)(2) operation is
+performed on the pipe's file descriptors. After setting up the pipe using the
+tt(Pipe's) member functions and passing the tt(Pipe's) file descriptors to
+code that uses the tt(Pipe's) descriptors, the tt(Pipe) object could in fact
+safely be destroyed. If the pipe should be closed at destruction time, a class
+could be derived from bf(Pipe)(3bobcat), whose destructor performs the
+required closing-operation.
 
 includefile(include/namespace)
 
@@ -49,11 +56,6 @@ pipe, stored at tt(fd). Following the construction of the tt(Pipe) object
 the array at by tt(fd) is no longer used by the tt(Pipe) object.
     )
         The copy constructor is available.
-
-    Note that when the pipe goes out of scope, no bf(close)(2) operation is
-performed on the pipe's ends. If the pipe should be closed by the desctructor,
-derive a class from bf(Pipe)(3bobcat), whose destructor performs the required
-closing-operation.
 
 manpagesection(MEMBER FUNCTIONS)
 
