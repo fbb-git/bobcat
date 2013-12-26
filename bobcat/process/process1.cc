@@ -2,11 +2,5 @@
 
 Process::Process(std::string const &command)
 :
-    d_command(command),
-
-    d_oChildIn(0),
-    d_iChildOut(0),
-    d_iChildErr(0)
-{
-    initialize(0, CIN | COUT | CERR, NO_PATH);
-}
+    Process(200, CIN | COUT | CERR, NO_PATH, 0, command)
+{}

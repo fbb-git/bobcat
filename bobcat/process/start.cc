@@ -10,6 +10,7 @@ void Process::start(IOMode mode, ProcessType type, size_t timeLimit)
     d_processType = type;
 
     sanitizeIOMode(mode);
+
     newPipes();
 
     if (d_command[0] == '`' && *d_command.rbegin() == '`')  // rm backticks

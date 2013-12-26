@@ -3,5 +3,7 @@
 Process::~Process()
 {
     stop();
+
+//    Signal::instance().add(SIGCHLD, *this);
 }
 

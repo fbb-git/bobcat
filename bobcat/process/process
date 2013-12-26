@@ -82,15 +82,39 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         int d_closedByChild;    // DIY CLOSE_ON_EXEC
 #endif
 
+
     public:
         explicit Process(std::string const &command = "");              // 1
-        explicit Process(IOMode mode, std::string const &command = ""); // 2
-        Process(IOMode mode, ProcessType type,                          // 3
+
+        explicit Process(size_t iomode, std::string const &command = ""); //3a
+        explicit Process(IOMode mode, std::string const &command = ""); // 3
+
+                                                                        // 4
+        Process(size_t bufSize, IOMode mode, std::string const &command = "");
+
+
+        Process(size_t mode, ProcessType type,                          // 5a
                                     std::string const &command = "");
-        Process(IOMode mode, ProcessType type, size_t timeLimit,      // 4
+        Process(IOMode mode, ProcessType type,                          // 5
                                     std::string const &command = "");
 
-        virtual ~Process();                 // stop()s any ongoing process
+        Process(size_t bufSize, IOMode mode, ProcessType type,          // 6
+                                    std::string const &command = "");
+
+
+        Process(size_t mode, ProcessType type, size_t timeLimit,        // 7a
+                                    std::string const &command = "");
+        Process(IOMode mode, ProcessType type, size_t timeLimit,        // 7
+                                    std::string const &command = "");
+
+        Process(size_t bufSize, IOMode mode, ProcessType type,          // 8
+                 size_t timeLimit, std::string const &command = "");
+
+        Process(Process const &other) = delete;
+
+        ~Process() override;                 // stop()s any ongoing process
+
+        Process &operator=(Process const &other) = delete;
 
         IOMode ioMode() const;              // returns default IOMode       .f
         ProcessType processType() const;    // returns default ProcessType  .f
@@ -155,9 +179,6 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         using Fork::waitForChild;
                                 
     private:
-        Process(Process const &other) = delete;
-        Process &operator=(Process const &other) = delete;
-
         virtual void childProcess();
         virtual void childRedirections();
         virtual void parentProcess();                       // .f
@@ -171,8 +192,7 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         void closeReadFd(Pipe &pipe);
 
         void forking();
-        void initialize(size_t timeLimit, IOMode mode, 
-                                                ProcessType processType);
+
         IOMode sanitizeIOMode(IOMode mode);
         void newPipes();
         void closeChildInputOnExec();
