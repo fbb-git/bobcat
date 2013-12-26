@@ -116,10 +116,12 @@ struct Process: private Fork, public IOStream, public ProcessEnums
 
         Process &operator=(Process const &other) = delete;
 
+        size_t bufSize() const;             // returns current buffer size
         IOMode ioMode() const;              // returns default IOMode       .f
         ProcessType processType() const;    // returns default ProcessType  .f
         size_t timeLimit() const;           // returns default time limit   .f
 
+        void setBufSize(size_t bufSize);  
         void setIOMode(IOMode mode);            // change IOMode        .f
 
         void setProcessType(ProcessType type);                      //  .f
@@ -129,16 +131,18 @@ struct Process: private Fork, public IOStream, public ProcessEnums
                                                 // 0 means: no time monitor
 
         void setCommand(std::string const &command);    // sets cmd,    .f
-                                                        // eats backticks
 
         Process &operator+=(std::string const &text);   //       opaddis.f
                                                         // adds to the command
         
+        void start(IOMode mode, ProcessType type, size_t timeLimit);    // 1
+        void start(size_t bufSize, IOMode mode, ProcessType type,       // 2
+                    size_t timeLimit);
+
         void start();                                   // 1.f
         void start(IOMode mode);                        // 2.f
         void start(IOMode mode, ProcessType type);      // 3.f
 
-        void start(IOMode mode, ProcessType type, size_t timeLimit);
 
         void system();              // calls /bin/sh -c cmd;            1.f
                                     //      shell redirs OK
@@ -151,8 +155,6 @@ struct Process: private Fork, public IOStream, public ProcessEnums
 
         std::string const &str() const; // current command              .f    
 
-        int stop();                     // terminate a running childprocess
-
         template <typename Type>
         Process &operator<<(Type const &value);                 // opinsert.f
 
@@ -161,23 +163,37 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         template <typename Type>
         Process &operator>>(Type &value);                       // opextract.f
 
+
+        int stop();                     // terminate a running childprocess
+        void close();                           // closes input to the child
+        void eoi();                             // closes input and waits for
+                                                // the child to end
+        using Fork::waitForChild;
+                                
         bool active();
 
         Process &operator()(IOMode mode);                       // opfun1.f
         Process &operator()(IOMode mode, ProcessType type);     // opfun2.f
+
+                                                            // operatorfun1.cc
         Process &operator()(IOMode mode, ProcessType type, size_t timeLimit);
+                                                            // operatorfun2.cc
+        Process &operator()(size_t bufSize, IOMode mode, ProcessType type, 
+                            size_t timeLimit);
 
-        void close();                           // closes input to the child
+        std::istream &childErrStream();         // READ cerr from the child
+        std::istream &cerr();                   // same, but deprecated
 
-        std::istream &cerr();                   // READ cerr from the child
+        std::istream &childOutStream();         //                      .f
+                                                // READ cout from the child
+                                                // (also: direct through
+                                                // extraction)
 
         size_t available();                     // returns ChildOutput bit_or
                                                 // (cf. manpage)
 
         void showMode(char const *lab) const;
 
-        using Fork::waitForChild;
-                                
     private:
         virtual void childProcess();
         virtual void childRedirections();
@@ -190,6 +206,7 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         void close(int fd);
         void closeWriteFd(Pipe &pipe);
         void closeReadFd(Pipe &pipe);
+        void rmBackticks();
 
         void forking();
 
@@ -203,6 +220,8 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         ExecContext analyzeCommand();
 };
 
+#include "eoi.f"
+#include "eoi2.f"
 #include "iomode.f"
 #include "opaddis.f"
 #include "opextract.f"

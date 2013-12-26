@@ -3,7 +3,17 @@
 Process &Process::operator<<(std::ostream &(*pf)(std::ostream &))
 {
     if (active())
-        dynamic_cast<std::ostream &>(*this) << pf;
+    {
+
+        if (pf != FBB::eoi)
+            static_cast<std::ostream &>(*this) << pf;
+        else
+        {        
+            close();
+            waitForChild();
+        }
+    }
+
     return *this;
 }
 
