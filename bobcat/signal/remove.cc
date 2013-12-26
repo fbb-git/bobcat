@@ -4,7 +4,7 @@ void Signal::remove(size_t signum, SignalHandler &object)
 {
     verify(signum, "Signal::remove");
 
-    if (d_signals.size() >= signum)
+    if (d_signals.size() <= signum)
         throw Exception(1) << "no signal handlers for signal " << signum <<
                               " were installed";
 
