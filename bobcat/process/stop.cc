@@ -5,8 +5,6 @@ int Process::stop()
     if (!d_active)
         return -1;
 
-//    d_command.clear();
-
     d_oChildIn.flush();
 
     d_oChildInbuf.open(-1);
@@ -18,7 +16,6 @@ int Process::stop()
     closeReadFd(d_iChildErrPipe);
 
     discontinue(d_child);
-    discontinue(d_monitor);
 
     d_active = false;
 

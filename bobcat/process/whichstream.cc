@@ -1,6 +1,6 @@
 #include "process.ih"
 
-size_t Process::whichStream()
+Process::ChildOutput Process::whichStream()
 {
     d_selector.wait();
 

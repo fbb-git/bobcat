@@ -1,7 +1,5 @@
 #include "process.ih"
 
-#include <iostream>
-
 void Process::forking()
 {
     if (d_mode == IOMode::DIRECT)
@@ -13,30 +11,28 @@ void Process::forking()
     
     d_child.pid = pid();
 
-    if (d_timeLimit == 0)         // no wait, set monitor.pid to 0: no 
-    {                               // time monitoring
-        d_monitor.pid = 0;
+    if (d_timeLimit == 0)       // no wait, no monitoring
         return;
-    }
 
-    d_monitor.pid = ::fork();
+//  Timeout monitoring now done by threading.
 
-    if (d_monitor.pid < 0)          // monitor process fails
-    {
-        d_monitor.pid = 0;
-        stop();
-        throw Exception() << "Process " << d_command << 
-                                        ": can't start the timeout monitor";
-    }
-    else if (d_monitor.pid == 0)    // actual monitoring process
-    {
-                                    // close open pipes inherited from the
-                                    // parent process
-        closeWriteFd(d_oChildInPipe);
-        closeReadFd(d_iChildOutPipe);
-        closeReadFd(d_iChildErrPipe);
-
-        sleep(d_timeLimit);         // end the child after 'timeLimit'
-        exit(0);
-    }
+//    pid_t pid = ::fork();
+//
+//    if (pid < 0)                // forking fails
+//    {
+//        stop();
+//        throw Exception() << "Process " << d_command << 
+//                                        ": can't start the timeout monitor";
+//    }
+//    else if (d_monitor.pid == 0)    // actual monitoring process
+//    {
+//                                    // close open pipes inherited from the
+//                                    // parent process
+//        closeWriteFd(d_oChildInPipe);
+//        closeReadFd(d_iChildOutPipe);
+//        closeReadFd(d_iChildErrPipe);
+//
+//        sleep(d_timeLimit);         // end the child after 'timeLimit'
+//        exit(0);
+//    }
 }

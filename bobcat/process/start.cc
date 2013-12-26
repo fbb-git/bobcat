@@ -1,6 +1,6 @@
 #include "process.ih"
 
-void Process::start(iomode mode, ProcessType type, size_t timeLimit)
+void Process::start(IOMode mode, ProcessType type, size_t timeLimit)
 {
     if (d_active)
         stop();

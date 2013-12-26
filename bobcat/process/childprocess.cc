@@ -26,7 +26,7 @@ void Process::childProcess()
 
 }
 
-//    std::cerr << "ChildProcess starts as:\n";
+//    std::cerr << "ChildOutput starts as:\n";
 //    for (char const **cp = ec.argv; *cp; ++cp)
 //        std::cerr << "  " << *cp << endl;
 //    std::cerr << "======================\n";

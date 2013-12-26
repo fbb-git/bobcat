@@ -19,10 +19,14 @@
     #endif
 #endif
 
+#include "../processenums/processenums"
+
 namespace FBB
 {
 
-struct Process: private Fork, public IOStream
+struct ProcessData;
+
+struct Process: private Fork, public IOStream, public ProcessEnums
 {
     friend Process &operator|(Process &lhs, Process &rhs);
 
@@ -35,11 +39,11 @@ struct Process: private Fork, public IOStream
 
     private:
         bool            d_active;
-        size_t          d_mode;
+        IOMode          d_mode;
         size_t          d_timeLimit;      // seconds allowed to child-process
         ProcessType     d_processType;
 
-        size_t          d_setMode;          // these values are set by the 
+        IOMode          d_setMode;          // these values are set by the 
         size_t          d_setTimeLimit;   // set members and used as 
         ProcessType     d_setProcessType;   // defaults unless overridden by
                                             // actual values
@@ -65,64 +69,34 @@ struct Process: private Fork, public IOStream
         {
             int     ret;
             pid_t   pid;
-        
+            
             RetPid();                       //  1.f
         };
 
         RetPid d_child;
-        RetPid d_monitor;
+
+        ProcessData *d_data;
+        char d_notUsed[sizeof(RetPid) - sizeof(ProcessData *)];
 
 #ifdef BOBCAT_DIY_CLOEXEC_
         int d_closedByChild;    // DIY CLOSE_ON_EXEC
 #endif
 
     public:
-        enum IOMode
-        {
-            STD             = 0,
-
-            CIN             = 1 << 0,
-            COUT            = 1 << 1,
-            CERR            = 1 << 2,
-
-            IGNORE_COUT     = 1 << 3,
-            IGNORE_CERR     = 1 << 4,
-
-            MERGE_COUT_CERR = 1 << 5,
-
-            DIRECT          = 1 << 8,
-
-            // flags below are Internal Use Only and cannot be set by
-            // users
-
-            IN_PIPE         = 1 << 10,
-            OUT_PIPE        = 1 << 11,
-
-            CLOSE_ON_EXEC   = 1 << 12,
-        };
-        typedef size_t iomode;
-
-        enum ChildOutput
-        {
-            NOTHING_AVAILABLE   = 0,
-            CHILD_COUT          = 1 << 0,
-            CHILD_CERR          = 1 << 1,
-        };
-            
         explicit Process(std::string const &command = "");              // 1
-        explicit Process(iomode mode, std::string const &command = ""); // 2
-        Process(iomode mode, ProcessType type,                          // 3
+        explicit Process(IOMode mode, std::string const &command = ""); // 2
+        Process(IOMode mode, ProcessType type,                          // 3
                                     std::string const &command = "");
-        Process(iomode mode, ProcessType type, size_t timeLimit,      // 4
+        Process(IOMode mode, ProcessType type, size_t timeLimit,      // 4
                                     std::string const &command = "");
 
         virtual ~Process();                 // stop()s any ongoing process
 
-        iomode ioMode() const;              // returns default IOMode       .f
+        IOMode ioMode() const;              // returns default IOMode       .f
         ProcessType processType() const;    // returns default ProcessType  .f
         size_t timeLimit() const;           // returns default time limit   .f
 
-        void setIOMode(iomode mode);            // change IOMode        .f
+        void setIOMode(IOMode mode);            // change IOMode        .f
 
         void setProcessType(ProcessType type);                      //  .f
 
@@ -137,15 +111,15 @@ struct Process: private Fork, public IOStream
                                                         // adds to the command
         
         void start();                                   // 1.f
-        void start(iomode mode);                        // 2.f
-        void start(iomode mode, ProcessType type);      // 3.f
+        void start(IOMode mode);                        // 2.f
+        void start(IOMode mode, ProcessType type);      // 3.f
 
-        void start(iomode mode, ProcessType type, size_t timeLimit);
+        void start(IOMode mode, ProcessType type, size_t timeLimit);
 
         void system();              // calls /bin/sh -c cmd;            1.f
                                     //      shell redirs OK
-        void system(iomode mode);                                   //  2.f
-        void system(iomode mode, size_t timeLimit);                 //  3.1
+        void system(IOMode mode);                                   //  2.f
+        void system(IOMode mode, size_t timeLimit);                 //  3.1
 
 
         int operator=(std::string const &cmd);  // sets and starts a command
@@ -165,9 +139,9 @@ struct Process: private Fork, public IOStream
 
         bool active();
 
-        Process &operator()(iomode mode);                       // opfun1.f
-        Process &operator()(iomode mode, ProcessType type);     // opfun2.f
-        Process &operator()(iomode mode, ProcessType type, size_t timeLimit);
+        Process &operator()(IOMode mode);                       // opfun1.f
+        Process &operator()(IOMode mode, ProcessType type);     // opfun2.f
+        Process &operator()(IOMode mode, ProcessType type, size_t timeLimit);
 
         void close();                           // closes input to the child
 
@@ -191,15 +165,15 @@ struct Process: private Fork, public IOStream
 
         void newPipe(Pipe &pipe);
         pid_t discontinue(RetPid &proc);
-        size_t whichStream();
+        ChildOutput whichStream();
         void close(int fd);
         void closeWriteFd(Pipe &pipe);
         void closeReadFd(Pipe &pipe);
 
         void forking();
-        void initialize(size_t timeLimit, iomode mode, 
+        void initialize(size_t timeLimit, IOMode mode, 
                                                 ProcessType processType);
-        iomode sanitizeIOMode(iomode mode);
+        IOMode sanitizeIOMode(IOMode mode);
         void newPipes();
         void closeChildInputOnExec();
 

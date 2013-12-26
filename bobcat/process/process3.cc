@@ -1,6 +1,6 @@
 #include "process.ih"
 
-Process::Process(iomode mode, ProcessType type, std::string const &command)
+Process::Process(IOMode mode, ProcessType type, std::string const &command)
 :
     d_command(command),
 

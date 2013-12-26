@@ -1,6 +1,6 @@
 #include "process.ih"
 
-Process::Process(iomode mode, ProcessType processType, size_t timeLimit, 
+Process::Process(IOMode mode, ProcessType processType, size_t timeLimit, 
                  string const &command)
 :
     d_command(command),

@@ -1,6 +1,6 @@
 #include "process.ih"
 
-void Process::initialize(size_t timeLimit, iomode mode, 
+void Process::initialize(size_t timeLimit, IOMode mode, 
                          ProcessType processType)
 {
 
