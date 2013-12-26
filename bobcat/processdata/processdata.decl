@@ -1,0 +1,105 @@
+#include <istream>
+#include <ostream>
+
+#include <mutex>
+#include <condition_variable>
+
+//#include "../pipe/pipe"
+//#include "../selector/selector"
+//#include "../ifdstreambuf/ifdstreambuf"
+//#include "../ofdstreambuf/ofdstreambuf"
+//#include "../signal/signal"
+
+#include "../processenums/processenums"
+
+//#if defined(__FreeBSD_kernel__) || defined(__FreeBSD__)
+//    #ifndef BOBCAT_DIY_CLOEXEC_
+//    #define BOBCAT_DIY_CLOEXEC_
+//    #endif
+//#endif
+
+namespace FBB
+{
+
+//struct RetPid
+//{
+//    int     ret;
+//    pid_t   pid;
+//
+//    RetPid();                       //  1.f
+//};
+
+class ProcessData: public ProcessEnums  // , public SignalHandler
+{
+//    enum ChildAction
+//    {
+//        PASSIVE,
+//        MONITORING,
+//        CHILD_ENDED
+//    };
+//        
+//    volatile ChildAction d_action = PASSIVE;
+//    std::mutex d_mutex;
+//    std::condition_variable d_condition;
+
+    public:
+//        static std::istream s_in;
+//        static std::ostream s_out;
+
+        size_t d_bufSize;
+    
+//        Pipe d_parentOutChildInPipe;        // cin read by the CHILD
+//        Pipe d_parentInChildOutPipe;        // cout written by the CHILD
+//        Pipe d_parentInChildErrPipe;        // cerr written by the CHILD    
+//    
+//        // These are used by the parent to access the child:
+//    
+//        OFdStreambuf    d_parentOutChildInBuf;  // Child extracts,  
+//        IFdStreambuf    d_parentInChildOutBuf;  // Child inserts,
+//        IFdStreambuf    d_parentInChildErrBuf;  // Child inserts
+//    
+//        std::ostream   d_parentOutChildIn;  // Parent inserts to child's cin
+//        std::istream   d_parentInChildOut;  // Parent extracts child's cout
+//        std::istream   d_parentInChildErr;  // Parent extracts child's cerr
+//    
+//        Selector        d_selector;         // senses activities on Child's
+//                                            // out/err streams
+//    
+//        RetPid d_child;
+//    
+//#ifdef BOBCAT_DIY_CLOEXEC_
+//        int d_closedByChild;    // DIY CLOSE_ON_EXEC
+//#endif
+
+        ProcessData(size_t bufSize);
+//        ~ProcessData() override;
+//    
+//        bool active();
+//        bool childRedirections(size_t mode);
+//        void close();
+//        void parentRedirections(size_t setMode, size_t mode);
+//        bool parentProcess(size_t timeLimit, pid_t pid);
+//        int stop();
+//        ChildOutput available();
+//        void newPipes(size_t setMode, size_t mode);
+//
+//    private:
+//        pid_t discontinue(RetPid &proc);
+//        ChildOutput whichStream();
+//        void close(int fd);
+//        void closeChildInputOnExec();
+//        void closeFds();
+//        void closeReadFd(Pipe &pipe);
+//        void closeWriteFd(Pipe &pipe);
+//        void newPipe(Pipe &pipe);
+//        void signalHandler(size_t signum) override;
+
+};
+
+}   // FBB
+
+
+
+
+
+
