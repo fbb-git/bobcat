@@ -1,7 +1,7 @@
 #include "process.ih"
 
-Process::Process(size_t bufSize, IOMode mode, ProcessType processType, 
-                 size_t timeLimit, string const &command)
+Process::Process(IOMode mode, ProcessType processType, 
+                 size_t timeLimit, size_t bufSize, string const &command)
 :
     d_active(false),
     d_timeLimit(timeLimit),

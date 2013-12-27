@@ -186,23 +186,29 @@ the tt(bit_or) operator should be used.
 
 manpagesection(PROCESS PARAMETERS)
     
-When running a child process three process parameters may be specified: the
-child streams to access from the tt(Process) object (as an bf(IOMode) value);
-the way to locate or start the child program (as a bf(ProcessType) value); and
-the maximum time (in seconds) the child program is allowed to run.nl()
+When running a child process four process parameters may be specified: the
+size of the stream buffers which are used for communication with the child
+process; the child streams to access from the tt(Process) object (as an
+bf(IOMode) value); the way to locate or start the child program (as a
+bf(ProcessType) value); and the maximum time (in seconds) the child program is
+allowed to run.
+
     Unless specified otherwise, all the child's standard streams (standard
 input, output and error) are accessible from the tt(Parent) process; the
 tt(PATH) environment variable will em(not) be used to locate the child program
 to be executed (often resulting in the requirement to provide an absolute path
 to the intended program); and the child processes will be allowed unlimited
-time to run.nl()
+time to run.
+
     Following the construction of a tt(Process) object all default parameter
 values may be modified. Process parameters may be altered for a single process
 or the general defaults may be modified. The tt(setXXX) members (see below)
 may be used to change the default process parameters. When process parameters
 are specified otherwise they will be active for the next process only.
 
+
 manpagesection(CONSTRUCTORS)
+
     The command provided to the following constructors may be the
 (initial part of the) specification of an external program to run. When the
 program is eventually started it may start and end with a em(back-tick)
@@ -213,36 +219,52 @@ executed.
 construction. A tt(start) member or the assignment operator (see below) is
 used to start the specified child process.
 
+    The tt(mode) parameter that is defined for the second through fourth
+constructor is defined as a tt(size_t) for backward compatibility reasons.
+Internally, this argument is immediately converted to a tt(Process::IOMode)
+value, silently ignoring values which do not represent valid tt(IOMode)
+values. Multiple tt(IOMode) values may be combined using the bit-or operator.
+
+    After constructing a tt(Process) object its parameters can be changed
+using tt(set)-member functions, function call operators or tt(start) members. 
+
     itemization(
     itb(Process(std::string const &cmd = ""))
-       This constructor can also be used as default constructor. It can be
-used to specify the (initial part of a) command to execute from a
-tt(Process) object. Standard default values are used for the process
-parameters (see section bf(PROCESS PARAMETERS)).
+       This constructor is used to specify the (initial part of a) command to
+execute from a tt(Process) object. Default values are used for the
+process parameters (see section bf(PROCESS PARAMETERS)).
 
-    itb(Process(IOMode mode, std::string const &cmd = ""))
-        This constructor requires the specification of the object's initial
-default bf(IOMode) setting and it can be used to specify the (initial part of
-a) command to execute from a tt(Process) object. Standard default values
-are used for the remaining two process parameters ((tt(NO_PATH)) and no time
-limit imposed on the child process).
+    itb(Process(size_t mode, std::string const &cmd = ""))
+        This constructor requires the specification of the object's 
+bf(IOMode), and it can be used to specify the (initial part of
+a) command to execute from a tt(Process) object. Default values
+are used for the remaining process parameters (see section bf(PROCESS
+PARAMETERS)). 
 
-    itb(Process(IOMode mode, ProcessType type, std::string const &cmd = ""))
-        This constructor requires the specification of the object's initial
-default bf(IOMode) setting and tt(ProcessType) and it can be used to specify
-the (initial part of a) command to execute from a tt(Process) object. By
-default no time limit will be imposed upon the child process.
+    itb(Process(size_t mode, ProcessType type, std::string const &cmd = ""))
+        This constructor requires the specification of the object's
+bf(IOMode) and tt(ProcessType), and it can be used to specify the (initial
+part of a) command to execute from a tt(Process) object.  Default values are
+used for the remaining process parameters (see section bf(PROCESS
+PARAMETERS)).
 
-    itb(Process(IOMode mode, ProcessType type, size_t timeLimit, 
+    itb(Process(size_t mode, ProcessType type, size_t timeLimit, 
 std::string const &cmd = ""))
-        This constructor requires the specification of the object's initial
-default bf(IOMode) setting, tt(ProcessType) and time limit imposed upon child
-processes it can be used to specify the (initial part of a) command to execute
-from a tt(Process) object. To prevent a time limit from being imposed upon the
-child process specify a time limit of 0 (zero).
+        This constructor requires the specification of the object's
+bf(IOMode), tt(ProcessType), and child process time limit. The (initial part
+of a) command to execute from a tt(Process) object may optionally be
+specified. The default process parameter is used for the sizes of the
+internally used stream buffers (see section bf(PROCESS PARAMETERS)).
 
+    itb(Process(IOMode mode, ProcessType type, size_t timeLimit, size_t
+        bufferSize, std::string const &cmd = ""))
+        This constructor requires the specification of the object's
+bf(IOMode), tt(ProcessType), child process time limit, and size of the
+internally used stream buffers. The (initial part of a) command to execute
+from a tt(Process) object may optionally be specified. Note that this
+constructor's tt(mode) parameter does not accept a tt(size_t) argument.
     )
-    The class bf(Process) does not offer copy and move constructors.
+    The class bf(Process) does not offer copy or move constructors.
 
 manpagesection(OVERLOADED OPERATORS)
 
@@ -282,22 +304,29 @@ interpreted as a command to execute.nl()
 calling tt(start) to execute the newly defined command using the current
 default process parameters. It returns tt(stop)'s return value.
 
-    itb(Process &operator()(iomode mode))
-        This operator changes the tt(IOMode) of the next child process. It
-returns the tt(Process) object allowing constructions like
+    itb(Process &operator()(IOMode mode))
+        This operator changes the the tt(Process) object's tt(IOMode)
+parameter. A reference to the tt(Process) object is returned, allowing
+constructions like
         verb(
-    process(COUT) = "/bin/cat"; 
+    process(Process::COUT) = "/bin/cat"; 
         )
     to start a new child process with the specified tt(IOMode). 
 
-    itb(Process &operator()(iomode mode, ProcessType type))
-        This operator changes the tt(IOMode) and tt(ProcessType) process
-parameters of the next child process.
+    itb(Process &operator()(IOMode mode, ProcessType type))
+        This operator changes the tt(Process) object's tt(IOMode) and
+tt(ProcessType) process parameters.
 
-    itb(Process &operator()(iomode mode, ProcessType type, size_t timeLimit))
-        This operator changes all three process parameters  of the next child
-process. Time limit 0 prevents a time limit from being imposed upon the next
-child process.
+    itb(Process &operator()(size_t mode, ProcessType type, size_t timeLimit))
+        This operator changes the tt(Process) object's mentioned process
+parameters, silently converting the tt(size_t mode) to an tt(IOMode)
+value. The currently specified default size of the stream buffers is kept
+as-is.
+
+    itb(Process &operator()(IOMode mode, ProcessType type, size_t timeLimit,
+        size_t bufferSize))
+        This operator changes all of the tt(Process) object's process
+parameters.
 
     itb(Process &operator|(Process &lhs, Process &rhs))
         This operator implements em(piping): information sent to the tt(lhs)'s
@@ -343,16 +372,11 @@ information must actually be inserted into the final process, tt(p3):
 
     p3.start();
 
-    string line;
-    while (getline(cin, line) && not line.empty())
-        p3 << line << endl;
-
-    p3.close();
-    p3.waitForChild();
+    p3 << cin.rdbuf() << eoi;
         )    
     )
-
-    The default overloaded assignment operator is not available.
+    The default overloaded copy and move assignment operators are not
+available.
 
 manpagesection(MEMBERS)
 
@@ -430,38 +454,43 @@ processes. No time limit will be imposed upon child processes if tt(timeLimit
 0) is specified.
 
     itb(void start())
-        The currently specified command is executed using the currently active
-process parameters. These process parameters may be modified (either as new
-defaults or for the next process only) using overloaded tt(start) members,
-the tt(system) members, function call operator or various
-tt(set-)members.nl()
-    Having specified a command to execute, the first white-space delimited
+        The currently specified command is started using the tt(Process)
+object's process parameters. 
+
+    Having specified a command to start, the first white-space delimited
 element of the specified command is used as the name of the program to
-execute. If the program should be called as a command to be executed by
-bf(sh)(1), the  tt(USE_SHELL ProcessType) or a tt(system) member 
-should be used.nl()
-    If a child process does not terminate by itself (within its allotted
-amount of time) it is terminated when it has run for its alloted time; when
-the tt(Process) object's tt(start) or tt(stop) members are called; when
-the object's assignment operator is used; or when the object goes out of
-scope.
+start. If the program should be called through bf(sh)(1), the tt(USE_SHELL
+ProcessType) or a tt(system) member should be used.
+
+    If a child process does not terminate by itself, then it is terminated
+when it has run for its alloted time; when the tt(Process) object's tt(start)
+or tt(stop) members are called; when the object's assignment operator is used;
+or when the object goes out of scope.
 
     itb(void start(IOMode mode))
-       The currently specified command is executed using the specified
-tt(IOMode) rather than the currently specified default but otherwise using the
-currently specified default process parameters. The specified tt(IOMode) will
-only be used for the process executed by this tt(start) member.
+       The currently specified command is started using the specified
+tt(IOMode), but otherwise using the currently configured tt(Process) object's
+process parameters. The specified tt(IOMode) is only used for the child
+process that is started by this member.
 
-    itb(void start(IOMode mode, Program program))
-       The currently specified command is executed using the specified
-tt(IOMode) and tt(ProcessType) as well as the currently specified child
-process time limit. The specified arguments will only be used for the process
-executed by this tt(start) member.
+    itb(void start(IOMode mode, ProcessType type))
+       The currently specified command is started using the specified
+tt(IOMode) and tt(ProcessType), but otherwise using the currently configured
+tt(Process) object's process parameters. The specified process parameter
+values are only used for the child process that is started by this member.
 
-    itb(void start(IOMode mode, Program program, size_t timeLimit))
-       The currently specified command is executed using the specified
-arguments for the process parameters. The specified arguments will only be
-used for the process executed by this tt(start) member.
+    itb(void start(size_t mode, Program program, size_t timeLimit))
+       The currently specified command is started using the specified
+tt(IOMode), tt(ProcessType), and time limit (silently converting the tt(size_t
+mode) to an tt(IOMode) value), and using the currently configured tt(Process)
+object's stream buffer size parameter. The specified process parameter values
+are only used for the child process that is started by this member.
+
+    itb(void start(IOMode mode, Program program, size_t timeLimit, size_t
+        bufferSize)) 
+       The currently specified command is started using the specified process
+parameters. The specified parameter values are only used for the child process
+that is started by this member.
 
     itb(void showMode(char const *lab) const)
         This member displays the label tt(lab), followed by the current

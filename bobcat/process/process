@@ -88,11 +88,13 @@ struct Process: private Fork, public IOStream, public ProcessEnums
     public:
         explicit Process(std::string const &command = "");              // 1
 
-        explicit Process(size_t iomode, std::string const &command = ""); //3a
-        Process(size_t mode, ProcessType type,                            //5a
+        explicit Process(size_t iomode, std::string const &command = ""); // 2
+        Process(size_t mode, ProcessType type,                            // 3
                                     std::string const &command = "");
-        Process(size_t mode, ProcessType type, size_t timeLimit,          //7a
+        Process(size_t mode, ProcessType type, size_t timeLimit,          // 4
                                     std::string const &command = "");
+        Process(IOMode mode, ProcessType type, size_t timeLimit,          // 5
+                 size_t bufSize, std::string const &command = "");
 
         Process(Process const &other) = delete;
 
@@ -119,13 +121,13 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         Process &operator+=(std::string const &text);   //       opaddis.f
                                                         // adds to the command
         
-        void start(IOMode mode, ProcessType type, size_t timeLimit);    // 1
-        void start(size_t bufSize, IOMode mode, ProcessType type,       // 2
-                    size_t timeLimit);
-
         void start();                                   // 1.f
         void start(IOMode mode);                        // 2.f
         void start(IOMode mode, ProcessType type);      // 3.f
+
+        void start(size_t mode, ProcessType type, size_t timeLimit);    // 1
+        void start(IOMode mode, ProcessType type,                       // 2
+                    size_t timeLimit, size_t bufSize);
 
 
         void system();              // calls /bin/sh -c cmd;            1.f
@@ -160,10 +162,10 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         Process &operator()(IOMode mode, ProcessType type);     // opfun2.f
 
                                                             // operatorfun1.cc
-        Process &operator()(IOMode mode, ProcessType type, size_t timeLimit);
-                                                            // operatorfun2.cc
-        Process &operator()(size_t bufSize, IOMode mode, ProcessType type, 
-                            size_t timeLimit);
+        Process &operator()(size_t mode, ProcessType type, size_t timeLimit);
+                                                            
+        Process &operator()(IOMode mode, ProcessType type,  // operatorfun2.cc
+                            size_t timeLimit, size_t bufSize);
 
         std::istream &childErrStream();         // READ cerr from the child
         std::istream &cerr();                   // same, but deprecated
@@ -179,8 +181,6 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         void showMode(char const *lab) const;
 
     private:
-        Process(size_t bufSize, IOMode mode, ProcessType type,            //8
-                 size_t timeLimit, std::string const &command = "");
 
         void childProcess() override;
         void childRedirections() override;
