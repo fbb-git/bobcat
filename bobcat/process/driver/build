@@ -38,8 +38,14 @@ case $1 in
         compile $1 -pthread
     ;;
 
+    (all)
+	compile cincoutcerr
+	compile $1 -pthread
+    ;;
+
     (clean)
-	rm -f pipe gpg sort sha1sum thread limit ls
+	rm -f pipe gpg sort sha1sum thread limit ls all cincoutcerr
+	rm -rf ../tmp ../../*/tmp
     ;;
 
     (*)
@@ -49,18 +55,19 @@ name of the test. The test-name plus .cc extension is the name of the test
 program source file.
 
 Available tests are:
-    pipe    - stdin is passed through 3 /bin/cat programs, and is then
-              written to stdout
+    all	    - stdin is split over stdout and stderr using multi-threading
     gpg     - stdin is a PGP encrypted file, stdout is the decrypted file,
               stderr shows the result of the signature verification
-    sort    - multi threading is used when sorting stdin to stdout, where
-              sort's output is extracted from the Process object
-    sha1sum - compute the input's sha1sum not using multi-threading
-    thread  - compute the input's sha1sum using multi-threading
-    limit   - limits process time to 3 seconds, while copying stdin to stdout
+    limit   - limits process time to 5 seconds, while copying stdin to stdout
               using /bin/cat
     ls      - show directory contents: no input, only std output
-
+    pipe    - stdin is passed through 3 /bin/cat programs, and is then
+              written to stdout
+    sha1sum - compute the input's sha1sum not using multi-threading
+    sort    - multi threading is used when sorting stdin to stdout, where
+              sort's output is extracted from the Process object
+    thread  - compute the input's sha1sum using multi-threading
+    
     clean   - not a test, but removes the test binaries
 "
     ;;

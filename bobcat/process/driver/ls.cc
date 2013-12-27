@@ -4,12 +4,13 @@
 using namespace std;
 using namespace FBB;
 
+//CODE
 int main()
 {
-    Process process("/bin/ls -Fla");
-    process.setIOMode(Process::COUT);
+    Process process(Process::COUT, "/bin/ls -Fla");
 
     process.start();
     cout << process.childOutStream().rdbuf();
 }
-    
+//=
+

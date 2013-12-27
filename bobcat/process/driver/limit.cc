@@ -5,17 +5,17 @@
 using namespace std;
 using namespace FBB;
 
+//CODE
 int main()
 {
-    Process process("/bin/cat");
-    process.setIOMode(Process::CIN | Process::COUT);
-    process.setTimeLimit(3);
+    Process process(Process::CIN | Process::COUT, "/bin/cat");
+    process.setTimeLimit(5);
 
     process.start();
 
     while (true)
     {
-        cout << "? " << flush;
+        cout << "? ";
         string line;
         if (not getline(cin, line))
             return 0;
@@ -29,9 +29,10 @@ int main()
         cout << "Received: " << line << endl;
     }
 
-    cout << "/bin/cat time limit of 3 seconds reached: child process ended\n";
+    cout << "/bin/cat time limit of 5 seconds reached: child process ended\n";
 }
-    
+//=
+
 
 
 
