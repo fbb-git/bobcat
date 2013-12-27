@@ -26,8 +26,6 @@ Process::Process(size_t bufSize, IOMode mode, ProcessType processType,
 
             // connect the input and output streams to Process
     open(d_iChildOut, d_oChildIn);
-
-//    Signal::instance().add(SIGCHLD, *this);
 }
 
 

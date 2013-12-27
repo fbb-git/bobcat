@@ -195,10 +195,10 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         void showMode(char const *lab) const;
 
     private:
-        virtual void childProcess();
-        virtual void childRedirections();
-        virtual void parentProcess();                       // .f
-        virtual void parentRedirections();
+        void childProcess() override;
+        void childRedirections() override;
+        void parentProcess() override;
+        void parentRedirections() override;
 
         void newPipe(Pipe &pipe);
         pid_t discontinue(RetPid &proc);
