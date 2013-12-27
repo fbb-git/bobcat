@@ -1,23 +1,75 @@
-#!/bin/bash
+#!/bin/sh
 
-ln -sf ../process .
-ln -sf ../process.ih .
+precompile()
+{
+    cd ..
 
+    cd ../signal
+    icmbuild
+
+    cd ../processdata
+    icmbuild
+
+    cd ../process
+    icmbuild
+
+    cd driver
+}
+
+compile()
+{
+    precompile
+
+    echo compiling $1.cc $2
+
+    g++ --std=c++11 -o $1 $2 $1.cc \
+		-L../tmp -lprocess \
+		-L../../processdata/tmp -lprocessdata \
+		-L../../signal/tmp -lsignal \
+		-lbobcat -s
+}
+    
 case $1 in
-    (b)
-        rm process process.ih
-        g++ -DBOBCAT --std=c++0x -I../../tmp -o driver driver.cc \
-	    -lbobcat -L../../tmp/lib -s
+    (pipe|gpg|sha1sum|limit|ls)
+        compile $1
     ;;
-    (o)
-        g++ --std=c++0x -o driver *.cc ../tmp/o/*.o -lbobcat -s
+
+    (sort|thread)
+        compile $1 -pthread
     ;;
-    (c)
-        g++ --std=c++0x -o driver *.cc -lbobcat -s
+
+    (clean)
+	rm -f pipe gpg sort sha1sum thread limit ls
     ;;
+
     (*)
-    echo $0 b links to bobcat built by 'build libraries all'
-    echo $0 o links to the files in ../tmp/o
-    echo $0 c links to the files in the current dir only
+    echo "
+Provide the name of the test as first argument. The executable receives the
+name of the test. The test-name plus .cc extension is the name of the test
+program source file.
+
+Available tests are:
+    pipe    - stdin is passed through 3 /bin/cat programs, and is then
+              written to stdout
+    gpg     - stdin is a PGP encrypted file, stdout is the decrypted file,
+              stderr shows the result of the signature verification
+    sort    - multi threading is used when sorting stdin to stdout, where
+              sort's output is extracted from the Process object
+    sha1sum - compute the input's sha1sum not using multi-threading
+    thread  - compute the input's sha1sum using multi-threading
+    limit   - limits process time to 3 seconds, while copying stdin to stdout
+              using /bin/cat
+    ls      - show directory contents: no input, only std output
+
+    clean   - not a test, but removes the test binaries
+"
     ;;
+
 esac
+
+
+
+
+
+
+
