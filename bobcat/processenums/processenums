@@ -16,18 +16,21 @@ struct ProcessEnums
 
     enum IOMode: size_t
     {
-        STD             = 0,        // == no piping/redirection
+        NONE                = 0,        // no piping/redirection
+        STD                 = NONE,     // for backward compatibility reasons
 
-        CIN             = 1 << 0,
-        COUT            = 1 << 1,
-        CERR            = 1 << 2,
+        CIN             	= 1 << 0,
+        COUT            	= 1 << 1,
+        CERR            	= 1 << 2,
+        ALL                 = CIN | COUT | CERR,
+                        	
+        IGNORE_COUT     	= 1 << 3,
+        IGNORE_CERR     	= 1 << 4,
+        IGNORE_COUT_CERR    = IGNORE_COUT |	 IGNORE_CERR,
 
-        IGNORE_COUT     = 1 << 3,
-        IGNORE_CERR     = 1 << 4,
-
-        MERGE_COUT_CERR = 1 << 5,
-
-        DIRECT          = 1 << 8,
+        MERGE_COUT_CERR 	= 1 << 5,
+                        	
+        DIRECT          	= 1 << 8,
     };
 
     protected:

@@ -133,8 +133,9 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         void system();              // calls /bin/sh -c cmd;            1.f
                                     //      shell redirs OK
         void system(IOMode mode);                                   //  2.f
-        void system(IOMode mode, size_t timeLimit);                 //  3.1
-
+        void system(IOMode mode, size_t timeLimit);                 //  3.f
+        void system(IOMode mode, size_t timeLimit, size_t bufSize); //  4.f
+    
 
         int operator=(std::string const &cmd);  // sets and starts a command
 
@@ -230,6 +231,7 @@ struct Process: private Fork, public IOStream, public ProcessEnums
 #include "system1.f"
 #include "system2.f"
 #include "system3.f"
+#include "system4.f"
 #include "timelimit.f"
 
 

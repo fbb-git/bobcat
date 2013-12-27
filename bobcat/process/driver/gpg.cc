@@ -9,7 +9,7 @@ using namespace FBB;
 int main()
 try
 {
-    Process gpg(Process::CIN,
+    Process gpg(Process::CIN |
     "/usr/bin/gpg --quiet --batch --decrypt");
 
     gpg.start();
