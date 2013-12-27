@@ -1,6 +1,8 @@
 #ifndef INCLUDED_BOBCAT_PROCESS_
 #define INCLUDED_BOBCAT_PROCESS_
 
+#include <iostream> // TMP
+
 #include <string>
 #include <ostream>
 #include <istream>
@@ -87,28 +89,10 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         explicit Process(std::string const &command = "");              // 1
 
         explicit Process(size_t iomode, std::string const &command = ""); //3a
-        explicit Process(IOMode mode, std::string const &command = ""); // 3
-
-                                                                        // 4
-        Process(size_t bufSize, IOMode mode, std::string const &command = "");
-
-
-        Process(size_t mode, ProcessType type,                          // 5a
+        Process(size_t mode, ProcessType type,                            //5a
                                     std::string const &command = "");
-        Process(IOMode mode, ProcessType type,                          // 5
+        Process(size_t mode, ProcessType type, size_t timeLimit,          //7a
                                     std::string const &command = "");
-
-        Process(size_t bufSize, IOMode mode, ProcessType type,          // 6
-                                    std::string const &command = "");
-
-
-        Process(size_t mode, ProcessType type, size_t timeLimit,        // 7a
-                                    std::string const &command = "");
-        Process(IOMode mode, ProcessType type, size_t timeLimit,        // 7
-                                    std::string const &command = "");
-
-        Process(size_t bufSize, IOMode mode, ProcessType type,          // 8
-                 size_t timeLimit, std::string const &command = "");
 
         Process(Process const &other) = delete;
 
@@ -195,6 +179,9 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         void showMode(char const *lab) const;
 
     private:
+        Process(size_t bufSize, IOMode mode, ProcessType type,            //8
+                 size_t timeLimit, std::string const &command = "");
+
         void childProcess() override;
         void childRedirections() override;
         void parentProcess() override;
@@ -218,8 +205,11 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         typedef std::string::const_iterator ConstIter;
         struct ExecContext;
         ExecContext analyzeCommand();
+
+        static void limiter(Process *process);
 };
 
+#include "childoutstream.f"
 #include "eoi.f"
 #include "eoi2.f"
 #include "iomode.f"

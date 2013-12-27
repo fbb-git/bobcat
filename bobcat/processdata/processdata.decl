@@ -4,6 +4,7 @@
 //#include <istream>
 //#include <ostream>
 
+#include <thread>
 #include <mutex>
 #include <condition_variable>
 
@@ -14,34 +15,19 @@
 namespace FBB
 {
 
-class ProcessData: public ProcessEnums, public SignalHandler
+struct ProcessData: private ProcessEnums, public SignalHandler
 {
-    enum ChildAction
-    {
-        PASSIVE,
-        MONITORING,
-        CHILD_ENDED
-    };
-        
-    volatile ChildAction d_action = PASSIVE;
+    std::thread d_limit;
+    volatile ChildAction d_action = CHILD_ENDED;
     std::mutex d_mutex;
     std::condition_variable d_condition;
+    size_t d_bufSize;
 
-    public:
-//        static std::istream s_in;
-//        static std::ostream s_out;
-
-        size_t d_bufSize;
-    
-
-        ProcessData(size_t bufSize);
-        ~ProcessData() override;
-
-        bool parentProcess(size_t timeLimit);
+    ProcessData(size_t bufSize);
+    ~ProcessData() override;
 
     private:
         void signalHandler(size_t signum) override;
-
 };
 
 }   // FBB

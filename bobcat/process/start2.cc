@@ -16,7 +16,9 @@ void Process::start(size_t bufferSize,
     rmBackticks();                      // rm backticks from d_command
 
     sanitizeIOMode(mode);
-
+                                        // not yet using the time limit
+                                        // thread
+    d_data->d_limit = thread(limiter, this);
     forking();
 
     setBufSize(savedBufSize);
@@ -24,3 +26,9 @@ void Process::start(size_t bufferSize,
     d_processType = d_setProcessType;       // parameters for a next run
     d_timeLimit = d_setTimeLimit;
 }
+
+
+
+
+
+
