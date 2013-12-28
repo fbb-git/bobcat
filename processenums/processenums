@@ -1,0 +1,130 @@
+#ifndef INCLUDED_BOBCAT_PROCESSENUMS_
+#define INCLUDED_BOBCAT_PROCESSENUMS_
+
+
+namespace FBB
+{
+
+struct ProcessEnums
+{
+    enum ChildOutput
+    {
+        NOTHING_AVAILABLE   = 0,
+        CHILD_COUT          = 1 << 0,
+        CHILD_CERR          = 1 << 1,
+    };
+
+    enum IOMode: size_t
+    {
+        NONE                = 0,        // no piping/redirection
+        STD                 = NONE,     // for backward compatibility reasons
+
+        CIN             	= 1 << 0,
+        COUT            	= 1 << 1,
+        CERR            	= 1 << 2,
+        ALL                 = CIN | COUT | CERR,
+                        	
+        IGNORE_COUT     	= 1 << 3,
+        IGNORE_CERR     	= 1 << 4,
+        IGNORE_COUT_CERR    = IGNORE_COUT |	 IGNORE_CERR,
+
+        MERGE_COUT_CERR 	= 1 << 5,
+                        	
+        DIRECT          	= 1 << 8,
+    };
+
+    protected:
+        static IOMode iomode(size_t mode);
+
+        enum IOModeExt
+        {
+            ALL_IOMODES     = (1 << 9) - 1,
+
+            IN_PIPE         = 1 << 10,
+            OUT_PIPE        = 1 << 11,
+
+            CLOSE_ON_EXEC   = 1 << 12,
+            PIPES_OK        = 1 << 13
+        };
+        friend IOMode operator|(IOMode lhs, IOModeExt rhs);
+        friend IOMode operator|(IOModeExt lhs, IOModeExt rhs);
+        friend IOMode &operator|=(IOMode &lhs, IOModeExt rhs);
+
+        enum ChildAction
+        {
+            TIME_LIMIT,
+            CHILD_ENDED
+        };
+};
+
+inline ProcessEnums::ChildOutput operator|(ProcessEnums::ChildOutput lhs, 
+                                      ProcessEnums::ChildOutput rhs)
+{
+    return static_cast<ProcessEnums::ChildOutput>(
+            static_cast<size_t>(lhs) | static_cast<size_t>(rhs));
+}
+
+inline bool operator&(ProcessEnums::ChildOutput lhs, 
+                                      ProcessEnums::ChildOutput rhs)
+{
+    return static_cast<size_t>(lhs) & static_cast<size_t>(rhs);
+}
+
+inline ProcessEnums::IOMode ProcessEnums::iomode(size_t mode)
+{
+    return static_cast<IOMode>(mode & ALL_IOMODES);
+}
+
+
+inline ProcessEnums::IOMode operator|(ProcessEnums::IOMode lhs, 
+                                      ProcessEnums::IOMode rhs)
+{
+    return static_cast<ProcessEnums::IOMode>(
+            static_cast<size_t>(lhs) | static_cast<size_t>(rhs));
+}
+
+
+inline ProcessEnums::IOMode operator|(ProcessEnums::IOMode lhs, 
+                                      ProcessEnums::IOModeExt rhs)
+{
+    return static_cast<ProcessEnums::IOMode>(
+            static_cast<size_t>(lhs) | static_cast<size_t>(rhs));
+}
+
+
+inline ProcessEnums::IOMode operator|(ProcessEnums::IOModeExt lhs, 
+                                      ProcessEnums::IOModeExt rhs)
+{
+    return static_cast<ProcessEnums::IOMode>(
+            static_cast<size_t>(lhs) | static_cast<size_t>(rhs));
+}
+
+inline ProcessEnums::IOMode operator&(ProcessEnums::IOMode lhs, 
+                                      ProcessEnums::IOMode rhs)
+{
+    return static_cast<ProcessEnums::IOMode>(
+            static_cast<size_t>(lhs) & static_cast<size_t>(rhs));
+}
+
+inline ProcessEnums::IOMode operator~(ProcessEnums::IOMode mode)
+{
+    return static_cast<ProcessEnums::IOMode>(~static_cast<size_t>(mode));
+}
+
+inline ProcessEnums::IOMode &operator|=(ProcessEnums::IOMode &lhs, 
+                                       ProcessEnums::IOMode rhs)
+{
+    reinterpret_cast<size_t &>(lhs) |= static_cast<size_t>(rhs);
+    return lhs;
+}
+
+inline ProcessEnums::IOMode &operator|=(ProcessEnums::IOMode &lhs, 
+                                       ProcessEnums::IOModeExt rhs)
+{
+    reinterpret_cast<size_t &>(lhs) |= static_cast<size_t>(rhs);
+    return lhs;
+}
+
+} // FBB        
+#endif
+

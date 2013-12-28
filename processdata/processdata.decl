@@ -1,0 +1,32 @@
+#ifndef INCLUDED_PROCESSDATA_DECL_
+#define INCLUDED_PROCESSDATA_DECL_
+
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+
+#include "../signal/signal"
+
+#include "../processenums/processenums"
+
+namespace FBB
+{
+
+struct ProcessData: private ProcessEnums, public SignalHandler
+{
+    std::thread d_limit;
+    volatile ChildAction d_action = CHILD_ENDED;
+    std::mutex d_mutex;
+    std::condition_variable d_condition;
+    size_t d_bufSize;
+
+    ProcessData(size_t bufSize);
+    ~ProcessData() override;
+
+    private:
+        void signalHandler(size_t signum) override;
+};
+
+}   // FBB
+
+#endif

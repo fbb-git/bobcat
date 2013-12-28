@@ -1,12 +1,6 @@
 #include "process.ih"
 
-Process::Process(iomode mode, std::string const &command)
+Process::Process(size_t mode, std::string const &command)
 :
-    d_command(command),
-
-    d_oChildIn(0),
-    d_iChildOut(0),
-    d_iChildErr(0)
-{
-    initialize(0, mode, NO_PATH);
-}
+    Process(iomode(mode), NO_PATH, 0, 200, command)
+{}

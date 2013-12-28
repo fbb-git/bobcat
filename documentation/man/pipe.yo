@@ -2,19 +2,37 @@ includefile(include/header)
 
 COMMENT(manpage, section, releasedate, archive, short name)
 manpage(FBB::Pipe)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
-                    (Error handler)
+                    (System Level Communication Pipe)
 
-manpagename(FBB::Pipe)(Defines a system level pipe)
+manpagename(FBB::Pipe)(Defines a system level communication pipe)
 
 manpagesynopsis()
     bf(#include <bobcat/pipe>)nl()
     Linking option: tt(-lbobcat) 
 
 manpagedescription()
-    bf(FBB::Pipe) objects may be used to construct a em(pipe). bf(FBB::Pipe)
+    bf(FBB::Pipe) objects may be used to construct a em(pipe). tt(Pipe)
 objects offer a simple interface to the reading and writing ends of
-pipes. bf(FBB::Pipe) objects are object-wrappers around the bf(pipe)(2) system
-call.
+pipes. tt(Pipe) objects are object-wrappers around the bf(pipe)(2) system
+call. 
+
+    A tt(Pipe) which is created just before a program forks can be used to set
+up a line of communication between the parent and child process. Information
+which is written by the child process to its standard output stream can be
+redirected to the writing end of the pipe (using the tt(writtenBy)
+member). The information appearing at the reading end of the pipe can then be
+extracted using, e.g., an tt(IFdStream) object, initialized with the
+tt(Pipe)'s reading file descriptor, or the reading end of the pipe can be
+redirected to an existing stream whose file descriptor is known, like tt(cin)
+(which uses the tt(STDIN_FILENO) file descriptor).
+
+    When a tt(Pipe) object goes out of scope, no bf(close)(2) operation is
+performed on the pipe's file descriptors. After setting up the pipe using the
+tt(Pipe's) member functions and passing the tt(Pipe's) file descriptors to
+code that uses the tt(Pipe's) descriptors, the tt(Pipe) object could in fact
+safely be destroyed. If the pipe should be closed at destruction time, a class
+could be derived from bf(Pipe)(3bobcat), whose destructor performs the
+required closing-operation.
 
 includefile(include/namespace)
 
@@ -24,10 +42,10 @@ manpagesection(INHERITS FROM)
 manpagesection(CONSTRUCTORS)
     itemization(
     itb(Pipe())
-        The default bf(Pipe()) constructor constructs a basic pipe, calling
+        The default tt(Pipe) constructor constructs a basic pipe, calling
 bf(pipe)(2). 
 
-        This constructor throws an tt(Exception) exception if the default bf(Pipe)
+    This constructor throws an tt(Exception) exception if the default tt(Pipe)
 constructor did not properly complete.  The thrown bf(Exception) object's
 tt(which()) member shows the system's tt(errno) value set by the failing
 bf(pipe)(2) function.
@@ -39,38 +57,54 @@ the array at by tt(fd) is no longer used by the tt(Pipe) object.
     )
         The copy constructor is available.
 
-    Note that when the pipe goes out of scope, no bf(close)(2) operation is
-performed on the pipe's ends. If the pipe should be closed by the desctructor,
-derive a class from bf(Pipe)(3bobcat), whose destructor performs the required
-closing-operation.
-
 manpagesection(MEMBER FUNCTIONS)
+
     itemization(
     itb(int readFd() const)
         Returns the pipe's file descriptor that is used for reading
+
     itb(void readFrom(int filedescriptor))
         Sets up redirection from the internal em(read) filedescriptor to the
-given filedescriptor: information is read from the bf(FBB::Pipe) object when
-reading from the provided filedescriptor.
+given filedescriptor: information written to the write-end of the pipe may be
+retrieved by extracting the information from the stream that is associated
+with the indicated file descriptor. E.g., after the call
+tt(readFrom(STDIN_FILENO)) information  inserted into the
+write-end of the pipe can be retrieved from tt(cin).
+
     itb(void readFrom(int const *filedescriptors, size_t n))
         Sets up redirection from the internal em(read) filedescriptor to the
-given filedescriptors: information is read from the bf(FBB::Pipe) object when
+given filedescriptors: information is read from the tt(Pipe) object when
 reading from any of the bf(n) provided filedescriptors (experimental).
+
     itb(int readOnly())
         Closes the writing end of the pipe, returns the reading end's file
-descriptor. 
+descriptor. This member can be used, e.g., to construct an tt(IFdStream)
+object to extract the information that is inserted into the write-end of the
+pipe. 
+
     itb(void verify() const)
-        Obsoleted, will be removed in a future Bobcat release.
+        Obsoleted, can safely be removed from source files.
+
     itb(int writeFd() const)
-        Returns the pipe's file descriptor that is used for writing
+        Returns the pipe's file descriptor that is used for writing.
+
     itb(void writtenBy(int filedescriptor))
         Sets up redirection from the internal em(write) filedescriptor to the
-given filedescriptor: information is  written to the bf(FBB::Pipe) object when
-writing to the provided filedescriptor.
+given filedescriptor: information is  written to the tt(Pipe) object when
+writing to the provided filedescriptor. E.g., after the call
+tt(writtenBy(STDOUT_FILENO)) information sent to the standard output stream (by
+either tt(cout) or by a child process (cf. bf(exec)(3))) is inserted into the
+write-end of the pipe.
+
     itb(void writtenBy(int const *filedescriptors, size_t n))
         Sets up redirection from the internal em(write) filedescriptor to the
-given filedescriptors: information is written to the bf(FBB::Pipe) object
-when writing to each of the bf(n) provided filedescriptors.
+given filedescriptors: information is inserted into the write-end of the
+tt(Pipe) object when writing to each of the bf(n) provided filedescriptors.
+E.g., when passing an array of two tt(int) values, respectively equal to
+tt(STDOUT_FILENO) and tt(STDERR_FILENO) to this member, all information which
+is thereafter sent to the standard output or error streams is inserted into
+the write-end of the pipe.
+
     itb(int writeOnly())
         Closes the reading end of the pipe, returns the writing end's file
 descriptor. 
@@ -78,10 +112,12 @@ descriptor.
 
 manpagesection(PROTECTED ENUMERATION)
     The bf(RW) protected enumeration has the following elements:
+
     itemization(
     itb(READ)
         The index in bf(d_fd[]) (see below) of the element holding the pipe's
 reading file descriptor;
+
     itb(WRITE)
         The index in bf(d_fd[]) (see below) of the element holding the pipe's
 writing file descriptor

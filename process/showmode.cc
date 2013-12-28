@@ -4,8 +4,8 @@ void Process::showMode(char const *lab) const
 {
     std::cerr << lab << ' ' << getpid() << ' ' << d_child.pid << " IOMode: ";
 
-    if (d_mode & STD)
-        std::cerr << "STD ";
+    if (d_mode == NONE)
+        std::cerr << "NONE ";
     if (d_mode & CIN)
         std::cerr << "CIN ";
     if (d_mode & COUT)
@@ -30,4 +30,12 @@ void Process::showMode(char const *lab) const
 
     std::cerr << '\n';
 }
+
+
+
+
+
+
+
+
 

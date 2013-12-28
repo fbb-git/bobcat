@@ -22,6 +22,11 @@ class Signal
     typedef std::vector<SignalHandler *> SignalHandlerVector;
     std::vector<SignalHandlerVector> d_signals;
 
+    // d_signals is a vector of vectors of pointers to SignalHandlers
+    // the row dimension refers to the signal number
+    // each row holds a SignalHandler object handling that kind of signal
+
+
     static Signal *s_signal;
 
     public:
@@ -31,6 +36,8 @@ class Signal
         Signal &operator=(Signal const &) = delete;
 
         void add(size_t signum, SignalHandler &object);
+        void remove(size_t signum, SignalHandler &object);
+
         void ignore(size_t signum);
         void reset(size_t signum);
 
