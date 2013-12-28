@@ -1,6 +1,8 @@
 #include <iostream>
+
+#include "../../processenums/processenums"
+#include "../../processdata/processdata.decl"
 #include "../process"
-//#include <bobcat/process>
 
 using namespace std;
 using namespace FBB;

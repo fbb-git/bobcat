@@ -3,6 +3,8 @@
 
 #include <unistd.h>
 
+#include "../../processenums/processenums"
+#include "../../processdata/processdata.decl"
 #include "../process"
 
 using namespace FBB;

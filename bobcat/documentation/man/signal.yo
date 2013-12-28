@@ -107,7 +107,10 @@ program's single tt(Signal) object:
         tt(SignalHandler::signalHandler) members are called in the same
         sequence as their respective tt(Signal::add) calls. If one of the
         earlier tt(signalHandler) members terminates the program then later
-        tt(signalHandler) members are not activated anymore.
+        tt(signalHandler) members are not activated anymore. If
+        tt(Signal::add) is called by, e.g., an object's constructor, then its
+        destructor should call tt(Signal::remove) to prevent the object's
+        signal handler from being called after its destruction.
     itb(void remove(size_t signum, SignalHandler &object))nl() 
        tt(SignalHandler object) for signal tt(signum) is removed from the
         tt(Signal) object. It is the responsibility of tt(object) to

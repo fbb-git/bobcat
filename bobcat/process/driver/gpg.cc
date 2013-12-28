@@ -1,4 +1,5 @@
-    //#include <bobcat/process>
+#include "../../processenums/processenums"
+#include "../../processdata/processdata.decl"
 #include "../process"
 
 #include <iostream>
