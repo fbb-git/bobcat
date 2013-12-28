@@ -24,7 +24,9 @@ Process &operator|(Process &lhs, Process &rhs)
     )
         lhs.d_setMode |= Process::CLOSE_ON_EXEC;
 
-    lhs.d_setMode |= Process::OUT_PIPE; // This is the output end of the pipe
+                                        // This is the output end of the pipe
+    lhs.d_setMode |= Process::PIPES_OK | Process::OUT_PIPE; 
+    rhs.d_setMode |= Process::PIPES_OK;
 
     lhs.start();                        // forking() does the real work
 
@@ -49,7 +51,7 @@ Process &operator|(Process &lhs, Process &rhs)
     }
 
                                         // this is the input end of the pipe
-    rhs.d_setMode |= Process::IN_PIPE | Process::CIN;
+    rhs.d_setMode |= Process::CIN | Process::IN_PIPE;
     rhs.d_mode |= Process::CIN;
 
     return rhs;                         // to start do, e.g., (p1|p2).start()
