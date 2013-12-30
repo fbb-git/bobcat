@@ -78,9 +78,8 @@ struct Process: private Fork, public IOStream, public ProcessEnums
         char d_notUsed[sizeof(RetPid) - sizeof(ProcessData *)];
 
 #ifdef BOBCAT_DIY_CLOEXEC_
-        int d_closedByChild;    // DIY CLOSE_ON_EXEC
+        int d_closedByChild = 0;        // DIY CLOSE_ON_EXEC
 #endif
-
 
     public:
         explicit Process(std::string const &command = "");              // 1

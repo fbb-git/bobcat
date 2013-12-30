@@ -18,10 +18,6 @@ Process::Process(IOMode mode, ProcessType processType,
 
     d_data(new ProcessData(bufSize))
 {
-#ifdef BOBCAT_DIY_CLOEXEC_
-    d_data->d_closedByChild = 0;
-#endif
-
     d_setMode = sanitizeIOMode(mode);
 
             // connect the input and output streams to Process
