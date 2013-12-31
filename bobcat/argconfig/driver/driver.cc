@@ -1,9 +1,11 @@
 #include <iostream>
 #include <string>
 
-#include "argconfig"
+#include "../argconfig"
 
-#include <bobcat/errno>
+#include <bobcat/exception>
+#include <bobcat/ranger>
+#include <bobcat/pattern>
 
 using namespace std;
 using namespace FBB;
@@ -34,12 +36,13 @@ X::X()
 void X::function()
 {
     if (d_arg.nArgs() == 0)
-        throw Errno("Provide the name of a config file as 1st arg");
+        throw Exception() << "Provide the name of a config file as 1st arg";
 
     cout << "Counting " << d_arg.option('o') << " instances of -o or "
-                                                            "--option\n";
-
-    cerr << "\n"
+                                                        "--option\n"
+            "Counting " << d_arg.option('v') << " instances of -v or "
+                                                        "--option-value\n"
+            "\n"
             "Now opening config file `" << d_arg[0] << "'\n";
 
     d_arg.open(d_arg[0]);       // Now open the config file explicitly
@@ -58,7 +61,18 @@ void X::function()
 
     cout << "\n"
             "Counting " << count << " instances of -v or --option-value\n"
-            "The first one having value `" << optval << "'\n";
+            "The first one having value `" << optval << "'\n"
+            "Here are all their values:\n";
+
+    auto iters = d_arg.beginEndRE("option-value");
+    Pattern pattern( R"(^option-value:?\s+(.*)\s*$)" );
+
+    for (auto &line: ranger(iters.first, iters.second))
+    {
+        cout << line << "\n";
+        if (pattern << line)
+            cout << "Tail: " << pattern[1] << '\n';
+    }        
 }
 
 int main(int argc, char **argv)
@@ -75,13 +89,11 @@ try
     X x;
     x.function();
 }
-catch (Errno const &err)
+catch (exception const &err)
 {
-    cout << "Terminating " << err.why() << endl;
+    cout << "Terminating " << err.what() << endl;
     return 1;
 }
-
-
 
 
 
