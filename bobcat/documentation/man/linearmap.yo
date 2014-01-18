@@ -1,0 +1,239 @@
+includefile(include/header)
+
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::LinearMap)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+                    (Linear-search using mapping container)
+
+manpagename(FBB::LinearMap)(A mapping container using a inear searching)
+
+manpagesynopsis()
+    bf(#include <bobcat/linearmap>)nl()
+
+
+manpagedescription()
+    The class template bf(LinearMap) implements a mapping container using a
+linear searching algorithm. A mapping container using linear searching is less
+complex than either the sorted tt(std::map) or the unsorted
+tt(std::unordered_map) container. For relative small number of elements the
+linear search algorithm is also faster than the binary search or hashing-based
+searching algorithms.
+
+    bf(LinearMap) implements all of the members which are also found in the
+standard tt(std::map), except for the tt(key_comp) and tt(value_comp)
+members. These latter two members are not available as ordering the keys is
+not an issue with the unordered, linear searching method which is used by
+bf(LinearMap). 
+
+includefile(include/namespace)
+
+manpagesection(INHERITS (PRIVATELY) FROM)
+    tt(std::vector<Key, Value, Allocator>)
+
+manpagesection(TEMPLATE TYPES)
+    The full template type definition of bf(LinearMap) is:
+        verb(
+    template <
+        typename Key, typename Value, 
+        typename Alloc = std::allocator< std::pair<Key const, Value> >
+    >
+        )
+    The tt(Key) type must offer tt(bool operator==). Furthermore, tt(Key) and
+tt(Value) types must support default and copy constructors and overloaded
+(copy) assignment operators.
+
+manpagesection(TYPEDEFS)
+    itemization(
+    itt(typedef std::pair<Key, Value>           value_type);
+    itt(iterator) - an iterator to a bf(LinearMap) object's elements;
+    itt(const_iterator)  - a tt(const_iterator) to a bf(LinearMap) object's
+     elements; 
+    itt(reverse_iterator) - a tt(reverse_iterator) to a bf(LinearMap) object's
+     elements;
+    itt(const_reverse_iterator) - a tt(const_reverse_iterator) to a
+     bf(LinearMap) object's elements.
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(LinearMap(Iterator begin, Iterator end))
+    The constructor is initialized using the iterator range rangett(begin,
+     end), where tt(Iterator) is any iterator type pointing to tt(value_type)
+     objects. If identical keys tt(K) are used then only the first occurrence
+     of the tt(value_type) object using key tt(K) is inserted.
+    )
+    Default and copy constructors are available.
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(Value &operator[](Key const &key))
+        A reference to the tt(Value) associated with tt(key) is returned. If
+tt(key) was not available prior to the call of the index operator a
+tt(value_map(key, Value()) object is inserted.
+    )
+    The copy assignment operator is available.
+
+manpagesection(MEMBER FUNCTIONS)
+     Note that the members of tt(std::vector) are not automatically available,
+as bf(LinearMap) is privately inherited from tt(std::vector).
+
+bf(LinearMap) offers the following member functions:
+    itemization(
+    itb(Value &at(int idx)) 
+    returns a reference to the bf(LinearMap)'s tt(Value) that is associated
+     with tt(key). If the tt(key) is not stored in the bf(LinearMap) then an
+     bf(std::out_of_range) exception is thrown.
+
+    itb(iterator begin()) 
+    returns an iterator pointing to the bf(LinearMap)'s first element.
+
+    itb(size_t capacity())
+    returns the number of elements that can be stored in the bf(LinearMap)
+     before its capacity is enlarged.
+
+    itb(const_iterator cbegin() const) 
+    returns a tt(const_iterator) pointing to the bf(LinearMap)'s first
+     element.
+
+    itb(const_iterator cend() const) 
+    returns a tt(const_iterator) pointing beyond the bf(LinearMap)'s last
+     element.
+
+    itb(void clear())
+    erases all elements from the bf(LinearMap).
+
+    itb(size_t count(key)) 
+    returns 1 if the provided key is available in the bf(LinearMap), otherwise
+     0 is returned.
+
+    itb(const_reverse_iterator crbegin() const)
+    returns a tt(const_reverse_iterator) pointing to a bf(LinearMap) object's
+     last element.
+
+    itb(const_reverse_iterator crend() const)
+    returns a tt(const_reverse_iterator) pointing before a bf(LinearMap)
+     object's first element.
+
+    itb(std::pair<iterator, bool> emplace(Args &&...args))
+    a tt(value_type) object is constructed from tt(emplace)'s arguments. A
+     tt(std::pair) is returned containing an iterator pointing to the object
+     using that key. If the bf(LinearMap) already contains an object having
+     the provided tt(Key) value then the returned tt(std::pair's bool) value
+     is tt(false).  If the provided tt(key) was not found, then the newly
+     constructed object is inserted into the bf(LinearMap), and the returned
+     tt(std::pair's bool) value is tt(true).
+
+    itb(bool empty())
+    returns tt(true) if the bf(LinearMap) contains no elements.
+
+    itb(iterator end())
+    returns an iterator pointing beyond the bf(LinearMap)'s last element.
+
+    itb(std::pair<iterator, iterator> equal_range(key))
+    returns a pair of iterators, being respectively the return values of the
+     member functions tt(lower_bound) and tt(upper_bound).
+
+    itb(bool erase(Key const &key)) 
+    erases the element having the given tt(key) from the
+     bf(LinearMap). tt(True) is returned if the value was removed, tt(false)
+     if the bf(LinearMap) did not contain an element using the given tt(key).
+
+    itb(void erase(iterator pos)) 
+    erases the element at iterator position tt(pos).
+
+    itb(void erase(iterator begin, iterator end)) 
+    erases all elements indicated by the iterator range rangett(first,
+     beyond). 
+
+    itb(iterator find(Key const &key))
+    returns an iterator to the element having the given key. If the element
+     isn't available, tt(end) is returned.
+
+    itb(const_iterator find(Key const &key) const)
+    returns a tt(const_iterator) to the element having the given key. If the
+     element isn't available, tt(end) is returned.
+
+    itb(allocator_type get_allocator() const)
+    returns a copy of the allocator object used by the tt(bf(LinearMap))
+     object.
+
+    itb(std::pair<iterator, bool> insert(value_type const &keyValue)) 
+    tries to inserts a new tt(value_type) object into the bf(LinearMap),
+     returning a tt(std::pair<iterator, bool>).  If the returned ti(bool)
+     field is tt(true), tt(keyValue) was inserted into the bf(LinearMap). The
+     value tt(false) indicates that the specified key was already available,
+     and tt(keyvalue) was not inserted into the bf(LinearMap).  In both
+     cases the tt(iterator) field points to the data element having the
+     specified tt(key).
+
+    itb(iterator insert(iterator pos, value_type const &keyValue))
+    tries to insert tt(keyValue) into the bf(LinearMap). tt(Pos) is ignored,
+     and an iterator to the  element having tt(keyValue)'s key value is
+     returned. If the specified key was already present, tt(keyValue) is not
+     inserted into the bf(LinearMap).
+
+    itb(void insert(Iterator begin, Iterator end))
+    tries to insert the tt(value_type) elements pointed at by the iterator
+     range rangett(begin, end) objects) into the bf(LinearMap).  tt(Iterator)
+     is any iterator type pointing to tt(value_type) objects. Already existing
+     tt(value_type) elements having keys equal to the keys of the elements
+     pointed at by the iterator range are not replaced.
+
+    itb(iterator lower_bound(Key const &key))
+    returns an iterator pointing to the tt(keyvalue) element having the
+     specified tt(key). If no such element exists, tt(end) is returned.
+
+    itb(const_iterator lower_bound(Key const &key) const)
+    returns a tt(const_iterator) pointing to the tt(keyvalue) element having
+     the specified tt(key). If no such element exists, tt(end) is returned.
+
+    itb(size_t max_size() const)
+    returns the maximum number of elements this tt(bf(LinearMap)) may
+     contain.
+
+    itb(reverse_iterator rbegin())
+    returns a tt(reverse_iterator) pointing to the bf(LinearMap) object's last
+     element.
+
+    itb(const_reverse_iterator rbegin() const)
+    returns a tt(const_reverse_iterator) pointing to the bf(LinearMap)
+     object's last element.
+
+    itb(reverse_iterator rend())
+    returns a tt(reverse_iterator) pointing before the bf(LinearMap) object's
+     first element.
+
+    itb(const_reverse_iterator rbegin() const)
+    returns a tt(const_reverse_iterator) pointing before the bf(LinearMap)
+     object's first element.
+
+
+    itb(size_t size() const)
+    returns the number of elements in the bf(LinearMap).
+
+    itb(void swap(LinearMap &other))
+    swaps two bf(LinearMap)s using identical tt(Key, Value) and tt(Alloc)
+     types.
+
+    itb(iterator upper_bound(Key const &key))
+    returns an iterator pointing to the tt(keyvalue) element having the
+     specified tt(key). If no such element exists, tt(end) is returned.
+
+    itb(const_iterator upper_bound(Key const &key) const)
+    returns a tt(const_iterator) pointing to the tt(keyvalue) element having
+     the specified tt(key). If no such element exists, tt(end) is returned.
+    )
+
+manpagesection(EXAMPLE)
+    verbinsert(CODE)(../../linearmap/driver.cc)
+
+manpagefiles()
+    em(bobcat/linearmap) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
