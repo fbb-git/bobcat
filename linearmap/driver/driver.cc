@@ -16,8 +16,14 @@ int main()
     // constructors:
     LM lm;
     LM lm2(lm);
+    LM lm3 = 
+    {
+        {"one", "value 1"},
+        {"two", "value 2"}
+    };
+        
     LM lm4(lm.begin(), lm.end());
-
+    
     // assignment:
     lm = lm2;
 
