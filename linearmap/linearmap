@@ -1,0 +1,115 @@
+#ifndef INCLUDED_BOBCAT_LINEARMAP_
+#define INCLUDED_BOBCAT_LINEARMAP_
+
+#include <vector>
+#include <algorithm>
+#include <stdexcept>
+
+namespace FBB
+{
+
+template <
+    typename Key, typename Value, 
+    typename Alloc = std::allocator< std::pair<Key const, Value> >
+>
+class LinearMap: private std::vector<std::pair<Key, Value>, Alloc>
+{
+        typedef std::vector<std::pair<Key, Value>, Alloc>   Base;
+        typedef LinearMap<Key, Value, Alloc>                LinMap;
+        typedef std::pair<
+            typename LinearMap<Key, Value, Alloc>::const_iterator,
+            typename LinearMap<Key, Value, Alloc>::const_iterator
+        >                                                   ConstIterPair;
+        typedef std::pair<
+            typename LinearMap<Key, Value, Alloc>::iterator,
+            typename LinearMap<Key, Value, Alloc>::iterator
+        >                                                   IterPair;
+
+    public:
+        typedef std::pair<Key, Value>           value_type;
+        typedef typename Base::iterator         iterator;
+        typedef typename Base::const_iterator   const_iterator;
+        typedef typename Base::reverse_iterator       reverse_iterator;
+        typedef typename Base::const_reverse_iterator const_reverse_iterator;
+
+        LinearMap()                     = default;
+        LinearMap(LinMap const &other)  = default;
+
+        template <typename Iterator>
+        LinearMap(Iterator begin, Iterator end);
+
+        LinMap &operator=(LinMap const &other)  = default;
+
+        Value &operator[](Key const &key);
+
+        Value &at(Key const &key);
+
+        using Base::begin;
+        using Base::capacity;
+        using Base::cbegin;
+        using Base::cend;
+        using Base::clear;
+
+        size_t count(Key const &key) const;
+
+        using Base::crbegin;
+        using Base::crend;
+
+        using Base::emplace;
+        using Base::empty;
+        using Base::end;
+
+        IterPair        equal_range(Key const &key);
+        ConstIterPair   equal_range(Key const &key) const;
+
+        bool erase(Key const &key);
+        void erase(iterator iter);
+        void erase(iterator begin, iterator end);
+
+        iterator find(Key const &key);
+        const_iterator find(Key const &key) const;
+
+        using Base::get_allocator;
+
+        std::pair<iterator, bool> insert(value_type const &keyvalue);
+        iterator insert(iterator pos, value_type const &keyValue);
+        template <typename Iterator>
+        void insert(Iterator begin, Iterator end);
+
+        iterator lower_bound(Key const &key);
+        const_iterator lower_bound(Key const &key) const;
+
+        using Base::max_size;
+        using Base::rbegin;
+        using Base::rend;
+        using Base::reserve;
+        using Base::size;
+        using Base::swap;
+
+        iterator upper_bound(Key const &key);
+        const_iterator upper_bound(Key const &key) const;
+
+    private:
+        value_type *findPtr(Key const &key) const;
+};
+
+#include "count.f"
+#include "equalrange1.f"
+#include "erase1.f"
+#include "erase2.f"
+#include "erase3.f"
+#include "find1.f"
+#include "find2.f"
+#include "findptr.f"
+#include "insert1.f"
+#include "insert2.f"
+#include "insert3.f"
+#include "linearmap1.f"
+#include "lowerbound1.f"
+#include "lowerbound2.f"
+#include "operatorindex.f"
+#include "upperbound1.f"
+#include "upperbound2.f"
+
+} // FBB        
+#endif
