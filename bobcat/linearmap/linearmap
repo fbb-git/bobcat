@@ -57,12 +57,16 @@ class LinearMap: private std::vector<std::pair<Key, Value>, Alloc>
         IterPair        equal_range(Key const &key);
         ConstIterPair   equal_range(Key const &key) const;
 
-        using Base::erase;
+        bool erase(Key const &key);
+        void erase(iterator iter);
+        void erase(iterator begin, iterator end);
 
         iterator find(Key const &key);
         const_iterator find(Key const &key) const;
 
         using Base::get_allocator;
+
+        std::pair<iterator, bool> insert(value_type const keyvalue);
         using Base::insert;
 
         iterator lower_bound(Key const &key);
@@ -84,9 +88,13 @@ class LinearMap: private std::vector<std::pair<Key, Value>, Alloc>
 
 #include "count.f"
 #include "equalrange1.f"
+#include "erase1.f"
+#include "erase2.f"
+#include "erase3.f"
 #include "find1.f"
 #include "find2.f"
 #include "findptr.f"
+#include "insert.f"
 #include "linearmap1.f"
 #include "lowerbound1.f"
 #include "lowerbound2.f"
