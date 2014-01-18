@@ -1,26 +1,15 @@
 #!/bin/bash
 
-ln -sf ../argconfig .
-ln -sf ../argconfig.ih .
-
 case $1 in
     (b)
         g++ --std=c++0x -o driver *.cc -lbobcat -s
     ;;
-    (o)
-        g++ --std=c++0x -o driver *.cc -L../../tmp -largconfig -lbobcat -s
-    ;;
-    (l)
-        g++ --std=c++0x --static -I../../tmp -o driver *.cc \
-                                        -L../../tmp/lib  -lbobcat -s
-    ;;
-    (c)
-        g++ --std=c++0x -o driver *.cc -lbobcat -s
+    (a)
+        g++ --std=c++0x -o driver *.cc -L../tmp -largconfig -lbobcat -s
     ;;
     (*)
+    echo $0 a links to the files in the current dir, ../tmp/libargconfig
+    echo and bobcat
     echo $0 b links to the installed bobcat library
-    echo $0 c links to the files in the current dir only
-    echo $0 l links to the library in ../../tmp/lib
-    echo $0 o links to the files in ../../tmp/o
     ;;
 esac

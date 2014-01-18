@@ -11,7 +11,7 @@ size_t ArgConfig::option(string *value, char const *longOption)
 
     ret = iterators.second - iterators.first;
     if (value && ret != 0)
-        *value = findKeyTail(longOption, 1);
+        *value = findKeyTail(string(longOption) + ":?", 1);
 
     return ret;
 }
