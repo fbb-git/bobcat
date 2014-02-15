@@ -33,7 +33,8 @@ int main()
     cout << lm.find("key")->second << '\n';
 
     for (auto value: lm)
-        cout << "For loop: " << value.first << ", " << value.second << '\n';
+        cout << "For loop: " << value.first << ", " << 
+                                                value.second << '\n';
 
     cerr << "# times 'key' is stored: " << lm.count("key") << "\n"
             "# times 'value is stored: " << lm.count("value") << '\n';
@@ -43,6 +44,7 @@ int main()
     lm4.clear();
     cout << "lm4's size = " << lm4.size() << '\n';
 };
+//=
 
 
 
