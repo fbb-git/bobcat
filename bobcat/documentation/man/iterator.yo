@@ -1,4 +1,4 @@
-NOUSERMACRO(Iterator)
+NOUSERMACRO(Iterator ReverseIterator last max min)
 includefile(include/header)
 
 COMMENT(manpage, section, releasedate, archive, short name)
@@ -28,11 +28,36 @@ manpagesection(INHERITS FROM)
     tt(std::iterator<std::bidirectional_iterator_tag, ...>)
 
 manpagesection(CONSTRUCTORS)
+
+    Constructors for bf(Iterator<Type>):
     itemization(
     itb(explicit Iterator(Tye const &value))
+       This constructor initializes the bf(Iterator) object with an initial
+        tt(Type) value. When dereferencing this iterator, tt(value) is
+        returned. 
+    )
+        
+The default implementations of the bf(Iterator<Type>)'s default, copy, and
+move constructors are available.
 
-    The default implementations of the default, copy, and move constructors
-    are available. 
+    Constructors for bf(ReverseIterator<Type>):
+    itemization(
+    itb(explicit ReverseIterator(Type const &value))
+       This constructor initializes the bf(ReverseIterator) object with an
+        initial tt(Type) value. When dereferencing this iterator immediately
+        following its construction, the decremented tt(value) is returned
+        (without modifying the internally stored tt(Type value));
+
+    itb(explicit ReverseIterator(Iterator<Type> const &iter))
+       This constructor initializes the bf(ReverseIterator) object with an
+        initial tt(Iterator<Type>) object. When dereferencing this iterator
+        immediately following its construction, the decremented bf(Iterator)'s
+        tt(value) is returned (without modifying the tt(Type
+        value) that is stored inside the bf(Iterator)).
+    )
+        
+The default implementations of the bf(ReverseIterator<Type>)'s default, copy,
+and move constructors are available.
 
 
 manpagesection(MEMBER FUNCTIONS)
@@ -40,8 +65,70 @@ manpagesection(MEMBER FUNCTIONS)
 tt(std::iterator<std:::reverse_iterator_tag, Type>) are available, as
 bf(FBB::Iterator) and bf(FBB::ReverseIterator) inherit from this class.
 
+    itemization(
+    itb(Iterator<Type> &operator++())
+       The (prefix) increment operator increments the iterator's value and
+        returns a reference to itself;
+
+    itb(Iterator<Type> &operator++(int))
+       The (postfix) increment operator increments the iterator's value and
+        returns a copy of itself, initialized with the iterator's value before
+        it was incremented;
+
+    itb(Iterator<Type> &operator--())
+       The (prefix) decrement operator decrements the iterator's value and
+        returns a reference to itself;
+
+    itb(Iterator<Type> &operator--(int))
+       The (postfix) decrement operator decrements the iterator's value and
+        returns a copy of itself, initialized with the iterator's value before
+        it was decremented;
+
+    itb(bool operator==(Iterator<Type> const &rhs) const)
+       This operator returns tt(true) if the value of the current bf(Iterator)
+        object is equal to the value of the tt(rhs) bf(Iterator) object;
+
+    itb(bool operator!=(Iterator<Type> const &rhs) const)
+       This operator returns tt(true) if the value of the current bf(Iterator)
+        object is not equal to the value of the tt(rhs) bf(Iterator) object;
+
+    itb(Type &operator*())
+       The derefence operator returns a reference to the bf(Iterator)'s value.
+
+    itb(Type const &operator*() const)
+       This derefence operator returns a reference to the bf(Iterator)'s
+        immutable value.
+    )
+
+manpagesection(STATIC MEMBER FUNCTIONS)
+        
+    Static members of bf(Iterator<Type>):
+    itemization(
+    itb(Iterator<Type> last(Type value))
+       An bf(Iterator<Type>) object is returned initialized with tt(++value),
+        so it can be conveniently be used to create an inclusive iterator
+        range (see also section bf(EXAMPLE));
+
+    itb(Iterator<Type> max())
+       An bf(Iterator<Type>) object is returned initialized with the value
+        returned by tt(std::numeric_limits<Type>::max());
+
+    itb(Iterator<Type> min())
+       An bf(Iterator<Type>) object is returned initialized with the value
+        returned by tt(std::numeric_limits<Type>::min()) 
+    )
+        
+    Static member of bf(ReverseIterator<Type>):
+    itemization(
+    itb(ReverseIterator<Type> last(Type const &value))
+       A bf(ReverseIterator<Type>) object is returned initialized with
+        bf(Iterator<Type>::last(value)), so it can be conveniently be used to
+        create an inclusive reverse iterator range (see also section
+        bf(EXAMPLE));
+    )
+
 manpagesection(EXAMPLE)
-    verbinclude(../../iterator/driver/driver.cc)
+    verbinsert(CODE)(../../iterator/driver/driver.cc)
 
 manpagefiles()
     em(bobcat/iterator) - defines the class interface

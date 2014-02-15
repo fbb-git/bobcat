@@ -8,11 +8,15 @@ namespace FBB
 {
 
 template <typename Type>
+struct ReverseIterator;
+
+template <typename Type>
 class Iterator: public std::iterator<std::bidirectional_iterator_tag, Type>
 {
     Type d_value;
 
     public:
+        Iterator() = default;
         explicit Iterator(Type const &value);
     
         Iterator<Type> &operator++();
@@ -20,13 +24,13 @@ class Iterator: public std::iterator<std::bidirectional_iterator_tag, Type>
         Iterator<Type> &operator--();
         Iterator<Type> operator--(int);
     
-        bool operator==(Iterator const &other) const;
-        bool operator!=(Iterator const &other) const;
+        bool operator==(Iterator<Type> const &other) const;
+        bool operator!=(Iterator<Type> const &other) const;
 
-                                            // internal value is required
-        Type const &operator*() const;
         Type &operator*();
+        Type const &operator*() const;
 
+        static Iterator<Type> last(Type value);
         static Iterator<Type> min();
         static Iterator<Type> max();
 };
@@ -35,11 +39,14 @@ template <typename Type>
 struct ReverseIterator: public std::reverse_iterator<Iterator<Type>>
 {
     explicit ReverseIterator(Type const &value);
-    explicit ReverseIterator(Iterator<Type> const &vi);
+    explicit ReverseIterator(Iterator<Type> const &iter);
+
+    static ReverseIterator<Type> last(Type const &value);
 };
 
 
 #include "iterator1.f"
+#include "last.f"
 #include "max.f"
 #include "min.f"
 #include "operatordec.f"
@@ -52,6 +59,7 @@ struct ReverseIterator: public std::reverse_iterator<Iterator<Type>>
 #include "operatorunequal.f"
 #include "reverseiterator1.f"
 #include "reverseiterator2.f"
+#include "reverseiteratorlast.f"
 
 } // FBB
 
