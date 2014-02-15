@@ -61,6 +61,10 @@ void install(string rss, string dev)
     
     run("gzip -n -9 < tmp/man/man7/" LIBRARY ".7 > " +
                    dev + MAN + "/man7/" LIBRARY ".7.gz");
+
+    chdir(dev + MAN + "/man3");
+    run("ln -sf iterator.3bobcat.gz reverseiterator.3bobcat.gz");
+    chdir(g_cwd);
 #endif
 
 #ifdef MANHTML
@@ -73,6 +77,10 @@ void install(string rss, string dev)
 
     run("ln -sf " LIBRARY ".7.html " + dev + DOCDEV + "/man/index.html");
     run("cp documentation/man/" LIBRARY ".jpg " + dev + DOCDEV + "/man");
+
+    chdir(dev + DOCDEV + "/man");
+    run("ln -sf iterator.3.html reverseiterator.3.html");
+    chdir(g_cwd);
 #endif
 
 #ifdef DOCOTHER

@@ -1,0 +1,55 @@
+NOUSERMACRO(Iterator)
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Iterator)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+                    (Iterator returning plain values)
+
+manpagename(FBB::Iterator)(Iterator returning plain values when dereferenced)
+
+FBB::ReverseIterator - reverse_iterator for bf(FBB::Iterator)
+
+manpagesynopsis()
+    bf(#include <bobcat/iterator>)nl()
+
+manpagedescription()
+
+The bf(FBB::Iterator<Type>) class template implements a bidirectional iterator
+for plain data types. Dereferencing bf(FBB::Iterator) objects returns values
+of type bf(Type), e.g., tt(char) or tt(int). This iterator comes in handy in
+case you need to initialize an objects with a range of values, which are of
+some basic type (see also the bf(EXAMPLE) section.
+
+bf(FBB::ReverseIterator) implements a reverse iterator for bf(FBB::Iterator). 
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    tt(std::iterator<std::bidirectional_iterator_tag, ...>)
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(explicit Iterator(Tye const &value))
+
+    The default implementations of the default, copy, and move constructors
+    are available. 
+
+
+manpagesection(MEMBER FUNCTIONS)
+    For template parameter type tt(Type) all members of
+tt(std::iterator<std:::reverse_iterator_tag, Type>) are available, as
+bf(FBB::Iterator) and bf(FBB::ReverseIterator) inherit from this class.
+
+manpagesection(EXAMPLE)
+    verbinclude(../../iterator/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/iterator) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
