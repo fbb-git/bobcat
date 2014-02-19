@@ -1,5 +1,6 @@
 template <typename Type>
 inline Type &Iterator<Type>::operator*()
 {
-    return d_value;
+    *d_type = d_value;
+    return *d_type;
 }

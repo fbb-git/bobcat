@@ -1,3 +1,14 @@
+bobcat (3.21.02)
+
+  * Iterator needs a location to store the value returned by Type
+    &operator*(): the object returning the Type value may vanish immediately
+    after operator*'s call. Solved by providing Iterator with a shared_ptr,
+    receiving a value when operator* is called, and returning a reference to
+    the value stored in the shared_ptr.
+
+
+
+
 bobcat (3.21.01)
 
   * Oops, 3.21.00 lacked the 'iterator' header file that provides Iterator and

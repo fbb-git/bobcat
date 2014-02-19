@@ -3,17 +3,16 @@
 
 #include <iterator>
 #include <limits>
+#include <memory>
 
 namespace FBB
 {
 
 template <typename Type>
-struct ReverseIterator;
-
-template <typename Type>
 class Iterator: public std::iterator<std::bidirectional_iterator_tag, Type>
 {
     Type d_value;
+    std::shared_ptr<Type> d_type;
 
     public:
         Iterator() = default;
