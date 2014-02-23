@@ -1,0 +1,62 @@
+#ifndef INCLUDED_BOBCAT_CSV_
+#define INCLUDED_BOBCAT_CSV_
+
+#include <iosfwd>
+#include <vector>
+#include <string>
+
+namespace FBB
+{
+
+struct CSV
+{
+    enum Mode
+    {
+        EMPTY           = 0,
+        TRAILINGCOMMA   = 1,
+        LINE            = 2
+    };
+
+    private:
+        std::vector<std::string> d_field;
+        std::vector<bool>        d_available;
+        std::string              d_type;
+        Mode                     d_mode = EMPTY;
+
+    public:
+        CSV() = default;
+        explicit CSV(std::string const &spec, Mode mode = LINE);
+        
+        size_t size() const;
+        size_t count() const;
+
+    private:
+        void assign(size_t idx, std::string &element);
+
+        friend std::istream &operator>>(std::istream &in, CSV &csv);
+        std::istream &extract(std::istream &in);
+
+};
+
+inline CSV::Mode operator|(CSV::Mode lhs, CSV::Mode rhs)
+{
+    return static_cast<CSV::Mode>(lhs | rhs);
+}
+
+inline size_t CSV::size() const
+{
+    return d_type.length();
+}
+
+inline std::istream &operator>>(std::istream &in, CSV &csv)
+{
+    return csv.extract(in);
+}
+
+} // FBB        
+#endif
+
+
+
+
+

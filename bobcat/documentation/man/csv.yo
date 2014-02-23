@@ -1,0 +1,97 @@
+NOUSERMACRO(CSV)
+includefile(include/header)
+
+COMMENT(replace 'classname' by the name of the new class)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::CSV)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+                    (CSV convertor)
+
+manpagename(FBB::CSV)(Convertor for comma separated values)
+
+manpagesynopsis()
+    bf(#include <bobcat/csv>)nl()
+
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+
+Objects of the class bf(CSV) can be used to convert series of comma separated
+values to the individual separated values.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(TYPEDEFS AND ENUMS)
+
+    The bf(enum Mode) specifies how a bf(CSV) is extracted from
+tt(std::istream) objects:
+    itemization(
+    itt(TRAILINGCOMMA)  a series of comma-separated values ends at a final
+        comma, which is removed from the tt(istream) by the bf(CSV) extraction
+        operator. 
+    itt(LINE) after extracting a bf(CSV) object any remaining characters on
+        the current tt(std::istream) line are ignored (i.e., the extraction
+        operator reads full lines of input).
+    )
+    These enumeration values may be combined using the tt(bit-or) operator.
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(CSV(std::string const &specification, Mode mode = LINE))
+        The specification in tt(specification) defines the subsequent fields
+        of the comma-separated value. Specifications are 
+        quote(
+            itemization(
+            itt(S): the field is left as-is, and can be retrieved as a
+                tt(std::string). 
+            itt(I): the field represents an tt(int) value;
+            itt(D): the field represents a tt(double) value;
+            )
+        )
+        Specifications may be separated by space or tab characters, which are
+        ignored. The number of specification characters determines the number
+        of fields that are stored in a bf(CSV) object. The final field may or
+        may not be followed by a comma. Each specification may also be
+        followed by a positive integral value, indicating that number of
+        comma-separated fields of the indicated type.
+
+        By default the bf(CSV) extraction operator extracts complete lines
+        from the stream from which a bf(CSV) object is extracted.
+    )
+    The default, copy, and move constructors are available.
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(std::string const &operator[](size_t index) const)
+       The contents of the indicated field is returned as a tt(std::string)
+    )
+    The copy and move assignment operators are available.
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(Type get<Type = std::string>(size_t idx)
+       The contents of field tt(idx) is returned as a value of type tt(Type). 
+        All built-in types as well as tt(std::sting) are accepted.
+    )
+
+manpagesection(MANIPULATORS)
+    itemization(
+    itb(FBB::) 
+    )
+
+manpagesection(EXAMPLE)
+    To do
+
+manpagefiles()
+    em(bobcat/csv) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
