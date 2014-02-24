@@ -12,16 +12,21 @@ int main()
     cin >> csv;
 
     cout << 
-        "Size: " << csv.size() << ". "         // number of specified fields
-        "Count: " << csv.count() <<            // number of available fields
+        "Size: " << csv.size() <<       // number of specified fields
+        ". "         
+        "Count: " << csv.count() <<     // number of available fields
+        ". "         
+        "Field 2 as int via get: " << csv.get<int>(2) <<
+        ". "         
+        "Field 2 as int via available: " << csv.available<int>(2) <<
+        ". "         
+        "Field 6 as string via get: " << csv.get<string>(6) <<
+        ". "         
+        "Field 6 as string via available: " << csv.available<string>(6) <<
+        ". "         
+        "Field 3 via operator[]: " << csv[3] <<
     '\n';
 
-
-
-//        csv.count() <<              // number of available fields
-//        csv.get<int>(0) <<          // get value[0] or its default value
-//        csv.available<int>(0) <<    // get value[0] or throw an exception
-//        csv[3] <<                   // field 3 as a string, possibly empty
 //        csv.begin() <<              // bidirectional const iterator returning
 //                                    // strings 
 //        csv.begin<Type>() <<        // bidirectional const iterator returning
@@ -29,10 +34,10 @@ int main()
 //        csv.rbegin() <<             // reverse iterator returning strings
 //        csv.rbegin<Type>() <<       // reverse iterator returning Type values
 //
-//    csv.available();                // bool vector indicating which fields are
-//                                    // available
-//    csv.data();                     // vector<string> const & holding all
-//                                    // fields 
+    csv.available();                // bool vector indicating which fields are
+                                    // available
+    csv.data();                     // vector<string> const & holding all
+                                    // fields 
 
 }
 
