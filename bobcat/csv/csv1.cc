@@ -1,34 +1,14 @@
 #include "csv.ih"
 
+    // Initialize the CSV object for a fixed number of specifications
+    // blanks are ignored, and each specification may be followed by an
+    // integral number defining the repeat count for that specification.
+
 CSV::CSV(std::string const &spec, Mode mode)
 :
     d_mode(mode)
 {
-    istringstream in(spec);
-    
-    while (true)
-    {
-        char ch;
-
-        if (not (in >> ch))
-            break;
-
-        ch = toupper(ch);
-        if (string("SID").find(ch) == string::npos)
-            throw Exception() << "CSV(\"" << spec << "\"): " << ch << 
-                                                    " not supported";
-        size_t repeat;
-        if (not (in >> repeat))
-        {
-            in.clear();
-            repeat = 1;
-        }
-        
-        d_type.append(repeat, ch);
-    }
-
-    d_field.resize(d_type.length());
-    d_available.resize(d_type.length());
+    setSpec(spec);
 }
 
 

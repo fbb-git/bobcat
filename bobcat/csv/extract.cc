@@ -1,8 +1,13 @@
 #include "csv.ih"
 
+    // called by operator>> to extract a series of CSVs from `in'.
 istream &CSV::extract(istream &in)
 {
+    d_field.clear();
+    d_available.clear();
+
     size_t idx = 0;
+
     for (size_t end = d_type.length() - ((d_mode & TRAILINGCOMMA) == 0); 
             idx != end;
                 ++idx
@@ -10,9 +15,8 @@ istream &CSV::extract(istream &in)
     {
         string element;
 
-        getline(in, element, ',');
-
-        assign(idx, element);
+        getline(in, element, ',');          // read all until the next comma.
+        store(idx, element);       
     }
 
     if (not (d_mode & TRAILINGCOMMA))
@@ -20,7 +24,7 @@ istream &CSV::extract(istream &in)
         string element;
         in >> element;
 
-        assign(idx, element);
+        store(idx, element);
     }
 
     if (d_mode & LINE)

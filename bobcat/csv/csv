@@ -114,6 +114,9 @@ struct CSV
     public:
         CSV() = default;
         explicit CSV(std::string const &spec, Mode mode = LINE);
+
+        void setSpec(std::string const &spec);
+        void setMode(Mode mode);
         
         size_t size() const;
         size_t count() const;
@@ -180,12 +183,17 @@ struct CSV
         const_reverse_iterator<Type> rend() const;
 
     private:
-        void assign(size_t idx, std::string &element);
+        void store(size_t idx, std::string const &value);
 
         friend std::istream &operator>>(std::istream &in, CSV &csv);
         std::istream &extract(std::istream &in);
 
 };
+
+void CSV::setMode(Mode mode)
+{
+    d_mode = mode;
+}
 
 template <typename Type>
 inline CSV::const_iterator<Type> CSV::begin() const
