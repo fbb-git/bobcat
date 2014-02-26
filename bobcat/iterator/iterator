@@ -9,8 +9,26 @@ namespace FBB
 {
 
 template <typename Type>
+class Iterator;
+
+template <typename Type>
+struct ReverseIterator: public std::reverse_iterator<Iterator<Type>>
+{
+    explicit ReverseIterator(Type const &value);
+    explicit ReverseIterator(Iterator<Type> const &iter);
+
+    static ReverseIterator<Type> last(Type const &value);
+};
+
+template <typename Type>
+bool operator==(Iterator<Type> const &lhs, Iterator<Type> const &rhs);
+
+template <typename Type>
 class Iterator: public std::iterator<std::bidirectional_iterator_tag, Type>
 {
+    friend  bool operator==<>(Iterator<Type> const &lhs, 
+                            Iterator<Type> const &rhs);
+
     Type d_value;
     std::shared_ptr<Type> d_type;
 
@@ -20,27 +38,19 @@ class Iterator: public std::iterator<std::bidirectional_iterator_tag, Type>
     
         Iterator<Type> &operator++();
         Iterator<Type> operator++(int);
-        Iterator<Type> &operator--();
-        Iterator<Type> operator--(int);
     
-        bool operator==(Iterator<Type> const &other) const;
-        bool operator!=(Iterator<Type> const &other) const;
-
         Type &operator*();
         Type const &operator*() const;
 
         static Iterator<Type> last(Type value);
         static Iterator<Type> min();
         static Iterator<Type> max();
-};
 
-template <typename Type>
-struct ReverseIterator: public std::reverse_iterator<Iterator<Type>>
-{
-    explicit ReverseIterator(Type const &value);
-    explicit ReverseIterator(Iterator<Type> const &iter);
+    private:
+        friend struct std::reverse_iterator<Iterator<Type>>;
 
-    static ReverseIterator<Type> last(Type const &value);
+        Iterator<Type> &operator--();
+        Iterator<Type> operator--(int);
 };
 
 

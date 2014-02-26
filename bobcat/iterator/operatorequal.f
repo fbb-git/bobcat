@@ -1,5 +1,5 @@
 template <typename Type>
-inline bool Iterator<Type>::operator==(Iterator<Type> const &rhs) const
+inline bool operator==(Iterator<Type> const &lhs, Iterator<Type> const &rhs)
 {
-    return d_value == rhs.d_value;
+    return lhs.d_value == rhs.d_value;
 }
