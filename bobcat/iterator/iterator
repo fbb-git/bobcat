@@ -33,13 +33,14 @@ class Iterator: public std::iterator<std::bidirectional_iterator_tag, Type>
     std::shared_ptr<Type> d_type;
 
     public:
+        typedef Type const &reference;
+
         Iterator() = default;
         explicit Iterator(Type const &value);
     
         Iterator<Type> &operator++();
         Iterator<Type> operator++(int);
     
-        Type &operator*();
         Type const &operator*() const;
 
         static Iterator<Type> last(Type value);
@@ -63,7 +64,6 @@ class Iterator: public std::iterator<std::bidirectional_iterator_tag, Type>
 #include "operatorinc.f"
 #include "operatorpostdec.f"
 #include "operatorpostinc.f"
-#include "operatorstar.f"
 #include "operatorstarconst.f"
 #include "operatorunequal.f"
 #include "reverseiterator1.f"
