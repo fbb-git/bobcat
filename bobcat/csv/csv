@@ -22,19 +22,31 @@ struct CSV
         LINE            = 2
     };
 
+    enum InsertType
+    {
+        LENGTH,
+        SIZE,
+        COUNT
+    };
+
     private:
         std::vector<std::string> d_field;
         std::vector<bool>        d_available;
         std::string              d_type;
         Mode                     d_mode = RAW;
+        std::ostream &(CSV::*d_insert)(std::ostream &out) const;
+
+        static std::ostream &(CSV::*s_insert[])(std::ostream &out) const;
 
     public:
         CSV() = default;
-        explicit CSV(std::string const &spec, Mode mode = LINE);
+        explicit CSV(std::string const &spec, Mode mode = LINE,
+                                              InsertType insertType = LENGTH);
 
         void setSpec(std::string const &spec);
         void setMode(Mode mode);
-        
+        void setInsertType(InsertType insertType);
+
         size_t length() const;          // number of specs in d_type
         size_t size() const;            // number of fields
         size_t count() const;           // number of valid fields
@@ -77,7 +89,9 @@ struct CSV
         std::istream &extract(std::istream &in);
 
         friend std::ostream &operator<<(std::ostream &in, CSV const &csv);
-        std::ostream &insert(std::ostream &in) const;
+        std::ostream &insertLength(std::ostream &out) const;
+        std::ostream &insertSize(std::ostream &out) const;
+        std::ostream &insertCount(std::ostream &out) const;
 };
 
 #include "csviterator.f"
@@ -107,6 +121,7 @@ struct CSV
 #include "rend1.f"
 #include "rend2.f"
 #include "setmode.f"
+#include "setinserttype.f"
 #include "size.f"
 
     // const_iterator members

@@ -1,4 +1,4 @@
-inline std::ostream &operator<<(std::ostream &in, CSV const &csv)
+inline std::ostream &operator<<(std::ostream &out, CSV const &csv)
 {
-    return csv.insert(in);
+    return (csv.*csv.d_insert)(out);
 }

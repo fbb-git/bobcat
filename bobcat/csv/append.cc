@@ -7,7 +7,7 @@ CSV &CSV::append(char spec, std::string const &value)
         throw Exception() << "CSV: specification `" << spec << 
                                                         "' not supported";
 
-    d_type += spec;
+    d_type += spec == '-' ? 'X' : spec;
 
     store(d_field.size(), value);
 

@@ -39,6 +39,20 @@ int main()
     cout << "All elements as ints, backward:\n";
     copy(csv.rbegin<int>(), csv.rend<int>(), ostream_iterator<int>(cout, " "));
     cout << '\n';
+
+    cout << "Insert LENGTH (default):\n" <<
+            csv << '\n';
+
+    csv.setInsertType(CSV::SIZE);
+
+    cout << "Insert SIZE:\n" <<
+            csv << '\n';
+
+    csv.setInsertType(CSV::COUNT);
+
+    cout << "Insert COUNT:\n" <<
+            csv << '\n';
+
 }
 
 
