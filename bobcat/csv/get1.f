@@ -1,12 +1,12 @@
 template <typename Type>
-inline typename IUO::Category<Type>::type CSV::get(size_t idx) const
+inline typename IUO::CSV<Type>::type CSV::get(size_t idx) const
 {
     try
     {
         return IUO::Avail<
-                        typename IUO::Category<Type>::type, 
-                        IUO::Category<Type>::nr
-                >::available(d_field[idx]);
+                        typename IUO::CSV<Type>::type, 
+                        IUO::CSV<Type>::cat
+                >::get(d_field[idx]);
     }
     catch (...)
     {

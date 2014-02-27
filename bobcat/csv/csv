@@ -8,93 +8,10 @@
 
 #include <bobcat/exception>
 
+#include "csviuo.f"
+
 namespace FBB
 {
-    namespace IUO
-    {
-        enum CSVenum
-        {
-            INT,
-            FLOAT,
-            STRING
-        };
-
-        template <typename Type, typename ...TypeList>
-        struct TypeCat;
-
-        template <typename Type, typename Head, typename ...TypeList>
-        struct TypeCat<Type, Head, TypeList...>
-        {
-            typedef typename TypeCat<Type, TypeList...>::type type;
-            enum { nr = TypeCat<Type, TypeList...>::nr };
-        };
-
-        template <typename Type>
-        struct TypeCat<Type>
-        {
-            typedef Type type;
-            enum { nr = INT };
-        };
-
-        template <typename ...TypeList>
-        struct TypeCat<float, float, TypeList...>
-        {
-            typedef float type;
-            enum { nr = FLOAT };
-        };
-
-        template <typename ...TypeList>
-        struct TypeCat<double, double, TypeList...>
-        {
-            typedef double type;
-            enum { nr = FLOAT };
-        };
-
-        template <typename ...TypeList>
-        struct TypeCat<long double, long double, TypeList...>
-        {
-            typedef long double type;
-            enum { nr = FLOAT };
-        };
-
-        template <typename ...TypeList>
-        struct TypeCat<std::string, std::string, TypeList...>
-        {
-            typedef std::string const &type;
-            enum { nr = STRING };
-        };
-
-        template <typename Type>
-        struct Category
-        {
-            typedef typename 
-            TypeCat<Type, float, double, long double, std::string>::type type;
-
-            enum { 
-                nr = 
-                   TypeCat<Type, float, double, long double, std::string>::nr
-            };
-        };
-
-        template <typename Type, size_t category>
-        struct Avail
-        {
-            static Type available(std::string const &field);
-        };
-
-        template <typename Type>
-        struct Avail<Type, FLOAT>
-        {
-            static Type available(std::string const &field);
-        };
-
-        template <typename Type>
-        struct Avail<Type, STRING>
-        {
-            static Type available(std::string const &field);
-        };
-
-    }   // IUO
 
 struct CSV
 {
@@ -118,14 +35,15 @@ struct CSV
         void setSpec(std::string const &spec);
         void setMode(Mode mode);
         
-        size_t size() const;
-        size_t count() const;
+        size_t length() const;          // number of specs in d_type
+        size_t size() const;            // number of fields
+        size_t count() const;           // number of valid fields
 
         template <typename Type>
-        typename IUO::Category<Type>::type available(size_t idx) const;
+        typename IUO::CSV<Type>::type field(size_t idx) const;
 
         template <typename Type>
-        typename IUO::Category<Type>::type get(size_t idx) const;
+        typename IUO::CSV<Type>::type get(size_t idx) const;
 
         CSV &append(char spec, std::string const &value);
 
@@ -138,37 +56,7 @@ struct CSV
         class const_iterator;
 
         template <typename Type>
-        class const_reverse_iterator: public 
-            std::reverse_iterator<const_iterator<Type>>
-        {};
-
-        template <typename Type = std::string>
-        class const_iterator: public
-                std::iterator<std::bidirectional_iterator_tag, 
-                std::string>
-        {
-            CSV const &d_csv;
-            size_t d_idx;
-
-            public:
-                const_iterator() = default;
-
-            const_iterator<Type> &operator++();
-            const_iterator<Type> operator++(int);
-
-            bool operator==(const_iterator<Type> const &other) const;
-            bool operator!=(const_iterator<Type> const &other) const;
-
-            typename IUO::Category<Type>::type operator*() const;
-            typename IUO::Category<Type>::type const *operator->() const;
-
-            private:
-                friend class CSV;
-                friend class const_reverse_iterator<Type>;
-
-                const_iterator(CSV const &csv, size_t idx);
-                const_iterator<Type> &operator--();
-        };
+        struct const_reverse_iterator;
 
         template <typename Type = std::string>
         const_iterator<Type> begin() const;
@@ -188,124 +76,50 @@ struct CSV
         friend std::istream &operator>>(std::istream &in, CSV &csv);
         std::istream &extract(std::istream &in);
 
+        friend std::ostream &operator<<(std::ostream &in, CSV const &csv);
+        std::ostream &insert(std::ostream &in) const;
 };
 
-void CSV::setMode(Mode mode)
-{
-    d_mode = mode;
-}
+#include "csviterator.f"
 
-template <typename Type>
-inline CSV::const_iterator<Type> CSV::begin() const
-{
-    return const_iterator<Type>(*this, 0);
-}
-
-template <typename Type>
-inline CSV::const_iterator<Type> CSV::end() const
-{
-    return const_iterator<Type>(*this, size());
-}
-
-template <typename Type>
-inline CSV::const_reverse_iterator<Type> CSV::rbegin() const
-{
-    return const_reverse_iterator<const_iterator<Type>>(end());
-}
-
-template <typename Type>
-inline CSV::const_reverse_iterator<Type> CSV::rend() const
-{
-    return const_reverse_iterator<const_iterator<Type>>(begin());
-}
-
-template <typename Type>
-CSV::const_iterator<Type> &CSV::const_iterator<Type>::operator++()
-{
-    ++d_idx;
-    return *this;
-}
-
-template <typename Type>
-CSV::const_iterator<Type> &CSV::const_iterator<Type>::operator--()
-{
-    --d_idx;
-    return *this;
-}
-
-template <typename Type>
-CSV::const_iterator<Type> CSV::const_iterator<Type>::operator++(int)
-{
-    const_iterator<Type> ret(*this);
-    ++d_idx;
-    return ret;
-}
-
-template <typename Type>
-inline bool CSV::const_iterator<Type>::operator!=(
-                                const_iterator<Type> const &other) const
-{
-    return not (*this == other);
-}
-
-template <typename Type>
-inline bool CSV::const_iterator<Type>::operator==(
-                                const_iterator<Type> const &other) const
-{
-    return d_idx == other.d_idx && &d_csv == &other.d_csv;
-}
-
-template <typename Type>
-inline typename IUO::Category<Type>::type 
-                    CSV::const_iterator<Type>::operator*() const
-{
-    return d_csv.get<Type>(d_idx);
-}
-
-template <typename Type>
-inline typename IUO::Category<Type>::type
-                    const *CSV::const_iterator<Type>::operator->() const
-{
-    return &d_csv.get<Type>(d_idx);
-}
-
-inline std::vector<std::string> const &CSV::data() const
-{
-    return d_field;
-}
-
-inline std::vector<bool> const &CSV::available() const
-{
-    return d_available;
-}
-
-inline std::string const &CSV::operator[](size_t idx) const
-{
-    return d_field[idx];
-}
-
-#include "available.f"
 #include "avail1.f"
 #include "avail2.f"
 #include "avail3.f"
+#include "available.f"
 
-#include "get1.f"
-#include "get2.f"
+#include "get1.f"       
+#include "get2.f"       // the definition of this std::string specialization
+                        // must be available before it is used.
 
-inline CSV::Mode operator|(CSV::Mode lhs, CSV::Mode rhs)
-{
-    return static_cast<CSV::Mode>(lhs | rhs);
-}
+#include "begin1.f"
+#include "begin2.f"
+#include "data.f"
+#include "end1.f"
+#include "end2.f"
+#include "field.f"
+#include "length.f"
+#include "operatorextract.f"
+#include "operatorindex.f"
+#include "operatorinsert.f"
+#include "operatoror.f"
+#include "rbegin1.f"
+#include "rbegin2.f"
+#include "rend1.f"
+#include "rend2.f"
+#include "setmode.f"
+#include "size.f"
 
-inline size_t CSV::size() const
-{
-    return d_type.length();
-}
+    // const_iterator members
 
-inline std::istream &operator>>(std::istream &in, CSV &csv)
-{
-    return csv.extract(in);
-}
+#include "constiterator.f"
+#include "operatorarrow.f"
+#include "operatordec.f"
+#include "operatorequal.f"
+#include "operatorinc.f"
+#include "operatorpostinc.f"
+#include "operatorstar1.f"
+#include "operatorunequal.f"
+
 
 
 } // FBB        

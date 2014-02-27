@@ -2,14 +2,10 @@ bobcat (3.22.00)
 
   * Added new class CSV, handling comma separated values
 
-  * Iterator needs a location to store the value returned by Type
-    &operator*(): the object returning the Type value may vanish immediately
-    after operator*'s call. Solved by providing Iterator with a shared_ptr,
-    receiving a value when operator* is called, and returning a reference to
-    the value stored in the shared_ptr.
-
-    
-
+  * Learned something new: in order to define a const reverse iterator, define
+    Type const &reference in the iterator class, and define Type const
+    &operator*() const. The use of shared_ptr (see git commit
+    1215566b78...) is not required.
 
 bobcat (3.21.01)
 
