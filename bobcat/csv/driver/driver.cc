@@ -39,20 +39,6 @@ int main()
     cout << "All elements as ints, backward:\n";
     copy(csv.rbegin<int>(), csv.rend<int>(), ostream_iterator<int>(cout, " "));
     cout << '\n';
-    
-
-    
-//        csv.begin<Type>() <<        // bidirectional const iterator returning
-//                                    // Type values 
-//        csv.rbegin() <<             // reverse iterator returning strings
-//        csv.rbegin<Type>() <<       // reverse iterator returning Type values
-//
-
-//    csv.available();                // bool vector indicating which fields are
-//                                    // available
-//    csv.data();                     // vector<string> const & holding all
-//                                    // fields 
-
 }
 
 
