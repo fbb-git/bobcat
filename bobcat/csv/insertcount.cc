@@ -4,13 +4,21 @@ ostream &CSV::insertCount(ostream &out) const
 {
     auto iter = d_field.begin();
 
+    char const *sep = "";
+
     for (bool available: d_available)
     {
-        if (available)
-            out << *iter << ',';
+        cout << sep;
 
+        if (available)
+            out << *iter;
+
+        sep = ",";        
         ++iter;
     }
+
+    if (d_mode & LINE)
+        cout << ',';
 
     return out;
 }

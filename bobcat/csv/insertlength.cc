@@ -4,20 +4,26 @@ ostream &CSV::insertLength(ostream &out) const
 {
     auto iter = d_field.begin();
 
+    char const *sep = "";
+
     for (char ch: d_type)
     {
+        cout << sep;
         if (ch == 'X')
-        {
-            out << " ,";
-            continue;
-        }
-
-        if (iter->empty())
-            out << " ,";
+            out << ' ';
         else
-            out << *iter << ',';
-        ++iter;
+        {
+            if (iter->empty())
+                out << ' ';
+            else
+                out << *iter;
+            ++iter;
+        }
+        sep = ",";
     }
+
+    if (d_mode & LINE)
+        cout << ',';
 
     return out;
 }

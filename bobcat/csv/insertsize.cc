@@ -2,13 +2,21 @@
 
 ostream &CSV::insertSize(ostream &out) const
 {
+    char const *sep = "";
+
     for (auto const &str: d_field)
     {
+        cout << sep;
+
         if (str.empty())
-            out << " ,";
+            out << ' ';
         else
-            out << str << ',';
+            out << str;
+        sep = ",";
     }
+
+    if (d_mode & LINE)
+        cout << ',';
 
     return out;
 }

@@ -17,7 +17,10 @@ manpagesynopsis()
 manpagedescription()
 
 Objects of the class bf(CSV) can be used to convert series of comma separated
-values to the individual separated values.
+values to the individual separated values. These values may be converted
+(individually or as a group) to standard integral types tt(int, size_t, long
+long,) etc., to floating point types (tt(float, double, long double)), or they
+can be accessed as tt(std::string) values.
 
 includefile(include/namespace)
 
@@ -37,6 +40,21 @@ tt(std::istream) objects:
         operator reads full lines of input).
     )
     These enumeration values may be combined using the tt(bit-or) operator.
+
+    The bf(enum InserType) specifies how a bf(CSV) is inserted into
+tt(std::ostream) objects:
+    itemization(
+    itt(LENGTH) indicates that all specifications (i.e., the em(length) of the
+        type-specifications, see the member tt(length) below), are inserted
+        into the tt(std::ostream) as a series of comma-separated values.
+    itt(SIZE) indicates that all (not ignored) comma-separated fields (i.e.,
+        the em(size) of the fields vector, see the member tt(size)
+        below), are inserted into the tt(std::ostream) as a series of
+        comma-separated values.
+    itt(COUNT) indicates that all valid (i.e., the em(count) of the
+        valid fields, see the member tt(count) below), are inserted
+        into the tt(std::ostream) as a series of comma-separated values.
+    )
 
 manpagesection(CONSTRUCTORS)
     itemization(
