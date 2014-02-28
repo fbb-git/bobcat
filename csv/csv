@@ -1,0 +1,154 @@
+#ifndef INCLUDED_BOBCAT_CSV_
+#define INCLUDED_BOBCAT_CSV_
+
+#include <iosfwd>
+#include <vector>
+#include <string>
+#include <iterator>
+
+#include <bobcat/exception>
+
+#include "csviuo.f"
+
+namespace FBB
+{
+
+struct CSV
+{
+    enum Mode
+    {
+        RAW             = 0,
+        TRAILINGCOMMA   = 1,
+        LINE            = 2
+    };
+
+    enum InsertType
+    {
+        LENGTH,
+        SIZE,
+        COUNT
+    };
+
+    private:
+        std::vector<std::string> d_field;
+        std::vector<bool>        d_available;
+        std::string              d_type;
+        Mode                     d_mode = RAW;
+        InsertType               d_insertType = LENGTH;
+        std::ostream &(CSV::*d_insert)(std::ostream &out) const;
+
+        static std::ostream &(CSV::*s_insert[])(std::ostream &out) const;
+
+    public:
+        CSV() = default;
+        explicit CSV(std::string const &spec, Mode mode = LINE,
+                                              InsertType insertType = LENGTH);
+
+        std::string const &spec() const;
+        Mode mode() const;
+        InsertType insertType() const;
+
+        void setSpec(std::string const &spec);
+        void setMode(Mode mode);
+        void setInsertType(InsertType insertType);
+
+        size_t length() const;          // number of specs in d_type
+        size_t size() const;            // number of fields
+        size_t count() const;           // number of valid fields
+
+        template <typename Type>
+        typename IUO::CSV<Type>::type field(size_t idx) const;
+
+        template <typename Type>
+        typename IUO::CSV<Type>::type get(size_t idx) const;
+
+        CSV &append(char spec, std::string const &value = "");
+
+        std::string const &operator[](size_t idx) const;
+
+        std::vector<std::string> const &data() const;
+        std::vector<bool> const &available() const;
+
+        template <typename Type>
+        class const_iterator;
+
+        template <typename Type>
+        struct const_reverse_iterator;
+
+        template <typename Type = std::string>
+        const_iterator<Type> begin() const;
+
+        template <typename Type = std::string>
+        const_iterator<Type> end() const;
+
+        template <typename Type = std::string>
+        const_reverse_iterator<Type> rbegin() const;
+
+        template <typename Type = std::string>
+        const_reverse_iterator<Type> rend() const;
+
+    private:
+        void store(size_t idx, std::string const &value);
+
+        friend std::istream &operator>>(std::istream &in, CSV &csv);
+        std::istream &extract(std::istream &in);
+
+        friend std::ostream &operator<<(std::ostream &in, CSV const &csv);
+        std::ostream &insertLength(std::ostream &out) const;
+        std::ostream &insertSize(std::ostream &out) const;
+        std::ostream &insertCount(std::ostream &out) const;
+};
+
+#include "csviterator.f"
+
+#include "avail1.f"
+#include "avail2.f"
+#include "avail3.f"
+#include "available.f"
+
+#include "get1.f"       
+#include "get2.f"       // the definition of this std::string specialization
+                        // must be available before it is used.
+
+#include "begin1.f"
+#include "begin2.f"
+#include "data.f"
+#include "end1.f"
+#include "end2.f"
+#include "field.f"
+#include "inserttype.f"
+#include "length.f"
+#include "mode.f"
+#include "operatorextract.f"
+#include "operatorindex.f"
+#include "operatorinsert.f"
+#include "operatoror.f"
+#include "rbegin1.f"
+#include "rbegin2.f"
+#include "rend1.f"
+#include "rend2.f"
+#include "setmode.f"
+#include "setinserttype.f"
+#include "size.f"
+#include "spec.f"
+
+    // const_iterator members
+
+#include "constiterator.f"
+#include "operatorarrow.f"
+#include "operatordec.f"
+#include "operatorequal.f"
+#include "operatorinc.f"
+#include "operatorpostinc.f"
+#include "operatorstar1.f"
+#include "operatorunequal.f"
+
+
+
+} // FBB        
+#endif
+
+
+
+
+

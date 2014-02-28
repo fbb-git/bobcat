@@ -22,23 +22,26 @@ hierarchy. Entries tagged with (Obs) are obsolete and should no longer be
 used. 
 
 
+0   MultiStreambuf     SyslogBuf       ReadLineBuf      LinearMap
+                           |                |          
+                      SyslogStream     ReadLineStream  
+
+
 0   X2a     Hash   Hostent  TypeTrait   Swap     Indent     ReadLineHistory
                                 |                
                           +-----+------+
                           |            |
                         binops       repeat              
                   
-
-0   MultiStreambuf     SyslogBuf       ReadLineBuf     RandBuffer    
-                           |                |              |        
-                      SyslogStream     ReadLineStream  IRandStream  
-                                                           |
-                                                           |
-0   DateTime     Exception  IFilterStreambuf               |
-       |             |                                     |                
-       |       +-----+---------+------+----------+         |
-       |       |     |         |      |          |         |
-       |      User Signal      |      |          +----+----+------+
+0                                                      RandBuffer    
+                                                           |        
+                                                       IRandStream  
+0   DateTime           Exception    IFilterStreambuf       |
+       |                   |                               |                
+       |                   |                               |                
+       |       +-----+-----+---+------+----------+         |
+       |       |     |     |   |      |          |         |
+       |      User Signal CSV  |      |          +----+----+------+
        |       |               |      |               |           |
        |       |     +---------+     Mbuf        EncryptBuf  SharedMutex
        |       |     |         |      |                           |
@@ -95,7 +98,7 @@ used.
                          |      |    |                     
                      TempStream |    |                     
                                 |    |                     
-0                A2x            |    |                     LinearMap
+0                A2x            |    |                     
                   |             |    |                     
                String           |    +----+                
                   |             |         |
