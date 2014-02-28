@@ -4,7 +4,9 @@ void CSV::store(size_t idx, string const &value)
 {
     string trimmed = String::trim(value);
 
-    bool ok = true;
+    bool ok;
+    size_t pos;
+
     try
     {
         switch (d_type[idx])
@@ -14,11 +16,13 @@ void CSV::store(size_t idx, string const &value)
             return;
 
             case 'I':
-                stoll(trimmed);
+                stoll(trimmed, &pos);
+                ok = trimmed.length();
             break;
                 
             case 'D':
-                stold(trimmed);
+                stold(trimmed, &pos);
+                ok = trimmed.length();
             break;
 
             case 'S':

@@ -56,9 +56,14 @@ tt(std::ostream) objects:
         into the tt(std::ostream) as a series of comma-separated values.
     )
 
+    The class tt(CSV) defines the nested classes tt(const_iterator) and
+tt(const_reverse_iterator) which are tt(InputIterators), which can be used 
+to iterate over the sequence of comma-separated values. 
+
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(CSV(std::string const &specification, Mode mode = LINE))
+    itb(CSV(std::string const &specification, Mode mode = LINE, InsertType =
+            LENGTH))
         The specification in tt(specification) defines the subsequent fields
         of the comma-separated value. Specifications are 
         quote(
@@ -67,32 +72,114 @@ manpagesection(CONSTRUCTORS)
                 tt(std::string). 
             itt(I): the field represents an tt(int) value;
             itt(D): the field represents a tt(double) value;
+            itt(X) or tt(-): the field is ignored and is not stored inside the
+                bf(CSV) object. E.g., with the specification tt(SXS) two
+                fields will actually be stored inside the bf(CSV) object:
+                field 0 contains the first field extracted from the input
+                stream, field 1 contains the third field extracted from the
+                input stream.
             )
         )
         Specifications may be separated by space or tab characters, which are
         ignored. The number of specification characters determines the number
         of fields that are stored in a bf(CSV) object. The final field may or
-        may not be followed by a comma. Each specification may also be
-        followed by a positive integral value, indicating that number of
-        comma-separated fields of the indicated type.
+        may not be followed by a comma. 
+
+        Each specification may also be followed by a positive integral value,
+        indicating that the input at that point contains that number of
+        comma-separated fields of the specified type.
 
         By default the bf(CSV) extraction operator extracts complete lines
-        from the stream from which a bf(CSV) object is extracted.
+        from the stream from which a bf(CSV) object is extracted. 
+
+        When inserting a bf(CSV) object into a tt(std::ostream) object all
+        fields that are specified by `tt(specification)' will be
+        inserted. Ignored fields will be inserted as single blanks.
     )
     The default, copy, and move constructors are available.
 
 manpagesection(OVERLOADED OPERATORS)
     itemization(
     itb(std::string const &operator[](size_t index) const)
-       The contents of the indicated field is returned as a tt(std::string)
+       The contents of the indicated field is returned as a
+        tt(std::string).
     )
     The copy and move assignment operators are available.
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
+    itb(CSV &append(char spec, std::string const &value = ""))
+       A field tt(spec), with textual representation tt(value) is added to the
+        object's current set of fiels. A specification tt('X') or
+        tt('-') is added to the object's set of specifications, but does not
+        add tt(value) to the currently stored set of values.
+
+    itb(std::vector<bool> const &available() const)
+       A vector of tt(bool) values indicating which of the matching data
+        fields are valid (i.e., could be converted to its specification as
+        defined at construction time or by tt(setSpec)) is returned.
+
+    itb(CSV::const_iterator<Type> begin<Type == std::string>() const)
+       This is a template member returning a tt(CSV::const_iterator) to the
+        object's first field. When dereferencing the tt(const_iterator)
+         where each value is converted to the indicated
+        tt(Type). If the conversion for a field fails, then the 
+
+    itb(size_t count() const)
+       The number of fields that could actually be converted to their
+        indicated types is returned. E.g., an empty field or a supposedly 
+        numeric field whose contents cannot be converted to the indicated
+        numeric value won't be counted here.
+
+    itb(std::vector<std::string> const &data() const)
+       The vector of fields stored inside the bf(CSV) object is returned.
+
+    itb(Type field<Type = std::string>(size_t idx) const)
+       This is a template member returning the contents of field tt(idx) as a
+        value of type tt(Type).  When tt(Type) equals tt(std::string) a
+        tt(std::string const &) is returned. For tt(Type) all integral and
+        floating types as well as tt(std::sting) are accepted. If field
+        tt(idx) cannot be converted to tt(Type) a bf(std::exception) is
+        thrown. 
+
     itb(Type get<Type = std::string>(size_t idx)
-       The contents of field tt(idx) is returned as a value of type tt(Type). 
-        All built-in types as well as tt(std::sting) are accepted.
+       This is a template member returning the contents of field tt(idx) as a
+        value of type tt(Type).  When tt(Type) equals tt(std::string) a
+        tt(std::string const &) is returned. For tt(Type) all integral and
+        floating types as well as tt(std::sting) are accepted. If field
+        tt(idx) cannot be converted to tt(Type), the tt(Type)'s default value
+        is returned.
+
+    itb(size_t length() const)
+       The number of specifications (defined at construction time or by the
+        tt(setSpec) member) is returned. This count includes the number of
+        tt(X) and tt(-) specifications.
+
+    itb(void setInsertType(InsertType insertType))
+       The objects tt(InsertType) is changed to tt(insertType). This has no
+        immediate effect, but is only interpreted with the insertion operator.
+
+    itb(void setMode(Mode mode))
+       The object's current tt(Mode) value is changed to tt(mode). This has no
+        immediate effect, but is only interpreted with the insertion and
+        extraction operators.
+
+    itb(void setSpec(std::string const &spec))
+       The information stored inside the bf(CSV) object is erased, and a new
+        field-specification is defined from tt(spec).
+
+    itb(size_t size() const)
+       The number of fields is returned (the returned value equals the value
+        returned by tt(length) not counting the tt(X) and tt(-) fields).
+
+        template <typename Type = std::string>
+        const_iterator<Type> end() const;
+
+        template <typename Type = std::string>
+        const_reverse_iterator<Type> rbegin() const;
+
+        template <typename Type = std::string>
+        const_reverse_iterator<Type> rend() const;
     )
 
 manpagesection(MANIPULATORS)

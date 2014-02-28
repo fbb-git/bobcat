@@ -1,5 +1,10 @@
 template <typename Type, size_t category>
-inline Type IUO::Avail<Type, category>::get(std::string const &field)
+Type IUO::Avail<Type, category>::get(std::string const &field)
 {
-    return static_cast<Type>(stoll(field));
+    size_t pos;
+    long long value = stoll(field, pos);
+    if (pos != field.length())
+        throw 1;
+    return static_cast<Type>(value);
 }
+

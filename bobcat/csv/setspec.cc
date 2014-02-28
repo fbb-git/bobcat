@@ -4,6 +4,7 @@ void CSV::setSpec(string const &spec)
 {
     d_field.clear();
     d_available.clear();
+    d_type.clear();
 
     istringstream in(spec);
 
