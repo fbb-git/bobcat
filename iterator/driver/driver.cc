@@ -1,13 +1,9 @@
-// To compile do:
-//                  g++ --std=c++11 driver.cc
-
-//CODE
 #include <algorithm>
 #include <iterator>
 #include <iostream>
 #include <string>
 
-#include "../iterator"
+#include <bobcat/iterator>
 
 using namespace std;
 using namespace FBB;
@@ -29,9 +25,6 @@ int main()
             ostream_iterator<int>(cout, ", "));
     cout << '\n';
 
-    ReverseIterator<int> ri(20);
-    cout << *ri << ' ' << *ri << '\n';
-
     copy(ReverseIterator<int>(20), ReverseIterator<int>(10),
             ostream_iterator<int>(cout, ", "));
     cout << '\n';
@@ -44,4 +37,3 @@ int main()
     cout << caps << '\n';
 
 }
-//=

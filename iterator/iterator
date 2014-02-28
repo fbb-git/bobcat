@@ -3,37 +3,13 @@
 
 #include <iterator>
 #include <limits>
+#include <memory>
 
 namespace FBB
 {
 
 template <typename Type>
-struct ReverseIterator;
-
-template <typename Type>
-class Iterator: public std::iterator<std::bidirectional_iterator_tag, Type>
-{
-    Type d_value;
-
-    public:
-        Iterator() = default;
-        explicit Iterator(Type const &value);
-    
-        Iterator<Type> &operator++();
-        Iterator<Type> operator++(int);
-        Iterator<Type> &operator--();
-        Iterator<Type> operator--(int);
-    
-        bool operator==(Iterator<Type> const &other) const;
-        bool operator!=(Iterator<Type> const &other) const;
-
-        Type &operator*();
-        Type const &operator*() const;
-
-        static Iterator<Type> last(Type value);
-        static Iterator<Type> min();
-        static Iterator<Type> max();
-};
+class Iterator;
 
 template <typename Type>
 struct ReverseIterator: public std::reverse_iterator<Iterator<Type>>
@@ -42,6 +18,40 @@ struct ReverseIterator: public std::reverse_iterator<Iterator<Type>>
     explicit ReverseIterator(Iterator<Type> const &iter);
 
     static ReverseIterator<Type> last(Type const &value);
+};
+
+template <typename Type>
+bool operator==(Iterator<Type> const &lhs, Iterator<Type> const &rhs);
+
+template <typename Type>
+class Iterator: public std::iterator<std::bidirectional_iterator_tag, Type>
+{
+    friend  bool operator==<>(Iterator<Type> const &lhs, 
+                            Iterator<Type> const &rhs);
+
+    Type d_value;
+    std::shared_ptr<Type> d_type;
+
+    public:
+        typedef Type const &reference;
+
+        Iterator() = default;
+        explicit Iterator(Type const &value);
+    
+        Iterator<Type> &operator++();
+        Iterator<Type> operator++(int);
+    
+        Type const &operator*() const;
+
+        static Iterator<Type> last(Type value);
+        static Iterator<Type> min();
+        static Iterator<Type> max();
+
+    private:
+        friend struct std::reverse_iterator<Iterator<Type>>;
+
+        Iterator<Type> &operator--();
+        Iterator<Type> operator--(int);
 };
 
 
@@ -54,7 +64,6 @@ struct ReverseIterator: public std::reverse_iterator<Iterator<Type>>
 #include "operatorinc.f"
 #include "operatorpostdec.f"
 #include "operatorpostinc.f"
-#include "operatorstar.f"
 #include "operatorstarconst.f"
 #include "operatorunequal.f"
 #include "reverseiterator1.f"
