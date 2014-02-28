@@ -34,6 +34,7 @@ struct CSV
         std::vector<bool>        d_available;
         std::string              d_type;
         Mode                     d_mode = RAW;
+        InsertType               d_insertType = LENGTH;
         std::ostream &(CSV::*d_insert)(std::ostream &out) const;
 
         static std::ostream &(CSV::*s_insert[])(std::ostream &out) const;
@@ -42,6 +43,10 @@ struct CSV
         CSV() = default;
         explicit CSV(std::string const &spec, Mode mode = LINE,
                                               InsertType insertType = LENGTH);
+
+        std::string const &spec() const;
+        Mode mode() const;
+        InsertType insertType() const;
 
         void setSpec(std::string const &spec);
         void setMode(Mode mode);
@@ -111,7 +116,9 @@ struct CSV
 #include "end1.f"
 #include "end2.f"
 #include "field.f"
+#include "inserttype.f"
 #include "length.f"
+#include "mode.f"
 #include "operatorextract.f"
 #include "operatorindex.f"
 #include "operatorinsert.f"
@@ -123,6 +130,7 @@ struct CSV
 #include "setmode.f"
 #include "setinserttype.f"
 #include "size.f"
+#include "spec.f"
 
     // const_iterator members
 

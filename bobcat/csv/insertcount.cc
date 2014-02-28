@@ -17,7 +17,7 @@ ostream &CSV::insertCount(ostream &out) const
         ++iter;
     }
 
-    if (d_mode & LINE)
+    if (d_mode & TRAILINGCOMMA)
         cout << ',';
 
     return out;

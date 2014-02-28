@@ -15,7 +15,7 @@ ostream &CSV::insertSize(ostream &out) const
         sep = ",";
     }
 
-    if (d_mode & LINE)
+    if (d_mode & TRAILINGCOMMA)
         cout << ',';
 
     return out;

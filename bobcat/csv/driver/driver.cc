@@ -1,6 +1,5 @@
 #include <iostream>
-
-#include "../csv"
+#include <bobcat/csv>
 
 using namespace std;
 using namespace FBB;
@@ -17,9 +16,9 @@ int main()
         "Nr. of available fields: " << csv.count() << "\n"
         "Field 2 as int via get: " << csv.get<int>(2) << "\n"
         "Field 2 as int via available: " << csv.field<int>(2) << "\n"
+        "Field 3 via operator[]: " << csv[3] << "\n"
         "Field 6 as string via get: " << csv.get<string>(6) << "\n"
         "Field 6 as string via available: " << csv.field<string>(6) << "\n"
-        "Field 3 via operator[]: " << csv[3] << "\n"
     ;
 
     cout << "First element as string: " << *csv.begin() << "\n";
@@ -52,7 +51,6 @@ int main()
 
     cout << "Insert COUNT:\n" <<
             csv << '\n';
-
 }
 
 
