@@ -103,7 +103,43 @@ manpagesection(OVERLOADED OPERATORS)
     itb(std::string const &operator[](size_t index) const)
        The contents of the indicated field is returned as a
         tt(std::string).
+
+    itb(std::istream &operator>>(std::istream &out, CSV const &csv))
+       The data fields stored within tt(csv) are inserted into tt(out) as a
+        series of comma-separated values. The fields are inserted according to
+        the latest tt(InsertType) specification:
+        quote(
+        itemization(
+        it() For tt(LENGTH) all fields are inserted according to their
+            original type specification, where tt('X') and tt('-') fields are
+            inserted as fields of single blank spaces;
+        it() For tt(SIZE) all fields that are stored inside tt(csv) are
+            inserted `as-is';
+        it() For tt(COUNT) all valid fields are inserted.
+        ))
+       If tt(csv)'s tt(Mode) specification contains tt(TRAILINGCOMMA) then a
+        comma is expected and extracted beyond the last field; if it contains
+        tt(LINE) then any information that is found on the line beyond the
+        last field (including its terminating comma, if applicable) is ignored
+        (including the tt('\n') line terminator).
+
+    itb(std::ostream &operator<<(std::ostream &out, CSV const &csv))
+       The data fields stored within tt(csv) are inserted into tt(out) as a
+        series of comma-separated values. The fields are inserted according to
+        the latest tt(InsertType) specification:
+        quote(
+        itemization(
+        it() For tt(LENGTH) all fields are inserted according to their
+            original type specification, where tt('X') and tt('-') fields are
+            inserted as fields of single blank spaces;
+        it() For tt(SIZE) all fields that are stored inside tt(csv) are
+            inserted `as-is';
+        it() For tt(COUNT) all valid fields are inserted.
+        ))
+       If tt(csv)'s tt(Mode) specification contains tt(TRAILINGCOMMA) then a
+        comma is inserted beyond the last field.
     )
+
     The copy and move assignment operators are available.
 
 manpagesection(MEMBER FUNCTIONS)
@@ -121,9 +157,9 @@ manpagesection(MEMBER FUNCTIONS)
 
     itb(CSV::const_iterator<Type> begin<Type == std::string>() const)
        This is a template member returning a tt(CSV::const_iterator) to the
-        object's first field. When dereferencing the tt(const_iterator)
-         where each value is converted to the indicated
-        tt(Type). If the conversion for a field fails, then the 
+        object's first field. When dereferencing a tt(const_iterator) the
+        value it refers to is converted to the indicated tt(Type). If the
+        conversion fails, the tt(Type)'s default value is returned.
 
     itb(size_t count() const)
        The number of fields that could actually be converted to their
@@ -134,6 +170,10 @@ manpagesection(MEMBER FUNCTIONS)
     itb(std::vector<std::string> const &data() const)
        The vector of fields stored inside the bf(CSV) object is returned.
 
+    itb(CSV::const_iterator<Type> end<Type == std::string>() const)
+       This is a template member returning a tt(CSV::const_iterator) pointing
+        just beyond the bf(CSV) object's last field.
+
     itb(Type field<Type = std::string>(size_t idx) const)
        This is a template member returning the contents of field tt(idx) as a
         value of type tt(Type).  When tt(Type) equals tt(std::string) a
@@ -142,7 +182,7 @@ manpagesection(MEMBER FUNCTIONS)
         tt(idx) cannot be converted to tt(Type) a bf(std::exception) is
         thrown. 
 
-    itb(Type get<Type = std::string>(size_t idx)
+    itb(Type get<Type = std::string>(size_t idx))
        This is a template member returning the contents of field tt(idx) as a
         value of type tt(Type).  When tt(Type) equals tt(std::string) a
         tt(std::string const &) is returned. For tt(Type) all integral and
@@ -150,10 +190,30 @@ manpagesection(MEMBER FUNCTIONS)
         tt(idx) cannot be converted to tt(Type), the tt(Type)'s default value
         is returned.
 
+    itb(InsertType insertType() const)
+       The object's current tt(InsertType) is returned.
+
     itb(size_t length() const)
        The number of specifications (defined at construction time or by the
         tt(setSpec) member) is returned. This count includes the number of
         tt(X) and tt(-) specifications.
+
+    itb(CSV::Mode mode() const)
+       The object's current tt(Mode) value is returned.
+
+    itb(std::string const &spec() const)
+       The object's current field-type specifications are returned.
+
+    itb(CSV::const_reverse_iterator<Type> rbegin<Type == std::string>() const)
+       This is a template member returning a tt(CSV::const_reverse_iterator)
+        to the object's last field. When dereferencing a
+        tt(const_reverse_iterator) the value it refers to is converted to the
+        indicated tt(Type). If the conversion fails, the tt(Type)'s default
+        value is returned.
+
+    itb(CSV::const_iterator<Type> rend<Type == std::string>() const)
+       This is a template member returning a tt(CSV::const_reverse_iterator)
+        pointing just before the bf(CSV) object's first field.
 
     itb(void setInsertType(InsertType insertType))
        The objects tt(InsertType) is changed to tt(insertType). This has no
@@ -171,24 +231,10 @@ manpagesection(MEMBER FUNCTIONS)
     itb(size_t size() const)
        The number of fields is returned (the returned value equals the value
         returned by tt(length) not counting the tt(X) and tt(-) fields).
-
-        template <typename Type = std::string>
-        const_iterator<Type> end() const;
-
-        template <typename Type = std::string>
-        const_reverse_iterator<Type> rbegin() const;
-
-        template <typename Type = std::string>
-        const_reverse_iterator<Type> rend() const;
-    )
-
-manpagesection(MANIPULATORS)
-    itemization(
-    itb(FBB::) 
     )
 
 manpagesection(EXAMPLE)
-    To do
+    verbinclude(../../csv/driver/driver.cc)
 
 manpagefiles()
     em(bobcat/csv) - defines the class interface
@@ -200,3 +246,4 @@ manpagebugs()
     None Reported.
 
 includefile(include/trailer)
+
