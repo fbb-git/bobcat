@@ -26,3 +26,11 @@ OneKey::OneKey(Mode state)
             "OneKey::OneKey(): can't change the stdin state to direct input";
     }
 }
+
+
+
+
+
+
+
+
