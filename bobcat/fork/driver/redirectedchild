@@ -1,0 +1,94 @@
+#include <iostream>
+#include <string>
+
+#include <signal.h>
+#include <unistd.h>
+
+#include <sys/types.h>
+
+#include <bobcat/pipe>
+#include <bobcat/ofdstream>
+#include <bobcat/ifdstream>
+#include <bobcat/process>
+#include <bobcat/fork>
+
+class ChildIO: public FBB::Fork
+{
+    FBB::Pipe childInput;   // child reads this
+    FBB::Pipe childOutput;   // child writes this
+
+    public:
+        void childRedirections();
+        void childProcess();
+        void parentProcess();
+};
+
+using namespace std;
+using namespace FBB;
+
+
+void ChildIO::childRedirections()
+{
+    childInput.readFrom(Redirector::STDIN);
+    childOutput.writtenBy(Redirector::STDOUT);
+}
+
+void ChildIO::childProcess()
+{
+        // The /bin/cat program replaces the
+        // child process started by Fork::fork()
+    Process process(Process::DIRECT, "/bin/cat");
+    process.start();
+   
+    // this point is never reached
+}
+
+void ChildIO::parentProcess()
+{
+        // Set up the parent's sides of the pipes
+    close(childOutput.writeFd());
+    IFdStream fromChild(childOutput.readFd());
+
+    close(childInput.readFd());
+    OFdStream toChild(childInput.writeFd());
+
+        // write lines to the child, read its output
+    string line;
+    while (true)
+    {
+        cout << "? ";
+        line.clear();
+        getline(cin, line);
+
+        if (line.empty())
+        {
+            kill(pid(), SIGTERM);
+            break;
+        }
+
+        toChild << line << endl;
+
+        getline(fromChild, line);
+        cout << "Got: " << line << endl;
+    }
+    cout << "The child returns value " << waitForChild() << endl;
+}
+
+int main()
+try
+{
+    ChildIO io;
+
+    io.fork();
+
+    return 0;
+}
+catch(exception const &exc)
+{
+    cerr << "Exception: " << exc.what() << endl;
+}
+catch(int x)
+{
+    cout << "The child terminates with: " << x << endl;
+    return x;
+}
