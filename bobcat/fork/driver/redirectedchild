@@ -46,11 +46,8 @@ void ChildIO::childProcess()
 void ChildIO::parentProcess()
 {
         // Set up the parent's sides of the pipes
-    close(childOutput.writeFd());
-    IFdStream fromChild(childOutput.readFd());
-
-    close(childInput.readFd());
-    OFdStream toChild(childInput.writeFd());
+    IFdStream fromChild(childOutput.readOnly());
+    OFdStream toChild(childInput.writeOnly());
 
         // write lines to the child, read its output
     string line;
