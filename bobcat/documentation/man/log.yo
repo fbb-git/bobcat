@@ -12,10 +12,10 @@ manpagesynopsis()
 
 manpagedescription()
 
-The class bf(FBB::Log) is a tt(std::ostream) initialized with a
+The class bf(FBB::Log) is an tt(std::ostream) initialized with a
 tt(FBB::LogBuffer). It is used to send log-messages to the (r)syslog
 stream. Refer to the bf(logbuffer)(3bobcat) man-page for details about this
-process. 
+process.
 
 includefile(include/namespace)
 
@@ -93,15 +93,17 @@ from this class.
     itemization(
     itb(size_t level())
         This member returns the currently set log level (i.e., the value set
-at the latest tt(setLevel()) call).
+at the latest tt(setLevel()) call). By default, the level is set to zero,
+meaning that all information is inserted into the log stream.
     itb(std::ostream &level(size_t useLevel))
         This member defines a log-level. Messages will be inserted into
 the stream when tt(useLevel) is equal to or exceeds the level set by
-    bf(setLevel()). The maximum level which can be selected is bf(std::numeric_limits<size_t>::max()). If
-not even such messages should be inserted into the bf(ostream), then the
-stream should be deactivated, using bf(off()), see below. The selected level
-remains active until redefined. Alternatively, the bf(FBB::level) manipulator
-may be inserted into an (empty) bf(FBB::Log) object (see bf(level)(3bobcat)).
+    bf(setLevel()). The maximum level which can be selected is
+bf(std::numeric_limits<size_t>::max()). If not even such messages should be
+inserted into the bf(ostream), then the stream should be deactivated, using
+bf(off()), see below. The selected level remains active until
+redefined. Alternatively, the bf(FBB::level) manipulator may be inserted into
+an (empty) bf(FBB::Log) object (see bf(level)(3bobcat)).
     itb(void off())
         Prevents any log messages from being generated. It may be cancelled by
 bf(setLevel()) (see below).
