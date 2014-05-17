@@ -13,5 +13,8 @@ SharedStreambuf::SharedStreambuf(int id, std::ios::openmode openMode)
         (openMode & ios::out and not (openMode & ios::in))
     )
         d_memory.clear();
+
+    setg(0, 0, 0);
+    setp(0, 0);
 }
 
