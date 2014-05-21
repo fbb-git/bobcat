@@ -76,30 +76,34 @@ manpagesection(CONSTRUCTORS)
 tt(std::streambuf) used by tt(std::cout). There is no limit to the number of
 messages that may be inserted. No message or line numbers are shown, no
 exception are thrown when inserting messages.
-    itb(explicit Mstream(std::ostream &ostr, size_t maxCount = std::numeric_limits<size_t>::max(), 
-                std::string const &tag = "", bool throwing = false))
-        This constructor uses the tt(std::streambuf) that is also used by the
-tt(ostream ostr). By default (using the default argument values) there is no
-limit to the number of messages that may be inserted. No message or line
-numbers are shown, no exception are thrown when inserting messages. Specifying
-any other value than tt(std::numeric_limits<size_t>::max()) will set the maximum number of messages that
-can be inserted to that value. The tt(tag) defines the text of the message
-label (e.g., tt(Error)). When tt(throwing) is specified as tt(true) an
-tt(FBB::Exception) exception is thrown after completing a message. The generated
-exception holds the id (see below for the member tt(id)) of the
-tt(Mstream) object from which the exception was thrown as well as the
-text tt(FBB::Mstream).
-    itb(explicit Mstream(std::streambuf &buf, size_t maxCount = std::numeric_limits<size_t>::max(), 
-                std::string const &tag = "", bool throwing = false))
-        This constructor uses tt(buf) to insert messages into. The remaining
-parameters are identical to those of the previous constructor.
-    itb(explicit Mstream(std::string const &name, size_t maxCount = std::numeric_limits<size_t>::max(), 
-                std::string const &tag = "", bool throwing = false))
-        This constructor creates a tt(std::ofstream) from the provided
-tt(name) parameter. It throws an tt(FBB::Exception) exception if the stream cannot
-be opened for writing. If a file by that name already exists it is rewritten.
-The remaining parameters are identical to those of the previous two
-constructors. 
+    itb(explicit Mstream(std::ostream &ostr, size_t maxCount =
+        std::numeric_limits<size_t>::max(), std::string const &tag = "", bool
+        throwing = false)) 
+       This constructor uses the tt(std::streambuf) that is also used by the
+        tt(ostream ostr). By default (using the default argument values) there
+        is no limit to the number of messages that may be inserted. No message
+        or line numbers are shown, no exception are thrown when inserting
+        messages. Specifying any other value than
+        tt(std::numeric_limits<size_t>::max()) will set the maximum number of
+        messages that can be inserted to that value. The tt(tag) defines the
+        text of the message label (e.g., tt(Error)). When tt(throwing) is
+        specified as tt(true) an tt(FBB::Exception) exception is thrown after
+        completing a message. The generated exception holds the id (see below
+        for the member tt(id)) of the tt(Mstream) object from which the
+        exception was thrown as well as the text tt(FBB::Mstream).
+    itb(explicit Mstream(std::streambuf &buf, size_t maxCount =
+        std::numeric_limits<size_t>::max(), std::string const &tag = "", bool
+        throwing = false)) 
+       This constructor uses tt(buf) to insert messages into. The remaining
+        parameters are identical to those of the previous constructor.
+    itb(explicit Mstream(std::string const &name, size_t maxCount =
+        std::numeric_limits<size_t>::max(), std::string const &tag = "", bool
+        throwing = false)) 
+       This constructor creates a tt(std::ofstream) from the provided tt(name)
+        parameter. It throws an tt(FBB::Exception) exception if the stream
+        cannot be opened for writing. If a file by that name already exists it
+        is rewritten.  The remaining parameters are identical to those of the
+        previous two constructors.
     )
     As tt(Mstream) inherits from tt(std::ostream) the copy constructor is
 not available. Neither is the move constructor.
@@ -171,7 +175,8 @@ tt(maxCount), the message label) are kept as-is.
     itb(void reset(std::ostream &ostr, size_t maxCount, 
                 std::string const &tag, bool throwing))
         messages inserted into tt(Mstream) objects are handled by the
-tt(std::streambuf) also used by tt(ostr).  By specifying tt(std::numeric_limits<size_t>::max()) for
+tt(std::streambuf) also used by tt(ostr).  By specifying
+        tt(std::numeric_limits<size_t>::max()) for
 tt(maxCount) there is no limit to the number of messages that may be handled
 by this tt(std::streambuf). The tt(tag) defines the text of the message label
 (e.g., tt(Error) or the empty string for no message label). When tt(throwing)
@@ -188,7 +193,8 @@ previous tt(reset) member.
                 std::string const &tag, bool throwing))
         messages inserted into tt(Mstream) objects are handled by a
 tt(std::ofstream) created using the provided tt(name) parameter. It throws an
-tt(FBB::Exception) exception if the stream cannot be opened for writing. If a file
+tt(FBB::Exception) exception if the stream cannot be opened for writing. If a
+        file
 by that name already exists it is rewritten.  The remaining parameters are
 identical to those of the previous two tt(reset) members.
 
@@ -256,11 +262,11 @@ and tt(std::flush) when inserted into another kind of tt(std::ostream) object.
     This manipulator completes the message that is currently being inserted
 into an tt(Mstream) object. It flushes the object's destination stream
 and prepares the object for the next message.  When the object's tt(throws)
-member returns tt(true) it will throw an tt(FBB:::Exception) exception which holds
-the id (see earlier for the member tt(id)) of the tt(Mstream) object from
-which the exception was thrown as well as the text tt(FBB::Mstream).  When
-used in combination with another kind of tt(std::ostream) object it acts like
-tt(std::flush).
+member returns tt(true) it will throw an tt(FBB:::Exception) exception which
+        holds the id (see earlier for the member tt(id)) of the tt(Mstream)
+        object from which the exception was thrown as well as the text
+        tt(FBB::Mstream).  When used in combination with another kind of
+        tt(std::ostream) object it acts like tt(std::flush).
     )
 
 As the manipulators tt(FBB::endl) and tt(FBB::flush) act like, respectively,

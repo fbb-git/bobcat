@@ -58,9 +58,11 @@ void install(string rss, string dev)
     md(dev + MAN + "/man1 " + dev + MAN + "/man3 " + dev + MAN + "/man7");
 
     rungzip9("tmp/man/man3/", dev + MAN + "/man3/");
+
+    rungzip9("tmp/man/man7/", dev + MAN + "/man7/");
     
-    run("gzip -n -9 < tmp/man/man7/" LIBRARY ".7 > " +
-                   dev + MAN + "/man7/" LIBRARY ".7.gz");
+//    run("gzip -n -9 < tmp/man/man7/" LIBRARY ".7 > " +
+//                   dev + MAN + "/man7/" LIBRARY ".7.gz");
 
     chdir(dev + MAN + "/man3");
     run("ln -sf iterator.3bobcat.gz reverseiterator.3bobcat.gz");
@@ -71,14 +73,12 @@ void install(string rss, string dev)
     printf("\n  installing the html versions of the manual pages\n");
     md(dev + DOCDEV + "/man");
 
-//  Don't zip as per man dh_compress:
-//    rungzip9("tmp/manhtml/", dev + DOCDEV + "/man/");
-    run("cp -r tmp/manhtml/* " + dev + DOCDEV + "/man/");
+    run("cp -r tmp/manhtml/* " + dev + DOC + "/man/");
 
-    run("ln -sf " LIBRARY ".7.html " + dev + DOCDEV + "/man/index.html");
-    run("cp documentation/man/" LIBRARY ".jpg " + dev + DOCDEV + "/man");
+    run("ln -sf " LIBRARY ".7.html " + dev + DOC + "/man/index.html");
+    run("cp documentation/man/" LIBRARY ".jpg " + dev + DOC + "/man");
 
-    chdir(dev + DOCDEV + "/man");
+    chdir(dev + DOC + "/man");
     run("ln -sf iterator.3.html reverseiterator.3.html");
     chdir(g_cwd);
 #endif
@@ -99,6 +99,7 @@ void install(string rss, string dev)
             "process-pipe.pdf "
             "TODO");
 
+    run("cp documentation/images/*.jpg " + dev + DOC);
     run("cp -r documentation/examples " + dev + DOCDEV);
 
     md(dev + DOCDEV + "/scripts");
