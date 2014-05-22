@@ -1,0 +1,111 @@
+includefile(include/header)
+
+COMMENT(replace 'sharedcondition' by the name of the new class)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::SharedCondition)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+                    (Shared Memory Mutex)
+
+manpagename(FBB::SharedCondition)(Mutex for shared memory)
+
+manpagesynopsis()
+    bf(#include <bobcat/sharedcondition>)nl()
+    Linking option: tt(-lpthread, -lbobcat ) 
+
+manpagedescription()
+
+    Condition variables are used to synchronize threads based on the values of
+data. Condition variables allow threads to wait until a certain condition has
+occurred, after which they continue their action. The advantage of using
+condition variables is that the waiting thread doesn't continuously have to
+poll the state of a variable (requiring the thread to gain access to the data
+before the data's values can be inspected). Instead, the waiting thread simply
+waits until it is notified by another thread that it can continue.
+
+    bf(SharedCondition) objects can be used in combination with shared
+memory. The bf(SharedCondition) object is defined in shared memory and may be
+accessed by threads running in different processes. These different
+processes might run a single tt(main) thread, or they themselves be
+multi-threaded.
+
+A thread 
+
+    Shared memory may be used by multiple processes. To synchronize access to
+shared memory an bf(FBB::SharedCondition) may be defined inside a shared
+memory segment. An bf(FBB::SharedCondition) allows clients to lock a shared
+memory segment before reading or writing its contents. E.g., the Bobcat class
+tt(FBB::SharedSegment) defines a tt(SharedCondition) in its shared memory
+segment.
+
+    The bf(FBB::SharedCondition) class uses the facilities offered by the
+tt(PThread) library to implement shared memory locking. To force
+unlocking a (possibly) locked shared memory segment, its destructor can be
+called. 
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(SharedCondition())
+       The default constructor initializes an bf(FBB::SharedCondition) object to a
+        shared memory mutex (using the tt(PTHREAD_PROCESS_SHARED)
+        attribute). As an bf(FBB::SharedCondition) object will normally be defined
+        inside a shared memory segment the object's memory is already
+        available. In this case placement new should be used to call the
+        constructor. E.g., if a shared memory segment is attached to the
+        current process at tt(d_shared), and an bf(FBB::SharedCondition) should be
+        defined at tt(d_shared)'s address, then the bf(FBB::SharedCondition)
+        object can be initialized like this: 
+       verb(
+    new (d_shared) FBB::SharedCondition;
+       )
+    )
+       The copy and move constructors are not available. 
+
+       The class's destructor releasea all of the current process's nested
+        shared memory segment locks. To destroy an bf(FBB::SharedMuted) object
+        that has been constructed using the placement tt(new) operator use
+       verb(
+    d_sharedcondition->~SharedCondition();
+       )
+       (assuming tt(SharedCondition *d_sharedcondition) points to the location where
+        placement new has previously initialized the bf(FBB::SharedCondition)
+        object.) 
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(void lock() const)
+       When returning from this member, the current process has locked the
+        shared memory segment.
+
+    itb(void unlock() const)
+       The object's lock of the shared memory segment is released.
+    )
+
+manpagesection(EXAMPLE)
+    See the bf(sharedstream)(3bobcat) man page.
+
+
+manpagefiles()
+    em(bobcat/sharedcondition) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+        bf(isharedstream)(3bobcat),
+        bf(osharedstream)(3bobcat),
+        bf(sharedblock)(3bobcat), 
+        bf(sharedmemory)(3bobcat),
+        bf(sharedpos)(3bobcat), 
+        bf(sharedsegment)(3bobcat), 
+        bf(sharedstream)(3bobcat), 
+        bf(sharedstreambuf)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
+
+

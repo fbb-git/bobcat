@@ -31,8 +31,11 @@ try
             SharedMemory shmem(1, SharedMemory::kB);
 
             void *ptr = shmem.ptr();
+            cout << "Before: " << shmem.showmanyc() << '\n';
+            shmem.seek(sizeof(SharedCondition) - 1);
+            shmem.put(0);
+            cout << "After: " << shmem.showmanyc() << '\n';
             new (ptr) SharedCondition();
-            shmem.seek(sizeof(SharedCondition));
 
             cout << "ID = " << shmem.id() << ", data at " << ptr << '\n' <<
                     shmem << endl;

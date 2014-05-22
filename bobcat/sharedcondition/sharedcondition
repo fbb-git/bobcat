@@ -1,6 +1,7 @@
 #ifndef INCLUDED_BOBCAT_SHAREDCONDITION_
 #define INCLUDED_BOBCAT_SHAREDCONDITION_
 
+#include <ios>
 #include <condition_variable>
 #include <thread>
 #include <chrono>
@@ -9,6 +10,8 @@
 
 namespace FBB
 {
+
+class SharedMemory;
 
 class SharedCondition: private SharedMutex
 {
@@ -62,6 +65,16 @@ class SharedCondition: private SharedMutex
             Predicate pred
         );
 
+                                    // create a SharedCondition at 
+                                    // shmem.offset(). Exception if out of 
+                                    // memory
+        static SharedCondition &create(SharedMemory &shmem);
+
+                                    
+        static SharedCondition &attach(SharedMemory &sharedMemory,
+                        std::ios::off_type offset = 0,
+                        std::ios::seekdir way = std::ios::cur);
+        
     private:
         template <typename Clock, typename Duration>
         static void waiter(
