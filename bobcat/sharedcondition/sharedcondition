@@ -1,0 +1,91 @@
+#ifndef INCLUDED_BOBCAT_SHAREDCONDITION_
+#define INCLUDED_BOBCAT_SHAREDCONDITION_
+
+#include <condition_variable>
+#include <thread>
+#include <chrono>
+
+#include <bobcat/sharedmutex>
+
+namespace FBB
+{
+
+class SharedCondition: private SharedMutex
+{
+    pthread_cond_t d_cond;
+    enum Status
+    {
+        INDETERMINATE,
+        NO_TIMEOUT,
+        TIMEOUT
+    };
+
+    Status d_status = INDETERMINATE;
+
+    public:
+        SharedCondition();
+        SharedCondition(SharedCondition const &other)           = delete;
+        SharedCondition &operator=(SharedCondition const &rhs)  = delete;
+
+        using SharedMutex::lock;
+        using SharedMutex::unlock;
+
+        void notify() noexcept;                             // f
+        void notify_all() noexcept;                         // f
+
+        void wait();                                        // 1.f
+
+        template <typename Predicate>
+        void wait(Predicate pred);                          // 2.f
+
+        template <typename Rep, typename Period>            // 1.f
+        std::cv_status wait_for(
+                std::chrono::duration<Rep, Period> const &relTime
+        );
+
+                                                            // 2.f
+        template <typename Rep, typename Period, typename Predicate>
+        bool wait_for(
+                std::chrono::duration<Rep, Period> const &relTime, 
+                Predicate pred
+        );
+
+        template <typename Clock, typename Duration>        // 1.f
+        std::cv_status wait_until(                      
+            std::chrono::time_point<Clock, Duration> const &absTime
+        );
+
+                                                            // 2.f
+        template <typename Clock, typename Duration, typename Predicate>
+        bool wait_until(
+            std::chrono::time_point<Clock, Duration> const &absTime, 
+            Predicate pred
+        );
+
+    private:
+        template <typename Clock, typename Duration>
+        static void waiter(
+                std::chrono::time_point<Clock, Duration> const &absTime, 
+                pthread_cond_t *d_cond, Status *status
+        );
+};
+
+#include "notify.f"
+#include "notifyall.f"
+
+#include "wait1.f"
+#include "wait2.f"
+
+#include "waiter.f"
+
+#include "waitfor1.f"
+#include "waitfor2.f"
+
+#include "waituntil1.f"
+
+} // FBB        
+#endif
+
+
+
+
