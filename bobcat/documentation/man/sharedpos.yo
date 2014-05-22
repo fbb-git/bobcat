@@ -60,7 +60,7 @@ manpagesection(MEMBER FUNCTIONS)
     itb(bool atMaxOffset() const)
        Returns tt(true) if offset equals the maximum offset that can be used
         for the current shared memory segment.nl()
-       The behavior of this member is undefined until tt(setup) has been
+       The behavior of this member is undefined until tt(reset) has been
         called. 
 
     itb(size_t blockIdx() const)
@@ -77,31 +77,31 @@ manpagesection(MEMBER FUNCTIONS)
         tt(sharedData). If tt(eof) returns tt(true) information may still 
         be em(written) to the shared memory: writting is possible until the
         maximum shared memory segment offset has been reached.nl()
-       The behavior of this member is undefined until tt(setup) has been
+       The behavior of this member is undefined until tt(reset) has been
         called. 
 
     itb(std::streamsize eos() const)
        The offset just beyond the maximum offset for the current shared
         segment data block is returned.nl()
-       The behavior of this member is undefined until tt(setup) has been
+       The behavior of this member is undefined until tt(reset) has been
         called. 
 
     itb(std::streamsize maxOffset() const)
        The maximum possible offset that can be used for the currently
         monitored shared memory segment is returned. Zero is returned until
-        tt(setup) has been called.
+        tt(reset) has been called.
 
     itb(std::streamsize offset() const)
        The offset within the currently monitored shared memory segment is
-        returned. Zero is returned until tt(setup) has been called.
+        returned. Zero is returned until tt(reset) has been called.
 
-    itb(void setup(SharedSegment *sharedData))
+    itb(void reset(SharedSegment *sharedData))
        The tt(SharedPos) object is reset to monitor the offset of a new
         tt(FBB::SharedSegment) object. The tt(SharedSegment *) must point to a
-        tt(SharedSegment) segment (cf. bf(sharedsegment)(3bobcat)) that must exist
-        until the end of the bf(FBB::SharedPos) object's lifetime or until the
-        next tt(reset) call. Immediately after calling tt(reset) offset has
-        the value 0. 
+        tt(SharedSegment) segment (cf. bf(sharedsegment)(3bobcat)) that must
+        exist until the end of the bf(FBB::SharedPos) object's lifetime or
+        until the next tt(reset) call. Immediately after calling tt(reset)
+        offset has the value 0.
 
     itb(std::streamsize showmanyc() const)
        The number of characters that can be read from the current shared
@@ -111,7 +111,7 @@ manpagesection(MEMBER FUNCTIONS)
         stable return value, calling functions should have obtained a lock on
         the shared memory segment before calling this member. See also the
         bf(sharedsegment)(3bobcat) man-page.nl()
-       The behavior of this member is undefined until tt(setup) has been
+       The behavior of this member is undefined until tt(reset) has been
         called. 
 
     itb(std::ios::pos_type seek(std::ios::off_type offset, 

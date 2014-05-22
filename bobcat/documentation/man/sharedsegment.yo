@@ -81,7 +81,9 @@ manpagesection(MEMBER FUNCTIONS)
     itb(void clear())
        All the shared memory data blocks are unconditionally deleted and
         tt(nReadable) returns 0 (the shared memory data blocks are not locked
-        prior to deleting them).
+        prior to deleting them). After calling tt(clear) all allocated 
+        bf(SharedSegment)'s shared memory segments have ceased to exist and
+        can no longer be used.
 
     itb(void lock(size_t idx) const)
        Access to shared data segment tt(idx) is locked. This member itself
@@ -143,7 +145,11 @@ manpagesection(STATIC MEMBER FUNCTIONS)
         group and others) as its arguments.
 
     itb(void deleteSegment(int id))
-       The shared memory segment having ID tt(id) is deleted from memory.
+       The shared memory segment having ID tt(id) is deleted from
+        memory. After calling tt(deleteSegment) shared memory segment tt(id)
+        doesn't exist anymore. The tt(id) can be the shared memory ID of any
+        segment for which the current user has write permissions. It isn't
+        necessarily the ID of a segment controlled by bf(SharedSegment).
 
     itb(Type *detach(Type *sharedPtr, bool requireOK = true))
        This member is defined as a member template. It expects a pointer to a
