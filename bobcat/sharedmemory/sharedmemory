@@ -93,6 +93,8 @@ class SharedMemory: public virtual SharedEnum__
         void kill();                    // delete all shared segments w/o locks
         void remove();                  // delete all shared segments.
 
+        size_t dataSegmentSize() const;
+
     private:
         std::ostream &insert(std::ostream &out) const;
 
@@ -122,6 +124,7 @@ class SharedMemory: public virtual SharedEnum__
                             long long maxMemory, SizeUnit sizeUnit);
 };
 
+#include "datasegmentsize.f"
 #include "id.f"
 #include "maxoffset.f"
 #include "nreadable.f"
@@ -132,4 +135,5 @@ class SharedMemory: public virtual SharedEnum__
 
 } // FBB        
 #endif
+
 

@@ -3,7 +3,6 @@
 
 #include <ios>
 #include <condition_variable>
-#include <thread>
 #include <chrono>
 
 #include <bobcat/sharedmutex>
@@ -16,14 +15,6 @@ class SharedMemory;
 class SharedCondition: private SharedMutex
 {
     pthread_cond_t d_cond;
-    enum Status
-    {
-        INDETERMINATE,
-        NO_TIMEOUT,
-        TIMEOUT
-    };
-
-    Status d_status = INDETERMINATE;
 
     public:
         SharedCondition();
@@ -34,7 +25,7 @@ class SharedCondition: private SharedMutex
         using SharedMutex::unlock;
 
         void notify() noexcept;                             // f
-        void notify_all() noexcept;                         // f
+        void notifyAll() noexcept;                          // f
 
         void wait();                                        // 1.f
 
@@ -65,15 +56,18 @@ class SharedCondition: private SharedMutex
             Predicate pred
         );
 
-                                    // create a SharedCondition at 
-                                    // shmem.offset(). Exception if out of 
-                                    // memory
-        static SharedCondition &create(SharedMemory &shmem);
+        static SharedCondition &create(std::streamsize *pos,
+                                       SharedMemory &shmem);
 
                                     
         static SharedCondition &attach(SharedMemory &sharedMemory,
                         std::ios::off_type offset = 0,
-                        std::ios::seekdir way = std::ios::cur);
+                        std::ios::seekdir way = std::ios::beg);
+
+        static SharedCondition &readAttach(SharedMemory &sharedMemory,
+                        std::ios::off_type offset = 0,
+                        std::ios::seekdir way = std::ios::beg);
+
     private:
         std::cv_status waiter(int64_t count);
 };

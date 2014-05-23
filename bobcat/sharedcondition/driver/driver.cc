@@ -30,15 +30,21 @@ try
         {
             SharedMemory shmem(1, SharedMemory::kB);
 
-            void *ptr = shmem.ptr();
-            cout << "Before: " << shmem.showmanyc() << '\n';
-            shmem.seek(sizeof(SharedCondition) - 1);
-            shmem.put(0);
-            cout << "After: " << shmem.showmanyc() << '\n';
-            new (ptr) SharedCondition();
+            shmem.seek(sizeof(streamsize)); // room for the location of the
+                                            // shared condition
 
-            cout << "ID = " << shmem.id() << ", data at " << ptr << '\n' <<
-                    shmem << endl;
+                                            // define the SharedCondition
+            streamsize pos;
+            SharedCondition::create(&pos, shmem);   
+
+            shmem.seek(0);                  // write the offset
+            shmem.write(reinterpret_cast<char const *>&pos, 
+                        sizeof(streamsize));
+
+            void *ptr = shmem.ptr();
+
+            cout << "ID = " << shmem.id() << ", SharedCondition at " << 
+                    pos << endl;
             break;
         }
 
@@ -53,23 +59,25 @@ try
         {
             SharedMemory shmem(stoll(argv[2]));
             shmem.seek(0);
-            SharedCondition *scPtr = 
-                            reinterpret_cast<SharedCondition *>(shmem.ptr());
+            streamsize pos;
+            shmem.read(reinterpret_cast<char *>(&pos), sizeof(pos));
 
-            scPtr->lock();
+            SharedCondition &sc = SharedCondition::attach(shmem, pos);
+
+            sc.lock();
             cout << "Obtained the lock. Now waiting for a notification\n";
         
             while (true)
             {
-                switch (scPtr->wait_for(chrono::seconds(5)))
+                switch (sc.wait_for(chrono::seconds(5)))
                 {
                     case cv_status::timeout:
                         cout << "Waited for 5 seconds\n\n";
                     break;
 
                     case cv_status::no_timeout:
-                        cout << "Received the notification. Now unlocking.\n";
-                        scPtr->unlock();
+                        sc.unlock();
+                        cout << "Received the notification. Unlocked.\n";
                     return 0;
                 }
             }
