@@ -74,13 +74,8 @@ class SharedCondition: private SharedMutex
         static SharedCondition &attach(SharedMemory &sharedMemory,
                         std::ios::off_type offset = 0,
                         std::ios::seekdir way = std::ios::cur);
-        
     private:
-        template <typename Clock, typename Duration>
-        static void waiter(
-                std::chrono::time_point<Clock, Duration> const &absTime, 
-                pthread_cond_t *d_cond, Status *status
-        );
+        std::cv_status waiter(int64_t count);
 };
 
 #include "notify.f"
@@ -89,12 +84,11 @@ class SharedCondition: private SharedMutex
 #include "wait1.f"
 #include "wait2.f"
 
-#include "waiter.f"
-
 #include "waitfor1.f"
 #include "waitfor2.f"
 
 #include "waituntil1.f"
+#include "waituntil2.f"
 
 } // FBB        
 #endif

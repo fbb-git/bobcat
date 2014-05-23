@@ -3,10 +3,10 @@ includefile(include/header)
 COMMENT(replace 'sharedcondition' by the name of the new class)
 
 COMMENT(manpage, section, releasedate, archive, short name)
-manpage(FBB::SharedCondition)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
-                    (Shared Memory Mutex)
+manpage(FBB::SharedCondition)(3bobcat)(_CurYrs_)
+        (libbobcat-dev__CurVers_-x.tar.gz)(Shared Memory Cond. Var.)
 
-manpagename(FBB::SharedCondition)(Mutex for shared memory)
+manpagename(FBB::SharedCondition)(Shared Memory Condition Variable)
 
 manpagesynopsis()
     bf(#include <bobcat/sharedcondition>)nl()
@@ -25,22 +25,43 @@ waits until it is notified by another thread that it can continue.
     bf(SharedCondition) objects can be used in combination with shared
 memory. The bf(SharedCondition) object is defined in shared memory and may be
 accessed by threads running in different processes. These different
-processes might run a single tt(main) thread, or they themselves be
+processes might run a single tt(main) thread, or they themselves can be
 multi-threaded.
 
-A thread 
+    In most situations condition variables are used like this:
+    itemization(
+    it() There exists a thread which should be suspended until a certain
+        condition has been met. 
+    it() This thread locks a mutex (or waits until the lock has been obtained)
+    it() While the condition hasn't been met, the thread is suspended (i.e.,
+        waits), automatically releasing the mutex's lock. 
+    it() Somehow (see below) the thread is resumed, at which point the thread
+        has automatically reacquired the lock.
+    it() Once the condition has been met, the while loop ends, and the mutex's
+        lock is released.
+    it() There exists a second thread, which influences the variables that are
+        elements of the condition, and which may notify the waiting thread,
+        once the required condition has been met.
+    it() This second thread locks the same mutex as used by the first thread.
+    it() The second thread modifies the variables that are involved, and if
+        the required condition has been met, it notifies the first thread.
+    it() The second thread releases the mutex's lock, allowing the first
+        thread to obtain the mutex's lock. 
+    )
 
-    Shared memory may be used by multiple processes. To synchronize access to
-shared memory an bf(FBB::SharedCondition) may be defined inside a shared
-memory segment. An bf(FBB::SharedCondition) allows clients to lock a shared
-memory segment before reading or writing its contents. E.g., the Bobcat class
-tt(FBB::SharedSegment) defines a tt(SharedCondition) in its shared memory
-segment.
+While the first thread is waiting, it is suspended. It may be resumed when it
+receives a notification from another thread, but also for spurious
+reasons. Therefore the first thread must verify that the condition has been
+met after resuming its actions.
 
-    The bf(FBB::SharedCondition) class uses the facilities offered by the
-tt(PThread) library to implement shared memory locking. To force
-unlocking a (possibly) locked shared memory segment, its destructor can be
-called. 
+As condition variables are always used in combination with mutexes,
+bf(SharedMutex) encapsulates the mutex-handling. The software using
+bf(SharedCondition) objects doesn't have to handle the mutexes itself.
+
+bf(SharedCondition) objects are used to synchronize actions by different
+processes, using shared memory as their vehicle of
+synchronization/communication. The example section provides an illustration.
+
 
 includefile(include/namespace)
 

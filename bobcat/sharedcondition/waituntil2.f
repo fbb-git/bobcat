@@ -4,7 +4,7 @@ bool SharedCondition::wait_until(
 {
     while (not pred())
     {
-        if (wait_for(absTime) == cv_status::timeout)
+        if (wait_until<Clock, Duration>(absTime) == std::cv_status::timeout)
             return pred();
     }
     return true;
