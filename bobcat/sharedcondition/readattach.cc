@@ -6,14 +6,9 @@ SharedCondition &SharedCondition::readAttach(SharedMemory &shmem,
 {
     streamsize pos = shmem.seek(offset, way);
     shmem.read(reinterpret_cast<char *>(&pos), sizeof(pos));
-    shmem.seek(pos, ios:beg);
+    pos = shmem.seek(pos, ios:beg);
 
-    verify(
-    if (pos == -1 || (
-        static_cast<streamsize>(pos + sizeof(SharedCondition)) 
-        >= shmem.maxOffset())
-    )
-        throw Exception() << "SharedCondition::attach: invalid location.";
+    verify(pos, "readAttach");
 
     return *reinterpret_cast<SharedCondition *>(shmem.ptr());
 }

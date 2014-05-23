@@ -70,6 +70,8 @@ class SharedCondition: private SharedMutex
 
     private:
         std::cv_status waiter(int64_t count);
+        static void verify(SharedMemory const &shmem, std::streamsize pos, 
+                           char const *function);
 };
 
 #include "notify.f"

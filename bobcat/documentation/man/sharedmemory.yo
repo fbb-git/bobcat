@@ -174,9 +174,11 @@ manpagesection(MEMBER FUNCTIONS)
         tt(remove).
 
     itb(std::ios::pos_type seek(std::ios::off_type offset, 
-                            std::ios::seekdir way = std::ios::beg))
+                            std::ios::seekdir origin = std::ios::beg))
        Moves the tt(offset) position relative to tt(way). The value -1 is
-        returned when seeking before offset 0 or beyond tt(maxOffset).
+        returned when seeking before offset 0 or beyond tt(maxOffset),
+        otherwise the offset relative to the begin location of the shared
+        memory (i.e, tt(offset) for tt(origin == ios::beg)) is returned.
 
     itb(std::streamsize showmanyc() const)
        The number of characters that can be read from the current shared
