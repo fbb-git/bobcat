@@ -8,7 +8,7 @@ SharedCondition &SharedCondition::create(std::streamsize *pos,
         throw Exception() << 
             "SharedCondition::create: no memory at SharedMemory segment";
 
-    size_t begin = shmem.offset() % size;
+    size_t begin = shmem.blockOffset();
     size_t end = (begin + sizeof(SharedCondition)) % size;
 
     if (begin + sizeof(SharedCondition) != end)
@@ -24,3 +24,7 @@ SharedCondition &SharedCondition::create(std::streamsize *pos,
 
     return *new (ptr) SharedCondition();
 }
+
+
+
+

@@ -111,6 +111,11 @@ manpagesection(OVERLOADED OPERATORS)
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
+    itb(
+    itb(size_t blockOffset() const)
+       The offset within the shared segment data block matching
+        tt(offset)'s return value is returned.  
+
     itb(void clear())
        First, the shared memory is locked. Next, all shared data segment are
         deleted, and the shared memory's own data are reset to indicate it is
@@ -148,7 +153,8 @@ manpagesection(MEMBER FUNCTIONS)
         the shared memory is returned.
     
     itb(std::streamsize offset() const)
-       The offset within the shared memory segment is returned.
+       The offset within the shared memory segment (i.e., relative to the
+        segment's tt(ios::beg) position) is returned.
 
     itb(char *ptr())
         Returns 0 if tt(offset() == maxOffset()). Otherwise it returns a

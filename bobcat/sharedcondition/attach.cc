@@ -6,7 +6,7 @@ SharedCondition &SharedCondition::attach(SharedMemory &shmem,
 {
     streamsize pos = shmem.seek(offset, way);
 
-    verify(pos, "attach");
+    verify(shmem, pos, "attach");
 
     return *reinterpret_cast<SharedCondition *>(shmem.ptr());
 }

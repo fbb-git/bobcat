@@ -6,9 +6,9 @@ SharedCondition &SharedCondition::readAttach(SharedMemory &shmem,
 {
     streamsize pos = shmem.seek(offset, way);
     shmem.read(reinterpret_cast<char *>(&pos), sizeof(pos));
-    pos = shmem.seek(pos, ios:beg);
+    pos = shmem.seek(pos, ios::beg);
 
-    verify(pos, "readAttach");
+    verify(shmem, pos, "readAttach");
 
     return *reinterpret_cast<SharedCondition *>(shmem.ptr());
 }

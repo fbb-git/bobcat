@@ -257,13 +257,27 @@ manpagesection(STATIC MEMBER FUNCTIONS)
                         std::ios::off_type offset = 0,
                         std::ios::seekdir origin = std::ios::beg))
        tt(SharedMemory shmem) uses its tt(seek) member to locate position
-        tt(offset) relative to tt(origin). This position is returned as the
-        location of a bf(SharedCondition) object. If the requested offset is
-        invalid (i.e., smaller than 0 or exceeding tt(maxOffset)) an
-        tt(FBB::Exception) is thrown.
+        tt(offset) relative to tt(origin). At this position a
+        bf(SharedCondition) object is constructed using the placement new
+        operator, and a reference to the constructed object is returned. If
+        the requested offset is invalid (i.e., smaller than 0 or exceeding
+        tt(maxOffset)) an tt(FBB::Exception) is thrown. 
+
+    itb(SharedCondition &readAttach(SharedMemory &shmem,
+                        std::ios::off_type offset = 0,
+                        std::ios::seekdir origin = std::ios::beg))
+       tt(SharedMemory shmem) uses its tt(seek) member to locate position
+        tt(offset) relative to tt(origin). At this position a
+        tt(std::streamsize) value is read (using the tt(SharedMememory's read)
+        member), which indicates the position (releative to the
+        tt(SharedMemory's std::ios::beg) position) where a tt(SharedCondition)
+        object is stored, and a reference to this bf(SharedCondition) object
+        is returned. If the requested offset is invalid (i.e., smaller than 0
+        or exceeding tt(maxOffset)) an tt(FBB::Exception) is thrown.
+
     )
 
-Notice that the memory segment in which the bf(SharedCondition) is installed
+Notice that the memory segment in which a bf(SharedCondition) is installed
 may become detached if the tt(SharedMemory) object is otherwise operated
 upon. Therefore, a thread calling tt(create) should store the offset where a
 bf(SharedCondition) objects is actually located in a location where other
