@@ -1,0 +1,39 @@
+#ifndef INCLUDED_BOBCAT_TTY_
+#define INCLUDED_BOBCAT_TTY_
+
+#include <termios.h>
+#include <iosfwd>
+
+namespace FBB
+{
+
+class Tty
+{
+    struct termios d_tty; 
+    int d_fd;
+
+    public:
+        enum EchoType
+        {
+            RESET,
+            ON,
+            OFF
+        };
+
+        Tty();
+        Tty(EchoType type);
+        bool echo(EchoType type);
+
+    private:
+};
+
+inline std::istream &operator>>(std::istream &in, Tty const &tty)
+{
+    return in;
+}
+
+
+} // FBB        
+#endif
+
+
