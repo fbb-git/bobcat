@@ -18,7 +18,6 @@ try
             "   k <id>: kill shared memory segment <id>\n"
             "   m <id>: show a message every 5 secs, otherwise wait until\n"
             "           being notified in segment <id>\n"
-            "   w <id>: wait until being notified in segment <id>\n"
             "   n <id>: notify the SharedCondition in segment ID <id>\n"
         ;
         return 0;
@@ -30,16 +29,9 @@ try
         {
             SharedMemory shmem(1, SharedMemory::kB);
 
-            shmem.seek(sizeof(streamsize)); // room for the location of the
-                                            // shared condition
-
-                                            // define the SharedCondition
+            shmem.seek(0);
             streamsize pos;
             SharedCondition::create(&pos, shmem);   
-
-            shmem.seek(0);                  // write the offset
-            shmem.write(reinterpret_cast<char const *>&pos, 
-                        sizeof(streamsize));
 
             void *ptr = shmem.ptr();
 
@@ -58,11 +50,7 @@ try
         case 'm':
         {
             SharedMemory shmem(stoll(argv[2]));
-            shmem.seek(0);
-            streamsize pos;
-            shmem.read(reinterpret_cast<char *>(&pos), sizeof(pos));
-
-            SharedCondition &sc = SharedCondition::attach(shmem, pos);
+            SharedCondition &sc = SharedCondition::attach(shmem);
 
             sc.lock();
             cout << "Obtained the lock. Now waiting for a notification\n";
@@ -86,33 +74,19 @@ try
         case 'n':
         {
             SharedMemory shmem(stoll(argv[2]));
-            shmem.seek(0);
-            SharedCondition *scPtr = 
-                            reinterpret_cast<SharedCondition *>(shmem.ptr());
+
+            SharedCondition &sc = SharedCondition::attach(shmem);
+
             cout << "Notifying the other after Enter ";
             cin.ignore(1000, '\n');
-            scPtr->lock();
-            cout << "Obtained the lock. Now notifying the other";
-            scPtr->notify();
+
+            sc.lock();
+            cout << "Obtained the lock. Now notifying the other\n";
+            sc.notify();
             cout << "Sent the notification. Now unlocking.\n";
-            scPtr->unlock();
+            sc.unlock();
             break;
         }
-            
-        case 'w':
-        {
-            SharedMemory shmem(stoll(argv[2]));
-            shmem.seek(0);
-            SharedCondition *scPtr = 
-                            reinterpret_cast<SharedCondition *>(shmem.ptr());
-            scPtr->lock();
-            cout << "Obtained the lock. Now waiting for a notification\n";
-            scPtr->wait();
-            cout << "Received the notification. Now unlocking.\n";
-            scPtr->unlock();
-            break;
-        }
-            
     }
 }
 catch (exception const &exc)
