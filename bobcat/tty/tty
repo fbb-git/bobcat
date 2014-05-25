@@ -22,6 +22,9 @@ class Tty
 
         Tty();
         Tty(EchoType type);
+
+        ~Tty();
+
         bool echo(EchoType type);
 
     private:
@@ -30,6 +33,11 @@ class Tty
 inline std::istream &operator>>(std::istream &in, Tty const &tty)
 {
     return in;
+}
+
+inline std::ostream &operator<<(std::ostream &out, Tty const &tty)
+{
+    return out;
 }
 
 

@@ -8,9 +8,9 @@ using namespace FBB;
 
 int main()
 {
-    cout << "Enter some text (not echoed): ";
+    cout << "Enter some text (not echoed): " << Tty(Tty::OFF);
     string line;
-    getline(cin >> Tty(Tty::OFF), line);
+    getline(cin, line);
     cout << "\n"
             "You entered: `" << line << "'\n";
     
