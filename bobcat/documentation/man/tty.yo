@@ -1,0 +1,97 @@
+includefile(include/header)
+
+COMMENT(replace 'tty' by the name of the new class)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Tty)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+                    (Controls echoing of characters)
+
+manpagename(FBB::Tty)(Controls echoing of characters entered at the terminal)
+
+manpagesynopsis()
+    bf(#include <bobcat/tty>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(Tty)(3bobcat) objects can be used to control the echoing of characters
+entered at the terminal (usually at tt(/dev/tty)). Directly reading from
+tt(/dev/tty) allows programs to read information (e.g., passwords or pass
+phrases) even if the standard input stream is redirected to a file. Unless
+redirected, tt(std::cin) is connected to tt(/dev/tty).
+
+    bf(Tty)(3bobcat) objects may be used as stand-alone objects or (usually
+anonymous) bf(Tty)(3bobcat) objects may be inserted into or extracted from
+streams. When inserting or extracting objects the involved streams are not
+affected; only the echoing of characters entered at tt(/dev/tty) is
+manipulated.
+
+    bf(Tty)(3bobcat)'s destructor does not reset the echo-state of
+tt(/dev/tty) to its original value. If that is required a bf(Tty)(3bobcat)
+object must be created first, calling its bf(echo(Tty::RESET)) member at the
+appropriate time. 
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(ENUM)
+    
+    The tt(enum EchoType) requests the type of echo-handling:
+    itemization(
+    it() bf(RESET) is used to reset tt(/dev/tty)'s state to the actual state
+        when a bf(Tty)(3bobcat) object was constructed
+    it() bf(ON) is used to activate echoing of characters entered at 
+        tt(/dev/tty).
+    it() bf(OFF) is used to suppress echoing of characters entered at 
+        tt(/dev/tty).
+    )
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Tty())
+       The current state of tt(/dev/tty) is saved.
+
+    itb(Tty(EchoType type))
+       The current state of tt(/dev/tty) is saved, and the object's member
+        tt(echo(type)) is called.
+    )
+
+    )
+    Default copy and move constructors are available.
+
+manpagesection(OVERLOADED OPERATORS)
+    itemization(
+    itb(std::istream &operator>>(std::istream &in, Tty const &tty))
+       The extraction operator does not affect tt(in), but tt(/dev/tty)'s
+        state is set according to the way the tt(tty) object was constructed.
+
+    itb(std::ostream &operator<<(std::ostream &out, Tty const &tty))
+       The insertion operator does not affect tt(out), but tt(/dev/tty)'s
+        state is set according to the way the tt(tty) object was constructed.
+    )
+    Default copy and move assignment operators are available.
+
+manpagesection(MEMBER FUNCTION)
+
+    itemization(
+    itb(echo(EchoType type))
+       tt(/Dev/tty)'s state is set according to the tt(EchoType) value that is
+        passed to this member.
+    )
+
+manpagesection(EXAMPLE)
+
+    verbinclude(../../tty/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/tty) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(onekey)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
+

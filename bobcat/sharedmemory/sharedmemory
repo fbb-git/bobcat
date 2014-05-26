@@ -79,12 +79,27 @@ class SharedMemory: public virtual SharedEnum__
                                         // write len bytes at d_offset
                                         // locks, returns #written or -1
         int write(char const *data, std::streamsize len);
+
+        template <typename Type>
+        int write(Type const &value);       // 1.f
+                   
+        template <typename Type>            // 2.f
+        int write(Type const &value, std::ios::off_type offset,
+                  std::ios::seekdir origin = std::ios::beg);
+
                   
         int get();                      // get char from d_segmentData 
                                         // locks), or EOF
 
                                         // read len chars, return nRead, locks
         int read(char *data, std::streamsize len);    
+
+        template <typename Type>
+        int read(Type *value);              // 1.f
+                  
+        template <typename Type>            // 2.f
+        int read(Type *value, std::ios::off_type offset,
+                  std::ios::seekdir origin = std::ios::beg);
 
 
         void clear();                   // clear all existing data and reduce
@@ -136,7 +151,11 @@ class SharedMemory: public virtual SharedEnum__
 #include "offset.f"
 #include "operatorassign.f"
 #include "operatorinsert.f"
+#include "read1.f"
+#include "read2.f"
 #include "swap.f"
+#include "write1.f"
+#include "write2.f"
 
 } // FBB        
 #endif
