@@ -5,6 +5,7 @@
 
 #include <bobcat/fswap>
 #include <bobcat/sharedpos>
+#include <bobcat/exception>
 
 namespace FBB
 {
@@ -98,7 +99,7 @@ class SharedMemory: public virtual SharedEnum__
         int read(Type *value);              // 1.f
                   
         template <typename Type>            // 2.f
-        int read(Type *value, std::ios::off_type offset,
+        int read(std::ios::off_type offset, Type *value,
                   std::ios::seekdir origin = std::ios::beg);
 
 
