@@ -136,12 +136,16 @@ manpagesection(MEMBER FUNCTIONS)
         tt(nReadable, EOF) is immediately returned.
 
     itb(int id() const)
-       The ID of the shared memory segment is returned.
+       The ID of the shared memory segment is returned. Following tt(kill)
+        tt(id) returns -1, indicating that the shared segment cannot be used
+        anymore (tt(operator=) can be used to re-initialize the
+        bf(FBB::SharedMemory) object).
 
     itb(void kill())
        Without locking the shared memory all shared memory controlled by the
         bf(FBB::SharedMemory) object is deleted. The bf(FBB::SharedMemory)
-        object is unusable after returning from tt(kill).
+        object is unusable after returning from tt(kill), with its tt(id)
+        member returns -1.
 
     itb(std::streamsize maxOffset() const)
        The maximum possible offset that can be used with the shared memory
