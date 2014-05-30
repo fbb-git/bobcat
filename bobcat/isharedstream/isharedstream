@@ -31,14 +31,28 @@ struct ISharedStream: private SharedStreambuf, public std::istream,
             int id,
             std::ios::openmode openMode = std::ios::in);
 
+    template <typename Type>
+    int read(Type *value);              // 1.f
+              
+    template <typename Type>            // 2.f
+    int read(std::ios::off_type offset, Type *value,
+              std::ios::seekdir origin = std::ios::beg);
+
     using std::istream::clear;
 
     void memInfo(std::ostream &out, char const *end = "\n") const;
 
+    using std::istream::read;
     using SharedStreambuf::id;
     using SharedStreambuf::remove;
     using SharedStreambuf::kill;
+    using SharedStreambuf::attachSharedCondition;
+    using SharedStreambuf::createSharedCondition;
+    using SharedStreambuf::readattachSharedCondition;
 };
+
+#include "read1.f"
+#include "read2.f"
 
 } // FBB        
 #endif

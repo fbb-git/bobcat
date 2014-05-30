@@ -33,18 +33,43 @@ struct SharedStream: private SharedStreambuf,
             int id,
             std::ios::openmode openMode = std::ios::in | std::ios::out);
 
+    bool truncate(std::streamsize offset);
 
     void memInfo(std::ostream &out, char const *end = "\n") const;
 
     void clear();
 
+    template <typename Type>
+    int read(Type *value);              // 1.f
+              
+    template <typename Type>            // 2.f
+    int read(std::ios::off_type offset, Type *value,
+              std::ios::seekdir origin = std::ios::beg);
+
+    template <typename Type>
+    int write(Type const *value);       // 1.f
+               
+    template <typename Type>            // 2.f
+    int write(std::ios::off_type offset, Type const *value,
+              std::ios::seekdir origin = std::ios::beg);
+
+  
+    using std::istream::read;
+    using std::ostream::write;
     using SharedStreambuf::id;
     using SharedStreambuf::remove;
     using SharedStreambuf::kill;
-
+    using SharedStreambuf::attachSharedCondition;
+    using SharedStreambuf::createSharedCondition;
+    using SharedStreambuf::readAttachSharedCondition;
 };
 
 #include "clear.f"
+#include "truncate.f"
+#include "read1.f"
+#include "read2.f"
+#include "write1.f"
+#include "write2.f"
 
 } // FBB        
 #endif

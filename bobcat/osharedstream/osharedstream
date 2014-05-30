@@ -31,14 +31,33 @@ struct OSharedStream: private SharedStreambuf, public std::ostream,
             int id,
             std::ios::openmode openMode = std::ios::in | std::ios::out);
 
+    template <typename Type>
+    int write(Type const *value);       // 1.f
+               
+    template <typename Type>            // 2.f
+    int write(std::ios::off_type offset, Type const *value,
+              std::ios::seekdir origin = std::ios::beg);
+
+ 
+    bool truncate(std::streamsize offset);
+    SharedMemory &sharedMemory();
+
     using std::ostream::clear;
 
     void memInfo(std::ostream &out, char const *end = "\n") const;
 
+    using std::ostream::write;
     using SharedStreambuf::id;
     using SharedStreambuf::remove;
     using SharedStreambuf::kill;
+    using SharedStreambuf::attachSharedCondition;
+    using SharedStreambuf::createSharedCondition;
+    using SharedStreambuf::readAttachSharedCondition;
 };
+
+#include "truncate.f"
+#include "write1.f"
+#include "write2.f"
 
 } // FBB        
 #endif

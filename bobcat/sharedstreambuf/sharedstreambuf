@@ -5,6 +5,7 @@
 #include <streambuf>
 
 #include <bobcat/sharedmemory>
+#include <bobcat/sharedcondition>
 
 namespace FBB
 {
@@ -46,9 +47,14 @@ class SharedStreambuf: public std::streambuf, public virtual SharedEnum__
 
         void memInfo(std::ostream &out) const;
 
-        SharedMemory &sharedMemory();
-
     protected:
+        SharedMemory &sharedMemory();
+        SharedCondition &createSharedCondition(std::streamsize *offset);
+        SharedCondition &attachSharedCondition(std::ios::off_type offset = 0,
+                        std::ios::seekdir way = std::ios::beg);
+        SharedCondition &readAttachSharedCondition(
+                        std::ios::off_type offset = 0,
+                        std::ios::seekdir way = std::ios::beg);
         void setOpenMode(std::ios::openmode openMode);        
         
     private:
@@ -72,10 +78,13 @@ class SharedStreambuf: public std::streambuf, public virtual SharedEnum__
             std::ios::openmode mode = std::ios::in | std::ios::out) override;
 };
 
+#include "attachsharedcondition.f"
 #include "clear.f"
+#include "createsharedcondition.f"
 #include "id.f"
 #include "kill.f"
 #include "meminfo.f"
+#include "readattachsharedcondition.f"
 #include "remove.f"
 #include "setmemory.f"
 #include "setopenmode.f"

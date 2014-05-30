@@ -94,12 +94,6 @@ values tt(kB, MB), and tt(GB), defined by tt(FBB::SharedEnum__) are available.
         after returning from tt(kill). Other processes that were using the
         shared memory can continue to do so.
 
-    itb(void remove())
-       The shared memory is first locked. Next, all shared memory is returned
-        to the operating system. The bf(FBB::SharedStream) object is unusable
-        after returning from tt(remove). Other processes that were using the
-        shared memory can continue to do so.
-
     itb(void memInfo(std::ostream &out, char const *end = "\n"))
        Information about the tt(SharedMemory) object is inserted into the
         provide tt(ostream) object. The IDs of the shared segments, their
@@ -135,6 +129,25 @@ values tt(kB, MB), and tt(GB), defined by tt(FBB::SharedEnum__) are available.
         segment having ID tt(id) exists), an tt(FBB::Exception) is
         thrown. Specifying the tt(ios::trunc) flag immediately clears the
         contents of the shared memory.
+
+    itb(void remove())
+       The shared memory is first locked. Next, all shared memory is returned
+        to the operating system. The bf(FBB::SharedStream) object is unusable
+        after returning from tt(remove). Other processes that were using the
+        shared memory can continue to do so.
+
+    itb(FBB::SharedMemory &sharedMemory())
+       A reference to the tt(FBB::SharedMemory) object to which the
+        bf(FBB::OSharedStream) object interfaces is returned.
+
+    itb(bool truncate(std::streamsize offset))
+       If tt(offset) is not exceeding the value returned by tt(seekp(0,
+        std::ios::end)) this latter value is changed to tt(offset) and
+        tt(true) is returned. Otherwise tt(false) is returned, and the value
+        returned by tt(seekp) is not changed. If the value returned by
+        tt(tellp()) exceeded tt(offset) it is redured to tt(offset) as
+        well. Subsequent read operations on the shared memory can only succeed
+        until tt(tellg) returns tt(offset).
     )
 
 manpagesection(EXAMPLE)

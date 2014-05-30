@@ -113,9 +113,16 @@ manpagesection(MEMBER FUNCTIONS)
         tt(nReadableLock).
 
     itb(size_t segmentSize() const)
-        The size (in bytes) of the shared memory data blocks is returned. The
+       The size (in bytes) of the shared memory data blocks is returned. The
         bf(FBB::SharedSegment) object can accomodate at most tt(segmentSize() *
         nBlocks()) bytes.
+
+    itb(bool truncate(std::streamsize offset))
+       After calling tt(nReadableLock), if tt(offset) is not exceeding the
+        value returned by tt(nReadable) tt(nReadable) is changed to tt(offset)
+        and tt(true) is returned. Otherwise tt(false) is returned, and the
+        value returned by tt(nReadable) is not changed. Before returning
+        tt(nReadableUnlock) is called.
 
     itb(void unlock(size_t idx) const)
        Releases the lock on the shared memory data segment tt(idx). If the
