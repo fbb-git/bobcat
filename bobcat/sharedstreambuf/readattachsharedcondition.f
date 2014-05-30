@@ -1,4 +1,4 @@
-SharedCondition &SharedStreambuf::readAttachSharedCondition(
+inline SharedCondition &SharedStreambuf::readAttachSharedCondition(
                                     std::ios::off_type offset, 
                                     std::ios::seekdir way)
 {
