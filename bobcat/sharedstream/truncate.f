@@ -1,4 +1,4 @@
-bool SharedStream::truncate(std::streamsize offset)
+inline bool SharedStream::truncate(std::streamsize offset)
 {
     return sharedMemory().truncate(offset);
 }
