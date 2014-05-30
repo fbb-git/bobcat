@@ -93,6 +93,14 @@ tt(GB), defined by tt(FBB::SharedEnum__) are available.
         memory is deleted. The bf(FBB::SharedStreambuf) object is
         unusable after returning from tt(kill). 
 
+    itb(void memInfo(std::ostream &out))
+       Information about the tt(SharedMemory) object is inserted into the
+        provide tt(ostream) object. The IDs of the shared segments, their
+        sizes, the maximum number of shared memory segments, the number of
+        bytes that can be read from the shared memory, and its actual storage
+        capacity, etc., are displayed. The inserted information is not
+        terminated by a final newline character.
+
     itb(void remove())
        The shared memory is locked, and the bf(FBB::SharedStreambuf)'s shared
         memory is deleted. The bf(FBB::SharedStreambuf) object is unusable
@@ -105,13 +113,9 @@ tt(GB), defined by tt(FBB::SharedEnum__) are available.
         to reuse a bf(FBB::SharedStreambuf) object again after calling
         tt(kill) or tt(remove).
 
-    itb(void memInfo(std::ostream &out))
-       Information about the tt(SharedMemory) object is inserted into the
-        provide tt(ostream) object. The IDs of the shared segments, their
-        sizes, the maximum number of shared memory segments, the number of
-        bytes that can be read from the shared memory, and its actual storage
-        capacity, etc., are displayed. The inserted information is not
-        terminated by a final newline character.
+    itb(FBB::SharedMemory &sharedMemory())
+       A reference to the tt(FBB::SharedMemory) object to which the
+        bf(FBB::SharedStreambuf) object interfaces is returned.
     )
 
 manpagesection(PROTECTED MEMBER FUNCTION)

@@ -46,6 +46,8 @@ class SharedStreambuf: public std::streambuf, public virtual SharedEnum__
 
         void memInfo(std::ostream &out) const;
 
+        SharedMemory &sharedMemory();
+
     protected:
         void setOpenMode(std::ios::openmode openMode);        
         
@@ -70,13 +72,14 @@ class SharedStreambuf: public std::streambuf, public virtual SharedEnum__
             std::ios::openmode mode = std::ios::in | std::ios::out) override;
 };
 
-#include "setopenmode.f"
-#include "id.f"
-#include "remove.f"
-#include "kill.f"
 #include "clear.f"
-#include "setmemory.f"
+#include "id.f"
+#include "kill.f"
 #include "meminfo.f"
+#include "remove.f"
+#include "setmemory.f"
+#include "setopenmode.f"
+#include "sharedmemory.f"
 
 } // FBB        
 #endif
