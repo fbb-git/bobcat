@@ -1,5 +1,7 @@
 #include "sharedmemory.ih"
 
+//#include <iostream>
+
 int SharedMemory::write(char const *data, streamsize len)
 {
     if (d_pos.atMaxOffset())
