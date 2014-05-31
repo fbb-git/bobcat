@@ -6,28 +6,49 @@
 #include <chrono>
 
 #include <bobcat/sharedmutex>
+#include <bobcat/sharedmemory>
 
 namespace FBB
 {
 
-class SharedMemory;
-
-class SharedCondition: private SharedMutex
+class SharedCondition
 {
-    pthread_cond_t d_cond;
+    SharedMemory &d_shmem;
+    std::streamsize d_offset;
 
-    public:
-        SharedCondition();
-        SharedCondition(SharedCondition const &other)           = delete;
-        SharedCondition &operator=(SharedCondition const &rhs)  = delete;
+    struct Condition: private SharedMutex
+    {
+        Condition();
 
+        pthread_cond_t d_cond;
+    
         using SharedMutex::lock;
         using SharedMutex::unlock;
+        using SharedMutex::mutexPtr;
+    };
 
-        void notify() noexcept;                             // f
-        void notifyAll() noexcept;                          // f
+    struct Data
+    {
+        std::streamsize offset;
+        Condition *condition;
+    };
 
-        void wait();                                        // 1.f
+    public:
+        static SharedCondition create(SharedMemory &shmem);
+        static SharedCondition attach(SharedMemory &shmem,
+                        std::ios::off_type offset = 0,
+                        std::ios::seekdir way = std::ios::beg);
+
+        std::streamsize offset() const;
+        static constexpr size_t width();
+
+        void lock();
+        void unlock();
+
+        void notify() noexcept;
+        void notifyAll() noexcept;
+
+        void wait();
 
         template <typename Predicate>
         void wait(Predicate pred);                          // 2.f
@@ -56,34 +77,23 @@ class SharedCondition: private SharedMutex
             Predicate pred
         );
 
-        static SharedCondition &create(std::streamsize *pos,
-                                       SharedMemory &shmem);
-
-        static SharedCondition &attach(SharedMemory &sharedMemory,
-                        std::ios::off_type offset = 0,
-                        std::ios::seekdir way = std::ios::beg);
-
-        static SharedCondition &readAttach(SharedMemory &sharedMemory,
-                        std::ios::off_type offset = 0,
-                        std::ios::seekdir way = std::ios::beg);
-
     private:
-        std::cv_status waiter(int64_t count);
+        SharedCondition(SharedMemory &shmem, std::streamsize offset);
+        std::cv_status waiter(Condition *cond, int64_t count);
+        Data prepare();
+
+
         static void verify(SharedMemory const &shmem, std::streamsize pos, 
                            char const *function);
 };
 
-#include "notify.f"
-#include "notifyall.f"
-
-#include "wait1.f"
+#include "offset.f"
 #include "wait2.f"
-
 #include "waitfor1.f"
 #include "waitfor2.f"
-
 #include "waituntil1.f"
 #include "waituntil2.f"
+#include "width.f"
 
 } // FBB        
 #endif

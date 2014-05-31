@@ -29,14 +29,12 @@ try
         {
             SharedMemory shmem(1, SharedMemory::kB);
 
-            shmem.seek(0);
-            streamsize pos;
-            SharedCondition::create(&pos, shmem);   
+            SharedCondition cond = SharedCondition::create(shmem);   
 
             void *ptr = shmem.ptr();
 
             cout << "ID = " << shmem.id() << ", SharedCondition at " << 
-                    pos << endl;
+                    cond.offset() << endl;
             break;
         }
 
@@ -50,43 +48,59 @@ try
         case 'm':
         {
             SharedMemory shmem(stoll(argv[2]));
-            SharedCondition &sc = SharedCondition::attach(shmem);
+            SharedCondition cond = SharedCondition::attach(shmem);
 
-            sc.lock();
+            cond.lock();
             cout << "Obtained the lock. Now waiting for a notification\n";
         
             while (true)
             {
-                switch (sc.wait_for(chrono::seconds(5)))
+                switch (cond.wait_for(chrono::seconds(5)))
                 {
                     case cv_status::timeout:
                         cout << "Waited for 5 seconds\n\n";
                     break;
 
                     case cv_status::no_timeout:
-                        sc.unlock();
+                        cond.unlock();
                         cout << "Received the notification. Unlocked.\n";
                     return 0;
                 }
             }
         }
             
+        case 'w':
+        {
+            SharedMemory shmem(stoll(argv[2]));
+            SharedCondition cond = SharedCondition::attach(shmem);
+
+            cond.lock();
+            cout << "Obtained the lock. Now waiting for a notification\n";
+        
+            cond.wait();
+            cout << "Received the notification. Unlocking.\n";
+
+            cond.unlock();
+            break;
+        }
+            
         case 'n':
         {
             SharedMemory shmem(stoll(argv[2]));
 
-            SharedCondition &sc = SharedCondition::attach(shmem);
+            SharedCondition cond = SharedCondition::attach(shmem);
 
             cout << "Notifying the other after Enter ";
             cin.ignore(1000, '\n');
 
-            sc.lock();
+            cond.lock();
             cout << "Obtained the lock. Now notifying the other\n";
-            sc.notify();
+            cond.notify();
             cout << "Sent the notification. Now unlocking.\n";
-            sc.unlock();
+            cond.unlock();
             break;
         }
+
     }
 }
 catch (exception const &exc)

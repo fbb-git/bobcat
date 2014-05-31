@@ -1,12 +1,14 @@
 #include "sharedcondition.ih"
 
-SharedCondition &SharedCondition::attach(SharedMemory &shmem,
+SharedCondition SharedCondition::attach(SharedMemory &shmem,
                                             std::ios::off_type offset,
                                             std::ios::seekdir way)
 {
-    streamsize pos = shmem.seek(offset, way);
+    streamsize currentOffset = shmem.offset();
 
-    verify(shmem, pos, "attach");
+    SharedCondition ret(shmem, shmem.seek(offset, way));
 
-    return *reinterpret_cast<SharedCondition *>(shmem.ptr());
+    shmem.seek(currentOffset);
+
+    return ret;
 }
