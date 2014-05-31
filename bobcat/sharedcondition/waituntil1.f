@@ -5,6 +5,6 @@ std::cv_status SharedCondition::wait_until(
     Data data = prepare();
 
     auto ret = waiter(data.condition, absTime.time_since_epoch().count());
-    d_shmem.seek(data.offset);
+    d_shmem->seek(data.offset);
     return ret;
 }

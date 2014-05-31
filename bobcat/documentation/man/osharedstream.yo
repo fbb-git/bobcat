@@ -71,6 +71,20 @@ manpagesection(MEMBER FUNCTIONS)
 values tt(kB, MB), and tt(GB), defined by tt(FBB::OSharedEnum__) are available. 
 
     itemization(
+    itb(SharedCondition attachSharedCondition(std::ios::off_type offset,
+                                        std::ios::seekdir origin))
+       This member returns an bf(FBB::SharedCondition)(3) object, located at
+        offset tt(offset) (relative to tt(origin)) in the tt(SharedMemory)
+        object to which the bf(OSharedStream) object interfaces.  This member
+        does not alter the value returned by the stream's tt(tellp) member.
+
+    itb(SharedCondition createSharedCondition())
+       This member returns an bf(FBB::SharedCondition)(3) object, created at
+        the current offset of the tt(SharedMemory) object to which the
+        bf(OSharedStream) object interfaces.  Creating a tt(SharedCondition)
+        object does not alter the value returned by the stream's tt(tellp)
+        member.
+
     itb(void clear())
        This member clears the error states of the tt(std::istream) base class
         object.
@@ -124,18 +138,13 @@ values tt(kB, MB), and tt(GB), defined by tt(FBB::OSharedEnum__) are available.
         after returning from tt(remove). Other processes that were using the
         shared memory can continue to do so.
 
-    itb(FBB::SharedMemory &sharedMemory())
-       A reference to the tt(FBB::SharedMemory) object to which the
-        bf(FBB::OSharedStream) object interfaces is returned.
-
     itb(bool truncate(std::streamsize offset))
        If tt(offset) is not exceeding the value returned by tt(seekp(0,
         std::ios::end)) this latter value is changed to tt(offset) and
         tt(true) is returned. Otherwise tt(false) is returned, and the value
-        returned by tt(seekp) is not changed. If the value returned by
-        tt(tellp()) exceeded tt(offset) it is redured to tt(offset) as
-        well. Subsequent read operations on the shared memory can only succeed
-        until tt(tellg) returns tt(offset).
+        returned by tt(seekp) is not altered. If the value returned by
+        tt(tellp) exceeded tt(offset), tt(tellp)'s return value is reduced to
+        tt(offset) as well.
     )
 
 manpagesection(EXAMPLE)
@@ -152,6 +161,7 @@ manpageseealso()
         bf(sharedmemory)(3bobcat)
         bf(sharedmutex)(3bobcat), 
         bf(sharedpos)(3bobcat), 
+        bf(sharedreadme)(7bobcat), 
         bf(sharedsegment)(3bobcat),
         bf(sharedstream)(3bobcat),
         bf(sharedstreambuf)(3bobcat)

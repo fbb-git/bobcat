@@ -13,7 +13,7 @@ namespace FBB
 
 class SharedCondition
 {
-    SharedMemory &d_shmem;
+    SharedMemory *d_shmem;              // Note: not allocated
     std::streamsize d_offset;
 
     struct Condition: private SharedMutex
@@ -34,13 +34,17 @@ class SharedCondition
     };
 
     public:
+        SharedCondition();
+        ~SharedCondition();
+
         static SharedCondition create(SharedMemory &shmem);
         static SharedCondition attach(SharedMemory &shmem,
                         std::ios::off_type offset = 0,
                         std::ios::seekdir way = std::ios::beg);
 
         std::streamsize offset() const;
-        static constexpr size_t width();
+
+        static constexpr size_t size();
 
         void lock();
         void unlock();
@@ -93,7 +97,7 @@ class SharedCondition
 #include "waitfor2.f"
 #include "waituntil1.f"
 #include "waituntil2.f"
-#include "width.f"
+#include "size.f"
 
 } // FBB        
 #endif

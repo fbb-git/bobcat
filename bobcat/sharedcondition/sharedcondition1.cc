@@ -1,7 +1,7 @@
 #include "sharedcondition.ih"
 
-SharedCondition::SharedCondition(SharedMemory &shmem, std::streamsize offset)
+SharedCondition::SharedCondition()
 :
-    d_shmem(shmem),
-    d_offset(offset)
+    d_shmem(0),
+    d_offset(0)
 {}

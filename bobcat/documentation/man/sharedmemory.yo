@@ -1,7 +1,5 @@
 includefile(include/header)
 
-COMMENT(replace 'sharedmemory' by the name of the new class)
-
 COMMENT(manpage, section, releasedate, archive, short name)
 manpage(FBB::SharedMemory)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
                     (Shared Memory Memory)
@@ -170,12 +168,27 @@ manpagesection(MEMBER FUNCTIONS)
         position tt(offset), incrementing tt(offset) thereafter. If tt(ch ==
         EOF, EOF) is immediately returned.
 
+    itb(int read(Type *value))
+       This member was implemented as a member template. It calls
+        the next member, casting tt(Type *) to tt(tt(char *), and using
+        tt(sizeof(Type)) as its second argument.  The number of
+        bytes actually read is returned. This member returns -1 if
+        initially tt(offset) was at least equal to tt(nReadable).
+              
     itb(int read(char *data, std::streamsize len))
        While locking the appropriate shared data segment(s) at most tt(len)
         bytes are read from the shared memory, starting at tt(offset). The
         bytes read from shared memory are stored at tt(data).  The number of
-        bytes actually written is returned. This member returns -1 if
+        bytes actually read is returned. This member returns -1 if
         initially tt(offset) was at least equal to tt(nReadable).
+              
+    itb(int read(std::ios::off_type offset, Type *value,
+                  std::ios::seekdir origin = std::ios::beg))
+       This member was implemented as a member template. After changing the
+        bf(SharedMemory)'s offset to tt(offset) (relative to tt(origin)), it
+        calls the first tt(read) member, passing it tt(value). The number of
+        bytes actually read is returned. This member returns -1 if initially
+        tt(offset) was at least equal to tt(nReadable).
               
     itb(void remove())
        The shared memory is locked, after which all shared memory controlled
@@ -207,27 +220,28 @@ manpagesection(MEMBER FUNCTIONS)
         returned. Otherwise tt(false) is returned, and the value returned by
         tt(nReadable) is not changed. 
 
-
-COMMENT(
-    itb(bool try_lock() const)
-       When returning tt(true) the current process has obtained the lock, and
-        the object's lock count is set to 1. Otherwise, tt(false) is returned
-        (which includes the case where the process already has obtained the
-        lock).
-
-    itb(void unlock() const)
-       If the object's lock count is zero, the function immediately
-        returns. Otherwise, the object's lock count is decremented. Once the
-        lock count has decremented to zero the lock of the shared memory
-        segment is released.
-END)
-
+    itb(int write(Type const *value))
+       This member was implemented as a member template. It calls the next
+        member, casting tt(Type const *) to tt(tt(char const *), and using
+        tt(sizeof(Type)) as its second argument.  The number of bytes actually
+        written is returned. This member returns -1 if initially tt(offset)
+        was at least equal to tt(maxOffset).
+              
     itb(int write(char const *data, std::streamsize len))
        The bf(FBB::SharedMemory) object calls tt(lock) to lock the shared
         memory, and writes at most tt(len) bytes into the shared memory,
         starting at tt(offset). Next, tt(unlock) is called. The number of
         bytes actually written is returned. The member function returns -1 if
         initially tt(offset) is equal to tt(maxOffset).
+
+    itb(int write(std::ios::off_type offset, Type const *value,
+                  std::ios::seekdir origin = std::ios::beg))
+       This member was implemented as a member template. After changing the
+        bf(SharedMemory)'s offset to tt(offset) (relative to tt(origin)), it
+        calls the first tt(write) member, passing it tt(value). The number of
+        bytes actually written is returned. This member returns -1 if
+        initially tt(offset) was at least equal to tt(maxOffset).
+              
     )
 
 manpagesection(EXAMPLE)
@@ -244,6 +258,7 @@ manpageseealso()
         bf(sharedcondition)(3bobcat), 
         bf(sharedmutex)(3bobcat), 
         bf(sharedpos)(3bobcat), 
+        bf(sharedreadme)(7bobcat),
         bf(sharedsegment)(3bobcat),
         bf(sharedstream)(3bobcat), 
         bf(sharedstreambuf)(3bobcat)

@@ -17,6 +17,6 @@ bool SharedCondition::wait_until(
         }
     }
 
-    d_shmem.seek(data.offset);
+    d_shmem->seek(data.offset);
     return ret;
 }

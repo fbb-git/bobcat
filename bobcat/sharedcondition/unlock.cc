@@ -5,5 +5,5 @@ void SharedCondition::unlock()
     Data data = prepare();
 
     data.condition->unlock();
-    d_shmem.seek(data.offset);
+    d_shmem->seek(data.offset);
 }

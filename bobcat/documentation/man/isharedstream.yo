@@ -69,10 +69,26 @@ manpagesection(OVERLOADED OPERATORS)
 
 manpagesection(MEMBER FUNCTIONS)
 
-     All members of tt(std::istream) and tt(std::ostream) and the tt(enum)
-values tt(kB, MB), and tt(GB), defined by tt(FBB::ISharedEnum__) are available. 
+     All members of tt(std::istream), and the tt(enum) values tt(kB, MB), and
+tt(GB), defined by tt(FBB::ISharedEnum__) are available.
 
     itemization(
+    itb(SharedCondition attachSharedCondition(std::ios::off_type offset,
+                                        std::ios::seekdir origin))
+       This member returns an bf(FBB::SharedCondition)(3) object, located at
+        offset tt(offset) (relative to tt(origin)) in the tt(SharedMemory)
+        object to which the bf(ISharedStream) object interfaces.  This member
+        does not alter the value returned by the stream's tt(tellg) member.
+
+    itb(SharedCondition createSharedCondition())
+       This member returns an bf(FBB::SharedCondition)(3) object, created at
+        the current offset of the tt(SharedMemory) object to which the
+        bf(ISharedStream) object interfaces. Note that this member em(changes)
+        the information within the object's tt(SharedMemory) substrate, which
+        is somewhat counter-intuitive for an em(std::istream) type of stream.
+        Creating a tt(SharedCondition) object does not alter the value
+        returned by the stream's tt(tellg) member.
+
     itb(void clear())
        This member clears the error states of the tt(std::istream) base class
         object.
@@ -84,12 +100,6 @@ values tt(kB, MB), and tt(GB), defined by tt(FBB::ISharedEnum__) are available.
        Without locking the shared memory first,  all shared memory is returned
         to the operating system. The bf(FBB::ISharedStream) object is unusable
         after returning from tt(kill). Other processes that were using the
-        shared memory can continue to do so.
-
-    itb(void remove())
-       The shared memory is first locked. Next, all shared memory is returned
-        to the operating system. The bf(FBB::ISharedStream) object is unusable
-        after returning from tt(remove). Other processes that were using the
         shared memory can continue to do so.
 
     itb(void memInfo(std::ostream &out, char const *end = "\n"))
@@ -124,7 +134,24 @@ values tt(kB, MB), and tt(GB), defined by tt(FBB::ISharedEnum__) are available.
         memory is ready for use. If opening fails (e.g., no shared memory
         segment having ID tt(id) exists), an tt(FBB::Exception) is
         thrown.
+
+    itb(void remove())
+       The shared memory is first locked. Next, all shared memory is returned
+        to the operating system. The bf(FBB::ISharedStream) object is unusable
+        after returning from tt(remove). Other processes that were using the
+        shared memory can continue to do so.
+
+    itb(bool truncate(std::streamsize offset))
+       If tt(offset) is not exceeding the value returned by tt(seekg(0,
+        std::ios::end)), then this latter value is changed to tt(offset) and
+        tt(true) is returned. Otherwise tt(false) is returned, and the value
+        returned by tt(seekg) is not altered. If the value returned by
+        tt(tellg) exceeded tt(offset), tt(tellg)'s return value it is reduced
+        to tt(offset) as well. Subsequent read operations on the shared memory
+        can only succeed as long as tt(tellg)'s return value hasn't reached
+        the value tt(offset). 
     )
+
 
 manpagesection(EXAMPLE)
     See the bf(sharedstream)(3bobcat) man page.
@@ -140,6 +167,7 @@ manpageseealso()
         bf(sharedmemory)(3bobcat),
         bf(sharedmutex)(3bobcat), 
         bf(sharedpos)(3bobcat), 
+        bf(sharedreadme)(7bobcat), 
         bf(sharedsegment)(3bobcat),
         bf(sharedstream)(3bobcat),
         bf(sharedstreambuf)(3bobcat)
