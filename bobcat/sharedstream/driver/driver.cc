@@ -5,6 +5,7 @@
 
 #include <bobcat/exception>
 #include <bobcat/sharedstream>
+#include <bobcat/sharedcondition>
 
 using namespace std;
 using namespace FBB;
@@ -22,6 +23,7 @@ int main()
                 " K             kill (no lock) existing shared segment\n"
                 " S             show stats of current shared segment\n"
                 " L <id>        Load segment <id>\n"
+                " C             Install a SharedCondition at offset 0\n"
                 " c            create new shared memory (sets id)\n"
 //                " l            lock segment id until key pressed\n"
 //                " p <x> c      put char c at offset x\n"
@@ -33,6 +35,10 @@ int main()
 
                   " x            extract lines (until EOF) from the current "
                                                                 "offset\n"
+                  " X            extract the next line from the current "
+                                                                "offset\n"
+                  "              when nodified via 'N'\n"
+                  " N            notify a waiting X\n"
                   " s <x>        seek (abs) offset x\n"
                 "? ";
 
@@ -58,6 +64,14 @@ int main()
             }
             break;
         
+            case 'C':
+            {
+                sharedStream.seekp(0);
+                SharedCondition cond(sharedStream.createSharedCondition());
+                sharedStream.seekg(cond.width());
+                break;
+            }
+
             case 'K':         // delete segment
             {
                 if (id == -1)
@@ -146,6 +160,53 @@ int main()
             }
             break;
                     
+            case 'X':
+            {
+                SharedCondition cond(sharedStream.attachSharedCondition(0));
+
+                string line;
+                sharedStream.seekg(cond.width());
+
+                cond.lock();
+
+                while (true)
+                {
+                    cond.wait();
+
+                    cout << ": ";
+                    if (not getline(sharedStream, line))
+                        break;
+
+                    cout << line << "\n"
+                            "   tellg: " << sharedStream.tellg() << ", "
+                            "   tellp: " << sharedStream.tellp() << '\n';
+                }
+                cout << "All done\n";
+                cond.unlock();
+            }
+            break;
+
+            case 'N':
+            {
+                string line;
+                getline(cin, line);
+
+                SharedCondition cond(sharedStream.attachSharedCondition(0));
+                while (true)
+                {
+                    cout << "'enter' or 'q'? ";
+                    getline(cin, line);
+
+                    if (line == "q")
+                        break;
+
+                    cond.lock();
+                    cond.notify();
+                    cond.unlock();
+                }
+            }
+            break;
+        
             case 'p':           // put a char behind the last written
             {
                 if (id == -1)
