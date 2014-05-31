@@ -239,19 +239,24 @@ manpagesection(MEMBER FUNCTIONS)
 manpagesection(STATIC MEMBER FUNCTIONS)
 
     itemization(
-    itb(SharedCondition &create(std::streamsize *pos, SharedMemory &shmem)) 
+    itb(FBB::SharedCondition::Location create(SharedMemory &shmem)) 
        A bf(SharedCondition) object is initialized at the current offset of
         the tt(SharedMemory) object referred to by tt(shmem), or at the first
         offset of the next physical shared data segment if there's too little
         room at the current offset to define a bf(SharedCondition) object. An
         tt(FBB::Exception) is thrown if there isn't enough memory available in
-        the tt(SharedMemory) object to define a bf(SharedCondition)
-        object. The offset (relative to tt(ios::beg)) where the
+        the tt(SharedMemory) object to define a bf(SharedCondition).
+        bf(SharedCondition) objects created by this member remember their
+        position within the tt(SharedMemory) object, and actions performed by
+        the created bf(SharedCondition) object will not alter the
+        tt(SharedMemory) object's offset. Consequently, there is no need to
+        change the tt(SharedMemmory)'s offset either before or after calling
+        members of the bf(SharedCondition) object. The function returns a
+        tt(SharedCondition::Location) object.
+
+The offset (relative to tt(ios::beg)) where the
         bf(SharedCondition) object is actually stored is returned at
-        tt(pos). The function returns a reference to the initialized
-        bf(SharedCondition) object, and the tt(SharedMemory)'s offset is set
-        to the first byte beyond the just initialized bf(SharedCondition)
-        object.
+        tt(pos). 
 
     itb(SharedCondition &attach(SharedMemory &shmem,
                         std::ios::off_type offset = 0,
