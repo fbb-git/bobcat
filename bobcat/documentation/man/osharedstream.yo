@@ -71,23 +71,28 @@ manpagesection(MEMBER FUNCTIONS)
 values tt(kB, MB), and tt(GB), defined by tt(FBB::OSharedEnum__) are available. 
 
     itemization(
-    itb(SharedCondition attachSharedCondition(std::ios::off_type offset,
+    itb(FBB::SharedCondition attachSharedCondition(std::ios::off_type offset,
                                         std::ios::seekdir origin))
-       This member returns an bf(FBB::SharedCondition)(3) object, located at
-        offset tt(offset) (relative to tt(origin)) in the tt(SharedMemory)
-        object to which the bf(OSharedStream) object interfaces.  This member
-        does not alter the value returned by the stream's tt(tellp) member.
+       Returns an bf(FBB::SharedCondition)(3) object, interfacing to a shared
+        condition variable located at offset tt(offset) (relative to
+        tt(origin)) in the tt(SharedMemory) object to which the
+        bf(OSharedStream) object interfaces.  This member does not alter the
+        value returned by the stream's tt(tellp) member.
 
-    itb(SharedCondition createSharedCondition())
-       This member returns an bf(FBB::SharedCondition)(3) object, created at
-        the current offset of the tt(SharedMemory) object to which the
-        bf(OSharedStream) object interfaces.  Creating a tt(SharedCondition)
-        object does not alter the value returned by the stream's tt(tellp)
-        member.
+        An tt(FBB::Exception) is thrown if the tt(FBB::SharedCondition) object
+        could not be constructed.
 
-    itb(void clear())
-       This member clears the error states of the tt(std::istream) base class
-        object.
+    itb(FBB::SharedCondition createSharedCondition())
+       Returns an bf(FBB::SharedCondition)(3) object, interfacing to a newly
+        created shared condition variable which is created at the current
+        offset of the tt(SharedMemory) object to which the bf(OSharedStream)
+        object interfaces (or at the first offset of the next physical shared
+        memory data block, cf. bf(sharedcondition)(3bobcat))).  Creating a
+        tt(SharedCondition) object does not alter the value returned by the
+        stream's tt(tellp) member.
+
+        An tt(FBB::Exception) is thrown if the tt(FBB::SharedCondition) object
+        could not be constructed.
 
     itb(int id() const)
        The ID of the shared memory segment is returned.

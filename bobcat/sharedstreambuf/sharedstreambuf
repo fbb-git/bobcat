@@ -31,28 +31,28 @@ class SharedStreambuf: public std::streambuf, public virtual SharedEnum__
 
         virtual ~SharedStreambuf();
 
+        void clear();                   // clear all existing data and reduce
+                                        // until only the segment at 
+                                        // d_sharedData
+
         int id() const;                 // id of the shared Memory segment
 
         void kill();                    // kill all shared segments w/o locks
                                         // the object is unusable hereafter
 
+        void memInfo(std::ostream &out) const;
+
         void remove();                  // remove all shared segments.
                                         // the object is unusable hereafter
 
-        void clear();                   // clear all existing data and reduce
-                                        // until only the segment at 
-                                        // d_sharedData
-
         void setMemory(SharedMemory &&tmp);
 
-        void memInfo(std::ostream &out) const;
-
     protected:
-        SharedMemory &sharedMemory();
-        SharedCondition createSharedCondition();
         SharedCondition attachSharedCondition(std::ios::off_type offset = 0,
                         std::ios::seekdir way = std::ios::beg);
+        SharedCondition createSharedCondition();
         void setOpenMode(std::ios::openmode openMode);        
+        SharedMemory &sharedMemory();
         
     private:
         bool mode(std::ios::openmode flag);
