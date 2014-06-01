@@ -37,20 +37,14 @@ class SharedCondition
         SharedCondition();
         ~SharedCondition();
 
-        static SharedCondition create(SharedMemory &shmem);
-        static SharedCondition attach(SharedMemory &shmem,
-                        std::ios::off_type offset = 0,
-                        std::ios::seekdir way = std::ios::beg);
-
-        std::streamsize offset() const;
-
-        static constexpr size_t size();
-
         void lock();
-        void unlock();
 
         void notify() noexcept;
         void notifyAll() noexcept;
+
+        std::streamsize offset() const;
+
+        void unlock();
 
         void wait();
 
@@ -81,14 +75,20 @@ class SharedCondition
             Predicate pred
         );
 
+
+        static SharedCondition attach(SharedMemory &shmem,
+                        std::ios::off_type offset = 0,
+                        std::ios::seekdir way = std::ios::beg);
+
+        static SharedCondition create(SharedMemory &shmem);
+
+        static constexpr size_t size();
+
     private:
         SharedCondition(SharedMemory &shmem, std::streamsize offset);
         std::cv_status waiter(Condition *cond, int64_t count);
+
         Data prepare();
-
-
-        static void verify(SharedMemory const &shmem, std::streamsize pos, 
-                           char const *function);
 };
 
 #include "offset.f"

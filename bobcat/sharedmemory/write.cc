@@ -34,3 +34,4 @@ int SharedMemory::write(char const *data, streamsize len)
 
     return d_pos.offset() - begin;
 }
+

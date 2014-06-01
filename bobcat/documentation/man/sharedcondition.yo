@@ -25,7 +25,7 @@ accessed by threads running in different processes. These different
 processes might run a single tt(main) thread, or they themselves can be
 multi-threaded.
 
-    Condition variables are encountered in situations like these:
+    Condition variables are used in situations like these:
     itemization(
     it() There exists a thread which should be suspended until a certain
         condition has been met. 
@@ -51,19 +51,16 @@ receives a notification from another thread, but also for spurious
 reasons. Therefore the first thread must verify that the condition has been
 met after resuming its actions.
 
-As condition variables are always used in combination with mutexes,
+As condition variables are always used in combination with a mutex,
 bf(SharedMutex) encapsulates the mutex-handling. The software using
-bf(SharedCondition) objects doesn't have to handle the mutexes itself.
+bf(SharedCondition) objects doesn't have to handle the mutex itself.
 
 bf(SharedCondition) objects are used to synchronize actions by different
 processes, using shared memory as their vehicle of
-synchronization/communication. For this to work, the bf(SharedCondition)
-object should have been defined in shared memory.  The example section
-provides an illustration.
-
-bf(SharedCondition) objects themselves are small objects, containing the
-necessary information to access the actual shared memory condition variable
-(living in some shared memory segment).
+synchronization/communication. The actual condition variable that is used by a
+bf(SharedCondition) object is defined in shared memory.  bf(SharedCondition)
+objects themselves are small objects, containing the necessary information to
+access the actual shared memory condition variable.
 
 includefile(include/namespace)
 
@@ -74,15 +71,15 @@ manpagesection(CONSTRUCTORS)
     itemization(
     itb(SharedCondition())
        The default constructor creates an empty stub which cannot yet be used
-        (using it results in throwing an tt(FBB::Exception)). As the
-        bf(SharedCondition) class supports assignment operators, these empty
-        stubs can be (re)configured at any time after their construction.
+        (or an tt(FBB::Exception) is thrown). As the bf(SharedCondition) class
+        supports assignment operators, empty stubs can easily be
+        (re)configured at any time after their construction.
     )
        (Default) copy and move constructors are available. 
 
        The class's destructor releases (if applicable) its lock on the shared
         condition variables mutex lock. The destructor takes no action if its
-        object in fact is an empty stub.
+        object is an empty stub.
 
 manpagesection(OVERLOADED OPERATORS)
 
@@ -90,24 +87,26 @@ manpagesection(OVERLOADED OPERATORS)
 
 manpagesection(MEMBER FUNCTIONS)
 
-    The offset of the tt(SharedMemory) object in which the bf(SharedCondition)
-        object has been defined after calling any of the bf(SharedCondition)
-        members is equal to the offset before calling these members.
+Returning from bf(SharedCondition) member functions the offset of the
+tt(SharedMemory) object in which the condition variable has been defined has
+not changed. Internally, the current offset is saved; the requested function
+is performed; and the original offset is restored. Consequently,
+bf(SharedCondition) member functions can be used disregarding the
+tt(SharedMemory)'s current offset.
 
     itemization(
     itb(void lock() const)
        When returning from this member, the current process has locked the
-        bf(SharedCondition) object.
-
-    itb(void unlock() const)
-       The object's lock is released.
+        bf(SharedCondition) object. Be careful not to call tt(lock) twice
+        during the same thread of execution (cf. bf(sharedmutex)(3bobcat) for
+        details).
 
     itb(void notify() noexept)
-       One of the threads waiting on the bf(SharedCondition) object will wake
+       One of the threads waiting on the bf(SharedCondition) object wakes
         up. The thread calling tt(notify) should release its mutex lock
-        shortly after this, allowing the notified thread to obtain the
-        lock. The prototypical piece of pseudo code illustrating the use of
-        tt(notify) therefore looks like this:
+        shortly after calling tt(notify), allowing the notified thread to
+        obtain the lock. A prototypical piece of pseudo code illustrating
+        the use of tt(notify) looks like this:
        verb(
     sharedCondition.lock();     // lock the mutex
     ...                         // operate on the condition's variables
@@ -116,8 +115,8 @@ manpagesection(MEMBER FUNCTIONS)
     sharedCondition.unlock();   // release the lock
        )
        As the tt(sharedCondition.lock ... sharedCondition.unlock) sequence
-        itself may repeatedly be executed, the tt(unlock) member cannot be
-        called from within tt(notify).
+        itself may be executed at different flow of control sections, the
+        tt(unlock) member cannot be called from within tt(notify).
 
     itb(void notifyAll() noexept)
        Different from the plain tt(notify) member, this member wakes up all of
@@ -125,47 +124,57 @@ manpagesection(MEMBER FUNCTIONS)
         the current thread has released its mutex lock only one of these
         signaled threads will actually obtain the lock. The pseudo code for
         using tt(notifyAll) is identical to the pseudo code for using
-        tt(notify) (but then calling tt(notifyAll), of course).
+        tt(notify) (i.e., calling tt(notifyAll), of course).
 
     itb(std::streamsize offset() const)
        The location of the shared condition variable (within the
-        tt(SharedMemory) object) is returned.
+        tt(SharedMemory) object) is returned. The shared condition object ends
+        at tt(offset() + SharedCondition::width()), see below.
+
+    itb(void unlock() const)
+       The object's lock is released (nothing happens if called when the
+        current object does not have the object's  lock).
 
     itb(void wait())
        Before calling tt(wait) the current thread should have obtained a lock
-        on the bf(SharedCondition) object. When calling tt(wait) the running
-        thread suspends its activities and waits until being notified. Once
-        notified, it reacquires the lock and continues. Shortly after this the
-        process should release its lock on the bf(SharedCondition) object.
-        lock. The prototypical piece of pseudo code illustrating the use of
-        tt(wait) therefore looks like this:
+        on the bf(SharedCondition) object. 
+
+       When calling tt(wait) the running thread suspends its activities and
+        waits until being notified. Once notified, it reacquires the lock and
+        continues. Shortly after this the process should again release its
+        lock on the bf(SharedCondition) object.  lock. A prototypical piece of
+        pseudo code illustrating how to use tt(wait) looks like this:
        verb(
     sharedCondition.lock();         // lock the mutex
     while (conditionWasNotYetMet)   // waiting required
         sharedCondition.wait(); 
+    ...                             // do something: we have the lock
     sharedCondition.unlock();       // release the lock
        )
 
     itb(void wait(Predicate pred))
        This member was implemented as a member template. tt(Predicate) either
-        is a predicate function or a predicate function object (not expecting
-        arguments). As long as tt(pred) is returning false, tt(wait()) (no
-        arguments) is called. The function returns once tt(pred) has returned
-        tt(true).
+        is a predicate function or a predicate function object. The predicate
+        function or the predicate function object's function call operators
+        may not require arguments. As long as tt(pred) is returning false,
+        tt(wait()) (no arguments) is called. The function returns once
+        tt(pred) has returned tt(true).
 
-        The running thread should have obtained a lock on bf(SharedCondition)
-        prior to calling this member, and should release the lock after this
-        member has returned.
+        The running thread should have obtained a lock on the
+        bf(SharedCondition) condition variable prior to calling this member,
+        and should release the lock after this member has returned.
 
         The pseudo code for using tt(wait(pred)) is identical to the pseudo
-        code for using tt(wait) (but then calling tt(wait(pred)), of course).
+        code for using tt(wait) (albeit that tt(pred) has to be passed to
+        tt(wait), of course).
 
     itb(std::cv_status wait_for(std::chrono::duration<Type, Unit> 
         const &relTime))
        This member was implemented as a member template. tt(Type) defines the
         type of the variable holding the amount of time (usually tt(int64_t)),
-        specified in time unit tt(Unit). Predefined tt(duration) types exist,
-        like tt(std::chrono::seconds(4)), representing 4 seconds, or
+        specified in time unit tt(Unit). Predefined tt(duration) types are
+        available from the tt(std::chrono) namespace, like
+        tt(std::chrono::seconds(4)), representing 4 seconds, or
         tt(std::chrono::milliseconds(30)), representing 30 milliseconds.
 
         The running thread should have obtained a lock on bf(SharedCondition)
@@ -177,21 +186,46 @@ manpagesection(MEMBER FUNCTIONS)
         tt(relTime) has passed. Otherwise tt(std::cv_status::timeout) is
         returned.
 
+        A prototypical piece of pseudo code illustrating how to use
+        tt(wait_for) looks like this:
+       verb(
+    sharedCondition.lock();         // lock the mutex
+    while (conditionWasNotYetMet)   // waiting required
+    {
+        while (sharedCondition.wait_for(someTime) 
+               == std::cv_status::timeout)
+            handle_timeout 
+
+        do_something
+    }
+    sharedCondition.unlock();       // release the lock
+       )
+       When returning from tt(wait_for) the current thread has obtained the
+        shared condition's lock, but maybe due to a timeout: this can be
+        verified by inspecting tt(wait_for's) return value, and an appropriate
+        action can be selected.
+
     itb(bool wait_for(std::chrono::duration<Type, Unit> 
         const &relTime, Predicate pred))
        This member was implemented as a member template. tt(Type) defines the
         type of the variable holding the amount of time (usually tt(int64_t)),
         specified in time unit tt(Unit). tt(Predicate) either is a predicate
-        function or a predicate function object (not expecting arguments).
+        function or a predicate function object.  The predicate function or
+        the predicate function object's function call operators may not
+        require arguments. 
 
         The running thread should have obtained a lock on bf(SharedCondition)
         prior to calling this member, and should release the lock after this
         member has returned.
 
-        As long as tt(pred) returns false, tt(wait_for(relTime))
-        is called. If the latter function returns tt(std::cv_status::timeout),
-        then tt(pred()) is called, and its return value is returned. Otherwise
+        As long as tt(pred) returns false, tt(wait_for(relTime)) is called. If
+        the latter function returns tt(std::cv_status::timeout), then
+        tt(pred) is called, and its return value is returned. Otherwise
         tt(true) is returned.
+
+        The pseudo code for using this member is identical to the pseudo code
+        for using the abovementioned tt(wait_for) member (albeit that tt(pred)
+        must also be passed to tt(wait_for), of course).
 
     itb(std::cv_status wait_until(std::chrono::time_point<Clock, Duration> 
         const &absTime))
@@ -208,10 +242,14 @@ manpagesection(MEMBER FUNCTIONS)
         prior to calling this member, and should release the lock after this
         member has returned.
 
-        This member acts like tt(wait), returning
+        This member acts like tt(wait_for(relative-time)), returning
         tt(std::cv_status::no_timeout) if a notification was received before
         tt(absTime) has passed. Otherwise tt(std::cv_status::timeout) is
         returned.
+
+        The pseudo code for using this member is identical to the pseudo code
+        for using the abovementioned tt(wait_for(relative-time)) member
+        (albeit that absolute time must be specified).
 
     itb(bool wait_until(std::chrono::time_point<Clock, Duration> 
         const &absTime, Predicate pred))
@@ -224,10 +262,14 @@ manpagesection(MEMBER FUNCTIONS)
         prior to calling this member, and should release the lock after this
         member has returned.
 
-        As long as tt(pred()) returns false, tt(wait_until(absTime))
+        As long as tt(pred) returns false, tt(wait_until(absTime))
         is called. If the latter function returns tt(std::cv_status::timeout),
-        then tt(pred()) is called, and its return value is returned. Otherwise
+        then tt(pred) is called, and its return value is returned. Otherwise
         tt(true) is returned.
+
+        The pseudo code for using this member is identical to the pseudo code
+        for using the abovementioned tt(wait_until) member (albeit that
+        tt(pred) must also be passed to tt(wait_until), of course).
     )
 
 manpagesection(STATIC MEMBER FUNCTIONS)
@@ -237,23 +279,22 @@ manpagesection(STATIC MEMBER FUNCTIONS)
                         std::ios::off_type offset = 0,
                         std::ios::seekdir origin = std::ios::beg))
        The tt(SharedCondition) object interfacing to the shared condition
-        variable at the specified offset in the specified tt(SharedMemory)
-        object is returned. If the requested offset is invalid (i.e., smaller
-        than 0 or exceeding tt(maxOffset)) an tt(FBB::Exception) is thrown.
+        variable located at tt(offset) (relative to tt(origin)) in tt(shmem)
+        is returned. 
+
+        An tt(FBB::Exception) is thrown if the requested offset is invalid
+        (i.e., smaller than 0 or exceeding tt(shmem.maxOffset())).
 
     itb(FBB::SharedCondition create(SharedMemory &shmem)) 
-       A bf(SharedCondition) object is initialized at the current offset of
+       A shared condition variable is initialized at the current offset of
         the tt(SharedMemory) object referred to by tt(shmem), or at the first
-        offset of the next physical shared data segment if there's too little
-        room at the current offset to define a bf(SharedCondition) object. An
-        tt(FBB::Exception) is thrown if there isn't enough memory available in
-        the tt(SharedMemory) object to define a bf(SharedCondition).
+        offset of the next physical shared data segment. 
 
-        bf(SharedCondition) objects created by this member remember their
-        position within the tt(SharedMemory) object, and actions performed by
-        the created bf(SharedCondition) object do not alter the
-        tt(SharedMemory) object's offset. This function returns a
-        tt(SharedCondition::Location) object.
+        A bf(SharedCondition) object interfacing to the initialized shared
+        condition variable is returned.
+
+        An tt(FBB::Exception) is thrown if there isn't enough memory available
+        in the tt(SharedMemory) object to define a shared condition variable.
 
     itb(size_t size() const)
        Returns the size in bytes of shared condition variables stored in

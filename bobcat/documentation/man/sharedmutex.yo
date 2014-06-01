@@ -15,14 +15,19 @@ manpagesynopsis()
 manpagedescription()
     Shared memory may be used by multiple processes. To synchronize access to
 shared memory an bf(FBB::SharedMutex) may be defined inside a shared memory
-segment. An bf(FBB::SharedMutex) allows clients to lock a shared memory
+segment. bf(SharedMutex) objects allows clients to lock a shared memory
 segment before reading or writing its contents. E.g., the Bobcat class
-tt(FBB::SharedSegment) defines a tt(SharedMutex) in its shared memory segment.
+tt(FBB::SharedSegment) defines a bf(SharedMutex) in its shared memory segment.
 
-    The bf(FBB::SharedMutex) class uses the facilities offered by the
-tt(PThread) library to implement shared memory locking. To force
-unlocking a (possibly) locked shared memory segment, its destructor can be
-called. 
+    The bf(SharedMutex) class uses the facilities offered by the
+tt(PThread) library to implement (non recursive) shared memory locking. To
+force unlocking a (possibly) locked shared memory segment, its destructor can
+be called. 
+
+    bf(SharedMutex) mutexes are non-recursive, resulting in deadlocks if their
+tt(lock) member is called twice from the same thread of execution without an
+intermediate call to tt(unlock) the mutex. If this causes concern, a variable
+can be defined indicating whether the lock has already been obtained.
 
 includefile(include/namespace)
 
@@ -61,10 +66,13 @@ manpagesection(MEMBER FUNCTIONS)
     itemization(
     itb(void lock() const)
        When returning from this member, the current process has locked the
-        shared memory segment.
+        shared memory segment. Note that bf(SharedMutex) objects are
+        non-recursive. 
 
     itb(void unlock() const)
-       The object's lock of the shared memory segment is released.
+       The object's lock of the shared memory segment is released. This member
+        can also be called if the bf(SharedMutex's) lock has not been
+        obtained. 
     )
 
 manpagesection(EXAMPLE)
