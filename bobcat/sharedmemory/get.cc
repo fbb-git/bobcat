@@ -4,6 +4,8 @@ int SharedMemory::get()
 {
     int ret;
 
+    validate();
+
     map();
 
     if (d_pos.eof())

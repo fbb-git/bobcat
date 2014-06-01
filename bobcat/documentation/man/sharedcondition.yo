@@ -67,19 +67,20 @@ includefile(include/namespace)
 manpagesection(INHERITS FROM)
     bf(SharedMutex)(3bobcat)
 
-manpagesection(CONSTRUCTORS)
+manpagesection(CONSTRUCTORS, DESTRUCTOR)
     itemization(
     itb(SharedCondition())
        The default constructor creates an empty stub which cannot yet be used
         (or an tt(FBB::Exception) is thrown). As the bf(SharedCondition) class
         supports assignment operators, empty stubs can easily be
         (re)configured at any time after their construction.
-    )
-       (Default) copy and move constructors are available. 
 
+    itb(~SharedCondition())
        The class's destructor releases (if applicable) its lock on the shared
         condition variables mutex lock. The destructor takes no action if its
         object is an empty stub.
+    )
+       (Default) copy and move constructors are available. 
 
 manpagesection(OVERLOADED OPERATORS)
 

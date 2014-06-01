@@ -17,29 +17,35 @@ memory segment made available by tt(FBB::SharedSegment) and monitored by
 tt(FBB::SharedPos). It is the main building block for
 tt(FBB::SharedStreambuf), defining the `device' to which
 tt(FBB::SharedStreambuf) interfaces. All shared memory related I/O should be
-performed through an bf(FBB::SharedMemory) object, which is a true object, not
-itself residing in shared memory. An bf(FBB::SharedMemory) object defines,
-connects to and manages access to shared memory, encapsulating all raw shared
-memory operations. In addition to the class bf(FBB::SharedMemory) the header
-file tt(bobcat/sharedmemory) also defines a bf(struct SharedEnum__) defining
-an bf(enum SizeUnit). 
+performed by bf(FBB::SharedMemory) objects, which are true objects, not
+themselves residing in shared memory. 
 
-The total amount of requested shared memory is always a lower bound to the
-actual amount of shared memory that eventually may become available. As a
-fictitious example: assume 100 kB of memory is requested, then a table of,
-e.g., 10 entries is maintained, each entry controlling the access to a shared
-memory block of, 10 kB. These 10 kB blocks aren't immediately allocated,
-but become available once the program reads from or writes to addresses
-located in these data blocks. Whenever a data block is created it is
-initialized to 0-bytes.
+An bf(FBB::SharedMemory) object defines, connects to and manages access to
+shared memory, encapsulating all raw shared memory operations. In addition to
+the class bf(FBB::SharedMemory) the header file tt(bobcat/sharedmemory) also
+defines a bf(struct SharedEnum__) defining bf(enum SizeUnit) within the
+namespace tt(FBB).
+
+The requested amount of shared memory is always a lower bound to the maximum
+amount of shared memory that eventually may become available. When defining a
+bf(SharedMemory) object not all of its potentially available shared memory is
+immediately allocated. Shared memory will be allocated by the bf(SharedMemory)
+object once needed (up to a calculated maximum).
+
+As a fictitious example: assume 100 kB of memory is requested. The
+bf(SharedMemory) object then maintains a table of, e.g., 10 entries, each
+entry controlling access to a shared memory block of 10 kB. These 10 kB blocks
+aren't immediately allocated, but become available once the program reads from
+or writes to addresses located in these data blocks. Newly allocated data
+blocks are initialized to 0-bytes.
 
     Caveat: when constructing a shared memory segment make sure the segment's
 ID is stored at a retrievable location. This allows other processes to access
 the shared segment. The shared segment ID is also required to delete a shared
 memory segment. If the shared segment ID is lost, the memory occupied by the
-shared memory segment remains inaccessible, and will reduce the amount of
-usable memory until the computer is rebooted. The member function tt(id)
-returns the ID of the shared memory currently monitored by an
+shared memory segment remains inaccessible (although they can be retrieved and
+removed by additional means, like bf(ipcs)(1) and bf(ipcrm)(1)). The member
+tt(id) returns the ID of the shared memory currently monitored by an
 bf(FBB::SharedMemory) object.
 
 includefile(include/namespace)
@@ -49,7 +55,7 @@ manpagesection(INHERITS FROM)
 
     The bf(struct SharedEnum__) is a wrapper struct around bf(enum SizeUnit),
 which is available through inheritance in several bf(FBB::Shared*) classes,
-and offers symbolic constants defining standard memory sizes. Its bf(enum
+and offers symbolic constants defining standard memory sizes. The bf(enum
 SizeUnit) defines the following symbolic constants:
         itemization(
         it() bf(kB), representing 1024 (2**10) bytes of memory;
@@ -61,18 +67,18 @@ manpagesection(CONSTRUCTORS, DESTRUCTOR)
 
     itemization(
     itb(SharedMemory())
-       The default constructor does not yet access a shared memory segment,
-        but can be used to define a stub bf(FBB::SharedMemory) object, to be
-        used at some later point during the execution of a program.
+       The default constructor defines an empty stub, which cannot immediately
+        be used.  As the bf(SharedMemory) class supports move assignment,
+        empty stubs can easily be (re)configured at any time after their
+        construction.
 
     itb(SharedMemory(size_t maxSize, SizeUnit sizeUnit, size_t access = 0600))
        This constructor creates a shared memory segment having a capacity of
         at least tt(maxSize * sizeUnit) bytes. The shared memory's access
         rights are defined by the tt(access) parameter, using the well-known
-        (bf(chmod)(1)) way to define the access rights for the owner, the
-        group and others. If construction succeeds the shared memory is
-        ready for use. If construction fails, an tt(FBB::Exception) is
-        thrown. 
+        (bf(chmod)(1)) octal values to define access rights for the owner, the
+        group and others. If construction succeeds the shared memory is ready
+        for use. If construction fails, an tt(FBB::Exception) is thrown.
 
     itb(SharedMemory(int id))
        This constructor connects to a shared memory segment having ID
@@ -111,8 +117,9 @@ manpagesection(MEMBER FUNCTIONS)
     itemization(
     itb(
     itb(size_t blockOffset() const)
-       The offset within the shared segment data block matching
-        tt(offset)'s return value is returned.  
+       The offset within the shared segment data block matching tt(offset)'s
+        return value is returned. 0 is returned if the bf(SharedMemory)
+        object has not yet been connected to a shared memory block.
 
     itb(void clear())
        First, the shared memory is locked. Next, all shared data segment are
@@ -122,9 +129,13 @@ manpagesection(MEMBER FUNCTIONS)
         bf(FBB::SharedMemory) object is effectively re-initialized, with
         tt(offset) and tt(nReadable) returning 0.
 
+        An tt(FBB::Exception) is thrown if the bf(SharedMemory) object has not
+        yet been connected to a shared memory block.
+
     itb(size_t dataSegmentSize() const)
-       Returns the size (in bytes) of data segments. If no tt(SharedSegment)
-        is available, 0 is returned.
+       Returns the size (in bytes) of shared memory data block. 0 is returned
+        if the bf(SharedMemory) object has not yet been connected to a shared
+        memory block.
 
     itb(int get())
        First the bf(FBB::SharedMemory) object calls tt(lock) to lock the
@@ -133,40 +144,55 @@ manpagesection(MEMBER FUNCTIONS)
         retrieved character is returned. If tt(offset) is at least equal to
         tt(nReadable, EOF) is immediately returned.
 
+        An tt(FBB::Exception) is thrown if the bf(SharedMemory) object has not
+        yet been connected to a shared memory block.
+
     itb(int id() const)
        The ID of the shared memory segment is returned. Following tt(kill)
         tt(id) returns -1, indicating that the shared segment cannot be used
-        anymore (tt(operator=) can be used to re-initialize the
+        anymore (note that tt(operator=) can be used to re-initialize the
         bf(FBB::SharedMemory) object).
 
     itb(void kill())
        Without locking the shared memory all shared memory controlled by the
-        bf(FBB::SharedMemory) object is deleted. The bf(FBB::SharedMemory)
-        object is unusable after returning from tt(kill), with its tt(id)
-        member returns -1.
+        bf(SharedMemory) object is deleted. The bf(SharedMemory) object is
+        unusable after returning from tt(kill), with its tt(id) member returns
+        -1. Nothing happens if this member is called when the bf(SharedMemory)
+        object has not yet been connected to a shared memory block.
 
     itb(std::streamsize maxOffset() const)
        The maximum possible offset that can be used with the shared memory
-        segment is returned. The members tt(offset) and tt(nReadable)
-        never exceed the value returned by tt(maxOffset).
+        segment is returned. The members tt(offset) and tt(nReadable) never
+        exceed the value returned by tt(maxOffset). 0 is returned if the
+        bf(SharedMemory) object has not yet been connected to a shared memory
+        block.
 
     itb(std::streamsize nReadable() const)
        The number of characters (bytes) that can be read from the beginning of
-        the shared memory is returned.
+        the shared memory is returned. 0 is returned if the bf(SharedMemory)
+        object has not yet been connected to a shared memory block.
     
     itb(std::streamsize offset() const)
        The offset within the shared memory segment (i.e., relative to the
-        segment's tt(ios::beg) position) is returned.
+        segment's tt(ios::beg) position) is returned. 0 is returned if the
+        bf(SharedMemory) object has not yet been connected to a shared memory
+        block.
 
     itb(char *ptr())
         Returns 0 if tt(offset() == maxOffset()). Otherwise it returns a
         pointer to the character at index tt(offset) within the shared memory
         segment.
 
+        An tt(FBB::Exception) is thrown if the bf(SharedMemory) object has not
+        yet been connected to a shared memory block.
+
     itb(int put(int ch))
        After locking the appropriate shared data segment, tt(ch) is written at
         position tt(offset), incrementing tt(offset) thereafter. If tt(ch ==
         EOF, EOF) is immediately returned.
+
+        An tt(FBB::Exception) is thrown if the bf(SharedMemory) object has not
+        yet been connected to a shared memory block.
 
     itb(int read(Type *value))
        This member was implemented as a member template. It calls
@@ -174,7 +200,10 @@ manpagesection(MEMBER FUNCTIONS)
         tt(sizeof(Type)) as its second argument.  The number of
         bytes actually read is returned. This member returns -1 if
         initially tt(offset) was at least equal to tt(nReadable).
-              
+
+        An tt(FBB::Exception) is thrown if the bf(SharedMemory) object has not
+        yet been connected to a shared memory block.
+
     itb(int read(char *data, std::streamsize len))
        While locking the appropriate shared data segment(s) at most tt(len)
         bytes are read from the shared memory, starting at tt(offset). The
@@ -182,6 +211,9 @@ manpagesection(MEMBER FUNCTIONS)
         bytes actually read is returned. This member returns -1 if
         initially tt(offset) was at least equal to tt(nReadable).
               
+        An tt(FBB::Exception) is thrown if the bf(SharedMemory) object has not
+        yet been connected to a shared memory block.
+
     itb(int read(std::ios::off_type offset, Type *value,
                   std::ios::seekdir origin = std::ios::beg))
        This member was implemented as a member template. After changing the
@@ -190,18 +222,26 @@ manpagesection(MEMBER FUNCTIONS)
         bytes actually read is returned. This member returns -1 if initially
         tt(offset) was at least equal to tt(nReadable).
               
+        An tt(FBB::Exception) is thrown if the bf(SharedMemory) object has not
+        yet been connected to a shared memory block.
+
     itb(void remove())
        The shared memory is locked, after which all shared memory controlled
         by the bf(FBB::SharedMemory) object is deleted. The
         bf(FBB::SharedMemory) object is unusable after returning from
         tt(remove).
 
+        An tt(FBB::Exception) is thrown if the bf(SharedMemory) object has not
+        yet been connected to a shared memory block.
+
     itb(std::ios::pos_type seek(std::ios::off_type offset, 
                             std::ios::seekdir origin = std::ios::beg))
        Moves the tt(offset) position relative to tt(way). The value -1 is
         returned when seeking before offset 0 or beyond tt(maxOffset),
         otherwise the offset relative to the begin location of the shared
-        memory (i.e, tt(offset) for tt(origin == ios::beg)) is returned.
+        memory (i.e, tt(offset) for tt(origin == ios::beg)) is returned.  0 is
+        returned if the bf(SharedMemory) object has not yet been connected to
+        a shared memory block.
 
     itb(std::streamsize showmanyc() const)
        The number of characters that can be read from the current shared
@@ -209,7 +249,9 @@ manpagesection(MEMBER FUNCTIONS)
         of readable characters in the shared memory segment. This number may
         change while this member is being executed. In order to receive a
         stable return value, calling functions should have obtained a lock on
-        the shared memory segment before calling this member.
+        the shared memory segment before calling this member. 0 is returned if
+        the bf(SharedMemory) object has not yet been connected to a shared
+        memory block.
 
     itb(void swap(SharedMemory &other))
        The current and other bf(FBB::SharedMemory) objects are swapped.
@@ -220,6 +262,9 @@ manpagesection(MEMBER FUNCTIONS)
         returned. Otherwise tt(false) is returned, and the value returned by
         tt(nReadable) is not changed. 
 
+        An tt(FBB::Exception) is thrown if the bf(SharedMemory) object has not
+        yet been connected to a shared memory block.
+
     itb(int write(Type const *value))
        This member was implemented as a member template. It calls the next
         member, casting tt(Type const *) to tt(tt(char const *), and using
@@ -227,12 +272,18 @@ manpagesection(MEMBER FUNCTIONS)
         written is returned. This member returns -1 if initially tt(offset)
         was at least equal to tt(maxOffset).
               
+        An tt(FBB::Exception) is thrown if the bf(SharedMemory) object has not
+        yet been connected to a shared memory block.
+
     itb(int write(char const *data, std::streamsize len))
        The bf(FBB::SharedMemory) object calls tt(lock) to lock the shared
         memory, and writes at most tt(len) bytes into the shared memory,
         starting at tt(offset). Next, tt(unlock) is called. The number of
         bytes actually written is returned. The member function returns -1 if
         initially tt(offset) is equal to tt(maxOffset).
+
+        An tt(FBB::Exception) is thrown if the bf(SharedMemory) object has not
+        yet been connected to a shared memory block.
 
     itb(int write(std::ios::off_type offset, Type const *value,
                   std::ios::seekdir origin = std::ios::beg))
@@ -242,6 +293,8 @@ manpagesection(MEMBER FUNCTIONS)
         bytes actually written is returned. This member returns -1 if
         initially tt(offset) was at least equal to tt(maxOffset).
               
+        An tt(FBB::Exception) is thrown if the bf(SharedMemory) object has not
+        yet been connected to a shared memory block.
     )
 
 manpagesection(EXAMPLE)
@@ -251,7 +304,7 @@ manpagefiles()
     em(bobcat/sharedmemory) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(chmod)(1),
+    bf(bobcat)(7), bf(chmod)(1), bf(ipcs)(1), bf(ipcrm)(1),
         bf(isharedstream)(3bobcat),
         bf(osharedstream)(3bobcat),
         bf(sharedblock)(3bobcat), 

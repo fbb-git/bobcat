@@ -7,6 +7,8 @@ int SharedMemory::write(char const *data, streamsize len)
     if (d_pos.atMaxOffset())
         return -1;
 
+    validate();
+
     streamsize begin = d_pos.offset();
 
 //cerr << "write at " << begin << ", len = " << len << '\n';
