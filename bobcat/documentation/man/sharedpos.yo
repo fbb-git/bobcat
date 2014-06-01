@@ -21,7 +21,8 @@ useful for other tt(Shared*) classes offered by Bobcat. There is probably
 little use for a stand-alone bf(SharedPos) object.
 
     In the descriptions of the class's member functions tt(offset) refers to
-the read/write offset within the available shared memory.
+the read/write offset within a bf(FBB::SharedSegment)(3bobcat) object for
+which bf(SharedPos) performs the offset-administration.
 
 includefile(include/namespace)
 
@@ -33,8 +34,8 @@ manpagesection(TYPEDEFS AND ENUMS)
 manpagesection(CONSTRUCTORS)
     
     Default, copy and move constructors are available. The default constructor
-        does not yet monitor the offsets for a shared memory segment. The
-        member tt(reset) is used to start monitoring offsets.
+        does not yet monitor the offset of an tt(FBB::SharedSegment)
+        object. The member tt(reset) is used to start monitoring offsets.
 
 manpagesection(OVERLOADED OPERATORS)
     itemization(
@@ -49,59 +50,58 @@ manpagesection(OVERLOADED OPERATORS)
         offset and an tt(FBB::Exception) is thrown.
 
     itb(std::ostream &operator<<(std::ostream &out, SharedPos const &pos)) 
-       Inserts information about the bf(FBB::SharedPos) object into tt(out).
+       Inserts information about the bf(SharedPos) object into tt(out).
     )
 
-    The copy and move assignment operators are available.
+    Copy and move assignment operators are available.
 
 manpagesection(MEMBER FUNCTIONS)
+
+    Note: the behavior of member functions returning values which refer to
+information of an tt(FBB::SharedSegment) is undefined untill the member
+tt(reset) has been called.
 
     itemization(
     itb(bool atMaxOffset() const)
        Returns tt(true) if offset equals the maximum offset that can be used
-        for the current shared memory segment.nl()
-       The behavior of this member is undefined until tt(reset) has been
-        called. 
+        for the configured tt(FBB::SharedSegment) object. 
 
     itb(size_t blockIdx() const)
-       The index of the shared segment data block in which offset is located
-        is returned. 
+       The index of the configured tt(FBB::SharedSegment) object's shared
+        segment data block to which offset refers is returned.
 
     itb(size_t blockOffset() const)
        The offset within the shared segment data block matching the member
-        tt(offset)'s return value is returned.  
+        tt(offset)'s return value is returned.
 
     itb(bool eof() const)
        Returns tt(true) if offset exceeds the maximum offset of any character
-        ever written to the shared memory pointed at by
-        tt(sharedData). If tt(eof) returns tt(true) information may still 
-        be em(written) to the shared memory: writting is possible until the
-        maximum shared memory segment offset has been reached.nl()
-       The behavior of this member is undefined until tt(reset) has been
-        called. 
+        ever written to the shared memory to which the bf(SharedPos) object
+        interfaces. If tt(eof) returns tt(true) information may still be
+        em(written) to the shared memory: writting is possible until the
+        maximum shared memory segment offset has been reached.
 
     itb(std::streamsize eos() const)
        The offset just beyond the maximum offset for the current shared
-        segment data block is returned.nl()
-       The behavior of this member is undefined until tt(reset) has been
-        called. 
+        segment data block is returned. E.g., if tt(blockIdx) returns 5, and
+        the size of the shared segment data blocks equals 2000, then tt(eos)
+        returns 12000 (the first offset of segment 6).
 
     itb(std::streamsize maxOffset() const)
        The maximum possible offset that can be used for the currently
-        monitored shared memory segment is returned. Zero is returned until
-        tt(reset) has been called.
+        monitored tt(FBB::SharedSegment) is returned.
 
     itb(std::streamsize offset() const)
        The offset within the currently monitored shared memory segment is
-        returned. Zero is returned until tt(reset) has been called.
+        returned.
 
     itb(void reset(SharedSegment *sharedData))
-       The tt(SharedPos) object is reset to monitor the offset of a new
-        tt(FBB::SharedSegment) object. The tt(SharedSegment *) must point to a
-        tt(SharedSegment) segment (cf. bf(sharedsegment)(3bobcat)) that must
-        exist until the end of the bf(FBB::SharedPos) object's lifetime or
-        until the next tt(reset) call. Immediately after calling tt(reset)
-        offset has the value 0.
+       The tt(SharedPos) object is reset to monitor the offset of the
+        tt(FBB::SharedSegment) object whose address is passed as argument to
+        tt(reset). The address must point to an bf(sharedsegment)(3bobcat))
+        object that must exist until the end of the bf(SharedPos)
+        object's lifetime or until its next tt(reset) call. Immediately after
+        calling tt(reset) offset is reset to 0.
 
     itb(std::streamsize showmanyc() const)
        The number of characters that can be read from the current shared
@@ -109,17 +109,15 @@ manpagesection(MEMBER FUNCTIONS)
         of readable characters in the shared memory segment. This number may
         change while this member is being executed. In order to receive a
         stable return value, calling functions should have obtained a lock on
-        the shared memory segment before calling this member. See also the
-        bf(sharedsegment)(3bobcat) man-page.nl()
-       The behavior of this member is undefined until tt(reset) has been
-        called. 
+        the tt(FBB::SharedSegment) data before calling this member. See also
+        the bf(sharedsegment)(3bobcat) man-page.
 
     itb(std::ios::pos_type seek(std::ios::off_type offset, 
-                                std::ios::seekdir way = std::ios::beg))
+                                std::ios::seekdir origin = std::ios::beg))
        The monitored offset is changed to this member's tt(offset) argument,
-        relative to tt(way). Seeking beyond tt(eof) is OK; -1 is returned when
-        seeking beyond tt(maxOffset) or seeking before the shared segment's
-        offset 0.
+        relative to tt(origin). Seeking beyond tt(eof) is OK. However, -1 is
+        returned when seeking beyond tt(maxOffset) or seeking before the
+        shared segment's offset 0.
     )
 
 manpagesection(EXAMPLE)
@@ -136,6 +134,7 @@ manpageseealso()
         bf(sharedcondition)(3bobcat), 
         bf(sharedmemory)(3bobcat),
         bf(sharedmutex)(3bobcat), 
+        bf(sharedreadme)(7bobcat), 
         bf(sharedsegment)(3bobcat), 
         bf(sharedstream)(3bobcat), 
         bf(sharedstreambuf)(3bobcat)

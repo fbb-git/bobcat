@@ -1,7 +1,5 @@
 includefile(include/header)
 
-COMMENT(replace 'sharedmutex' by the name of the new class)
-
 COMMENT(manpage, section, releasedate, archive, short name)
 manpage(FBB::SharedMutex)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
                     (Shared Memory Mutex)
@@ -34,7 +32,7 @@ includefile(include/namespace)
 manpagesection(INHERITS FROM)
     -
 
-manpagesection(CONSTRUCTORS)
+manpagesection(CONSTRUCTORS, DESTRUCTOR )
     itemization(
     itb(SharedMutex())
        The default constructor initializes an bf(FBB::SharedMutex) object to a
@@ -49,18 +47,20 @@ manpagesection(CONSTRUCTORS)
        verb(
     new (d_shared) FBB::SharedMutex;
        )
-    )
-       The copy and move constructors are not available. 
 
+    itb(~SharedMutex())
        The class's destructor releases all of the current process's nested
         shared memory segment locks. To destroy an bf(FBB::SharedMutex) object
         that has been constructed using the placement tt(new) operator use
        verb(
-    d_sharedMutex->~SharedMutex();
+d_sharedMutex->~SharedMutex();
        )
        (assuming tt(SharedMutex *d_sharedMutex) points to the location where
         placement new has previously initialized the bf(FBB::SharedMutex)
         object.) 
+
+    )
+       Copy and move constructors are not available. 
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
@@ -75,9 +75,15 @@ manpagesection(MEMBER FUNCTIONS)
         obtained. 
     )
 
+manpagesection(PROTECTED MEMBER FUNCTION)
+    itemization(
+    itb(pthread_mutex_t *mutexPtr())
+       A pointer is returned to the tt(pthread_mutex_t) object used by
+        the bf(SharedMutex) object;
+    )
+
 manpagesection(EXAMPLE)
     See the bf(sharedstream)(3bobcat) man page.
-
 
 manpagefiles()
     em(bobcat/sharedmutex) - defines the class interface
@@ -89,7 +95,9 @@ manpageseealso()
         bf(sharedblock)(3bobcat), 
         bf(sharedcondition)(3bobcat), 
         bf(sharedmemory)(3bobcat),
+            (e.g.,) bf(pthread_mutex_init)(3posix),
         bf(sharedpos)(3bobcat), 
+        bf(sharedreadme)(7bobcat), 
         bf(sharedsegment)(3bobcat), 
         bf(sharedstream)(3bobcat), 
         bf(sharedstreambuf)(3bobcat)
