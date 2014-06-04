@@ -122,7 +122,10 @@ class SharedMemory: public virtual SharedEnum__
         template <typename Type>            // 2.f
         int write(std::ios::off_type offset, Type const *value,
                   std::ios::seekdir origin = std::ios::beg);
-                  
+
+        template <typename SharedType, typename ... Params>
+        SharedType *install(std::streamsize *offset, Params &&...params);
+
     private:
         std::ostream &insert(std::ostream &out) const;
 
@@ -157,6 +160,7 @@ class SharedMemory: public virtual SharedEnum__
 #include "blockoffset.f"
 #include "datasegmentsize.f"
 #include "id.f"
+#include "install.f"
 #include "maxoffset.f"
 #include "nreadable.f"
 #include "offset.f"

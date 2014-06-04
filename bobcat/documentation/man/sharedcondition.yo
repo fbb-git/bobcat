@@ -20,8 +20,10 @@ to gain access to the variable before they can inspect its value). Using
 condition variables waiting threads simply wait until they are notified.
 
     bf(SharedCondition) objects can be used in combination with shared
-memory. The bf(SharedCondition) object is defined in shared memory and may be
-accessed by threads running in different processes. These different
+memory. bf(SharedCondition) objects interface to objects (called em(Condition)
+objects in this man-page) which are defined in shared memory and contain a
+tt(SharedMutex) and a shared condition object. These tt(Condition) objects may
+be accessed by threads running in different processes. These different
 processes might run a single tt(main) thread, or they themselves can be
 multi-threaded.
 
@@ -298,7 +300,7 @@ manpagesection(STATIC MEMBER FUNCTIONS)
         in the tt(SharedMemory) object to define a shared condition variable.
 
     itb(size_t size() const)
-       Returns the size in bytes of shared condition variables stored in
+       Returns the size in bytes of the shared condition variables stored in
         tt(SharedMemory) objects.
     )
 

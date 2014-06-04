@@ -61,16 +61,36 @@ time a pointer to a bf(SharedSegment) object.
 
     it() bf(SharedMemory)(3bobcat)
 
-The class bf(SharedMemory)(3bobcat) offers a directly usable interface to
-shared memory, defining members like tt(read, get, write) and tt(put). A
-bf(SharedMemory) object itself resides in a program's working memory, and not
+The class bf(SharedMemory)(3bobcat) offers the standard interface to
+shared memory, defining members like tt(read, get, write) and tt(put). It
+interfaces to a tt(SharedSegment) object, and uses a tt(SharedPos) object to
+keep track of the tt(SharedMemory's) offsets.
+
+A bf(SharedMemory) object itself resides in a program's working memory, and not
 in the computer's shared memory area. At any time the bf(SharedMemory) object
 only loads at most one actual block of the shared memory block managed by
 bf(SharedSegment). The current position in the shared memory managed by
 bf(SharedSegment) is monitored by the bf(SharedMemory)'s tt(SharedBlock d_pos)
 member. 
 
+Following read/write operations the offset is updated accordingly. There's
+only one offset, which is used by tt([IO]?SharedStream) objects when
+requesting or updating offsets. a bf(SharedMemory) object offers safeguards
+against inappropriate use. E.g., if no memory has been allocated yet it may
+thow exceptions. Also, offsets can never exceed the tt(SharedMemory's) maximum
+possible offset. 
+
     it() bf(SharedMutex)(3bobcat)
+
+The class bf(SharedMutex) implements a non-recursive mutex that can be stored
+in shared memory. It merely offers tt(lock) and tt(unlock) members. Within one
+thread tt(lcok) should never be called repeatedly unless tt(unlock) is called
+first. The tt(unlock) member may safely repeatedly be called; once the mutex
+has been unlocked, repeated requests to unlock the mutex are simply
+ignored. When a bf(SharedMutex) is destroyed it calls tt(unlock). Use
+placement tt(new) when defining bf(SharedMutex) object in shared
+memory. 
+
     it() bf(SharedCondition)(3bobcat)
     it() bf(SharedStreambuf)(3bobcat)
     it() bf(SharedStream, ISharedStream, OSharedStream)(3bobcat)

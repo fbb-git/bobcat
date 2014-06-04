@@ -115,7 +115,6 @@ manpagesection(OVERLOADED OPERATORS)
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
-    itb(
     itb(size_t blockOffset() const)
        The offset within the shared segment data block matching tt(offset)'s
         return value is returned. 0 is returned if the bf(SharedMemory)
@@ -152,6 +151,40 @@ manpagesection(MEMBER FUNCTIONS)
         tt(id) returns -1, indicating that the shared segment cannot be used
         anymore (note that tt(operator=) can be used to re-initialize the
         bf(FBB::SharedMemory) object).
+
+    itb(SharedType *install(std::streamsize *offset, 
+                           Params &&...params))
+       This member was implemented as a member template, using tt(typename
+        SharedType) and tt(typename ...Params), allowing perfect forwarding of
+        arguments to tt(SharedType)'s constructor.
+
+        This member installs a tt(SharedType) object at bf(SharedMemory's) at
+        bf(SharedMemory)'s first available offset: either at the current
+        offset, or (if tt(SharedType's) size is too big to fit in the current
+        data block at offset) at the first byte of the next tt(SharedSegment)
+        shared data block.
+
+        The actual offset where the tt(SharedType) object is installed is
+        returned in tt(*offset), unless a tt(nullptr) is passed as
+        tt(install's) first argument.
+
+        A pointer to the installed tt(SharedType) is returned, with
+        tt(shmem.offset) pointing just beyond tt(SharedType's) last byte. 
+
+        The tt(SharedType) object is installed using placement new. E.g., the
+        following example illustrates how a bf(SharedMutex)(3bobcat) object
+        can be installed at the first possible 
+        location of tt(SharedMemory shmem):
+            verb(
+    std::streamsize offset;
+    FBB::SharedMutex *mutexPtr = shmem.install<FBB::SharedMutex>(&offset); 
+            )
+       If the installed object must be destroyed, its destructor must
+        explicitly be called. E.g., to destroy the tt(Mutex) pointed at by
+        tt(mutexPtr) use tt(mutexPtr->~SharedMutex()).
+
+        An tt(FBB::Exception) is thrown if tt(shmem) could not install the
+        object in its shared memory data blocks.
 
     itb(void kill())
        Without locking the shared memory all shared memory controlled by the
@@ -296,6 +329,8 @@ manpagesection(MEMBER FUNCTIONS)
         An tt(FBB::Exception) is thrown if the bf(SharedMemory) object has not
         yet been connected to a shared memory block.
     )
+
+
 
 manpagesection(EXAMPLE)
     See the bf(sharedstream)(3bobcat) man page.
