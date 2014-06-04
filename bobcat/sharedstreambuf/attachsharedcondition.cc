@@ -5,6 +5,6 @@ SharedCondition SharedStreambuf::attachSharedCondition(
                                         std::ios::seekdir way)
 {
     auto sharedCondition(SharedCondition::attach(d_memory, offset, way));
-    seekoff(sharedCondition.offset() + sharedCondition.width());
+    seekoff(sharedCondition.offset() + sharedCondition.size());
     return sharedCondition;
 }
