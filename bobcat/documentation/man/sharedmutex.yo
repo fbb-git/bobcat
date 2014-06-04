@@ -50,9 +50,9 @@ manpagesection(CONSTRUCTORS, DESTRUCTOR )
        Caveat: when using placement new to initialize a bf(SharedMutex) make
         sure that the bf(SharedMutex) fits inside a block (i.e.,
         tt(shared.blockOffset() + sizeof(SharedMemory) <
-        shared.dataSegmentSize()). If not, use tt(seek) to switch to an offset
-        where this equality holds true, or simply use tt(SharedMemory::create)
-        like this:
+        shared.dataSegmentSize())). If not, use tt(seek) to switch to an
+        offset where this equality holds true, or simply use
+        tt(SharedMemory::create) like this:
        verb(
     FBB::SharedMemory::create<FBB::SharedMutex>();
        )

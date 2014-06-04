@@ -88,13 +88,39 @@ thread tt(lcok) should never be called repeatedly unless tt(unlock) is called
 first. The tt(unlock) member may safely repeatedly be called; once the mutex
 has been unlocked, repeated requests to unlock the mutex are simply
 ignored. When a bf(SharedMutex) is destroyed it calls tt(unlock). Use
-placement tt(new) when defining bf(SharedMutex) object in shared
-memory. 
+tt(SharedMemory's install) member to define a bf(SharedMutex) object in shared
+memory, and use tt(ptr->~SharedMutex()) (with tt(SharedMutex *ptr) pointing at
+the tt(SharedMutex) object) to destroy it again.
 
     it() bf(SharedCondition)(3bobcat)
+
+The class bf(SharedCondition) implements a condition variable and an
+associated mutex, both created in shared memory controlled by a
+bf(SharedMemory) object. It offers all the functionality of
+tt(std::condition_variable). A bf(SharedCondition) object itself is defined in
+a thread's working memory, but interfaces to a tt(`Condition') object
+containing a condition variable and a mutex which are installed in shared
+memory. The size of this tt(`Condition') object is returned by the static
+member tt(SharedCondition::size). bf(SharedCondition) members ensure that the
+thread has access to the tt(`Condition') object, and that the shared memory's
+offset has not changed when returning from the bf(SharedCondition's) members.
+
     it() bf(SharedStreambuf)(3bobcat)
+
+The class bf(SharedStreambuf) implements a tt(std::streambuf) specialization
+interfacing to a tt(SharedMemory) object. In addition to a default constructor
+which is an empty stub the class offers constructors which immediately
+interface to a tt(SharedMemory) object, as well as a member to (re)associate
+a bf(SharedStreambuf) object with a tt(SharedMemory) object.
+
     it() bf(SharedStream, ISharedStream, OSharedStream)(3bobcat)
 
+These stream classes offer stream-facilities operating on shared memory
+maintained by a tt(SharedMemory) object. The bf(SharedStream) class uses the
+tt(SharedMemory's seek) member for both tt(seekp) and tt(seekg), and uses
+tt(SharedMemory's offset) member for both tt(tellp) and tt(tellg). All shared
+stream objects, including bf(ISharedStream), offer a member to initialize a
+tt(SharedCondition)
 
 )
 

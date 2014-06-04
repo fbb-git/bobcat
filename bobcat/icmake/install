@@ -55,15 +55,17 @@ void install(string rss, string dev)
 
 #ifdef MANPAGES
     printf("\n  installing the manual pages\n");
-    md(dev + MAN + "/man1 " + dev + MAN + "/man3 " + dev + MAN + "/man7");
+    md(dev + MAN + "/man1 "     + 
+       dev + MAN + "/man3 "     + 
+       dev + MAN + "/man7 "     +
+       dev + DOC + "/images"    );
+
+    run("cp documentation/images/*.jpg " + dev + DOC + "/images");
 
     rungzip9("tmp/man/man3/", dev + MAN + "/man3/");
 
     rungzip9("tmp/man/man7/", dev + MAN + "/man7/");
     
-//    run("gzip -n -9 < tmp/man/man7/" LIBRARY ".7 > " +
-//                   dev + MAN + "/man7/" LIBRARY ".7.gz");
-
     chdir(dev + MAN + "/man3");
     run("ln -sf iterator.3bobcat.gz reverseiterator.3bobcat.gz");
     chdir(g_cwd);

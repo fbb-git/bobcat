@@ -28,7 +28,7 @@ manpagesection(SIZEUNIT ENUMERATION)
 The bf(enum SizeUnit) defines the following symbolic constants:
         itemization(
         it() bf(kB), representing 1024 (2**10) bytes of memory;
-        it() bf(MB), representing 1048576 (2**20 bytes of memory;
+        it() bf(MB), representing 1048576 (2**20) bytes of memory;
         it() bf(GB), representing 1073741824 (2**30) bytes of memory
         )
 
@@ -84,12 +84,13 @@ tt(GB), defined by tt(FBB::ISharedEnum__) are available.
         An tt(FBB::Exception) is thrown if the tt(FBB::SharedCondition) object
         could not be constructed.
 
+COMMENT(
     itb(FBB::SharedCondition createSharedCondition())
        Returns an bf(FBB::SharedCondition)(3) object, interfacing to a newly
         created shared condition variable which is created at the current
         offset of the tt(SharedMemory) object to which the bf(ISharedStream)
         object interfaces (or at the first offset of the next physical shared
-        memory data block, cf. bf(sharedcondition)(3bobcat))).  Creating a
+        memory data block, cf. bf(sharedcondition)(3bobcat)).  Creating a
         tt(SharedCondition) object does not alter the value returned by the
         stream's tt(tellg) member.
 
@@ -99,6 +100,7 @@ tt(GB), defined by tt(FBB::ISharedEnum__) are available.
 
         An tt(FBB::Exception) is thrown if the tt(FBB::SharedCondition) object
         could not be constructed.
+END)
 
     itb(int id() const)
        The ID of the shared memory segment is returned.
