@@ -9,8 +9,8 @@ using namespace FBB;
 class Background: public Fork
 {
     public:
-        void childProcess();
-        void parentProcess();
+        void childProcess()     override;
+        void parentProcess()    override;
 };
 
 void Background::childProcess()

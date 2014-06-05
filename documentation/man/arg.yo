@@ -56,11 +56,22 @@ immediately.
 
         tt(optstring) should consist of letters, possibly postfixed by:
         itemization(
-        it() a colon (tt(:)), indicating that the option has a required
-            argument;
-        it() a double colon (tt(::)), indicating that the option itself 
-            has an optional argument (in that case, the option's value 
-            will be empty, unless specified).
+        it() a colon (tt(:)), indicating that the option requires an option
+            value. 
+        it() a double colon (tt(::)), indicating that the option itself has an
+            optional argument. With short options the option value is
+            considered absent unless it immediately follows the short option
+            (e.g., tt(-tvalue) for a short option tt(-t)). Long options
+            optionally accepting arguments should always immediately be
+            followed by a = character. Here the option's value must
+            immediately follow the = character, and must start with a
+            non-blank character, or the option's value is considered
+            absent. E.g., tt(--value=) indicates an absent option value,
+            tt(--value=text) indicates the option's value equals tt(text).  If
+            an option value itself contains blanks, it should be surrounded by
+            single or double quotes (e.g., tt(-t'this value'), or
+            tt(--text='this value')). The surrounding quotes themselves are
+            not part of the option's value.            
         )
 
     itb(FBB::Arg &instance()) 

@@ -2,6 +2,8 @@
 
 void SharedMemory::remove()
 {
+    validate();
+
     lockAll();
     kill();
 }

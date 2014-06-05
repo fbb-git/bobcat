@@ -8,7 +8,9 @@ using namespace FBB;
 
 int main()
 {
-    Log &log = Log::initialize("&1");
+//    Log &log = Log::initialize("&1");
+    Log log;
+    log.open("/tmp/out");
 
     log << "This message is written to cout" << nl <<
            setw(16) << ' ' << "occupying multiple lines\n";
@@ -17,5 +19,6 @@ int main()
     log << "This message is not shown\n";
     log.setLevel(0);
     log << "This message is shown again\n";
-    return 0;
 }
+
+

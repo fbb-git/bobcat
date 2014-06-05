@@ -1,3 +1,43 @@
+bobcat (3.23.00)
+
+  * Added class SharedCondition, which is used to define a condition variable
+    inside a shared memory segment.
+
+  * Added class Tty, controlling echoing of characters entered at the terminal
+    (/dev/tty).
+
+  * Log objects are now active by default (except for the Log object
+    constructed by its default constructor)
+
+  * The default Log constructor no longer has a default argument, as providing
+    an explicit argument may be confused with the constructor expecting a
+    std::string as its first argument.
+
+  * Added new member 
+    `prepareDaemon(string const &out, string const &err, mode_t mode) const' 
+    to the class Fork, allowing automatic redirection of stdandard output and
+    standard error messages to files.
+
+  * Added new member `install' to the class SharedMemory, using placement new
+    to construct an object in shared memory.
+
+  * Added the description of the enum SizeUnit to the man-pages of all classes
+    using FBB::SharedEnum::SizeUnit.
+
+  * SharedStreambuf: extractions (also insertions ?) sometimes failed to
+    operate correctly. Fixed by adding setg() and setp() calls to constructors
+    and underflow. Also added sharedstreambuf/driver.
+
+  * Added SharedReadme (7bobcat) and associated figures describing how the
+    Shared Memory classes were implemented.
+
+  * Fixed incomplete deletion of shared memory segments by
+    SharedMemory::kill() and SharedMemory::clear()
+
+  * Fixed unbalanced parentheses in the man-pages
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Wed, 04 Jun 2014 17:38:42 +0200
+
 bobcat (3.22.01)
 
   * Hurd-i386 architectures do not (completely?) implement the POSIX standard,

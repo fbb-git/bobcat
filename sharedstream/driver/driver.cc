@@ -5,13 +5,14 @@
 
 #include <bobcat/exception>
 #include <bobcat/sharedstream>
+#include <bobcat/sharedcondition>
 
 using namespace std;
 using namespace FBB;
 
 int main()
 {
-    SharedStream shared;
+    SharedStream sharedStream;
 
     int id = -1;
 
@@ -20,15 +21,25 @@ int main()
         cout << 
                 "\n"
                 " K             kill (no lock) existing shared segment\n"
-                " R             remove existing shared segment\n"
                 " S             show stats of current shared segment\n"
                 " L <id>        Load segment <id>\n"
+                " C             Install a SharedCondition at offset 0\n"
                 " c            create new shared memory (sets id)\n"
-                " l            lock segment id until key pressed\n"
-                " p <x> c      put char c at offset x\n"
+//                " l            lock segment id until key pressed\n"
+//                " p <x> c      put char c at offset x\n"
                 " q            quit\n"
-                " r <x> <n>    read n chars from offset x\n"
-                " w <x> args   write all args at offset x\n"
+//                " r <x> <n>    read n chars from offset x\n"
+//                " w <x> args   write all args at offset x\n"
+                  " i            insert lines (until empty) at the current "
+                                                                "offset\n"
+
+                  " x            extract lines (until EOF) from the current "
+                                                                "offset\n"
+                  " X            extract the next line from the current "
+                                                                "offset\n"
+                  "              when nodified via 'N'\n"
+                  " N            notify a waiting X\n"
+                  " s <x>        seek (abs) offset x\n"
                 "? ";
 
         char ch;
@@ -38,23 +49,30 @@ int main()
 
         cout << "Requested: " << ch << '\n';
 
-        shared.clear();
+        sharedStream.clear();
 
         switch (ch)
         {
             case 'c':
             {
-                shared.open(1, SharedStream::kB);
+                sharedStream.open(1, SharedStream::kB);
 
-                id = shared.id();
+                id = sharedStream.id();
                 cout << "id = " << id << '\n';
-                shared.memInfo(cout);
+                sharedStream.memInfo(cout);
                 cout << '\n';
             }
             break;
         
+            case 'C':
+            {
+                sharedStream.seekp(0);
+                SharedCondition cond(sharedStream.createSharedCondition());
+                sharedStream.seekg(cond.width());
+                break;
+            }
+
             case 'K':         // delete segment
-            case 'R':         // delete segment
             {
                 if (id == -1)
                 {
@@ -64,9 +82,9 @@ int main()
 
                 cout << "Removing segment id = " << id << '\n';
                 if (ch == 'R')
-                    shared.remove();
+                    sharedStream.remove();
                 else
-                    shared.kill();
+                    sharedStream.kill();
 
                 id = -1;
             }
@@ -75,8 +93,8 @@ int main()
             case 'L':
                 cin >> id;
                 cout << "Loading segment " << id << '\n';
-                shared.open(id);
-                shared.memInfo(cout);
+                sharedStream.open(id);
+                sharedStream.memInfo(cout);
                 cout << '\n';
             break;
 
@@ -86,10 +104,109 @@ int main()
                     cout << "No segment loaded\n";
                     continue;
                 }
-                shared.memInfo(cout);
+                sharedStream.memInfo(cout);
                 cout << '\n';
             break;
             
+            case 's':
+            {
+                size_t offset;
+                if (id == -1)
+                {
+                    cout << "No segment loaded\n";
+                    continue;
+                }
+                cin >> offset;
+                sharedStream.seekg(offset);
+                sharedStream.seekp(offset);
+                cout << "tellg: " << sharedStream.tellg() << ", "
+                        "tellp: " << sharedStream.tellp() << '\n';
+            }
+            break;
+            
+            case 'i':
+            {
+                string line;
+                getline(cin, line);
+                sharedStream.seekp(0, ios::cur);
+                while (true)
+                {
+                    cout << "? ";
+                    if (not getline(cin, line) || line.empty())
+                        break;
+                    sharedStream << line << endl;
+                    cout << 
+                            "   tellp: " << sharedStream.tellp() << '\n';
+                }
+                    cout << // "   tellg: " << sharedStream.tellg() << ", "
+                            "   tellp: " << sharedStream.tellp() << '\n';
+            }
+            break;
+                    
+            case 'x':
+            {
+                string line;
+                sharedStream.seekg(0, ios::cur);
+
+                while (true)
+                {
+                    cout << ": ";
+                    if (not getline(sharedStream, line))
+                        break;
+                    cout << line << "\n"
+                            "   tellg: " << sharedStream.tellg() << ", "
+                            "   tellp: " << sharedStream.tellp() << '\n';
+                }
+            }
+            break;
+                    
+            case 'X':
+            {
+                SharedCondition cond(sharedStream.attachSharedCondition(0));
+
+                string line;
+                sharedStream.seekg(cond.width());
+
+                cond.lock();
+
+                while (true)
+                {
+                    cond.wait();
+
+                    cout << ": ";
+                    if (not getline(sharedStream, line))
+                        break;
+
+                    cout << line << "\n"
+                            "   tellg: " << sharedStream.tellg() << ", "
+                            "   tellp: " << sharedStream.tellp() << '\n';
+                }
+                cout << "All done\n";
+                cond.unlock();
+            }
+            break;
+
+            case 'N':
+            {
+                string line;
+                getline(cin, line);
+
+                SharedCondition cond(sharedStream.attachSharedCondition(0));
+                while (true)
+                {
+                    cout << "'enter' or 'q'? ";
+                    getline(cin, line);
+
+                    if (line == "q")
+                        break;
+
+                    cond.lock();
+                    cond.notify();
+                    cond.unlock();
+                }
+            }
+            break;
+        
             case 'p':           // put a char behind the last written
             {
                 if (id == -1)
@@ -102,10 +219,10 @@ int main()
                 if (!cin)
                     throw Exception() << "cmd specification error";
     
-                shared.seekp(offset);
+                sharedStream.seekp(offset);
                 cout << "Segment id = " << id << " at write offset " << 
-                                                    shared.tellp() << '\n';
-                shared.put(ch);
+                                                    sharedStream.tellp() << '\n';
+                sharedStream.put(ch);
             }
             break;
                 
@@ -125,11 +242,11 @@ int main()
 
                 char buf[n];
 
-                shared.seekg(offset);
+                sharedStream.seekg(offset);
                 cout << "Segment id = " << id << " at offset " << 
-                         shared.tellg() << ", to read " << n << " bytes\n";
+                         sharedStream.tellg() << ", to read " << n << " bytes\n";
     
-                n = shared.read(buf, n).gcount();
+                n = sharedStream.read(buf, n).gcount();
     
                 if (n < 0)
                     cout << "No data at " << offset << '\n';
@@ -161,18 +278,18 @@ int main()
                 if (!cin)
                     throw Exception() << "cmd specification error";
     
-                streampos pos = shared.seekp(offset).tellp();
+                streampos pos = sharedStream.seekp(offset).tellp();
 
                 cout << "Segment id = " << id << " at offset " << 
                          pos << ", to write " << line.length() << " bytes\n";
     
                 
-                shared.write(line.data(), line.length());
+                sharedStream.write(line.data(), line.length());
 
-                if (!shared)
+                if (!sharedStream)
                     cout << "No room left to write any bytes\n";
                 else
-                    cout << "Wrote " << (shared.tellp() - pos) << " bytes\n";
+                    cout << "Wrote " << (sharedStream.tellp() - pos) << " bytes\n";
             }
             break;
                 

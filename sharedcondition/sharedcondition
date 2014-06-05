@@ -1,0 +1,107 @@
+#ifndef INCLUDED_BOBCAT_SHAREDCONDITION_
+#define INCLUDED_BOBCAT_SHAREDCONDITION_
+
+#include <ios>
+#include <condition_variable>
+#include <chrono>
+
+#include <bobcat/sharedmutex>
+#include <bobcat/sharedmemory>
+
+namespace FBB
+{
+
+class SharedCondition
+{
+    SharedMemory *d_shmem;              // Note: not allocated
+    std::streamsize d_offset;
+
+    struct Condition: private SharedMutex
+    {
+        Condition();
+
+        pthread_cond_t d_cond;
+    
+        using SharedMutex::lock;
+        using SharedMutex::unlock;
+        using SharedMutex::mutexPtr;
+    };
+
+    struct Data
+    {
+        std::streamsize offset;
+        Condition *condition;
+    };
+
+    public:
+        SharedCondition();
+        ~SharedCondition();
+
+        void lock();
+
+        void notify() noexcept;
+        void notifyAll() noexcept;
+
+        std::streamsize offset() const;
+
+        void unlock();
+
+        void wait();
+
+        template <typename Predicate>
+        void wait(Predicate pred);                          // 2.f
+
+        template <typename Rep, typename Period>            // 1.f
+        std::cv_status wait_for(
+                std::chrono::duration<Rep, Period> const &relTime
+        );
+
+                                                            // 2.f
+        template <typename Rep, typename Period, typename Predicate>
+        bool wait_for(
+                std::chrono::duration<Rep, Period> const &relTime, 
+                Predicate pred
+        );
+
+        template <typename Clock, typename Duration>        // 1.f
+        std::cv_status wait_until(                      
+            std::chrono::time_point<Clock, Duration> const &absTime
+        );
+
+                                                            // 2.f
+        template <typename Clock, typename Duration, typename Predicate>
+        bool wait_until(
+            std::chrono::time_point<Clock, Duration> const &absTime, 
+            Predicate pred
+        );
+
+
+        static SharedCondition attach(SharedMemory &shmem,
+                        std::ios::off_type offset = 0,
+                        std::ios::seekdir way = std::ios::beg);
+
+        static SharedCondition create(SharedMemory &shmem);
+
+        static constexpr size_t size();
+
+    private:
+        SharedCondition(SharedMemory &shmem, std::streamsize offset);
+        std::cv_status waiter(Condition *cond, int64_t count);
+
+        Data prepare();
+};
+
+#include "offset.f"
+#include "wait2.f"
+#include "waitfor1.f"
+#include "waitfor2.f"
+#include "waituntil1.f"
+#include "waituntil2.f"
+#include "size.f"
+
+} // FBB        
+#endif
+
+
+
+

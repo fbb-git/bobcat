@@ -1,0 +1,163 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(SharedREADME)(7bobcat)(_CurYrs_)
+                    (libbobcat-dev__CurVers_-x.tar.gz)
+                    (Bobcat Shared Memory README)
+
+manpagename(SharedREADME)(Description of Bobcat's shared memory classes)
+
+
+manpagedescription()
+
+itemization(
+    it() bf(SharedLock)(3bobcat) 
+
+The class bf(SharedLock)(3bobcat) is a wrapper around a
+tt(pthread_mutex). bf(SharedLock) has member functions tt(lock) and
+tt(unlock), with tt(lock) throwing an exception when it fails to obtain the
+lock (i.e., calling tt(pthread_mutex's lock) member fails, otherwise it waits
+until tt(pthread_mutex's lock) succeeds).
+
+bf(SharedLock) is a convenience class for other shared memory
+classes. By itself bf(SharedLock) is unrelated to shared memory.
+
+    it() bf(SharedBlock)(3bobcat)
+
+The class bf(SharedBlock)(3bobcat) defines a small object consisting of a
+bf(SharedMutex) and a (shared segment) id. If offers functionality to set and
+retrieve the id, and to lock and unlock the bf(SharedMutex). bf(SharedBlock)
+objects are used by 
+bf(SharedSegment)(3bobcat) objects to keep track of which segments actually
+contain the shared memory data. It's a bookkeeping helper class.
+
+
+    it() bf(SharedSegment)(3bobcat)
+
+The class bf(SharedSegment) (cf. figure tt(images/sharedsegment1.jpg))
+interfaces to actual shared memory. Its main member function is the static
+member tt(create), returning a pointer to a newly allocated tt(SharedMemory)
+object.
+
+The member tt(create) receives as its input parameters the number of blocks,
+the size of the segments allocated by bf(SharedSegment), and the segment's
+access mode (as used by, e.g., bf(chmod)(1)). It returns a pointer to the
+allocated tt(SharedSegment), and its ID (set using a pointer to an tt(int),
+passed as its first parameter). 
+
+Although the bf(SharedSegment) class defines an array of a single
+bf(SharedBlock)(3bobcat) object, in fact it will contain tt(d_nBlocks)
+bf(SharedBlock) objects. The member tt(create) first allocates a block of raw
+memory of the required total size. Next it initializes the first part of this
+raw, shared memory, using the tt(SharedSegment) constructor and placement
+new. Next, the remaining amount of raw shared memory is initialized with
+tt(d_nBlocks - 1) bf(SharedBlock) objects, again using placement new
+(cf. figure tt(images/sharedsegment2.jpg)).
+    it() bf(SharedPos)(3bobcat)
+
+The class bf(SharedPos)(3bobcat) monitors position information in the shared
+memory segments managed by bf(SharedSegment) objects. bf(SharedPos) only has a
+default constructor, but offers a bf(reset) member receiving at construction
+time a pointer to a bf(SharedSegment) object. 
+
+    it() bf(SharedMemory)(3bobcat)
+
+The class bf(SharedMemory)(3bobcat) offers the standard interface to
+shared memory, defining members like tt(read, get, write) and tt(put). It
+interfaces to a tt(SharedSegment) object, and uses a tt(SharedPos) object to
+keep track of the tt(SharedMemory's) offsets.
+
+A bf(SharedMemory) object itself resides in a program's working memory, and not
+in the computer's shared memory area. At any time the bf(SharedMemory) object
+only loads at most one actual block of the shared memory block managed by
+bf(SharedSegment). The current position in the shared memory managed by
+bf(SharedSegment) is monitored by the bf(SharedMemory)'s tt(SharedBlock d_pos)
+member. 
+
+Following read/write operations the offset is updated accordingly. There's
+only one offset, which is used by tt([IO]?SharedStream) objects when
+requesting or updating offsets. a bf(SharedMemory) object offers safeguards
+against inappropriate use. E.g., if no memory has been allocated yet it may
+thow exceptions. Also, offsets can never exceed the tt(SharedMemory's) maximum
+possible offset. 
+
+    it() bf(SharedMutex)(3bobcat)
+
+The class bf(SharedMutex) implements a non-recursive mutex that can be stored
+in shared memory. It merely offers tt(lock) and tt(unlock) members. Within one
+thread tt(lcok) should never be called repeatedly unless tt(unlock) is called
+first. The tt(unlock) member may safely repeatedly be called; once the mutex
+has been unlocked, repeated requests to unlock the mutex are simply
+ignored. When a bf(SharedMutex) is destroyed it calls tt(unlock). Use
+tt(SharedMemory's install) member to define a bf(SharedMutex) object in shared
+memory, and use tt(ptr->~SharedMutex()) (with tt(SharedMutex *ptr) pointing at
+the tt(SharedMutex) object) to destroy it again.
+
+    it() bf(SharedCondition)(3bobcat)
+
+The class bf(SharedCondition) implements a condition variable and an
+associated mutex, both created in shared memory controlled by a
+bf(SharedMemory) object. It offers all the functionality of
+tt(std::condition_variable). A bf(SharedCondition) object itself is defined in
+a thread's working memory, but interfaces to a tt(`Condition') object
+containing a condition variable and a mutex which are installed in shared
+memory. The size of this tt(`Condition') object is returned by the static
+member tt(SharedCondition::size). bf(SharedCondition) members ensure that the
+thread has access to the tt(`Condition') object, and that the shared memory's
+offset has not changed when returning from the bf(SharedCondition's) members.
+
+    it() bf(SharedStreambuf)(3bobcat)
+
+The class bf(SharedStreambuf) implements a tt(std::streambuf) specialization
+interfacing to a tt(SharedMemory) object. In addition to a default constructor
+which is an empty stub the class offers constructors which immediately
+interface to a tt(SharedMemory) object, as well as a member to (re)associate
+a bf(SharedStreambuf) object with a tt(SharedMemory) object.
+
+    it() bf(SharedStream, ISharedStream, OSharedStream)(3bobcat)
+
+These stream classes offer stream-facilities operating on shared memory
+maintained by a tt(SharedMemory) object. The bf(SharedStream) class uses the
+tt(SharedMemory's seek) member for both tt(seekp) and tt(seekg), and uses
+tt(SharedMemory's offset) member for both tt(tellp) and tt(tellg). All shared
+stream objects, including bf(ISharedStream), offer a member to initialize a
+tt(SharedCondition)
+
+)
+
+An overview of currently defined shared memory segments is shown by the
+command tt(ipcs -ma). To remove a defined shared memory segment the command
+tt(ipcrm -m <id>) can be used, where tt(<id>) is the shared memory segment's
+ID. 
+
+
+manpagesection(EXAMPLE)
+    See the bf(sharedstream)(3bobcat) man page.
+
+manpagesection(FILES)
+
+    Images referred to in this man-page are located in the source distribution
+in tt(bobcat/documents/images), or they can be found in the standard location
+of documentation files in your distribution (e.g., they are located in
+tt(/usr/share/doc/libbobcat3/images)).
+
+
+manpageseealso()
+    bf(bobcat)(7), bf(ipcs)(1), bf(ipcrm)(1),
+        bf(isharedstream)(3bobcat),
+        bf(osharedstream)(3bobcat),
+        bf(sharedblock)(3bobcat), 
+        bf(sharedcondition)(3bobcat), 
+        bf(sharedmemory)(3bobcat),
+        bf(sharedmutex)(3bobcat),
+        bf(sharedpos)(3bobcat), 
+        bf(sharedsegment)(3bobcat), 
+        bf(sharedstream)(3bobcat), 
+        bf(sharedstreambuf)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
+
+

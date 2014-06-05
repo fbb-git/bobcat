@@ -55,13 +55,17 @@ void install(string rss, string dev)
 
 #ifdef MANPAGES
     printf("\n  installing the manual pages\n");
-    md(dev + MAN + "/man1 " + dev + MAN + "/man3 " + dev + MAN + "/man7");
+    md(dev + MAN + "/man1 "     + 
+       dev + MAN + "/man3 "     + 
+       dev + MAN + "/man7 "     +
+       dev + DOC + "/images"    );
+
+    run("cp documentation/images/*.jpg " + dev + DOC + "/images");
 
     rungzip9("tmp/man/man3/", dev + MAN + "/man3/");
-    
-    run("gzip -n -9 < tmp/man/man7/" LIBRARY ".7 > " +
-                   dev + MAN + "/man7/" LIBRARY ".7.gz");
 
+    rungzip9("tmp/man/man7/", dev + MAN + "/man7/");
+    
     chdir(dev + MAN + "/man3");
     run("ln -sf iterator.3bobcat.gz reverseiterator.3bobcat.gz");
     chdir(g_cwd);
@@ -69,16 +73,14 @@ void install(string rss, string dev)
 
 #ifdef MANHTML
     printf("\n  installing the html versions of the manual pages\n");
-    md(dev + DOCDEV + "/man");
+    md(dev + DOC + "/man");
 
-//  Don't zip as per man dh_compress:
-//    rungzip9("tmp/manhtml/", dev + DOCDEV + "/man/");
-    run("cp -r tmp/manhtml/* " + dev + DOCDEV + "/man/");
+    run("cp -r tmp/manhtml/* " + dev + DOC + "/man/");
 
-    run("ln -sf " LIBRARY ".7.html " + dev + DOCDEV + "/man/index.html");
-    run("cp documentation/man/" LIBRARY ".jpg " + dev + DOCDEV + "/man");
+    run("ln -sf " LIBRARY ".7.html " + dev + DOC + "/man/index.html");
+    run("cp documentation/man/" LIBRARY ".jpg " + dev + DOC + "/man");
 
-    chdir(dev + DOCDEV + "/man");
+    chdir(dev + DOC + "/man");
     run("ln -sf iterator.3.html reverseiterator.3.html");
     chdir(g_cwd);
 #endif

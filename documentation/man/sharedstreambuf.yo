@@ -14,9 +14,9 @@ manpagesynopsis()
 manpagedescription()
     This class implements a specialization of the bf(std::streambuf) class,
 allowing stream classes (tt(std::istream, std::ostream, FBB::ISharedStream,
-FBB::OSharedStream) and tt(FBB::SharedStream) to perform I/O operations on
-shared memory. bf(FBB::SharedStreambuf) objects interface to an
-tt(FBB::SharedStream) objects.
+FBB::OSharedStream) and tt(FBB::SharedStream)) to perform I/O operations on
+shared memory. bf(FBB::SharedStreambuf) objects interface to a
+tt(FBB::SharedMemory) objects.
 
 includefile(include/namespace)
 
@@ -24,44 +24,59 @@ manpagesection(INHERITS FROM)
     bf(std::streambuf, FBB::SharedEnum__) (cf. bf(sharedmemory(3bobcat)) for
 a description of the latter class).
 
+manpagesection(SIZEUNIT ENUMERATION)
+
+The bf(enum SizeUnit) defines the following symbolic constants:
+        itemization(
+        it() bf(kB), representing 1024 (2**10) bytes of memory;
+        it() bf(MB), representing 1048576 (2**20) bytes of memory;
+        it() bf(GB), representing 1073741824 (2**30) bytes of memory
+        )
+
 manpagesection(CONSTRUCTORS)
     itemization(
     itb(SharedStreambuf())
        The default constructor defines a stub bf(SharedStreambuf) object that
-        cannot immediately be used to access shared memory. To use it, its
-        member tt(setMemory) must first be called.
+        cannot immediately be used to access shared memory. Before it can be
+        used by, shared stream classes like tt(FBB::SharedStream), its member
+        tt(setMemory) must first have been called.
 
     itb(SharedStreambuf(size_t maxSize, SizeUnit sizeUnit, 
             std::ios::openmode openMode = std::ios::in | std::ios::out,
             size_t access = 0600))
        This constructor creates a shared memory segment having a capacity of
-        at least tt(maxSize * sizeUnit) bytes. By default, the shared memory
-        segment is opened for reading and writing. Different from the open
-        modes used for file streams, creating a shared memory stream with open
-        modes tt(ios::in | ios::out) is OK. In this case the shared memory
-        segment is created and once information has been written to the shared
-        memory it can also be read again. The shared memory's access rights
-        are defined by the tt(access) parameter, using the well-known
-        (bf(chmod)(1)) way to define the access rights for the owner, the
-        group and others, using octal digits. If construction succeeds the
-        shared memory is ready for use. If construction fails, an
-        tt(FBB::Exception) is thrown.
+        at least tt(maxSize * sizeUnit) bytes. 
+
+        By default, the shared memory segment is opened for reading and
+        writing. Different from the open modes used for file streams, creating
+        a shared memory stream with open modes tt(ios::in | ios::out) is
+        OK. In this case the shared memory segment is created and once
+        information has been written to the shared memory it can also be read
+        again. 
+
+        The shared memory's access rights are defined by the tt(access)
+        parameter, interpreted as an octal value, using the well-known
+        (bf(chmod)(1)) way to define the access rights for owner, group and
+        others.
+
+        If construction fails, an tt(FBB::Exception) is thrown.
 
     itb(SharedStreambuf(int id, std::ios::openmode openMode = std::ios::in |
         std::ios::out)) 
        This constructor connects to a shared memory segment having ID
-        tt(id). If construction succeeds the shared memory is ready for
-        use. If construction fails (e.g., no shared memory segment having ID
-        tt(id) exists, an tt(FBB::Exception) is thrown. Specifying the
-        tt(ios::trunc) flag or specifying tt(ios::out) without also specifying
-        tt(ios::in) immediately clears the contents of the shared
-        memory.
+        tt(id). 
+
+        Specifying the tt(ios::trunc) flag immediately clears the contents of
+        the shared memory.
+
+        An tt(FBB::Exception) is thrown if construction fails (e.g., no shared
+        memory segment having ID tt(id) exists),
     )
     Copy and move constructors are not available.
 
 manpagesection(OVERLOADED OPERATORS)
 
-    The overloaded move and copy assignment operators are not available.
+    Overloaded move and copy assignment operators are not available.
 
 manpagesection(MEMBER FUNCTIONS)
 
@@ -84,6 +99,14 @@ tt(GB), defined by tt(FBB::SharedEnum__) are available.
         memory is deleted. The bf(FBB::SharedStreambuf) object is
         unusable after returning from tt(kill). 
 
+    itb(void memInfo(std::ostream &out))
+       Information about the tt(SharedMemory) object is inserted into the
+        provide tt(ostream) object. The IDs of the shared segments, their
+        sizes, the maximum number of shared memory segments, the number of
+        bytes that can be read from the shared memory, and its actual storage
+        capacity, etc., are displayed. The inserted information is not
+        terminated by a final newline character.
+
     itb(void remove())
        The shared memory is locked, and the bf(FBB::SharedStreambuf)'s shared
         memory is deleted. The bf(FBB::SharedStreambuf) object is unusable
@@ -96,24 +119,45 @@ tt(GB), defined by tt(FBB::SharedEnum__) are available.
         to reuse a bf(FBB::SharedStreambuf) object again after calling
         tt(kill) or tt(remove).
 
-    itb(void memInfo(std::ostream &out))
-       Information about the tt(SharedMemory) object is inserted into the
-        provide tt(ostream) object. The IDs of the shared segments, their
-        sizes, the maximum number of shared memory segments, the number of
-        bytes that can be read from the shared memory, and its actual storage
-        capacity, etc., are displayed. The inserted information is not
-        terminated by a final newline character.
+    itb(FBB::SharedMemory &sharedMemory())
+       A reference to the tt(FBB::SharedMemory) object to which the
+        bf(FBB::SharedStreambuf) object interfaces is returned.
     )
 
-manpagesection(PROTECTED MEMBER FUNCTION)
+manpagesection(PROTECTED MEMBER FUNCTIONS)
+
+    itemization(
+    itemization(
+    itb(FBB::SharedCondition attachSharedCondition(std::ios::off_type offset,
+                                        std::ios::seekdir origin))
+       Returns an bf(FBB::SharedCondition)(3) object, interfacing to a shared
+        condition variable located at offset tt(offset) (relative to
+        tt(origin)) in the tt(SharedMemory) object to which the
+        bf(SharedStreamBuf) object interfaces.
+
+        An tt(FBB::Exception) is thrown if the tt(FBB::SharedCondition) object
+        could not be constructed.
+
+    itb(FBB::SharedCondition createSharedCondition())
+       Returns an bf(FBB::SharedCondition)(3) object, interfacing to a newly
+        created shared condition variable which is created at the current
+        offset of the tt(SharedMemory) object to which the bf(SharedStream)
+        object interfaces (or at the first offset of the next physical shared
+        memory data block, cf. bf(sharedcondition)(3bobcat))).
+
+        An tt(FBB::Exception) is thrown if the tt(FBB::SharedCondition) object
+        could not be constructed.
 
     itb(void setOpenMode(std::ios::openmode flag))
        The streambuf's tt(openmode) is changed to the settings defined by
         tt(flag). This member is used by, e.g., tt(SharedStream::open), to
         adapt the bf(FBB::SharedStreambuf)'s tt(openmode) to the flags that
         are passed to tt(open).
-    )
 
+    itb(FBB::SharedMemory &sharedMemory())
+       Returns a reference to the tt(FBB::SharedMemory) object to which the
+        bf(SharedStreambuf) object interfaces.
+    )
 
 manpagesection(EXAMPLE)
     See the bf(sharedstream)(3bobcat) man page.
@@ -126,9 +170,11 @@ manpageseealso()
         bf(isharedstream)(3bobcat),
         bf(osharedstream)(3bobcat),
         bf(sharedblock)(3bobcat), 
+        bf(sharedcondition)(3bobcat), 
         bf(sharedmemory)(3bobcat)
         bf(sharedmutex)(3bobcat), 
         bf(sharedpos)(3bobcat), 
+        bf(sharedreadme)(7bobcat), 
         bf(sharedsegment)(3bobcat),
         bf(sharedstream)(3bobcat)
 

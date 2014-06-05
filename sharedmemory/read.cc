@@ -5,6 +5,8 @@ int SharedMemory::read(char *data, streamsize len)
     if (d_pos.eof())
         return -1;
 
+    validate();
+
     streamsize begin = d_pos.offset();
 
 //cerr << "read at " << begin << ", len = " << len << '\n';

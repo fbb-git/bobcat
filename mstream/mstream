@@ -4,6 +4,7 @@
 #include <climits>
 #include <ostream>
 #include <fstream>
+#include <unistd.h>
 
 #include <bobcat/mbuf>
 
@@ -45,6 +46,8 @@ class Mstream: private Mbuf, public std::ostream
                             size_t maxCount = UINT_MAX, 
                             std::string const &tag = "", 
                             bool throwing = false);
+
+        static void echo(bool trueIsOn, int fd = STDIN_FILENO);
 
         // rdbuf members are still available but will turn a Mstream into
         // the kind of stream the streambuf handles. Except for one if the

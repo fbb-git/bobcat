@@ -23,7 +23,8 @@ void man()
         }
     }
 
-    yo = makelist("*.yo") - (list)LIBRARY ".yo" - (list)"reverseiter.yo";
+    yo = makelist("*.yo") - (list)LIBRARY ".yo" - (list)"reverseiter.yo" -
+                            (list)"sharedreadme.yo";
 
     for (idx = sizeof(yo); idx--; )
     {
@@ -47,6 +48,13 @@ void man()
         run("yodl2html --no-warnings  -r 3 "
                         "-o ../../tmp/manhtml/" LIBRARY ".7.html " 
                                                             LIBRARY ".yo");
+
+        run("yodl2man  --no-warnings  -r 3 -l 3 "
+                    "-o ../../tmp/man/man7/sharedreadme.7" LIBRARY
+                    " sharedreadme.yo");
+        run("yodl2html --no-warnings  -r 3 "
+                        "-o ../../tmp/manhtml/sharedreadme.7.html "
+                                    "sharedreadme.yo");
     }
 
     run("touch man-stamp");
