@@ -24,23 +24,29 @@ class SharedPos
     size_t d_blockOffset = 0;
 
     public:
-        void reset(SharedSegment *sharedData);
+        bool atMaxOffset() const;
+
+        size_t blockIdx() const;
+
+        size_t blockOffset() const;
+
         bool eof() const;               // true if no char can be read
                                         // because offset >= writeoffset
-        bool atMaxOffset() const;
-        std::streamsize showmanyc() const;
 
-        std::streamsize maxOffset() const;  // abs. max. possible offset
-        std::streamsize offset() const;     // current abs. offset
         std::streamsize eos() const;        // abs. offset just past
                                             // block[blockIdx()] 
 
-        size_t blockIdx() const;
-        size_t blockOffset() const;
+        std::streamsize maxOffset() const;  // abs. max. possible offset
+
+        std::streamsize offset() const;     // current abs. offset
+
+        void reset(SharedSegment *sharedData);
 
                                                 // returns -1 if inaccessible
         std::ios::pos_type seek(std::ios::off_type offset, 
                                 std::ios::seekdir way = std::ios::beg);
+
+        std::streamsize showmanyc() const;
 
         void operator++();              // caller must have locked the shared
                                         // data

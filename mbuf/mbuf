@@ -71,9 +71,9 @@ class Mbuf: public std::streambuf
         void showTag();
         void inspectOfstr(std::string const &name) const;
         
-        virtual int overflow(int c);
-        virtual std::streamsize xsputn(char const *buf, std::streamsize n);
-        virtual int sync();
+        int overflow(int c) override;
+        std::streamsize xsputn(char const *buf, std::streamsize n) override;
+        int sync() override;
 };
 
 #include "count.f"

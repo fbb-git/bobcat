@@ -5,7 +5,7 @@ int SharedSegment::newSegment(size_t requestedSize, size_t access)
     int id = shmget(IPC_PRIVATE, requestedSize, access);
 
     if (id == -1)                           // no block available
-        throw Exception() << "Cannot create a shared segment segment";
+        throw Exception() << "Cannot create a shared segment";
 
     size_t actualSize = size(id);
 

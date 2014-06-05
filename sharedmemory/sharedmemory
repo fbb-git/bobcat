@@ -5,6 +5,7 @@
 
 #include <bobcat/fswap>
 #include <bobcat/sharedpos>
+#include <bobcat/exception>
 
 namespace FBB
 {
@@ -54,44 +55,76 @@ class SharedMemory: public virtual SharedEnum__
 
         SharedMemory &operator=(SharedMemory &&tmp);
 
-        std::streamsize showmanyc();
 
-        std::streamsize nReadable() const;  // beyond last readable byte
-        std::streamsize offset() const;     // read/write offset
-        std::streamsize maxOffset() const;  
+        std::streamsize blockOffset() const;// offset matching offset(),
+                                            // relative to the current data 
+                                            // block.
 
+        void clear();                   // clear all existing data and reduce
+                                        // until only the segment at 
+                                        // d_sharedSegment  
 
-        char *ptr();                        // 0 if at maxOffset
+        size_t dataSegmentSize() const;
 
-                                        // returns -1 if inaccessible
-        std::ios::pos_type seek(std::ios::off_type offset, 
-                                std::ios::seekdir way = std::ios::beg);
+        int get();                      // get char from d_segmentData 
+                                        // locks), or EOF   
 
         int id() const;                 // id of the d_sharedSegment segment
+
+
+                // after kill/remove: shared segment is unusable
+        void kill();                    // delete all shared segments w/o locks
+
+        std::streamsize maxOffset() const;  
+
+        std::streamsize nReadable() const;  // beyond last readable byte
+        std::streamsize offset() const;     // read/write offset relative to
+                                            // ios::beg
+
+        char *ptr();                        // 0 if at maxOffset
 
         int put(int ch);                // put char at d_offset (locks),
                                         // ch == EOF immediately returns EOF 
 
-                                        // write len bytes at d_offset
-                                        // locks, returns #written or -1
-        int write(char const *data, std::streamsize len);
-                  
-        int get();                      // get char from d_segmentData 
-                                        // locks), or EOF
-
-                                        // read len chars, return nRead, locks
+                                        // read len chars, return nRead or -1, 
+                                        // locks
         int read(char *data, std::streamsize len);    
 
+        template <typename Type>
+        int read(Type *value);              // 1.f
+     
+        template <typename Type>            // 2.f
+        int read(std::ios::off_type offset, Type *value,
+                  std::ios::seekdir origin = std::ios::beg);
 
-        void clear();                   // clear all existing data and reduce
-                                        // until only the segment at 
-                                        // d_sharedSegment
+                // after kill/remove: shared segment is unusable
+        void remove();                  // delete all shared segments.
+
+                                        // returns -1 if inaccessible
+        std::ios::pos_type seek(std::ios::off_type offset, 
+                                std::ios::seekdir origin = std::ios::beg);
+
+        std::streamsize showmanyc();
 
         void swap(SharedMemory &other);
 
-                // after kill/remove: shared segment is unusable
-        void kill();                    // delete all shared segments w/o locks
-        void remove();                  // delete all shared segments.
+        bool truncate(std::streamsize offset);  // nReadable is reduced to 
+                                            // offset
+
+
+                                        // write len bytes at d_offset
+                                        // locks, returns #written or -1
+        int write(char const *data, std::streamsize len);
+
+        template <typename Type>
+        int write(Type const *value);       // 1.f
+     
+        template <typename Type>            // 2.f
+        int write(std::ios::off_type offset, Type const *value,
+                  std::ios::seekdir origin = std::ios::beg);
+
+        template <typename SharedType, typename ... Params>
+        SharedType *install(std::streamsize *offset, Params &&...params);
 
     private:
         std::ostream &insert(std::ostream &out) const;
@@ -120,16 +153,26 @@ class SharedMemory: public virtual SharedEnum__
         static size_t computeSegmentSize(
                             size_t *nBlocks, 
                             long long maxMemory, SizeUnit sizeUnit);
+
+        void validate() const;
 };
 
+#include "blockoffset.f"
+#include "datasegmentsize.f"
 #include "id.f"
+#include "install.f"
 #include "maxoffset.f"
 #include "nreadable.f"
 #include "offset.f"
 #include "operatorassign.f"
 #include "operatorinsert.f"
+#include "read1.f"
+#include "read2.f"
 #include "swap.f"
+#include "write1.f"
+#include "write2.f"
 
 } // FBB        
 #endif
+
 

@@ -15,7 +15,18 @@ manpagedescription()
     This class combines the features of the bf(std::istream) and
 bf(std::ostream) classes, operating on shared memory. As with tt(std::fstream)
 objects, a tt(seekp) or tt(seekg) member call is required to switch from
-writing to reading or v.v.
+writing to reading or v.v. 
+
+As with tt(std::fstream) objects, bf(FBB::SharedStream) objects do not keep
+separate offsets for reading and writeing: the seek-members always refer to
+the (single) offset maintained by the tt(FBB::SharedMemory) object to which
+the bf(SharedStream) object interfaces. 
+
+So, although tt(tellg) and tt(tellp) return identical values, tt(tellg) should
+not be called after writing to a bf(SharedStream) object, and tt(tellp) should
+not be called after reading from a bf(SharedStream) object, as calling members
+related to reading (tt(tellg)) after writing and v.v. put the stream in its
+fail state.
 
 includefile(include/namespace)
 
@@ -24,8 +35,16 @@ manpagesection(INHERITS FROM)
     bf(std::istream),nl()
     bf(std::ostream),nl()
     bf(FBB::SharedEnum__) (cf. bf(sharedmemory)(3bobcat) for a description of
-        this last base class).
+        this base class).
 
+manpagesection(SIZEUNIT ENUMERATION)
+
+The bf(enum SizeUnit) defines the following symbolic constants:
+        itemization(
+        it() bf(kB), representing 1024 (2**10) bytes of memory;
+        it() bf(MB), representing 1048576 (2**20 bytes of memory;
+        it() bf(GB), representing 1073741824 (2**30) bytes of memory
+        )
 
 manpagesection(CONSTRUCTORS)
     itemization(
@@ -40,32 +59,39 @@ manpagesection(CONSTRUCTORS)
        This constructor creates a stream inheriting the facilities of an
         tt(std::istream) and tt(std::ostream) that interfaces to a shared
         memory segment having a capacity of at least tt(maxSize * sizeUnit)
-        bytes. By default, the shared memory segment is opened for reading and
+        bytes. 
+
+        By default, the shared memory segment is opened for reading and
         writing. Different from the open modes used for file streams, creating
         a shared memory stream with open modes tt(ios::in | ios::out) is
         OK. In this case the shared memory segment is created and once
         information has been written to the shared memory it can also be read
-        again. The shared memory's access rights are defined by the tt(access)
-        parameter, using the well-known (bf(chmod)(1)) way to define the
-        access rights for the owner, the group and others, using octal
-        digits. If construction succeeds the shared memory is ready for
-        use. If construction fails, an tt(FBB::Exception) is thrown.
+        again. 
+
+        The shared memory's access rights are defined by the tt(access)
+        parameter, interpreted as an octal value, using the well-known
+        (bf(chmod)(1)) way to define the access rights for owner, group and
+        others.
+
+        If construction fails, an tt(FBB::Exception) is thrown.
 
     itb(SharedStream(int id, std::ios::openmode openMode = std::ios::in |
         std::ios::out)) 
        This constructor creates a stream inheriting the facilities of an
         tt(std::istream) and tt(std::ostream) that connects to a shared memory
-        segment having ID tt(id). If construction succeeds the shared memory
-        is ready for use. If construction fails (e.g., no shared memory
-        segment having ID tt(id) exists), an tt(FBB::Exception) is
-        thrown. Specifying the tt(ios::trunc) flag immediately clears the
-        contents of the shared memory.
+        segment having ID tt(id). 
+
+        Specifying the tt(ios::trunc) flag immediately clears the contents of
+        the shared memory.
+
+        An tt(FBB::Exception) is thrown if construction fails (e.g., no shared
+        memory segment having ID tt(id) exists),
     )
     Copy and move constructors are not available.
 
 manpagesection(OVERLOADED OPERATORS)
 
-    The overloaded move and copy assignment operators are not available.
+    No overloaded move and copy assignment operators are available.
 
 manpagesection(MEMBER FUNCTIONS)
 
@@ -73,9 +99,28 @@ manpagesection(MEMBER FUNCTIONS)
 values tt(kB, MB), and tt(GB), defined by tt(FBB::SharedEnum__) are available. 
 
     itemization(
-    itb(void clear())
-       This member clears the error states of the tt(std::istream)
-        and tt(std::ostream) base class objects.
+    itb(FBB::SharedCondition attachSharedCondition(std::ios::off_type offset,
+                                        std::ios::seekdir origin))
+       Returns an bf(FBB::SharedCondition)(3) object, interfacing to a shared
+        condition variable located at offset tt(offset) (relative to
+        tt(origin)) in the tt(SharedMemory) object to which the
+        bf(SharedStream) object interfaces.  This member does not alter the
+        value returned by the stream's tt(tellg) and tt(tellp) members.
+
+        An tt(FBB::Exception) is thrown if the tt(FBB::SharedCondition) object
+        could not be constructed.
+
+    itb(FBB::SharedCondition createSharedCondition())
+       Returns an bf(FBB::SharedCondition)(3) object, interfacing to a newly
+        created shared condition variable which is created at the current
+        offset of the tt(SharedMemory) object to which the bf(SharedStream)
+        object interfaces (or at the first offset of the next physical shared
+        memory data block, cf. bf(sharedcondition)(3bobcat))).  Creating a
+        tt(SharedCondition) object does not alter the value returned by the
+        stream's tt(tellg) and tt(tellp) members.
+
+        An tt(FBB::Exception) is thrown if the tt(FBB::SharedCondition) object
+        could not be constructed.
 
     itb(int id() const)
        The ID of the shared memory segment is returned.
@@ -86,19 +131,13 @@ values tt(kB, MB), and tt(GB), defined by tt(FBB::SharedEnum__) are available.
         after returning from tt(kill). Other processes that were using the
         shared memory can continue to do so.
 
-    itb(void remove())
-       The shared memory is first locked. Next, all shared memory is returned
-        to the operating system. The bf(FBB::SharedStream) object is unusable
-        after returning from tt(remove). Other processes that were using the
-        shared memory can continue to do so.
-
     itb(void memInfo(std::ostream &out, char const *end = "\n"))
        Information about the tt(SharedMemory) object is inserted into the
         provide tt(ostream) object. The IDs of the shared segments, their
         sizes, the maximum number of shared memory segments, the number of
         bytes that can be read from the shared memory, and its actual storage
         capacity, etc., are displayed. Following the information about the
-        shaed memory, tt(end) is inserted into tt(out).
+        shared memory, tt(end) is inserted into tt(out).
 
     itb(void open(size_t maxSize, SizeUnit sizeUnit,
             std::ios::openmode openMode = std::ios::in | std::ios::out,
@@ -106,27 +145,50 @@ values tt(kB, MB), and tt(GB), defined by tt(FBB::SharedEnum__) are available.
        This member creates a shared memory segment having a capacity of at
         least tt(maxSize * sizeUnit) bytes, and connects the shared memory
         segment to the bf(FBB::SharedStream). A matching tt(close) member does
-        not exist and is not required. By default, the shared memory segment
-        is opened for reading and writing. Different from the open modes used
-        for file streams, creating a shared memory stream with open modes
-        tt(ios::in | ios::out) is OK. In this case the shared memory segment
-        is created and once information has been written to the shared memory
-        it can also be read again. The shared memory's access rights are
-        defined by the tt(access) parameter, using the well-known
-        (bf(chmod)(1)) way to define the access rights for the owner, the
-        group and others, using octal digits. If opening succeeds the shared
-        memory is ready for use. If opening fails, an tt(FBB::Exception) is
-        thrown.
+        not exist and is not required. 
+
+        By default, the shared memory segment is opened for reading and
+        writing. Different from the open modes used for file streams, creating
+        a shared memory stream with open modes tt(ios::in | ios::out) is
+        OK. In this case the shared memory segment is created and once
+        information has been written to the shared memory it can also be read
+        again. 
+
+        The shared memory's access rights are defined by the tt(access)
+        parameter, interpreted as an octal value, using the well-known
+        (bf(chmod)(1)) way to define the access rights for owner, group and
+        others.
+
+        If opening fails, an tt(FBB::Exception) is thrown.
 
     itb(void open(int id, std::ios::openmode openMode = std::ios::in |
         std::ios::out)) 
        This member connects the bf(FBB::SharedStream) object to a shared
         memory segment having ID tt(id). A matching tt(close) member does
         not exist and is not required. If opening succeeds the shared
-        memory is ready for use. If opening fails (e.g., no shared memory
-        segment having ID tt(id) exists), an tt(FBB::Exception) is
-        thrown. Specifying the tt(ios::trunc) flag immediately clears the
-        contents of the shared memory.
+        memory is ready for use. 
+
+        Specifying the tt(ios::trunc) flag immediately clears the contents of
+        the shared memory.
+
+        An tt(FBB::Exception) is thrown if opening fails (e.g., no shared
+        memory segment having ID tt(id) exists). 
+
+    itb(void remove())
+       The shared memory is first locked. Next, all shared memory is returned
+        to the operating system. The bf(FBB::SharedStream) object is unusable
+        after returning from tt(remove). Other processes that were using the
+        shared memory can continue to do so.
+
+    itb(bool truncate(std::streamsize offset))
+       If tt(offset) is not exceeding the value returned by tt(seekg(0,
+        std::ios::end)), then this latter value is changed to tt(offset) and
+        tt(true) is returned. Otherwise tt(false) is returned, and the value
+        returned by tt(seekg) is not altered. If the value returned by
+        tt(tellg) exceeded tt(offset), tt(tellg)'s return value it is reduced
+        to tt(offset) as well. Subsequent read operations on the shared memory
+        can only succeed as long as tt(tellg)'s return value hasn't reached
+        the value tt(offset). 
     )
 
 manpagesection(EXAMPLE)
@@ -141,6 +203,7 @@ manpageseealso()
         bf(isharedstream)(3bobcat),
         bf(osharedstream)(3bobcat),
         bf(sharedblock)(3bobcat), 
+        bf(sharedcondition)(3bobcat), 
         bf(sharedmemory)(3bobcat)
         bf(sharedmutex)(3bobcat), 
         bf(sharedpos)(3bobcat), 

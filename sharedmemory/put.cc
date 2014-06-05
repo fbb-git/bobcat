@@ -11,6 +11,7 @@ int SharedMemory::put(int ch)
         *cp = ch;
         ++d_pos;
     unlock(d_pos.blockIdx());
+
     d_sharedSegment->updateNreadable(d_pos.offset());
 
     return ch;

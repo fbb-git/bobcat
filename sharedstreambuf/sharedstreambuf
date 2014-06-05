@@ -5,6 +5,7 @@
 #include <streambuf>
 
 #include <bobcat/sharedmemory>
+#include <bobcat/sharedcondition>
 
 namespace FBB
 {
@@ -30,24 +31,28 @@ class SharedStreambuf: public std::streambuf, public virtual SharedEnum__
 
         virtual ~SharedStreambuf();
 
+        void clear();                   // clear all existing data and reduce
+                                        // until only the segment at 
+                                        // d_sharedData
+
         int id() const;                 // id of the shared Memory segment
 
         void kill();                    // kill all shared segments w/o locks
                                         // the object is unusable hereafter
 
+        void memInfo(std::ostream &out) const;
+
         void remove();                  // remove all shared segments.
                                         // the object is unusable hereafter
 
-        void clear();                   // clear all existing data and reduce
-                                        // until only the segment at 
-                                        // d_sharedData
-
         void setMemory(SharedMemory &&tmp);
 
-        void memInfo(std::ostream &out) const;
-
     protected:
+        SharedCondition attachSharedCondition(std::ios::off_type offset = 0,
+                        std::ios::seekdir way = std::ios::beg);
+        SharedCondition createSharedCondition();
         void setOpenMode(std::ios::openmode openMode);        
+        SharedMemory &sharedMemory();
         
     private:
         bool mode(std::ios::openmode flag);
@@ -70,13 +75,14 @@ class SharedStreambuf: public std::streambuf, public virtual SharedEnum__
             std::ios::openmode mode = std::ios::in | std::ios::out) override;
 };
 
-#include "setopenmode.f"
-#include "id.f"
-#include "remove.f"
-#include "kill.f"
 #include "clear.f"
-#include "setmemory.f"
+#include "id.f"
+#include "kill.f"
 #include "meminfo.f"
+#include "remove.f"
+#include "setmemory.f"
+#include "setopenmode.f"
+#include "sharedmemory.f"
 
 } // FBB        
 #endif

@@ -1,7 +1,5 @@
 includefile(include/header)
 
-COMMENT(replace 'sharedmutex' by the name of the new class)
-
 COMMENT(manpage, section, releasedate, archive, short name)
 manpage(FBB::SharedMutex)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
                     (Shared Memory Mutex)
@@ -15,21 +13,26 @@ manpagesynopsis()
 manpagedescription()
     Shared memory may be used by multiple processes. To synchronize access to
 shared memory an bf(FBB::SharedMutex) may be defined inside a shared memory
-segment. An bf(FBB::SharedMutex) allows clients to lock a shared memory
+segment. bf(SharedMutex) objects allows clients to lock a shared memory
 segment before reading or writing its contents. E.g., the Bobcat class
-tt(FBB::SharedSegment) defines a tt(SharedMutex) in its shared memory segment.
+tt(FBB::SharedSegment) defines a bf(SharedMutex) in its shared memory segment.
 
-    The bf(FBB::SharedMutex) class uses the facilities offered by the
-tt(PThread) library to implement shared memory locking. To force
-unlocking a (possibly) locked shared memory segment, its destructor can be
-called. 
+    The bf(SharedMutex) class uses the facilities offered by the
+tt(PThread) library to implement (non recursive) shared memory locking. To
+force unlocking a (possibly) locked shared memory segment, its destructor can
+be called. 
+
+    bf(SharedMutex) mutexes are non-recursive, resulting in deadlocks if their
+tt(lock) member is called twice from the same thread of execution without an
+intermediate call to tt(unlock) the mutex. If this causes concern, a variable
+can be defined indicating whether the lock has already been obtained.
 
 includefile(include/namespace)
 
 manpagesection(INHERITS FROM)
     -
 
-manpagesection(CONSTRUCTORS)
+manpagesection(CONSTRUCTORS, DESTRUCTOR )
     itemization(
     itb(SharedMutex())
        The default constructor initializes an bf(FBB::SharedMutex) object to a
@@ -44,32 +47,52 @@ manpagesection(CONSTRUCTORS)
        verb(
     new (d_shared) FBB::SharedMutex;
        )
-    )
-       The copy and move constructors are not available. 
+       Caveat: when using placement new to initialize a bf(SharedMutex) make
+        sure that the bf(SharedMutex) fits inside a block (i.e.,
+        tt(shared.blockOffset() + sizeof(SharedMemory) <
+        shared.dataSegmentSize())). If not, use tt(seek) to switch to an
+        offset where this equality holds true, or simply use
+        tt(SharedMemory::create) like this:
+       verb(
+    FBB::SharedMemory::create<FBB::SharedMutex>();
+       )
 
-       The class's destructor releasea all of the current process's nested
-        shared memory segment locks. To destroy an bf(FBB::SharedMuted) object
+    itb(~SharedMutex())
+       The class's destructor releases all of the current process's nested
+        shared memory segment locks. To destroy an bf(FBB::SharedMutex) object
         that has been constructed using the placement tt(new) operator use
        verb(
-    d_sharedMutex->~SharedMutex();
+d_sharedMutex->~SharedMutex();
        )
        (assuming tt(SharedMutex *d_sharedMutex) points to the location where
         placement new has previously initialized the bf(FBB::SharedMutex)
         object.) 
 
+    )
+       Copy and move constructors are not available. 
+
 manpagesection(MEMBER FUNCTIONS)
     itemization(
     itb(void lock() const)
        When returning from this member, the current process has locked the
-        shared memory segment.
+        shared memory segment. Note that bf(SharedMutex) objects are
+        non-recursive. 
 
     itb(void unlock() const)
-       The object's lock of the shared memory segment is released.
+       The object's lock of the shared memory segment is released. This member
+        can also be called if the bf(SharedMutex's) lock has not been
+        obtained. 
+    )
+
+manpagesection(PROTECTED MEMBER FUNCTION)
+    itemization(
+    itb(pthread_mutex_t *mutexPtr())
+       A pointer is returned to the tt(pthread_mutex_t) object used by
+        the bf(SharedMutex) object;
     )
 
 manpagesection(EXAMPLE)
     See the bf(sharedstream)(3bobcat) man page.
-
 
 manpagefiles()
     em(bobcat/sharedmutex) - defines the class interface
@@ -79,8 +102,11 @@ manpageseealso()
         bf(isharedstream)(3bobcat),
         bf(osharedstream)(3bobcat),
         bf(sharedblock)(3bobcat), 
+        bf(sharedcondition)(3bobcat), 
         bf(sharedmemory)(3bobcat),
+            (e.g.,) bf(pthread_mutex_init)(3posix),
         bf(sharedpos)(3bobcat), 
+        bf(sharedreadme)(7bobcat), 
         bf(sharedsegment)(3bobcat), 
         bf(sharedstream)(3bobcat), 
         bf(sharedstreambuf)(3bobcat)

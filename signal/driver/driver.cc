@@ -16,7 +16,7 @@ class SignalDemo: public FBB::SignalHandler
         void run();
 
     private:
-        virtual void signalHandler(size_t signum) override;
+        void signalHandler(size_t signum) override;
 };
 
 using namespace std;
@@ -33,7 +33,7 @@ void SignalDemo::run()
 {
     while (d_continue)
     {
-        cout << "Send a SIGHUP or SIGTERM... to process " << d_pid << endl;
+        cout << "Send a SIGINT or SIGTERM... to process " << d_pid << endl;
         sleep(1);
     }
     cout << "Ending `run' after receiving signal " << d_signal << endl;
@@ -41,8 +41,8 @@ void SignalDemo::run()
 
 void SignalDemo::signalHandler(size_t signal)
 {
-    if (signal == SIGHUP)
-        cout << "Process " << d_pid << " received SIGHUP" << endl;
+    if (signal == SIGINT)
+        cout << "Process " << d_pid << " received SIGINT" << endl;
     else if (signal == SIGTERM)
     {
         cout << "Process " << d_pid << " received SIGTERM" << endl;
@@ -55,7 +55,7 @@ int main()
 {
     SignalDemo signalDemo;
 
-    Signal::instance().add(SIGHUP, signalDemo);
+    Signal::instance().add(SIGINT, signalDemo);
     Signal::instance().add(SIGTERM, signalDemo);
 
     signalDemo.run();

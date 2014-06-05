@@ -1,9 +1,13 @@
 #include "sharedmemory.ih"
 
+//#include <iostream>
+
 int SharedMemory::write(char const *data, streamsize len)
 {
     if (d_pos.atMaxOffset())
         return -1;
+
+    validate();
 
     streamsize begin = d_pos.offset();
 
@@ -32,3 +36,4 @@ int SharedMemory::write(char const *data, streamsize len)
 
     return d_pos.offset() - begin;
 }
+

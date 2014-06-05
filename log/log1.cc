@@ -1,8 +1,8 @@
 #include "log.ih"
 
-Log::Log(char const *delim)
+Log::Log()
 :
-    LogBuffer(TIMESTAMPS, false, delim),
+    LogBuffer(TIMESTAMPS, false, " "),
     ostream(this)
 {
     init();

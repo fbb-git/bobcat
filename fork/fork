@@ -3,6 +3,8 @@
 
 #include <sys/types.h>
 
+#include <iosfwd>
+
 namespace FBB
 {    
 
@@ -24,8 +26,15 @@ class Fork
         virtual void parentProcess() = 0;   // must be implemented
 
         void prepareDaemon() const;         // prepares for a daemon
+        void prepareDaemon(std::string const &out,
+                           std::string const &err,
+                           mode_t mode = 0600) const;
 
         int waitForChild();                 // returns the status
+
+    private:
+        static void reopen(std::string const &out, mode_t mode);
+
 };
 
 #include "pid.f"

@@ -22,6 +22,18 @@ struct ISharedStream: private SharedStreambuf, public std::istream,
             size_t id, 
             std::ios::openmode openMode = std::ios::in);
 
+    using SharedStreambuf::attachSharedCondition;
+
+//    using SharedStreambuf::createSharedCondition;
+
+    using std::istream::clear;
+
+    using SharedStreambuf::id;
+
+    using SharedStreambuf::kill;
+
+    void memInfo(std::ostream &out, char const *end = "\n") const;
+
     void open(
             size_t maxSize, SizeUnit sizeUnit,
             std::ios::openmode openMode = std::ios::in,
@@ -31,19 +43,12 @@ struct ISharedStream: private SharedStreambuf, public std::istream,
             int id,
             std::ios::openmode openMode = std::ios::in);
 
-    using std::istream::clear;
-
-    void memInfo(std::ostream &out, char const *end = "\n") const;
-
-    using SharedStreambuf::id;
     using SharedStreambuf::remove;
-    using SharedStreambuf::kill;
+
+    bool truncate(std::streamsize offset);
 };
+
+#include "truncate.f"
 
 } // FBB        
 #endif
-
-
-
-
-
