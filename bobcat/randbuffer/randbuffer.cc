@@ -15,6 +15,6 @@ Randbuffer::Randbuffer(int min, int max, size_t seed)
 
     d_max++;
 
-    srand(seed);
+    srandom(seed);
     setg(0, 0, 0);
 }
