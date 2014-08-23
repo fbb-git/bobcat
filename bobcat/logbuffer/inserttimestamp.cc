@@ -3,9 +3,11 @@
 void LogBuffer::insertTimestamp()
 {
     time_t curtime = time(0);
-    struct tm *loctime = localtime (&curtime);
+    struct tm *timestruct = 
+        (d_timestamps == TIMESTAMPS ? localtime : gmtime)(&curtime);
+
     char buffer[256];       // see time functions example of `info libc'
 
-    strftime(buffer, 256, "%b %e %T", loctime);
+    strftime(buffer, 256, "%b %e %T", timestruct);
     *d_stream << buffer << d_delim;
 }
