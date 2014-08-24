@@ -31,6 +31,9 @@ values:
         Log-messages will not have timestamps prepended to them.
     itb(TIMESTAMPS)
         Log-messages will have timestamps prepended to them.
+    itb(UTCTIMESTAMPS)
+        Log-messages will have timestamps showing the UTC time prepended to
+        them.
     )
 
 manpagesection(CONSTRUCTORS)
@@ -62,27 +65,25 @@ consists of the month, the day number of the month and the (local) time of the
 current message, as usually appearing in messages in tt(/var/log) files. E.g.,
 tt(Aug 5 13:52:23).
     )
-    The copy constructor is not available.
+
+    Copy and move constructors are not available.
 
 manpagesection(MEMBER FUNCTIONS)
      All members of bf(std::streambuf) are available, as bf(FBB::LogBuffer)
 inherits from this class. 
     itemization(
-    itb(void setStream(std::ostream &stream))
-        This member may be used to switch the stream to log to. It is the
-responsibility of the programmer to ensure that the external stream remains
-available for as long as log-messages are inserted into it.
     itb(int overflow(int c))
     This member em(overrides) the bf(std::streambuf) member. It is
 called by tt(std::ostream) objects using bf(OFdStreambuf). It calls
 tt(sync()), an then it puts the next available character into the buffer. It
 returns the inserted character.
-    itb(int sync())
-        This member em(overrides) the bf(std::streambuf) member. It writes
-the buffer to the device associated with the file descriptor, and returns 0.
-    itb(void setStream(bool active))
+    itb(void setActive(bool active))
         The member function (de)activates logging. The argument bf(true)
 activates logging, the argument bf(false) deactivates it.
+    itb(void setStream(std::ostream &stream))
+        This member may be used to switch the stream to log to. It is the
+responsibility of the programmer to ensure that the external stream remains
+available for as long as log-messages are inserted into it.
     itb(void settimestamp(FBB::TimeStamps timestamps,
                 char const *delim = " "))
         The member function (de)activates time stamp prepending. Use the value
@@ -98,6 +99,9 @@ FBB::NOTIMESTAMPS delim) is ignored.
 before the next insertion. It is called as bf(setEmpty(true)) when a newline
 character (tt(\n)) is inserted, ensuring that another timestamp is prepended
 before the next insertion.
+    itb(int sync())
+        This member em(overrides) the bf(std::streambuf) member. It writes
+the buffer to the device associated with the file descriptor, and returns 0.
     )
 
 manpagesection(PROTECTED MEMBER FUNCTION)

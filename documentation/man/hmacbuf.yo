@@ -1,10 +1,10 @@
 includefile(include/header)
 
 COMMENT(manpage, section, releasedate, archive, short name)
-manpage(FBB::Hmacbuf)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+manpage(FBB::HMacBuf)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
                     (Compute HMAC Message Digests)
 
-manpagename(FBB::Hmacbuf)
+manpagename(FBB::HMacBuf)
            (Computes HMAC Message Digests from information inserted into a
 std::ostream) 
 
@@ -13,7 +13,7 @@ manpagesynopsis()
     Linking option: tt( -lbobcat) 
 
 manpagedescription()
-    bf(FBB::Hmacbuf) objects are bf(std::streambuf) objects that can be used
+    bf(FBB::HMacBuf) objects are bf(std::streambuf) objects that can be used
 to initialize tt(std::ostream) objects with.
 
     All information inserted into such a tt(std::ostream) is used to compute a
@@ -39,7 +39,7 @@ manpagesection(INHERITS FROM)
 
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(Hmacbuf(std::string const &key, char const *type, 
+    itb(HMacBuf(std::string const &key, char const *type, 
                 size_t bufsize = 1024))
         This constructor initializes the streambuf, setting it up for the
 message digest algorithm specified with tt(type). The message hmac
@@ -50,7 +50,7 @@ use the sha256 algorithm specify tt("sha256").
 the HMAC message digest.
 
     The tt(bufsize) argument specifies the internal buffer used by
-tt(Hmacbuf) to store incoming characters temporarily. The provided default
+tt(HMacBuf) to store incoming characters temporarily. The provided default
 argument should be OK in all normal cases. 
     )
     There is no copy constructor.
@@ -68,9 +68,9 @@ into the provided tt(ostream). See the example below for an illustration.
 
 manpagesection(MEMBER FUNCTIONS)
 
-     All members of bf(std::streambuf) are available, as bf(FBB::Hmacbuf)
+     All members of bf(std::streambuf) are available, as bf(FBB::HMacBuf)
 inherits from this class. Some of the bf(std::streambuf)'s member are
-overridden or are hidden by tt(Hmacbuf). In normal situations these
+overridden or are hidden by tt(HMacBuf). In normal situations these
 inherited members will not be used by programs using tt(HMacBuf) objects.
 
     itemization(
