@@ -11,13 +11,14 @@ namespace FBB
 enum TimeStamps
 {
     NOTIMESTAMPS,
-    TIMESTAMPS
+    TIMESTAMPS,
+    UTCTIMESTAMPS
 };
 
 class LogBuffer: public std::streambuf
 {
     std::ostream *d_stream; // the stream to insert info to
-    bool d_insertTimestamp; // write the timestamp or not
+    TimeStamps d_timestamps;// what timestamp to use?
     bool d_active;          // actually write information or not
     bool d_empty;           // set to true at the beginning, after writing \n
     std::string d_delim;    // delimiter following time stamps

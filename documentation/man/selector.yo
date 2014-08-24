@@ -83,15 +83,18 @@ results in tt(wait) returning immediately. To switch off the alarm time use
 tt(noAlarm).
     itb(int wait())
         This member should be called to wait for activities on the installed
-file descriptors or timeout-period. The members tt(exceptFd, nReady,
-readFd) and tt(writeFd) show their defined behaviors only after tt(wait)
-has returned.  It throws an tt(FBB::Exception) exception when bf(select)(2) fails,
-which may very well indicate the end of any available input. Otherwise it
-returns the number of available file descriptors. Note that tt(wait)
-may also return with an input file descriptor returned by tt(readFd) of a file
-at its end-of-file position. The file is `ready for reading', but no
-characters will be returned when trying to  read from it due to its
-end-of-file status.
+file descriptors or timeout-period. The members tt(exceptFd, nReady, readFd)
+and tt(writeFd) show their defined behaviors only after tt(wait) has returned.
+
+It throws an tt(FBB::Exception) exception when bf(select)(2) fails, which may
+very well indicate the end of any available input. An exception is also thrown
+if the program received a signal.
+
+If tt(wait) returns normally its return value represents the number of
+available file descriptors. Note that tt(wait) may also return with an input
+file descriptor returned by tt(readFd) of a file at its end-of-file
+position. The file is `ready for reading', but no characters will be returned
+when trying to read from it due to its end-of-file status.
     itb(int writeFd())
         Returns -1 of no more file descriptors are available for
 writing. Otherwise the next available file descriptor for writing is

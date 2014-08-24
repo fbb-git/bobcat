@@ -8,7 +8,7 @@ int LogBuffer::overflow(int c)
     if (c == 0)             // newline without timestamp request
         d_empty = false;
 
-    if (d_insertTimestamp)  // timestamps requested
+    if (d_timestamps != NOTIMESTAMPS)  // timestamps requested
     {
         if (d_empty)        // write one if there's nothing on the line
         {
