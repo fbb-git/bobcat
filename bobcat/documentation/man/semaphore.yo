@@ -17,7 +17,8 @@ manpagedescription()
 According to tt(http://en.wikipedia.org/wiki/Semaphore_(programming)) a
 semaphore is a variable or abstract data type that is used for controlling
 access, by multiple processes, to a common resource in a parallel programming
-or a multi user environment.
+or a multi user environment. The tt(Semaphore) as a data type was designed
+around 1962 by Edsger Dijkstra.
 
 A useful way to think of a semaphore is as a record of how many units of a
 particular resource are available, coupled with operations to safely (i.e.,
@@ -41,23 +42,63 @@ manpagesection(CONSTRUCTORS)
     itb(Semaphore(size_t nAvailable))
         The constructor defines the semaphore's initial state. With a counting
 semaphore tt(nAvailable) defines, e.g., the number of available locations in a
-storage area. Locking/unlocking with facilities to notify another waiting
-thread is implemented via binary semaphores, which are initialized to 1 or 0.
+storage area. Locking/unlocking, supporting facilities to notify other waiting
+threads is implemented via binary semaphores, which are initialized to 1 or 0.
+A semaphore containing the value 0 blocks. I.e., its tt(wait) member waits
+until its value is incremented by another thread, calling one of the
+semaphore's tt(notify) members.
     )
     Copy and move constructors are not available.
 
 
 manpagesection(MEMBER FUNCTIONS)
-     All members of bf(std::ostringstream) and bf(  std::exception) are
-available, as bf(FBB::Semaphore) inherits from these classes.
     itemization(
-    itb()
+    itb(void notify())
+       The internally maintained tt(available) value is incremented and one
+        waiting thread (cf. the tt(wait) members below) is notified,
+        reactivating that thread.
+    itb(void notify_all())
+       The internally maintained tt(available) value is incremented and all
+        waiting threads (cf. the tt(wait) members below) are notified. Only
+        one thread 
+        reactivating that thread.
+    itb(void wait())
+       This member blocks for as long as the internally stored value
+        (tt(available)) equals zero. When returning from tt(wait) the current
+        thread holds the lock of the tt(std::mutex) which is maintained
+        internally by the tt(Semaphore) object. tt(Notify) members are used to
+        increment tt(available) and to inform tt(wait) that it may
+        return. When multiple threads are waiting only one thread will stop
+        waiting, while the remaining threads will continue to wait for another
+        notification.
+    itb(std::cv_status wait_for(std::chrono::duration<Rep, Period> const
+                                                                &relTime))
+       This member blocks for as long as the internally stored value
+        (tt(available)) equals zero and the amount of time specified by
+        tt(relTime) hasn't passed. If the latter happens,
+        tt(std::cv_status::timeout) is returned, otherwise
+        tt(std::cv_status::no_timeout) is returned, in which case the current
+        thread holds the lock of the tt(std::mutex) which is maintained
+        internally by the tt(Semaphore) object. tt(Notify) members are used to
+        increment tt(available) and to inform tt(wait) that it may
+        return. When multiple threads are waiting only one thread will stop
+        waiting, while the remaining threads will continue to wait for another
+        notification.
+    itb(std::cv_status wait_until(std::chrono::time_point<Clock, Duration> 
+                                                            const &absTime))
+       This member blocks for as long as the internally stored value
+        (tt(available)) equals zero and the time specified by tt(absTime)
+        hasn't been reached. If the latter happens (or if tt(absTime) lies in
+        the past) tt(std::cv_status::timeout) is returned, otherwise
+        tt(std::cv_status::no_timeout) is returned, in which case the current
+        thread holds the lock of the tt(std::mutex) which is maintained
+        internally by the tt(Semaphore) object. tt(Notify) members are used to
+        increment tt(available) and to inform tt(wait) that it may
+        return. When multiple threads are waiting only one thread will stop
+        waiting, while the remaining threads will continue to wait for another
+        notification.
     )
 
-manpagesection(MANIPULATORS)
-    itemization(
-    itb(FBB::) 
-    )
 
 manpagesection(EXAMPLE)
     To do
