@@ -60,8 +60,17 @@ manpagesection(MEMBER FUNCTIONS)
     itb(void notify_all())
        The internally maintained tt(available) value is incremented and all
         waiting threads (cf. the tt(wait) members below) are notified. Only
-        one thread 
-        reactivating that thread.
+        one waiting thread will be able to obtain the semaphore's lock and to
+        reduce tt(available), and that particular thread is thereupon
+        reactivated. 
+    itb(void set(size_t available))
+       This member blocks until it has obtained the lock of the tt(std::mutex)
+        which is maintained internally by the tt(Semaphore) object. Next the
+        tt(Semaphore's available) value receives the value of the member's
+        argumnt, and the lock is released.
+    itb(size_t size() const)
+       Without trying to lock the tt(Semaphore) object's tt(mutex) the current
+        value of the tt(Semaphore's available) value is returned.
     itb(void wait())
        This member blocks for as long as the internally stored value
         (tt(available)) equals zero. When returning from tt(wait) the current
@@ -99,9 +108,55 @@ manpagesection(MEMBER FUNCTIONS)
         notification.
     )
 
-
 manpagesection(EXAMPLE)
-    To do
+    verb(
+    #include <bobcat/semaphore>
+    
+    using namespace FBB;
+
+    Semaphore produce(10);          // storage area size
+    Semaphore consume(0);           // # items in store
+    std::queue itemQueue;           // storage queue
+
+    void consumer()
+    {
+        while (true)
+        {
+            consume.wait();          // wait until there's an item in store
+
+                // mutex lock the queue with multiple consumers
+            size_t item = itemQueue.front();
+            itemQueue.pop();
+
+            produce.notify();   // notify the producer 
+
+            process(item);      // not implemented
+        }
+    }
+
+    void producer()
+    {
+        size_t item = 0;
+        while (true)
+        {
+            ++item;
+            produce.wait();     // wait for room in the storage
+
+                // mutex lock the queue with multiple consumers
+            itemQueue.push(item);
+
+            consume.notify();   // notify the consumer
+        }
+    }
+    int main()
+    {
+        thread cons(consumer);
+        thread prod(producer);
+
+        cons.join();            // ending the threads not implemented 
+        prod.join();
+    }
+    )
 
 manpagefiles()
     em(bobcat/semaphore) - defines the class interface
