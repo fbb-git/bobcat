@@ -45,13 +45,13 @@ bf(FBB::LocalServerSocket):
     itemization(
     itb(KEEP)
         When this value is specified at construction time, the file
-representing the Unix Domain Socket will not be removed when the
-bf(LocalServerSocket) is destroyed. This is the default value used with the
-bf(LocalServerSocket) constructor.
+representing the Unix Domain Socket is not removed when the
+bf(LocalServerSocket) is destroyed.
     itb(UNLINK)
         When this value is specified at construction time, the file
-representing the Unix Domain Socket will be removed when the
-bf(LocalServerSocket) is destroyed.
+representing the Unix Domain Socket is removed when the bf(LocalServerSocket)
+is destroyed. As a socket cannot be reused, this is the default value used
+with the bf(LocalServerSocket) constructor.
     )
 
 manpagesection(CONSTRUCTOR)
@@ -60,13 +60,13 @@ manpagesection(CONSTRUCTOR)
         This constructor creates an empty (non-functioning)
 tt(FBB::LocalServerSocket) object. Before it can be used, the tt(open()) member
 must be called (see below).
-    itb(LocalServerSocket(string const &name, Socket action = KEEP) 
+    itb(LocalServerSocket(string const &name, Socket action = UNLINK) 
         throw (Exception))
         This constructor initializes an bf(FBB::LocalServerSocket) object,
 which will listen for connection requests using the named Unix Domain
 socket.  An bf(FBB::Exception) is thrown if the socket could not be
 constructed. If the constructor is given a second argument
-tt(FBB::LocalServerSocket::UNLINK), the constructed socket will be unlinked
+tt(FBB::LocalServerSocket::KEEP), the constructed socket is not unlinked
 when the bf(FBB::LocalServerSocket) object is destroyed.  The construction of
 the socket does not mean that the bf(FBB::LocalServerSocket) object is
 actually listening for connections. To start listening, the member
@@ -101,13 +101,13 @@ infrquently and for relatively short time intervals. Otherwise, in more
 complex programs, an bf(FBB::Selector) object can be used to sense input on
 the server socket and/or on various client sockets.
 
-    itb(void open(string const &name, Socket action = KEEP))
+    itb(void open(string const &name, Socket action = UNLINK))
         This member prepares a bf(FBB::LocalServerSocket) object for use. It
 should only be used in combination with the default constructor. Following
 tt(open()) the tt(FBB:::LocalServerSocket) object will be able to listen for
-connection requests using the named Unix Domain socket.  An bf(FBB::Exception) is
-thrown if the socket could not be constructed. If the a second argument
-tt(FBB::LocalServerSocket::UNLINK), is provided the constructed socket will be
+connection requests using the named Unix Domain socket.  An bf(FBB::Exception)
+is thrown if the socket could not be constructed. If the a second argument
+tt(FBB::LocalServerSocket::KEEP), is provided the constructed socket is not
 unlinked when the bf(FBB::LocalServerSocket) object is destroyed.  The
 construction of the socket does not mean that the bf(FBB::LocalServerSocket)
 object is actually listening for connections. To start listening, the member

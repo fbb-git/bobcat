@@ -22,10 +22,10 @@ class LocalServerSocket: public LocalSocketBase
 
         LocalServerSocket() = default;
         explicit LocalServerSocket(std::string const &name,     // 1.f
-                                   Socket action = KEEP);
+                                   Socket action = UNLINK);
         ~LocalServerSocket();
 
-        void open(std::string const &name, Socket action = KEEP);
+        void open(std::string const &name, Socket action = UNLINK);
         void listen(size_t backlog = 5, bool blocking = true);
         size_t accept();
 
