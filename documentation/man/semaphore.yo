@@ -1,0 +1,170 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::Semaphore)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+                    (Dijkstra's Semaphore)
+
+manpagename(FBB::Semaphore)
+                (Implements the Semaphore type designed by Dijkstra)
+
+manpagesynopsis()
+    bf(#include <bobcat/semaphore>)nl()
+
+    Linking option: tt(-lpthread -lbobcat) 
+
+manpagedescription()
+
+According to tt(http://en.wikipedia.org/wiki/Semaphore_(programming)) a
+semaphore is a variable or abstract data type that is used for controlling
+access, by multiple processes, to a common resource in a parallel programming
+or a multi user environment. The tt(Semaphore) as a data type was designed
+around 1962 by Edsger Dijkstra.
+
+A useful way to think of a semaphore is as a record of how many units of a
+particular resource are available, coupled with operations to safely (i.e.,
+without race conditions) adjust that record as units are required or become
+free, and, if necessary, wait until a unit of the resource becomes
+available. 
+
+Semaphores are a useful tool in the prevention of race conditions.  Semaphores
+allowing an arbitrary resource count are called counting semaphores, while
+semaphores which are restricted to the values 0 and 1 (or locked/unlocked,
+unavailable/available) are called binary semaphores. Both types are supported
+by Bobcat's implementation.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    -
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(Semaphore(size_t nAvailable))
+        The constructor defines the semaphore's initial state. With a counting
+semaphore tt(nAvailable) defines, e.g., the number of available locations in a
+storage area. Locking/unlocking, supporting facilities to notify other waiting
+threads is implemented via binary semaphores, which are initialized to 1 or 0.
+A semaphore containing the value 0 blocks. I.e., its tt(wait) member waits
+until its value is incremented by another thread, calling one of the
+semaphore's tt(notify) members.
+    )
+    Copy and move constructors are not available.
+
+
+manpagesection(MEMBER FUNCTIONS)
+    itemization(
+    itb(void notify())
+       The internally maintained tt(available) value is incremented and one
+        waiting thread (cf. the tt(wait) members below) is notified,
+        reactivating that thread.
+    itb(void notify_all())
+       The internally maintained tt(available) value is incremented and all
+        waiting threads (cf. the tt(wait) members below) are notified. Only
+        one waiting thread will be able to obtain the semaphore's lock and to
+        reduce tt(available), and that particular thread is thereupon
+        reactivated. 
+    itb(void set(size_t available))
+       This member blocks until it has obtained the lock of the tt(std::mutex)
+        which is maintained internally by the tt(Semaphore) object. Next the
+        tt(Semaphore's available) value receives the value of the member's
+        argumnt, and the lock is released.
+    itb(size_t size() const)
+       Without trying to lock the tt(Semaphore) object's tt(mutex) the current
+        value of the tt(Semaphore's available) value is returned.
+    itb(void wait())
+       This member blocks for as long as the internally stored value
+        (tt(available)) equals zero. When returning from tt(wait) the current
+        thread holds the lock of the tt(std::mutex) which is maintained
+        internally by the tt(Semaphore) object. tt(Notify) members are used to
+        increment tt(available) and to inform tt(wait) that it may
+        return. When multiple threads are waiting only one thread will stop
+        waiting, while the remaining threads will continue to wait for another
+        notification.
+    itb(std::cv_status wait_for(std::chrono::duration<Rep, Period> const
+                                                                &relTime))
+       This member blocks for as long as the internally stored value
+        (tt(available)) equals zero and the amount of time specified by
+        tt(relTime) hasn't passed. If the latter happens,
+        tt(std::cv_status::timeout) is returned, otherwise
+        tt(std::cv_status::no_timeout) is returned, in which case the current
+        thread holds the lock of the tt(std::mutex) which is maintained
+        internally by the tt(Semaphore) object. tt(Notify) members are used to
+        increment tt(available) and to inform tt(wait) that it may
+        return. When multiple threads are waiting only one thread will stop
+        waiting, while the remaining threads will continue to wait for another
+        notification.
+    itb(std::cv_status wait_until(std::chrono::time_point<Clock, Duration> 
+                                                            const &absTime))
+       This member blocks for as long as the internally stored value
+        (tt(available)) equals zero and the time specified by tt(absTime)
+        hasn't been reached. If the latter happens (or if tt(absTime) lies in
+        the past) tt(std::cv_status::timeout) is returned, otherwise
+        tt(std::cv_status::no_timeout) is returned, in which case the current
+        thread holds the lock of the tt(std::mutex) which is maintained
+        internally by the tt(Semaphore) object. tt(Notify) members are used to
+        increment tt(available) and to inform tt(wait) that it may
+        return. When multiple threads are waiting only one thread will stop
+        waiting, while the remaining threads will continue to wait for another
+        notification.
+    )
+
+manpagesection(EXAMPLE)
+    verb(
+    #include <bobcat/semaphore>
+    
+    using namespace FBB;
+
+    Semaphore produce(10);          // storage area size
+    Semaphore consume(0);           // # items in store
+    std::queue itemQueue;           // storage queue
+
+    void consumer()
+    {
+        while (true)
+        {
+            consume.wait();          // wait until there's an item in store
+
+                // mutex lock the queue with multiple consumers
+            size_t item = itemQueue.front();
+            itemQueue.pop();
+
+            produce.notify();   // notify the producer 
+
+            process(item);      // not implemented
+        }
+    }
+
+    void producer()
+    {
+        size_t item = 0;
+        while (true)
+        {
+            ++item;
+            produce.wait();     // wait for room in the storage
+
+                // mutex lock the queue with multiple consumers
+            itemQueue.push(item);
+
+            consume.notify();   // notify the consumer
+        }
+    }
+    int main()
+    {
+        thread cons(consumer);
+        thread prod(producer);
+
+        cons.join();            // ending the threads not implemented 
+        prod.join();
+    }
+    )
+
+manpagefiles()
+    em(bobcat/semaphore) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)

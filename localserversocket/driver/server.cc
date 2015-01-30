@@ -2,6 +2,7 @@
 #include <bobcat/localserversocket>
 #include <bobcat/ifdstream>
 #include <bobcat/ofdstream>
+#include <bobcat/exception>
 
 using namespace std;
 using namespace FBB;
@@ -47,11 +48,11 @@ try
         cout << "Ready for another connection\n";
     }
 }
-catch (Errno const &err)
+catch (exception const &err)
 {
     cerr <<
-        err.why() << endl <<
-        "Server socket on port " << argv[1] << 
+        err.what() << endl <<
+        "Server socket on " << argv[1] << 
         " can't be opened" << endl;
     return -1;
 }        
