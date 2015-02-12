@@ -10,35 +10,35 @@
 namespace FBB
 {
 
-class MultiStreambuf: public std::streambuf
+struct MultiStreambuf: public std::streambuf
 {
-    public:
-        enum Mode
-        {
-            OFF,                // stream not used
-            ON,                 // stream always used
-            ONCE,               // stream used until flushed
-            RESET,              // stream once used. Set to ONCE to re-use
-        };
+    enum Mode
+    {
+        OFF,                // stream not used
+        ON,                 // stream always used
+        ONCE,               // stream used until flushed
+        RESET,              // stream once used. Set to ONCE to re-use
+        ALL,                // with remove: remove all ostreams matching os
+    };
 
-        class stream            // holds a pointer to a stream and a indicator
-        {                       // telling us whether or not to use the stream
-            friend class MultiStreambuf;
+    class stream            // holds a pointer to a stream and a indicator
+    {                       // telling us whether or not to use the stream
+        friend class MultiStreambuf;
 
-            std::ostream *d_os;
-            Mode          d_mode;
+        std::ostream *d_os;
+        Mode          d_mode;
 
-            public:
-                stream(std::ostream &os, Mode mode = ON);   // 1.f
-                void setMode(Mode mode);                    // .f
-                Mode mode() const;                          // .f
-                std::ostream &ostream();                    // .f
-            private:
-                static void setOnce(stream &os);            // .f
-        };
+        public:
+            stream(std::ostream &os, Mode mode = ON);   // 1.f
+            void setMode(Mode mode);                    // .f
+            Mode mode() const;                          // .f
+            std::ostream &ostream();                    // .f
+        private:
+            static void setOnce(stream &os);            // .f
+    };
 
-        typedef std::vector<stream>::iterator iterator;
-        typedef std::vector<stream>::const_iterator const_iterator;
+    typedef std::vector<stream>::iterator iterator;
+    typedef std::vector<stream>::const_iterator const_iterator;
 
     private:
         std::string d_buffer;
@@ -51,10 +51,14 @@ class MultiStreambuf: public std::streambuf
 
         void insert(std::ostream &os, Mode mode = ON);                  // 1.f
         void insert(std::vector<stream> const &os);                     // 2.f
+
+        bool remove(std::ostream &os, Mode mode = ONCE);
+
         iterator begin();                                               // 1.f
         iterator end();                                                 // 1.f
         const_iterator begin() const;                                   // 2.f
         const_iterator end() const;                                     // 2.f
+        size_t size() const;                                            //  .f
         void setOnce();             // reset all `RESET' modes to `ONCE'
         
     protected:
