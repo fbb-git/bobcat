@@ -20,7 +20,7 @@ void DateTime::parse(istream &in)
         in.ignore(6);           // +01:00
     }
 
-    d_ok = in;
+    d_ok = in.good();
     d_errno = 0;
 
     if (d_ok)

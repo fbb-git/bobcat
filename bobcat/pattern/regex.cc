@@ -10,7 +10,7 @@ Pattern::Regex::Regex(string pattern, int options)
 
     if (errcode)
     {
-        auto_ptr<char> buffer(new char[100]);
+        unique_ptr<char> buffer(new char[100]);
 
         regerror(errcode, &d_regex, buffer.get(), 100);
 

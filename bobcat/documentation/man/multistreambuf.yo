@@ -13,7 +13,7 @@ manpagesynopsis()
 
 manpagedescription()
     The bf(FBB::MultiStreambuf) class is a specialization of
-tt(std::streambuf). It can be used to write selectvely to multiple
+tt(std::streambuf). It can be used to write selectively to multiple
 tt(std::ostreams). Each tt(std::ostream) that is associated with a
 bf(MultiStreambuf) is given a mode-tag indicating whether the stream
 should always be used when information is inserted into the
@@ -24,10 +24,15 @@ mode-tags may be set to any of the defined tag-values.
 tt(std::ostream) the constructed tt(std::ostream) becomes an
 output-multiplexer: by inserting information into the tt(std::ostream) object,
 all tt(std::ostream) objects added to its bf(MultiStreambuf) buffer which
-have an active mode will receive that information.
+have an active mode receive that information.
 
 An bf(MultiStreambuf) object should be outlived by all active streams
 that are associated with it.
+
+bf(MultiStreambuf) objects refer to tt(std::ostreams) which are passed to it,
+and not to their tt(std::streambufs). So it is possible to change these
+tt(std::ostream's std::streambufs) without reinstalling the tt(std::ostreams)
+themselves. 
 
 No assumptions should be made about the order in which the tt(std::ostream)
 objects that are associated with the bf(MultiStreambuf) objects are
@@ -55,6 +60,9 @@ bf(MultiStreambuf)
         A tt(std::ostream) having this mode will not be used when information
 is inserted into a bf(MultiStreambuf). At a flush operation all bf(ONCE)
 modes will be set to bf(RESET)
+    itb(ALL)
+        This mode is used in combination with the member tt(remove) to remove 
+all tt(std::ostream) elements matching a specified tt(std::ostream) argument.
     )
 
 manpagesection(TYPES)
@@ -117,10 +125,21 @@ element that is stored in a bf(MultiStreambuf) object.
 object.
     itb(void insert(std::ostream &os, Mode mode = ON))
         This member adds the specified tt(std::ostream) using the specified
-bf(Mode) to the current set of bf(stream) objects.
+bf(Mode) to the current set of bf(stream) objects. Note that if called
+multiple times for identical tt(std::ostreams) these objects are inserted
+multiple times as well.
     itb(void insert(std::vector<stream> const &os))
         This member adds all bf(stream) objects stored in the bf(os) vector to
 the current set of bf(stream) objects.
+    itb(bool remove(std::ostream &os, Mode mode = ONCE))
+        If tt(os) is stored in the bf(MultiStreambuf) it is removed, and
+tt(true) is returned. If mode tt(ALL) is specified all tt(os) objects that
+were stored in the bf(MultiStreambuf) object are removed (and tt(true) is
+returned). If the tt(os) object was not stored tt(false) is returned. To
+determine whether tt(os) has been stored in the bf(MultiStreambuf) object its
+address is compared to the addresses of the tt(std::ostream) objects that are
+stored inside the bf(MultiStreambuf) object: the object(s) having addresses
+tt(&os) is (are) removed.
     itb(void void setOnce())
         This member will reset all the tt(RESET) bf(Mode) values of the stored
 bf(stream) objects to tt(ONCE).

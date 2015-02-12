@@ -3,7 +3,6 @@
 #include <iterator>
 
 #include <bobcat/mstream>
-#include <bobcat/errno>
 
 using namespace std;
 using namespace FBB;
@@ -11,6 +10,8 @@ using namespace FBB;
 int main(int argc, char **argv)
 try
 {
+    cout << sizeof(Mstream) << ' ' << sizeof(Mbuf) << '\n';
+
     imsg << "Informational: " << endl;
     imsg.off();
     cout << "The i-msg stream is now off. This message should appear once" <<
@@ -23,7 +24,7 @@ try
 
     wmsg << "Warning message" << endl;
     emsg << "Oops, this this is an error (not really)" << endl;
-    emsg << "Oops, this goes wrong, too" << endl;
+    emsg << "Oops, this goes wrong, too" << noid;
 
     imsg.on();
     imsg << "And another informational msg: " << emsg.count() << 
@@ -34,19 +35,27 @@ try
 
     imsg << "Msg in between" << endl;
 
+    imsg.setTag("tag");
+    imsg << "tagged message" << endl;
+
+    imsg.setTag("label");
+    imsg << "labeled message" << endl;
+
     cerr << "(cerr) LineExcess: " << emsg.lineExcess() << ", count = " <<
             emsg.count() << endl;
 
-    emsg << "Fourth error" << endl;
+    emsg << "Fourth error\n" << noid;       // no id is shown
+    emsg << "Fourth error\n" << flush;      // shows id (remove the previous
+                                            // statement)
 
     cerr << "(cerr) LineExcess: " << emsg.lineExcess() << ", count = " <<
             emsg.count() << endl;
 
     cerr << "Beyond\n";
 }            
-catch(FBB::Errno const &e)
+catch(exception const &e)
 {
-    std::cerr << "Got an Errno object: " << e.why() << '\n';
+    std::cerr << "Got a std::exception: " << e.what() << '\n';
 }
 catch(...)
 {

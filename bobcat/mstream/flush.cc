@@ -10,11 +10,12 @@ std::ostream &flush(std::ostream &os)
     if (Mstream *mp = dynamic_cast<Mstream *>(&os))
     {
         if (mp->throws())
-            throw Exception() << mp->id();
+            throw Exception() << ' ' << mp->id() << ' ';
 
         if (mp->lineExcess())
-            throw Exception() << mp->id() << "Exceeding max. # of " << 
-                        mp->maxCount() << " messages";
+            throw Exception() << ' ' << mp->id() << 
+                                 " Exceeding max. # of " << mp->maxCount() << 
+                                 " messages";
     }
     return os;
 }
