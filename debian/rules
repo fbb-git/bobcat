@@ -10,13 +10,15 @@
 # archive downloaded from https://www.icce.rug.nl/debian/bobcat
 # (bobcat_x.y.z..tar.gz)
 
-MD5TRUSTED := eb1dd97f1e9c615111b9b62c5c8f6848
+MD5TRUSTED := 0ff293f5655ff67189c8120772d378d1
 
 export DEB_BUILD_HARDENING=1
 export LDFLAGS = $(shell dpkg-buildflags --get LDFLAGS)
 export CPPFLAGS = $(shell dpkg-buildflags --get CPPFLAGS)
 export CXXFLAGS = $(shell dpkg-buildflags --get CXXFLAGS)
+
 export CXX = g++
+#export CXX = g++-5
 
 CXXFLAGS += --std=c++0x -Wall
 LDFLAGS += -lpthread
