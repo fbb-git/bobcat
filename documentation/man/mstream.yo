@@ -92,8 +92,8 @@ exceptions are thrown when inserting messages.
         text of the message label (e.g., tt(Error)). 
 
         When tt(throwing) is tt(true) an exception is thrown after completing
-        a message. The generated exception's tt(what) member shows the
-        bf(FBB::Mstream) object's id (see below for the member tt(id)) of the
+        a message. The generated exception's tt(what) member may show the
+        bf(FBB::Mstream) object's id (see below at the member tt(id)) of the
         tt(Mstream) object throwing the exception.
     itb(explicit Mstream(std::streambuf &buf, size_t maxCount =
         std::numeric_limits<size_t>::max(), std::string const &tag = "", bool
@@ -137,8 +137,8 @@ ignoring messages the message count is not updated.
 
     itb(size_t maxCount() const)
         returns the maximum number of messages that can be inserted. If the
-returned value equals tt(std::numeric_limits<size_t>::max()) then there is no limit to the number of
-messages that can be inserted.
+returned value equals tt(std::numeric_limits<size_t>::max()) then there is no
+limit to the number of messages that can be inserted.
 
     itb(void noLineNr())
         calling this member will suppress the display of a line number if it
@@ -258,14 +258,28 @@ bf(Mstream), but are free functions defined in the namespace bf(FBB).
         This manipulator inserts a newline character in the tt(Mstream)'s
 stream and then calls tt(FBB::flush). This manipulator acts like tt(std::endl)
 and tt(std::flush) when inserted into another kind of tt(std::ostream) object.
+
     itb(std::ostream &flush(std::ostream &out))
     This manipulator completes the message that is currently being inserted
 into an tt(Mstream) object. It flushes the object's destination stream and
 prepares the object for the next message.  When the object's tt(throws) member
-returns tt(true) it will throw an exception whose tt(what) member contains the
+returns tt(true) it throws an exception whose tt(what) member contains the
 id (see earlier for the member tt(id)) of the tt(Mstream) object throwing the
 exception. When used in combination with another kind of tt(std::ostream)
 object it acts like tt(std::flush).
+
+    itb(std::ostream &noid(std::ostream &out))
+    This manipulator completes the message that is currently being inserted
+into an tt(Mstream) object. It flushes the object's destination stream and
+prepares the object for the next message.  When the object's tt(throws) member
+returns tt(true) it throws an exception whose tt(what) member does not
+contain the bf(Mstream) object's ID. When used in combination with another
+kind of tt(std::ostream) object it acts like tt(std::flush).
+
+    itb(std::ostream &noidl(std::ostream &out))
+        This manipulator inserts a newline character in the tt(Mstream)'s
+stream and then calls tt(FBB::noid). This manipulator acts like tt(std::endl)
+and tt(std::flush) when inserted into another kind of tt(std::ostream) object.
     )
 
 As the manipulators tt(FBB::endl) and tt(FBB::flush) act like, respectively,
