@@ -2,5 +2,5 @@
 
 void Mbuf::setTag(string const &tag)
 {
-    d_tag = tag.length() ? '[' + tag : tag;
+    d_tag = not tag.empty() && (tag.front() != '[') ? '[' + tag : tag;
 }
