@@ -10,7 +10,7 @@
 # archive downloaded from https://www.icce.rug.nl/debian/bobcat
 # (bobcat_x.y.z..tar.gz)
 
-MD5TRUSTED := 30cd442f3f7be89aae9404f8af6a5872
+MD5TRUSTED := 7985a70f7350a9fc8364e6e06eedc8df
 
 export DEB_BUILD_HARDENING=1
 export LDFLAGS = $(shell dpkg-buildflags --get LDFLAGS)
@@ -18,7 +18,7 @@ export CPPFLAGS = $(shell dpkg-buildflags --get CPPFLAGS)
 export CXXFLAGS = $(shell dpkg-buildflags --get CXXFLAGS)
 
 export CXX = g++
-#export CXX = g++-5
+export CXX = g++-5
 
 CXXFLAGS += --std=c++14 -Wall
 LDFLAGS += -lpthread
@@ -45,7 +45,7 @@ install: build-arch
 	dh_testroot
 	dh_clean
 	dh_installdirs
-	./build install debian/libbobcat3 debian/libbobcat-dev
+	./build install debian/libbobcat4 debian/libbobcat-dev
 
 binary-indep:
 
