@@ -7,8 +7,8 @@ BigInt BigInt::fromText(string const &text, int mode)
 {
     BigInt ret;
 
-    if (not mode & (ios::hex | ios::oct | ios::dec))
-        mode =
+    if ((not mode) & (ios::hex | ios::oct | ios::dec))  // (not mode) to keep
+        mode =                                          // the compiler happy
             text.find_first_of("abcdefABCDEF") != string::npos ? ios::hex :
             text.find_first_of("89") == string::npos && 
                                                text[0] == '0'  ? ios::oct :

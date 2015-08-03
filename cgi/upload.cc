@@ -34,7 +34,7 @@ void CGI::upload(string *line)
     }
 
     string previous;
-    auto_ptr<char> buffer(new char[s_uploadBlock]);
+    unique_ptr<char> buffer(new char[s_uploadBlock]);
 
     next(line);                         // skip the blank line following the
                                         // content-type
