@@ -1,0 +1,263 @@
+--- arg/arg.orig	2013-10-02 13:57:01 UTC
++++ arg/arg
+@@ -5,6 +5,9 @@
+         Singleton Class built around getopt() and getopt_long() (3)
+ */
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <cerrno>
++#endif
+ 
+ #include <string>
+ #include <vector>
+--- datetime/datetime.orig	2013-10-02 13:57:01 UTC
++++ datetime/datetime
+@@ -1,6 +1,10 @@
+ #ifndef INCLUDED_BOBCAT_DATETIME_
+ #define INCLUDED_BOBCAT_DATETIME_
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <cerrno>
++#endif
++
+ #include <ctime>
+ #include <iosfwd>
+ 
+--- diffiehellman/diffiehellman.orig	2013-10-01 16:50:39 UTC
++++ diffiehellman/diffiehellman
+@@ -1,6 +1,10 @@
+ #ifndef INCLUDED_BOBCAT_DIFFIEHELLMAN_
+ #define INCLUDED_BOBCAT_DIFFIEHELLMAN_
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <sys/types.h>
++#endif
++
+ #include <memory>
+ #include <iosfwd>
+ 
+--- hostname/hostname.orig	2013-10-12 15:12:39 UTC
++++ hostname/hostname
+@@ -1,6 +1,10 @@
+ #ifndef INCLUDED_BOBCAT_HOSTNAME_
+ #define INCLUDED_BOBCAT_HOSTNAME_
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <sys/socket.h>
++#endif
++
+ #include <bobcat/hostent>
+ 
+ namespace FBB
+--- ifilterstreambuf/ifilterstreambuf.orig	2013-10-02 13:57:01 UTC
++++ ifilterstreambuf/ifilterstreambuf
+@@ -1,6 +1,10 @@
+ #ifndef INCLUDED_BOBCAT_IFILTERSTREAMBUF_
+ #define INCLUDED_BOBCAT_IFILTERSTREAMBUF_
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <cstdio>
++#endif
++
+ #include <streambuf>
+ #include <memory>
+ 
+--- inetaddress/inetaddress.orig	2015-01-25 09:51:12 UTC
++++ inetaddress/inetaddress
+@@ -1,6 +1,11 @@
+ #ifndef INCLUDED_BOBCAT_INETADDRESS_
+ #define INCLUDED_BOBCAT_INETADDRESS_
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <sys/types.h>
++#include <sys/socket.h>
++#endif
++
+ #include <netinet/in.h>
+ #include <string>
+ 
+--- localsocketbase/localsocketbase.orig	2013-10-06 09:51:05 UTC
++++ localsocketbase/localsocketbase
+@@ -5,6 +5,10 @@
+ #include <string>
+ #include <sys/socket.h>
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <cstring>
++#endif
++
+ namespace FBB
+ {
+ 
+--- logbuffer/logbuffer.orig	2014-08-24 07:42:02 UTC
++++ logbuffer/logbuffer
+@@ -1,6 +1,10 @@
+ #ifndef INCLUDED_BOBCAT_LOGBUFFER_
+ #define INCLUDED_BOBCAT_LOGBUFFER_
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <cstdio>
++#endif
++
+ #include <streambuf>
+ #include <ostream>
+ #include <string>
+--- ofdstreambuf/ofdstreambuf.orig	2013-10-03 16:52:33 UTC
++++ ofdstreambuf/ofdstreambuf
+@@ -1,6 +1,10 @@
+ #ifndef INCLUDED_BOBCAT_OFDSTREAMBUF_
+ #define INCLUDED_BOBCAT_OFDSTREAMBUF_
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <cstdio>
++#endif
++
+ #include <streambuf>
+ 
+ namespace FBB
+--- process/process.orig	2013-12-30 10:13:10 UTC
++++ process/process
+@@ -5,6 +5,10 @@
+ #include <ostream>
+ #include <istream>
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <csignal>
++#endif
++
+ #include <bobcat/fork>
+ #include <bobcat/string>
+ #include <bobcat/pipe>
+--- readlinebuf/readlinebuf.orig	2013-10-04 15:17:42 UTC
++++ readlinebuf/readlinebuf
+@@ -1,6 +1,11 @@
+ #ifndef INCLUDED_BOBCAT_READLINEBUF_
+ #define INCLUDED_BOBCAT_READLINEBUF_
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__) 
++#include <cstdio>
++#include <cstdlib>
++#endif
++
+ #include <string>
+ #include <streambuf>
+ #include <memory>
+--- readlinehistory/readlinehistory.orig	2013-10-04 18:57:32 UTC
++++ readlinehistory/readlinehistory
+@@ -4,6 +4,9 @@
+ #include <iterator>
+ #include <string>
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <cstdio>
++#endif
+ #include <readline/history.h>
+ 
+ namespace FBB
+--- sharedmemory/sharedmemory.orig	2014-06-04 06:31:09 UTC
++++ sharedmemory/sharedmemory
+@@ -1,6 +1,10 @@
+ #ifndef INCLUDED_BOBCAT_SHAREDMEMORY_
+ #define INCLUDED_BOBCAT_SHAREDMEMORY_
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <cstdio>
++#endif
++
+ #include <ios>
+ 
+ #include <bobcat/fswap>
+--- sharedstreambuf/sharedstreambuf.orig	2014-06-01 13:29:49 UTC
++++ sharedstreambuf/sharedstreambuf
+@@ -1,6 +1,10 @@
+ #ifndef INCLUDED_BOBCAT_SHAREDSTREAMBUF_
+ #define INCLUDED_BOBCAT_SHAREDSTREAMBUF_
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <cstdio>
++#endif
++
+ #include <ios>
+ #include <streambuf>
+ 
+--- signal/signal.orig	2013-12-26 12:39:10 UTC
++++ signal/signal
+@@ -1,6 +1,10 @@
+ #ifndef INCLUDED_SIGNAL_
+ #define INCLUDED_SIGNAL_
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <cstdlib>
++#endif
++
+ #include <vector>
+ #include <signal.h>
+ 
+--- socketbase/socketbase.orig	2015-01-25 09:51:12 UTC
++++ socketbase/socketbase
+@@ -1,6 +1,10 @@
+ #ifndef INCLUDED_BOBCAT_SOCKETBASE_
+ #define INCLUDED_BOBCAT_SOCKETBASE_
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <sys/types.h>
++#endif
++
+ #include <string>
+ #include <sys/socket.h>
+ 
+--- stat/stat.orig	2014-03-03 16:28:16 UTC
++++ stat/stat
+@@ -6,6 +6,10 @@
+ #include <unistd.h>
+ #include <string>
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <cerrno>
++#endif
++
+ #include <bobcat/datetime>
+ #include <bobcat/gs>
+ 
+--- syslogbuf/syslogbuf.orig	2013-10-12 12:10:29 UTC
++++ syslogbuf/syslogbuf
+@@ -90,6 +90,11 @@
+ #include <syslog.h>
+ #include <streambuf>
+ #include <string>
++
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <cstdio>
++#endif
++
+                         
+ namespace FBB
+ {
+--- syslogstream/syslogstream.orig	2013-10-03 17:45:14 UTC
++++ syslogstream/syslogstream
+@@ -88,6 +88,11 @@
+ 
+ #include <ostream>
+ #include <syslog.h>
++
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++#include <cerrno>
++#endif
++
+                         
+ namespace FBB
+ {
+--- tempstream/tempstream1.cc.orig	2013-10-01 16:50:32 UTC
++++ tempstream/tempstream1.cc
+@@ -7,7 +7,11 @@ TempStream::TempStream(string const &bas
+     strcpy(buf + base.length(), "XXXXXX");
+     base.copy(buf, string::npos);
+ 
++#if defined(__FreeBSD__) || defined(__DragonFly__)
++    int fd = mkstemp(buf);
++#else
+     int fd = mkostemp(buf, O_RDWR);
++#endif
+ 
+     if (fd == -1)
+         throw Exception() << "TempStream: " << errnodescr;
