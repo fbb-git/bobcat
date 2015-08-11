@@ -11,10 +11,12 @@ Vcs-Git: git://anonscm.debian.org/collab-maint/bobcat.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/bobcat.git
 Homepage: http://bobcat.sourceforge.net/
 
-Package: libbobcat3
+Package: libbobcat3v5
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libbobcat3
+Replaces: libbobcat3
 Description: run-time (shared) Bobcat library
  The (shared) Bobcat library contains classes and templates used by, e.g., the
  Stealth and Bisonc++ programs. 
@@ -45,7 +47,7 @@ Description: run-time (shared) Bobcat library
 Package: libbobcat-dev
 Architecture: any
 Section: libdevel
-Depends: libbobcat3 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Depends: libbobcat3v5 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: headers and documentation for the Bobcat library
  Headers and documentation of classes defined in the Bobcat library.
  .
