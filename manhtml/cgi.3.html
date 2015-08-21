@@ -1,0 +1,497 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::CGI</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::CGI</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::CGI(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::CGI(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz CGI interface</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::CGI - handles GET and POST submitted form data
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/cgi&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+The class <em>CGI</em> offers an interface to data submitted by web-forms. The
+data is sent to a script handling the data using a <em>&lt;form
+action="/path/to/form/script"&gt;</em> stanza. Very often this is indeed a script,
+like a Perl script, but there is no need to use a scripting language. The
+class <em>CGI</em> allows <strong>C++</strong> programmers to process the form by an executable
+usually resulting in faster processing and in construction time benefits from
+the type safety offered by <strong>C++</strong>. The class <em>CGI</em> automatically handles
+data submitted using the <em>GET</em> method as well as data submitted using the
+<em>POST</em> method.
+<p>
+By default the class's constructor writes the customary <em>Content-type</em>
+header lines to the standard output stream. Additional (html) output of a
+reply page must be provided by other code. Therefore, a program processing an
+uploaded form will have an organization comparable to the following basic
+setup:
+        <pre>
+
+    // assume includes and namespace std/FBB were defined
+    int main()
+    {
+        CGI cgi;
+        cout &lt;&lt; "&lt;html&gt;&lt;body&gt;\n";
+        if (parametersOK(cgi))
+        {
+            process(cgi);     
+            generateReplyPage();
+        }
+        else
+            generateErrorPage();
+        cout &lt;&lt; "&lt;/body&gt;&lt;/html&gt;\n;
+    }
+        
+</pre>
+
+<p>
+When errors in the received form-data are detected an error message is
+written to the standard output stream and an <em>FBB::Exception</em> exception is
+thrown.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>TYPEDEF</h2>
+    <ul>
+    <li> <strong>CGI::MapStringVector</strong>:<br> 
+       A shorthand for <em>std::unordered_map&lt;std::string, 
+        std::vector&lt;std::string&gt; &gt;</em>,
+        which is the data type in which form-variables are stored. 
+    </ul>
+<p>
+<h2>ENUMERATIONS</h2>
+    The <em>CGI::Method</em> enumeration specifies values indicating the way the
+        form's data were submitted:
+    <ul>
+    <li> <strong>CGI::UNDETERMINED</strong>:<br>
+       Used internally indicating that the form's method was neither <em>GET</em>
+        nor <em>POST</em>.
+    <li> <strong>CGI::GET</strong>:<br>
+       Indicates that the <em>GET</em> method was used when submitting the form's
+        data;
+    <li> <strong>CGI::POST</strong>:<br>
+       Indicates that the <em>POST</em> method was used when submitting the form's
+        data.
+    </ul>
+<p>
+The <em>CGI::Create</em> enumeration is used to request or suppress creation of
+        the directory to contain any file uploaded by a form:
+    <ul>
+    <li> <strong>CGI::DONT_CREATE_PATH</strong>:<br>
+       When uploading files, the destination directory must exist;
+    <li> <strong>CGI::CREATE_PATH</strong>:<br>
+       When uploading files, the destination directory will be created.
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>CGI(bool defaultEscape = true, 
+            char const *header = "Content-type: text/html", 
+            std::ostream &amp;out = std::cout)</strong>:<br>
+        The default constructor writes the standard content type header to the
+standard output stream and will use <em>std::cout</em> for output. Specifying <em>0</em>
+as header suppresses outputting the <em>Content-type</em> line. Otherwise the
+content type line is also followed by two <em>\r\n</em> character combinations. By
+default all characters in retrieved form-variables are escaped. The overloaded
+insertion operators (see below) can be used to modify the default set of
+characters to escape. The backslash is used as the escape character. The
+escape-prefix is not used if the <em>defaultEscape</em> value is specified as
+<em>false</em> and if no insertions into the <strong>CGI</strong> object were performed.
+    </ul>
+    The copy and move constructors are available.
+<p>
+<h2>OERLOADED OPERATORS</h2>
+<p>
+<strong>Note:</strong> the following three insertion operators, defining sets of
+characters that should be escaped, can only be used before calling any of the
+<em>param, begin</em> or <em>end</em> members. As soon as one of these latter three
+members has been called the set of characters to be escaped is fixed and
+attempts to modify that set is silently ignored.
+<p>
+<ul>
+    <li> <strong>char const *operator[](std::string const &amp;key) const</strong>:<br>
+        The index operator returns the value of the environment variable
+        specified as the index. 0 is returned if the variable
+        specified at <em>key</em> is not defined.
+<p>
+<li> <strong>CGI &amp;operator&lt;&lt;(std::string const &amp;accept)</strong>:<br>
+       This member's actions are suppressed once <em>param, begin</em> or
+        <em>end</em> (see below) has been called.
+<p>
+The insertion operator can be used to fine-tune the set of characters
+        that are escaped in strings returned by <em>param</em> (see
+        below). Depending on the value of the constructor's <em>defaultEscape</em>
+        parameter characters inserted into the <em>CGI</em> object will or will not
+        be escaped by a backslash. 
+<p>
+If the constructor's <em>defaultEscape</em> parameter was specified as
+        <em>true</em> then the insertion operator can be used to define a set of
+        characters that are <em>not</em> escaped. 
+<p>
+If <em>defaultEscape</em> was specified as <em>false</em> then the insertion
+        operator will define a set of characters that <em>will</em> be
+        escaped. 
+<p>
+The backlash itself is always escaped and a request to use it
+        unescaped is silently ignored. 
+<p>
+The <em>accept</em> string can be specified as a regular expression
+        character set, without the usual surrounding square brackets. E.g., an
+        insertion like <em>cgi &lt;&lt; "-a-z0-9"</em> defines the set consisting of the
+        dash, the lower case letters and the digits.
+<p>
+Individual characters, character ranges (using the dash to specify a
+        range) and all standard character classes (<em>[:alnum:], [:alpha:],
+        [:cntrl:], [:digit:], [:graph:], [:lower:], [:print:], [:punct:],
+        [:space:], [:upper:]</em>, and <em>[:xdigit:]</em>) can be used to specify a
+        set of characters. In addition to these standard character classes the
+        class <em>[:cgi:]</em> can be used to define the set consisting of the
+        characters <em>" ' ` ;</em> and <em>\</em>.  
+<p>
+Note that standard and <em>[:cgi:]</em> character classes <em>do</em> require
+        square brackets. 
+<p>
+When a series of insertions are performed then the union of the sets
+        defined by these insertions are used. 
+<p>
+<strong>Note</strong>: using unescaped single quotes, the double quotes, backtick
+        characters and semicolons in CGI-programs might be risky and is not
+        advised.
+<p>
+<li> <strong>CGI &amp;operator&lt;&lt;(int c)</strong>:<br>
+       This member's actions are suppressed once <em>param, begin</em> or
+        <em>end</em> (see below) has been called.
+<p>
+This insertion operator is used to change the default escape handling
+        of a single character <em>c</em>. The <em>int</em> parameter is cast internally
+        to a <em>char</em>.
+<p>
+<li> <strong>CGI &amp;operator&lt;&lt;(std::pair&lt;char, char&gt; range)</strong>:<br>
+       This member's actions are suppressed once <em>param, begin</em> or
+        <em>end</em> (see below) has been called.
+<p>
+This insertion operator can be used to change the default escape
+        handling of a range of characters. The pair's second character must be
+        equal to or exceed the position of the pair's first character in the
+        ASCII collating sequence or the member will have no effect.
+<p>
+<li> <strong>std::ostream &amp;std::operator&lt;&lt;(std::ostream &amp;out, CGI const &amp;cgi)</strong>:<br>
+       <em>CGI</em> objects can be inserted into <em>ostreams</em> to display the
+        characters that will appear escaped in strings returned by the 
+        <em>param()</em> member function. Each character for which <em>isprint()</em>
+        returns <em>true</em> will be displayed as character, surrounded by single
+        quotes. For all other characters their ASCII values are displayed.
+        Each character is displayed on a line by itself.
+<p>
+</ul>
+<p>
+The copy and move assignment operators are available. 
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+    <ul>
+    <li> <strong>CGI::MapStringVector::const_iterator begin()</strong>:<br>
+       Returns the begin iterator of the form's parameter map. Iterator values
+        unequal to <em>end</em> (see below) point to a pair of values, the first of
+        which is the name of a field defined by the form, the second is a
+        vector of strings containing the field's value(s). See also the
+        description of the <em>param</em> member below.
+<p>
+<li> <strong>CGI::MapStringVector::const_iterator end()</strong>:<br>
+       Returns the end iterator of the form's parameter map.
+<p>
+<li> <strong>unsigned long long maxUploadSize() const</strong>:<br>
+       Returns the current maximum file upload size in bytes.
+<p>
+<li> <strong>CGI::Method method() const</strong>:<br> 
+       Returns the method that was used when the form was submitted (either
+        <em>CGI::GET</em> or <em>CGI::POST</em>).
+<p>
+<li> <strong>std::vector&lt;std::string&gt; const &amp;param(std::string const &amp;variable)</strong>:<br>
+       Returns the value of the form-variable specified by the function's
+        argument. An empty vector is returned if the variable was not provided
+        by the form's data. 
+<p>
+If the same variable was specified multiple times or if its value
+        extends over multiple lines (only with <em>multipart/form-data</em>) then
+        the vector contains multiple strings. 
+<p>
+With <em>GET</em> and <em>POST</em> methods not using <em>multipart/form-data</em>
+        input fields extending over multiple lines are stored in one string,
+        using <em>\r\n</em> combinations between those lines.
+<p>
+When files are uploaded the vectors contain sets of four
+        strings. The first string provides the path nme of the uploaded file;
+        the second string provides the file name specified in the form itself
+        (so it is the name of the file at the remote location); the third
+        string shows the content type specified by the remote browser (e.g.,
+        <em>application/octet-stream</em>), the fourth string contains <em>OK</em> if
+        the file was successfully uploaded and <em>truncated</em> if the file was
+        truncated. Existing files will not be overwritten. When uploading a
+        file a usable filename must be found within 100 trials.
+<p>
+<li> <strong>std::string param1(std::string const &amp;variable) const</strong>:<br>
+       Returns the first element of the <em>vector&lt;string&gt;</em> returned by the
+        <em>param</em> member or an empty string if <em>variable</em> was not defined by
+        the received form.
+<p>
+<li> <strong>std::string const &amp;query() const</strong>:<br> 
+       Returns the query-string submitted with <em>CGI::GET</em> or <em>CGI::POST</em>
+        forms (if the <em>POST</em>ed form specified
+        <em>ENCTYPE="multipart/form-data"</em> the query string is empty). 
+<p>
+<li> <strong>report()</strong>:<br>
+        The <em>report</em> member silently returns if no errors were encountered
+        while processing form-data. Otherwise, the <em>html</em> file generated by
+        the <em>CGI</em> program displays a line starting with <em>FBB::CGI</em>,
+        followed by the status report. 
+<p>
+The following status report messages are presently defined:
+<p>
+<em>Content-Disposition not recognized in:</em>, which is followed by the
+        line where the <em>Content-Disposition</em> was expected. This may occur
+        when processing <em>multipart/form</em> data.
+<p>
+<em>Invalid multipart/form-data</em>. This message can be generated when
+        readling lines while processing <em>multipart/form</em> data.
+<p>
+<em>GET/POST REQUEST_METHOD not found</em>. This message is shown if the
+        program couldn't find the form's <em>REQUEST_METHOD</em> type (i.e.,
+        <em>GET</em> or <em>POST</em>).
+<p>
+<em>Invalid CONTENT_LENGHT in POSTed form</em>. This message is shown if
+        the content-length header has an incorrect value.
+<p>
+<em>Content-Type not found for file-field</em>, followed by the file's
+        field name. This message is shown if no <em>Content-Type</em> specification
+        was found in an uploaded form.
+<p>
+<em>Can't open a file to write an uploaded file</em>. This message
+        indicates that the CGI program was unable to open a file to write an
+        uploaded file to. This can be caused by an overfull disk or partition
+        or by incorrect write-permissions.
+<p>
+<em>multipart/form-data: no end-boundary found</em>. This message is shown
+        if the end-boundary was missing in a <em>multipart/form-data</em> form.
+<p>
+<li> <strong>void setFileDestination(std::string const &amp;path, 
+                                std::string const &amp;prefix = "",
+                                Create create = CREATE_PATH)</strong>:<br>
+       This member is used to specify the path and prefix of uploaded
+        files. Uploaded files will be stored at <em>path/prefixNr</em> where <em>Nr</em>
+        is an internally used number starting at one. When <em>CREATE_PATH</em> is
+        specified <em>path</em> must be available or the <strong>CGI</strong> object must be
+        able to create the path. If <em>DONT_CREATE_PATH</em> is specified the
+        specified path must be available. If not, an <em>FBB::Exception</em>
+        exception will be thrown.
+<p>
+<li> <strong>void setMaxUploadSize(size_t maxSize, int unit = 'M')</strong>:<br>
+       This member can be used to change the maximum size of uploaded
+        files. Its default value is 100Mb. The <em>unit</em> can be one of <em>b</em>
+        (bytes, the default), <em>K</em> (Kbytes), <em>M</em> (Mbytes) or <em>G</em>
+        (Gbytes). Unit-specifiers are interpreted case insensitively. File
+        uploads will continue until the maximum upload size is exceeded,
+        followed by discarding any remainder.
+    </ul>
+    The first time one of the <em>param(), begin()</em> or <em>end()</em> members is
+called these members may detect errors in the the received form data. If so,
+an error message is written to the standard output stream and an
+<em>FBB::Exception</em> exception will be thrown.
+<p>
+<h2>STATIC MEMBERS</h2>
+    <ul>
+    <li> <strong>std::string dos2unix(std::string const &amp;text)</strong>:<br>
+        This member converts all <em>\r\n</em> character combinations in <em>text</em>
+        into plain <em>\n</em> characters, returning the converted text.
+<p>
+<li> <strong>std::string unPercent(std::string const &amp;text)</strong>:<br> This member converts
+        all <em>%xx</em> encoded characters into their corresponding ASCII
+        values. Also, <em>+</em> characters are converted to single blank
+        spaces. The converted string is returned.
+    </ul>    
+<p>
+<h2>EXAMPLE</h2>
+<p>
+<pre>
+#include "main.ih"
+
+void showParam(CGI::MapStringVector::value_type const &amp;mapValue)
+{
+    cout &lt;&lt; "Param: " &lt;&lt; mapValue.first &lt;&lt; '\n';
+
+    for (auto &amp;str: mapValue.second)
+        cout &lt;&lt; "    " &lt;&lt; CGI::dos2unix(str) &lt;&lt; "\n"
+            "    ";
+
+    cout &lt;&lt; '\n';
+}
+
+int main(int argc, char **argv)
+try
+{
+    Arg &amp;arg = Arg::initialize("evhm:", argc, argv);
+
+    // usage and version are in the source archive in .../cgi/driver
+    // arg.versionHelp(usage, version, 2);
+
+    ifstream in(arg[0]);
+    string line;
+    while (getline(in, line))
+    {
+        size_t pos = line.find('=');
+
+        if (pos == string::npos)
+            continue;
+                            // set environment vars simulating
+                            // a GET form
+        if (setenv(line.substr(0, pos).c_str(),     
+               line.substr(pos + 1).c_str(), true) == 0)
+        {
+            if (arg.option('e'))
+                cout &lt;&lt; line.substr(0, pos).c_str() &lt;&lt; '=' &lt;&lt;
+                       line.substr(pos + 1).c_str() &lt;&lt; '\n';
+        }
+        else
+            cout &lt;&lt; "FAILED: setenv " &lt;&lt; line &lt;&lt; '\n';
+    }
+
+    CGI cgi(false);             // chars are not escaped
+
+    cgi &lt;&lt; arg[1];
+
+    if (arg.option(&amp;line, 'm'))
+        cgi.setMaxUploadSize(A2x(line), *line.rbegin());
+
+    cout &lt;&lt; "Max upload size (b): " &lt;&lt; cgi.maxUploadSize() &lt;&lt; '\n';
+
+    CGI::Method method = cgi.method();
+
+    cout &lt;&lt; "To escape:\n" &lt;&lt; 
+            cgi &lt;&lt; "\n"
+            "Method: " &lt;&lt; (method == CGI::GET ? "GET" : "POST") &lt;&lt; 
+            '\n';
+
+    cout &lt;&lt; "Query string: " &lt;&lt; cgi.query() &lt;&lt; '\n';
+
+    cout &lt;&lt; "Submit string: `" &lt;&lt; cgi.param1("submit") &lt;&lt; "'\n";
+
+    for (auto &amp;mapElement: cgi)
+        showParam(mapElement);
+
+    cout &lt;&lt; "END OF PROGRAM\n";
+}
+catch (exception const &amp;err)
+{
+    cout &lt;&lt; err.what() &lt;&lt; '\n';
+    return 1;
+}
+catch (...)
+{
+    return 1;
+}
+
+
+
+
+</pre>
+
+<p>
+To test the program's <em>get</em> form processing, call it as <em>driver get
+'[:cgi:]'</em>, with the file <em>get</em> containing:
+    <pre>
+INFO=This is an abbreviated set of environment variables
+SERVER_ADMIN=f.b.brokken@rug.nl
+GATEWAY_INTERFACE=CGI/1.1
+SERVER_PROTOCOL=HTTP/1.1
+REQUEST_METHOD=GET
+QUERY_STRING=hidden=hidval&amp;submit=Submit+%20Query
+</pre>
+
+<p>
+To test the program's <em>post</em> form processing, call it as <em>driver post1
+'[:cgi:]'</em>, using <em>post1</em> and <em>post1.cin</em> found in Bobcat's source archive
+under <em>../cgi/driver</em>.
+<p>
+<h2>FILES</h2>
+    <em>bobcat/cgi</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

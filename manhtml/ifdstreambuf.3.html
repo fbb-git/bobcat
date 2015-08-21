@@ -1,0 +1,189 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::IFdStreambuf</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::IFdStreambuf</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::IFdStreambuf(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::IFdStreambuf(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz File Descriptor Input Stream Buffer</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::IFdStreambuf - Input stream buffer initialized by a file descriptor
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/ifdstreambuf&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    <strong>FBB::IFdStreambuf</strong> objects may be used as a <strong>std::streambuf</strong> of
+<em>std::istream</em> objects to allow extractions from a file descriptor.
+<p>
+File descriptors are not defined within the context of <strong>C++</strong>,
+but they can be used on operating systems that support the concept. Realize
+that using file descriptors introduces operating system dependencies.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <strong>std::streambuf</strong>
+<p>
+<h2>ENUMERATION</h2>
+    The public enumeration <strong>Mode</strong> defined in the class <strong>FBB::IFdStreamBuf</strong>
+has the following values:
+    <ul>
+    <li> <strong>CLOSE_FD</strong>, indicating that the file descriptor used by the object
+must be closed;
+    <li> <strong>KEEP_FD</strong> (the default) indicating that the file descriptor used by
+the object must not be closed.
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Ifdstreambuf()</strong>:<br>
+        This constructor initializes the streambuf, without associating it to
+a file descriptor, and without using buffering. The member <strong>open()</strong> can be
+used subsequently to associate the object with a file descriptor and
+optionally a buffer size. When the object is destroyed or if the mode-less
+overloaded version of the <strong>open</strong> member is called, the file descriptor will
+not be closed.
+<p>
+<li> <strong>Ifdstreambuf(Mode mode)</strong>:<br>
+        This constructor initializes the streambuf, without associating it to
+a file descriptor, and without using buffering. The member <strong>open()</strong> can be
+used subsequently to associate the object with a file descriptor and
+optionally a buffer size. When the object is destroyed or if the mode-less
+overloaded version of the <strong>open</strong> member is called, the <strong>Mode</strong> argument
+determines whether the file descriptor will be closed or will remain open.
+<p>
+<li> <strong>IFdStreambuf(int fd, size_t n = 1)</strong>:<br>
+        This constructor initializes the streambuf, associating it to file
+descriptor <em>fd</em>, and an optional unget buffer size (by default having size
+1).  When the object is destroyed or if the mode-less overloaded version of
+the <strong>open</strong> member is called, the file descriptor will not be closed.
+<p>
+<li> <strong>IFdStreambuf(int fd, Mode mode, size_t n = 1)</strong>:<br>
+        This constructor initializes the streambuf, associating it to file
+descriptor <em>fd</em>, and an optional unget buffer size (by default having size
+1).   When the object is destroyed or if the mode-less
+overloaded version of the <strong>open</strong> member is called, the <strong>Mode</strong> argument
+determines whether the file descriptor will be closed or will remain open.
+    </ul>
+    There is no copy constructor.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+     All members of <strong>std::streambuf</strong> are
+available, as <strong>FBB::IFdStreambuf</strong> inherits from this class. Some of the
+<strong>std::streambuf</strong>'s member are overridden by <strong>FBB::IFdStreambuf</strong>, see
+below. 
+    <ul>
+    <li> <strong>void close()</strong>:<br>
+        The file descriptor used by the <em>IFdStreambuf</em> is closed,
+irrespective of the <em>Mode</em> that was specified when the <em>IFdStreambuf</em>
+object was constructed. Following <em>close</em> the <em>IFdStreambuf</em> object can
+no longer be used until one of its <em>open</em> members has been called.
+    <li> <strong>int fd() const</strong>:<br>
+        The file descriptor used by the <em>IFdStreambuf</em> object is returned.
+        If the <em>OFdStreambuf</em> is not associated with a file descriptor -1 is
+        returned. 
+    <li> <strong>void open(int xfd, size_t n = 1)</strong>:<br>
+        The streambuf is (re)initialized, using file descriptor <em>fd</em>, and an
+optional unget buffer size (by default having size 1). When called repeatedly,
+the <strong>Mode</strong> specification used whem the object was constructed determines
+whether the file descriptor will be closed or will remain open.
+    <li> <strong>void open(int xfd, Mode mode, size_t n = 1)</strong>:<br>
+        The streambuf is (re)initialized, using file descriptor <em>fd</em>, a file
+descriptor closing parameter and an optional unget buffer size (by default
+having size 1). Depending on the <strong>Mode</strong> argument the object's currently used
+file descriptor will be closed or will remain open when the <em>IFdStreambuf</em>
+object is destroyed.
+    </ul>
+<p>
+Note that there is no overloaded assignment operator available for this
+class. 
+<p>
+<h2>EXAMPLE</h2>
+    To do
+<p>
+<h2>FILES</h2>
+    <em>bobcat/ifdstreambuf</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>ifdstream</strong>(3bobcat), <strong>ofdstreambuf</strong>(3bobcat), 
+    <strong>std::streambuf</strong>
+<p>
+<h2>BUGS</h2>
+    The member <em>xsgetn(char *dest, std::streamsize n)</em> will set
+<em>istream::good()</em> to <em>false</em> when fewer bytes than <em>n</em> were read using
+<em>istream::read()</em>. Also see <em>xsgetn</em>'s description.
+<p>
+Note that by default the provided file descriptors remain open. The
+complementary class <strong>ofdstreambuf</strong>(3bobcat) <em>closes</em> the file descriptor
+by default. This inconsistency was deliberately accepted to keep the classes
+interfaces backward compatible.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

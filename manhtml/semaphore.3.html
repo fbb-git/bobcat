@@ -1,0 +1,240 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::Semaphore</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Semaphore</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::Semaphore(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Semaphore(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz Dijkstra's Semaphore</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Semaphore - Implements the Semaphore type designed by Dijkstra
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/semaphore&gt;</strong><br>
+<p>
+Linking option: <em>-lpthread -lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+According to <em>http://en.wikipedia.org/wiki/Semaphore_(programming)</em> a
+semaphore is a variable or abstract data type that is used for controlling
+access, by multiple processes, to a common resource in a parallel programming
+or a multi user environment. The <em>Semaphore</em> as a data type was designed
+around 1962 by Edsger Dijkstra.
+<p>
+A useful way to think of a semaphore is as a record of how many units of a
+particular resource are available, coupled with operations to safely (i.e.,
+without race conditions) adjust that record as units are required or become
+free, and, if necessary, wait until a unit of the resource becomes
+available. 
+<p>
+Semaphores are a useful tool in the prevention of race conditions.  Semaphores
+allowing an arbitrary resource count are called counting semaphores, while
+semaphores which are restricted to the values 0 and 1 (or locked/unlocked,
+unavailable/available) are called binary semaphores. Both types are supported
+by Bobcat's implementation.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Semaphore(size_t nAvailable)</strong>:<br>
+        The constructor defines the semaphore's initial state. With a counting
+semaphore <em>nAvailable</em> defines, e.g., the number of available locations in a
+storage area. Locking/unlocking, supporting facilities to notify other waiting
+threads is implemented via binary semaphores, which are initialized to 1 or 0.
+A semaphore containing the value 0 blocks. I.e., its <em>wait</em> member waits
+until its value is incremented by another thread, calling one of the
+semaphore's <em>notify</em> members.
+    </ul>
+    Copy and move constructors are not available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+    <ul>
+    <li> <strong>void notify()</strong>:<br>
+       The internally maintained <em>available</em> value is incremented and one
+        waiting thread (cf. the <em>wait</em> members below) is notified,
+        reactivating that thread.
+    <li> <strong>void notify_all()</strong>:<br>
+       The internally maintained <em>available</em> value is incremented and all
+        waiting threads (cf. the <em>wait</em> members below) are notified. Only
+        one waiting thread will be able to obtain the semaphore's lock and to
+        reduce <em>available</em>, and that particular thread is thereupon
+        reactivated. 
+    <li> <strong>void set(size_t available)</strong>:<br>
+       This member blocks until it has obtained the lock of the <em>std::mutex</em>
+        which is maintained internally by the <em>Semaphore</em> object. Next the
+        <em>Semaphore's available</em> value receives the value of the member's
+        argumnt, and the lock is released.
+    <li> <strong>size_t size() const</strong>:<br>
+       Without trying to lock the <em>Semaphore</em> object's <em>mutex</em> the current
+        value of the <em>Semaphore's available</em> value is returned.
+    <li> <strong>void wait()</strong>:<br>
+       This member blocks for as long as the internally stored value
+        (<em>available</em>) equals zero. When returning from <em>wait</em> the current
+        thread holds the lock of the <em>std::mutex</em> which is maintained
+        internally by the <em>Semaphore</em> object. <em>Notify</em> members are used to
+        increment <em>available</em> and to inform <em>wait</em> that it may
+        return. When multiple threads are waiting only one thread will stop
+        waiting, while the remaining threads will continue to wait for another
+        notification.
+    <li> <strong>std::cv_status wait_for(std::chrono::duration&lt;Rep, Period&gt; const
+                                                                &amp;relTime)</strong>:<br>
+       This member blocks for as long as the internally stored value
+        (<em>available</em>) equals zero and the amount of time specified by
+        <em>relTime</em> hasn't passed. If the latter happens,
+        <em>std::cv_status::timeout</em> is returned, otherwise
+        <em>std::cv_status::no_timeout</em> is returned, in which case the current
+        thread holds the lock of the <em>std::mutex</em> which is maintained
+        internally by the <em>Semaphore</em> object. <em>Notify</em> members are used to
+        increment <em>available</em> and to inform <em>wait</em> that it may
+        return. When multiple threads are waiting only one thread will stop
+        waiting, while the remaining threads will continue to wait for another
+        notification.
+    <li> <strong>std::cv_status wait_until(std::chrono::time_point&lt;Clock, Duration&gt; 
+                                                            const &amp;absTime)</strong>:<br>
+       This member blocks for as long as the internally stored value
+        (<em>available</em>) equals zero and the time specified by <em>absTime</em>
+        hasn't been reached. If the latter happens (or if <em>absTime</em> lies in
+        the past) <em>std::cv_status::timeout</em> is returned, otherwise
+        <em>std::cv_status::no_timeout</em> is returned, in which case the current
+        thread holds the lock of the <em>std::mutex</em> which is maintained
+        internally by the <em>Semaphore</em> object. <em>Notify</em> members are used to
+        increment <em>available</em> and to inform <em>wait</em> that it may
+        return. When multiple threads are waiting only one thread will stop
+        waiting, while the remaining threads will continue to wait for another
+        notification.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    <pre>
+
+    #include &lt;bobcat/semaphore&gt;
+    
+    using namespace FBB;
+
+    Semaphore produce(10);          // storage area size
+    Semaphore consume(0);           // # items in store
+    std::queue itemQueue;           // storage queue
+
+    void consumer()
+    {
+        while (true)
+        {
+            consume.wait();          // wait until there's an item in store
+
+                // mutex lock the queue with multiple consumers
+            size_t item = itemQueue.front();
+            itemQueue.pop();
+
+            produce.notify();   // notify the producer 
+
+            process(item);      // not implemented
+        }
+    }
+
+    void producer()
+    {
+        size_t item = 0;
+        while (true)
+        {
+            ++item;
+            produce.wait();     // wait for room in the storage
+
+                // mutex lock the queue with multiple consumers
+            itemQueue.push(item);
+
+            consume.notify();   // notify the consumer
+        }
+    }
+    int main()
+    {
+        thread cons(consumer);
+        thread prod(producer);
+
+        cons.join();            // ending the threads not implemented 
+        prod.join();
+    }
+    
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/semaphore</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

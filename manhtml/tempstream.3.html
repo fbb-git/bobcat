@@ -1,0 +1,148 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::TempStream</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::TempStream</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::TempStream(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::TempStream(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz Temporary fstream</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::TempStream - Temporary fstream
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/tempstream&gt;</strong><br>
+<p>
+<h2>DESCRIPTION</h2>
+    <strong>FBB::TempStream</strong> objects are temporary <em>std::fstreams</em> opened with
+mode 0600 (user only read+write). The file created by a <em>TempStream</em> object
+is removed from the file system once the <em>TempStream</em> object goes out of
+scope.
+<p>
+A <em>TempStream</em> object creates an empty file, and information can
+immediately be inserted into the <em>TempStream</em> object. To switch between
+insertion and extraction simply call <em>seekg</em> (for extraction) or <em>seekp</em>
+(for insertion).
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <strong>std::fstream</strong>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>TempStream(std::string const &amp;base = "/tmp/FBB::TempStream")</strong>:<br>
+        The constructor initializes the object and creates a file with the
+given base-name to which six random characters are appended. If the
+<em>TempStream</em> could not be constructed an <em>FBB::Exception</em> is thrown.
+    </ul>
+<p>
+Copy and move constructors are not available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+     All <strong>std::fstream</strong> members are available, as <strong>FBB::TempStream</strong>
+inherits from this class. In addition, <em>TempStream</em> itself offers 
+    <ul>
+    <li> <strong>std::string const &amp;fileName() const</strong>:<br>
+        The name of the created temporary file.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+        <pre>
+
+    #include &lt;iostream&gt;
+    #include &lt;bobcat/tempstream&gt;
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main()
+    {
+        TempStream ts("/tmp/demo");
+    
+        ts &lt;&lt; "Hello world\n";
+    
+        ts.seekg(0);
+        string line;
+        getline(ts, line);
+        cout &lt;&lt; line &lt;&lt; ", removed: " &lt;&lt; ts.fileName() &lt;&lt; '\n';
+    }
+        
+</pre>
+    
+<p>
+<h2>FILES</h2>
+    <em>bobcat/tempstream</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>mkostemp</strong>(3)
+<p>
+<h2>BUGS</h2>
+    None reported.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

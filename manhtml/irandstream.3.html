@@ -1,0 +1,156 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::IRandStream</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::IRandStream</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::IRandStream(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::IRandStream(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz Random numbers istream</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::IRandStream - Istream producing random numbers
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/irandstream&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    <strong>FBB::IRandStream</strong> objects may be used to extract random numbers in a
+given range from a stream.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <strong>std::istream</strong>, <br>
+    <strong>FBB::RandBuffer</strong> (private) 
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>IRandStream(int max)</strong>:<br>
+    This <strong>FBB::IRandStream()</strong> constructor initializes the random generator.
+The default seed (i.e., 1) for the <strong>srand</strong>(3) function is used, meaning that
+every new run of the program will generate the same sequence of random
+values. Another constructor (see below) is provided when this is not
+considered appropriate. Random values between 1 and <em>max</em> (inclusive) are
+returned.
+<p>
+<li> <strong>IRandStream(int min, int max)</strong>:<br>
+    This <strong>FBB::IRandStream()</strong> constructor initializes the random generator.
+The default seed (i.e., 1) for the <strong>srand</strong>(3) function is used, meaning that
+every new run of the program will generate the same sequence of random
+values. Another constructor (see below) is provided when this is not
+considered appropriate. Random values between <em>min</em> and <em>max</em> (inclusive)
+are returned.
+<p>
+<li> <strong>IRandStream(int min, int max, int seed)</strong>:<br>
+    This <strong>FBB::IRandStream()</strong> constructor initializes the random
+generator. The seed is used to initialze the random number generator. To start
+the random generator at some unpredictable point, <em>time(0)</em> could be used.
+Random values between <em>min</em> and <em>max</em> (inclusive) are returned.
+    </ul>
+<p>
+<h2>INHERITED MEMBERS</h2>
+<p>
+Since the class uses public derivation from <strong>std::istream</strong>, all members
+of this class can be used.
+<p>
+<h2>EXAMPLE</h2>
+    <pre>
+#include &lt;iostream&gt;
+#include &lt;bobcat/irandstream&gt;
+
+using namespace std;
+using namespace FBB;
+
+int main(int argc, char **argv)
+{
+    IRandStream in(1000);
+
+    for (; argc--; )
+    {
+        size_t random;
+        in &gt;&gt; random;
+        cout &lt;&lt; random &lt;&lt; endl;
+    }
+
+    return 0;
+}
+
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/irandstream</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>randbuffer</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

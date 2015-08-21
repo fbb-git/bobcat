@@ -1,0 +1,601 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::SharedStream</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::SharedStream</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::SharedStream(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::SharedStream(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz I/O on shared memory</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::SharedStream - I/O operations on shared memory
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/sharedstream&gt;</strong><br>
+    Linking option: <em>-lpthread -lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+This class combines the features of the <strong>std::istream</strong> and
+<strong>std::ostream</strong> classes, operating on shared memory. As with <em>std::fstream</em>
+objects, a <em>seekp</em> or <em>seekg</em> member call is required to switch from
+writing to reading or v.v. 
+<p>
+As with <em>std::fstream</em> objects, <strong>FBB::SharedStream</strong> objects do not keep
+separate offsets for reading and writeing: the seek-members always refer to
+the (single) offset maintained by the <em>FBB::SharedMemory</em> object to which
+the <strong>SharedStream</strong> object interfaces. 
+<p>
+So, although <em>tellg</em> and <em>tellp</em> return identical values, <em>tellg</em> should
+not be called after writing to a <strong>SharedStream</strong> object, and <em>tellp</em> should
+not be called after reading from a <strong>SharedStream</strong> object, as calling members
+related to reading (<em>tellg</em>) after writing and v.v. put the stream in its
+fail state.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <strong>FBB::SharedStreambuf</strong> (private inheritance),<br>
+    <strong>std::istream</strong>,<br>
+    <strong>std::ostream</strong>,<br>
+    <strong>FBB::SharedEnum__</strong> (cf. <strong>sharedmemory</strong>(3bobcat) for a description of
+        this base class).
+<p>
+<h2>SIZEUNIT ENUMERATION</h2>
+<p>
+The <strong>enum SizeUnit</strong> defines the following symbolic constants:
+        <ul>
+        <li> <strong>kB</strong>, representing 1024 (2**10) bytes of memory;
+        <li> <strong>MB</strong>, representing 1048576 (2**20 bytes of memory;
+        <li> <strong>GB</strong>, representing 1073741824 (2**30) bytes of memory
+        )
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>SharedStream()</strong>:<br>
+       The default constructor defines a stub a <strong>SharedStream</strong> object that
+        cannot immediately be used to access shared memory. To use it, its
+        member <em>open</em> must first be called.
+<p>
+<li> <strong>SharedStream(size_t maxSize, SizeUnit sizeUnit, 
+            std::ios::openmode openMode = std::ios::in | std::ios::out,
+            size_t access = 0600)</strong>:<br>
+       This constructor creates a stream inheriting the facilities of an
+        <em>std::istream</em> and <em>std::ostream</em> that interfaces to a shared
+        memory segment having a capacity of at least <em>maxSize * sizeUnit</em>
+        bytes. 
+<p>
+By default, the shared memory segment is opened for reading and
+        writing. Different from the open modes used for file streams, creating
+        a shared memory stream with open modes <em>ios::in | ios::out</em> is
+        OK. In this case the shared memory segment is created and once
+        information has been written to the shared memory it can also be read
+        again. 
+<p>
+The shared memory's access rights are defined by the <em>access</em>
+        parameter, interpreted as an octal value, using the well-known
+        (<strong>chmod</strong>(1)) way to define the access rights for owner, group and
+        others.
+<p>
+If construction fails, an <em>FBB::Exception</em> is thrown.
+<p>
+<li> <strong>SharedStream(int id, std::ios::openmode openMode = std::ios::in |
+        std::ios::out)</strong>:<br> 
+       This constructor creates a stream inheriting the facilities of an
+        <em>std::istream</em> and <em>std::ostream</em> that connects to a shared memory
+        segment having ID <em>id</em>. 
+<p>
+Specifying the <em>ios::trunc</em> flag immediately clears the contents of
+        the shared memory.
+<p>
+An <em>FBB::Exception</em> is thrown if construction fails (e.g., no shared
+        memory segment having ID <em>id</em> exists),
+    </ul>
+    Copy and move constructors are not available.
+<p>
+<h2>OVERLOADED OPERATORS</h2>
+<p>
+No overloaded move and copy assignment operators are available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+<p>
+All members of <em>std::istream</em> and <em>std::ostream</em> and the <em>enum</em>
+values <em>kB, MB</em>, and <em>GB</em>, defined by <em>FBB::SharedEnum__</em> are available. 
+<p>
+<ul>
+    <li> <strong>FBB::SharedCondition attachSharedCondition(std::ios::off_type offset,
+                                        std::ios::seekdir origin)</strong>:<br>
+       Returns an <strong>FBB::SharedCondition</strong>(3) object, interfacing to a shared
+        condition variable located at offset <em>offset</em> (relative to
+        <em>origin</em>) in the <em>SharedMemory</em> object to which the
+        <strong>SharedStream</strong> object interfaces.  This member does not alter the
+        value returned by the stream's <em>tellg</em> and <em>tellp</em> members.
+<p>
+An <em>FBB::Exception</em> is thrown if the <em>FBB::SharedCondition</em> object
+        could not be constructed.
+<p>
+<li> <strong>FBB::SharedCondition createSharedCondition()</strong>:<br>
+       Returns an <strong>FBB::SharedCondition</strong>(3) object, interfacing to a newly
+        created shared condition variable which is created at the current
+        offset of the <em>SharedMemory</em> object to which the <strong>SharedStream</strong>
+        object interfaces (or at the first offset of the next physical shared
+        memory data block, cf. <strong>sharedcondition</strong>(3bobcat))</ul>.  Creating a
+        <em>SharedCondition</em> object does not alter the value returned by the
+        stream's <em>tellg</em> and <em>tellp</em> members.
+<p>
+An <em>FBB::Exception</em> is thrown if the <em>FBB::SharedCondition</em> object
+        could not be constructed.
+<p>
+<li> <strong>int id() const</strong>:<br>
+       The ID of the shared memory segment is returned.
+<p>
+<li> <strong>void kill()</strong>:<br>
+       Without locking the shared memory first,  all shared memory is returned
+        to the operating system. The <strong>FBB::SharedStream</strong> object is unusable
+        after returning from <em>kill</em>. Other processes that were using the
+        shared memory can continue to do so.
+<p>
+<li> <strong>void memInfo(std::ostream &amp;out, char const *end = "\n")</strong>:<br>
+       Information about the <em>SharedMemory</em> object is inserted into the
+        provide <em>ostream</em> object. The IDs of the shared segments, their
+        sizes, the maximum number of shared memory segments, the number of
+        bytes that can be read from the shared memory, and its actual storage
+        capacity, etc., are displayed. Following the information about the
+        shared memory, <em>end</em> is inserted into <em>out</em>.
+<p>
+<li> <strong>void open(size_t maxSize, SizeUnit sizeUnit,
+            std::ios::openmode openMode = std::ios::in | std::ios::out,
+            size_t access = 0600)</strong>:<br>
+       This member creates a shared memory segment having a capacity of at
+        least <em>maxSize * sizeUnit</em> bytes, and connects the shared memory
+        segment to the <strong>FBB::SharedStream</strong>. A matching <em>close</em> member does
+        not exist and is not required. 
+<p>
+By default, the shared memory segment is opened for reading and
+        writing. Different from the open modes used for file streams, creating
+        a shared memory stream with open modes <em>ios::in | ios::out</em> is
+        OK. In this case the shared memory segment is created and once
+        information has been written to the shared memory it can also be read
+        again. 
+<p>
+The shared memory's access rights are defined by the <em>access</em>
+        parameter, interpreted as an octal value, using the well-known
+        (<strong>chmod</strong>(1)) way to define the access rights for owner, group and
+        others.
+<p>
+If opening fails, an <em>FBB::Exception</em> is thrown.
+<p>
+<li> <strong>void open(int id, std::ios::openmode openMode = std::ios::in |
+        std::ios::out)</strong>:<br> 
+       This member connects the <strong>FBB::SharedStream</strong> object to a shared
+        memory segment having ID <em>id</em>. A matching <em>close</em> member does
+        not exist and is not required. If opening succeeds the shared
+        memory is ready for use. 
+<p>
+Specifying the <em>ios::trunc</em> flag immediately clears the contents of
+        the shared memory.
+<p>
+An <em>FBB::Exception</em> is thrown if opening fails (e.g., no shared
+        memory segment having ID <em>id</em> exists). 
+<p>
+<li> <strong>void remove()</strong>:<br>
+       The shared memory is first locked. Next, all shared memory is returned
+        to the operating system. The <strong>FBB::SharedStream</strong> object is unusable
+        after returning from <em>remove</em>. Other processes that were using the
+        shared memory can continue to do so.
+<p>
+<li> <strong>bool truncate(std::streamsize offset)</strong>:<br>
+       If <em>offset</em> is not exceeding the value returned by <em>seekg(0,
+        std::ios::end)</em>, then this latter value is changed to <em>offset</em> and
+        <em>true</em> is returned. Otherwise <em>false</em> is returned, and the value
+        returned by <em>seekg</em> is not altered. If the value returned by
+        <em>tellg</em> exceeded <em>offset</em>, <em>tellg</em>'s return value it is reduced
+        to <em>offset</em> as well. Subsequent read operations on the shared memory
+        can only succeed as long as <em>tellg</em>'s return value hasn't reached
+        the value <em>offset</em>. 
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+<p>
+<pre>
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;ostream&gt;
+#include &lt;istream&gt;
+
+#include &lt;bobcat/exception&gt;
+#include &lt;bobcat/sharedstream&gt;
+#include &lt;bobcat/sharedcondition&gt;
+
+using namespace std;
+using namespace FBB;
+
+int main()
+{
+    SharedStream sharedStream;
+
+    int id = -1;
+
+    while (true)
+    {
+        cout &lt;&lt; 
+                "\n"
+                " K             kill (no lock) existing shared segment\n"
+                " S             show stats of current shared segment\n"
+                " L &lt;id&gt;        Load segment &lt;id&gt;\n"
+                " C             Install a SharedCondition at offset 0\n"
+                " c            create new shared memory (sets id)\n"
+//                " l            lock segment id until key pressed\n"
+//                " p &lt;x&gt; c      put char c at offset x\n"
+                " q            quit\n"
+//                " r &lt;x&gt; &lt;n&gt;    read n chars from offset x\n"
+//                " w &lt;x&gt; args   write all args at offset x\n"
+                  " i            insert lines (until empty) at the current "
+                                                                "offset\n"
+
+                  " x            extract lines (until EOF) from the current "
+                                                                "offset\n"
+                  " X            extract the next line from the current "
+                                                                "offset\n"
+                  "              when nodified via 'N'\n"
+                  " N            notify a waiting X\n"
+                  " s &lt;x&gt;        seek (abs) offset x\n"
+                "? ";
+
+        char ch;
+        cin &gt;&gt; ch;
+
+        ios::off_type offset;
+
+        cout &lt;&lt; "Requested: " &lt;&lt; ch &lt;&lt; '\n';
+
+        sharedStream.clear();
+
+        switch (ch)
+        {
+            case 'c':
+            {
+                sharedStream.open(1, SharedStream::kB);
+
+                id = sharedStream.id();
+                cout &lt;&lt; "id = " &lt;&lt; id &lt;&lt; '\n';
+                sharedStream.memInfo(cout);
+                cout &lt;&lt; '\n';
+            }
+            break;
+        
+            case 'C':
+            {
+                sharedStream.seekp(0);
+                SharedCondition cond(sharedStream.createSharedCondition());
+                sharedStream.seekg(cond.width());
+                break;
+            }
+
+            case 'K':         // delete segment
+            {
+                if (id == -1)
+                {
+                    cout &lt;&lt; "No segment loaded\n";
+                    continue;
+                }
+
+                cout &lt;&lt; "Removing segment id = " &lt;&lt; id &lt;&lt; '\n';
+                if (ch == 'R')
+                    sharedStream.remove();
+                else
+                    sharedStream.kill();
+
+                id = -1;
+            }
+            break;
+
+            case 'L':
+                cin &gt;&gt; id;
+                cout &lt;&lt; "Loading segment " &lt;&lt; id &lt;&lt; '\n';
+                sharedStream.open(id);
+                sharedStream.memInfo(cout);
+                cout &lt;&lt; '\n';
+            break;
+
+            case 'S':
+                if (id == -1)
+                {
+                    cout &lt;&lt; "No segment loaded\n";
+                    continue;
+                }
+                sharedStream.memInfo(cout);
+                cout &lt;&lt; '\n';
+            break;
+            
+            case 's':
+            {
+                size_t offset;
+                if (id == -1)
+                {
+                    cout &lt;&lt; "No segment loaded\n";
+                    continue;
+                }
+                cin &gt;&gt; offset;
+                sharedStream.seekg(offset);
+                sharedStream.seekp(offset);
+                cout &lt;&lt; "tellg: " &lt;&lt; sharedStream.tellg() &lt;&lt; ", "
+                        "tellp: " &lt;&lt; sharedStream.tellp() &lt;&lt; '\n';
+            }
+            break;
+            
+            case 'i':
+            {
+                string line;
+                getline(cin, line);
+                sharedStream.seekp(0, ios::cur);
+                while (true)
+                {
+                    cout &lt;&lt; "? ";
+                    if (not getline(cin, line) || line.empty())
+                        break;
+                    sharedStream &lt;&lt; line &lt;&lt; endl;
+                    cout &lt;&lt; 
+                            "   tellp: " &lt;&lt; sharedStream.tellp() &lt;&lt; '\n';
+                }
+                    cout &lt;&lt; // "   tellg: " &lt;&lt; sharedStream.tellg() &lt;&lt; ", "
+                            "   tellp: " &lt;&lt; sharedStream.tellp() &lt;&lt; '\n';
+            }
+            break;
+                    
+            case 'x':
+            {
+                string line;
+                sharedStream.seekg(0, ios::cur);
+
+                while (true)
+                {
+                    cout &lt;&lt; ": ";
+                    if (not getline(sharedStream, line))
+                        break;
+                    cout &lt;&lt; line &lt;&lt; "\n"
+                            "   tellg: " &lt;&lt; sharedStream.tellg() &lt;&lt; ", "
+                            "   tellp: " &lt;&lt; sharedStream.tellp() &lt;&lt; '\n';
+                }
+            }
+            break;
+                    
+            case 'X':
+            {
+                SharedCondition cond(sharedStream.attachSharedCondition(0));
+
+                string line;
+                sharedStream.seekg(cond.width());
+
+                cond.lock();
+
+                while (true)
+                {
+                    cond.wait();
+
+                    cout &lt;&lt; ": ";
+                    if (not getline(sharedStream, line))
+                        break;
+
+                    cout &lt;&lt; line &lt;&lt; "\n"
+                            "   tellg: " &lt;&lt; sharedStream.tellg() &lt;&lt; ", "
+                            "   tellp: " &lt;&lt; sharedStream.tellp() &lt;&lt; '\n';
+                }
+                cout &lt;&lt; "All done\n";
+                cond.unlock();
+            }
+            break;
+
+            case 'N':
+            {
+                string line;
+                getline(cin, line);
+
+                SharedCondition cond(sharedStream.attachSharedCondition(0));
+                while (true)
+                {
+                    cout &lt;&lt; "'enter' or 'q'? ";
+                    getline(cin, line);
+
+                    if (line == "q")
+                        break;
+
+                    cond.lock();
+                    cond.notify();
+                    cond.unlock();
+                }
+            }
+            break;
+        
+            case 'p':           // put a char behind the last written
+            {
+                if (id == -1)
+                {
+                    cout &lt;&lt; "No segment loaded\n";
+                    continue;
+                }
+
+                cin &gt;&gt; offset &gt;&gt; ch;
+                if (!cin)
+                    throw Exception() &lt;&lt; "cmd specification error";
+    
+                sharedStream.seekp(offset);
+                cout &lt;&lt; "Segment id = " &lt;&lt; id &lt;&lt; " at write offset " &lt;&lt; 
+                                                    sharedStream.tellp() &lt;&lt; '\n';
+                sharedStream.put(ch);
+            }
+            break;
+                
+            case 'r':           // put a char behind the last written
+            {
+                if (id == -1)
+                {
+                    cout &lt;&lt; "No segment loaded\n";
+                    continue;
+                }
+
+                int n;
+
+                cin &gt;&gt; offset &gt;&gt; n;
+                if (!cin)
+                    throw Exception() &lt;&lt; "cmd specification error";
+
+                char buf[n];
+
+                sharedStream.seekg(offset);
+                cout &lt;&lt; "Segment id = " &lt;&lt; id &lt;&lt; " at offset " &lt;&lt; 
+                         sharedStream.tellg() &lt;&lt; ", to read " &lt;&lt; n &lt;&lt; " bytes\n";
+    
+                n = sharedStream.read(buf, n).gcount();
+    
+                if (n &lt; 0)
+                    cout &lt;&lt; "No data at " &lt;&lt; offset &lt;&lt; '\n';
+                else
+                {
+                    cout &lt;&lt; "Retrieved " &lt;&lt; n &lt;&lt; " bytes, containing `";
+                    cout.write(buf, n);
+                    cout &lt;&lt; "'\n";
+    
+                    for (auto ch: buf)
+                        cout &lt;&lt; static_cast&lt;int&gt;(ch) &lt;&lt; ' ';
+                    cout &lt;&lt; '\n';
+                }
+            }
+            break;
+                
+            case 'w':           // write chars at offset
+            {
+                if (id == -1)
+                {
+                    cout &lt;&lt; "No segment loaded\n";
+                    continue;
+                }
+
+                string line;
+
+                cin &gt;&gt; offset;
+                getline(cin, line);
+                if (!cin)
+                    throw Exception() &lt;&lt; "cmd specification error";
+    
+                streampos pos = sharedStream.seekp(offset).tellp();
+
+                cout &lt;&lt; "Segment id = " &lt;&lt; id &lt;&lt; " at offset " &lt;&lt; 
+                         pos &lt;&lt; ", to write " &lt;&lt; line.length() &lt;&lt; " bytes\n";
+    
+                
+                sharedStream.write(line.data(), line.length());
+
+                if (!sharedStream)
+                    cout &lt;&lt; "No room left to write any bytes\n";
+                else
+                    cout &lt;&lt; "Wrote " &lt;&lt; (sharedStream.tellp() - pos) &lt;&lt; " bytes\n";
+            }
+            break;
+                
+            case 'q':
+            return 0;
+
+            default:
+                cout &lt;&lt; "request not implemented: " &lt;&lt; ch &lt;&lt; '\n';
+            break;
+        }
+    }
+}
+
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/sharedstream</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7),  <strong>chmod</strong>(1),
+        <strong>isharedstream</strong>(3bobcat),
+        <strong>osharedstream</strong>(3bobcat),
+        <strong>sharedblock</strong>(3bobcat), 
+        <strong>sharedcondition</strong>(3bobcat), 
+        <strong>sharedmemory</strong>(3bobcat)
+        <strong>sharedmutex</strong>(3bobcat), 
+        <strong>sharedpos</strong>(3bobcat), 
+        <strong>sharedsegment</strong>(3bobcat),
+        <strong>sharedstreambuf</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    Note that by default exceptions thrown from within a <strong>std::stream</strong>
+object are caught by the stream object, setting its <em>ios::failbit</em> flag. To
+allow exceptions to leave a stream object, its <em>exceptions</em> member can be
+called, e.g., using:
+        <pre>
+
+    myStream.exceptions(ios::failbit | ios::badbit | ios::eofbit);
+        
+</pre>
+
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

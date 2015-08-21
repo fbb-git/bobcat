@@ -1,0 +1,253 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::fswap</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::fswap</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::fswap(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::fswap(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz Fast swap function</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::fswap - generic template fast swap function
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/fswap&gt;</strong><br>
+<p>
+<h2>DESCRIPTION</h2>
+    The information stored in objects frequently needs to be swapped. A
+well-known example is the swapping operation required when implementing an
+overloaded assignment operator. For example, the generic form of the operator
+assignment operator is:
+        <pre>
+
+    Class &amp;operator=(Class const &amp;other)
+    {
+        Class tmp(other);
+        swap(tmp);
+        return *this;
+    }
+        
+</pre>
+
+    The swap functionality merely swaps the contents of the current object and
+another object. The standard <em>std::swap</em> function calls the class's
+<em>operator=</em> function to swap objects. Newer implementations might use
+move-operations to increase the speed of the swaping operation, but in both
+cases some form of the assignment operator must be available. Swapping,
+however, might be possible when assignemnt isn't. Classes having reference
+data members usually don't offer assignment operators but swapping might be a
+well-defined operation.
+<p>
+It is well known that objects can be installed in a block of memory using
+<em>placement new</em>, using a block of memory the size of the object to construct
+the object it. This is the foundation of the template function <em>FBB::fswap</em>
+(fast swap). This swap function merely uses the memory occupied by objects to
+implement the swapping operation and it may therefore be used with classes
+having const data members, reference data members, ponters to allocated memory
+etc, etc. The function simply uses a spare block of memory the size of the
+object to be swapped. It then uses <strong>memcpy</strong>(3) to swap the information
+contained in the two objects, using the spare block of memory as a
+placeholder.
+<p>
+The function uses partial specializations to optimize the swapping
+operation for objects of sizes 1, 2, 4 or 8 bytes. It uses <strong>memcpy</strong>(3) for
+objects of other sizes.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>SWAP FUNCTION</h2>
+<p>
+<ul>
+    <li> <strong>fswap(Type &amp;lhs, Type &amp;rhs)</strong>:<br>
+        This template function swaps the contents of the two objects. It can
+be used with classes having const data members, reference members, pointer
+members or standard value-typed data members.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    <pre>
+#include &lt;iostream&gt;
+#include "../fswap"
+
+class Demo
+{
+    std::ostream &amp;d_out;
+    size_t d_value;
+
+    public:
+        Demo(std::ostream &amp;out = std::cerr, size_t value = 0)
+        :
+            d_out(out),
+            d_value(value)
+        {}
+
+        void show(char const *msg)
+        {
+            d_out &lt;&lt; msg &lt;&lt; ". Value: " &lt;&lt; d_value &lt;&lt; '\n';
+        }
+};
+
+
+using namespace std;
+
+int main()
+{
+    Demo d1;
+    Demo d2(cout, 12);
+
+    FBB::fswap(d1, d2);
+
+    d1.show("This is d1");              // to cerr: 12
+    d2.show("This is d2");              // to cout: 0
+}
+
+
+
+
+
+
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/fswap</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>memcpy</strong>(3)
+<p>
+<h2>BUGS</h2>
+    The <em>fswap</em> function should not be applied mechanically to swap objects
+of classes having pointer data members defining, e.g., a linked list. Consider
+a list of four objects like:
+        <pre>
+
+    A -&gt; B -&gt; C -&gt; D
+        
+</pre>
+
+    fast-swapping B and C would result in the following corrupted list:
+        <pre>
+
+               +------+
+               |      |
+    A -&gt; C -+  +-&gt; B -+   +-&gt; D
+            |             |
+            +-------------+
+        
+</pre>
+
+    However, classes implementing a data structure like a linked-list might
+still benefit from fast swapping operations: by implementing their own swap
+member they could first use fast swapping to swap the objects, followed by 
+another fast swap to unswap their `next' pointers.
+<p>
+The <em>fswap</em> function should also not be used for objects defining
+(back-)pointers to their own data. Consider the following objects using
+pointers to data and (back-)pointers to the original objects:
+        <pre>
+
+    Before fswapping:
+        A                                  B                          
+       +--------+   +-----------+         +--------+   +-----------+  
+       |        |   |           |         |        |   |           |  
+     +--&gt; *Aimp------&gt; *A (back)--+     +--&gt; *Bimp------&gt; *B (back)--+
+     | |        |   |           | |     | |        |   |           | |
+     +--**Aimp  |   +-----------+ |     +--**Bimp  |   +-----------+ |
+       +--------+ &lt;---------------+       +--------+ &lt;---------------+
+
+    After fswapping:
+                     +-------------------------------+
+                  +--|-------------------------------|-+                
+    +-------------|--|-----------------+             | |                
+    |   A         |  v                 |   B         | v              
+    |  +--------+ | +-----------+      |  +--------+ | +-----------+  
+    |  |        | | |           |      |  |        | | |           |  
+  +-----&gt; *Bimp---+ |  *A (back)--+    +---&gt; *Aimp---+ |  *B (back)--+
+  | |  |        |   |           | |       |        |   |           | |
+  | +---**Bimp  |   +-----------+ |    +---**Aimp  |   +-----------+ |
+  |    +--------+ &lt;---------------+    |  +--------+ &lt;---------------+
+  +------------------------------------+
+        
+</pre>
+
+    After the swap <em>**Bimp</em> should point to <em>Bimp</em>'s address (now at A),
+but in fact it points to <em>Aimp</em>'s address (now at B). Likewise, the back
+pointers still point at their original objects rather than at their swapped
+objects. 
+<p>
+All <em>stream</em> classes define such pointers and can therefore not be swapped
+using <em>fswap</em>.
+<p>
+The bottom line being that <em>fswap</em> should only be used for self-defined
+classes for which it can be proven that fast-swapping does not corrupt the
+values of its pointer data.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

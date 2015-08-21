@@ -1,0 +1,221 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::Ranger</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Ranger</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::Ranger(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Ranger(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz Error handler</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Ranger - generalizes ranges for range-based for-loops
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/ranger&gt;</strong><br>
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+The <em>Ranger</em> class template defines ranges that can be used with range-based
+for-loops. The standard range-based for-loop requires for its
+range-specificiation an array or an iterator range as offered by, e.g.,
+containers (through their <em>begin</em> and <em>end</em> members). Ranges defined by a
+pair of pointers or by a subrange defined by iterator expressions cannot
+currently be used in combination with range-based for-loops. 
+<p>
+<em>Ranger</em> extends the applicability of range-based for-loops by turning pairs
+of pointers, an initial pointer and a pointer count, or a pair of iterators
+into a range that can be used by range-based for-loops.
+<p>
+<em>Ranger</em> is a class template requiring one template type parameter:
+<em>Iterator</em>, an iterator or pointer type reaching the data when dereferenced.
+<p>
+<em>Ranger</em>'s users don't have to specify <em>Ranger</em>'s template type. The
+function template <em>ranger</em> returns the appropriate <em>Ranger</em> object.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>FREE FUNCTION</h2>
+    When using the following free functions, any (subrange) of iterators or
+pointers can be used. With iterators subranges of <em>reverse iterators</em> can
+also be specified. The <strong>EXAMPLE</strong> section below illustrates the use of the
+<em>ranger</em> function templates.
+    <ul>
+    <li> <strong>Ranger&lt;Iterator&gt; ranger(Iterator &amp;&amp;begin, Iterator &amp;&amp;end)</strong>:<br>
+        this function template returns a <em>Ranger</em> object for the (sub)range
+        defined by two (reverse) iterators;
+    <li> <strong>Ranger&lt;Iterator&gt; ranger(Iterator &amp;&amp;begin, size_t count)</strong>:<br>
+        this function template returns a <em>Ranger</em> object for the (sub)range
+        defined by the (reverse) iterator range <em>begin</em> and <em>begin +
+        count</em>;
+    <li> <strong>Ranger&lt;Data *&gt; ranger(Data *begin, Data *end)</strong>:<br>
+        this function template returns a <em>Ranger</em> object for the (sub)range
+        defined by the two pointers <em>begin</em> and <em>end</em>;
+    <li> <strong>Ranger&lt;Data *&gt; ranger(Data *begin, size_t count)</strong>:<br>
+        this function template returns a <em>Ranger</em> object for the (sub)range
+        defined by the two pointers <em>begin</em> and <em>begin + count</em>. 
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    Below, <em>Iterator</em> refers to the <em>Ranger</em> class template's type
+parameter. Although named 'Iterator' it can also be a pointer to some data
+type (e.g., <em>std::string *</em>).
+    <ul>
+    <li> <strong>Ranger(Iterator const &amp;begin, Iterator const &amp;end)</strong>:<br>
+        A <em>Ranger</em> object can be passed as range-specifier in a range-based
+for-loop. All elements defined by the range will subsequently be visited by
+the range-based for-loop.
+    </ul>
+    The copy and move constructors are available.
+<p>
+<h2>OVERLOADED OPERATORS</h2>
+    The copy and move assignment operators are available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+    <ul>
+    <li> <strong>Iterator const &amp;begin() const</strong>:<br>
+        returns (a copy of) the <em>begin</em> iterator passed to the <em>Ranger</em>'s
+constructor. Note that if <em>Iterator</em> was a pointer type (like <em>int *</em>) the
+data to which the iterator returned by <em>begin()</em> can actually be modified,
+as the member's return type (using <em>int *</em> for <em>Iterator</em>) becomes <em>int
+* const &amp;</em>, so a reference to a constant pointer to an <em>int</em>. This is
+perfectly OK: if the data themselves should be immutable, then the data type
+must be defined as <em>int const</em>, which is automatically the case when passing
+<em>int const *</em> data. See the <strong>EXAMPLE</strong> section for an illustration.
+    <li> <strong>Iterator const &amp;end() const</strong>:<br>
+        returns (a copy of) the <em>end</em> iterator passed to the <em>Ranger</em>'s
+constructor. 
+    </ul>
+    If reverse iterators are passed to <em>Ranger</em>'s constructor, then 
+    the <em>begin</em> and <em>end</em> members return <em>reverse iterators</em>. Since 
+the intended use of <em>Ranger</em> objects is to define a range for range-base
+for-loops, members like <em>rbegin</em> and <em>rend</em> can be omitted from
+<em>Ranger</em>.
+<p>
+<h2>EXAMPLE</h2>
+    <pre>
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+
+#include &lt;bobcat/ranger&gt;
+
+using namespace std;
+using namespace FBB;
+
+int main()
+{
+    vector&lt;int&gt; iv {1, 2, 3, 4, 5};
+                                    // display and modify a subrange
+    for(auto &amp;el: ranger(iv.rbegin() + 1, iv.rend() - 1))
+        cout &lt;&lt; el++ &lt;&lt; ' ';
+    cout &lt;&lt; '\n';
+                                    // display a reversed range
+    for(auto &amp;el: ranger(iv.rbegin() + 1, iv.rend() - 1))
+        cout &lt;&lt; el &lt;&lt; ' ';
+    cout &lt;&lt; '\n';
+                                    // same: display using a count
+    for(auto &amp;el: ranger(iv.rbegin() + 1, 3))
+        cout &lt;&lt; el &lt;&lt; ' ';
+    cout &lt;&lt; '\n';
+
+    int intArray[] = {1, 2, 3, 4, 5};  
+                                    // display and modify elements 
+                                    // in a pointer-based range
+    for(auto &amp;el: ranger(intArray + 1, intArray + 3))
+        cout &lt;&lt; el++ &lt;&lt; ' ';
+    cout &lt;&lt; '\n';
+                                    // data now modified
+    for(auto &amp;el: ranger(intArray + 1, intArray + 3))
+        cout &lt;&lt; el &lt;&lt; ' ';
+    cout &lt;&lt; '\n';
+                                    // using a count rather than an
+                                    // end-pointer
+    for(auto &amp;el: ranger(intArray + 1, 3))
+        cout &lt;&lt; el &lt;&lt; ' ';
+    cout &lt;&lt; '\n';
+
+    int const constInts[] = {1, 2, 3, 4, 5};
+
+                                    // data can't be modified
+    for(auto &amp;el: ranger(constInts + 1, constInts + 3))
+        cout &lt;&lt; el &lt;&lt; ' ';
+    cout &lt;&lt; '\n';
+}
+
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/ranger</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

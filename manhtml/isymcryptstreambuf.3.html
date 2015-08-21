@@ -1,0 +1,712 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::ISymCryptStreambuf</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::ISymCryptStreambuf</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::ISymCryptStreambuf(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::ISymCryptStreambuf(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz Symmetric Encryption Stream Buffer</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::ISymCryptStreambuf - Input Filtering stream buffer doing symmetric encryption
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/isymcryptstreambuf&gt;</strong><br>
+    Linking option: <em>-lbobcat -lcrypto</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    The information made available by <strong>ISymCryptStreambuf</strong> objects has
+been subject to symmetric encryption or decryption. The information to be
+encrypted or decrypted is made available to <strong>ISymCryptStreambuf</strong> object
+via <em>std::istream</em> objects.
+<p>
+The <em>class ISymCryptStreambuf</em> is a class template, using a
+<em>FBB::CryptType</em> template non-type parameter. Objects of the class
+<em>FBB::ISymCryptStreambuf&lt;FBB::ENCRYPT&gt;</em> encrypt the information they
+receive, objects of the class <em>FBB::ISymCryptStreambuf&lt;FBB::DECRYPT&gt;</em>
+decrypt the information they receive. See also section <strong>ENUMERATION</strong> below.
+<p>
+All symmetric encryption methods defined by the OpenSSL library that can
+be selected by name may be used in combination with <em>EncryptBuf</em> objects. To
+select a particular encryption method an identifier is passed to the
+constructor. E.g., <em>"aes-128-cbc"</em> indicating the AES (Rijndael) method,
+using 128 bit sized keys and blocks using `cbc' mode (see below for an
+explanation).
+<p>
+When providing shorter keys than expected by the method the provided key
+is extended by adding the required number of 0-bytes. (zero valued bytes,
+not <em>'0'</em> characters). 
+<p>
+Most modes use an <em>initialization vector</em>. The initialization vector must be
+provided at construction time. The matching decrypting object needs to know
+the initialization vector that was used when encrypting the data: the
+application must ensure that the matching decryption object receives the same
+initialization vector as the one that was provided to the encryption
+object. Initialization vectors are not security sensitive in the sense that
+they can be sent in the clear to the decryption object. What <em>is</em>
+important, though, is that they contain random data when used `for real'. When
+an initialization vector is specified that is shorter than expected by the
+method it will be extended with the required number of 0-bytes.
+<p>
+    Block ciphers use one of the following four encryption modes:
+    <ul>
+    <li> <strong>CBC (Cipher Block Chaining)</strong>:<br> 
+        The first block is XOR-ed by the initialization vector and then
+encrypted using the specified method. Subsequent blocks are XOR-ed by the
+encrypted version of the preceding block. Due to the initialization vector
+dictionary attacks are infeasible, as long as the initialization vector is
+truly random.
+    <li> <strong>ECB (Electronic Code Book)</strong>:<br> 
+        Each block is encrypted by itself, using the specified encryption
+method. Although an <em>initialization vector</em> may be specified, it is not
+used. This method is susceptible to dictionary attacks and should therefore be
+avoided, unless you know what you're doing.
+    <li> <strong>CFB (Cipher Feednack)</strong>:<br>
+        This method allows a block cipher to be used as a stream cipher. It
+uses an initialization vector, which should be unique and random for each new
+stream of data that is encrypted using the method. Encryption can only start
+after the first data block has been received.
+    <li> <strong>OFB (Output Feednack)</strong>:<br>
+        This is an alternative way to use a block cipher as a stream
+cipher. It is somewhat more susceptible to traditional data manipulation
+attacks, which can usually be thwarted when a message authentication code is
+added to the information as well. Like CFB it uses an initialization vector,
+which should again be unique and random for each new stream of data that is
+encrypted.
+    </ul>
+<p>
+
+The following table presents an overview of methods that are currently
+available. Methods for which the block size is specified as N.A. are stream
+ciphers; other methods are block ciphers: 
+    <table>
+
+    <td colspan=5><hr></td>
+
+    
+<tr>
+<td> method</td><td> keysize</td><td> blocksize</td><td> mode</td><td> identifier</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td> (bytes)</td><td> (bytes)</td> 
+</tr>
+
+<td colspan=5><hr></td>
+
+    
+<tr>
+<td> AES</td><td> 16</td><td> 8</td><td> CBC</td><td> "aes-128-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> EBC</td><td> "aes-128-ecb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> CFB</td><td> "aes-128-cfb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> OFB</td><td> "aes-128-ofb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td> 24</td><td> 24</td><td> CBC</td><td> "aes-192-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> EBC</td><td> "aes-192-ecb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> CFB</td><td> "aes-192-cfb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> OFB</td><td> "aes-192-ofb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td> 32</td><td> 32</td><td> CBC</td><td> "aes-256-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> EBC</td><td> "aes-256-ecb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> CFB</td><td> "aes-256-cfb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> OFB</td><td> "aes-256-ofb"</td>
+ 
+</tr>
+
+<td colspan=5><hr></td>
+
+    
+<tr>
+<td> BLOWFISH</td><td> 16</td><td> 8</td><td> CBC</td><td> "bf-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> EBC</td><td> "bf-ecb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> CFB</td><td> "bf-cfb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> OFB</td><td> "bf-ofb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> max key length is 56 bytes, 16 generally used</td> 
+</tr>
+
+<td colspan=5><hr></td>
+
+    
+<tr>
+<td> CAMELLIA</td><td> 16</td><td> 16</td><td> CBC</td><td> "camellia-128-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> EBC</td><td> "camellia-128-ecb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> CFB</td><td> "camellia-128-cfb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> OFB</td><td> "camellia-128-ofb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td> 24</td><td> </td><td> CBC</td><td> "camellia-192-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> EBC</td><td> "camellia-192-ecb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> CFB</td><td> "camellia-192-cfb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> OFB</td><td> "camellia-192-ofb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td> 32</td><td> </td><td> CBC</td><td> "camellia-256-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> EBC</td><td> "camellia-256-ecb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> CFB</td><td> "camellia-256-cfb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> OFB</td><td> "camellia-256-ofb"</td>
+ 
+</tr>
+
+<td colspan=5><hr></td>
+
+    
+<tr>
+<td> CAST</td><td> 16</td><td> 8</td><td> CBC</td><td> "cast-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> EBC</td><td> "cast-ecb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> CFB</td><td> "cast-cfb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> OFB</td><td> "cast-ofb"</td>
+ 
+</tr>
+
+    
+<tr>
+
+            <td> min key length is 5 bytes, max is shown</td> 
+</tr>
+
+<td colspan=5><hr></td>
+
+    
+<tr>
+<td> DES</td><td> 8</td><td> 8</td><td> CBC</td><td> "des-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> EBC</td><td> "des-ebc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> CFB</td><td> "des-cfb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> OFB</td><td> "des-ofb"</td>
+ 
+</tr>
+
+<td colspan=5><hr></td>
+
+    
+<tr>
+<td> DESX</td><td> 8</td><td> 8</td><td> CBC</td><td> "desx-cbc"</td>
+ 
+</tr>
+
+<td colspan=5><hr></td>
+
+    
+<tr>
+<td> 3DES</td><td> 16</td><td> 8</td><td> CBC</td><td> "des-ede-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> EBC</td><td> "des-ede"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> CFB</td><td> "des-ede-cfb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> OFB</td><td> "des-ede-ofb"</td>
+ 
+</tr>
+
+<td colspan=5><hr></td>
+
+    
+<tr>
+<td> 3DES</td><td> 24</td><td> 8</td><td> CBC</td><td> "des-ede3-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> EBC</td><td> "des-ede3"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> CFB</td><td> "des-ede3-cfb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> OFB</td><td> "des-ede3-ofb"</td>
+ 
+</tr>
+
+    
+<tr>
+
+        <td> Key bytes 9-16 define the 2nd key, bytes 17-24</td> 
+</tr>
+
+    
+<tr>
+<td> define the 3rd key</td> 
+</tr>
+
+<td colspan=5><hr></td>
+
+    
+<tr>
+<td> RC2</td><td> 16</td><td> 8</td><td> CBC</td><td> "rc2-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> EBC</td><td> "rc2-ecb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> CFB</td><td> "rc2-cfb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> OFB</td><td> "rc2-ofb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> Key length variable, max. 128 bytes, default length is shown</td> 
+</tr>
+
+<td colspan=5><hr></td>
+
+    
+<tr>
+<td> RC2-40</td><td> 5</td><td> 8</td><td> </td><td> "rc2-40-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> obsolete: avoid</td> 
+</tr>
+
+<td colspan=5><hr></td>
+
+    
+<tr>
+<td> RC2-64</td><td> 8</td><td> 8</td><td> </td><td> "rc2-64-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> obsolete: avoid</td> 
+</tr>
+
+<td colspan=5><hr></td>
+
+    
+<tr>
+<td> RC4</td><td> 16</td><td> N.A.</td><td> </td><td> "rc4"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> Key length is variable, max. 256 bytes. default length is shown</td> 
+</tr>
+
+    
+<tr>
+
+        <td> Encrypt again to decrypt. Don't use <em>DecryptBuf</em></td> 
+</tr>
+ 
+<td colspan=5><hr></td>
+
+    
+<tr>
+<td> RC4-40</td><td> 5</td><td> N.A.</td><td> </td><td> "rc4-40"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> obsolete: avoid</td> 
+</tr>
+
+<td colspan=5><hr></td>
+
+    
+<tr>
+<td> RC5</td><td> 16</td><td> 8</td><td> CBC</td><td> "rc5-cbc"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> EBC</td><td> "rc5-ecb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> CFB</td><td> "rc5-cfb"</td>
+ 
+</tr>
+
+    
+<tr>
+<td> </td><td>   </td><td>   </td><td> OFB</td><td> "rc5-ofb"</td>
+ 
+</tr>
+
+    
+<tr>
+
+        <td> Key length variable, max. 256 bytes, rounds 8, 12 or 16,</td> 
+</tr>
+
+    
+<tr>
+
+        <td> default # rounds is 12</td> 
+</tr>
+
+<td colspan=5><hr></td>
+
+    
+</table>
+<p>
+The RC4 stream cipher is subject to a well-known attack
+(cf. <a href="http://www.wisdom.weizmann.ac.il/~itsik/RC4/Papers/Mantin1.zip">http://www.wisdom.weizmann.ac.il/~itsik/RC4/Papers/Mantin1.zip</a>)
+unless the initial 256 bytes produced by the cipher are discarded. 
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <strong>FBB::IFilterStreambuf</strong>
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+     All members of <strong>FBB::IFilterStreambuf</strong> are available, as
+<strong>ISymCryptStreambuf</strong> inherits from this class.
+<p>
+Overloaded move and/or copy assignment operators are not available.
+<p>
+<h2>ENUMERATION</h2>
+<p>
+<strong>ISymCryptStreambuf</strong> objects either encrypt or decrypt
+information. <strong>ISymCryptStreambuf</strong> objects of the class
+<strong>FBB::ISymCryptStreambuf&lt;FBB::ENCRYPT&gt;</strong> encrypt the data they receive,
+<strong>ISymCryptStreambuf</strong> objects of the class
+<strong>FBB::ISymCryptStreambuf&lt;FBB::DECRYPT&gt;</strong> decrypt the data they receive. 
+<p>
+The values <em>ENCRYPT</em> and <em>DECRYPT</em> are defined in the <em>enum CryptType</em>,
+which is defined in the <em>FBB</em> namespace.
+<p>
+<h2>CONSTRUCTOR</h2>
+    <ul>
+    <li> <strong>ISymCryptStreambuf&lt;CryptType&gt;(
+                   std::istream &amp;in,        char const *type,
+                   std::string const &amp;key,  std::string const &amp;iv,
+                   size_t bufSize = 100,    size_t filterBufSize = 1000, 
+                   ENGINE *engine = 0)</strong>:<br>
+        This constructor initializes the streambuf.
+    <ul>
+    - <em>ISymCryptStreambuf&lt;ENCRYPT&gt;</em> objects perform encryption;<br>
+        <em>ISymCryptStreambuf&lt;DECRYPT&gt;</em> objects perform decryption;<br>
+    - <em>ISymCryptStreambuf&lt;CryptType&gt;</em> objects obtain the bytes to encrypt
+or decrypt from <em>std::istream &amp;in</em>;<br>
+    - The encryption method to use is specified by the <em>type</em>
+parameter. E.g., <em>"bf-cbc"</em> selects the Blowfish Cipher Block Chaining
+method;<br>
+    - The symmetric key to use is specified by the <em>key</em> parameter;<br>
+    - The initialization vector is specified by the <em>iv</em> parameter;<br>
+    - The <em>FBB::ISymCryptStreambuf</em> internally used buffer will contain
+<em>bufSize</em> characters. The default value is the smallest value that is
+used. When a smaller <em>bufSize</em> value is specified, the default value is
+used;<br>
+    - <em>FBB::ISymCryptStreambuf</em>'s <em>IFilterStreambuf</em> base class is
+initialized with a buffer of size <em>filterBufSize</em>, using a lower bound
+of 100;<br>
+    - The parameter <em>ENGINE</em> can be used to specify a hardware
+accelleration engine, as supported by the used encryption/decryption
+method. Its default argument value indicates that no hardware accelleration is
+available.
+        </ul>
+    </ul>
+    Copy- and move constructors are not available.
+<p>
+<h2>EXAMPLE</h2>
+<p>
+The example shows the construction of an <em>ISymCryptStreambuf&lt;ENCRYPT&gt;</em>
+object <em>ebuf</em> which is used to initialize a <em>std::istream</em> object. The
+information read from this <em>istream</em> is encrypted using the Blowfish CBC
+method. A <em>ISymCryptStreambuf&lt;DECRYPT&gt;</em> object (<em>dbuf</em> reads the
+information from that stream and decrypts it again). The <em>std::istream din</em>
+object is initialized with the <em>ISymCryptStreambuf&lt;DECRYPT&gt;</em> object, and its
+contents is sent to <em>std::cout</em>. The information that is presented at
+<em>std::cin</em> and that appears at <em>std::cout</em> should be identical.
+<p>
+<pre>
+#include &lt;iostream&gt;
+
+#include &lt;bobcat/isymcryptstreambuf&gt;
+
+using namespace std;
+using namespace FBB;
+
+int main()
+{
+    ISymCryptStreambuf&lt;ENCRYPT&gt; ebuf(cin, "bf-cbc",
+                                    "1234567890", "1234567890");
+    istream ein(&amp;ebuf);
+
+    ISymCryptStreambuf&lt;DECRYPT&gt; dbuf(ein, "bf-cbc",
+                                    "1234567890", "1234567890");
+    istream din(&amp;dbuf);
+
+    cout &lt;&lt; din.rdbuf();
+}
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/isymcryptstreambuf</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>encryptbuf</strong>(3bobcat), <strong>isymcryptstream</strong>(3bobcat),
+<strong>ibase64streambuf</strong>(3bobcat), <strong>ifilterstreambuf</strong>(3bobcat),
+<strong>ofilterstreambuf</strong>(3bobcat), <strong>std::streambuf</strong>.
+<p>
+<h2>BUGS</h2>
+<p>
+Sep/Oct 2013: due to a change in library handling by the linker
+(cf. <a href="http://fedoraproject.org/wiki/UnderstandingDSOLinkChange">http://fedoraproject.org/wiki/UnderstandingDSOLinkChange</a> and
+<a href="https://wiki.debian.org/ToolChain/DSOLinking">https://wiki.debian.org/ToolChain/DSOLinking</a>) libraries that are
+indirectly required are no longer automatically linked to your program. With
+<strong>BigInt</strong> this is <em>libcrypto</em>, which requires programs to link to both
+<em>bobcat</em> and <em>crypto</em>.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

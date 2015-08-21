@@ -1,0 +1,202 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::repeat</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::repeat</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::repeat(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::repeat(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz repeated function calls</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::repeat - call a (member) function a fixed number of times
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/repeat&gt;</strong><br>
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+The <strong>FBB::repeat</strong> function template allows a function or member function to
+be called a certain number of times. The functions or member functions may
+define arguments. Arguments to these functions are specified when <em>repeat</em>
+is called, and are perfectly forwarded by the <em>repeat</em> function
+template to the (member) function called by <em>repeat</em>.
+<p>
+The first argument of the <em>repeat</em> function template defines the number of 
+times the (member) function must be called.
+<p>
+The <em>FBB::repeat</em> function template are defined <em>inline</em>,
+allowing the compiler to `optimize away' the <em>repeat</em> function call 
+itself.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>REPEAT FUNCTION TEMPLATE</h2>
+    The <em>repeat</em> function template is declared as:
+    <pre>
+
+template &lt;typename Counter, typename First, typename ...Params&gt;
+void repeat(Counter counter, First &amp;&amp;first, Params &amp;&amp;...params);
+    
+</pre>
+
+    In this declaration,
+    <ul>
+    <li> <strong>Counter</strong> represents the counter's type. Usually an <em>int</em> or
+        <em>size_t</em>. When calling <em>repeat</em> <em>counter</em> must be initialized to
+        the number of times <em>repeat</em> must call the (member) function (see
+        below);
+    <li> <strong>First</strong> represents the prototype of a function or the name of a
+        class.  name of a class. Likewise, <em>first</em> either is the address
+        (name) of the function to be called or the name of an object of class
+        type <em>First</em>. In the latter case the object may or may not be a
+        <em>const</em> object.
+    <li> <strong>...Params</strong> represents the set of parameter types of arguments
+        which must be perfectly forwarded to the called function. If <em>first</em>
+        represents a class type object, the first argument <em>must</em> be the
+        address of a member function of the class <em>First</em>.
+    </ul>
+<p>
+<h2>EXAMPLES</h2>
+    <pre>
+#include &lt;iostream&gt;
+#include &lt;iterator&gt;
+#include &lt;algorithm&gt;
+
+#include "../repeat"
+
+using namespace std;
+using namespace FBB;
+
+class Object
+{
+    public:
+        void member(int argc, char **argv) const;
+        void member2(size_t &amp;rept, int argc, char **argv);
+};
+
+void Object::member(int argc, char **argv) const
+{
+    cout &lt;&lt; "member called\n";
+    copy(argv, argv + argc, ostream_iterator&lt;char const *&gt;(cout, "\n"));
+}
+
+void Object::member2(size_t &amp;rept, int argc, char **argv)
+{
+    cout &lt;&lt; "member2 called, iteration " &lt;&lt; rept++ &lt;&lt; "\n";
+    copy(argv, argv + argc, ostream_iterator&lt;char const *&gt;(cout, "\n"));
+}
+
+void fun()
+{
+    cout &lt;&lt; "Fun called\n";
+}
+
+int main(int argc, char **argv)
+{
+    Object object;
+
+    cout &lt;&lt; "\n"
+            "*** The number of arguments determines the repeat-count ***\n\n";
+
+    cout &lt;&lt; "Fun without arguments:\n";
+    repeat(argc, fun);
+
+    cout &lt;&lt; "Object receiving argc and argv:\n";
+    repeat(argc, object, &amp;Object::member, argc, argv);
+
+    cout &lt;&lt; "Object receiving argc and argv, showing the iteration count:\n";
+    size_t count = 0;
+    repeat(argc, object, &amp;Object::member2, count, argc, argv);
+
+    Object const obj;
+    cout &lt;&lt; "Const Object receiving argc and argv:\n";
+    repeat(argc, obj, &amp;Object::member, argc, argv);
+
+}
+
+
+
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/repeat</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7)
+<p>
+<h2>BUGS</h2>
+    Be careful when using overloaded functions, as the template argument
+        resolution mechanism may be unable to determine which function to
+        call. If overloaded functions must be used, a <em>static_cast</em> is
+        likely required to disambiguate your intentions.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

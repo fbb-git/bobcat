@@ -1,0 +1,372 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::ReadLineStream</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::ReadLineStream</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::ReadLineStream(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::ReadLineStream(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz Editing input lines</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::ReadLineStream - std::istream offering line-editing and history
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/readlinestream&gt;</strong><br>
+    Linking option: -lreadline -lbobcat
+<p>
+<h2>DESCRIPTION</h2>
+    A <strong>FBB::ReadLineStream</strong> object is a <em>std::istream</em> objects, allowing
+line-editing and history manipulation.
+<p>
+The <strong>ReadLineStream</strong> class uses Gnu's readline library to allow editing of
+input lines. The <em>ReadLineStream</em> object can be used to construct a <em>std::istream</em>
+allowing in-line editing of lines read from the terminal. All lines may be
+preceded by a configurable prompt. 
+<p>
+Since Gnu's readline library operates on global data there can only be one
+<strong>ReadLineStream</strong> (and underlying <strong>ReadLineBuf</strong>) object. 
+<strong>ReadLineStream</strong> is a singleton class: in any program there can only be one
+<strong>ReadLineStream</strong> object.
+<p>
+<strong>ReadLineStream</strong> offers editing capabilities while the user is entering
+lines. Like Gnu's <strong>readline</strong>(3) function, the line editing commands are
+by default similar to those of <strong>emacs</strong>(1), but can easily be reconfigured,
+e.g. to offer <strong>vi</strong>(1)-like characteristics. 
+<p>
+History manipulation is provided as an option. The collected history may be
+accessed for reading using an <strong>FBB::ReadLineHistory</strong> object. 
+<p>
+Specific information about the facilities offered by the Gnu software used by
+<strong>ReadLineStream</strong> is provided in the GNU Readline Library documentation
+(<em>http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html</em>).
+<p>
+Gnu's <em>readline</em> function reads its information from the standard input
+file. Programs using <em>ReadLineStream</em> should normally not extract information
+from <em>std::cin</em>. However, as the standard input file has a file descriptor
+(0), redirection should be possible (e.g., using <em>FBB::Redirector</em>).
+<p>
+When the command line is kept, history expansion is offered as an option.
+History expansion introduces words from the history list into the input
+stream, making it easy to repeat commands, to insert elements of a 
+previous input line into the current input line, or to fix errors in previous
+command lines.
+<p>
+History expansion is usually performed  immediately  after  a  complete
+line  is read.
+<p>
+The line selected from the history is called the <em>event</em>, and the portions
+of that line that are processed are called <em>words</em>.  Various modifiers are
+available to manipulate selected words. This is comparable to the way a
+program like <strong>bash</strong>(1) breaks up its input line into `words'.
+<p>
+History expansion is introduced by the use of the history expansion character,
+by default equal to the <em>!</em>-character.  Only backslash (<em>\</em>) and single
+quotes can change the history expansion character into a normal character.
+<p>
+The remainder of this section is copied almost verbatim from the
+<strong>history</strong>(3) man-page. The reader is referred to that man-page or to the Gnu
+History Library documentation for further details.
+<p>
+The following <strong>event designators</strong> are supported:
+    <ul>
+    <li> <em>!</em>:  starts a  history substitution, except when followed by a blank,
+              newline, <em>=</em> or <em>(</em>.
+    <li> <em>!n</em>: refers to command line n.
+    <li> <em>!-n</em>: refers to the current command line minus n.
+    <li> <em>!!</em>  refers to the previous command.  This is a synonym for `!-1'.
+    <li> <em>!string</em> refers to the most recent command starting with string.
+    <li> <em>!?string[?]</em>  refers to the most recent command containing string.
+        The trailing <em>?</em> may be omitted if string is followed immediately by
+        a newline.
+    <li> <em>^string1^string2^</em> (quick substitution) repeats the last command,
+            replacing <em>string1</em> with <em>string2</em>.  
+            Equivalent to <em>!!:s/string1/string2/</em>.
+    <li> <em>!#</em> the entire command line typed so far.
+    </ul>
+<p>
+<strong>Word Designators</strong>
+<p>
+Word designators are used to select desired words from the event.  A <em>:</em>
+separates the event specification from the word designator.  It may be omitted
+if the word designator begins with a <em>^, $, *, -</em>, or <em>%</em>.  Words are
+numbered from the beginning of the line, with the first word being denoted by
+0 (zero).  Words are inserted into the current line separated by single
+spaces.
+    <ul>
+    <li> <em>0</em> (zero) The zeroth word.  For the shell, this is the command word.
+    <li> <em>n</em>      The nth word.
+    <li> <em>^</em>      The first argument.  That is, word 1.
+    <li> <em>$</em>      The last argument.
+    <li> <em>%</em>      The word matched by the most recent <em>?string?</em> search.
+    <li> <em>x-y</em>    A range of words; `-y' abbreviates `0-y'.
+    <li> <em>*</em>      All  of  the words but the zeroth.  This is a synonym for 
+                <em>1-$</em>. It is not an error to use * if there is just one word
+                in the event; the empty string is returned in that case.
+    <li> <em>x*</em>     Abbreviates <em>x-$</em>.
+    <li> <em>x-</em>     Abbreviates <em>x-$</em> like <em>x*</em>, but omits the last word.
+    </ul>
+  If  a  word  designator is supplied without an event specification, the
+       previous command is used as the event.
+<p>
+<strong>Modifiers</strong>
+<p>
+After the optional word designator, there may appear a sequence of  one
+or more of the following modifiers, each preceded by a <em>:</em>.
+    <ul>
+    <li> <em>h</em> removes a trailing file name component, leaving only the head.
+    <li> <em>t</em> removes all leading file name components, leaving the tail.
+    <li> <em>r</em> removes a trailing suffix of the form <em>.xxx</em>, leaving the
+           basename. 
+    <li> <em>e</em> removes all but the trailing suffix.
+    <li> <em>p</em> prints the new command but does not execute it.
+    <li> <em>q</em> quotes the substituted words, escaping further substitutions.
+    <li> <em>x</em> quotes the substituted words as with q, but break into words at
+           blanks and newlines.
+    <li> <em>s/old/new/</em> substitutes new for the first occurrence of old in the
+           event line.  Any delimiter can be used in place of <em>/</em>.  The
+           final delimiter is optional if it is the last character of the
+           event line.  The delimiter may be quoted in old and new with a
+           single backslash.  If <em>&amp;</em> appears in new, it is replaced by old.
+           A single backslash will quote the <em>&amp;</em>.  If <em>old</em> is null, it is
+           set to the last old substituted, or, if no previous history
+           substitutions took place, the last string in a <em>!?string[?]</em>
+           search.
+    <li> <em>&amp;</em>      repeats the previous substitution.
+    <li> <em>g</em> Causes changes to be applied over the entire event line.  This is
+           used in conjunction with <em>:s</em> (e.g., <em>:gs/old/new/</em>) or <em>:&amp;</em>.
+           If used with <em>:s</em>, any delimiter can be used in place of <em>/</em>,
+           and the final delimiter is optional if it is the last character of
+           the event line.  An a may be used as a synonym for <em>g</em>.
+    <li> <em>G</em> Apply the following <em>s</em> modifier once to each word in the event
+           line.
+    </ul>
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <em>FBB::ReadLineBuf</em> (privately), <em>std::istream</em> (publicly)
+<p>
+<h2>ENUMERATIONS</h2>
+<p>
+The <em>enum Type</em> defines the following value:
+    <ul>
+    <li> <em>DONT_EXPAND_HISTORY</em>: history expansion is not requested;
+    <li> <em>EXPAND_HISTORY</em>:  history expansion is requested.
+    </ul>
+<p>
+The <em>enum Expansion</em> provides meaningful return
+values for the history expansion process. Its values are:
+    <ul>
+    <li> <em>DONT_EXEC</em>: history expansion succeeded, but the expanded line should
+not be executed. E.g., after entering the line
+        <pre>
+
+    ls *
+        
+</pre>
+
+    the line
+        <pre>
+
+    !!:p
+        
+</pre>
+
+    should cause the using program to <em>display</em>, rather than exectute <em>ls
+*</em>. Note that interpretation of this expansion return value is not the task of
+the <strong>ReadLineBuf</strong> object, but of the program using the <strong>ReadLineBuf</strong>
+object.
+    <li> <em>ERROR</em>: the history expansion failed. See also the member
+<em>expansionError</em> below;
+    <li> <em>EXPANDED</em>: the history expansion succeeded;
+    <li> <em>NO_EXPANSION</em>: no history expansion took place.
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+<p>
+Preamble: since there can only be one <strong>ReadLineBuf</strong> object, any attempt
+to define a second <strong>ReadLineStream</strong> object will fail as there can only be a
+single <strong>ReadLineBuf</strong> object in any program. An attempt to define a second
+<strong>ReadLineBuf</strong> object results in a <em>logic_error</em> exception being thrown.
+<p>
+<ul>
+    <li> <strong>ReadLineStream(std::string const &amp;prompt = "", Type type =
+NO_EXPANSION)</strong>:<br>
+        This constructor initializes the <em>ReadLineStream</em> object with an
+initial prompt, using a history of at most <em>std::numeric_limits&lt;int&gt;::max()</em> lines, by default not
+using history expansion. 
+    <li> <strong>ReadLineStream(std::string const &amp;prompt, size_t historySize, Type
+            type = NO_EXPANSION)</strong>:<br>
+        This constructor initializes the <em>ReadLineStream</em> with an initial
+prompt, an initial history of a predefined maximum size, by default not using
+history expansion. Specifying a history size 0 results in no history being
+kept, any value equal to or exceeding the predefined constant <em>std::numeric_limits&lt;int&gt;::max()</em>
+results in a history of at most <em>std::numeric_limits&lt;int&gt;::max()</em> lines. If no history is requested
+but <em>type</em> is specified as <em>EXPAND_HISTORY</em> a <em>logic_error</em> exception is
+thrown. 
+    </ul>
+    The standard copy constructor is not available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+     All members of <strong>std::streambuf</strong> are
+available, as <strong>FBB::ReadLineStream</strong> inherits from this class.
+    <ul>
+    <li> <strong>ReadLineStream::Expansion expansion() const</strong>:<br>
+        The status of the history expansion after retrieving a line from the
+terminal is returned. Its value is determined after each line retrieved from
+the terminal. If no history expansion is requested it returns
+<em>Expansion::ERROR</em>.
+    <li> <strong>std::string const &amp;expansionError() const</strong>:<br>
+        A short textual description of the nature of the error when
+<em>expansion</em> returns <em>Expansion::ERROR</em> is returned. If no history
+expansion is requested an empty string is returned.
+    <li> <strong>bool setExpansion(Type type)</strong>:<br> 
+        History expansion can be activated or stopped using this member. When
+history expansion is requested but the <strong>ReadLineStream</strong> object maintains no
+history the function returns <em>false</em>. Otherwise it returns <em>true</em>.
+    <li> <strong>void setPrompt(std::string const &amp;prompt = "")</strong>:<br> 
+        The prompt that is displayed in front of the next line read from the
+terminal can be modified by this member. When called without arguments no
+prompt will be displayed. <em>setPrompt</em> can be called while input lines are
+being received. The new prompt will be active after the current line has been
+read from the terminal.
+    <li> <strong>bool useTimestamps(std::string (*timestamp)() = 0)</strong>:<br>
+        When initialized with the address of a function returning a
+<em>std::string</em> the entered commands will be given a timestamp equal to the
+text returned by the function pointed to by <em>timestamp</em>. The timestamps can
+be retrieved using the <strong>ReadLineHistory</strong>(3) object. By default or after
+passing an explicit 0-pointer to <em>useTimestamps</em> no timestamps are stored.
+The value <em>false</em> is returned when no history is kept, otherwise <em>true</em> is
+returned. 
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    <pre>
+#include &lt;iostream&gt;
+#include &lt;istream&gt;
+#include &lt;cstdio&gt;
+#include &lt;sstream&gt;
+#include &lt;iomanip&gt;
+
+#include &lt;bobcat/readlinestream&gt;
+
+using namespace std;
+using namespace FBB;
+
+int main()
+{
+    ReadLineStream in("", 10, ReadLineBuf::EXPAND_HISTORY);
+
+    size_t count = 0;
+    string line;
+    while (true)
+    {
+        ostringstream prompt;
+        prompt &lt;&lt; setw(2) &lt;&lt; ++count &lt;&lt; ": ";
+        in.setPrompt(prompt.str());
+
+        if (!getline(in, line))          // uses the last-set prompt
+            break;
+
+        cout &lt;&lt; "Retrieved: " &lt;&lt; line &lt;&lt; "\n"
+                "Expansion status: ";
+
+        switch (in.expansion())
+        {
+            case ReadLineBuf::ERROR:
+                cout &lt;&lt; "ERROR: " &lt;&lt; in.expansionError() &lt;&lt; '\n';
+            break;
+
+            case ReadLineBuf::NO_EXPANSION:
+                cout &lt;&lt; "no expansion performed\n";
+            break;
+
+            case ReadLineBuf::DONT_EXEC:
+                cout &lt;&lt; "don't execute the expanded line\n";
+            break;
+
+            case ReadLineBuf::EXPANDED:
+                cout &lt;&lt; "expansion successfully performed\n";
+            break;
+        }
+    }
+}
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/readlinebuf</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>readline</strong>(3), <strong>readlinebuf</strong>(3), 
+    <strong>readlinehistory</strong>(3)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

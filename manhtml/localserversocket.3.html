@@ -1,0 +1,261 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::LocalServerSocket</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::LocalServerSocket</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::LocalServerSocket(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::LocalServerSocket(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz Unix Domain Server Socket</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::LocalServerSocket - Unix Domain Server socket accepting connection requests
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/localserversocket&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    An <strong>FBB::LocalServerSocket</strong> defines a Unix Domain server socket,
+listening for connection requests from the local host using a Unix Domain
+socket. Connection requests may be accepted in either <em>blocking</em> or
+<em>non-blocking</em> modes. When a connection is accepted a socket is returned
+which may be used to read information from or write information to the client
+requesting the connection. The socket that is made available is a <em>file
+descriptor</em> which may be used to initialize a <strong>std::istream</strong> and/or
+<strong>std::ostream</strong>. The <strong>std::istream</strong> is used to read information from the
+client process; the <strong>std::ostream</strong> is used to send information to the client
+process.  Since a socket may be considered a <em>file descriptor</em> the avaiable
+<strong>FBB::IFdStream</strong>, <strong>FBB::IFdStreamBuf</strong>, <strong>FBB::OFdStream</strong>, and
+<strong>FBB::OFdStreamBuf</strong> classes may be used profitably here. Note that having
+available a socket does not mean that this defines the communication
+protocol. It is (still) the responsibility of the programmer to comply with an
+existing protocol or to implement a tailor-made protocol. The latter situation
+implies that the sequence of input- and output operations is defined by the
+programmer.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <strong>FBB::LocalSocketBase</strong>
+<p>
+<h2>ENUMERATION</h2>
+    The following enumeration is defined in th class
+<strong>FBB::LocalServerSocket</strong>:
+<p>
+<strong>enum Socket</strong><br>
+    This enumeration holds two values:
+    <ul>
+    <li> <strong>KEEP</strong>:<br>
+        When this value is specified at construction time, the file
+representing the Unix Domain Socket is not removed when the
+<strong>LocalServerSocket</strong> is destroyed.
+    <li> <strong>UNLINK</strong>:<br>
+        When this value is specified at construction time, the file
+representing the Unix Domain Socket is removed when the <strong>LocalServerSocket</strong>
+is destroyed. As a socket cannot be reused, this is the default value used
+with the <strong>LocalServerSocket</strong> constructor.
+    </ul>
+<p>
+<h2>CONSTRUCTOR</h2>
+    <ul>
+    <li> <strong>LocalServerSocket()</strong>:<br> 
+        This constructor creates an empty (non-functioning)
+<em>FBB::LocalServerSocket</em> object. Before it can be used, the <em>open()</em> member
+must be called (see below).
+    <li> <strong>LocalServerSocket(string const &amp;name, Socket action = UNLINK) 
+        throw (Exception)</strong>:<br>
+        This constructor initializes an <strong>FBB::LocalServerSocket</strong> object,
+which will listen for connection requests using the named Unix Domain
+socket.  An <strong>FBB::Exception</strong> is thrown if the socket could not be
+constructed. If the constructor is given a second argument
+<em>FBB::LocalServerSocket::KEEP</em>, the constructed socket is not unlinked
+when the <strong>FBB::LocalServerSocket</strong> object is destroyed.  The construction of
+the socket does not mean that the <strong>FBB::LocalServerSocket</strong> object is
+actually listening for connections. To start listening, the member
+<strong>listen()</strong> should be called.
+    </ul>
+    The copy constructor is not available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+    <ul>
+    <li> <strong>size_t accept()</strong>:<br>
+        The <strong>accept()</strong> member returns an <em>size_t</em> which is a file
+descriptor (socket) that may be used to communicate with the client requesting
+the connection. In more complex programs the returned file descriptor (socket)
+could be passed to a class derived from <strong>FBB::Fork</strong>, handling the
+communication with the child as a separate (child) process.
+<p>
+<li> <strong>void listen(size_t backlog = 5, bool blocking = true)</strong>:<br>
+        The <strong>listen()</strong> member defines the way the <strong>FBB::LocalServerSocket</strong>
+will listen for clients requesting a connection.  It can be used only once
+with a <strong>FBB::LocalServerSocket</strong>. An <strong>FBB::Exception</strong> object is thrown if
+listening fails.
+<p>
+The <strong>listen()</strong> member's <em>backlog</em> parameter defines the size of the
+<strong>FBB::LocalServerSocket</strong>'s internal queue in which connection requests may be
+stored waiting for their turn to be serviced. When <em>backlog</em> requests are
+waiting and another request arrives, then that request is lost. 
+<p>
+The member's second parameter, <em>blocking</em>, is used to control the
+blocking mode. By default, blocking is used, and <em>listen()</em> will wait until
+a connection is established. This is ok in situations where clients connect
+infrquently and for relatively short time intervals. Otherwise, in more
+complex programs, an <strong>FBB::Selector</strong> object can be used to sense input on
+the server socket and/or on various client sockets.
+<p>
+<li> <strong>void open(string const &amp;name, Socket action = UNLINK)</strong>:<br>
+        This member prepares a <strong>FBB::LocalServerSocket</strong> object for use. It
+should only be used in combination with the default constructor. Following
+<em>open()</em> the <em>FBB:::LocalServerSocket</em> object will be able to listen for
+connection requests using the named Unix Domain socket.  An <strong>FBB::Exception</strong>
+is thrown if the socket could not be constructed. If the a second argument
+<em>FBB::LocalServerSocket::KEEP</em>, is provided the constructed socket is not
+unlinked when the <strong>FBB::LocalServerSocket</strong> object is destroyed.  The
+construction of the socket does not mean that the <strong>FBB::LocalServerSocket</strong>
+object is actually listening for connections. To start listening, the member
+<strong>listen()</strong> should be called next.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    See also the <strong>localclientsocket</strong>(3bobcat) example.
+        <pre>
+
+    #include &lt;iostream&gt;
+    #include &lt;bobcat/localserversocket&gt;
+    #include &lt;bobcat/ifdstream&gt;
+    #include &lt;bobcat/ofdstream&gt;
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main(int argc, char **argv)
+    try
+    {
+        if (argc == 1)
+        {
+            cerr &lt;&lt; "Provide local filename, e.g., /tmp/uds\n";
+            return 1;
+        }
+    
+        LocalServerSocket server(argv[1]);
+    
+        cerr &lt;&lt; "server using `" &lt;&lt; argv[1] &lt;&lt; "'" &lt;&lt; endl;
+    
+        cout &lt;&lt; 
+            "The server terminates when it receives a single `q' on a line\n"
+            "A connection is terminated when no input is received anymore.\n"
+            "Then another connection is possible" &lt;&lt; endl;
+    
+        server.listen();                // listen in blocking mode
+    
+        while (true)
+        {
+            int fd = server.accept();
+    
+            cerr &lt;&lt; "Client FD = " &lt;&lt; fd &lt;&lt; ", " &lt;&lt; endl;
+    
+            IFdStream in(fd);           // stream to read from client
+            OFdStream out(fd);          // stream to write to client
+            string cmd;
+            
+            while (getline(in, cmd))
+            {
+                cout &lt;&lt; "Got: " &lt;&lt; cmd &lt;&lt; endl;
+                out &lt;&lt; "Got: " &lt;&lt; cmd &lt;&lt; "\r" &lt;&lt; endl;
+    
+                if (cmd[0] == 'q')
+                    return 0;
+            }
+            cout &lt;&lt; "Ready for another connection\n";
+        }
+    }
+    catch (Exception const &amp;err)
+    {
+        cerr &lt;&lt;
+            err.what() &lt;&lt; endl &lt;&lt;
+            "Server socket on port " &lt;&lt; argv[1] &lt;&lt; 
+            " can't be opened" &lt;&lt; endl;
+        return -1;
+    }        
+        
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/serversocket</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>localclientsocket</strong>(3bobcat), <strong>fork</strong>(3bobcat),
+<strong>ifdstream</strong>(3bobcat), <strong>ifdstreambuf</strong>(3bobcat),
+<strong>localsocketbase</strong>(3bobcat), <strong>ofdstream</strong>(3bobcat), <strong>ofdstream</strong>(3bobcat),
+<strong>select</strong>(2), <strong>selector</strong>(3bobcat), <strong>serversocket</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

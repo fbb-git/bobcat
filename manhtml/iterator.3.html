@@ -1,0 +1,250 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::Iterator</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Iterator</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::Iterator(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Iterator(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz Iterator returning plain values</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Iterator - Iterator returning plain values when dereferenced
+<p>
+FBB::ReverseIterator - reverse_iterator for <strong>FBB::Iterator</strong>
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/iterator&gt;</strong><br>
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+The <strong>FBB::Iterator&lt;Type&gt;</strong> class template implements a bidirectional iterator
+for plain data types. Dereferencing <strong>FBB::Iterator</strong> objects returns values
+of type <strong>Type</strong>, e.g., <em>char</em> or <em>int</em>. This iterator comes in handy in
+case you need to initialize an objects with a range of values, which are of
+some basic type (see also the <strong>EXAMPLE</strong> section).
+<p>
+<strong>FBB::ReverseIterator</strong> implements a reverse iterator for <strong>FBB::Iterator</strong>. 
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <em>std::iterator&lt;std::bidirectional_iterator_tag, ...&gt;</em>
+<p>
+<h2>CONSTRUCTORS</h2>
+<p>
+Constructors for <strong>Iterator&lt;Type&gt;</strong>:
+    <ul>
+    <li> <strong>explicit Iterator(Tye const &amp;value)</strong>:<br>
+       This constructor initializes the <strong>Iterator</strong> object with an initial
+        <em>Type</em> value. When dereferencing this iterator, <em>value</em> is
+        returned. 
+    </ul>
+<p>
+The default implementations of the <strong>Iterator&lt;Type&gt;</strong>'s default, copy, and
+move constructors are available.
+<p>
+Constructors for <strong>ReverseIterator&lt;Type&gt;</strong>:
+    <ul>
+    <li> <strong>explicit ReverseIterator(Type const &amp;value)</strong>:<br>
+       This constructor initializes the <strong>ReverseIterator</strong> object with an
+        initial <em>Type</em> value. When dereferencing this iterator immediately
+        following its construction, the decremented <em>value</em> is returned
+        (without modifying the internally stored <em>Type value</em>);
+<p>
+<li> <strong>explicit ReverseIterator(Iterator&lt;Type&gt; const &amp;iter)</strong>:<br>
+       This constructor initializes the <strong>ReverseIterator</strong> object with an
+        initial <em>Iterator&lt;Type&gt;</em> object. When dereferencing this iterator
+        immediately following its construction, the decremented <strong>Iterator</strong>'s
+        <em>value</em> is returned (without modifying the <em>Type
+        value</em> that is stored inside the <strong>Iterator</strong>).
+    </ul>
+<p>
+The default implementations of the <strong>ReverseIterator&lt;Type&gt;</strong>'s default, copy,
+and move constructors are available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+    For template parameter type <em>Type</em> all members of
+<em>std::iterator&lt;std:::reverse_iterator_tag, Type&gt;</em> are available, as
+<strong>FBB::Iterator</strong> and <strong>FBB::ReverseIterator</strong> inherit from this class.
+<p>
+<ul>
+    <li> <strong>Iterator&lt;Type&gt; &amp;operator++()</strong>:<br>
+       The (prefix) increment operator increments the iterator's value and
+        returns a reference to itself;
+<p>
+<li> <strong>Iterator&lt;Type&gt; &amp;operator++(int)</strong>:<br>
+       The (postfix) increment operator increments the iterator's value and
+        returns a copy of itself, initialized with the iterator's value before
+        it was incremented;
+<p>
+<li> <strong>Iterator&lt;Type&gt; &amp;operator--()</strong>:<br>
+       The (prefix) decrement operator decrements the iterator's value and
+        returns a reference to itself;
+<p>
+<li> <strong>Iterator&lt;Type&gt; &amp;operator--(int)</strong>:<br>
+       The (postfix) decrement operator decrements the iterator's value and
+        returns a copy of itself, initialized with the iterator's value before
+        it was decremented;
+<p>
+<li> <strong>bool operator==(Iterator&lt;Type&gt; const &amp;rhs) const</strong>:<br>
+       This operator returns <em>true</em> if the value of the current <strong>Iterator</strong>
+        object is equal to the value of the <em>rhs</em> <strong>Iterator</strong> object;
+<p>
+<li> <strong>bool operator!=(Iterator&lt;Type&gt; const &amp;rhs) const</strong>:<br>
+       This operator returns <em>true</em> if the value of the current <strong>Iterator</strong>
+        object is not equal to the value of the <em>rhs</em> <strong>Iterator</strong> object;
+<p>
+<li> <strong>Type &amp;operator*()</strong>:<br>
+       The derefence operator returns a reference to the <strong>Iterator</strong>'s value.
+<p>
+<li> <strong>Type const &amp;operator*() const</strong>:<br>
+       This derefence operator returns a reference to the <strong>Iterator</strong>'s
+        immutable value.
+    </ul>
+<p>
+<h2>STATIC MEMBER FUNCTIONS</h2>
+<p>
+Static members of <strong>Iterator&lt;Type&gt;</strong>:
+    <ul>
+    <li> <strong>Iterator&lt;Type&gt; last(Type value)</strong>:<br>
+       An <strong>Iterator&lt;Type&gt;</strong> object is returned initialized with <em>++value</em>,
+        so it can be conveniently be used to create an inclusive iterator
+        range (see also section <strong>EXAMPLE</strong>);
+<p>
+<li> <strong>Iterator&lt;Type&gt; max()</strong>:<br>
+       An <strong>Iterator&lt;Type&gt;</strong> object is returned initialized with the value
+        returned by <em>std::numeric_limits&lt;Type&gt;::max()</em>;
+<p>
+<li> <strong>Iterator&lt;Type&gt; min()</strong>:<br>
+       An <strong>Iterator&lt;Type&gt;</strong> object is returned initialized with the value
+        returned by <em>std::numeric_limits&lt;Type&gt;::min()</em> 
+    </ul>
+<p>
+Static member of <strong>ReverseIterator&lt;Type&gt;</strong>:
+    <ul>
+    <li> <strong>ReverseIterator&lt;Type&gt; last(Type const &amp;value)</strong>:<br>
+       A <strong>ReverseIterator&lt;Type&gt;</strong> object is returned initialized with
+        <strong>Iterator&lt;Type&gt;::last(value)</strong>, so it can be conveniently be used to
+        create an inclusive reverse iterator range (see also section
+        <strong>EXAMPLE</strong>);
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    <pre>
+#include &lt;algorithm&gt;
+#include &lt;iterator&gt;
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+#include &lt;bobcat/iterator&gt;
+
+using namespace std;
+using namespace FBB;
+
+int main()
+{
+    copy(Iterator&lt;int&gt;(10), Iterator&lt;int&gt;(20), 
+            ostream_iterator&lt;int&gt;(cout, ", "));
+    cout &lt;&lt; '\n';
+
+    copy(Iterator&lt;char&gt;(*Iterator&lt;char&gt;::max() - 9), 
+            Iterator&lt;char&gt;::last(*Iterator&lt;char&gt;::max()), 
+            ostream_iterator&lt;int&gt;(cout, ", "));
+    cout &lt;&lt; '\n';
+
+    cout &lt;&lt; *Iterator&lt;int&gt;::max() &lt;&lt; '\n';
+    copy(Iterator&lt;int&gt;(*Iterator&lt;int&gt;::max() - 9), 
+            Iterator&lt;int&gt;::last(*Iterator&lt;int&gt;::max()), 
+            ostream_iterator&lt;int&gt;(cout, ", "));
+    cout &lt;&lt; '\n';
+
+    copy(ReverseIterator&lt;int&gt;(20), ReverseIterator&lt;int&gt;(10),
+            ostream_iterator&lt;int&gt;(cout, ", "));
+    cout &lt;&lt; '\n';
+
+    std::string letters(Iterator&lt;char&gt;('a'), Iterator&lt;char&gt;::last('z'));
+    cout &lt;&lt; letters &lt;&lt; '\n';
+
+    std::string caps(ReverseIterator&lt;char&gt;::last('Z'), 
+                     ReverseIterator&lt;char&gt;('A'));
+    cout &lt;&lt; caps &lt;&lt; '\n';
+
+}
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/iterator</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

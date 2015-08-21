@@ -1,0 +1,286 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::SharedSegment</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::SharedSegment</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::SharedSegment(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::SharedSegment(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz Shared Memory Data</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::SharedSegment - Shared Memory data structure
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/sharedsegment&gt;</strong><br>
+    Linking option: <em>-lbobcat </em> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+The class <strong>FBB::SharedSegment</strong> implements the shared memory data
+structure used by Bobcat's shared memory classes. Bobcat's
+<em>SharedMemory</em> class accesses or defines a shared memory segment,
+controlling all its read and write operations. 
+<p>
+The requested amount of shared memory is always a lower bound to the maximum
+amount of shared memory that eventually may become available. When defining a
+<strong>SharedSegment</strong> object not all of its potentially available shared memory is
+immediately allocated. Shared memory will be allocated by the
+<strong>SharedSegment</strong> object once needed (up to a calculated maximum).
+<p>
+As a fictitious example: assume 100 kB of memory is requested, then the
+<strong>SharedSegment</strong> object, maintains a table of, e.g., 10 entries, each
+controlling the access to a shared memory block of 10 kB. These 10 kB blocks
+aren't immediately allocated, but become available once the program reads from
+or writes to addresses located in these data segments.
+<p>
+The class <strong>SharedSegment</strong> therefore defines a gateway, controlling access to
+and allocating required shared memory data segments. The mentioned table
+consists of <em>nBlocks SharedBlock</em> (<strong>sharedblock</strong>(3bobcat)) values,
+offering mutexes and IDs of shared data segments. The mutexes control which
+process has access to a particular block of shared data memory, and the IDs
+are either -1, meaning that their shared memory data segments has as not yet
+been allocated, or they contain the IDs of defined shared memory data
+segments.
+<p>
+The class <strong>SharedSegment</strong>'s sole responsibility is to offer the
+framework as described. When used by a <em>FBB::SharedMemory</em> object different
+processes may gain access to different parts of the shared memory data without
+interfering each other's read and write actions.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>CONSTRUCTORS</h2>
+<p>
+No publicly accessible constructors have been defined for
+<strong>SharedSegment</strong>. A static member function <em>create</em> (see below) is
+available, returning a pointer to a shared memory segment, in which a
+<strong>SharedSegment</strong> has been defined.
+<p>
+<h2>OVERLOADED OPERATORS</h2>
+    <ul>
+    <li> <strong>std::ostream &amp;operator&lt;&lt;(std::ostream &amp;out, 
+                                    SharedSegment const &amp;sharedData)</strong>:<br>
+       The overloaded insertion operator inserts basic statistics of the
+        shared memory data into the <em>ostream</em> object. Information about the
+        IDs of the shared segments, their sizes, the maximum number of shared
+        data segments and the number of bytes that can be read from the shared
+        memory are displayed.
+<p>
+<li> <strong>FBB::SharedBlock &amp;operator[](size_t idx)</strong>:<br>
+       Table element <em>idx</em> of the table of <em>FBB::SharedBlock</em>
+        block IDs is returned. The behavior of the program is undefined if
+        <em>idx</em> is or exceeds <em>nBlocks()</em>.
+<p>
+</ul>
+    Overloaded move and copy assignment operators are not available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+    <ul>
+    <li> <strong>size_t access() const</strong>:<br>
+       Returns the access rights of the shared memory segment as a number
+        which is usually interpreted as an octal value, using the well-known
+        (<strong>chmod</strong>(1)) way to define the access rights for owner, group and
+        others.
+<p>
+<li> <strong>void clear()</strong>:<br>
+       All the shared memory data blocks are unconditionally deleted and
+        <em>nReadable</em> returns 0 (the shared memory data blocks are not locked
+        prior to deleting them). After calling <em>clear</em> all allocated 
+        <strong>SharedSegment</strong>'s shared memory segments have ceased to exist and
+        can no longer be used.
+<p>
+<li> <strong>void lock(size_t idx) const</strong>:<br>
+       Access to shared data segment <em>idx</em> is locked. This member itself
+        does not support recursive locking.
+<p>
+<li> <strong>size_t nBlocks() const</strong>:<br>
+       Returns the number of shared memory data blocks that can be used by the
+        <strong>FBB::SharedSegment</strong> object.
+<p>
+<li> <strong>int newData(size_t idx)</strong>:<br>
+       Returns the ID of a newly created shared memory data segment. The ID is
+        also stored in the table of shared memory data segments that is
+        maintained by the <strong>SharedSegment</strong> object.
+<p>
+An <em>FBB::Exception</em> is thrown if the shared memory data segment
+        could not be allocated.
+<p>
+<li> <strong>std::streamsize nReadable() const</strong>:<br>
+       Returns the number of characters (bytes) that can be read from the
+        beginning of the shared memory.
+<p>
+<li> <strong>void nReadableLock() const</strong>:<br>
+       When returning from this member function a lock has been obtained of
+        <strong>SharedSegment</strong>'s mutex controlling access the the object's
+        data member storing the number of characters that can be read from the
+        shared memory controlled by the <strong>SharedSegment</strong> object.
+<p>
+<li> <strong>void nReadableUnlock() const</strong>:<br>
+       This member function releases the lock previously acquired by
+        <em>nReadableLock</em>.
+<p>
+<li> <strong>size_t segmentSize() const</strong>:<br>
+       Returns the size (in bytes) of the shared memory data blocks. The
+        <strong>SharedSegment</strong> object can accomodate at most <em>segmentSize() *
+        nBlocks()</em> bytes.
+<p>
+<li> <strong>bool truncate(std::streamsize offset)</strong>:<br>
+       After calling <em>nReadableLock</em>, if <em>offset</em> is not exceeding the
+        value returned by <em>nReadable</em> <em>nReadable</em> is changed to <em>offset</em>
+        and <em>true</em> is returned. Otherwise <em>false</em> is returned, and the
+        value returned by <em>nReadable</em> has not been changed. Before returning
+        <em>nReadableUnlock</em> is called.
+<p>
+<li> <strong>void unlock(size_t idx) const</strong>:<br>
+       Releases the lock on the shared memory data segment <em>idx</em>. If the
+        current process does not own the lock of shared memory data block
+        <em>idx</em> nothing happens and the function immediately returns.
+<p>
+<li> <strong>void updateNreadable(std::streamsize offset)</strong>:<br>
+       The number of bytes that can be retrieved from the shared memory is
+        updated to <em>max(nReadable(), offset)</em>. 
+    </ul>
+<p>
+<h2>STATIC MEMBER FUNCTIONS</h2>
+<p>
+<ul>
+    <li> <strong>void *attach(int id)</strong>:<br>
+       Returns the address of shared memory segment <em>id</em>, mapped to the
+        calling process's memory area.
+<p>
+An <em>FBB::Exception</em> is thrown if the shared memory data segment
+        could not be attached.
+<p>
+<li> <strong>SharedSegment *create(int *id, size_t nBlocks, size_t segmentSize, 
+                              size_t access)</strong>:<br> 
+       Returns a pointer to a newly created  <strong>SharedSegment</strong> object,
+        defined in the computer's shared memory. 
+<p>
+The created shared memory's ID is stored at <em>*id</em>. The remaining
+        arguments define the potential number of shared memory data blocks
+        (<em>nBlocks</em>); the size of these data blocks (<em>segmentSize</em>); and
+        the shared memory's access rights (<em>access</em>, using the well-known
+        octal value representation as used by (<strong>chmod</strong>(1)) to define access
+        rights for the owner, the group and others).
+<p>
+An <em>FBB::Exception</em> is thrown if the shared memory data segment
+        could not be created.
+<p>
+<li> <strong>void deleteSegment(int id)</strong>:<br>
+       The shared memory segment having ID <em>id</em> is deleted. After calling
+        <em>deleteSegment</em> shared memory segment <em>id</em> doesn't exist
+        anymore. The <em>id</em> can be the shared memory ID of any segment for
+        which the current user has write permissions.
+<p>
+An <em>FBB::Exception</em> is thrown if shared memory data segment <em>id</em>
+        could not be deleted.
+<p>
+<li> <strong>Type *detach(Type *sharedPtr, bool requireOK = true)</strong>:<br>
+       This member is defined as a member template. It expects a pointer to a
+        shared memory segment, previously mapped on the calling process's
+        memory space by <em>attach</em>, and detaches it from the process's memory
+        space, returning 0. 
+<p>
+By default, detaching the memory must succeed or an <strong>FBB::Exception</strong>
+        is thrown. Throwing an exception on failure can be prevented by
+        passing <em>false</em> as the member's second argument.
+<p>
+<li> <strong>size_t size(int id)</strong>:<br>
+       The size (in bytes) of shared memory data block having ID <em>id</em> is
+        returned.
+<p>
+An <em>FBB::Exception</em> is thrown if the size of segment <em>id</em> could
+        not be determined.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    See the <strong>sharedstream</strong>(3bobcat) man page.
+<p>
+<h2>FILES</h2>
+    <em>bobcat/sharedsegment</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>chmod</strong>(1),
+        <strong>isharedstream</strong>(3bobcat),
+        <strong>osharedstream</strong>(3bobcat),
+        <strong>sharedblock</strong>(3bobcat),
+        <strong>sharedcondition</strong>(3bobcat), 
+        <strong>sharedmemory</strong>(3bobcat),
+        <strong>sharedmutex</strong>(3bobcat), 
+        <strong>sharedpos</strong>(3bobcat), 
+        <strong>sharedreadme</strong>(7bobcat), 
+        <strong>sharedstream</strong>(3bobcat), 
+        <strong>sharedstreambuf</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

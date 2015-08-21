@@ -1,0 +1,151 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::mlm</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::mlm</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::mlm(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::mlm(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz OFoldStream manipulator</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::mlm - Manipulator modifying left margins of OFoldStream
+                      objects 
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/ofoldstream&gt;</strong> or <br>
+    <strong>#include &lt;bobcat/ofoldstreambuf&gt;</strong> <br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+The <em>mlm</em> class implements a manipulator that can be inserted into
+<em>OFoldStream</em> objects to modify the stream's left margin by a requested
+amount. The request cannot result in a negative left margin value. If a
+negative left margin would be the arithmetic result of the request then left
+margin 0 will silently be used.
+<p>
+Depending on the tab-setting of the <em>OFoldStream</em> the inserted value
+represents the number of blank space characters or the number of
+tab-characters that will be added to the left margin.
+<p>
+The request will be processed at the next newline character or <em>std::flush</em>
+or <em>std::endl</em> manipulator that is inserted into the stream. If a line is
+still empty once an <em>mlm</em> object and a <em>flush</em> manipulator are inserted
+into the stream then the new left margin will be effective at the next word
+inserted into that line (cf., the example section below)
+<p>
+A <em>bad_cast</em> exception is thrown when the manipulator is inserted into an
+<em>ostream</em> that is not using a <em>OFoldStreambuf</em> buffer.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>CONSTRUCTOR</h2>
+    <ul>
+    <li> <strong>mlm(int addValue)</strong>:<br>
+    </ul>
+    The standard copy constructor is available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+    There are no public or protected member functions in this class. 
+<p>
+<h2>EXAMPLE</h2>
+        <pre>
+
+    #include &lt;iostream&gt;
+    #include &lt;bobcat/ofoldstream&gt;
+
+    using namespace std;
+    using namespace FBB;
+
+    int main()
+    {
+        OFoldStream out(cout, 0, 80);
+        out &lt;&lt; "hello world (left margin is 0)" &lt;&lt; mlm(4) &lt;&lt; "\n"
+               "this uses a 4 character wide left margin\n" &lt;&lt; 
+                mlm(-10) &lt;&lt; flush &lt;&lt;
+                "left margin -6 changed to 0, active on this line\n";
+        return 0;
+    }
+        
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/mlm</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>manipulators</strong>(3bobcat), <strong>lm</strong>(3bobcat), 
+    <strong>ofoldstream</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

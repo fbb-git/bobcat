@@ -1,0 +1,270 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::Pipe</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Pipe</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::Pipe(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Pipe(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz System Level Communication Pipe</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Pipe - Defines a system level communication pipe
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/pipe&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    <strong>FBB::Pipe</strong> objects may be used to construct a <em>pipe</em>. <em>Pipe</em>
+objects offer a simple interface to the reading and writing ends of
+pipes. <em>Pipe</em> objects are object-wrappers around the <strong>pipe</strong>(2) system
+call. 
+<p>
+A <em>Pipe</em> which is created just before a program forks can be used to set
+up a line of communication between the parent and child process. Information
+which is written by the child process to its standard output stream can be
+redirected to the writing end of the pipe (using the <em>writtenBy</em>
+member). The information appearing at the reading end of the pipe can then be
+extracted using, e.g., an <em>IFdStream</em> object, initialized with the
+<em>Pipe</em>'s reading file descriptor, or the reading end of the pipe can be
+redirected to an existing stream whose file descriptor is known, like <em>cin</em>
+(which uses the <em>STDIN_FILENO</em> file descriptor).
+<p>
+When a <em>Pipe</em> object goes out of scope, no <strong>close</strong>(2) operation is
+performed on the pipe's file descriptors. After setting up the pipe using the
+<em>Pipe's</em> member functions and passing the <em>Pipe's</em> file descriptors to
+code that uses the <em>Pipe's</em> descriptors, the <em>Pipe</em> object could in fact
+safely be destroyed. If the pipe should be closed at destruction time, a class
+could be derived from <strong>Pipe</strong>(3bobcat), whose destructor performs the
+required closing-operation.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>Pipe()</strong>:<br>
+        The default <em>Pipe</em> constructor constructs a basic pipe, calling
+<strong>pipe</strong>(2). 
+<p>
+This constructor throws an <em>Exception</em> exception if the default <em>Pipe</em>
+constructor did not properly complete.  The thrown <strong>Exception</strong> object's
+<em>which()</em> member shows the system's <em>errno</em> value set by the failing
+<strong>pipe</strong>(2) function.
+<p>
+<li> <strong>Pipe(int const *fd)</strong>:<br>
+        This constructor expects two file descriptors, which already define a
+pipe, stored at <em>fd</em>. Following the construction of the <em>Pipe</em> object 
+the array at by <em>fd</em> is no longer used by the <em>Pipe</em> object.
+    </ul>
+        The copy constructor is available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+<p>
+<ul>
+    <li> <strong>int readFd() const</strong>:<br>
+        Returns the pipe's file descriptor that is used for reading
+<p>
+<li> <strong>void readFrom(int filedescriptor)</strong>:<br>
+        Sets up redirection from the internal <em>read</em> filedescriptor to the
+given filedescriptor: information written to the write-end of the pipe may be
+retrieved by extracting the information from the stream that is associated
+with the indicated file descriptor. E.g., after the call
+<em>readFrom(STDIN_FILENO)</em> information  inserted into the
+write-end of the pipe can be retrieved from <em>cin</em>.
+<p>
+<li> <strong>void readFrom(int const *filedescriptors, size_t n)</strong>:<br>
+        Sets up redirection from the internal <em>read</em> filedescriptor to the
+given filedescriptors: information is read from the <em>Pipe</em> object when
+reading from any of the <strong>n</strong> provided filedescriptors (experimental).
+<p>
+<li> <strong>int readOnly()</strong>:<br>
+        Closes the writing end of the pipe, returns the reading end's file
+descriptor. This member can be used, e.g., to construct an <em>IFdStream</em>
+object to extract the information that is inserted into the write-end of the
+pipe. 
+<p>
+<li> <strong>void verify() const</strong>:<br>
+        Obsoleted, can safely be removed from source files.
+<p>
+<li> <strong>int writeFd() const</strong>:<br>
+        Returns the pipe's file descriptor that is used for writing.
+<p>
+<li> <strong>void writtenBy(int filedescriptor)</strong>:<br>
+        Sets up redirection from the internal <em>write</em> filedescriptor to the
+given filedescriptor: information is  written to the <em>Pipe</em> object when
+writing to the provided filedescriptor. E.g., after the call
+<em>writtenBy(STDOUT_FILENO)</em> information sent to the standard output stream (by
+either <em>cout</em> or by a child process (cf. <strong>exec</strong>(3))) is inserted into the
+write-end of the pipe.
+<p>
+<li> <strong>void writtenBy(int const *filedescriptors, size_t n)</strong>:<br>
+        Sets up redirection from the internal <em>write</em> filedescriptor to the
+given filedescriptors: information is inserted into the write-end of the
+<em>Pipe</em> object when writing to each of the <strong>n</strong> provided filedescriptors.
+E.g., when passing an array of two <em>int</em> values, respectively equal to
+<em>STDOUT_FILENO</em> and <em>STDERR_FILENO</em> to this member, all information which
+is thereafter sent to the standard output or error streams is inserted into
+the write-end of the pipe.
+<p>
+<li> <strong>int writeOnly()</strong>:<br>
+        Closes the reading end of the pipe, returns the writing end's file
+descriptor. 
+    </ul>
+<p>
+<h2>PROTECTED ENUMERATION</h2>
+    The <strong>RW</strong> protected enumeration has the following elements:
+<p>
+<ul>
+    <li> <strong>READ</strong>:<br>
+        The index in <strong>d_fd[]</strong> (see below) of the element holding the pipe's
+reading file descriptor;
+<p>
+<li> <strong>WRITE</strong>:<br>
+        The index in <strong>d_fd[]</strong> (see below) of the element holding the pipe's
+writing file descriptor
+    </ul>
+<p>
+<h2>PROTECTED DATA</h2>
+    <ul>
+    <li> <strong>int d_fd[2]</strong>:<br> 
+        The array holding the pipe's file descriptors. The <strong>READ</strong> element
+contains the pipe's reading file descriptor, the <strong>WRITE</strong> element
+contains the pipe's writing file descriptor,
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+        <pre>
+
+    #include &lt;bobcat/pipe&gt;
+    #include &lt;sys/types.h&gt;
+    #include &lt;sys/wait.h&gt;
+    #include &lt;unistd.h&gt;
+    #include &lt;iostream&gt;
+    #include &lt;string&gt;
+    
+    using namespace std;
+    using namespace FBB;
+    
+    int main()
+    {
+        Pipe p;                         // construct a pipe
+    
+        cout &lt;&lt; "Read file descriptor: " &lt;&lt; p.getReadFd() &lt;&lt; endl;
+        cout &lt;&lt; "Write file descriptor: " &lt;&lt; p.getWriteFd() &lt;&lt; endl;
+    
+        int pid = fork();
+    
+        if (pid == -1)
+            return 1;
+    
+        if (!pid)                       //child
+        {
+            p.readFrom(STDIN_FILENO);   // read what goes into the pipe
+    
+            string s;
+
+            getline(cin, s);
+            cout &lt;&lt; "CHILD: Got `" &lt;&lt; s &lt;&lt; "'" &lt;&lt; endl;    
+    
+            getline(cin, s);
+            cout &lt;&lt; "CHILD: Got `" &lt;&lt; s &lt;&lt; "'" &lt;&lt; endl;    
+    
+            return 0;
+        }
+    
+        p.writtenBy(STDOUT_FILENO);      // write to the pipe via cout
+    
+        cout &lt;&lt; "first line" &lt;&lt; endl;
+        cout &lt;&lt; "second line" &lt;&lt; endl;
+    
+        waitpid(pid, 0, 0);
+    
+        return 0;
+    }
+        
+</pre>
+
+<p>
+See also the 2nd example at <strong>fork</strong>(3bobcat)
+<p>
+<h2>FILES</h2>
+    <em>bobcat/pipe</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>fork</strong>(3bobcat), <strong>pipe</strong>(2), <strong>mkfifo</strong>(3)
+<p>
+<h2>BUGS</h2>
+    Note that when the pipe goes out of scope, no <strong>close</strong>(2) operation is
+performed on the pipe's ends. If the pipe should be closed by the desctructor,
+derive a class from <strong>Pipe</strong>(3bobcat), whose destructor performs the required
+closing-operation.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

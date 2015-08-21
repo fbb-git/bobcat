@@ -1,0 +1,331 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::DiffieHellman</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::DiffieHellman</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::DiffieHellman(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::DiffieHellman(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz Diffie Hellman key computations</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::DiffieHellman - Diffie-Hellman PKI, computing shared keys
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/diffiehellman&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+The class <strong>FBB::DiffieHellman</strong> computes shared keys (shared secrets) using
+the Diffie-Hellman (1976) algorithm. The Diffie-Hellman algorithm uses public
+and private information. The public information consists of a <em>prime</em> (e.g.,
+a prime number consisting of 1024 bits), a <em>generator</em> (for which the value
+5 is commonly used), and the value <em>generator<sup>private</sup> mod prime</em>, where
+<em>private</em> is a randomly selected large number, which is the private
+information. 
+<p>
+The Diffie-Hellman algorithm is commonly used to compute a shared key which
+can be used to encrypt information sent between two parties. One party, which
+in this man-page is called the <em>initiator</em> computes the prime and defines
+the generator.  The prime is computed by <strong>FBB::DiffieHellman</strong>'s first
+constructor, while the generator is passed to this constructor as one of its
+arguments. For the generator the value 5 is often used.
+<p>
+Next the initiator passes its public information, consisting of the prime, the
+generator, and the value <em>generator<sup>private</sup> mod prime</em> to the other
+party, which in this man-page is called the <em>peer</em>. The public information
+is written in binairy, big-endian form to file using the member <em>save</em>. The
+initiator may optionally save the private information to a separate file as
+well. 
+<p>
+The peer thereupon receives the initiator's public information. The
+initialor's public information is read by a <strong>FBB::DiffieHellman</strong> constructor
+either expecting the name of a file or a <em>std::istream</em> containining the
+initiator's public information. 
+<p>
+Having obtained the prime and generator, the peer's public (and, optionally,
+private information) is saved by also calling <em>save</em>. This results, among
+other things, in the value <em>generator<sup>private</sup> mod prime</em>, but now using
+the peer's private information. 
+<p>
+At this point the peer is already able to compute the shared key. The key is
+returned by calling the <em>key</em> member, which returns the shared key as a
+series of bytes stored in a <em>std::string</em>. 
+<p>
+Before the initiator can compute the shared key the peer's
+<em>generator<sup>private</sup> mod prime</em> value must be available. The peer sends
+the saved public data to the initiator. The initiator then passes the peer's
+public data either by file name or by <em>std::istream</em> to the <em>key</em> member,
+returning the shared key. 
+<p>
+<strong>Perfect Forward Secrecy and Ephemeral Diffie Hellman</strong>
+<p>
+If the initiator and peer decide not to save their private information
+<em>Perfect Forward Secrecy</em> and <em>Ephemeral Diffie Hellman</em> may be
+obtained. Here, the procedure is applied as follows:
+<p>
+<ul>
+    <li> Initiator and peer have agreed upon and securely exchanged a
+long-lasting common secret, which may be used in combination with, e.g.,
+symmetric encryption methods.
+    <li> Applying the abovementioned procedure, the private information is
+never saved on file. Consequently, the shared key, once computed, cannot be
+reconstructed anymore.
+    <li> The value <em>generator<sup>private</sup> mod prime</em> is not sent to either
+peer or initiator `in the clear', but encrypted using the long-lasting common
+secret. As the current implementation saves all public information on file,
+it's probably easiest to encrypt the file containing the public information.
+    <li> The recipients, having recieved the other party's encrypted public
+information, decrypt it using the long-lasting shared secret and compute the
+the shared key.
+    <li> As the secret information is not kept, the shared key cannot be
+reconstructed, while a Man-In-The-Middle attack is prevented by only
+exchanging encrypted public information.
+    <li> The shared key can now be used to encrypt a communication session
+    </ul>
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>PUBLIC ENUMERATION</h2>
+<p>
+The enumeration <em>FBB::DiffieHellman::SecretKey</em> has two values:
+    <ul>
+    <li> <em>DONT_SAVE_SECRET_KEY</em>, indicating that the secret information
+should not be saved on file;
+    <li> <em>SAVE_SECRET_KEY</em>, indicating that the secret information
+should be saved on file;
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>DiffieHellman(size_t primeLength = 1024, size_t generator = 5,
+                      bool progress = false)</strong>:<br>
+        This constructor computes a prime of the specified length, and
+initializes the public information with the indicated generator. If
+<em>progress</em> is <em>true</em>, the progress of the prime construction process is
+shown to <em>std::cout</em> by a series of dots, minuses and plusses. Generating a
+suitable prime may fail, resulting in an <em>FBB::Exception</em> being
+thrown. Unless the generator is specified as 2 or 5 the warning <em>cannot
+check the validity of generator ...</em> is inserted into the
+<strong>mstream</strong>(3bobcat)'s <em>wmsg</em> object. A warning is also inserted if the
+provided generator is not a generator for the computed prime.
+<p>
+This constructor should be called by the initiator to start the
+Diffie-Hellman shared key computation procedure.
+<p>
+<li> <strong>DiffieHellman(std::string const &amp;initiatorPublicFileName)</strong>:<br>
+    This constructor should be called by the peer, after having received the
+initiator's public info. It makes the initiator's public information available
+to the peer, after which the peer's public and private information can be
+computed. 
+<p>
+<li> <strong>DiffieHellman(std::stream &amp;initiatorPublicStream)</strong>:<br>
+    This constructor acts like the previous constructor, expecting a
+<em>std::istream</em> rather than a file name. It should be called by the peer,
+after having received the initiator's public info. It makes the initiator's
+public information available to the peer, after which the peer's public and
+private information can be computed.
+<p>
+<li> <strong>DiffieHellman(std::string const &amp;initiatorPublicFileName, std::string
+const &amp;initiatorPrivateFileName)</strong>:<br>
+    Unless the initiator's <em>DiffieHellman</em> object is still available,
+this constructor should again be called by the initiator, to load the
+initiator's public and private data.
+<p>
+<li> <strong>DiffieHellman(std::stream &amp;initiatorPublicStream, std::stream
+&amp;initiatorPrivateStream)</strong>:<br> 
+    This constructor acts like the previous constructor, expecting 
+<em>std::istreams</em> rather than file names. It should be called by the
+initiator, to load the initiator's public and private info.
+    </ul>
+    Copy and move constructors are available.
+<p>
+<h2>OVERLOADED OPERATORS</h2>
+    Copy and move assignment operators are available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+    <ul>
+    <li> <strong>std::string key() const</strong>:<br>
+    This member should be called by the peer. It returns the shared key. If
+the key cannot be computed, or if the key is not resistant to the small group
+attack (i.e., if the key equals 1, or is at least equal to the public prime
+value, or if <em>key<sup>(prime - 1) / 2</sup> mod prime != 1</em>), then an
+<em>FBB::Exception</em> is thrown.
+<p>
+<li> <strong>std::string key(std::string const &amp;peerPublicFileName) const</strong>:<br>
+    This member should be called by the initiator. It skips the data referring
+to the prime and generator found in <em>peerPublicFileName</em> and then reads the
+peer's <em>generator<sup>private</sup> mod prime</em> value.  If this value cannot be
+read or if the key is not resistant to the small group attack (cf. the
+description of the previous <em>key</em> member) then an <em>FBB::Exception</em> is
+thrown. It returns the shared key.
+<p>
+<li> <strong>std::string key(std::istream const &amp;peerPublicStream) const</strong>:<br>
+    This member should be called by the initiator. It acts like the previous
+<em>key</em> member, reading the peer's <em>generator<sup>private</sup> mod prime</em> value
+from <em>peerPublicStream</em>. It returns the shared key.
+<p>
+<li> <strong>void save(std::string const &amp;basename, SecretKey action = 
+                                                    DONT_SAVE_SECRET_KEY)</strong>:<br>
+    This member should be called by the initiator. It saves the public
+information on the file <em>'basename'.pub</em>. The information is written in
+binary, big-endian format, using the following organization:
+<p>
+- the size of the prime in bytes;<br>
+    - the prime's bytes;<br>
+    - the size of the generator in bytes;<br>
+    - the generator's bytes;<br>
+    - the size of the public info (<em>generator<sup>private</sup> mod prime</em>) in
+        bytes;<br>
+    - the public info's bytes.<br>
+<p>
+If <em>action</em> is specified as <em>SAVE_SECRET_KEY</em> then the private
+information is written in binary, big-endian format, using the following
+organization:
+<p>
+- the size of the private information in bytes;<br>
+    - the private information bytes.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+<p>
+When called without arguments, the example program generates
+Diffie-Hellman parameters writing the initiator's public and private
+information to, respectively, <em>init.pub</em> and <em>init.sec</em>.
+<p>
+When called with one argument, <em>init.pub</em> is read, and the peer's public
+and private information is written to, respectively, <em>peer.pub</em> and
+<em>peer.sec</em>. Next, the (peer's) shared key is written to <em>peerkey</em>.
+<p>
+When called with two arguments, <em>init.pub</em> and <em>init.sec</em> are read,
+as well as the peer's public information (on the file <em>peer.pub</em>). Next, the
+(initiator's) shared key is written to <em>initkey</em>. 
+<p>
+The files <em>peerkey</em> and <em>initkey</em> should be identical.
+<p>
+<pre>
+
+#include &lt;fstream&gt;
+#include &lt;iostream&gt;
+#include &lt;bobcat/diffiehellman&gt;
+
+using namespace FBB;
+using namespace std;
+
+int main(int argc, char **argv)
+try
+{
+    if (argc == 1)
+    {
+        DiffieHellman dh(1024, 5, true);
+        dh.save("init", DiffieHellman::SAVE_SECRET_KEY);
+    }
+
+    if (argc == 2)
+    {
+        DiffieHellman dh("init.pub");
+        dh.save("peer", DiffieHellman::SAVE_SECRET_KEY);
+
+        string key = dh.key();
+        cout &lt;&lt; "Key length: " &lt;&lt; key.length() &lt;&lt; '\n';
+        ofstream outkey("peerkey");
+        outkey.write(key.data(), key.length());
+    }
+
+    if (argc == 3)
+    {
+        DiffieHellman dh("init.pub", "init.sec");
+
+        string key = dh.key("peer.pub");
+        cout &lt;&lt; "Key length: " &lt;&lt; key.length() &lt;&lt; '\n';
+        ofstream outkey("initkey");
+        outkey.write(key.data(), key.length());
+    }
+
+}
+catch (std::exception const &amp;exc)
+{
+    std::cout &lt;&lt; exc.what() &lt;&lt; '\n';
+}
+
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/diffiehellman</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>bigint</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

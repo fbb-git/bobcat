@@ -1,0 +1,259 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::OFoldStream</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::OFoldStream</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::OFoldStream(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::OFoldStream(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz Fold long lines</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::OFoldStream - Folds long lines
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/ofoldstream&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    <strong>FBB::OFoldStream</strong> folds long lines written to it. The
+<em>OFoldStream</em> writes the (folded) lines to a second <em>ostream</em> which is
+either used by or opened by the <em>OFoldStream</em> object.
+<p>
+<em>OFoldStream</em> objects never fold lines in the middle of series of
+non-blank characters but will always break a line at white space
+characters. The resulting lines will always appear to the right of a
+configurable left margin and to the left of a configurable right margin. There
+is a somewhat pathological exception to this: if a word is too long to fit in
+between the margins then the word will exceed the right hand margin.
+<p>
+The indentation used for the left margins is configurable to either blanks
+(the default) or tabs. When tabs are used the width of a tab character is
+configurable, using a default of 8 positions in the destination stream.
+<p>
+<em>OFoldStream</em> is implemented as a wrapper class around <em>std::ostream</em>
+and <em>FBB::OFoldStreambuf</em> and a more complete description of the folding
+process can be found in the <strong>ofoldstreambuf</strong>(3bobcat) man page.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    std::ostream,<br>
+    (and privately from FBB::OFoldStreambuf)
+<p>
+<h2>ENUMERATION</h2>
+    The enumeration <em>TabsOrBlanks</em> is used to select tabs or blanks when
+writing the indentation. The default is blanks. When tabs are selected the
+display width of tabs characters can be configured as well (using the default
+of 8 positions for each tab-character). The enumeration has two values:
+    <ul>
+    <li> <strong>BLANKS</strong>:<br>
+        The default, indicating that the left margin is specified and written
+as a number of blanks;
+    <li> <strong>TABS</strong>:<br>
+        Indicating that the left margin is specified and written as a number
+of tab-characters.
+    </ul>
+<p>
+The enumeration <em>TrailingBlanks</em> is used to configure the
+<em>OFoldStream</em> object with respect to any trailing blanks that may appear
+on the final line. It is the same enumeration type as used with
+<em>OFoldStreambuf</em> (cf. <strong>ofoldstreambuf</strong>(3bobcat)) having two values:
+    <ul>
+    <li> <strong>IGNORE_TRAILING_BLANKS</strong>:<br>
+        This indicates that trailing blanks appearing at the final line if it
+is not terminated by a newline should not be written to the destination
+<em>std::ostream</em>. This is the default used by <em>OFoldStream</em> objects.
+    <li> <strong>KEEP_TRAILING_BLANKS</strong>:<br>
+        This indicates that trailing blanks at the final line if it is not
+terminated by a newline should be written to the destination <em>std::ostream</em>
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>OFoldStream()</strong>:<br>
+        This constructor initializes an <em>OFoldStream</em> object but does not
+associate it with a destination stream. It uses the values 0, 80, <em>BLANKS</em>,
+and <em>IGNORE_TRAILING_BLANKS</em>for, resp. its left margin, right margin
+left-margin characters and <em>TrailingBlanks</em> handling mode.
+<p>
+<li> <strong>OFoldStream(char const *fname,
+                   size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
+                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS)</strong>:<br>
+    This constructor initializes an <em>OFoldStream</em> object and opens (using
+<em>std::ios::out</em>) the destination stream using the name specified as its
+<em>fname</em> argument. 
+<p>
+<li> <strong>OFoldStream(std::ostream &amp;stream,
+                   size_t leftIndent = 0, size_t rightMargin = 80,
+                    TabsOrBlanks tob = BLANKS,
+                   TrailingBlanks tb = IGNORE_TRAILING_BLANKS)</strong>:<br>
+    This constructor initializes an <em>OFoldStream</em> object and uses as its
+destination stream the <em>std::ostream stream</em>.
+    </ul>
+<p>
+The destructor writes any buffered information to the destination stream
+and will then flush the destination stream.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+     All members of <strong>std::ostream</strong> are available, as <strong>FBB::OFoldStream</strong>
+inherits from this class.
+    <ul>
+    <li> <strong>void close()</strong>:<br>
+        This member flushes any pending information to the destination stream
+and then closes the destination stream.
+<p>
+<li> <strong>void open(char const *fname, openmode mode = std::ios::out)</strong>:<br>
+        This member associates the <em>OFilterStream</em> object with an
+<em>std::ofstream</em> object whose filename is provided and that should receive
+the folded information.
+<p>
+<li> <strong>void open(std::ostream &amp;out)</strong>:<br>
+        This member associates the <em>OFilterStream</em> object with the provided
+<em>ostream</em> object.
+<p>
+<li> <strong>void setMargins(size_t leftMargin, size_t rightMargin)</strong>:<br>
+        This member can be used to modify the left- and right folding
+margins. Note that the left margin may also be modified using the <em>FBB::lm</em>
+and <em>FBB::mlm</em> manipulators.
+<p>
+<li> <strong>void setTrailingBlanks(TrailingBlanks tb)</strong>:<br>
+        This member can be used to modify the currently used
+<em>TrailingBlanks</em> parameter.
+<p>
+<li> <strong>void useBlanks()</strong>:<br>
+        This member can be used to select blanks  to be used when inserting
+left margins.
+<p>
+<li> <strong>void useTabs(size_t tabWidth = 8)</strong>:<br>
+        This member can be used to select tab-characters to be used when
+inserting left margins. The second parameter is used to specify the display
+width of a tab-character.
+    </ul>
+<p>
+<h2>STATIC MEMBER FUNCTIONS</h2>
+<p>
+<ul>
+    <li> <strong>size_t leftMargin(std::ostream const &amp;os)</strong>:<br>
+        This member returns the current left margin setting of the
+<em>OFoldStream</em> object passed to it as its argument. The member defines a
+<em>std::ostream</em> parameter since in many cases the <em>OFoldStream</em> object will
+be used in functions themselves defining <em>std::ostream</em>
+parameters. Internally, the <em>std::ostream</em>'s <em>std::streambuf</em> is down cast
+to an <em>OFoldStreambuf</em> and an <em>FBB::Exception</em> exception is thrown if that
+cast fails.
+    <li> <strong>size_t rightMargin(std::ostream const &amp;os)</strong>:<br>
+        This member returns the current right margin setting of the
+<em>OFoldStream</em> object passed to it as its argument. The member's parameter is
+down cast in the same way as <em>leftMargin()</em>'s argument: an <em>FBB::Exception</em>
+exception is thrown if that cast fails.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    <pre>
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;bobcat/ofoldstream&gt;
+
+using namespace std;
+using namespace FBB;
+
+void margins(ostream &amp;out)
+{
+    cout &lt;&lt; OFoldStream::leftMargin(out) &lt;&lt; ", " &lt;&lt; 
+            OFoldStream::rightMargin(out) &lt;&lt; endl;
+}
+
+int main()
+{
+    OFoldStream out(cout, 4, 40);
+
+    out &lt;&lt; lm(4);
+
+    string line;
+    while (getline(cin, line))
+        out &lt;&lt; line &lt;&lt; '\n';
+
+    margins(out);
+
+    return 0;
+}
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/ofoldstream</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7),  <strong>lm</strong>(3bobcat), <strong>mlm</strong>(3bobcat),
+    <strong>ofoldstreambuf</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

@@ -1,0 +1,367 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::SyslogStream</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::SyslogStream</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::SyslogStream(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::SyslogStream(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz Output Stream for Syslog</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::SyslogStream - An output stream inserting syslog messages
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/syslogstream&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+    <strong>FBB::SyslogStream</strong> objects may be used as a <em>std::ostream</em> to write
+syslog messages using stream facilities. 
+<p>
+Multiple separate insertions can be used to create a single syslog message:
+the message is only sent to the syslog daemon after receiving a <em>flush</em>
+command (e.g., after inserting <em>std::flush</em> or <em>std::endl</em>). Non-printable
+characters (like <em>'\n'</em>) show up in the syslog message as octal values,
+preceded by <em>#</em> (e.g., <em>#012</em> for <em>'\n'</em>). The newline normally inserted
+by <em>std::endl</em> is ignored: <strong>SyslogStream</strong> objects interpret <em>std::endl</em>
+like <em>std::flush</em>. 
+<p>
+One series of insertions may contain multiple <em>std::endl</em> or <em>std::flush</em>
+manipulators. At each of these manipulators a new message is sent to the
+syslog daemon, containing all info that has so far been buffered. After
+sending a message to the syslog daemon, the <strong>SyslogStream</strong>'s internal buffer
+is cleared.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    <strong>std::ostream</strong>
+<p>
+<h2>ENUMERATIONS</h2>
+<p>
+The following enumerations are defined in the namespace <strong>FBB</strong>:
+<p>
+<strong>Priority</strong>:
+<p>
+The values of this enumeration match the corresponding priority
+<em>LOG_xxx</em> values used with <strong>syslog</strong>(3):
+    <ul>
+    <li> <strong>EMERG</strong>:<br>
+        system is unusable;
+    <li> <strong>ALERT</strong>:<br>
+        action must be taken immediately;
+    <li> <strong>CRIT</strong>:<br>
+        critical conditions;
+    <li> <strong>ERR</strong>:<br>
+        error conditions;
+    <li> <strong>WARNING</strong>:<br>
+        warning conditions;
+    <li> <strong>NOTICE</strong>:<br>
+        normal, but significant, condition;
+    <li> <strong>INFO</strong>:<br>
+        informational message;
+    <li> <strong>DEBUG</strong>:<br>
+        debug-level message;
+    </ul>
+    The <em>setMask</em> member (see below) can be used to select which type of
+messages will actually be processed by the syslog daemon.
+<p>
+<strong>PriorityType</strong>:
+<p>
+This enumberation has two values fine-tuning the type of messages that
+are actually processed by the syslog daemon:
+    <ul>
+    <li> <strong>SINGLE</strong>:<br>
+        Only messages of the priority specified at the <em>setMask</em> call are
+processed by the syslog daemon;
+    <li> <strong>UPTO</strong>:<br>
+        Messages of priority <em>EMERG</em> up to the the priority specified at the
+<em>setMask</em> call are processed by the syslog daemon;
+    </ul>
+    By default, the syslog daemon processes all messages it receives.
+<p>
+<strong>Facility</strong>:
+<p>
+The values of this enumeration match the corresponding facility
+<em>LOG_xxx</em> values used with <strong>syslog</strong>(3):
+    <ul>
+    <li> <strong>AUTHPRIV</strong>:<br>
+        security/authorization messages (private)
+    <li> <strong>CRON</strong>:<br>
+        clock daemon (<em>cron</em> and <em>at</em>)
+    <li> <strong>DAEMON</strong>:<br>
+        other system daemons
+    <li> <strong>KERN</strong>:<br>
+        kernel messages
+    <li> <strong>LOCAL0</strong>:<br> 
+        reserved for local use. <strong>LOCAL1</strong> through <strong>LOCAL7</strong> are
+        available as well.
+    <li> <strong>LPR</strong>:<br>
+        line printer subsystem
+    <li> <strong>MAIL</strong>:<br>
+        mail subsystem
+    <li> <strong>NEWS</strong>:<br>
+        <em>USENET</em> news subsystem
+    <li> <strong>SYSLOGBUF</strong>:<br>
+        messages generated internally by <em>syslogbufd</em>
+    <li> <strong>USER</strong>:<br>
+        generic user-level messages
+    <li> <strong>UUCP</strong>:<br>
+        UUCP subsystem
+    </ul>
+<p>
+<h2>CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong>SyslogStream(string const &amp;ident = "",
+                FBB::Priority priority = FBB::NOTICE, 
+                FBB::Facility facility = FBB::USER,
+                int option = 0)</strong>:<br>
+        This constructor initializes a <strong>SyslogStream</strong> object.  The
+<em>ident</em> parameter is usually the name of the program. Its contents are
+prepended to syslog messages. 
+<p>
+The <em>priority</em> parameter determines the default importance of the message
+sent to the syslog daemon. By default messages are sent to the syslog daemon
+with priority <strong>FBB::NOTICE</strong>. Syslog messages may be given different priority
+by inserting a <strong>SyslogStream</strong> manipulator (see below). The priority set at
+construction time may also be modified using the <em>setPriority</em> and
+<em>setDefaultPriority</em> members.
+<p>
+Which messages actually appear in log facilities is not determined by
+the messages' priorities, but by syslog's <em>log mask</em>. The log mask can be
+set by the static member <em>setMask</em> (see below).
+<p>
+The <em>facility</em> parameter determines the type of program doing the
+logging. By default <strong>FBB::USER</strong> is used.
+<p>
+The <em>option</em> parameter may be used to specify various options (use the
+binary `<em>bitor</em>' (`<em>|</em>') operator to combine options):
+<p>
+<strong>LOG_CONS</strong>:
+              write directly to system console  if  there  is  an
+              error while sending to system logger <br>
+       <strong>LOG_NDELAY</strong>:
+              open the connection immediately (normally, the con-
+              nection is opened when the first message is logged) <br>
+       <strong>LOG_PERROR</strong>:
+              print to stderr as well <br>
+       <strong>LOG__PID</strong>:
+              include PID with each message <br>
+<p>
+By default no options are used.
+<p>
+<li> <strong>SyslogStream(char const *ident,
+                FBB::Priority priority = FBB::NOTICE, 
+                FBB::Facility facility = FBB::USER,
+                int option = 0)</strong>:<br>
+        This constructor is kept for backward compatibility. Its parameters
+have the same meanings as those of the abovementioned constructor. A
+<em>nullptr</em> indicates that no text needs to be prepended to syslog messages.
+    </ul>
+<p>
+Copy and move constructors are not available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+<p>
+All members of <strong>std::ostream</strong> are available, as <strong>FBB::SyslogStream</strong>
+inherits from this class.
+<p>
+<ul>
+    <li> <strong>void close()</strong>:<br>
+       If the <strong>SyslogStream</strong>'s internal buffer is not empty it is flushed to
+        the syslog daemon. Thereafer <strong>closelog</strong>(3) is called.
+    <li> <strong>Priority defaultPriority() const</strong>:<br>
+       Returns the current default priority. I.e., the priority that will be
+        used for the messages after inserting <em>endl</em> or <em>flush</em>.
+    <li> <strong>void open(string const &amp;ident,
+                FBB::Priority priority = FBB::NOTICE, 
+                FBB::Facility facility = FBB::USER,
+                int option = 0)</strong>:<br>
+       Redefines the current identifier, priority, facility and options that
+        are used when sending messages to the syslog daemon. If the
+        <strong>SyslogStream</strong>'s internal buffer is not empty it is first flushed to
+        the syslog daemon using the identifier, priority and options that were
+        active just before calling <em>open</em>.
+    <li> <strong>Priority priority() const</strong>:<br>
+       Returns the next priority. I.e., the priority that will be used for
+        the next message that is sent to the syslog daemon.
+    <li> <strong>Priority setDefaultPriority(Priority priority)</strong>:<br>
+       Changes the default priority of the next message that is sent to the
+        syslog daemon after inserting <em>std::eoln</em> or
+        <em>std::flush</em>. The previously active default priority is
+        returned.
+    <li> <strong>Priority setPriority(Priority priority)</strong>:<br> Changes the priority for the
+        next message that is sent to the syslog daemon after inserting
+        <em>std::eoln</em> or <em>std::flush</em>. Subsequent messages will again use
+        the default priority. The previously active priority setting is
+        returned.
+    </ul>
+<p>
+<h2>STATIC MEMBER FUNCTIONS</h2>
+<p>
+<ul>
+    <li> <strong>Priority setMask(Priority priority, PriorityMask upTo)</strong>:<br>
+       Syslog messages of (if <em>upTo</em> equals <em>SINGLE</em>) or up to (if
+        <em>upTo</em> equals <em>UPTO</em>) the indicated priority are processed by the
+        syslog daemon. 
+    <li> <strong>Priority setMask(Priority priority, Priority ...priorities)</strong>:<br>
+       Syslog messages of the priorities passed to <em>setMask</em> are processed
+        by the syslog daemon. At least one priority must be specified.
+    <li> <strong>Facility stoF(std::string const &amp;name, Facility facility = USER)</strong>:<br>
+       Returns the facility matching the name of the facility provided by
+        <em>name</em>. Facility matching is performed case insensitively. E.g., if
+        <em>name</em> contains <em>daemon</em>, facility <em>FBB::DAEMON</em> is returned. If
+        <em>name</em> does not match any facility name then the value of this
+        function's second argument is returned. The function's name (<em>stoF</em>)
+        was used in analogy of the various <em>sto...</em> conversion functions
+        that were made available by the <strong>C++11</strong> standard.
+    <li> <strong>Priority stoP(std::string const &amp;name, Priority priority = NOTICE)</strong>:<br>
+       Returns the priority matching the name of the priority provided by
+        <em>name</em>. Priority matching is performed case insensitively. E.g., if
+        <em>name</em> contains <em>emerg</em>, priority <em>FBB::EMERG</em> is returned. If
+        <em>name</em> does not match any priority name then the value of this
+        function's second argument is returned. The function's name (<em>stoP</em>)
+        was used in analogy of the various <em>sto...</em> conversion functions
+        that were made available by the <strong>C++11</strong> standard.
+    </ul>
+<p>
+<h2>MANIPULATORS</h2>
+<p>
+The following set of manipulators are all defined as (static) members.
+They may be inserted into an <strong>FBB::SyslogStream</strong> object. Except for the last
+manipulator (<em>strerrno</em>), they have the following characteristics in common:
+    <ul>
+    <li> They change the priority of the messages that are subsequently
+inserted by the <strong>FBB::SyslogStream</strong> object, thus acting like a separate
+<em>setPriority</em> call.
+    <li> When inserting multiple manipulators before the inserted message is
+flushed (e.g., using the <em>std::flush</em> or the <em>std::endl</em> manipulators) the
+last inserted <strong>FBB::SyslogStream</strong> manipulator will be used.
+    <li> If the manipulators are not inserted into an
+<strong>FBB::SyslogStream</strong> object (but in another <em>std::ostream</em> type of object)
+then they perform no action.
+    </ul>
+<p>
+Here are the available manipulators:
+    <ul>
+    <li> <strong>SyslogStream::alert</strong>:<br> 
+        Messages are inserted with priority <strong>FBB::ALERT</strong>.
+    <li> <strong>SyslogStream::crit</strong>:<br> 
+        Message are inserted with priority <strong>FBB::CRIT</strong>.
+    <li> <strong>SyslogStream::debug</strong>:<br> 
+        Messages are inserted with priority <strong>FBB::DEBUG</strong>.
+    <li> <strong>SyslogStream::emerg</strong>:<br>
+        Messages are inserted with priority <strong>FBB::EMERG</strong>.
+    <li> <strong>SyslogStream::err</strong>:<br>
+        Messages are inserted with priority <strong>FBB::ERR</strong>.
+    <li> <strong>SyslogStream::info</strong>:<br> 
+        Messages are inserted with priority <strong>FBB::INFO</strong>.
+    <li> <strong>SyslogStream::notice</strong>:<br> 
+        Messages are inserted with priority <strong>FBB::NOTICE</strong>.
+    <li> <strong>SyslogStream::strerrno</strong>:<br>
+       This manipulator inserts the textual interpretation of <em>std::errno</em>'s
+        current value into a <em>std::ostream</em>. Note that, different from the
+        other manipulators, the object into which this manipulator is inserted
+        does not have to be a <strong>FBB::SyslogStream</strong> object.
+    <li> <strong>SyslogStream::warning</strong>:<br>
+        Messages are inserted with priority <strong>FBB::WARNING</strong>.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    <pre>
+
+#include &lt;bobcat/syslogstream&gt;
+
+using namespace std;
+using namespace FBB;
+
+int main(int argc, char **argv)
+{
+    SyslogStream sls(argv[0]);
+
+    sls &lt;&lt; SyslogStream::debug &lt;&lt; "Hello world" &lt;&lt; flush &lt;&lt;
+           SyslogStream::strerrno &lt;&lt; endl;
+}
+    
+</pre>
+
+<p>
+<h2>FILES</h2>
+    <em>bobcat/syslogstream</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), <strong>closelog</strong>(3), <strong>openlog</strong>(3), <strong>rsyslogd</strong>(8),
+        <strong>syslog</strong>(3), <strong>syslogbuf</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    The constructor's <em>option</em> parameter is an <em>int</em>. Because of this,
+<em>int</em> values rather than enumeration values are passed to the
+constructor. It is the responsibility of the programmer to pass defined option
+values only.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>

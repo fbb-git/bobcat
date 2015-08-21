@@ -1,0 +1,214 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::Sharedpos</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Sharedpos</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>2005-2015</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::Sharedpos(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr>
+<h1>FBB::Sharedpos(3bobcat)</h1>
+<h2>libbobcat-dev_4.00.00-x.tar.gz Shared Memory Offsets</h2>
+<h2>2005-2015</h2>
+
+
+<p>
+<h2>NAME</h2>FBB::Sharedpos - Shared Memory offset controller
+<p>
+<h2>SYNOPSIS</h2>
+    <strong>#include &lt;bobcat/sharedpos&gt;</strong><br>
+    Linking option: <em>-lbobcat</em> 
+<p>
+<h2>DESCRIPTION</h2>
+<p>
+The class <strong>SharedPos</strong> is a support class for Bobcat's shared memory
+handling classes. It controls the shared memory read/write ofset and ensures
+that shared memory operations never exceed the shared memory's maximum offset.
+<p>
+The class <strong>SharedPos</strong> has several public members, but they are primarily
+useful for other <em>Shared*</em> classes offered by Bobcat. There is probably
+little use for a stand-alone <strong>SharedPos</strong> object.
+<p>
+In the descriptions of the class's member functions <em>offset</em> refers to
+the read/write offset within a <strong>FBB::SharedSegment</strong>(3bobcat) object for
+which <strong>SharedPos</strong> performs the offset-administration.
+<p>
+<h2>NAMESPACE</h2>
+    <strong>FBB</strong><br>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong>FBB</strong>.
+<p>
+<h2>INHERITS FROM</h2>
+    -
+<p>
+<h2>TYPEDEFS AND ENUMS</h2>
+<p>
+<h2>CONSTRUCTORS</h2>
+<p>
+Default, copy and move constructors are available. The default constructor
+        does not yet monitor the offset of an <em>FBB::SharedSegment</em>
+        object. The member <em>reset</em> is used to start monitoring offsets.
+<p>
+<h2>OVERLOADED OPERATORS</h2>
+    <ul>
+    <li> <strong>void operator++()</strong>:<br> 
+       The offset is incremented. If this member is called when the offset is
+        equal to the shared memory's maximum offset an <em>FBB::Exception</em> is
+        thrown.
+<p>
+<li> <strong>void operator+=(size_t len)</strong>:<br> 
+       The offset is incremented by <em>len</em>. If <em>offset + len</em> exceeds the
+        shared memory's maximum offset then the offset is set to the maximum
+        offset and an <em>FBB::Exception</em> is thrown.
+<p>
+<li> <strong>std::ostream &amp;operator&lt;&lt;(std::ostream &amp;out, SharedPos const &amp;pos)</strong>:<br> 
+       Inserts information about the <strong>SharedPos</strong> object into <em>out</em>.
+    </ul>
+<p>
+Copy and move assignment operators are available.
+<p>
+<h2>MEMBER FUNCTIONS</h2>
+<p>
+Note: the behavior of member functions returning values which refer to
+information of an <em>FBB::SharedSegment</em> is undefined untill the member
+<em>reset</em> has been called.
+<p>
+<ul>
+    <li> <strong>bool atMaxOffset() const</strong>:<br>
+       Returns <em>true</em> if offset equals the maximum offset that can be used
+        for the configured <em>FBB::SharedSegment</em> object. 
+<p>
+<li> <strong>size_t blockIdx() const</strong>:<br>
+       The index of the configured <em>FBB::SharedSegment</em> object's shared
+        segment data block to which offset refers is returned.
+<p>
+<li> <strong>size_t blockOffset() const</strong>:<br>
+       The offset within the shared segment data block matching the member
+        <em>offset</em>'s return value is returned.
+<p>
+<li> <strong>bool eof() const</strong>:<br>
+       Returns <em>true</em> if offset exceeds the maximum offset of any character
+        ever written to the shared memory to which the <strong>SharedPos</strong> object
+        interfaces. If <em>eof</em> returns <em>true</em> information may still be
+        <em>written</em> to the shared memory: writting is possible until the
+        maximum shared memory segment offset has been reached.
+<p>
+<li> <strong>std::streamsize eos() const</strong>:<br>
+       The offset just beyond the maximum offset for the current shared
+        segment data block is returned. E.g., if <em>blockIdx</em> returns 5, and
+        the size of the shared segment data blocks equals 2000, then <em>eos</em>
+        returns 12000 (the first offset of segment 6).
+<p>
+<li> <strong>std::streamsize maxOffset() const</strong>:<br>
+       The maximum possible offset that can be used for the currently
+        monitored <em>FBB::SharedSegment</em> is returned.
+<p>
+<li> <strong>std::streamsize offset() const</strong>:<br>
+       The offset within the currently monitored shared memory segment is
+        returned.
+<p>
+<li> <strong>void reset(SharedSegment *sharedData)</strong>:<br>
+       The <em>SharedPos</em> object is reset to monitor the offset of the
+        <em>FBB::SharedSegment</em> object whose address is passed as argument to
+        <em>reset</em>. The address must point to a <strong>sharedsegment</strong>(3bobcat)
+        object that must exist until the end of the <strong>SharedPos</strong>
+        object's lifetime or until its next <em>reset</em> call. Immediately after
+        calling <em>reset</em> offset is reset to 0.
+<p>
+<li> <strong>std::streamsize showmanyc() const</strong>:<br>
+       The number of characters that can be read from the current shared
+        segment data block is returned.  This member interrogates the number
+        of readable characters in the shared memory segment. This number may
+        change while this member is being executed. In order to receive a
+        stable return value, calling functions should have obtained a lock on
+        the <em>FBB::SharedSegment</em> data before calling this member. See also
+        the <strong>sharedsegment</strong>(3bobcat) man-page.
+<p>
+<li> <strong>std::ios::pos_type seek(std::ios::off_type offset, 
+                                std::ios::seekdir origin = std::ios::beg)</strong>:<br>
+       The monitored offset is changed to this member's <em>offset</em> argument,
+        relative to <em>origin</em>. Seeking beyond <em>eof</em> is OK. However, -1 is
+        returned when seeking beyond <em>maxOffset</em> or seeking before the
+        shared segment's offset 0.
+    </ul>
+<p>
+<h2>EXAMPLE</h2>
+    See the <strong>sharedstream</strong>(3bobcat) man page.
+<p>
+<h2>FILES</h2>
+    <em>bobcat/sharedpos</em> - defines the class interface
+<p>
+<h2>SEE ALSO</h2>
+    <strong>bobcat</strong>(7), 
+        <strong>isharedstream</strong>(3bobcat),
+        <strong>osharedstream</strong>(3bobcat),
+        <strong>sharedblock</strong>(3bobcat), 
+        <strong>sharedcondition</strong>(3bobcat), 
+        <strong>sharedmemory</strong>(3bobcat),
+        <strong>sharedmutex</strong>(3bobcat), 
+        <strong>sharedreadme</strong>(7bobcat), 
+        <strong>sharedsegment</strong>(3bobcat), 
+        <strong>sharedstream</strong>(3bobcat), 
+        <strong>sharedstreambuf</strong>(3bobcat)
+<p>
+<h2>BUGS</h2>
+    None Reported.
+<p>
+
+<h2>DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2>BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2>COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2>AUTHOR</h2>
+    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<p>
