@@ -34,6 +34,7 @@ list
 #include "icmake/addclasses""
 #include "icmake/special"
 #include "icmake/man"
+#include "icmake/github"
 #include "icmake/library"
 #include "icmake/libraries"
 #include "icmake/install"
@@ -86,11 +87,8 @@ void main(int argc, list argv)
     if (option == "man")
         man();
 
-    if (option == "sf")
-    {
-        special(0, 0);
-        exit(0);
-    }
+    if (option == "github")
+        github();
 
     if (option == "install")
         install(element(2, argv), element(3, argv));
@@ -111,7 +109,8 @@ void main(int argc, list argv)
         "                         optionally strip the libraries)\n"
         "   l                   - same as 'libraries all', but clearing the\n"
         "                         screen before starting the compilation\n"
-        "   sf                  - preliminaries required for SourceForge\n"
+        "   github               - prepare github's gh-pages update\n"
+        "                          (internal use only)\n"
     );
     exit(1);
 }
