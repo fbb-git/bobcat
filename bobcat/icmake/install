@@ -31,6 +31,13 @@ void reqzip(string dest, string src)
         log(dest + file + ".gz");
     }
 }
+
+void runInstall(string cmd, string src, string pattern, string dest)
+{
+    md(dest);
+    run(cmd + " " + src + " " + pattern + " " + dest);
+    logFiles(src, pattern, dest);
+}
     
 void install(string rss, string dev)
 {
@@ -39,40 +46,40 @@ void install(string rss, string dev)
 #undefine LIBRARIES
 #ifdef LIBRARIES
     printf("\n  installing the libraries\n");
-
-    dest = dev + LIB;
-    md(dest);
-    run("cp " CPOPTS " " + g_tmpliba + "* " + dest);
-    logFiles(g_tmpliba, "", dest);
+    runInstall("cp " CPOPTS, g_tmpliba, "*", dev + lib);
+//    dest = dev + LIB;
+//    md(dest);
+//    run("cp " CPOPTS " " + g_tmpliba + "* " + dest);
+//    logFiles(g_tmpliba, "", dest);
 
 #ifndef ONLY_STATIC
-    dest = rss + LIB;
-printf("SHARED: ", dest, "\n");
-    md(dest);
-    run("cp " CPOPTS " " + g_tmplibso + "* " + dest);
-    logFiles(g_tmplibso, "", dest);
+    runInstall("cp " CPOPTS, g_tmplibso, "*", rss + lib);
+//    dest = rss + LIB;
+//    md(dest);
+//    run("cp " CPOPTS " " + g_tmplibso + "* " + dest);
+//    logFiles(g_tmplibso, "", dest);
 #endif
 
-// #ifndef ONLY_STATIC
-//     md(rss + LIB);
-//     run("cp " CPOPTS " tmp/lib/*so.* " + rss + LIB);
-// 
-//     md(dev + LIB);
-//     run("cp " CPOPTS " tmp/lib/*.a tmp/lib/*.so " + dev + LIB);
-// #else
-//     md(dev + LIB);
-//     run("cp " CPOPTS " tmp/lib/*.a " + dev + LIB);
-// #endif
+// OFF #ifndef ONLY_STATIC
+// OFF     md(rss + LIB);
+// OFF     run("cp " CPOPTS " tmp/lib/*so.* " + rss + LIB);
+// OFF 
+// OFF     md(dev + LIB);
+// OFF     run("cp " CPOPTS " tmp/lib/*.a tmp/lib/*.so " + dev + LIB);
+// OFF #else
+// OFF     md(dev + LIB);
+// OFF     run("cp " CPOPTS " tmp/lib/*.a " + dev + LIB);
+// OFF #endif
 
 #endif
 
-#undefine HEADERS
 #ifdef HEADERS
     printf("\n  installing the headers\n");
-    dest = dev + INC;
-    md(dest);
-    run("cp tmp/" LIBRARY "/* " + dest);
-    logFiles("tmp/" LIBRARY, "", dest);
+    runInstall("cp", "tmp/" LIBRARY, "*", dev + inc);
+//    dest = dev + INC;
+//    md(dest);
+//    run("cp tmp/" LIBRARY "/* " + dest);
+//    logFiles("tmp/" LIBRARY, "", dest);
 #endif
 
 #undefine MANPAGES
