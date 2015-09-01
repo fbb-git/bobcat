@@ -61,6 +61,23 @@ perform the following steps:
     Following the installation nothing in this directory tree is required
     for the proper functioning of the bobcat library, so consider removing it.
 
+
+    9.  Uninstalling previously installed components of Bobcat (using
+        ./build install ...) is easy if the environment variable BOBCAT was
+        defined when issuing the `./build install ...' commands. In that case,
+        run the command
+
+            ./build uninstall
+
+        This command only works if the environment variable BOBCAT has the
+        same value as used with the `./build install' commands, and the file
+        to which it refers still exists. In that case `./build install'
+        removes all installed files (unless they were modified) and removes
+        all empty directories created by the various `./build install ...'
+        commands. 
+        Defining the BOBCAT environment variable as ~/.bobcat usually works
+        well. 
+
 Make sure that the library is found by the loader. By default it is installed
 in /usr/lib, which is in the loader's standard search path
 
@@ -71,3 +88,5 @@ e.g., #include <bobcat/errno>. No `bobcat' headers have (.h) extensions.
 By default the manual pages are stored under /usr/share/man/man1,
 /usr/share/man/man3, and /usr/share/man/man7, which are normally in the `man'
 program's set of visited directories.
+
+

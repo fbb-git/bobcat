@@ -3,18 +3,3 @@ void run(string cmd)
     system(0, cmd);
 }
 
-void md(string target)
-{
-    int idx;
-    list paths;
-
-    paths = strtok(target, " ");
-
-    for (idx = sizeof(paths); idx--; )
-    {
-        g_file = element(idx, paths);
-        if (!exists(g_file))
-            run("mkdir -p " + g_file);
-    }
-}
-

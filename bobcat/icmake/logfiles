@@ -1,0 +1,21 @@
+void logFiles(string dir, string pattern, string dest)
+{
+    list files;
+    int idx;
+
+    if (g_logPath == "")            // do not store uninstall info
+        return;
+
+    if (pattern != "")
+        pattern = "-name '" + pattern + "'";
+
+    files = backtick("(chdir " + dir + ";find ./ -type f " + pattern + ")");
+
+    for (idx = sizeof(files); idx--; )
+        log(dest + "/" + files[idx]);
+
+    files = backtick("(chdir " + dir + ";find ./ -type l " + pattern + ")");
+
+    for (idx = sizeof(files); idx--; )
+        logLink(dest + "/" + files[idx]);
+}

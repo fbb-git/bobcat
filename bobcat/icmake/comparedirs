@@ -1,0 +1,33 @@
+int compareDirs(string first, string second)
+{
+    int n1;
+    int n2;
+    int n;
+    int idx;
+    list el1;
+    list el2;
+
+    el1 = strtok(first, "/");
+    n1 = sizeof(el1);
+
+    el2 = strtok(second, "/");
+    n2 = sizeof(el2);
+
+    if (n1 > n2)            // more elements in first    
+        n = n2;
+    else
+        n = n1;
+
+    for (idx = n; idx--; )      // compare from the last to the first (last
+    {                           // since that one's most likely to differ)
+        if (el1[idx] != el2[idx])
+            return 0;           // first != second
+    }
+
+    if (n1 > n2)            // keep the longest one.
+        return -1;
+    return 1;
+}    
+
+
+

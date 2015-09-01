@@ -110,23 +110,21 @@ void askReadLine(int all)
     }    
 }
 
-void special(int expand, int all)
+void special(int query, int all)
 {
     list cut;
     list line;
     int refresh;
 
-    if (expand)
+    if (g_all && query)
     {
-#ifndef ONLYCLASSES
         askXpointer(all);
         askOpenSSL(all);
         askReadLine(all);
         askMilter(all);
-#endif
-
-        g_nClasses = sizeof(g_classes);
     }
+
+    g_nClasses = sizeof(g_classes);
 
     refresh = "VERSION" newer "release.yo";
 

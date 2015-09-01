@@ -5,7 +5,6 @@ void man()
     string base;
     string yodl;
     int idx;
-    int forced;
 
     special(0, 0);
 
@@ -14,14 +13,6 @@ void man()
     chdir("documentation/man");
 
     inc = makelist("*.fnc");
-    for (idx = sizeof(inc); idx--; )
-    {
-        if (element(idx, inc) younger "man-stamp")
-        {
-            forced = 1;
-            break;
-        }
-    }
 
     yo = makelist("*.yo") - (list)LIBRARY ".yo" - (list)"reverseiter.yo" -
                             (list)"sharedreadme.yo";
@@ -30,33 +21,24 @@ void man()
     {
         yodl = element(idx, yo);
     
-        if (forced || yodl younger "man-stamp")
-        {
-            base = get_base(yodl);
-    
-            run("yodl2man  --no-warnings -r 3 -l 3 -o ../../tmp/man/man3/" + 
-                                            base + ".3" LIBRARY " " + yodl);
-            run("yodl2html --no-warnings -r 3 -l 3 -o ../../tmp/manhtml/" + 
-                                            base + ".3.html " + yodl);
-        }
+        base = get_base(yodl);
+
+        run("yodl2man  --no-warnings -r 3 -l 3 -o ../../tmp/man/man3/" + 
+                                        base + ".3" LIBRARY " " + yodl);
+        run("yodl2html --no-warnings -r 3 -l 3 -o ../../tmp/manhtml/" + 
+                                        base + ".3.html " + yodl);
     }
 
-    if (forced || LIBRARY ".yo" younger "man-stamp")
-    {
-        run("yodl2man  --no-warnings  -r 3 -o ../../tmp/man/man7/" 
-                                                LIBRARY ".7 " LIBRARY ".yo");
-        run("yodl2html --no-warnings  -r 3 "
-                        "-o ../../tmp/manhtml/" LIBRARY ".7.html " 
-                                                            LIBRARY ".yo");
+    run("yodl2man  --no-warnings  -r 3 -o ../../tmp/man/man7/" 
+                                            LIBRARY ".7 " LIBRARY ".yo");
+    run("yodl2html --no-warnings  -r 3 "
+                    "-o ../../tmp/manhtml/" LIBRARY ".7.html " LIBRARY ".yo");
 
-        run("yodl2man  --no-warnings  -r 3 -l 3 "
-                    "-o ../../tmp/man/man7/sharedreadme.7" LIBRARY
-                    " sharedreadme.yo");
-        run("yodl2html --no-warnings  -r 3 "
-                        "-o ../../tmp/manhtml/sharedreadme.7.html "
-                                    "sharedreadme.yo");
-    }
-
-    run("touch man-stamp");
+    run("yodl2man  --no-warnings  -r 3 -l 3 "
+                "-o ../../tmp/man/man7/sharedreadme.7" LIBRARY
+                " sharedreadme.yo");
+    run("yodl2html --no-warnings  -r 3 "
+                    "-o ../../tmp/manhtml/sharedreadme.7.html "
+                                "sharedreadme.yo");
     exit(0);
 }

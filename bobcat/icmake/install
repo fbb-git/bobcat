@@ -11,6 +11,7 @@ void rungzip9(string src, string dest)
     {
         file = element(idx, man);
         run("gzip -n -9 < " + src + file + " > " + dest + file + ".gz");
+        log(dest + file + ".gz");
     }
 }
 
@@ -27,32 +28,54 @@ void reqzip(string dest, string src)
     {
         file = element(idx, files);
         run("gzip -n -9 < " + file + " > " + dest + file + ".gz");
+        log(dest + file + ".gz");
     }
 }
     
 void install(string rss, string dev)
 {
+    string dest;
+
+#undefine LIBRARIES
 #ifdef LIBRARIES
     printf("\n  installing the libraries\n");
 
+    dest = dev + LIB;
+    md(dest);
+    run("cp " CPOPTS " " + g_tmpliba + "* " + dest);
+    logFiles(g_tmpliba, "", dest);
+
 #ifndef ONLY_STATIC
-    md(rss + LIB);
-    run("cp " CPOPTS " tmp/lib/*so.* " + rss + LIB);
-
-    md(dev + LIB);
-    run("cp " CPOPTS " tmp/lib/*.a tmp/lib/*.so " + dev + LIB);
-#else
-    md(dev + LIB);
-    run("cp " CPOPTS " tmp/lib/*.a " + dev + LIB);
-#endif
+    dest = rss + LIB;
+printf("SHARED: ", dest, "\n");
+    md(dest);
+    run("cp " CPOPTS " " + g_tmplibso + "* " + dest);
+    logFiles(g_tmplibso, "", dest);
 #endif
 
+// #ifndef ONLY_STATIC
+//     md(rss + LIB);
+//     run("cp " CPOPTS " tmp/lib/*so.* " + rss + LIB);
+// 
+//     md(dev + LIB);
+//     run("cp " CPOPTS " tmp/lib/*.a tmp/lib/*.so " + dev + LIB);
+// #else
+//     md(dev + LIB);
+//     run("cp " CPOPTS " tmp/lib/*.a " + dev + LIB);
+// #endif
+
+#endif
+
+#undefine HEADERS
 #ifdef HEADERS
     printf("\n  installing the headers\n");
-    md(dev + INC);
-    run("cp tmp/" LIBRARY "/* " + dev + INC);
+    dest = dev + INC;
+    md(dest);
+    run("cp tmp/" LIBRARY "/* " + dest);
+    logFiles("tmp/" LIBRARY, "", dest);
 #endif
 
+#undefine MANPAGES
 #ifdef MANPAGES
     printf("\n  installing the manual pages\n");
     md(dev + MAN + "/man1 "     + 
@@ -61,6 +84,7 @@ void install(string rss, string dev)
        dev + DOC + "/images"    );
 
     run("cp documentation/images/*.jpg " + dev + DOC + "/images");
+    logFiles("documentation/images/", "*.jpg", dev + DOC + "/images");
 
     rungzip9("tmp/man/man3/", dev + MAN + "/man3/");
 
@@ -68,40 +92,52 @@ void install(string rss, string dev)
     
     chdir(dev + MAN + "/man3");
     run("ln -sf iterator.3bobcat.gz reverseiterator.3bobcat.gz");
+    logLink("reverseiterator.3bobcat.gz");
+
     chdir(g_cwd);
 #endif
 
+#undefine MANHTML
 #ifdef MANHTML
     printf("\n  installing the html versions of the manual pages\n");
     md(dev + DOC + "/man");
 
     run("cp -r tmp/manhtml/* " + dev + DOC + "/man/");
+    logFiles("tmp/manhtml/", "", dev + DOC + "/man/");
 
     run("ln -sf " LIBRARY ".7.html " + dev + DOC + "/man/index.html");
+    logLink(dev + DOC + "/man/index.html");
+
     run("cp documentation/man/" LIBRARY ".jpg " + dev + DOC + "/man");
+    log(dev + DOC + "/man/" LIBRARY ".jpg");
 
     chdir(dev + DOC + "/man");
     run("ln -sf iterator.3.html reverseiterator.3.html");
+    logLink("reverseiterator.3.html");
+
     chdir(g_cwd);
 #endif
 
+
 #ifdef DOCOTHER
     printf("\n  installing remaining documentation\n");
-    reqzip(dev + DOCDEV + "/", 
-            "READLINE "
-            "README "
-            "README.X11 "
-            "README.class-setup "
-            "README.immovable "
-            "README.milter "
-            "README.optimization "
-            "README.process-pipe "
-            "README.fnwrap "
-            "process-pipe.odp "
-            "process-pipe.pdf "
-            "TODO");
+//    reqzip(dev + DOCDEV + "/", 
+//            "READLINE "
+//            "README "
+//            "README.X11 "
+//            "README.class-setup "
+//            "README.immovable "
+//            "README.milter "
+//            "README.optimization "
+//            "README.process-pipe "
+//            "README.fnwrap "
+//            "process-pipe.odp "
+//            "process-pipe.pdf "
+//            "TODO");
 
+    logDirs("documentation/examples", dev + DOCDEV + "/examples");
     run("cp -r documentation/examples " + dev + DOCDEV);
+    logFiles("documentation/examples", "", dev + DOCDEV + "/examples");
 
     md(dev + DOCDEV + "/scripts");
     rungzip9("scripts/", dev + DOCDEV + "/scripts/");
@@ -112,6 +148,8 @@ void install(string rss, string dev)
         reqzip(rss + DOC + "/", "README");
     }
 #endif
+
+writeLog();
 
     printf("\n  Installation completed\n");
 

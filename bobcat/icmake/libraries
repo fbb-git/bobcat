@@ -22,10 +22,10 @@ void buildHeader(string destination, string class, list iFiles)
             exec("cat " + strtok(line, "\"")[1] + " >> " + destination);
     }
 
-    echo(ECHO_COMMANDS);
+    echo(g_echo);
 }
 
-void iFiles(string class)
+void _iFiles(string class)
 {
     int idx;
     string destination;
@@ -59,14 +59,14 @@ void iFiles(string class)
     chdir(g_cwd);
 }    
     
-void cpHeaders()
+void _cpHeaders()
 {
     int idx;
     string file;
     string class;
     
     for (idx = g_nClasses; idx--; )
-        iFiles(g_classes[idx]);
+        _iFiles(g_classes[idx]);
 }
 
 void static_library(string library)
@@ -128,14 +128,14 @@ void libraries(string libname, int all, int strip)
     string libsoshared;
     string staticLib;
 
-    staticLib = g_tmplib + "lib" LIBRARY ".a";
+    staticLib = g_tmpliba + "lib" LIBRARY ".a";
 
     addClasses("CLASSES");
     special(1, all);
 
-    md(g_tmplib + " " + g_tmphdr);
+    md(g_tmpliba + " " + g_tmphdr + " " + g_tmplibso);
 
-    cpHeaders();
+    _cpHeaders();
 
     g_copt += " -isystem tmp";
 
@@ -149,11 +149,10 @@ void libraries(string libname, int all, int strip)
     g_copt += " -fPIC";
                                           // adds option for shared lib
 
-    library("os", g_tmplib + libsoshared);      // compile the shared lib
+    library("os", g_tmplibso + libsoshared);      // compile the shared lib
 
-    shared_library(g_tmplib, libso, libsoshared, strip);
+    shared_library(g_tmplibso, libso, libsoshared, strip);
 #endif
 
     exit(0);
 }
-

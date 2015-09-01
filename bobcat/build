@@ -1,14 +1,16 @@
 #!/usr/bin/icmake -qt/tmp/bobcat
 
+#define LOGENV "BOBCAT"
+
 #include "INSTALL.im"
 
-#define ECHO_COMMANDS       1
 #define LIBRARY             "bobcat"
 #define DRYRUN              ""
 
-//#define ONLYCLASSES
-    // comment out if the additional library requiring classes should also
-    // be compiled
+int g_echo = ON;
+
+list    g_log;
+string  g_logPath = getenv(LOGENV)[1];
 
 string
     g_cwd,              // current WD
@@ -17,27 +19,49 @@ string
     g_cxx,              // compiler used
     g_sources,          // sources to be used
     g_version,          // The library's version from the file VERSION
-    g_tmplib,           // Library compilation target
+    g_tmpliba,          // Static Library compilation target
+    g_tmplibso,         // Shared Library compilation target
     g_tmphdr,           // Class header target
     g_tmpbin,           // Binary target
     g_lcgen,            // bobcat lcgen program name
     g_lcgendefault,     // default max size of the bobcat/lc structs
     g_sharedLibReq;     // libraries required by the shared lib
-int
-    g_nClasses;         // number of classes/subdirectories
-list
-    g_classes;          // list of classes/directories, listed in CLASSES
 
+int g_nClasses;         // number of classes/subdirectories
+
+int g_all = 1;          // if 0: only compile the classes not requiring
+                        // additional libaries. see icmake/special
+
+list g_classes;         // list of classes/directories, listed in CLASSES
+
+#include "icmake/cuteoln"
+#include "icmake/backtick"
 #include "icmake/run"
+#include "icmake/md"
 #include "icmake/getenv"
 #include "icmake/clean"
 #include "icmake/addclasses""
 #include "icmake/special"
+
+#include "icmake/md5sum"
+#include "icmake/log"
+#include "icmake/loglink"
+#include "icmake/writelog"
+#include "icmake/logdirs"
+#include "icmake/logfiles"
+#include "icmake/readlog"
+#include "icmake/comparedirs"
+#include "icmake/adddir"
+#include "icmake/removedir"
+#include "icmake/remove"
+#include "icmake/uninstall"
+
 #include "icmake/man"
 #include "icmake/github"
 #include "icmake/library"
 #include "icmake/libraries"
 #include "icmake/install"
+
 
 void main(int argc, list argv)
 {
@@ -45,13 +69,14 @@ void main(int argc, list argv)
     string all;
     string strip;
 
-    echo(ECHO_COMMANDS);
+    echo(g_echo);
 
     g_cwd = chdir(".");
 
-    g_tmplib = "tmp/lib/";
-    g_tmphdr = "tmp/" LIBRARY "/";
-    g_tmpbin = "tmp/bin/";
+    g_tmpliba   = "tmp/liba/";
+    g_tmplibso  = "tmp/libso/";
+    g_tmphdr    = "tmp/" LIBRARY "/";
+    g_tmpbin    = "tmp/bin/";
 
     g_lcgen  = "bobcatlcgen";
     g_lcgendefault = " 10 ";    // KEEP THE BLANKS
@@ -61,18 +86,28 @@ void main(int argc, list argv)
     g_cxx =  setOpt(CXX, "CXX");
     g_copt = setOpt(CXXFLAGS, "CXXFLAGS");
 
-    option = element(1, argv);
+    option = argv[1];
 
     if (option == "clean" || option == "distclean")
         clean();
 
+    if (option == "light")
+    {
+        option = "libraries";
+        g_all   = 0;
+        libraries("bobcat", 1, argv[2] == "strip");
+    }
+
+        // 'all': all all libraries unconditionally
+        // not 'all': ask for the inclusion of additional libraries
+        // g_light: do not consider the additional libraries
     if (option == "libraries")
     {
-        all = element(2, argv);
+        all = argv[2];          // maybe 'all' or 'strip' or empty
 
-        if (all == "all")
-            strip = element(3, argv);
-        else
+        if (all == "all")       // all -> specify strip from [3]
+            strip = argv[3];
+        else                    // not all: defines 'strip'
             strip = all;
 
         libraries("bobcat", all == "all", strip == "strip");
@@ -91,26 +126,35 @@ void main(int argc, list argv)
         github();
 
     if (option == "install")
-        install(element(2, argv), element(3, argv));
+        install(argv[2], argv[3]);
+
+    if (option == "uninstall")
+        uninstall();
 
     printf("Usage: build what\n"
         "Where `what' is one of:\n"
         "   clean               - clean up remnants of previous compilations\n"
         "   distclean           - same as clean\n"
+        "   man                 - build the manual page (requires Yodl)\n"
+        "   light [strip]       - build the bobcat(-dev) libraries without\n"
+        "                         the classes requiring the Milter, X11, SSL "
+                                                                    "and\n"
+        "                         Readline libraries\n"
+        "   libraries [all] [strip] - build the bobcat(-dev) libraries\n"
+        "                         (optionally add optional classes,\n"
+        "                         optionally strip the libraries)\n"
+        "   l                   - same as 'libraries all', but clearing the\n"
+        "                         screen before starting the compilation\n"
         "   install <rss dev>   - to install the software in the locations\n"
         "                         defined in the INSTALL.im file,\n"
         "                         optionally below <rss> (run-time package)\n"
         "                         and <dev> (development package)\n"
         "                         By default all is installed. To configure\n"
         "                         update setLocations() in INSTALL.im\n"
-        "   man                 - build the manual page (requires Yodl)\n"
-        "   libraries [all] [strip] - build the bobcat(-dev) libraries\n"
-        "                         (optionally add optional classes,\n"
-        "                         optionally strip the libraries)\n"
-        "   l                   - same as 'libraries all', but clearing the\n"
-        "                         screen before starting the compilation\n"
-        "   github               - prepare github's gh-pages update\n"
-        "                          (internal use only)\n"
+        "   uninstall           - remove installed files and empty "
+                                                            "directories\n"
+        "   github              - prepare github's gh-pages update\n"
+        "                         (internal use only)\n"
     );
-    exit(1);
+    exit(0);
 }

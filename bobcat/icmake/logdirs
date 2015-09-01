@@ -1,0 +1,12 @@
+void logDirs(string source, string dest)
+{
+    list files;
+    int idx;
+
+    files = backtick("(chdir " + source + ";find ./ -type d)");
+
+    echo(OFF);
+    for (idx = sizeof(files); idx--; )
+        md(dest + "/" + files[idx]);
+    echo(g_echo);
+}
