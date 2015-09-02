@@ -52,7 +52,7 @@ void runInstall(string cmd, string src, string pattern, string dest)
     chdir(g_cwd);
     md(dest);
     run(cmd + " " + src + pattern + " " + dest);
-    logFiles(src, pattern, dest);
+//    logFiles(src, pattern, dest);
 }
     
 void install(string rss, string dev)
@@ -66,10 +66,10 @@ void install(string rss, string dev)
 
 #ifdef LIBRARIES
     printf("\n  installing the libraries\n");
-    logInstall(g_tmpliba, dev + LIB);
+    logInstall(g_tmpliba, "", dev + LIB);
 
 #ifndef ONLY_STATIC
-    logInstall(g_tmplibso, rss + LIB);
+    logInstall(g_tmplibso, "", rss + LIB);
 #endif
 
 #endif

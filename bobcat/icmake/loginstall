@@ -6,26 +6,34 @@
 
 void logInstall(string source, string pattern, string dest)
 {
+    list entries;
+    int idx;
+
     chdir(g_cwd);
 
     md(dest);
 
     entries = findAll("f", source, pattern);
 
-    for (idx = sizeof(entries); idx--)
-    {
+    for (idx = sizeof(entries); idx--; )
         run("cp " + source + "/" + entries[idx] + " " + dest);
-        log(file);
-    }
 
+    chdir(dest);
+    for (idx = sizeof(entries); idx--; )
+        log(entries[idx]);
+
+    chdir(g_cwd);
     entries = findAll("l", source, pattern);
 
-    for (idx = sizeof(entries); idx--)
-    {
+    for (idx = sizeof(entries); idx--; )
         run("cp -d " + source + "/" + entries[idx] + " " + dest);
-        logLink(file);
-    }
+
+    chdir(dest);
+
+    for (idx = sizeof(entries); idx--; )
+        logLink(entries[idx]);
 }
 
 
         
+
