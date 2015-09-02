@@ -9,13 +9,15 @@ void logFiles(string dir, string pattern, string dest)
     if (pattern != "")
         pattern = "-name '" + pattern + "'";
 
-    files = backtick("(chdir " + dir + ";find ./ -type f " + pattern + ")");
+    chdir(dir);
+
+    files = backtick("find ./ -type f " + pattern);
 
     for (idx = sizeof(files); idx--; )
-        log(dest + "/" + files[idx]);
+        log(files[idx]);
 
-    files = backtick("(chdir " + dir + ";find ./ -type l " + pattern + ")");
+    files = backtick("find ./ -type l " + pattern);
 
     for (idx = sizeof(files); idx--; )
-        logLink(dest + "/" + files[idx]);
+        logLink(files[idx]);
 }

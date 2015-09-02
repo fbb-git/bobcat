@@ -4,15 +4,25 @@ void rungzip9(string src, string dest)
     string file;
     list man;
 
+    chdir(g_cwd);
+
+    md(dest);
+
     chdir(src);
     man = makelist("*");
+
     chdir(g_cwd);
     for (idx = sizeof(man); idx--; )
     {
-        file = element(idx, man);
+        file = man[idx];
         run("gzip -n -9 < " + src + file + " > " + dest + file + ".gz");
-        log(dest + file + ".gz");
     }
+    chdir(dest);
+    for (idx = sizeof(man); idx--; )
+    {
+        file = man[idx];
+        log(file + ".gz");
+     }
 }
 
 void reqzip(string dest, string src)
@@ -21,146 +31,112 @@ void reqzip(string dest, string src)
     int idx;
     string file;
 
+    chdir(g_cwd);
+
     md(dest);
 
     files = strtok(src, " ");
     for (idx = sizeof(files); idx--; )
     {
-        file = element(idx, files);
+        file = files[idx];
         run("gzip -n -9 < " + file + " > " + dest + file + ".gz");
-        log(dest + file + ".gz");
+        log(file + ".gz");
     }
 }
 
 void runInstall(string cmd, string src, string pattern, string dest)
 {
+    chdir(g_cwd);
     md(dest);
-    run(cmd + " " + src + " " + pattern + " " + dest);
+    run(cmd + " " + src + pattern + " " + dest);
     logFiles(src, pattern, dest);
 }
     
 void install(string rss, string dev)
 {
     string dest;
+    string target;
 
-#undefine LIBRARIES
 #ifdef LIBRARIES
     printf("\n  installing the libraries\n");
-    runInstall("cp " CPOPTS, g_tmpliba, "*", dev + lib);
-//    dest = dev + LIB;
-//    md(dest);
-//    run("cp " CPOPTS " " + g_tmpliba + "* " + dest);
-//    logFiles(g_tmpliba, "", dest);
+    runInstall("cp " CPOPTS, g_tmpliba, "*", dev + LIB);
 
 #ifndef ONLY_STATIC
-    runInstall("cp " CPOPTS, g_tmplibso, "*", rss + lib);
-//    dest = rss + LIB;
-//    md(dest);
-//    run("cp " CPOPTS " " + g_tmplibso + "* " + dest);
-//    logFiles(g_tmplibso, "", dest);
+    runInstall("cp " CPOPTS, g_tmplibso, "*", rss + LIB);
 #endif
-
-// OFF #ifndef ONLY_STATIC
-// OFF     md(rss + LIB);
-// OFF     run("cp " CPOPTS " tmp/lib/*so.* " + rss + LIB);
-// OFF 
-// OFF     md(dev + LIB);
-// OFF     run("cp " CPOPTS " tmp/lib/*.a tmp/lib/*.so " + dev + LIB);
-// OFF #else
-// OFF     md(dev + LIB);
-// OFF     run("cp " CPOPTS " tmp/lib/*.a " + dev + LIB);
-// OFF #endif
 
 #endif
 
 #ifdef HEADERS
     printf("\n  installing the headers\n");
-    runInstall("cp", "tmp/" LIBRARY, "*", dev + inc);
-//    dest = dev + INC;
-//    md(dest);
-//    run("cp tmp/" LIBRARY "/* " + dest);
-//    logFiles("tmp/" LIBRARY, "", dest);
+    runInstall("cp", "tmp/" LIBRARY "/", "*", dev + INC);
 #endif
 
-#undefine MANPAGES
 #ifdef MANPAGES
     printf("\n  installing the manual pages\n");
-    md(dev + MAN + "/man1 "     + 
-       dev + MAN + "/man3 "     + 
-       dev + MAN + "/man7 "     +
-       dev + DOC + "/images"    );
 
-    run("cp documentation/images/*.jpg " + dev + DOC + "/images");
-    logFiles("documentation/images/", "*.jpg", dev + DOC + "/images");
-
+    runInstall("cp", "documentation/images/", "*.jpg", dev + DOC + "/images");
+ 
     rungzip9("tmp/man/man3/", dev + MAN + "/man3/");
 
-    rungzip9("tmp/man/man7/", dev + MAN + "/man7/");
-    
+    chdir(g_cwd);
     chdir(dev + MAN + "/man3");
     run("ln -sf iterator.3bobcat.gz reverseiterator.3bobcat.gz");
     logLink("reverseiterator.3bobcat.gz");
 
-    chdir(g_cwd);
+    rungzip9("tmp/man/man7/", dev + MAN + "/man7/");
 #endif
 
-#undefine MANHTML
 #ifdef MANHTML
     printf("\n  installing the html versions of the manual pages\n");
-    md(dev + DOC + "/man");
 
-    run("cp -r tmp/manhtml/* " + dev + DOC + "/man/");
-    logFiles("tmp/manhtml/", "", dev + DOC + "/man/");
+    target = dev + DOC + "/man";
 
-    run("ln -sf " LIBRARY ".7.html " + dev + DOC + "/man/index.html");
-    logLink(dev + DOC + "/man/index.html");
+    runInstall("cp -r", "tmp/manhtml/", "*", target);
 
-    run("cp documentation/man/" LIBRARY ".jpg " + dev + DOC + "/man");
-    log(dev + DOC + "/man/" LIBRARY ".jpg");
+    chdir(g_cwd); 
+    run("cp documentation/man/" LIBRARY ".jpg " + target);
 
-    chdir(dev + DOC + "/man");
+    chdir(target);
+    run("ln -sf " LIBRARY ".7.html index.html");
     run("ln -sf iterator.3.html reverseiterator.3.html");
+
+    log(LIBRARY ".jpg");
+    logLink("index.html");
     logLink("reverseiterator.3.html");
-
-    chdir(g_cwd);
+ 
 #endif
-
-
-#ifdef DOCOTHER
-    printf("\n  installing remaining documentation\n");
-//    reqzip(dev + DOCDEV + "/", 
-//            "READLINE "
-//            "README "
-//            "README.X11 "
-//            "README.class-setup "
-//            "README.immovable "
-//            "README.milter "
-//            "README.optimization "
-//            "README.process-pipe "
-//            "README.fnwrap "
-//            "process-pipe.odp "
-//            "process-pipe.pdf "
-//            "TODO");
-
-    logDirs("documentation/examples", dev + DOCDEV + "/examples");
-    run("cp -r documentation/examples " + dev + DOCDEV);
-    logFiles("documentation/examples", "", dev + DOCDEV + "/examples");
-
-    md(dev + DOCDEV + "/scripts");
-    rungzip9("scripts/", dev + DOCDEV + "/scripts/");
-
-    if (DOC != "")
-    {
-        md(rss + DOC);
-        reqzip(rss + DOC + "/", "README");
-    }
-#endif
-
-writeLog();
+//
+//#ifdef DOCOTHER
+//   printf("\n  installing remaining documentation\n");
+//   reqzip(dev + DOCDEV + "/", 
+//           "READLINE "
+//           "README "
+//           "README.X11 "
+//           "README.class-setup "
+//           "README.immovable "
+//           "README.milter "
+//           "README.optimization "
+//           "README.process-pipe "
+//           "README.fnwrap "
+//           "process-pipe.odp "
+//           "process-pipe.pdf "
+//           "TODO");
+//
+//    logDirs("documentation/examples", dev + DOCDEV + "/examples");
+//    run("cp -r documentation/examples " + dev + DOCDEV);
+//    logFiles("documentation/examples", "", dev + DOCDEV + "/examples");
+//
+//     rungzip9("scripts/", dev + DOCDEV + "/scripts/");
+// 
+//     if (DOC != "")
+//         reqzip(rss + DOC + "/", "README");
+//#endif
 
     printf("\n  Installation completed\n");
-
-    exit(0);
+    writeLog();
 }
+
+
 
 

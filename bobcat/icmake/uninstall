@@ -3,7 +3,8 @@ void uninstall()
     string key;
     int idx;
     list entry;
-    list dir;
+    list dirs;
+    string dir;
 
     if (g_logPath == "")            // do not store uninstall info
     {
@@ -16,22 +17,26 @@ void uninstall()
     echo(OFF);
     g_echo = OFF;
 
-    for (idx = sizeof(g_log); idx--; ) // separate dir from file
+    for (idx = sizeof(g_log); idx--; )    
     {
         entry = strtok(g_log[idx], " \n");
         if (entry[0] == "dir")
-            dir = addDir(dir, entry[1]);
+        {
+            dir = entry[1];
+            dirs += (list)dir;
+            chdir(dir);
+        }
         else if (entry[0] == "file")
             remove(entry);
         else if (entry[0] == "link")
             run("rm " + entry[1]);
     }
 
-    for (idx = sizeof(dir); idx--; )
-        removeDir(dir[idx]);
+    for (idx = sizeof(dirs); idx--; )
+        removeDir(dirs[idx]);
 
     echo(ON);
-    run("rm " + g_logPath);
+//    run("rm " + g_logPath);
 
     exit(0);
 }
