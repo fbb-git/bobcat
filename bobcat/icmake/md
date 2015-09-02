@@ -4,23 +4,25 @@
 //
 //     uses: run()
 
+// if the target directory does not exist it is created and its realpath is
+// logged.
+
 void md(string target)
 {
     int idx;
     list paths;
     string dir;
 
-    paths = strtok(target, " \n");
-
-    for (idx = sizeof(paths); idx--; )
+    if (!exists(target))
     {
-        dir = paths[idx];
-        if (!exists(dir))
-        {
-            run("mkdir -p " + dir);
-                                                           // log new dirs
-            g_log += (list)("dir " + cutEoln(backtick("realpath " + dir)[0]));
-        }
+        run("mkdir " + target);
+        if (g_installing)
+            g_log += (list)("dir " + 
+                            cutEoln(backtick("realpath " + target)[0]));
     }
-}
+    else if ((stat(target)[0] & S_IFDIR) == 0)
+    {
+        printf(target + " exists, but is not a directory\n");
+        exit(1);
+    }
 

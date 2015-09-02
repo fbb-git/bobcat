@@ -1,12 +1,21 @@
-void logFiles(string dir, string pattern, string dest)
+// log recursively all files and directories in src as entries in dest
+// dest is created if necessary
+
+void logRecursive(string src, string dest)
 {
     list files;
     int idx;
     string find1;
+    list dirs;
+
 
     if (g_logPath == "")            // do not store uninstall info
         return;
 
+    dirs = findDirs(src);              // local dirs, no eoln in dirs[idx]
+
+
+    
     if (pattern != "")
         pattern = "-name '" + pattern + "'";
 

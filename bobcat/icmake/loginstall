@@ -1,0 +1,31 @@
+// source and dest, absolute or reachable from g_cwd, should exist.
+// files and links in source matching dest (if empty: all) are copied to dest
+// and are logged in g_log
+
+// Before they are logged, dest is created
+
+void logInstall(string source, string pattern, string dest)
+{
+    chdir(g_cwd);
+
+    md(dest);
+
+    entries = findAll("f", source, pattern);
+
+    for (idx = sizeof(entries); idx--)
+    {
+        run("cp " + source + "/" + entries[idx] + " " + dest);
+        log(file);
+    }
+
+    entries = findAll("l", source, pattern);
+
+    for (idx = sizeof(entries); idx--)
+    {
+        run("cp -d " + source + "/" + entries[idx] + " " + dest);
+        logLink(file);
+    }
+}
+
+
+        

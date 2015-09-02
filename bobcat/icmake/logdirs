@@ -1,12 +1,21 @@
-void logDirs(string source, string dest)
+list logDirs(string source, string dest)
 {
-    list files;
+    list dirs;
+    list ret;
+    string entry;
     int idx;
+    int nDirs;
 
-    files = backtick("(chdir " + source + ";find ./ -type d)");
+    dirs = backtick("(chdir " + source + ";find ./ -type d)");
+    nDirs = sizeof(dirs);
 
     echo(OFF);
-    for (idx = sizeof(files); idx--; )
-        md(dest + "/" + files[idx]);
+    for (idx = 0; idx != nDirs; ++idx)
+    {
+        ret += (list)cutEoln(dirs[idx]);
+        md(dest + "/" + ret[idx]);
+    }
     echo(g_echo);
+
+    return ret;
 }
