@@ -18,7 +18,6 @@ export CPPFLAGS = $(shell dpkg-buildflags --get CPPFLAGS)
 export CXXFLAGS = $(shell dpkg-buildflags --get CXXFLAGS)
 
 export CXX = g++
-export CXX = g++-5
 
 CXXFLAGS += --std=c++14 -Wall
 LDFLAGS += -lpthread
@@ -67,40 +66,5 @@ binary-arch: build-arch install
 	dh_md5sums
 	dh_builddeb
 
-# The following is for internal development usage only
-
-DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
-UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
-UPNAME := bobcat
-UPFILE := $(UPNAME)_$(UPVERSION).tar.gz
-DEFILE := $(UPNAME)_$(UPVERSION).orig.tar.gz
-URL				   := https://www.icce.rug.nl/debian/bobcat
-MD5CURRENT := `md5sum ../tarballs/$(DEFILE) | sed -e 's/ .*//'`
-SVNTRUNK   := https://svn.sourceforge.net/svnroot/bobcat/trunk/bobcat
-
-get-orig-source:
-	@@[ -d ../tarballs/. ]||mkdir -p ../tarballs
-
-	-@if [ ! -f ../tarballs/$(DEFILE) ] ; then \
-	echo -e "Downloading $(URL)/$(UPFILE)\nSaving into ../tarballs/$(DEFILE) ..." ; \
-	wget --no-check-certificate --quiet -nv -T20 -t3 -O \
-	../tarballs/$(DEFILE) $(URL)/$(UPFILE) ; \
-	else \
-	echo "Upstream source tarball has already been downloaded" ; \
-	fi
-
-	-@if [ "$(MD5CURRENT)" != "$(MD5TRUSTED)" ] ; then \
-	echo "Expecting upstream filename md5sum $(MD5TRUSTED), but $(MD5CURRENT) found" ; \
-	echo "Upstream filename md5sum is NOT trusted! Possible upstream filename forge!" ; \
-	false ; \
-	else \
-	echo "Upstream filename md5sum is trusted!" ; \
-	fi
-
-print-version:
-	@@echo "Debian version:   $(DEBVERSION)"
-	@@echo "Upstream version: $(UPVERSION)"
-
 binary: binary-indep binary-arch
 .PHONY: clean build build-indep build-arch binary-indep binary-arch binary install
-
