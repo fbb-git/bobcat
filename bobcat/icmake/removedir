@@ -7,9 +7,19 @@ void removeDir(string dir)
     int warn = 1;
 
     parts = strtok(dir, "/");
-    chdir(dir);
 
-    for (idx = sizeof(parts); idx--; )
+    chdir("/");
+    for (idx = 0; idx != sizeof(parts); ++idx)
+    {
+        if (!exists(parts[idx]))
+        {
+            ++idx;
+            break;
+        }
+        chdir(parts[idx]);
+    }
+
+    for (; idx--; )
     {
         entries = backtick("ls -A");
 

@@ -15,7 +15,7 @@ list findAll(string type, string source, string pattern)
     if (pattern != "")
         pattern = "-name '" + pattern + "'";
 
-    entries = backtick(cmd + pattern + " -printf \"%f\\n\"");
+    entries = backtick(cmd + " " + pattern + " -printf \"%f\\n\"");
 
     for (idx = sizeof(entries); idx--; )
         ret += (list)cutEoln(entries[idx]);

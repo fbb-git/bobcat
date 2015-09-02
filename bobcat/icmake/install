@@ -1,29 +1,3 @@
-void rungzip9(string src, string dest)
-{
-    int idx;
-    string file;
-    list man;
-
-    chdir(g_cwd);
-
-    md(dest);
-
-    chdir(src);
-    man = makelist("*");
-
-    chdir(g_cwd);
-    for (idx = sizeof(man); idx--; )
-    {
-        file = man[idx];
-        run("gzip -n -9 < " + src + file + " > " + dest + file + ".gz");
-    }
-    chdir(dest);
-    for (idx = sizeof(man); idx--; )
-    {
-        file = man[idx];
-        log(file + ".gz");
-     }
-}
 
 void reqzip(string dest, string src)
 {
@@ -74,46 +48,41 @@ void install(string rss, string dev)
 
 #endif
 
-//#ifdef HEADERS
-//    printf("\n  installing the headers\n");
-//    runInstall("cp", "tmp/" LIBRARY "/", "*", dev + INC);
-//#endif
-//
-//#ifdef MANPAGES
-//    printf("\n  installing the manual pages\n");
-//
-//    runInstall("cp", "documentation/images/", "*.jpg", dev + DOC + "/images");
- 
-//    rungzip9("tmp/man/man3/", dev + MAN + "/man3/");
-//
-//    chdir(g_cwd);
-//    chdir(dev + MAN + "/man3");
-//    run("ln -sf iterator.3bobcat.gz reverseiterator.3bobcat.gz");
-//    logLink("reverseiterator.3bobcat.gz");
-//
-//    rungzip9("tmp/man/man7/", dev + MAN + "/man7/");
-//#endif
+#ifdef HEADERS
+    printf("\n  installing the headers\n");
+    logInstall("tmp/" LIBRARY "/", "", dev + INC);
+#endif
 
-//#ifdef MANHTML
-//    printf("\n  installing the html versions of the manual pages\n");
-//
-//    target = dev + DOC + "/man";
-//
-//    runInstall("cp -r", "tmp/manhtml/", "*", target);
-//
-//    chdir(g_cwd); 
-//    run("cp documentation/man/" LIBRARY ".jpg " + target);
-//
-//    chdir(target);
-//    run("ln -sf " LIBRARY ".7.html index.html");
-//    run("ln -sf iterator.3.html reverseiterator.3.html");
-//
-//    log(LIBRARY ".jpg");
-//    logLink("index.html");
-//    logLink("reverseiterator.3.html");
-// 
-//#endif
-//
+#ifdef MANPAGES
+    printf("\n  installing the manual pages\n");
+
+    logInstall("documentation/images/", "*.jpg", dev + DOC + "/images");
+ 
+    rungzip9("tmp/man/man3/",  dev + MAN + "/man3/");
+
+    run("ln -sf iterator.3bobcat.gz reverseiterator.3bobcat.gz");
+    logLink("reverseiterator.3bobcat.gz");
+
+    rungzip9("tmp/man/man7/",  dev + MAN + "/man7/");
+#endif
+
+#ifdef MANHTML
+    printf("\n  installing the html versions of the manual pages\n");
+
+    target = dev + DOC + "/man";
+
+    logInstall("tmp/manhtml/", "", target);
+
+    logInstall("documentation/man/",  LIBRARY ".jpg", target);
+
+    chdir(g_cwd + target);
+    run("ln -sf " LIBRARY ".7.html index.html");
+    logLink("index.html");
+
+    run("ln -sf iterator.3.html reverseiterator.3.html");
+    logLink("reverseiterator.3.html");
+#endif
+
 #ifdef DOCOTHER
 //    chdir(g_cwd);
 //    printf("\n  installing remaining documentation\n");
