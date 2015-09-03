@@ -4,7 +4,7 @@
 
 // Before they are logged, dest is created
 
-void logInstall(string source, string pattern, string dest)
+void logInstall(string src, string pattern, string dest)
 {
     list entries;
     int idx;
@@ -12,21 +12,23 @@ void logInstall(string source, string pattern, string dest)
     chdir(g_cwd);
 
     md(dest);
+    src += "/";
+    dest += "/";
 
-    entries = findAll("f", source, pattern);
+    entries = findAll("f", src, pattern);
 
     for (idx = sizeof(entries); idx--; )
-        run("cp " + source + "/" + entries[idx] + " " + dest);
+        run("cp " + src + entries[idx] + " " + dest);
 
     chdir(dest);
     for (idx = sizeof(entries); idx--; )
         log(entries[idx]);
 
     chdir(g_cwd);
-    entries = findAll("l", source, pattern);
+    entries = findAll("l", src, pattern);
 
     for (idx = sizeof(entries); idx--; )
-        run("cp -d " + source + "/" + entries[idx] + " " + dest);
+        run("cp " CPOPT " " + src + entries[idx] + " " + dest);
 
     chdir(dest);
 

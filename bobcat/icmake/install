@@ -1,34 +1,4 @@
 
-void reqzip(string dest, string src)
-{
-    list files;
-    int idx;
-    string file;
-
-    chdir(g_cwd);
-
-    md(dest);
-
-    files = strtok(src, " ");
-    for (idx = sizeof(files); idx--; )
-    {
-        file = files[idx];
-        run("gzip -n -9 < " + file + " > " + dest + file + ".gz");
-    }
-
-    chdir(dest);
-    for (idx = sizeof(files); idx--; )
-        log(file + ".gz");
-}
-
-void runInstall(string cmd, string src, string pattern, string dest)
-{
-    chdir(g_cwd);
-    md(dest);
-    run(cmd + " " + src + pattern + " " + dest);
-//    logFiles(src, pattern, dest);
-}
-    
 void install(string rss, string dev)
 {
     string dest;
@@ -38,42 +8,42 @@ void install(string rss, string dev)
 
     g_installing = 1;
 
-#ifdef LIBRARIES
+#ifdef LIB
     printf("\n  installing the libraries\n");
-    logInstall(g_tmpliba, "", dev + LIB);
+    logInstall(g_tmpliba, "", dev + BASE LIB);
 
-#ifndef ONLY_STATIC
-    logInstall(g_tmplibso, "", rss + LIB);
+#ifndef BUILD_SHARED
+    logInstall(g_tmplibso, "", rss + BASE LIB);
 #endif
 
 #endif
 
-#ifdef HEADERS
+#ifdef INC
     printf("\n  installing the headers\n");
-    logInstall("tmp/" LIBRARY "/", "", dev + INC);
+    logInstall("tmp" LIBRARY, "", dev + BASE INC);
 #endif
 
-#ifdef MANPAGES
+#ifdef MAN
     printf("\n  installing the manual pages\n");
 
-    logInstall("documentation/images/", "*.jpg", dev + DOC + "/images");
- 
-    rungzip9("tmp/man/man3/",  dev + MAN + "/man3/");
+    logZip("tmp/man/man3",  "", dev + BASE MAN "/man3");
 
     run("ln -sf iterator.3bobcat.gz reverseiterator.3bobcat.gz");
     logLink("reverseiterator.3bobcat.gz");
 
-    rungzip9("tmp/man/man7/",  dev + MAN + "/man7/");
+    logZip("tmp/man/man7",  "", dev + BASE MAN "/man7");
 #endif
 
-#ifdef MANHTML
+#ifdef DOC
     printf("\n  installing the html versions of the manual pages\n");
 
-    target = dev + DOC + "/man";
+    logInstall("documentation/images", "*.jpg", dev + BASE DOC "/images");
+ 
+    target = dev + BASE DOC + "/man";
 
-    logInstall("tmp/manhtml/", "", target);
+    logInstall("tmp/manhtml", "", target);
 
-    logInstall("documentation/man/",  LIBRARY ".jpg", target);
+    logInstall("documentation/man",  LIBRARY ".jpg", target);
 
     chdir(g_cwd + target);
     run("ln -sf " LIBRARY ".7.html index.html");
@@ -83,41 +53,42 @@ void install(string rss, string dev)
     logLink("reverseiterator.3.html");
 #endif
 
-#ifdef DOCOTHER
+#ifdef DOCDEV
+    printf("\n  installing remaining documentation\n");
+    logZip("", 
+               "READLINE "
+               "README "
+               "README.X11 "
+               "README.class-setup "
+               "README.immovable "
+               "README.milter "
+               "README.optimization "
+               "README.process-pipe "
+               "README.fnwrap "
+               "process-pipe.odp "
+               "process-pipe.pdf "
+               "TODO",
+            dev + BASE DOCDEV);
+
 //    chdir(g_cwd);
-//    printf("\n  installing remaining documentation\n");
-//    reqzip(dev + DOCDEV + "/", 
-//           "READLINE "
-//           "README "
-//           "README.X11 "
-//           "README.class-setup "
-//           "README.immovable "
-//           "README.milter "
-//           "README.optimization "
-//           "README.process-pipe "
-//           "README.fnwrap "
-//           "process-pipe.odp "
-//           "process-pipe.pdf "
-//           "TODO");
+//    dirs = logRecursive("documentation/examples", 
+//                            dev + BASE DOCDEV "/examples");
 //
 //    chdir(g_cwd);
-//    dirs = logRecursive("documentation/examples", dev + DOCDEV + "/examples");
-//
-//    chdir(g_cwd);
-//    run("cp -r documentation/examples " + dev + DOCDEV);
+//    run("cp -r documentation/examples " + dev + BASE DOCDEV);
 //
 //    for (idx = sizeof(dirs); idx--; )
 //    {
 //        chdir(g_cwd);
 //        logFiles("documentation/examples/" + dirs[idx], "", 
-//                    dev + DOCDEV + "/examples/" + dirs[idx]);
+//                    dev + BASE DOCDEV "/examples/" + dirs[idx]);
 //    }
 
 //    chdir(g_cwd);
-//    rungzip9("scripts/", dev + DOCDEV + "/scripts/");
+//    rungzip9("scripts/", dev + BASE DOCDEV "/scripts/");
 // 
 //    if (DOC != "")
-//         reqzip(rss + DOC + "/", "README");
+//         reqzip(rss + BASE DOC, "README");
 #endif
 
     printf("\n  Installation completed\n");

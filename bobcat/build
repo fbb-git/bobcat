@@ -5,7 +5,6 @@
 #include "INSTALL.im"
 
 #define LIBRARY             "bobcat"
-#define DRYRUN              ""
 
 int g_echo = ON;
 
@@ -13,7 +12,7 @@ list    g_log;
 string  g_logPath = getenv(LOGENV)[1];
 
 string
-    g_cwd,              // current WD
+    g_cwd,              // current WD, ends in /.
     g_file,             // used to store the name of a file from a list
     g_copt,             // compiler options
     g_cxx,              // compiler used
@@ -23,8 +22,6 @@ string
     g_tmplibso,         // Shared Library compilation target
     g_tmphdr,           // Class header target
     g_tmpbin,           // Binary target
-    g_lcgen,            // bobcat lcgen program name
-    g_lcgendefault,     // default max size of the bobcat/lc structs
     g_sharedLibReq;     // libraries required by the shared lib
 
 int g_nClasses;         // number of classes/subdirectories
@@ -49,7 +46,8 @@ list g_classes;         // list of classes/directories, listed in CLASSES
 #include "icmake/findall"
 #include "icmake/writelog"
 #include "icmake/loginstall"
-#include "icmake/rungzip9"
+// #include "icmake/rungzip9"
+#include "icmake/logzip"
 
 //#include "icmake/logdirs"
 //#include "icmake/logfiles"
@@ -78,15 +76,11 @@ void main(int argc, list argv)
 
     g_cwd = chdir(".");
 
-    g_tmpliba   = "tmp/liba/";
-    g_tmplibso  = "tmp/libso/";
-    g_tmphdr    = "tmp/" LIBRARY "/";
-    g_tmpbin    = "tmp/bin/";
+    g_tmpliba   = "tmp/liba";
+    g_tmplibso  = "tmp/libso";
+    g_tmphdr    = "tmp/" LIBRARY;
+    g_tmpbin    = "tmp/bin";
 
-    g_lcgen  = "bobcatlcgen";
-    g_lcgendefault = " 10 ";    // KEEP THE BLANKS
-
-    setLocations();     // from INSTALL.im
 
     g_cxx =  setOpt(CXX, "CXX");
     g_copt = setOpt(CXXFLAGS, "CXXFLAGS");
