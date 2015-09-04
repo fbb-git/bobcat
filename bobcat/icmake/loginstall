@@ -9,6 +9,8 @@ void logInstall(string src, string pattern, string dest)
     list entries;
     int idx;
 
+    mark();
+
     chdir(g_cwd);
 
     md(dest);
@@ -28,7 +30,7 @@ void logInstall(string src, string pattern, string dest)
     entries = findAll("l", src, pattern);
 
     for (idx = sizeof(entries); idx--; )
-        run("cp " CPOPT " " + src + entries[idx] + " " + dest);
+        run("cp " CPOPTS " " + src + entries[idx] + " " + dest);
 
     chdir(dest);
 

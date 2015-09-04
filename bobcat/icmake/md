@@ -16,14 +16,21 @@ void md(string target)
     if (!exists(target))
     {
         run("mkdir -p " + target);
-        if (g_installing)
-            g_log += (list)("dir " + 
-                            cutEoln(backtick("realpath " + target)[0]));
+//        if (g_installing)
+//            g_log += (list)("dir " + 
+//                            cutEoln(backtick("realpath " + target)[0]));
     }
     else if (((int)stat(target)[0] & S_IFDIR) == 0)
     {
         printf(target + " exists, but is not a directory\n");
         exit(1);
     }
+
+    if (g_installing)
+        g_log += (list)(g_logMark + " dir " + 
+                        cutEoln(backtick("realpath " + target)[0]));
 }
+
+
+
 

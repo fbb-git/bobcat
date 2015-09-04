@@ -6,12 +6,19 @@
 
 #define LIBRARY             "bobcat"
 
-int g_echo = ON;
-
 list    g_log;
-string  g_logPath = getenv(LOGENV)[1];
+list g_classes;         // list of classes/directories, listed in CLASSES
 
-string
+int g_echo = ON;
+int g_nClasses;         // number of classes/subdirectories
+int g_installing;       // set to 1 by install.
+int g_all = 1;          // if 0: only compile the classes not requiring
+                        // additional libaries. see icmake/special
+int g_lognr;            // unique-marker number counter for g_log entries
+
+string  
+    g_logPath = getenv(LOGENV)[1],
+    g_logMark,          // unique-marker for g_log entries
     g_cwd,              // current WD, ends in /.
     g_file,             // used to store the name of a file from a list
     g_copt,             // compiler options
@@ -24,12 +31,6 @@ string
     g_tmpbin,           // Binary target
     g_sharedLibReq;     // libraries required by the shared lib
 
-int g_nClasses;         // number of classes/subdirectories
-int g_installing;       // set to 1 by install.
-int g_all = 1;          // if 0: only compile the classes not requiring
-                        // additional libaries. see icmake/special
-
-list g_classes;         // list of classes/directories, listed in CLASSES
 
 #include "icmake/cuteoln"
 #include "icmake/backtick"
@@ -39,6 +40,7 @@ list g_classes;         // list of classes/directories, listed in CLASSES
 #include "icmake/clean"
 #include "icmake/addclasses""
 #include "icmake/special"
+#include "icmake/mark"
 
 #include "icmake/md5sum"
 #include "icmake/log"
@@ -46,11 +48,8 @@ list g_classes;         // list of classes/directories, listed in CLASSES
 #include "icmake/findall"
 #include "icmake/writelog"
 #include "icmake/loginstall"
-// #include "icmake/rungzip9"
+#include "icmake/logrecursive"
 #include "icmake/logzip"
-
-//#include "icmake/logdirs"
-//#include "icmake/logfiles"
 
 #include "icmake/readlog"
 #include "icmake/comparedirs"
@@ -71,6 +70,12 @@ void main(int argc, list argv)
     string option;
     string all;
     string strip;
+
+    if (argv[1] == "-q")
+    {
+        g_echo = OFF;
+        argv -= (list)"-q";
+    }
 
     echo(g_echo);
 
@@ -130,8 +135,10 @@ void main(int argc, list argv)
     if (option == "uninstall")
         uninstall();
 
-    printf("Usage: build what\n"
-        "Where `what' is one of:\n"
+    printf("Usage: build [-q] what\n"
+        "Where\n"
+        "   [-q]:   run quietly, do not show executed commands\n"
+        "`what' is one of:\n"
         "   clean               - clean up remnants of previous compilations\n"
         "   distclean           - same as clean\n"
         "   man                 - build the manual page (requires Yodl)\n"

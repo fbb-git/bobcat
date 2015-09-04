@@ -3,36 +3,24 @@
 
 void logRecursive(string src, string dest)
 {
-    list files;
-    int idx;
-    string find1;
     list dirs;
-
-
-    if (g_logPath == "")            // do not store uninstall info
-        return;
-
-    dirs = findDirs(src);              // local dirs, no eoln in dirs[idx]
-
-
+    string next;
+    int idx;
     
-    if (pattern != "")
-        pattern = "-name '" + pattern + "'";
+    chdir(g_cwd);
 
-    pattern += " -printf \"%f\\n\"";
+    src += "/";
+    dest += "/";
 
-    chdir(dir);
+    dirs = findAll("d", src, "");     // find all subdirs 
 
-    find1 = "find ./ -mindepth 1 -maxdepth 1 -type ";
-    files = backtick(find1 + "f " + pattern);
+    for (idx = sizeof(dirs); idx--; ) // visit all subdirs
+    {
+        next = dirs[idx];
+        logRecursive(src + next, dest + next);
+    }
 
-    for (idx = sizeof(files); idx--; )
-        log(files[idx]);
-
-    files = backtick(find1 + "l " + pattern);
-
-    for (idx = sizeof(files); idx--; )
-        logLink(files[idx]);
+    logInstall(src, "", dest);
 }
 
 

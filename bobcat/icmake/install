@@ -20,7 +20,7 @@ void install(string rss, string dev)
 
 #ifdef INC
     printf("\n  installing the headers\n");
-    logInstall("tmp" LIBRARY, "", dev + BASE INC);
+    logInstall("tmp/" LIBRARY, "", dev + BASE INC);
 #endif
 
 #ifdef MAN
@@ -51,6 +51,8 @@ void install(string rss, string dev)
 
     run("ln -sf iterator.3.html reverseiterator.3.html");
     logLink("reverseiterator.3.html");
+
+    logZip("", "README", rss + BASE DOC);
 #endif
 
 #ifdef DOCDEV
@@ -70,25 +72,9 @@ void install(string rss, string dev)
                "TODO",
             dev + BASE DOCDEV);
 
-//    chdir(g_cwd);
-//    dirs = logRecursive("documentation/examples", 
-//                            dev + BASE DOCDEV "/examples");
-//
-//    chdir(g_cwd);
-//    run("cp -r documentation/examples " + dev + BASE DOCDEV);
-//
-//    for (idx = sizeof(dirs); idx--; )
-//    {
-//        chdir(g_cwd);
-//        logFiles("documentation/examples/" + dirs[idx], "", 
-//                    dev + BASE DOCDEV "/examples/" + dirs[idx]);
-//    }
+    logRecursive("documentation/examples", dev + BASE DOCDEV "/examples");
 
-//    chdir(g_cwd);
-//    rungzip9("scripts/", dev + BASE DOCDEV "/scripts/");
-// 
-//    if (DOC != "")
-//         reqzip(rss + BASE DOC, "README");
+    logZip("scripts", "", dev + BASE DOCDEV "/scripts");
 #endif
 
     printf("\n  Installation completed\n");

@@ -17,6 +17,8 @@ void man()
     yo = makelist("*.yo") - (list)LIBRARY ".yo" - (list)"reverseiter.yo" -
                             (list)"sharedreadme.yo";
 
+    printf("    Building the man3 man-pages");
+
     for (idx = sizeof(yo); idx--; )
     {
         yodl = element(idx, yo);
@@ -27,7 +29,11 @@ void man()
                                         base + ".3" LIBRARY " " + yodl);
         run("yodl2html --no-warnings -r 3 -l 3 -o ../../tmp/manhtml/" + 
                                         base + ".3.html " + yodl);
+        printf(".");
     }
+
+    printf("\n"
+            "   Building the man7 man-pages\n");
 
     run("yodl2man  --no-warnings  -r 3 -o ../../tmp/man/man7/" 
                                             LIBRARY ".7 " LIBRARY ".yo");
