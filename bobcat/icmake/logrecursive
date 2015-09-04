@@ -6,17 +6,14 @@ void logRecursive(string src, string dest)
     list dirs;
     string next;
     int idx;
-    
+        
     chdir(g_cwd);
-
-    src += "/";
-    dest += "/";
 
     dirs = findAll("d", src, "");     // find all subdirs 
 
     for (idx = sizeof(dirs); idx--; ) // visit all subdirs
     {
-        next = dirs[idx];
+        next = "/" + dirs[idx];
         logRecursive(src + next, dest + next);
     }
 
