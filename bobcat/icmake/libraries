@@ -142,7 +142,7 @@ void libraries(string libname, int all, int strip)
     library("oa", staticLib);               // compile for static lib.
     static_library(staticLib);              // build static library
 
-#ifndef BUILD_SHARED
+#ifdef BUILD_SHARED
     libso = "lib" LIBRARY ".so";
     libsoshared = libso + "." + g_version;
 
