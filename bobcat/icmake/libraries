@@ -62,11 +62,31 @@ void _iFiles(string class)
 void _cpHeaders()
 {
     int idx;
-    string file;
-    string class;
     
     for (idx = g_nClasses; idx--; )
         _iFiles(g_classes[idx]);
+}
+    
+void _precompileHeaders()
+{
+    int idx;
+    string class;
+    string classHH;
+    string compiler;
+
+    compiler = g_cxx + " " + g_copt + " ";
+
+    for (idx = g_nClasses; idx--; )
+    {
+        class = g_classes[idx];
+        classHH = class + ".hh";
+
+        chdir(class);
+        
+        if (classHH younger class + ".hh.gch")
+            run(compiler + " " + classHH);
+        chdir(g_cwd);
+    }
 }
 
 void static_library(string library)
@@ -82,7 +102,7 @@ void static_library(string library)
     }
 }
 
-void shared_library(string destDir, string libso, string libsoshared, 
+void _shared_library(string destDir, string libso, string libsoshared, 
                     int strip)
 {
     string libsomajor;
@@ -102,7 +122,7 @@ void shared_library(string destDir, string libso, string libsoshared,
                     " -shared -Wl,--as-needed,"
                     "-z,defs,-soname," + 
                     libsomajor +
-                    " -o " + destDir + libsoshared +
+                    " -o " + destDir + "/" + libsoshared +
                     " */os/*.o " +
                     g_sharedLibReq);
     
@@ -128,7 +148,7 @@ void libraries(string libname, int all, int strip)
     string libsoshared;
     string staticLib;
 
-    staticLib = g_tmpliba + "lib" LIBRARY ".a";
+    staticLib = g_tmpliba + "/lib" LIBRARY ".a";
 
     addClasses("CLASSES");
     special(1, all);
@@ -136,6 +156,8 @@ void libraries(string libname, int all, int strip)
     md(g_tmpliba + " " + g_tmphdr + " " + g_tmplibso);
 
     _cpHeaders();
+
+    _precompileHeaders();
 
     g_copt += " -isystem tmp";
 
@@ -149,10 +171,14 @@ void libraries(string libname, int all, int strip)
     g_copt += " -fPIC";
                                           // adds option for shared lib
 
-    library("os", g_tmplibso + libsoshared);      // compile the shared lib
+    library("os", g_tmplibso + "/" + libsoshared);  // compile the shared lib
 
-    shared_library(g_tmplibso, libso, libsoshared, strip);
+    _shared_library(g_tmplibso, libso, libsoshared, strip);
 #endif
 
     exit(0);
 }
+
+
+
+
