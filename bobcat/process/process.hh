@@ -1,0 +1,41 @@
+#include "process"
+
+#include <iostream>
+#include <stdexcept>
+
+#include <fcntl.h>
+#include <algorithm>
+#include <signal.h>
+#include <unistd.h>
+
+#include <sys/types.h>
+#include <sys/wait.h>
+
+#include <bobcat/redirector>
+#include <bobcat/exception>
+
+#include "../processdata/processdata.decl"
+
+using namespace std;
+using namespace FBB;
+
+struct Process::ExecContext
+{
+    size_t argc;            // must eventually be at least 1
+    char const **argv;      // 0-terminated array of pointers to the 
+                            // arguments
+};
+    
+#include "retpid1.f"
+
+
+
+
+
+
+
+
+
+
+
+

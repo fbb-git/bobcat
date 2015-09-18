@@ -1,0 +1,131 @@
+#include "pattern"
+
+/*
+    The PerlSetFSA is a Finite State Automaton converting the special
+character set characters as used by Perl to their corresponding
+set-notations. 
+
+    The special perl-set characters may be used inside and outside of
+character classes. When used in a class, it adds the set to the current
+set. If the class starts with a caret, then the meaning of the set is
+reversed:
+            \s <-> \S
+            \d <-> \D
+(etc).
+
+    The character sets s, d, and w are currently supported. \b and \B are 
+already part of the standard regex implementation. 
+
+*/
+
+#include <iostream>
+#include <vector>
+#include <memory>
+
+#include <bobcat/fswap>
+#include <bobcat/ranger>
+#include <bobcat/exception>
+
+using namespace std;
+
+namespace FBB
+{
+
+class PerlSetFSA
+{
+    class Validator;
+    friend class Validator;
+
+    enum State
+    {
+        Start,
+        Bs,
+        Set,
+        NegatedSet,
+        SetBs,
+        NestedSet,
+        InsideASet,
+        NegatedSetBs,
+        NegatedNestedSet,
+        InsideANegatedSet,
+
+        nStates_
+    };
+ 
+    struct TransitionMatrix
+    {
+        State   d_state;
+        int     d_input;
+        State   d_next;
+        void (PerlSetFSA::*d_action)();
+    };
+
+    static TransitionMatrix s_stateTransitions[];
+    static TransitionMatrix *s_stateTransitions_end;
+
+    class Validator
+    {
+        vector<bool> d_used;
+        int     d_last;
+        State   d_state;
+        bool    d_valid;
+        size_t d_element;
+
+        public:
+            Validator()
+            :
+                d_used(nStates_),
+                d_last(0),
+                d_state(nStates_),
+                d_valid(true)
+            {}
+            void operator()(TransitionMatrix const &state);
+            operator bool() const
+            {
+                return d_valid;
+            }
+    };
+
+        // s_transition holds as many elements as there are states,
+        // first: points to first element of corresponding state
+        //          in s_transition
+        // second: points just beyond the last element of corresponding
+        //          state in s_transition
+
+    typedef pair<TransitionMatrix *, 
+                      TransitionMatrix *> statePair;
+
+    static vector<statePair> s_transition;
+
+    string d_target;
+    string::iterator d_next;
+
+    public:
+        //static void setup();
+        PerlSetFSA();
+        void convert(string &pattern);
+
+    private:
+        static void initialize(TransitionMatrix &stateDescription);
+
+        void nop() 
+        {};
+        void copy();
+        void copybs();
+        void w_Set();
+        void W_Set();
+        void d_Set();
+        void D_Set();
+        void s_Set();
+        void S_Set();
+        void w_Nest();
+        void d_Nest();
+        void s_Nest();
+};
+
+#include "destructor.f"
+#include "newregex.f"
+
+} // FBB
+
+using namespace FBB;

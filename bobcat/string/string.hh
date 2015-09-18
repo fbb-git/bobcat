@@ -1,0 +1,15 @@
+#include "string"
+
+#include <string.h>
+#include <cctype>
+#include <iosfwd>
+#include <algorithm>
+
+#include <bobcat/a2x>
+
+using namespace std;
+using namespace FBB;
+
+#include "tolower.f"
+#include "toupper.f"
+

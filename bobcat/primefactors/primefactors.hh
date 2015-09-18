@@ -1,0 +1,48 @@
+#include "primefactors"
+
+#include <iterator>
+
+#include "../exception/exception"
+//#include <bobcat/exception>
+#include <bobcat/user>
+
+
+using namespace std;
+using namespace FBB;
+
+class PrimeFactors::iteratorStream: public iterator
+{
+    enum InputMode
+    {
+        STREAM_PRIMES,
+        NEW_PRIMES,
+        SENTINEL
+    };
+    std::string d_name;
+    std::fstream d_stream;
+    size_t d_blockSize;
+
+    BigIntVector d_streamPrimes;
+    BigIntVector d_newPrimes;
+
+    public:
+        iteratorStream(std::string const &name, size_t blockSize);
+        ~iteratorStream();
+
+    private:
+        iterator &operatorPreInc() override;
+        void next() override;
+
+        void openStream();
+        void resetPrimes();
+        bool readPrimes();
+
+        void writeNewPrimes();
+};
+
+#include "opinc.f"
+#include "opstar.f"
+#include "lastprime.f"
+#include "nextprime.f"
+#include "atsentinel.f"
+#include "setsentinel.f"
