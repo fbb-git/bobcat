@@ -1,4 +1,4 @@
-#include "sharedsegment.ih"
+#include "sharedsegment.hh"
 
 SharedSegment::SharedSegment(size_t access, size_t nBlocks, size_t segmentSize)
 :

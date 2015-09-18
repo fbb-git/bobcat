@@ -1,4 +1,4 @@
-#include "syslogstream.ih"
+#include "syslogstream.hh"
 
 SyslogStream::SyslogStream(char const *ident, Priority priority, 
                             Facility facility, int option)

@@ -1,4 +1,4 @@
-#include "main.ih"
+#include "main.hh"
 
 void typeList(ostream &out, size_t nTs, size_t nUnspec)
 {

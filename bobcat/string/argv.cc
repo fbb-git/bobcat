@@ -1,4 +1,4 @@
-#include "string.ih"
+#include "string.hh"
 
 char const **String::argv(std::vector<string> const &lines)
 {

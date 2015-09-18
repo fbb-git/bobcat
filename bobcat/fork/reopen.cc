@@ -1,4 +1,4 @@
-#include "fork.ih"
+#include "fork.hh"
 
 void Fork::reopen(string const &out, mode_t mode)
 {

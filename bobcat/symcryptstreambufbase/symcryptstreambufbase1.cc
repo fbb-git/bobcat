@@ -1,4 +1,4 @@
-#include "symcryptstreambufbase.ih"
+#include "symcryptstreambufbase.hh"
 
 SymCryptStreambufBase::SymCryptStreambufBase(
             int (*evpInit_ex)(EVP_CIPHER_CTX *, EVP_CIPHER const *,

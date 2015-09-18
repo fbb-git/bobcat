@@ -1,4 +1,4 @@
-#include "sharedmemory.ih"
+#include "sharedmemory.hh"
 
     // private, only called by load.
 

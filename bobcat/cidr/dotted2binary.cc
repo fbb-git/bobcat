@@ -1,4 +1,4 @@
-#include "cidr.ih"
+#include "cidr.hh"
 
 size_t Cidr::dotted2binary(std::string const &dotted)
 {

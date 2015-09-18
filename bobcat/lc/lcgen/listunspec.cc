@@ -1,4 +1,4 @@
-#include "main.ih"
+#include "main.hh"
 
 void listUnspec(ostream &out, size_t nUnspec)
 {

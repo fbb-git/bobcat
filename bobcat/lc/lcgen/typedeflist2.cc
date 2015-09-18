@@ -1,4 +1,4 @@
-#include "main.ih"
+#include "main.hh"
 
 void typeDefList(ostream &out, size_t nArgs, size_t nNoDefault, 
                                              char const *defaultType) 

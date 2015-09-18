@@ -1,4 +1,4 @@
-#include "sharedmemory.ih"
+#include "sharedmemory.hh"
 
 SharedMemory::SharedMemory(size_t maxSize, SizeUnit sizeUnit, size_t access)
 {

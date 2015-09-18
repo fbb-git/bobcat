@@ -1,4 +1,4 @@
-#include "cgi.ih"
+#include "cgi.hh"
 
 size_t CGIFSA::charToken()
 {

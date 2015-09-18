@@ -1,3 +1,3 @@
-#include "argconfig.ih"
+#include "argconfig.hh"
 
 ArgConfig *ArgConfig::s_argconfig;

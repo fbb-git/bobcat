@@ -1,4 +1,4 @@
-#include "stat.ih"
+#include "stat.hh"
 
 void Stat::init()
 {

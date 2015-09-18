@@ -1,4 +1,4 @@
-#include "hostent.ih"
+#include "hostent.hh"
 
 Hostent &Hostent::operator=(Hostent const &other)
 {

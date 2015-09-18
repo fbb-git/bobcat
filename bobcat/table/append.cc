@@ -1,4 +1,4 @@
-#include "table.ih"
+#include "table.hh"
 
 Table &Table::append(string const &str, char const *sep, bool addEmpty)
 {

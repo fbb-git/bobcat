@@ -1,4 +1,4 @@
-#include "sharedsegment.ih"
+#include "sharedsegment.hh"
 
 void SharedSegment::clear()
 {

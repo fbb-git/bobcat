@@ -1,4 +1,4 @@
-#include "iuo.ih"
+#include "iuo.hh"
 
 OptStructArray::OptStructArray(size_t n)
 :

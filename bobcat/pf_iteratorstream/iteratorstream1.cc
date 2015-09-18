@@ -1,4 +1,4 @@
-#include "../primefactors/primefactors.ih"
+#include "../primefactors/primefactors.hh"
 
 PrimeFactors::iteratorStream::iteratorStream(std::string const &name, 
                                              size_t blockSize)

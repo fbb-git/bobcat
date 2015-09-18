@@ -1,4 +1,4 @@
-#include "align.ih"
+#include "align.hh"
 
 Align::Align(size_t col, Manipulator manip)
 :

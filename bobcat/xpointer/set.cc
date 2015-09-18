@@ -1,4 +1,4 @@
-#include "xpointer.ih"
+#include "xpointer.hh"
 
 bool Xpointer::set(int x, int y) const
 {

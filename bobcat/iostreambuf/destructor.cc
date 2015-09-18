@@ -1,4 +1,4 @@
-#include "iostreambuf.ih"
+#include "iostreambuf.hh"
 
 IOStreambuf::~IOStreambuf()
 {

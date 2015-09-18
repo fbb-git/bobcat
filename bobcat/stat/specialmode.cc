@@ -1,4 +1,4 @@
-#include "stat.ih"
+#include "stat.hh"
 
 bool Stat::specialMode(size_t mode, Combine combi) const
 {

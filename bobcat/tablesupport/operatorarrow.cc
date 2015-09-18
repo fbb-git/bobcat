@@ -1,4 +1,4 @@
-#include "tablesupport.ih"
+#include "tablesupport.hh"
 
 TableSupport::Field const *TableSupport::const_iterator::operator->() const
 {

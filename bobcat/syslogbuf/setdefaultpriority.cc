@@ -1,4 +1,4 @@
-#include "syslogbuf.ih"
+#include "syslogbuf.hh"
 
 Priority Syslogbuf::setDefaultPriority(Priority priority)
 {

@@ -1,4 +1,4 @@
-#include "hostent.ih"
+#include "hostent.hh"
 
 size_t Hostent::countAliases(char const * const *alias) const
 {

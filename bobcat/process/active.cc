@@ -1,4 +1,4 @@
-#include "process.ih"
+#include "process.hh"
 
 bool Process::active()
 {

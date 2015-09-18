@@ -1,4 +1,4 @@
-#include "logbuffer.ih"
+#include "logbuffer.hh"
 
 void LogBuffer::settimestamp(TimeStamps timestamps, char const *delim)
 {

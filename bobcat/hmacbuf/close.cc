@@ -1,4 +1,4 @@
-#include "hmacbuf.ih"
+#include "hmacbuf.hh"
 
 void HMacBuf::close()
 {

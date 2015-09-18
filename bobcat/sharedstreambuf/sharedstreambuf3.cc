@@ -1,4 +1,4 @@
-#include "sharedstreambuf.ih"
+#include "sharedstreambuf.hh"
 
 SharedStreambuf::SharedStreambuf(int id, std::ios::openmode openMode)
 :

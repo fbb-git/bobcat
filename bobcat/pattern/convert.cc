@@ -1,6 +1,6 @@
 //#include <iomanip>
 
-#include "pattern.ih"
+#include "pattern.hh"
 
 void PerlSetFSA::convert(string &pattern)
 {

@@ -1,4 +1,4 @@
-#include "process.ih"
+#include "process.hh"
 
 Process &Process::operator()(IOMode mode, ProcessType type, size_t timeLimit,
                              size_t bufSize) 

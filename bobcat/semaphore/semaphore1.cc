@@ -1,4 +1,4 @@
-#include "semaphore.ih"
+#include "semaphore.hh"
 
 Semaphore::Semaphore(size_t nAvailable)
 :

@@ -1,4 +1,4 @@
-#include "configfile.ih"
+#include "configfile.hh"
 
 // findKeyTail("key:") - 
 //                   trimmed text following key. initial ws before

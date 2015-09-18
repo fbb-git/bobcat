@@ -1,4 +1,4 @@
-#include "tablebuf.ih"
+#include "tablebuf.hh"
 
 int TableBuf::overflow(int ch)
 {

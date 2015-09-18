@@ -1,4 +1,4 @@
-#include "tablesupport.ih"
+#include "tablesupport.hh"
 
 void TableSupport::v_vline(size_t col) const
 {

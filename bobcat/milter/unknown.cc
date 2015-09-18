@@ -1,4 +1,4 @@
-#include "milter.ih"
+#include "milter.hh"
 
 #if SMFI_VERSION > 2
 

@@ -1,4 +1,4 @@
-#include "ifdstreambuf.ih"
+#include "ifdstreambuf.hh"
 
 int IFdStreambuf::underflow()
 {

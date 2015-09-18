@@ -1,4 +1,4 @@
-#include "configfile.ih"
+#include "configfile.hh"
 
 size_t ConfigFile::index(const_iterator const &iterator)
 {

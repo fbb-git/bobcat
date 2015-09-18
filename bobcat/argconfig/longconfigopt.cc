@@ -1,4 +1,4 @@
-#include "argconfig.ih"
+#include "argconfig.hh"
 
 ArgConfig::RE_iteratorPair ArgConfig::longConfigOpt(string const &longOpt)
 {

@@ -1,4 +1,4 @@
-#include "readlinebuf.ih"
+#include "readlinebuf.hh"
 
 ReadLineBuf::ReadLineBuf(string const &prompt, Type type)
 :

@@ -1,4 +1,4 @@
-#include "diffiehellman.ih"
+#include "diffiehellman.hh"
 
 DiffieHellman::DiffieHellman(size_t primeLength, size_t generator, 
                              bool progress)

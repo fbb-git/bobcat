@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "arg.hh"
 
 int Arg::beyondDashes() const
 {

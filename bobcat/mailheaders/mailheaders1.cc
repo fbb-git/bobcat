@@ -1,4 +1,4 @@
-#include "mailheaders.ih"
+#include "mailheaders.hh"
 
 MailHeaders::MailHeaders(istream &in, Mode mode)
 :

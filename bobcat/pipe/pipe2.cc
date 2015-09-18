@@ -1,4 +1,4 @@
-#include "pipe.ih"
+#include "pipe.hh"
 
 Pipe::Pipe(int const *fd)
 {

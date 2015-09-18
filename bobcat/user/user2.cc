@@ -1,4 +1,4 @@
-#include "user.ih"
+#include "user.hh"
 
 User::User(User &&tmp)
 :

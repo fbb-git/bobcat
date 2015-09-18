@@ -1,4 +1,4 @@
-#include "base64streambufbase.ih"
+#include "base64streambufbase.hh"
 
 Base64StreambufBase::Base64StreambufBase(std::istream &in, size_t bufSize)
 :   

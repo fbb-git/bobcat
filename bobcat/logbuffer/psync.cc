@@ -1,4 +1,4 @@
-#include "logbuffer.ih"
+#include "logbuffer.hh"
 
 int LogBuffer::pSync()
 {

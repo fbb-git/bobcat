@@ -1,4 +1,4 @@
-#include "signal.ih"
+#include "signal.hh"
 
 void Signal::remove(size_t signum, SignalHandler &object)
 {

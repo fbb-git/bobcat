@@ -1,4 +1,4 @@
-#include "tty.ih"
+#include "tty.hh"
 
 Tty::Tty()
 :

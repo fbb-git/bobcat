@@ -1,4 +1,4 @@
-#include "x2a.ih"
+#include "x2a.hh"
 
 X2a::X2a(double x, size_t behind)
 {

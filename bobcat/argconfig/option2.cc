@@ -1,4 +1,4 @@
-#include "argconfig.ih"
+#include "argconfig.hh"
 
 size_t ArgConfig::option(std::string const &optchars)
 {

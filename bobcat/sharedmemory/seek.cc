@@ -1,4 +1,4 @@
-#include "sharedmemory.ih"
+#include "sharedmemory.hh"
 
 ios::pos_type SharedMemory::seek(ios::off_type offset, ios::seekdir way)
 {

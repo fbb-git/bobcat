@@ -1,6 +1,6 @@
 //                     usage.cc
 
-#include "main.ih"
+#include "main.hh"
 
 void usage(std::string  const  &progname)
 {

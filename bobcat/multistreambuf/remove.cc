@@ -1,4 +1,4 @@
-#include "multistreambuf.ih"
+#include "multistreambuf.hh"
 
 bool MultiStreambuf::remove(ostream &os, Mode mode)
 {

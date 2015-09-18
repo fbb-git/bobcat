@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "arg.hh"
 
 size_t Arg__::option(size_t idx, 
                  string *value, char const *longOption) const

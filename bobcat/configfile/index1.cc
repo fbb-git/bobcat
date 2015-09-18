@@ -1,4 +1,4 @@
-#include "configfile.ih"
+#include "configfile.hh"
 
 size_t ConfigFile::index(size_t lineNr)
 {

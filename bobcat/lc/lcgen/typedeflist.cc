@@ -1,4 +1,4 @@
-#include "main.ih"
+#include "main.hh"
 
 void typeDefList(ostream &out, size_t nTs)
 {

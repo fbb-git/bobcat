@@ -1,4 +1,4 @@
-#include "logbuffer.ih"
+#include "logbuffer.hh"
 
 void LogBuffer::insertTimestamp()
 {

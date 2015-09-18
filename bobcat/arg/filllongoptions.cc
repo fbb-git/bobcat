@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "arg.hh"
 
 void Arg__::fillLongOptions(OptStruct *optStruct,
                             std::string const &optString,

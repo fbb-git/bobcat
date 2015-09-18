@@ -1,4 +1,4 @@
-#include "base64streambufbase.ih"
+#include "base64streambufbase.hh"
 #include <iostream>
 
 bool Base64StreambufBase::decrypt()

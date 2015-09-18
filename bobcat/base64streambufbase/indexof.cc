@@ -1,4 +1,4 @@
-#include "base64streambufbase.ih"
+#include "base64streambufbase.hh"
 
 size_t Base64StreambufBase::indexOf(int ch)
 {

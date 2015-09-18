@@ -1,4 +1,4 @@
-#include "semaphore.ih"
+#include "semaphore.hh"
 
 void Semaphore::wait()
 {

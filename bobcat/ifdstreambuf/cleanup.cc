@@ -1,4 +1,4 @@
-#include "ifdstreambuf.ih"
+#include "ifdstreambuf.hh"
 
 void IFdStreambuf::cleanup(Mode mode)
 {

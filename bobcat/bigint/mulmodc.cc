@@ -1,4 +1,4 @@
-#include "bigint.ih"
+#include "bigint.hh"
 
 BigInt BigInt::mulModc(BigInt const &rhs, BigInt const &mod) const
 {

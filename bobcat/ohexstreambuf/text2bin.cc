@@ -1,4 +1,4 @@
-#include "ohexstreambuf.ih"
+#include "ohexstreambuf.hh"
 
 string OHexStreambuf::text2bin(string const &in)
 {

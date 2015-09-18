@@ -1,4 +1,4 @@
-#include "mstream.ih"
+#include "mstream.hh"
 
 void Mstream::reset(Mstream const &mstr)
 {

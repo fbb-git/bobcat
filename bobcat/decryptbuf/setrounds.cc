@@ -1,4 +1,4 @@
-#include "decryptbuf.ih"
+#include "decryptbuf.hh"
 
 bool DecryptBuf::setRounds(size_t nRounds)
 {

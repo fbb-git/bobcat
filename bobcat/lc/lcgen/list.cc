@@ -1,4 +1,4 @@
-#include "main.ih"
+#include "main.hh"
 
 void list(ostream &out, size_t nTs, char const *txt)
 {

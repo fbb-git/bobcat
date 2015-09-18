@@ -1,4 +1,4 @@
-#include "string.ih"
+#include "string.hh"
 
 size_t String::split(std::vector<string> *words, 
                 string const &str, char const *sep, bool addEmpty)

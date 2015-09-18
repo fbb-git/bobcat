@@ -1,4 +1,4 @@
-#include "ifdstreambuf.ih"
+#include "ifdstreambuf.hh"
 
 IFdStreambuf::IFdStreambuf(int fd, size_t n)
 :

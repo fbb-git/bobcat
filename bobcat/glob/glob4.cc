@@ -1,4 +1,4 @@
-#include "glob.ih"
+#include "glob.hh"
 
 Glob::Glob(Glob const &other)
 {

@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "arg.hh"
 
 std::string const &Arg::basename() const
 {

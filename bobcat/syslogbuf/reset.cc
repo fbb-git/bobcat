@@ -1,4 +1,4 @@
-#include "syslogbuf.ih"
+#include "syslogbuf.hh"
 
 void Syslogbuf::reset(string const &ident, Facility facility, int option)
 {

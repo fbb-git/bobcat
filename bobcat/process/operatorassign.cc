@@ -1,4 +1,4 @@
-#include "process.ih"
+#include "process.hh"
 
 int Process::operator=(std::string const &command)
 {

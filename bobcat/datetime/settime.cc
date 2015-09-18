@@ -1,4 +1,4 @@
-#include "datetime.ih"
+#include "datetime.hh"
 
 bool DateTime::setTime(time_t seconds)
 {

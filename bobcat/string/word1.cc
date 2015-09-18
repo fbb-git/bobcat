@@ -1,4 +1,4 @@
-#include "string.ih"
+#include "string.hh"
 
     // type should have been initialized to `NORMAL' by the caller
 

@@ -1,4 +1,4 @@
-#include "processdata.ih"
+#include "processdata.hh"
 
 ProcessData::ProcessData(size_t bufSize)
 :

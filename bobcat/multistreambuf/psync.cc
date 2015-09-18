@@ -1,4 +1,4 @@
-#include "multistreambuf.ih"
+#include "multistreambuf.hh"
 
 int MultiStreambuf::pSync()
 {

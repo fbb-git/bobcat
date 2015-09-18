@@ -1,4 +1,4 @@
-#include "diffiehellman.ih"
+#include "diffiehellman.hh"
 
 void DiffieHellman::write(ostream &out, BIGNUM const *bn, char *buffer,
                                                         uint32_t nBytes) const

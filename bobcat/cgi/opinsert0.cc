@@ -1,4 +1,4 @@
-#include "cgi.ih"
+#include "cgi.hh"
 
 std::ostream &FBB::operator<<(std::ostream &out, CGI const &cgi)
 {

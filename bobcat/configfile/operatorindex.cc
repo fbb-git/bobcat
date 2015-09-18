@@ -1,4 +1,4 @@
-#include "configfile.ih"
+#include "configfile.hh"
 
 std::string const &ConfigFile::operator[](size_t idx) const
 {
