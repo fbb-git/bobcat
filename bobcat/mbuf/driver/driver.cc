@@ -2,6 +2,7 @@
 #include <iostream>
 #include <bobcat/exception>
 #include <bobcat/mbuf>
+#include <bobcat/mstream>
 
 using namespace std;
 using namespace FBB;
@@ -11,9 +12,9 @@ int main()
 {
     ostream os(cout.rdbuf());
 
-    Mbuf msb(&os);
+    Mbuf msb(os.rdbuf());
 
-    Msg ms(msb);
+    Mstream ms(&msb);
 
     string s;
 
@@ -23,22 +24,26 @@ int main()
 
     ms << "this should fail" << endl;     // explicit flush
 
-
     os.clear();
 
     ms << "this should be shown" << endl;     // explicit flush
 
-
-    msb.reset(&cout, true);         // throwing buffer
+                                              // throwing buffer
+    msb.reset(cout.rdbuf(), 0, "", true);
     try
     {
         ms << "Following this, we throw" << endl;
     }
     catch (exception const &err)
     {
-        cout << "Caught Exception exception" << endl;
+        cerr << "Caught exception" << endl;
     }
 }
+
+
+
+
+
 
 
 

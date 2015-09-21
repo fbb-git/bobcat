@@ -1,6 +1,7 @@
 #include <bobcat/selector>
 #include <bobcat/exception>
 
+#include <unistd.h>
 #include <string>
 #include <iostream>
 
