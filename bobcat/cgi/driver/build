@@ -10,10 +10,10 @@ case $1 in
             if [ ! -s ${NAME}.o -o ${NAME}.cc -nt ${NAME}.o ]
             then
                 echo "g++ -c $x"
-                g++ --std=c++0x -I../../tmp -o ${NAME}.o -c $x || exit 1
+                g++ --std=c++14 -I../../tmp -o ${NAME}.o -c $x || exit 1
             fi
         done
-        g++ --std=c++0x -o driver *.o -L../../tmp/lib -lbobcat
+        g++ --std=c++14 -o driver *.o -L../../tmp/lib -lbobcat
     ;;
     (lib)
         for x in *.cc 
@@ -22,7 +22,7 @@ case $1 in
             if [ ! -s ${NAME}.o -o ${NAME}.cc -nt ${NAME}.o ]
             then
                 echo "g++ -c $x"
-                g++ --std=c++0x -o ${NAME}.o -c $x || exit 1
+                g++ --std=c++14 -o ${NAME}.o -c $x || exit 1
             fi
         done
         g++ -o driver *.o -lbobcat

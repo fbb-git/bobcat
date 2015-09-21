@@ -1,17 +1,17 @@
-#include "../msgbuf"
 
 #include <iostream>
-#include <bobcat/errno>
+#include <bobcat/exception>
+#include <bobcat/mbuf>
 
 using namespace std;
 using namespace FBB;
-using namespace FBB::BOBCAT;
+// using namespace FBB::BOBCAT;
 
 int main()
 {
     ostream os(cout.rdbuf());
 
-    Msgbuf msb(&os);
+    Mbuf msb(&os);
 
     Msg ms(msb);
 
@@ -34,9 +34,9 @@ int main()
     {
         ms << "Following this, we throw" << endl;
     }
-    catch(Errno const &err)
+    catch (exception const &err)
     {
-        cout << "Caught Errno exception" << endl;
+        cout << "Caught Exception exception" << endl;
     }
 }
 

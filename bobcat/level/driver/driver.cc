@@ -2,7 +2,7 @@
                               driver.cc
 */
 
-#include <bobcat/errno>
+#include <bobcat/exception>
 #include <bobcat/level>
 #include <iostream>
 
@@ -13,21 +13,21 @@ int main(int argc, char **argv, char **envp)
 {
     try
     {
-        Log::getInstance() << "hello world" << endl;
+        Log::instance() << "hello world" << endl;
     }
-    catch(Errno const &e)
+    catch(exception const &e)
     {
-        cout << e.why() << endl;
+        cout << e.what() << endl;
     }
 
 
-    Log log(STATIC);
+    Log log;
 
     log << ": message to cout" << nl << 
             "<-- No timestamp here " << '\n' <<
             "<-- But timestamp here " << endl;
 
-    Log::getInstance() << "\n";
+    Log::instance() << "\n";
 
     log.setLevel(1);
     log.setTimestamp(NOTIMESTAMPS);
@@ -45,7 +45,4 @@ int main(int argc, char **argv, char **envp)
 
     log << level(1) << "Not shown\n";
     log << level(5) << "Shown again\n";
-
-    return 0;
 }
-

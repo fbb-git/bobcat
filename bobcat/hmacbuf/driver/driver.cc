@@ -2,7 +2,7 @@
 #include <ostream>
 #include <cstring>
 #include <iomanip>
-#include <bobcat/errno>
+#include <bobcat/exception>
 #include <bobcat/hmacbuf>
 
 using namespace std;
@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 try
 {
     if (argc < 3)
-        throw Errno(1, "Arg1: key, arg2: digest method required");
+        throw Exception(0) << "Arg1: key, arg2: digest method required";
 
     string key(argv[1]);
 
@@ -30,8 +30,8 @@ try
     hmacbuf.close();
     cout << ">" << hmacbuf << "<" << endl;
 }
-catch(Errno const &err)
+catch(exception const &err)
 {
-    cout << err.why() << endl;
-    return 1;
+    cout << err.what() << endl;
+    return errno;
 }

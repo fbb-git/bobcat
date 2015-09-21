@@ -19,21 +19,21 @@ try
     Xpointer xpointer;
 
     if (!xpointer.set(A2x(argv[1]), A2x(argv[2])))
-        throw Errno() << insertable << "Pointer setting failed" << throwable;
+        throw Exception() << insertable << "Pointer setting failed" << throwable;
 
     int x;
     int y;
 
     if (!xpointer.get(&x, &y))
-        throw Errno() << insertable << "Pointer getting failed" << throwable;
+        throw Exception() << insertable << "Pointer getting failed" << throwable;
 
     cout << "Pointer now at " << x << ", " << y << endl;
 
     return 0;
 }
-catch (Errno const &err)
+catch (Exception const &err)
 {
-    cout << err.why() << endl;
+    cout << err.what() << endl;
     return 1;
 }
 

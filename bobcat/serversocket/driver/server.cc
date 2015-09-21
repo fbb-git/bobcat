@@ -61,10 +61,10 @@ try
         cout << "Ready for another connection\n";
     }
 }
-catch (Errno const &err)
+catch (Exception const &err)
 {
     cerr <<
-        err.why() << endl <<
+        err.what() << endl <<
         "Server socket on port " << argv[1] << 
         " can't be opened" << endl;
     return -1;

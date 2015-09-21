@@ -1,6 +1,6 @@
 #include <iostream>
 #include <ostream>
-#include <bobcat/errno>
+#include <bobcat/exception>
 #include <bobcat/digestbuf>
 
 using namespace std;
@@ -23,8 +23,8 @@ try
     digestbuf.close();
     cout << ">" << digestbuf << "<" << endl;
 }
-catch(Errno const &err)
+catch(exception const &err)
 {
-    cout << err.why() << endl;
+    cout << err.what() << endl;
     return 1;
 }

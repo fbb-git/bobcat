@@ -39,10 +39,10 @@ int main()
             }
         }
     }
-    catch (Errno const &e)
+    catch (exception const &e)
     {
-        cout << e.why() << endl;
-        return e.which();
+        cout << e.what() << endl;
+        return 1;
     }
 }
 

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <bobcat/errno>
+#include <bobcat/exception>
 #include <bobcat/encryptbuf>
 #include <bobcat/ohexstreambuf>
 
@@ -13,8 +13,9 @@ int main(int argc, char **argv)
 try
 {
     if (argc == 1)
-        throw Errno("1st arg: method, 2nd arg: key, 3rd arg:  (opt): iv, "
-                    "stdin: file to encrypt (to stdout)");
+        throw Exception(1) << 
+                    "1st arg: method, 2nd arg: key, 3rd arg:  (opt): iv, "
+                    "stdin: file to encrypt (to stdout)";
 
     string key(argv[2]);
     string iv;
@@ -40,8 +41,8 @@ try
 
     out << cin.rdbuf();
 }
-catch(Errno const &err)
+catch(exception const &err)
 {
-    cout << err.why() << endl;
+    cout << err.what() << endl;
     return 1;
 }
