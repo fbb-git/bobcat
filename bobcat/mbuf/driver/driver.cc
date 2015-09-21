@@ -6,13 +6,10 @@
 
 using namespace std;
 using namespace FBB;
-// using namespace FBB::BOBCAT;
 
 int main()
 {
-    ostream os(cout.rdbuf());
-
-    Mbuf msb(os.rdbuf());
+    Mbuf msb(cout.rdbuf());
 
     Mstream ms(&msb);
 
@@ -20,16 +17,16 @@ int main()
 
     ms << "hello world" << s << 12 << endl;     // explicit flush
 
-    os.setstate(ios::badbit);
+    ms.setstate(ios::badbit);
 
-    ms << "this should fail" << endl;     // explicit flush
+    ms << "this should fail" << endl;           // explicit flush
 
-    os.clear();
+    ms.clear();
 
     ms << "this should be shown" << endl;     // explicit flush
 
-                                              // throwing buffer
-    msb.reset(cout.rdbuf(), 0, "", true);
+    ms.setMaxCount(0);
+
     try
     {
         ms << "Following this, we throw" << endl;
@@ -38,6 +35,9 @@ int main()
     {
         cerr << "Caught exception" << endl;
     }
+
+    cout << "leaving " << ms.bad() << "\n";
+
 }
 
 
