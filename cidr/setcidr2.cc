@@ -1,4 +1,4 @@
-#include "cidr.ih"
+#include "cidr.hh"
 
 void Cidr::setCidr(istream &fin)
 {

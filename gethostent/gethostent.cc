@@ -1,4 +1,4 @@
-#include "gethostent.ih"
+#include "gethostent.hh"
 
 hostent const *GetHostent::gethostent(char const *prefix, string const &host) 
 {

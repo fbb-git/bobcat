@@ -1,4 +1,4 @@
-#include "sharedmemory.ih"
+#include "sharedmemory.hh"
 
 // Memory computation
 //     P: standard page size

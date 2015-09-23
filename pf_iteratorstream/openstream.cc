@@ -1,4 +1,4 @@
-#include "../primefactors/primefactors.ih"
+#include "../primefactors/primefactors.hh"
 
 void PrimeFactors::iteratorStream::openStream()
 {

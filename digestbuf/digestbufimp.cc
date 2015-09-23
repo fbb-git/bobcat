@@ -1,4 +1,4 @@
-#include "digestbuf.ih"
+#include "digestbuf.hh"
 
 DigestBufImp::DigestBufImp(size_t bufsize)
 :

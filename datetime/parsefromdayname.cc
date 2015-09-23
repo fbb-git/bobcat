@@ -1,4 +1,4 @@
-#include "datetime.ih"
+#include "datetime.hh"
 
 void DateTime::parseFromDayName(istream &in)
 {

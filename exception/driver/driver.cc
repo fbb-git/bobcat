@@ -40,7 +40,7 @@ int main(int argc, char **argv)
     catch(exception const &e)
     {
         cerr << e.what() << '\n'
-             << "Errno == " << errno << '\n';
+             << "Exception == " << errno << '\n';
     }
 
     try
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 
     try
     {
-        throw Exception(E2BIG) << "Error: " << FBB::strerror;
+        throw Exception(E2BIG) << "Error: " << FBB::errnodescr;
     }
     catch(exception const &e)
     {

@@ -1,4 +1,4 @@
-#include "hostname.ih"
+#include "hostname.hh"
 
 /*
     initialize the Hostent part by

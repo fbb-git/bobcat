@@ -1,4 +1,4 @@
-#include "datetime.ih"
+#include "datetime.hh"
 
 DateTime &DateTime::operator+=(time_t seconds)
 {

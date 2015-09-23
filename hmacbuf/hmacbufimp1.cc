@@ -1,4 +1,4 @@
-#include "hmacbuf.ih"
+#include "hmacbuf.hh"
 
 HMacBufImp::HMacBufImp(std::string const &key, size_t bufsize)
 :

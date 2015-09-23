@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "arg.hh"
 
 /*
     called by fillLongOption() to create the array of `struct option'

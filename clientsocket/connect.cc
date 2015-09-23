@@ -1,4 +1,4 @@
-#include "clientsocket.ih"
+#include "clientsocket.hh"
 
 int ClientSocket::connect()
 {

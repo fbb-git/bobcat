@@ -2,12 +2,12 @@
                               driver.cc
 */
 
-#include "driver.h"
-
-#include <fbb/gethostent.h>
+#include <iostream>
 #include <algorithm>
-#include <fbb/hostent.h>
 #include <iterator>
+
+#include <bobcat/hostent>
+#include <bobcat/gethostent>
 
 using namespace std;
 using namespace FBB;
@@ -34,12 +34,11 @@ int main(int argc, char **argv, char **envp)
         for (size_t idx = 0; idx < he.nAddresses(); idx++)
             cout << he.dottedDecimalAddress(idx) << endl;
     }
-    catch (Errno const &err)
+    catch (exception const &err)
     {
-        cout << err.why() << endl;
+        cout << err.what() << endl;
         return 1;
     }
-    return 0;
 }
 
 

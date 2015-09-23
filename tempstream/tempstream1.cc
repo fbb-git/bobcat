@@ -1,4 +1,4 @@
-#include "tempstream.ih"
+#include "tempstream.hh"
 
 TempStream::TempStream(string const &base)
 {

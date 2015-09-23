@@ -1,4 +1,4 @@
-#include "sharedsegment.ih"
+#include "sharedsegment.hh"
 
 size_t SharedSegment::size(int id) 
 {

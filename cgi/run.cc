@@ -1,4 +1,4 @@
-#include "cgi.ih"
+#include "cgi.hh"
 
 // Characters are retrieved from d_in by the tokenizer. They are stored on
 // the stack by the tokenizers, and retrieved from the stack by the

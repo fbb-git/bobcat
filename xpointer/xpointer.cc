@@ -1,4 +1,4 @@
-#include "xpointer.ih"
+#include "xpointer.hh"
 
 Xpointer::Xpointer()
 {

@@ -1,4 +1,4 @@
-#include "cgi.ih"
+#include "cgi.hh"
 
 string CGI::dos2unix(string const &text)
 {

@@ -1,4 +1,4 @@
-#include "ifilterstreambuf.ih"
+#include "ifilterstreambuf.hh"
 
 #include <iostream>
 

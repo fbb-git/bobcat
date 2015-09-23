@@ -1,4 +1,4 @@
-#include "datetime.ih"
+#include "datetime.hh"
 
 ostream &DateTime::timeStr(ostream &out) const
 {

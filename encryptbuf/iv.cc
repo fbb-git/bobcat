@@ -1,4 +1,4 @@
-#include "encryptbuf.ih"
+#include "encryptbuf.hh"
 
 std::string const &EncryptBuf::iv() const
 {

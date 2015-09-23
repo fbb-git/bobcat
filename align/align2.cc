@@ -1,4 +1,4 @@
-#include "align.ih"
+#include "align.hh"
 
 Align::Align(Manipulator manip)
 :

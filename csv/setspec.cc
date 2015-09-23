@@ -1,4 +1,4 @@
-#include "csv.ih"
+#include "csv.hh"
 
 void CSV::setSpec(string const &spec)
 {

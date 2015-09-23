@@ -1,4 +1,4 @@
-#include "pattern.ih"
+#include "pattern.hh"
 
 void Pattern::copy(Pattern const &other)
 {    

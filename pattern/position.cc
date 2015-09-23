@@ -1,4 +1,4 @@
-#include "pattern.ih"
+#include "pattern.hh"
 
 Pattern::Position Pattern::position(size_t index) const
 {

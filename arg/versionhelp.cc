@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "arg.hh"
 
 void Arg__::versionHelp(void (*usage)(string const &progname), 
         char const *version, size_t minArgs, int helpFlag, 

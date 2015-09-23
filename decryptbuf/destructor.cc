@@ -1,4 +1,4 @@
-#include "decryptbuf.ih"
+#include "decryptbuf.hh"
 
 DecryptBuf::~DecryptBuf()
 {

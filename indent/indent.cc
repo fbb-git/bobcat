@@ -1,4 +1,4 @@
-#include "indent.ih"
+#include "indent.hh"
 
 ostream &FBB::indent(ostream &out)
 {

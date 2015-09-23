@@ -1,4 +1,4 @@
-#include "processdata.ih"
+#include "processdata.hh"
 
 void ProcessData::signalHandler(size_t signal)
 {

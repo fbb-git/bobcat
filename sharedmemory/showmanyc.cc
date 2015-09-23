@@ -1,4 +1,4 @@
-#include "sharedmemory.ih"
+#include "sharedmemory.hh"
 
 streamsize SharedMemory::showmanyc()
 {

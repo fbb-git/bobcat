@@ -1,4 +1,4 @@
-#include "datetime.ih"
+#include "datetime.hh"
 
 // time represents UTC or LOCALTIME
 // For time == LOCALTIME: LOCALTIME = UTC + TZ + dst -> UTC = time - TZ - dst

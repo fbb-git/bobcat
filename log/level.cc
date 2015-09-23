@@ -1,4 +1,4 @@
-#include "log.ih"
+#include "log.hh"
 
 ostream &Log::level(size_t activeLevel)
 {

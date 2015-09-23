@@ -1,4 +1,4 @@
-#include "log.ih"
+#include "log.hh"
 
 void Log::setLevel(size_t newLevel)
 {

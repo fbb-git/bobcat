@@ -1,4 +1,4 @@
-#include "iostreambuf.ih"
+#include "iostreambuf.hh"
 
 std::ios::pos_type IOStreambuf::pSeekoff(off_type offset, 
                             std::ios::seekdir way, std::ios::openmode mode)

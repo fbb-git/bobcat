@@ -1,5 +1,5 @@
 
-#include "base64streambufbase.ih"
+#include "base64streambufbase.hh"
 
 bool Base64StreambufBase::encrypt()
 {

@@ -13,8 +13,8 @@ try
 {
     Pipe p;                         // construct a pipe
 
-    cout << "Read file descriptor: " << p.getReadFd() << endl;
-    cout << "Write file descriptor: " << p.getWriteFd() << endl;
+    cout << "Read file descriptor: " << p.readFd() << endl;
+    cout << "Write file descriptor: " << p.writeFd() << endl;
 
     int pid = fork();
 
@@ -45,9 +45,9 @@ try
 
     waitpid(pid, 0, 0);
 }
-throw (Errno const &err)
+catch (exception const &err)
 {
-    cout << err.why() << endl;
+    cout << err.what() << endl;
     return 1;
 }
 

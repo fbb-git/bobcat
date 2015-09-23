@@ -1,4 +1,4 @@
-#include "readlinehistory.ih"
+#include "readlinehistory.hh"
 
 ReadLineHistory::HistoryElement const 
     &ReadLineHistory::const_iterator::operator*() const

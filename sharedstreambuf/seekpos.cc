@@ -1,4 +1,4 @@
-#include "sharedstreambuf.ih"
+#include "sharedstreambuf.hh"
 
 ios::pos_type SharedStreambuf::seekpos(ios::pos_type offset, 
                                        ios::openmode mode)

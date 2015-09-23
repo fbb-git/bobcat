@@ -1,4 +1,4 @@
-#include "sharedsegment.ih"
+#include "sharedsegment.hh"
 
 int SharedSegment::newData(size_t idx)
 {

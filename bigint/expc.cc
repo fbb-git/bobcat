@@ -1,4 +1,4 @@
-#include "bigint.ih"
+#include "bigint.hh"
 
 BigInt BigInt::expc(BigInt const &exponent) const
 {

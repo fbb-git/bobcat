@@ -11,9 +11,9 @@ manpagesynopsis()
     Linking option: tt(-lbobcat) 
 
 manpagedescription()
-    Objects of this class implement a tt(std::streambuf) class that are used
-to handle messages in a standardized way. Messages may be prefixed with order
-numbers and labels and/or line numbers. 
+    Objects of this class are derived from tt(std::streambuf), and are used to
+handle messages in a standardized way. Messages may be prefixed with order
+(line) numbers and/or labels.
 
     By default all messages are inserted into the standard output stream, but
 other destinations (standard error, a named file, etc.) can easily be
@@ -21,7 +21,9 @@ configured.
 
     bf(FBB::Mbuf) objects themselves are tt(std::streambuf) objects, so they
 can be used to construct tt(std::ostream) objects. However, they are intended
-to be used by bf(mstream)(3bobcat) objects.
+to be used by bf(mstream)(3bobcat) objects, and passing tt(Mbuf) objects to
+other kind of tt(ostream) objects is deprecated and may result in undefined
+behavior.
 
 manpagesection(NAMESPACE)
     bf(FBB)nl()

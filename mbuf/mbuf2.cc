@@ -1,4 +1,4 @@
-#include "mbuf.ih"
+#include "mbuf.hh"
 
 Mbuf::Mbuf(streambuf *buf, size_t maxCount, string const &tag, 
                             bool throwing)

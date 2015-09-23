@@ -1,4 +1,4 @@
-#include "bigint.ih"
+#include "bigint.hh"
 
 BigInt::Bit &BigInt::Bit::operator^=(bool rhs)
 {

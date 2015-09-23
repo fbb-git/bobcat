@@ -1,4 +1,4 @@
-#include "milter.ih"
+#include "milter.hh"
 
 sfsistat Milter::mClose(SMFICTX *ctx)
 {

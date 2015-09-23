@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "arg.hh"
 
 Arg     *Arg::s_arg;
 

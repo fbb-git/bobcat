@@ -1,121 +1,83 @@
-void rungzip9(string src, string dest)
-{
-    int idx;
-    string file;
-    list man;
 
-    chdir(src);
-    man = makelist("*");
-    chdir(g_cwd);
-    for (idx = sizeof(man); idx--; )
-    {
-        file = element(idx, man);
-        run("gzip -n -9 < " + src + file + " > " + dest + file + ".gz");
-    }
-}
-
-void reqzip(string dest, string src)
-{
-    list files;
-    int idx;
-    string file;
-
-    md(dest);
-
-    files = strtok(src, " ");
-    for (idx = sizeof(files); idx--; )
-    {
-        file = element(idx, files);
-        run("gzip -n -9 < " + file + " > " + dest + file + ".gz");
-    }
-}
-    
 void install(string rss, string dev)
 {
-#ifdef LIBRARIES
+    string target;
+
+    g_installing = 1;
+
+#ifdef LIB
     printf("\n  installing the libraries\n");
+    logInstall(g_tmpliba, "", dev + BASE LIB);
 
-#ifndef ONLY_STATIC
-    md(rss + LIB);
-    run("cp " CPOPTS " tmp/lib/*so.* " + rss + LIB);
-
-    md(dev + LIB);
-    run("cp " CPOPTS " tmp/lib/*.a tmp/lib/*.so " + dev + LIB);
-#else
-    md(dev + LIB);
-    run("cp " CPOPTS " tmp/lib/*.a " + dev + LIB);
-#endif
+#ifdef BUILD_SHARED
+    logInstall(g_tmplibso, "", rss + BASE LIB);
 #endif
 
-#ifdef HEADERS
+#endif
+
+#ifdef INC
     printf("\n  installing the headers\n");
-    md(dev + INC);
-    run("cp tmp/" LIBRARY "/* " + dev + INC);
+    logInstall("tmp/" LIBRARY, "", dev + BASE INC);
 #endif
 
-#ifdef MANPAGES
+#ifdef MAN
     printf("\n  installing the manual pages\n");
-    md(dev + MAN + "/man1 "     + 
-       dev + MAN + "/man3 "     + 
-       dev + MAN + "/man7 "     +
-       dev + DOC + "/images"    );
 
-    run("cp documentation/images/*.jpg " + dev + DOC + "/images");
+    logZip("tmp/man/man3",  "", dev + BASE MAN "/man3");
 
-    rungzip9("tmp/man/man3/", dev + MAN + "/man3/");
-
-    rungzip9("tmp/man/man7/", dev + MAN + "/man7/");
-    
-    chdir(dev + MAN + "/man3");
     run("ln -sf iterator.3bobcat.gz reverseiterator.3bobcat.gz");
-    chdir(g_cwd);
+    logLink("reverseiterator.3bobcat.gz");
+
+    logZip("tmp/man/man7",  "", dev + BASE MAN "/man7");
 #endif
 
-#ifdef MANHTML
+#ifdef DOC
     printf("\n  installing the html versions of the manual pages\n");
-    md(dev + DOC + "/man");
 
-    run("cp -r tmp/manhtml/* " + dev + DOC + "/man/");
+    logInstall("documentation/images", "*.jpg", dev + BASE DOC "/images");
+ 
+    target = dev + BASE DOC + "/man";
 
-    run("ln -sf " LIBRARY ".7.html " + dev + DOC + "/man/index.html");
-    run("cp documentation/man/" LIBRARY ".jpg " + dev + DOC + "/man");
+    logInstall("tmp/manhtml", "", target);
 
-    chdir(dev + DOC + "/man");
+    logInstall("documentation/man",  LIBRARY ".jpg", target);
+
+    chdir(g_cwd + target);
+    run("ln -sf " LIBRARY ".7.html index.html");
+    logLink("index.html");
+
     run("ln -sf iterator.3.html reverseiterator.3.html");
-    chdir(g_cwd);
+    logLink("reverseiterator.3.html");
+
+    logZip("", "README", rss + BASE DOC);
 #endif
 
-#ifdef DOCOTHER
+#ifdef DOCDEV
     printf("\n  installing remaining documentation\n");
-    reqzip(dev + DOCDEV + "/", 
-            "READLINE "
-            "README "
-            "README.X11 "
-            "README.class-setup "
-            "README.immovable "
-            "README.milter "
-            "README.optimization "
-            "README.process-pipe "
-            "README.fnwrap "
-            "process-pipe.odp "
-            "process-pipe.pdf "
-            "TODO");
+    logZip("", 
+               "READLINE "
+               "README "
+               "README.X11 "
+               "README.class-setup "
+               "README.immovable "
+               "README.milter "
+               "README.optimization "
+               "README.process-pipe "
+               "README.fnwrap "
+               "process-pipe.odp "
+               "process-pipe.pdf "
+               "TODO",
+            dev + BASE DOCDEV);
 
-    run("cp -r documentation/examples " + dev + DOCDEV);
+    logRecursive("documentation/examples", dev + BASE DOCDEV "/examples");
 
-    md(dev + DOCDEV + "/scripts");
-    rungzip9("scripts/", dev + DOCDEV + "/scripts/");
-
-    if (DOC != "")
-    {
-        md(rss + DOC);
-        reqzip(rss + DOC + "/", "README");
-    }
+    logZip("scripts", "", dev + BASE DOCDEV "/scripts");
 #endif
 
     printf("\n  Installation completed\n");
-
-    exit(0);
+    writeLog();
 }
+
+
 
 

@@ -1,4 +1,4 @@
-#include "bigint.ih"
+#include "bigint.hh"
 
 void BigInt::swap(BigInt &other)
 {

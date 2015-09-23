@@ -1,4 +1,4 @@
-#include "main.ih"
+#include "main.hh"
 
 auto_ptr<Pipe> d_child_inp;          // cin read by the CHILD
 auto_ptr<Pipe> d_child_outp;         // cout written by the CHILD

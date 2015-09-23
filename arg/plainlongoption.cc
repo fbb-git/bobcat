@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "arg.hh"
 
 bool Arg__::plainLongOption(Arg__::LongOption const &longOption)
 {

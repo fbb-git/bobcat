@@ -1,4 +1,4 @@
-#include "signal.ih"
+#include "signal.hh"
 
 void Signal::handler(int signum)
 {

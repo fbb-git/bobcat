@@ -1,4 +1,4 @@
-#include "bigint.ih"
+#include "bigint.hh"
 
 BigInt BigInt::prime(size_t nBits, BigInt const *mod, BigInt const *rem,
                      PrimeType primeType)

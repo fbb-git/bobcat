@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "arg.hh"
 
 size_t Arg__::option(std::string const &optchars) const
 {

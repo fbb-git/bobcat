@@ -1,4 +1,4 @@
-#include "cgi.ih"
+#include "cgi.hh"
 
 std::string CGI::unPercent(std::string const &text)
 {

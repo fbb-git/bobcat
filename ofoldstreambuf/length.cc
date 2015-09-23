@@ -1,4 +1,4 @@
-#include "ofoldstreambuf.ih"
+#include "ofoldstreambuf.hh"
 
 size_t OFoldStreambuf::length() const
 {

@@ -1,4 +1,4 @@
-#include "mbuf.ih"
+#include "mbuf.hh"
 
 void Mbuf::inspectOfstr(string const &name) const
 {

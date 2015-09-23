@@ -1,4 +1,4 @@
-#include "configfile.ih"
+#include "configfile.hh"
 
 bool ConfigFile__::rmCommentAndEscapes(string &line)
 {

@@ -1,4 +1,4 @@
-#include "diffiehellman.ih"
+#include "diffiehellman.hh"
 
 bool DiffieHellman::load(istream &publicData)
 {

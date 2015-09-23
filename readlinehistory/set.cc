@@ -1,4 +1,4 @@
-#include "readlinehistory.ih"
+#include "readlinehistory.hh"
 
 ReadLineHistory::HistoryElement const 
         &ReadLineHistory::HistoryElement::set(HIST_ENTRY const *element)

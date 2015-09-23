@@ -1,4 +1,4 @@
-#include "primefactors.ih"
+#include "primefactors.hh"
 
 void PrimeFactors::reduce(BigInt const &prime)
 {

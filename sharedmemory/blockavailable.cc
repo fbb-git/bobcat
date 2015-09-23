@@ -1,4 +1,4 @@
-#include "sharedmemory.ih"
+#include "sharedmemory.hh"
 
 bool SharedMemory::blockAvailable(size_t idx)
 {

@@ -1,4 +1,4 @@
-#include "configfile.ih"
+#include "configfile.hh"
 
 ConfigFile::const_iterator ConfigFile::begin() const
 {

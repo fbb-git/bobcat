@@ -1,4 +1,4 @@
-#include "encryptbuf.ih"
+#include "encryptbuf.hh"
 
 EVP_CIPHER_CTX *EncryptBuf::cipherCtx()
 {

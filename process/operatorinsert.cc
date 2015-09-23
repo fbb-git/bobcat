@@ -1,4 +1,4 @@
-#include "process.ih"
+#include "process.hh"
 
 Process &Process::operator<<(std::ostream &(*pf)(std::ostream &))
 {

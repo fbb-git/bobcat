@@ -1,4 +1,4 @@
-#include "user.ih"
+#include "user.hh"
 
 void User::verify() const
 {}

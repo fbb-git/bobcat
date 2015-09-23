@@ -1,4 +1,4 @@
-#include "randbuffer.ih"
+#include "randbuffer.hh"
 
 int Randbuffer::underflow()
 {

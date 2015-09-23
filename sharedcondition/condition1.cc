@@ -1,4 +1,4 @@
-#include "sharedcondition.ih"
+#include "sharedcondition.hh"
 
 SharedCondition::Condition::Condition()
 {

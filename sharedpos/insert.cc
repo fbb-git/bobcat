@@ -1,4 +1,4 @@
-#include "sharedpos.ih"
+#include "sharedpos.hh"
 
 ostream &SharedPos::insert(ostream &out) const
 {

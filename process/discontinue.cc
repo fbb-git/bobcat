@@ -1,4 +1,4 @@
-#include "process.ih"
+#include "process.hh"
 
 pid_t Process::discontinue(RetPid &proc)
 {

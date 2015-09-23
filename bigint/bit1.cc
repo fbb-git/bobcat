@@ -1,4 +1,4 @@
-#include "bigint.ih"
+#include "bigint.hh"
 
 BigInt::Bit::Bit(BigInt &bi, size_t idx)
 :

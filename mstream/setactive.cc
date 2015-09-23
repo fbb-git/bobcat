@@ -1,4 +1,4 @@
-#include "mstream.ih"
+#include "mstream.hh"
 
 bool Mstream::setActive(bool ifTrue)
 {

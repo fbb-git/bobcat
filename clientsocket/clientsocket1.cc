@@ -1,4 +1,4 @@
-#include "clientsocket.ih"
+#include "clientsocket.hh"
 
 ClientSocket::ClientSocket(string const &host, uint16_t port)
 :

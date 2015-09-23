@@ -1,4 +1,4 @@
-#include "bigint.ih"
+#include "bigint.hh"
 
 void BigInt::setWord(size_t index, BigInt::Word word)
 {

@@ -1,4 +1,4 @@
-#include "tablesupport.ih"
+#include "tablesupport.hh"
 
 TableSupport::HLine::HLine(ColumnType margins, 
                             size_t row, size_t begin, size_t end)

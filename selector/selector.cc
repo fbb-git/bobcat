@@ -2,7 +2,7 @@
                               selector.cc
 */
 
-#include "selector.ih"
+#include "selector.hh"
 
 Selector::Selector()
 {

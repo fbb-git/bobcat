@@ -1,4 +1,4 @@
-#include "localsocketbase.ih"
+#include "localsocketbase.hh"
 
 void LocalSocketBase::open(std::string const &name)
 {

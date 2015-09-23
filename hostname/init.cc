@@ -1,4 +1,4 @@
-#include "hostname.ih"
+#include "hostname.hh"
 
 void Hostname::init()
 {

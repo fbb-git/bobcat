@@ -1,4 +1,4 @@
-#include "iostreambuf.ih"
+#include "iostreambuf.hh"
 
 int IOStreambuf::overflow(int c)
 {

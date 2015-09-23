@@ -1,4 +1,4 @@
-#include "ofdstreambuf.ih"
+#include "ofdstreambuf.hh"
 
 void OFdStreambuf::open(int fd, Mode mode, size_t n)
 {

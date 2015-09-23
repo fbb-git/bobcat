@@ -1,6 +1,6 @@
 //                     version.cc
 
-#include "main.ih"
+#include "main.hh"
 
 namespace Icmbuild
 {

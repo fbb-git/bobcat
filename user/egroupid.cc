@@ -1,4 +1,4 @@
-#include "user.ih"
+#include "user.hh"
 
 size_t User::eGroupid() const
 {

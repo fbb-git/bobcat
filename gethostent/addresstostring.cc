@@ -1,4 +1,4 @@
-#include "gethostent.ih"
+#include "gethostent.hh"
 
 string GetHostent::addressToString(char const *prefix, void const *ads)
 {

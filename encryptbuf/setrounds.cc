@@ -1,4 +1,4 @@
-#include "encryptbuf.ih"
+#include "encryptbuf.hh"
 
 bool EncryptBuf::setRounds(size_t nRounds)
 {

@@ -1,3 +1,35 @@
+<<<<<<< HEAD
+=======
+bobcat (4.01.00)
+
+  * Moved primefactors from CLASSES to SSLCLASSES as the class PrimeFactors 
+    depends on BigInt, which in turn depends on the SSL library.
+
+  * Added 'build uninstall'. This command only works if, when calling one of
+    the 'build install' alternatives and when calling 'build uninstall' the
+    environment variable BOBCAT contains the (preferably absolute) filename
+    of a file on which installed files and directories are logged.
+    Note that 'build (dist)clean' does not remove the file pointed at by the
+    BOBCAT environment variable, unless that file happpens to be in a
+    directory removed by 'build (dist)clean'. See also the file INSTALL.
+    Defining the BOBCAT environment variable as ~/.bobcat usually works
+    well. 
+
+  * In addition to the classes mentioned at 4.00.00 the struct LC (bobcat/lc)
+    was also removed, as it is now superfluous because of the availability of
+    lambda functions:
+        LC          (lambda functions)
+
+  * The .ih internal headers were renamed to .hh, allowing g++ to
+    autimatically recognize them as header files, so they could be converted
+    to precompiled headers, following a suggestion by Bram Neijt. The build
+    script now creates the precompiled headers. They are removed again at the
+    end of the library construction process unless the option -p is provided 
+    with 'build libraries'. They are also removed by './build distclean'.
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Wed, 23 Sep 2015 12:11:09 +0200
+
+>>>>>>> upstream/4.01.00
 bobcat (4.00.00)
 
   * Major release upgrade needed because of the ABI change of the libc++

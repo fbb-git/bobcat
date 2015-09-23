@@ -1,4 +1,4 @@
-#include "bigint.ih"
+#include "bigint.hh"
 
 ostream &BigInt::insertInto(ostream &out) const
 {

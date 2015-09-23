@@ -1,4 +1,4 @@
-#include "string.ih"
+#include "string.hh"
 
 String::ConstIter String::quoted(string const &str,
                                     ConstIter from, int quote)

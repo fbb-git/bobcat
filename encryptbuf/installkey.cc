@@ -1,4 +1,4 @@
-#include "encryptbuf.ih"
+#include "encryptbuf.hh"
 
 void EncryptBuf::installKey(string const &key, size_t numberOfBytes)
 {

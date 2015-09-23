@@ -1,4 +1,4 @@
-#include "sharedstreambuf.ih"
+#include "sharedstreambuf.hh"
 
 std::streamsize SharedStreambuf::xsputn(char const *buf, std::streamsize len)
 {

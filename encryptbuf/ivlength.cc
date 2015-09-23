@@ -1,4 +1,4 @@
-#include "encryptbuf.ih"
+#include "encryptbuf.hh"
 
 size_t EncryptBuf::ivLength() const
 {

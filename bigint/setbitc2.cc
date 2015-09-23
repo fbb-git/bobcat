@@ -1,4 +1,4 @@
-#include "bigint.ih"
+#include "bigint.hh"
 
 BigInt BigInt::setBitc(size_t index, bool value) const
 {

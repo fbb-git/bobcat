@@ -1,4 +1,4 @@
-#include "ofoldstreambuf.ih"
+#include "ofoldstreambuf.hh"
 
 int OFoldStreambuf::overflow(int c)
 {

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #include "multistreambuf.ih"
+=======
+#include "multistreambuf.hh"
+>>>>>>> upstream/4.01.00
 
 bool MultiStreambuf::remove(ostream &os, Mode mode)
 {

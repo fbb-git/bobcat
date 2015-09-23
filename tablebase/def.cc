@@ -1,4 +1,4 @@
-#include "tablebase.ih"
+#include "tablebase.hh"
 
 void TableBase::def()
 {
