@@ -1,18 +1,15 @@
 void man()
 {
     list yo;
-    list inc;
     string base;
     string yodl;
     int idx;
 
     special(0, 0);
 
-    md("tmp/man/man1 tmp/man/man3 tmp/man/man7 tmp/manhtml");
+    md("tmp/man/man3 tmp/man/man7 tmp/manhtml");
 
     chdir("documentation/man");
-
-    inc = makelist("*.fnc");
 
     yo = makelist("*.yo") - (list)LIBRARY ".yo" - (list)"reverseiter.yo" -
                             (list)"sharedreadme.yo";
@@ -34,9 +31,8 @@ void man()
 
     printf("\n"
             "   Building the man7 man-pages\n");
-
     run("yodl2man  --no-warnings  -r 3 -o ../../tmp/man/man7/" 
-                                            LIBRARY ".7 " LIBRARY ".yo");
+                                          LIBRARY ".7 " LIBRARY ".yo");
     run("yodl2html --no-warnings  -r 3 "
                     "-o ../../tmp/manhtml/" LIBRARY ".7.html " LIBRARY ".yo");
 

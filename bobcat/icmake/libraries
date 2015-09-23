@@ -102,7 +102,7 @@ void static_library(string library)
     }
 }
 
-void _shared_library(string destDir, string libso, string libsoshared, 
+void _shared_library(string libso, string libsoshared, 
                     int strip)
 {
     string libsomajor;
@@ -122,11 +122,11 @@ void _shared_library(string destDir, string libso, string libsoshared,
                     " -shared -Wl,--as-needed,"
                     "-z,defs,-soname," + 
                     libsomajor +
-                    " -o " + destDir + "/" + libsoshared +
+                    " -o " + g_tmplibso + "/" + libsoshared +
                     " */os/*.o " +
                     g_sharedLibReq);
     
-        chdir(destDir);
+        chdir(g_tmplibso);
     
         if (strip)
             run("strip --strip-unneeded " + libsoshared);
@@ -134,15 +134,17 @@ void _shared_library(string destDir, string libso, string libsoshared,
         run("chmod -x " + libsoshared);
         
         run("ln -sf " + libsoshared + " " + libsomajor);
+
+        chdir(g_cwd + g_tmpliba);
+
         run("ln -sf " + libsomajor  + " " + libso);
     
-//        run("rm -f */os/*");
-
         chdir(g_cwd);
+        run("rm -f */os/*");
     }
 }
 
-void libraries(string libname, int all, int strip)
+void libraries(int keepPch, string libname, int all, int strip)
 {
     string libso;
     string libsoshared;
@@ -173,8 +175,11 @@ void libraries(string libname, int all, int strip)
 
     library("os", g_tmplibso + "/" + libsoshared);  // compile the shared lib
 
-    _shared_library(g_tmplibso, libso, libsoshared, strip);
+    _shared_library(libso, libsoshared, strip);
 #endif
+
+    if (!keepPch)
+        run("rm -rf */*.hh.gch");
 
     exit(0);
 }

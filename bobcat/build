@@ -68,11 +68,18 @@ void main(int argc, list argv)
     string option;
     string all;
     string strip;
+    int keepPch = 0;
 
     if (argv[1] == "-q")
     {
         g_echo = OFF;
         argv -= (list)"-q";
+    }
+
+    if (argv[1] == "-p")
+    {
+        keepPch = 1;
+        argv -= (list)"-p";
     }
 
     echo(g_echo);
@@ -97,7 +104,7 @@ void main(int argc, list argv)
     {
         option = "libraries";
         g_all   = 0;
-        libraries("bobcat", 1, argv[2] == "strip");
+        libraries(keepPch, "bobcat", 1, argv[2] == "strip");
     }
 
         // 'all': all all libraries unconditionally
@@ -112,13 +119,13 @@ void main(int argc, list argv)
         else                    // not all: defines 'strip'
             strip = all;
 
-        libraries("bobcat", all == "all", strip == "strip");
+        libraries(keepPch, "bobcat", all == "all", strip == "strip");
     }
 
     if (option == "l")
     {
         system(P_NOCHECK, "tput clear");
-        libraries("bobcat", 1, 0);
+        libraries(keepPch, "bobcat", 1, 0);
     }
 
     if (option == "man")
@@ -133,9 +140,12 @@ void main(int argc, list argv)
     if (option == "uninstall")
         uninstall();
 
-    printf("Usage: build [-q] what\n"
+    printf("Usage: build [-q] [-p] what\n"
         "Where\n"
         "   [-q]:   run quietly, do not show executed commands\n"
+        "   [-p]:   used with build light, build libraries and build l\n"
+        "           when specified, the precompiled headers are kept after\n"
+        "           constructing the libraries\n"   
         "`what' is one of:\n"
         "   clean               - clean up remnants of previous compilations\n"
         "   distclean           - same as clean\n"
