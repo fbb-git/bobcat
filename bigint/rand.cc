@@ -1,4 +1,4 @@
-#include "bigint.ih"
+#include "bigint.hh"
 
 BigInt BigInt::rand(size_t size, Msb msb, Lsb lsb)
 {

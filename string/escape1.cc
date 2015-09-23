@@ -1,4 +1,4 @@
-#include "string.ih"
+#include "string.hh"
 
 string String::escape(string const &str, char const *series)
 {

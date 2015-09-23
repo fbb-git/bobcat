@@ -1,4 +1,4 @@
-#include "ofoldstreambuf.ih"
+#include "ofoldstreambuf.hh"
 
 void OFoldStreambuf::setMargins(size_t leftMargin, size_t rightMargin)
 {

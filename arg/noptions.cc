@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "arg.hh"
 
 size_t Arg::nOptions() const
 {

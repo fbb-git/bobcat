@@ -1,4 +1,4 @@
-#include "process.ih"
+#include "process.hh"
 
 void Process::setBufSize(size_t bufSize)
 {

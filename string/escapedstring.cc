@@ -1,4 +1,4 @@
-#include "string.ih"
+#include "string.hh"
 
 // On entry, `begin' points at the beginning of the stand-alone escape
 // character. 

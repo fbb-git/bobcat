@@ -1,4 +1,4 @@
-#include "iostreambuf.ih"
+#include "iostreambuf.hh"
 
 void IOStreambuf::open(std::istream &in, std::ostream &out)
 {

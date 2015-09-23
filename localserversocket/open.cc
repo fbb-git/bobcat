@@ -1,4 +1,4 @@
-#include "localserversocket.ih"
+#include "localserversocket.hh"
 
 void LocalServerSocket::open(string const &name, Socket action)
 {

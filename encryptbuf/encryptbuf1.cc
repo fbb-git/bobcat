@@ -1,4 +1,4 @@
-#include "encryptbuf.ih"
+#include "encryptbuf.hh"
 
 EncryptBuf::EncryptBuf(ostream &outStream, char const *type, 
                         string key, string iv, size_t bufsize)

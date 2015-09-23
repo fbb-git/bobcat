@@ -1,53 +1,41 @@
-    // About compiling the bobcat library on BSD/MacOSX:
-    //
-    // According to Karel Kubat (karel at e dash tunity dot com) the bobcat
-    // library won't compile under BSD/MacOSX if the Linux options to create
-    // the dynamic library are used. Instead of 
-    //      -shared -Wl,-z,def,-soname,
-    // Karel suggests to use:
-    //      -dynamiclib -Wl,-single_module
-    //
-    // Also, he suggests to use the name libbobcat.dylib instead of
-    // libbobcat.so.1 
-    //
-    // In the directory ./contrib the script c-conf is found which is provided
-    // by Karel and which might be useful to construct the libraries under
-    // BSD/MacOSX systems. Don't contact me if you experience any problems
-    // with Karel's script. Instead, contact Karel directly.
+// About compiling the bobcat library on BSD/MacOSX:
+//
+// According to Karel Kubat (karel at e dash tunity dot com) the bobcat
+// library won't compile under BSD/MacOSX if the Linux options to create
+// the dynamic library are used. Instead of 
+//      -shared -Wl,-z,def,-soname,
+// Karel suggests to use:
+//      -dynamiclib -Wl,-single_module
+//
+// Also, he suggests to use the name libbobcat.dylib instead of
+// libbobcat.so.1 
+//
+// In the directory ./contrib the script c-conf is found which is provided
+// by Karel and which might be useful to construct the libraries under
+// BSD/MacOSX systems. Don't contact me if you experience any problems
+// with Karel's script. Instead, contact Karel directly.
+//===========================================================================
 
-//#define ONLY_STATIC
-    // Activating this #define prevents the construction of the shared library
+    // Remove this #define to prevent the construction of the shared library 
+#define BUILD_SHARED
 
+    // The name of the C++ compiler
 #define CXX         "g++"
-#define CXXFLAGS    "--std=c++14 -O2 -Wall"
+//#define CXX         "g++-5"
+
     // Specify compiler options that should be used.
     // This is overruled by the environment variable CXXFLAGS
     // The options "-isystem tmp" must always be used, are set in
     // icmake/library and should not be altered.
+#define CXXFLAGS    "--std=c++14 -O2 -Wall -fdiagnostics-color=never"
 
+    // Classes requiring the -pthread compiler option
 #define PTHREAD     "sharedmutex sharedblock sharedmemory sharedsegment " \
                     "process processdata semaphore"
-    // Classes requiring the -pthread compiler option
 
-#define LDFLAGS    "-lpthread"
     // Specify linker options that should be used when creating the shared
     // library
-
-#define LIBRARIES
-    // Install the libraries, remove if not requested
-
-#define HEADERS
-    // Install the headers, remove if not requested
-
-#define MANPAGES
-    // Install the manpages, remove if not requested
-
-#define MANHTML
-    // Install the html-versions of the manpages, remove if not requested
-
-#define DOCOTHER
-    // Install remaining docs (README, examples, etc), remove if not requested
-
+#define LDFLAGS    "-lpthread"
 
     // The following /bin/cp options are used to keep, rather than follow
     // symbolic references. If your installation doesn't support these flags,
@@ -59,60 +47,37 @@
     //          mode,ownership,timestamps), if possible  additional  
     //          attributes:  context, links, all
     //   -d     same as --no-dereference --preserve=links
-
 #define CPOPTS  "-d"
 
-    // The following icmake string variables are given their values below, in
-    // the function `setLocations()'
-
-string BASE;
 
     // BASE=is the directory below which ALL bisonc++ files will be stored.
-
     // For an operational non-Debian installation, you probably must be
     // `root', and BASE "/usr" or BASE "/usr/local" is suggested (see
     // below). `BASE' itself is not used outside of this file, so feel free to
     // define BIN, SKEL, MAN and DOC (below) in any which way you like.
+#define BASE "/usr"
 
-string BIN;
-    // The location of the binary program bobcatlcgen
+// All remaining directory locations are relative wrt BASE. 
+// With 'build install' you can dynamically specify locations before BASE.
+// By remove one or more of the following #defines you prevent the 
+// installation of those elements
 
-//string GPP;
-    // GPP specifies the compiler to use. By defining GPP with a specific 
-    // version (e.g., GPP=g++-4.1) that particular version can be used. The
-    // distributed definition uses the `default' compiler version and uses 
-    // `g++'. It is `gpp' in some installations. 
-
-string DOC;
     // DOC is the directory in which all standard documentation will be stored
     // in this directory the non-development related information is stored. It
     // is not used if not defined (or defined empty)
+#define DOC     "/share/doc/libbobcat4"
 
-string DOCDEV;
     // DOCDEV is the directory in which all other documentation will be stored
     // In this directory the development related information is stored
+#define DOCDEV  "/share/doc/libbobcat4-dev"
 
-string INC;
     // the directory in which the header files will be stored
+#define INC     "/include/bobcat"
 
-string LIB;
     // the directory in which the bobcat libraries will be stored
+#define LIB     "/lib"
 
-string MAN;
     // MAN is the directory in which the manual pages will be stored
     // They are stored below man3 and man7
+#define MAN     "/share/man"
 
-string SHAREDOPT;
-string SHAREDLIB;
-
-void setLocations()
-{
-    BASE  = "/usr";
-
-    BIN  =      BASE + "/bin";    
-    DOC  =      BASE + "/share/doc/libbobcat3";
-    DOCDEV  =   BASE + "/share/doc/libbobcat3-dev";
-    INC  =      BASE + "/include/bobcat";
-    LIB  =      BASE + "/lib";
-    MAN  =      BASE + "/share/man";    
-}

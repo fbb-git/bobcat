@@ -1,4 +1,4 @@
-#include "ofoldstream.ih"
+#include "ofoldstream.hh"
 
 void OFoldStream::open(char const *fname, 
                     size_t leftIndent, size_t rightMargin, TrailingBlanks tb)

@@ -1,4 +1,4 @@
-#include "exception.ih"
+#include "exception.hh"
 
 size_t Exception::protection(std::string const &name, size_t protect,
                            Protection type)

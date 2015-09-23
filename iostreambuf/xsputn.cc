@@ -1,4 +1,4 @@
-#include "iostreambuf.ih"
+#include "iostreambuf.hh"
 
 std::streamsize IOStreambuf::xsputn(char const *buffer, streamsize n)
 {

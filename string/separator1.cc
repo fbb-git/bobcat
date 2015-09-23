@@ -1,4 +1,4 @@
-#include "string.ih"
+#include "string.hh"
 
     // We're at a separator. Return the iterator pointing beyond the
     // separator. find_first_not_of() will do that, unless there are no

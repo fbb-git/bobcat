@@ -1,4 +1,4 @@
-#include "milter.ih"
+#include "milter.hh"
 
 void Milter::initialize(string const &name, Milter &milter, 
                         callback_set callbacks, flag_set flags)

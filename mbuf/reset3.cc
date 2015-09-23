@@ -1,4 +1,4 @@
-#include "mbuf.ih"
+#include "mbuf.hh"
 
 void Mbuf::reset(string const &name, size_t maxCount, string const &tag, 
                    bool throwing)
@@ -8,7 +8,7 @@ void Mbuf::reset(string const &name, size_t maxCount, string const &tag,
     if (d_ofstr->rdbuf() == d_ostr.rdbuf())
         d_ofstr.reset();
 
-    d_ofstr = shared_ptr<ofstream>(new ofstream(name));
+    d_ofstr = make_shared<ofstream>(name);
     d_ostr.rdbuf(d_ofstr->rdbuf()),
 
     d_firstChar = true;

@@ -1,4 +1,4 @@
-#include "localsocketbase.ih"
+#include "localsocketbase.hh"
 
 LocalSocketBase::LocalSocketBase()
 :

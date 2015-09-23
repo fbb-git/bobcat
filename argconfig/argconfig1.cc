@@ -1,4 +1,4 @@
-#include "argconfig.ih"
+#include "argconfig.hh"
 
 ArgConfig::ArgConfig(char const *optstring, 
     int argc, char **argv,

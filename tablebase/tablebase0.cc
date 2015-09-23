@@ -1,4 +1,4 @@
-#include "tablebase.ih"
+#include "tablebase.hh"
 
 TableBase::TableBase(size_t nColumns, FillDirection direction, 
                                                         WidthType widthType)

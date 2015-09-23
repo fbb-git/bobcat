@@ -1,4 +1,4 @@
-#include "isharedstream.ih"
+#include "isharedstream.hh"
 
 void ISharedStream::open(int id, std::ios::openmode openMode)
 {

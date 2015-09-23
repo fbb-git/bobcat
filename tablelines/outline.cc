@@ -1,4 +1,4 @@
-#include "tablelines.ih"
+#include "tablelines.hh"
 
 void TableLines::outLine(Field const &field,  ostream &out) 
 {

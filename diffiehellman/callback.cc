@@ -1,4 +1,4 @@
-#include "diffiehellman.ih"
+#include "diffiehellman.hh"
 
 namespace {
     char info[] = {0, '.', '-', '+'};

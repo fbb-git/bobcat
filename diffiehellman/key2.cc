@@ -1,4 +1,4 @@
-#include "diffiehellman.ih"
+#include "diffiehellman.hh"
 
 string DiffieHellman::key(std::string const &peerPublicFileName)
 {

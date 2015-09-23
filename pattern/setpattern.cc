@@ -1,4 +1,4 @@
-#include "pattern.ih"
+#include "pattern.hh"
 
 void Pattern::setPattern(string const &pattern, 
         bool caseSensitive, size_t nSub, int options)

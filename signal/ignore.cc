@@ -1,4 +1,4 @@
-#include "signal.ih"
+#include "signal.hh"
 
 void Signal::ignore(size_t signum)
 {

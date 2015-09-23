@@ -5,9 +5,8 @@
 #include <iostream>
 #include <string>
 
-#include <bobcat/errno>
-
-#include "../glob"
+#include <bobcat/exception>
+#include <bobcat/glob>
 
 
 using namespace std;
@@ -59,12 +58,10 @@ try
     cout << "\nThe next glob fails, this is intentional\n";
 
     Glob fails("*", 1023);
-
-    return 0;
 }
-catch (Errno const &err)
+catch (exception const &err)
 {
-    cout << err.why() << '\n';
-    return err.which();
+    cout << err.what() << '\n';
+    return 1;
 }
 

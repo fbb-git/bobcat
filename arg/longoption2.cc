@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "arg.hh"
 
 LongOption__::LongOption__(char const *name, int optionChar)
 :

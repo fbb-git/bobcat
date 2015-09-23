@@ -1,4 +1,4 @@
-#include "../primefactors/primefactors.ih"
+#include "../primefactors/primefactors.hh"
 
 PrimeFactors::iterator::iterator(BigIntVector &primes)
 :

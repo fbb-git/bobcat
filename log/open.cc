@@ -1,4 +1,4 @@
-#include "log.ih"
+#include "log.hh"
 
 void Log::open(string const &filename, ios::openmode mode, char const *delim)
 {
@@ -10,7 +10,7 @@ void Log::open(string const &filename, ios::openmode mode, char const *delim)
     {
         d_stream.open(filename.c_str(), mode);
         if (!d_stream)
-            Exception() << "Log::Log(string, ...): can't write `" << 
+            throw Exception() << "Log::Log(string, ...): can't write `" << 
                                                         filename << '\'';
         setStream(d_stream);
     }

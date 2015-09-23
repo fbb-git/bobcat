@@ -1,4 +1,4 @@
-#include "string.ih"
+#include "string.hh"
 
 vector<String::SplitPair> String::split(string const &str,
                                     string const &separators, bool addEmpty)

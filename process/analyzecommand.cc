@@ -1,4 +1,4 @@
-#include "process.ih"
+#include "process.hh"
 
 Process::ExecContext Process::analyzeCommand()
 {

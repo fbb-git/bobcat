@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "arg.hh"
 
 char const **Arg__::argPointers()
 {

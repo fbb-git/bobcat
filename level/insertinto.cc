@@ -1,4 +1,4 @@
-#include "level.ih"
+#include "level.hh"
 
 std::ostream &level::insertInto(ostream &str, Log &lp) const
 {

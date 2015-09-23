@@ -1,4 +1,4 @@
-#include "selector.ih"
+#include "selector.hh"
 
 void Selector::addFd(fd_set *set, int fd)
 {

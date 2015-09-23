@@ -1,4 +1,4 @@
-#include "process.ih"
+#include "process.hh"
 
 Process::Process(size_t mode, std::string const &command)
 :

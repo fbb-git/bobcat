@@ -1,4 +1,4 @@
-#include "process.ih"
+#include "process.hh"
 
 void Process::start(IOMode mode, ProcessType type, size_t timeLimit, 
                     size_t bufferSize) 

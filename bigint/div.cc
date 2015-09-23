@@ -1,4 +1,4 @@
-#include "bigint.ih"
+#include "bigint.hh"
 
 BigInt &BigInt::div(BigInt *remainder, BigInt const &rhs)
 {

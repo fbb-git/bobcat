@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include <bobcat/hostname>
-#include <bobcat/errno>
+#include <bobcat/exception>
 
 using namespace std;
 using namespace FBB;
@@ -37,12 +37,11 @@ int main(int argc, char **argv)
                 cout << h.dottedDecimalAddress(idx) << " ";
             cout << endl;
         }
-        catch (Errno const &err)
+        catch (exception const &err)
         {
-            cout << err.why() << endl;
+            cout << err.what() << endl;
         }
     }
-    return 0;
 }
 
 

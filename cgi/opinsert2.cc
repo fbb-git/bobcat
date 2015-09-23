@@ -1,4 +1,4 @@
-#include "cgi.ih"
+#include "cgi.hh"
 
 CGI &CGI::operator<<(std::pair<char, char> range)
 {

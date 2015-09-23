@@ -1,4 +1,4 @@
-#include "cgi.ih"
+#include "cgi.hh"
 
 void CGI::setQuery()
 {
@@ -12,7 +12,7 @@ void CGI::setQuery()
         case POST:
             if (d_boundary.length() == 0)
             {
-                auto_ptr<char> cp(new char[d_contentLength]);
+                unique_ptr<char> cp(new char[d_contentLength]);
             
                 if (!cin.read(cp.get(), d_contentLength))
                     d_status = "invalid CONTENT_LENGTH in POSTed form";

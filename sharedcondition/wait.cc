@@ -1,4 +1,4 @@
-#include "sharedcondition.ih"
+#include "sharedcondition.hh"
 
 void SharedCondition::wait()
 {

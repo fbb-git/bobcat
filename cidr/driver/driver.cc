@@ -2,7 +2,7 @@
 #include <fstream>
 #include <iostream>
 
-#include <bobcat/errno>
+#include <bobcat/exception>
 #ifdef BOBCAT
     #include <bobcat/cidr>
 #else
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 
     if (argc > 1)
     {
-        Errno::open(in, argv[1]);       // file containing cidr-specs
+        Exception::open(in, argv[1]);       // file containing cidr-specs
         spec = FILE;
     }
     
@@ -82,9 +82,9 @@ int main(int argc, char **argv)
                         "Address: " << cidr.address() << '\n';
             }
         }
-        catch (Errno const &err)
+        catch (exception const &err)
         {
-            cout << "Oops... " << err.why() << "\n"
+            cout << "Oops... " << err.what() << "\n"
                     "Try again...\n";
         }
     }

@@ -1,4 +1,4 @@
-#include "tablebase.ih"
+#include "tablebase.hh"
 
 ostream &TableBase::insert(ostream &ostr)
 {

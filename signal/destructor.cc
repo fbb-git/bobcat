@@ -1,4 +1,4 @@
-#include "signal.ih"
+#include "signal.hh"
 
 SignalHandler::~SignalHandler()
 {}

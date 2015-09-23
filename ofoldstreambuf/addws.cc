@@ -1,4 +1,4 @@
-#include "ofoldstreambuf.ih"
+#include "ofoldstreambuf.hh"
 
 void OFoldStreambuf::addWs(int c)
 {

@@ -1,4 +1,4 @@
-#include "sharedstreambuf.ih"
+#include "sharedstreambuf.hh"
 
 SharedCondition SharedStreambuf::attachSharedCondition(
                                         std::ios::off_type offset,

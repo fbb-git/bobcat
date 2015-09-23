@@ -1,4 +1,4 @@
-#include "configfile.ih"
+#include "configfile.hh"
 
 bool FBB::operator==(RE_iterator const &lhs, RE_iterator const &rhs)
 {

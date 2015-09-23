@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "arg.hh"
 
 Arg__::Arg__(char const *optstring, int argc, char **argv)
 :

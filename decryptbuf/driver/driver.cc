@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <bobcat/errno>
+#include <bobcat/exception>
 #include <bobcat/decryptbuf>
 
 using namespace std;
@@ -10,8 +10,9 @@ int main(int argc, char **argv)
 try
 {
     if (argc == 1)
-        throw Errno("1st arg: method, 2nd arg: key, 3rd arg: file to "
-                    "decrypt (to stdout), 4th arg: iv");
+        throw Exception(1) << 
+                    "1st arg: method, 2nd arg: key, 3rd arg: file to "
+                    "decrypt (to stdout), 4th arg: iv";
 
     cerr << "Key: `" << argv[2] << "'\n"
             "IV:  `" << argv[4] << "'\n";
@@ -23,9 +24,9 @@ try
     out << in.rdbuf();
     // decryptbuf.done();       // optionally
 }
-catch(Errno const &err)
+catch(exception const &err)
 {
-    cout << err.why() << endl;
+    cout << err.what() << endl;
     return 1;
 }
 

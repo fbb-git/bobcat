@@ -1,4 +1,4 @@
-#include "configfile.ih"
+#include "configfile.hh"
 
 ConfigFile &ConfigFile::operator=(ConfigFile &&tmp)
 {

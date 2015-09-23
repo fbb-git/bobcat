@@ -1,4 +1,4 @@
-//#include "cmdfinderbase.ih"
+//#include "cmdfinderbase.hh"
 //
 //CmdFinderBase::CmdFinderBase(CmdFinderBase &&tmp) 
 //:

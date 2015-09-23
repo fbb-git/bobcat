@@ -1,4 +1,4 @@
-#include "pipe.ih"
+#include "pipe.hh"
 
 void Pipe::writtenBy(int fd)
 {

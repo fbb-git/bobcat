@@ -1,4 +1,4 @@
-#include "syslogstream.ih"
+#include "syslogstream.hh"
 
 ostream &SyslogStream::setPriority(ostream &str, Priority value)
 {

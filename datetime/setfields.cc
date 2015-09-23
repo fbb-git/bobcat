@@ -1,4 +1,4 @@
-#include "datetime.ih"
+#include "datetime.hh"
 
 bool DateTime::setFields(TimeStruct const &time, int fields)
 {

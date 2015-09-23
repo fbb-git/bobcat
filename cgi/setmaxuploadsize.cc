@@ -1,4 +1,4 @@
-#include "cgi.ih"
+#include "cgi.hh"
 
 void CGI::setMaxUploadSize(size_t maxUploadSize, int unit)
 {

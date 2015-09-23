@@ -1,4 +1,4 @@
-#include "mailheaders.ih"
+#include "mailheaders.hh"
 
 MailHeaders::const_hdr_iterator::Comparator 
     MailHeaders::const_hdr_iterator::s_comparator[] = 

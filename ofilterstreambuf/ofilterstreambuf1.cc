@@ -1,4 +1,4 @@
-#include "ofilterstreambuf.ih"
+#include "ofilterstreambuf.hh"
 
 OFilterStreambuf::OFilterStreambuf(std::string const &fname, openmode mode)
 :

@@ -1,44 +1,49 @@
-#include "../msgbuf"
 
 #include <iostream>
-#include <bobcat/errno>
+#include <bobcat/exception>
+#include <bobcat/mbuf>
+#include <bobcat/mstream>
 
 using namespace std;
 using namespace FBB;
-using namespace FBB::BOBCAT;
 
 int main()
 {
-    ostream os(cout.rdbuf());
+    Mbuf msb(cout.rdbuf());
 
-    Msgbuf msb(&os);
-
-    Msg ms(msb);
+    Mstream ms(&msb);
 
     string s;
 
     ms << "hello world" << s << 12 << endl;     // explicit flush
 
-    os.setstate(ios::badbit);
+    ms.setstate(ios::badbit);
 
-    ms << "this should fail" << endl;     // explicit flush
+    ms << "this should fail" << endl;           // explicit flush
 
-
-    os.clear();
+    ms.clear();
 
     ms << "this should be shown" << endl;     // explicit flush
 
+    ms.setMaxCount(0);
 
-    msb.reset(&cout, true);         // throwing buffer
     try
     {
         ms << "Following this, we throw" << endl;
     }
-    catch(Errno const &err)
+    catch (exception const &err)
     {
-        cout << "Caught Errno exception" << endl;
+        cerr << "Caught exception" << endl;
     }
+
+    cout << "leaving " << ms.bad() << "\n";
+
 }
+
+
+
+
+
 
 
 

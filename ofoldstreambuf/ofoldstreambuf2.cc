@@ -1,4 +1,4 @@
-#include "ofoldstreambuf.ih"
+#include "ofoldstreambuf.hh"
 
 OFoldStreambuf::OFoldStreambuf(char const *fname, 
                        size_t indent, size_t rightMargin,

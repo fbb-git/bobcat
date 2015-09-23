@@ -1,4 +1,4 @@
-#include "sharedstreambuf.ih"
+#include "sharedstreambuf.hh"
 
 SharedStreambuf::SharedStreambuf(
                 size_t maxSize, SharedMemory::SizeUnit sizeUnit,

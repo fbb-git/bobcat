@@ -1,4 +1,4 @@
-#include "encryptbuf.ih"
+#include "encryptbuf.hh"
 
 void EncryptBufImp::setChar(char &ch, IRandStream &irs)
 {

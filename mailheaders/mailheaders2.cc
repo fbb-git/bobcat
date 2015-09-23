@@ -1,4 +1,4 @@
-#include "mailheaders.ih"
+#include "mailheaders.hh"
 
 MailHeaders::MailHeaders(MailHeaders &&tmp)
 :

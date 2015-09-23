@@ -1,4 +1,4 @@
-#include "cmdfinderbase.ih"
+#include "cmdfinderbase.hh"
 
 void CmdFinderBase::setMode(size_t mode)
 {

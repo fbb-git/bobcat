@@ -1,4 +1,4 @@
-#include "hostent.ih"
+#include "hostent.hh"
 
 Hostent::Hostent(hostent const *other)
 {

@@ -1,4 +1,4 @@
-#include "inetaddress.ih"
+#include "inetaddress.hh"
 
 std::string InetAddress::dottedDecimalAddress() const
 {

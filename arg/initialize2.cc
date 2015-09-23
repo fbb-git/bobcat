@@ -1,4 +1,4 @@
-#include "arg.ih"
+#include "arg.hh"
 
 Arg &Arg::initialize(char const *optstring,
                 LongOption const * const begin, 

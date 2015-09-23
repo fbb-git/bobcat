@@ -1,4 +1,4 @@
-#include "string.ih"
+#include "string.hh"
 
 /*
     Each character of the String is inspected in turn. The following

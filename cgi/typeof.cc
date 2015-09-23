@@ -1,4 +1,4 @@
-#include "cgi.ih"
+#include "cgi.hh"
 
 CGI::Boundary CGI::typeOf(string const &line) const
 {

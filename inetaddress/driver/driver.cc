@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include <bobcat/inetaddress>
-#include <bobcat/errno>
+#include <bobcat/exception>
 
 using namespace std;
 using namespace FBB;
@@ -29,11 +29,9 @@ try
             endl;
     cout << "It has the generic `ANY' address: " << 
             ia.dottedDecimalAddress() << endl;
-
-    return 0;
 }
-catch (Errno const &e)
+catch (exception const &e)
 {
-    cout << "Exception: " << e.why() << endl;
+    cout << "Exception: " << e.what() << endl;
 }
 

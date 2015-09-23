@@ -1,4 +1,4 @@
-#include "multistreambuf.ih"
+#include "multistreambuf.hh"
 
 int MultiStreambuf::overflow(int c)
 {

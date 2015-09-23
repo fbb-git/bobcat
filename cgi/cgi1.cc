@@ -1,4 +1,4 @@
-#include "cgi.ih"
+#include "cgi.hh"
 
 CGI::CGI(bool defaultEscape, char const *header, std::ostream &out)
 :

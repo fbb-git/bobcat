@@ -3,7 +3,7 @@
 #include <string>
 
 #include "../bigint"
-#include <bobcat/errno>
+#include <bobcat/exception>
 
 using namespace std;
 using namespace FBB;
@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 try
 {   
     if (argc == 1)
-        throw Errno(1, "Provide h (hex), o (oct), or d (dec) argument");
+        throw Exception(1) << "Provide h (hex), o (oct), or d (dec) argument";
 
 //    BigInt value;
 //
@@ -173,9 +173,9 @@ try
     char *txt = origNr.bigEndian();
     cout.write(txt, origNr.sizeInBytes()) << '\n';
 }
-catch(Errno const &err)
+catch(exception const &err)
 {
-    cout << err.why() << '\n';
+    cout << err.what() << '\n';
     return 1;
 }
 

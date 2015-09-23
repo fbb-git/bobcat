@@ -1,4 +1,4 @@
-#include "sharedsegment.ih"
+#include "sharedsegment.hh"
 
 ostream &SharedSegment::insert(ostream &out) const
 {

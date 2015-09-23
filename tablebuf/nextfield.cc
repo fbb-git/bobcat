@@ -1,4 +1,4 @@
-#include "tablebuf.ih"
+#include "tablebuf.hh"
 
 void TableBuf::nextField()
 {

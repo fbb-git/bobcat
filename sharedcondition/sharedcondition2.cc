@@ -1,4 +1,4 @@
-#include "sharedcondition.ih"
+#include "sharedcondition.hh"
 
 SharedCondition::SharedCondition(SharedMemory &shmem, std::streamsize offset)
 :

@@ -1,4 +1,4 @@
-#include "milter.ih"
+#include "milter.hh"
 
 sfsistat Milter::sender(char **argv)
 {

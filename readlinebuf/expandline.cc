@@ -1,4 +1,4 @@
-#include "readlinebuf.ih"
+#include "readlinebuf.hh"
 
 char *ReadLineBuf::expandLine()
 {
@@ -21,7 +21,7 @@ char *ReadLineBuf::expandLine()
         break;
 
         default:
-            swap(expanded, buf);
+            std::swap(expanded, buf);
         break;
     }
     free(expanded);

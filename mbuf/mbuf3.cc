@@ -1,4 +1,4 @@
-#include "mbuf.ih"
+#include "mbuf.hh"
 
 Mbuf::Mbuf(string const &name, size_t maxCount, string const &tag, 
                             bool throwing)

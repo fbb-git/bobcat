@@ -1,4 +1,4 @@
-#include "csv.ih"
+#include "csv.hh"
 
 void CSV::store(size_t idx, string const &value)
 {

@@ -1,4 +1,4 @@
-#include "diffiehellman.ih"
+#include "diffiehellman.hh"
 
 DiffieHellman::DiffieHellman(istream &initiatorPublicStream)
 :

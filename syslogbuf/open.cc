@@ -1,4 +1,4 @@
-#include "syslogbuf.ih"
+#include "syslogbuf.hh"
 
 void Syslogbuf::open(std::string const &ident, 
                      Priority priority, Facility facility, int option)

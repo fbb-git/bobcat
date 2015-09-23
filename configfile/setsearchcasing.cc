@@ -1,4 +1,4 @@
-#include "configfile.ih"
+#include "configfile.hh"
 
 void ConfigFile::setSearchCasing(SearchCasing type)
 {

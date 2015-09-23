@@ -1,4 +1,4 @@
-#include "configfile.ih"
+#include "configfile.hh"
 
 RE_iterator &RE_iterator::operator++()
 {

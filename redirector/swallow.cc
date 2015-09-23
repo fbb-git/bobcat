@@ -1,4 +1,4 @@
-#include "redirector.ih"
+#include "redirector.hh"
 
 void Redirector::swallow(int alternateFd) const
 {

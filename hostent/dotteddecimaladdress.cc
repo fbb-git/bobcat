@@ -1,4 +1,4 @@
-#include "hostent.ih"
+#include "hostent.hh"
 
 string Hostent::dottedDecimalAddress(size_t nr) const
 {

@@ -1,4 +1,4 @@
-#include "sharedpos.ih"
+#include "sharedpos.hh"
 
 void SharedPos::operator+=(size_t len)
 {

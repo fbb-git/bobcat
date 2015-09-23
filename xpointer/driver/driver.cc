@@ -1,7 +1,6 @@
 #include <iostream>
 #include "../xpointer"
-#include <bobcat/errno>
-#include <bobcat/a2x>
+#include <bobcat/exception>
 
 using namespace std;
 using namespace FBB;
@@ -13,27 +12,25 @@ try
     {
         cout << "Two arguments required: x and y pixel-pointerlocation" <<
                 endl;
-        return 1;
+        return 0;
     }
 
     Xpointer xpointer;
 
-    if (!xpointer.set(A2x(argv[1]), A2x(argv[2])))
-        throw Errno() << insertable << "Pointer setting failed" << throwable;
+    if (!xpointer.set(stol(argv[1]), stol(argv[2])))
+        throw Exception() << "Pointer setting failed";
 
     int x;
     int y;
 
     if (!xpointer.get(&x, &y))
-        throw Errno() << insertable << "Pointer getting failed" << throwable;
+        throw Exception() << "Pointer getting failed";
 
     cout << "Pointer now at " << x << ", " << y << endl;
-
-    return 0;
 }
-catch (Errno const &err)
+catch (exception const &err)
 {
-    cout << err.why() << endl;
+    cout << err.what() << endl;
     return 1;
 }
 

@@ -1,4 +1,4 @@
-#include "xpointer.ih"
+#include "xpointer.hh"
 
 bool Xpointer::get(int *x, int *y) const
 {

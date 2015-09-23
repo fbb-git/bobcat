@@ -1,4 +1,4 @@
-#include "sharedmemory.ih"
+#include "sharedmemory.hh"
 
 int SharedMemory::readBlock(char *data, size_t len)
 {
