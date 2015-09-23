@@ -10,7 +10,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr>
 <h1>FBB::HMacBuf</h1>
-<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>libbobcat-dev_4.01.00-x.tar.gz</h2>
 <h2>2005-2015</h2>
 
 <!DOCTYPE html><html><head>
@@ -43,7 +43,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr>
 <h1>FBB::HMacBuf(3bobcat)</h1>
-<h2>libbobcat-dev_4.00.00-x.tar.gz Compute HMAC Message Digests</h2>
+<h2>libbobcat-dev_4.01.00-x.tar.gz Compute HMAC Message Digests</h2>
 <h2>2005-2015</h2>
 
 
@@ -156,7 +156,7 @@ using the same <em>HMacBuf</em> object.
 #include &lt;ostream&gt;
 #include &lt;cstring&gt;
 #include &lt;iomanip&gt;
-#include &lt;bobcat/errno&gt;
+#include &lt;bobcat/exception&gt;
 #include &lt;bobcat/hmacbuf&gt;
 
 using namespace std;
@@ -166,7 +166,7 @@ int main(int argc, char **argv)
 try
 {
     if (argc &lt; 3)
-        throw Errno(1, "Arg1: key, arg2: digest method required");
+        throw Exception(0) &lt;&lt; "Arg1: key, arg2: digest method required";
 
     string key(argv[1]);
 
@@ -184,10 +184,10 @@ try
     hmacbuf.close();
     cout &lt;&lt; "&gt;" &lt;&lt; hmacbuf &lt;&lt; "&lt;" &lt;&lt; endl;
 }
-catch(Errno const &amp;err)
+catch(exception const &amp;err)
 {
-    cout &lt;&lt; err.why() &lt;&lt; endl;
-    return 1;
+    cout &lt;&lt; err.what() &lt;&lt; endl;
+    return errno;
 }
 </pre>
 
@@ -204,12 +204,12 @@ catch(Errno const &amp;err)
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

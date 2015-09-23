@@ -10,7 +10,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr>
 <h1>FBB::Mbuf</h1>
-<h2>libbobcat-dev_4.00.00-x.tar.gz</h2>
+<h2>libbobcat-dev_4.01.00-x.tar.gz</h2>
 <h2>2005-2015</h2>
 
 <!DOCTYPE html><html><head>
@@ -43,7 +43,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr>
 <h1>FBB::Mbuf(3bobcat)</h1>
-<h2>libbobcat-dev_4.00.00-x.tar.gz Message handler</h2>
+<h2>libbobcat-dev_4.01.00-x.tar.gz Message handler</h2>
 <h2>2005-2015</h2>
 
 
@@ -55,9 +55,9 @@
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
-    Objects of this class implement a <em>std::streambuf</em> class that are used
-to handle messages in a standardized way. Messages may be prefixed with order
-numbers and labels and/or line numbers. 
+    Objects of this class are derived from <em>std::streambuf</em>, and are used to
+handle messages in a standardized way. Messages may be prefixed with order
+(line) numbers and/or labels.
 <p>
 By default all messages are inserted into the standard output stream, but
 other destinations (standard error, a named file, etc.) can easily be
@@ -65,7 +65,9 @@ configured.
 <p>
 <strong>FBB::Mbuf</strong> objects themselves are <em>std::streambuf</em> objects, so they
 can be used to construct <em>std::ostream</em> objects. However, they are intended
-to be used by <strong>mstream</strong>(3bobcat) objects.
+to be used by <strong>mstream</strong>(3bobcat) objects, and passing <em>Mbuf</em> objects to
+other kind of <em>ostream</em> objects is deprecated and may result in undefined
+behavior.
 <p>
 <h2>NAMESPACE</h2>
     <strong>FBB</strong><br>
@@ -211,12 +213,12 @@ exception is not thrown.
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.00.00-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.00.00-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.00.00-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.00.00-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.00-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.00-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.00-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.00.00-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
