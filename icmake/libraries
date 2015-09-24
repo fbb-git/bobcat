@@ -71,7 +71,7 @@ void _precompileHeaders()
 {
     int idx;
     string class;
-    string classHH;
+    string classIH;
     string compiler;
 
     compiler = g_cxx + " " + g_copt + " ";
@@ -79,12 +79,12 @@ void _precompileHeaders()
     for (idx = g_nClasses; idx--; )
     {
         class = g_classes[idx];
-        classHH = class + ".hh";
+        classIH = class + ".ih";
 
         chdir(class);
         
-        if (classHH younger class + ".hh.gch")
-            run(compiler + " " + classHH);
+        if (classIH younger class + ".ih.gch")
+            run(compiler + " -x c++-header " + classIH);
         chdir(g_cwd);
     }
 }
@@ -179,7 +179,7 @@ void libraries(int keepPch, string libname, int all, int strip)
 #endif
 
     if (!keepPch)
-        run("rm -rf */*.hh.gch");
+        run("rm -rf */*.ih.gch");
 
     exit(0);
 }
