@@ -1,4 +1,4 @@
-//#include "mailheaders.ih"
+//#include "mailheaders.hh"
 //
 //MailHeaders::const_hdr_iterator 
 //MailHeaders::const_hdr_iterator::operator--(int)

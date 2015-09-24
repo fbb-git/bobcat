@@ -6,14 +6,14 @@ ln -sf ../cidr.ih .
 case $1 in
     (b)
         rm cidr cidr.ih
-        g++ -DBOBCAT --std=c++0x -I../../tmp -o driver driver.cc \
+        g++ -DBOBCAT --std=c++14 -I../../tmp -o driver driver.cc \
             -lbobcat -L../../tmp/lib -s
     ;;
     (o)
-        g++ --std=c++0x -o driver *.cc ../tmp/o/*.o -lbobcat -s
+        g++ --std=c++14 -o driver *.cc ../tmp/o/*.o -lbobcat -s
     ;;
     (c)
-        g++ --std=c++0x -o driver *.cc -lbobcat -s
+        g++ --std=c++14 -o driver *.cc -lbobcat -s
     ;;
     (*)
     echo $0 b links to bobcat built by 'build libraries all'

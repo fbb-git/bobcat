@@ -1,7 +1,7 @@
 #include <iostream>
 #include <iterator>
 
-#include <bobcat/errno>
+#include <bobcat/exception>
 #ifdef BOBCAT
     #include <bobcat/configfile>
 #else
@@ -87,9 +87,9 @@ try
         cout << "value of findKey: " << cf.findKey(param) << '\n';
     }
 }
-catch (Errno e)
+catch (exception const &e)
 {
-    cout << "Fatal: " << e.why() << endl;
+    cout << "Fatal: " << e.what() << endl;
     return 1;
 }
 

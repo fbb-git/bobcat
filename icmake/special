@@ -12,7 +12,7 @@ void askMilter(int all)
                                                             "library if\n"
     "    you're not planning to construct mail filters using FBB::Milter.\n"
     "\n"
-    "    Press Enter y if you WANT to compile the files of the class "
+    "    Enter y if you WANT to compile the files of the class "
                                                             "FBB::Milter.\n"
     "    Press Enter or any other line if you DON'T WANT to include the "
                                                             "class\n"
@@ -41,7 +41,7 @@ void askXpointer(int all)
                                                             "library if\n"
     "    you're not planning to construct programs using Xpointer.\n"
     "\n"
-    "    Press Enter y if you WANT to compile the files of the class "
+    "    Enter y if you WANT to compile the files of the class "
                                                             "FBB::Xpointer.\n"
     "    Press Enter or any other line if you DON'T WANT to include the "
                                                             "class\n"
@@ -70,7 +70,7 @@ void askOpenSSL(int all)
                                                             " library if\n"
     "    you're not planning to construct programs using them.\n"
     "\n"
-    "    Press Enter y if you WANT to compile the files of the SSL classes\n"
+    "    Enter y if you WANT to compile the files of the SSL classes\n"
     "    Press Enter or any other line if you DON'T WANT to include the "
                                                             "SSL classes\n"
     "                                  in the " LIBRARY " library.\n"
@@ -97,10 +97,10 @@ void askReadLine(int all)
     "    out of the " LIBRARY " library if you're not planning to construct\n"
     "    programs using them.\n"
     "\n"
-    "    Press Enter y if you WANT to compile the classes using the\n"
+    "    Enter y if you WANT to compile the classes using the\n"
     "    readline library\n"
-    "    Press Enter or any other line if you DON'T WANT to include these "
-    "    classes in the " LIBRARY " library.\n"
+    "    Press Enter or any other line if you DON'T WANT to include these\n"
+    "                                  classes in the " LIBRARY " library.\n"
         );
 
     if (all || gets() == "y")
@@ -110,23 +110,21 @@ void askReadLine(int all)
     }    
 }
 
-void special(int expand, int all)
+void special(int query, int all)
 {
     list cut;
     list line;
     int refresh;
 
-    if (expand)
+    if (g_all && query)
     {
-#ifndef ONLYCLASSES
         askXpointer(all);
         askOpenSSL(all);
         askReadLine(all);
         askMilter(all);
-#endif
-
-        g_nClasses = sizeof(g_classes);
     }
+
+    g_nClasses = sizeof(g_classes);
 
     refresh = "VERSION" newer "release.yo";
 

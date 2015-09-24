@@ -3,8 +3,6 @@
 #include <bobcat/ifdstream>
 #include <bobcat/ofdstream>
 
-#include <bobcat/a2x>
-
 using namespace std;
 using namespace FBB;
 
@@ -17,7 +15,7 @@ try
         return 1;
     }
 
-    size_t portnr = A2x(argv[1]);
+    size_t portnr = stoul(argv[1]);
 
     ServerSocket server(portnr);
 
@@ -61,10 +59,10 @@ try
         cout << "Ready for another connection\n";
     }
 }
-catch (Errno const &err)
+catch (exception const &err)
 {
     cerr <<
-        err.why() << endl <<
+        err.what() << endl <<
         "Server socket on port " << argv[1] << 
         " can't be opened" << endl;
     return -1;

@@ -46,9 +46,9 @@ try
     }
     return 0;
 }
-catch (Errno const &err)
+catch (exception const &err)
 {
-    cerr << err.why() << "\n" <<
+    cerr << err.what() << "\n" <<
             "Can't connect to " << argv[1] << ", port " << argv[2] << endl;
     return 1;
 }

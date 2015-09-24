@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <iterator>
 
-#include <bobcat/errno>
+#include <bobcat/exception>
 
 using namespace std;
 using namespace FBB;
@@ -22,9 +22,9 @@ int main(int argc, char **argv, char **envp)
     {
         mh.read();
     }
-    catch (Errno &err)
+    catch (exception &err)
     {
-        cout << err.why() << endl;
+        cout << err.what() << endl;
     }
 
     mh.setHeaderIterator("Received");  
@@ -51,8 +51,6 @@ int main(int argc, char **argv, char **envp)
     mh.setHeaderIterator("From", MailHeaders::PARTIAL);  
 
     copy(mh.beginh(), mh.endh(),  ostream_iterator<string>(cout, "\n"));
-
-    return 0;
 }
 
 

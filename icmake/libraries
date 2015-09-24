@@ -22,10 +22,10 @@ void buildHeader(string destination, string class, list iFiles)
             exec("cat " + strtok(line, "\"")[1] + " >> " + destination);
     }
 
-    echo(ECHO_COMMANDS);
+    echo(g_echo);
 }
 
-void iFiles(string class)
+void _iFiles(string class)
 {
     int idx;
     string destination;
@@ -59,14 +59,34 @@ void iFiles(string class)
     chdir(g_cwd);
 }    
     
-void cpHeaders()
+void _cpHeaders()
 {
     int idx;
-    string file;
-    string class;
     
     for (idx = g_nClasses; idx--; )
-        iFiles(g_classes[idx]);
+        _iFiles(g_classes[idx]);
+}
+    
+void _precompileHeaders()
+{
+    int idx;
+    string class;
+    string classIH;
+    string compiler;
+
+    compiler = g_cxx + " " + g_copt + " ";
+
+    for (idx = g_nClasses; idx--; )
+    {
+        class = g_classes[idx];
+        classIH = class + ".ih";
+
+        chdir(class);
+        
+        if (classIH younger class + ".ih.gch")
+            run(compiler + " -x c++-header " + classIH);
+        chdir(g_cwd);
+    }
 }
 
 void static_library(string library)
@@ -82,7 +102,7 @@ void static_library(string library)
     }
 }
 
-void shared_library(string destDir, string libso, string libsoshared, 
+void _shared_library(string libso, string libsoshared, 
                     int strip)
 {
     string libsomajor;
@@ -102,11 +122,11 @@ void shared_library(string destDir, string libso, string libsoshared,
                     " -shared -Wl,--as-needed,"
                     "-z,defs,-soname," + 
                     libsomajor +
-                    " -o " + destDir + libsoshared +
+                    " -o " + g_tmplibso + "/" + libsoshared +
                     " */os/*.o " +
                     g_sharedLibReq);
     
-        chdir(destDir);
+        chdir(g_tmplibso);
     
         if (strip)
             run("strip --strip-unneeded " + libsoshared);
@@ -114,46 +134,52 @@ void shared_library(string destDir, string libso, string libsoshared,
         run("chmod -x " + libsoshared);
         
         run("ln -sf " + libsoshared + " " + libsomajor);
+
+        chdir(g_cwd + g_tmpliba);
+
         run("ln -sf " + libsomajor  + " " + libso);
     
-//        run("rm -f */os/*");
-
         chdir(g_cwd);
+        run("rm -f */os/*");
     }
 }
 
-void libraries(string libname, int all, int strip)
+void libraries(int keepPch, string libname, int all, int strip)
 {
     string libso;
     string libsoshared;
     string staticLib;
 
-    staticLib = g_tmplib + "lib" LIBRARY ".a";
+    staticLib = g_tmpliba + "/lib" LIBRARY ".a";
 
     addClasses("CLASSES");
     special(1, all);
 
-    md(g_tmplib + " " + g_tmphdr);
+    md(g_tmpliba + " " + g_tmphdr + " " + g_tmplibso);
 
-    cpHeaders();
+    _cpHeaders();
+
+    _precompileHeaders();
 
     g_copt += " -isystem tmp";
 
     library("oa", staticLib);               // compile for static lib.
     static_library(staticLib);              // build static library
 
-#ifndef ONLY_STATIC
+#ifdef BUILD_SHARED
     libso = "lib" LIBRARY ".so";
     libsoshared = libso + "." + g_version;
 
     g_copt += " -fPIC";
                                           // adds option for shared lib
 
-    library("os", g_tmplib + libsoshared);      // compile the shared lib
+    library("os", g_tmplibso + "/" + libsoshared);  // compile the shared lib
 
-    shared_library(g_tmplib, libso, libsoshared, strip);
+    _shared_library(libso, libsoshared, strip);
 #endif
+
+    if (!keepPch)
+        run("rm -rf */*.ih.gch");
 
     exit(0);
 }
-

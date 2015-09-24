@@ -1,6 +1,7 @@
-#include "../selector"
-#include "../../errno/errno"
+#include <bobcat/selector>
+#include <bobcat/exception>
 
+#include <unistd.h>
 #include <string>
 #include <iostream>
 
@@ -29,8 +30,8 @@ int main(int argc, char **argv, char **envp)
             }
         }
     }
-    catch (Errno const &e)
+    catch (exception const &e)
     {
-        cout << e.why() << endl;
+        cout << e.what() << endl;
     }
 }

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include <bobcat/errno>
+#include <bobcat/exception>
 
 #ifdef BOBCAT
     #include <bobcat/arg>
@@ -117,9 +117,9 @@ try
         longopt("file");
         longopt("add");
     }
-    catch (Errno const &e)
+    catch (exception const &e)
     {
-        cout << e.which() << " " << e.why() << '\n';
+        cout << e.what() << '\n';
     }
 
 }
@@ -129,12 +129,11 @@ catch (int x)
     cout << "int exception caught, value = " << x << '\n';
     return x;
 }
-catch (Errno const &e)
+catch (exception const &e)
 {
-    cout << "Errno exception caught, why() = " << e.why() << "\n"
-            "which() is: " << e.which() << '\n';
+    cout << "Exception caught: " << e.what() << '\n';
 
-    return e.which();
+    return 1;
 }
 catch (...)
 {

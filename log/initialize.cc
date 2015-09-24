@@ -5,7 +5,7 @@ Log &Log::initialize(std::string const &filename,
 {
     if (s_stream.get())
         throw Exception() << 
-                "Log::getInstance(): FBB::Log already initialized";
+                "Log::initialize: FBB::Log already initialized";
 
     s_stream.reset(new Log(filename, mode, delim));
     return *s_stream.get();
