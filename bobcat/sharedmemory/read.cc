@@ -1,4 +1,4 @@
-#include "sharedmemory.hh"
+#include "sharedmemory.ih"
 
 int SharedMemory::read(char *data, streamsize len)
 {

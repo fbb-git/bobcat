@@ -1,4 +1,4 @@
-#include "sharedmemory.hh"
+#include "sharedmemory.ih"
 
 SharedMemory::~SharedMemory()
 {

@@ -1,4 +1,4 @@
-#include "hmacbuf.hh"
+#include "hmacbuf.ih"
 
 namespace FBB
 {

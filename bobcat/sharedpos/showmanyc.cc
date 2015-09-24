@@ -1,4 +1,4 @@
-#include "sharedpos.hh"
+#include "sharedpos.ih"
 
 streamsize SharedPos::showmanyc() const
 {

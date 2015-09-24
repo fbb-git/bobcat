@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 // conversion stops at the first character outside of the expected range of
 // characters. 

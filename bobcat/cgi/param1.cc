@@ -1,4 +1,4 @@
-#include "cgi.hh"
+#include "cgi.ih"
 
 std::string CGI::param1(std::string const &variable)
 {

@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 BigInt BigInt::divc(BigInt *remainder, BigInt const &rhs) const
 {

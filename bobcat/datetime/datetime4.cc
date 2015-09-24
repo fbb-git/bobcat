@@ -1,4 +1,4 @@
-#include "datetime.hh"
+#include "datetime.ih"
 
 DateTime::DateTime(time_t time, int displayZoneShift)
 :

@@ -1,4 +1,4 @@
-#include "mstream.hh"
+#include "mstream.ih"
 
 namespace FBB
 {

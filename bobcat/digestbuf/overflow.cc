@@ -1,4 +1,4 @@
-#include "digestbuf.hh"
+#include "digestbuf.ih"
 
 int DigestBuf::overflow(int c)
 {

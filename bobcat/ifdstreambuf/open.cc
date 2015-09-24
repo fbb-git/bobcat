@@ -1,4 +1,4 @@
-#include "ifdstreambuf.hh"
+#include "ifdstreambuf.ih"
 
 void IFdStreambuf::open(int xfd, Mode mode, size_t n)
 {

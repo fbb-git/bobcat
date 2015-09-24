@@ -1,4 +1,4 @@
-#include "primefactors.hh"
+#include "primefactors.ih"
 
 PrimeFactors::Factors const &PrimeFactors::factorize(BigInt const &value)
 {

@@ -1,4 +1,4 @@
-#include "configfile.hh"
+#include "configfile.ih"
 
 // findKey("key:") - first ws-delimited field following key. initial ws before
 //                   key should not be specified: skipped by findKey.

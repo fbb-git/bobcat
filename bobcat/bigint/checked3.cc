@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 void BigInt::checked3(BIGNUM *div, BIGNUM *rem, 
                       BigInt const &rhs, char const *op) const

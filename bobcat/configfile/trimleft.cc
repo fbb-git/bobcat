@@ -1,4 +1,4 @@
-#include "configfile.hh"
+#include "configfile.ih"
 
 void ConfigFile__::trimLeft(string &line)
 {

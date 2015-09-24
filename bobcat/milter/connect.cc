@@ -1,4 +1,4 @@
-#include "milter.hh"
+#include "milter.ih"
 
 sfsistat Milter::connect(char *hostname, _SOCK_ADDR *hostaddr)
 {

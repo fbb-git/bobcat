@@ -1,4 +1,4 @@
-#include "hostent.hh"
+#include "hostent.ih"
 
 size_t Hostent::countAddresses(char const * const *addresses, 
                                                     size_t length) const

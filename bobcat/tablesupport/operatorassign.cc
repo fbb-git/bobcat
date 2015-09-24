@@ -1,4 +1,4 @@
-#include "tablesupport.hh"
+#include "tablesupport.ih"
 
 TableSupport &TableSupport::operator=(TableSupport &&tmp)
 {

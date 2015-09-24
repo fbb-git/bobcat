@@ -1,4 +1,4 @@
-#include "sharedmemory.hh"
+#include "sharedmemory.ih"
 
 void SharedMemory::unlock(size_t idx)
 {

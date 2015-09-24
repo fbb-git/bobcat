@@ -1,4 +1,4 @@
-#include "argconfig.hh"
+#include "argconfig.ih"
 
 ArgConfig &ArgConfig::instance()
 {

@@ -1,4 +1,4 @@
-#include "processdata.hh"
+#include "processdata.ih"
 
 ProcessData::~ProcessData()
 {

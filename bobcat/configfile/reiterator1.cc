@@ -1,4 +1,4 @@
-#include "configfile.hh"
+#include "configfile.ih"
 
 RE_iterator::RE_iterator(VsIterVector const &vsIter, size_t idx)
 :

@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 /*
     Newton's algorithm:

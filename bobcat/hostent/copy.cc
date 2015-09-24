@@ -1,4 +1,4 @@
-#include "hostent.hh"
+#include "hostent.ih"
 
 void Hostent::copy(hostent const *other, size_t n_aliases, 
                                          size_t n_addresses)

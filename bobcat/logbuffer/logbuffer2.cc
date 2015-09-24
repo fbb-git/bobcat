@@ -1,4 +1,4 @@
-#include "logbuffer.hh"
+#include "logbuffer.ih"
 
 LogBuffer::LogBuffer(ostream &stream, TimeStamps timestamps,
                     bool active, char const *delim)

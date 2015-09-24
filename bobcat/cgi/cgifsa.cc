@@ -1,4 +1,4 @@
-#include "cgi.hh"
+#include "cgi.ih"
 
 CGIFSA::CGIFSA(bool *escape, std::istream &in, bool setEscape)
 :

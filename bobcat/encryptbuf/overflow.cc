@@ -1,4 +1,4 @@
-#include "encryptbuf.hh"
+#include "encryptbuf.ih"
 
 int EncryptBuf::overflow(int c)
 {

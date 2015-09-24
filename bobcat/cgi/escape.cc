@@ -1,4 +1,4 @@
-#include "cgi.hh"
+#include "cgi.ih"
 
 string CGI::escape(string const &text)
 {

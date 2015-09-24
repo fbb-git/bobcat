@@ -1,4 +1,4 @@
-#include "diffiehellman.hh"
+#include "diffiehellman.ih"
 
 string DiffieHellman::key(istream &peerPublicStream)
 {

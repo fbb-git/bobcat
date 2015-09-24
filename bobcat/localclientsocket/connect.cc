@@ -1,4 +1,4 @@
-#include "localclientsocket.hh"
+#include "localclientsocket.ih"
 
 int LocalClientSocket::connect()
 {

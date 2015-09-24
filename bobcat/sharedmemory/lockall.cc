@@ -1,4 +1,4 @@
-#include "sharedmemory.hh"
+#include "sharedmemory.ih"
 
     // unchecked: d_lockCount should be 0
 

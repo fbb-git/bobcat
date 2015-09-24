@@ -1,4 +1,4 @@
-#include "cgi.hh"
+#include "cgi.ih"
 
 bool CGI::isFile(string const &line)
 try

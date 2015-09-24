@@ -1,4 +1,4 @@
-#include "a2x.hh"
+#include "a2x.ih"
 
 A2x &A2x::operator=(char const *txt)
 {

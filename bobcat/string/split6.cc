@@ -1,4 +1,4 @@
-#include "string.hh"
+#include "string.ih"
 
 String::SplitPair String::split(ConstIter &begin, ConstIter const &end,
                                     string const &separators)

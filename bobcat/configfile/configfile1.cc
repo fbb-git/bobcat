@@ -1,4 +1,4 @@
-#include "configfile.hh"
+#include "configfile.ih"
 
 ConfigFile__::ConfigFile__(Comment cType, SearchCasing sType,
                        Indices iType)

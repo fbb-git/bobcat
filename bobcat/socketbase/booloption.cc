@@ -1,4 +1,4 @@
-#include "socketbase.hh"
+#include "socketbase.ih"
 
 bool SocketBase::boolOption(int optname) const
 {

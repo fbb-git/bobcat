@@ -1,4 +1,4 @@
-#include "tablebuf.hh"
+#include "tablebuf.ih"
 
 void TableBuf::endRow()
 {

@@ -1,4 +1,4 @@
-#include "ifdstreambuf.hh"
+#include "ifdstreambuf.ih"
 
 std::streamsize IFdStreambuf::xsgetn(char *dest, std::streamsize n)
 {

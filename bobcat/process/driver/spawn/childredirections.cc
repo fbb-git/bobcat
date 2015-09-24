@@ -1,4 +1,4 @@
-#include "spawn.hh"
+#include "spawn.ih"
 
 void Spawn::childRedirections()
 {

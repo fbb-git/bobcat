@@ -1,4 +1,4 @@
-#include "isharedstream.hh"
+#include "isharedstream.ih"
 
 ISharedStream::ISharedStream(
                 size_t maxSize, SharedMemory::SizeUnit sizeUnit,

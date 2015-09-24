@@ -1,4 +1,4 @@
-#include "readlinebuf.hh"
+#include "readlinebuf.ih"
 
 ReadLineBuf::ReadLineBuf(string const &prompt, size_t historySize, Type type)
 :

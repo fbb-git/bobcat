@@ -1,4 +1,4 @@
-#include "decryptbuf.hh"
+#include "decryptbuf.ih"
 
 DecryptBuf::DecryptBuf(ostream &outStream, char const *type, 
                         string key, string iv, size_t bufsize)

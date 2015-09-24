@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 BigInt &BigInt::checked2(
                 int (*BN_op)(BIGNUM *, BIGNUM const *, BIGNUM const *, 

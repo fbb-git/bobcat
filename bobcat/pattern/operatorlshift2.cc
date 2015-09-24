@@ -1,4 +1,4 @@
-#include "pattern.hh"
+#include "pattern.ih"
 
 bool Pattern::operator<<(std::string const &text)
 try

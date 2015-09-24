@@ -1,4 +1,4 @@
-#include "cgi.hh"
+#include "cgi.ih"
 
 size_t CGIFSA::wordToken()
 {

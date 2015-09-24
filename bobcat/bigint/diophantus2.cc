@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 BigInt BigInt::diophantus(BigInt *factor1, BigInt *factor2, 
                           BigInt const &value1, BigInt const &value2)

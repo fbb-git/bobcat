@@ -1,4 +1,4 @@
-#include "pattern.hh"
+#include "pattern.ih"
 
 string Pattern::before() const
 {

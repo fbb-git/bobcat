@@ -1,4 +1,4 @@
-#include "ifilterstreambuf.hh"
+#include "ifilterstreambuf.ih"
 
 IFilterStreambuf::~IFilterStreambuf()
 {

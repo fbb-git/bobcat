@@ -1,4 +1,4 @@
-#include "readlinebuf.hh"
+#include "readlinebuf.ih"
 
 bool ReadLineBuf::useTimestamps(string (*timestamp)())
 {

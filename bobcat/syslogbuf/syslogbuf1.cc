@@ -1,4 +1,4 @@
-#include "syslogbuf.hh"
+#include "syslogbuf.ih"
 
 Syslogbuf::Syslogbuf(std::string const &ident, 
                      Priority priority, Facility facility, int option)

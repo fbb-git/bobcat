@@ -1,4 +1,4 @@
-#include "stat.hh"
+#include "stat.ih"
 
 bool Stat::set(string const &name, string const &pathlist)
 {

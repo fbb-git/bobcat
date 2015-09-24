@@ -1,4 +1,4 @@
-#include "argconfig.hh"
+#include "argconfig.ih"
 
 // same as Arg::option's equivalent
 

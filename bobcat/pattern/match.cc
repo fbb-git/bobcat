@@ -1,4 +1,4 @@
-#include "pattern.hh"
+#include "pattern.ih"
 
 void Pattern::match(string const &text, int options)
 {

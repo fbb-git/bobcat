@@ -1,4 +1,4 @@
-#include "mailheaders.hh"
+#include "mailheaders.ih"
 
 MailHeaders::const_hdr_iterator::const_hdr_iterator
 (

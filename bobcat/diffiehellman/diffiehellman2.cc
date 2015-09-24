@@ -1,4 +1,4 @@
-#include "diffiehellman.hh"
+#include "diffiehellman.ih"
 
 DiffieHellman::DiffieHellman(string const &initiatorPublicFileName)
 :

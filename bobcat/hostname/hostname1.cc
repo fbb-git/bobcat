@@ -1,4 +1,4 @@
-#include "hostname.hh"
+#include "hostname.ih"
 
 Hostname::Hostname(string const &host)
 :

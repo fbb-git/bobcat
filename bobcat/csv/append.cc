@@ -1,4 +1,4 @@
-#include "csv.hh"
+#include "csv.ih"
 
 CSV &CSV::append(char spec, std::string const &value)
 {

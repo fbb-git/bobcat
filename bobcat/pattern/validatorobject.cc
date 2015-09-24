@@ -1,4 +1,4 @@
-#include "pattern.hh"
+#include "pattern.ih"
 
 void PerlSetFSA::Validator::operator()(TransitionMatrix const &state)
 {

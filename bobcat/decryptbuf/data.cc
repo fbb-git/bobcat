@@ -1,3 +1,3 @@
-#include "decryptbuf.hh"
+#include "decryptbuf.ih"
 
 bool DecryptBuf::s_completed;

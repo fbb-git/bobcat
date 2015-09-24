@@ -1,4 +1,4 @@
-#include "ofoldstreambuf.hh"
+#include "ofoldstreambuf.ih"
 
 OFoldStreambuf::OFoldStreambuf(ostream &stream, size_t indent, 
                         size_t rightMargin,

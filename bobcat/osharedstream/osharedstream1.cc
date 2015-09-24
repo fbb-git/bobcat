@@ -1,4 +1,4 @@
-#include "osharedstream.hh"
+#include "osharedstream.ih"
 
 OSharedStream::OSharedStream()
 :

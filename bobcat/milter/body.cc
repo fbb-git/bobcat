@@ -1,4 +1,4 @@
-#include "milter.hh"
+#include "milter.ih"
 
 sfsistat Milter::body(unsigned char *text, size_t length)
 {

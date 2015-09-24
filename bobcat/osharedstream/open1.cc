@@ -1,4 +1,4 @@
-#include "osharedstream.hh"
+#include "osharedstream.ih"
 
 void OSharedStream::open(
                 size_t maxSize, SizeUnit sizeUnit,

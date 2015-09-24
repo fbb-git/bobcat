@@ -1,4 +1,4 @@
-#include "csv.hh"
+#include "csv.ih"
 
 std::ostream &(CSV::*CSV::s_insert[])(std::ostream &out) const = 
     {

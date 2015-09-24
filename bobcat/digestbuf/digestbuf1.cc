@@ -1,4 +1,4 @@
-#include "digestbuf.hh"
+#include "digestbuf.ih"
 
 DigestBuf::DigestBuf(char const *type, size_t bufsize)
 :

@@ -1,4 +1,4 @@
-#include "spawn.hh"
+#include "spawn.ih"
 
 //  1: program[0]
 //  2: command

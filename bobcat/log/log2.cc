@@ -1,4 +1,4 @@
-#include "log.hh"
+#include "log.ih"
 
 Log::Log(ostream &out, char const *delim)
 :

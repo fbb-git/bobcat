@@ -1,4 +1,4 @@
-#include "ofdstreambuf.hh"
+#include "ofdstreambuf.ih"
 
 int OFdStreambuf::overflow(int c)
 {

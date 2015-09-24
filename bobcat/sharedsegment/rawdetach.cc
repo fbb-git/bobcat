@@ -1,4 +1,4 @@
-#include "sharedsegment.hh"
+#include "sharedsegment.ih"
 
 void SharedSegment::rawDetach(void *sharedPtr, bool requireOK)
 {

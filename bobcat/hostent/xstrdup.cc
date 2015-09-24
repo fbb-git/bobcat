@@ -1,4 +1,4 @@
-#include "hostent.hh"
+#include "hostent.ih"
 
 char *Hostent::xstrdup(char const *src)
 {

@@ -1,4 +1,4 @@
-#include "arg.hh"
+#include "arg.ih"
 
 size_t Arg__::firstNonEmpty(size_t *idx, string *value, 
                             StringVector const &sv) const

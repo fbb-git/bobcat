@@ -1,4 +1,4 @@
-#include "cgi.hh"
+#include "cgi.ih"
 
 void CGI::setFileDestination(std::string const &path, 
                                 std::string const &prefix,

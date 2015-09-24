@@ -1,4 +1,4 @@
-#include "ifilterstreambuf.hh"
+#include "ifilterstreambuf.ih"
 
 void IFilterStreambuf::src2buffer(size_t nBytes)
 {

@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 char *BigInt::bn2oct(BIGNUM const *bn)
 {

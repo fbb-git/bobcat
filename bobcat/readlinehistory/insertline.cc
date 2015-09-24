@@ -1,4 +1,4 @@
-#include "readlinehistory.hh"
+#include "readlinehistory.ih"
 
 void ReadLineHistory::insertLine(HistoryElement const &he, std::ostream &out)
 {

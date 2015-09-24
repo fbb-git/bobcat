@@ -1,4 +1,4 @@
-#include "configfile.hh"
+#include "configfile.ih"
 
 // The keyPat *must* have a (...) subexpression, defining what to return
 

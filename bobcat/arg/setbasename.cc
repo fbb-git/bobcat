@@ -1,4 +1,4 @@
-#include "arg.hh"
+#include "arg.ih"
 
 void Arg__::setBasename(string const &argv0)
 {

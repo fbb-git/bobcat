@@ -1,4 +1,4 @@
-#include "cgi.hh"
+#include "cgi.ih"
 
 void CGIFSA::accept()
 {

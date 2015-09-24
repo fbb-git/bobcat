@@ -1,4 +1,4 @@
-#include "tablebuf.hh"
+#include "tablebuf.ih"
 
                         // displays the table
 std::ostream &FBB::operator<<(std::ostream &out, TableBuf &table)

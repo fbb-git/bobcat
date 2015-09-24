@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 void BigInt::copy(BIGNUM *lhs, BIGNUM const &rhs)
 {

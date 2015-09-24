@@ -1,4 +1,4 @@
-#include "cgi.hh"
+#include "cgi.ih"
 
 std::vector<std::string> const &CGI::param(std::string const &variable)
 {

@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 // neg = toggle + 1 -> toggle = neg - 1
 

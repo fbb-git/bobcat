@@ -1,4 +1,4 @@
-#include "pattern.hh"
+#include "pattern.ih"
 
 Pattern::Regex::Regex(string pattern, int options)
 :

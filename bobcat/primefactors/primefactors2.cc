@@ -1,4 +1,4 @@
-#include "primefactors.hh"
+#include "primefactors.ih"
 
 PrimeFactors::PrimeFactors(string const &name, size_t blockSize)
 :

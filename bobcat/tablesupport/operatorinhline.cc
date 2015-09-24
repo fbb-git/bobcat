@@ -1,4 +1,4 @@
-#include "tablesupport.hh"
+#include "tablesupport.ih"
 
 TableSupport &FBB::operator<<(TableSupport &support, 
                          TableSupport::HLine const &hline)

@@ -1,4 +1,4 @@
-#include "cgi.hh"
+#include "cgi.ih"
 
 vector<string> CGI::s_empty;
 

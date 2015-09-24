@@ -1,4 +1,4 @@
-#include "cgi.hh"
+#include "cgi.ih"
 
 void CGI::multipartFormData() 
 try

@@ -1,4 +1,4 @@
-#include "ofdstreambuf.hh"
+#include "ofdstreambuf.ih"
 
 void OFdStreambuf::cleanup(Mode mode)
 {

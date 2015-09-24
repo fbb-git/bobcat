@@ -1,4 +1,4 @@
-#include "indent.hh"
+#include "indent.ih"
 
 void FBB::Indent::dec()
 {

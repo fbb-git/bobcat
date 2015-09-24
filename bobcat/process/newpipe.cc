@@ -1,4 +1,4 @@
-#include "process.hh"
+#include "process.ih"
 
 void Process::newPipe(Pipe &pipe)
 {

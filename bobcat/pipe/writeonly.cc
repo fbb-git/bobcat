@@ -1,4 +1,4 @@
-#include "pipe.hh"
+#include "pipe.ih"
 
 int Pipe::writeOnly()
 {

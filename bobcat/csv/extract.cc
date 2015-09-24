@@ -1,4 +1,4 @@
-#include "csv.hh"
+#include "csv.ih"
 
     // called by operator>> to extract a series of CSVs from `in'.
 istream &CSV::extract(istream &in)

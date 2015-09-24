@@ -1,4 +1,4 @@
-#include "cidr.hh"
+#include "cidr.ih"
 
 Cidr::Cidr(std::string const &cidrPattern)
 {

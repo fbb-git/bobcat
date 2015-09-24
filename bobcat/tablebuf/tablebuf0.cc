@@ -1,4 +1,4 @@
-#include "tablebuf.hh"
+#include "tablebuf.ih"
 
 TableBuf::TableBuf(size_t nColumns, FillDirection direction, 
                                                         WidthType widthType)

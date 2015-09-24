@@ -1,4 +1,4 @@
-#include "glob.hh"
+#include "glob.ih"
 
 size_t Glob::size() const
 {

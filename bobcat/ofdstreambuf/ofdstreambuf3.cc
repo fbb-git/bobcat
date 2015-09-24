@@ -1,4 +1,4 @@
-#include "ofdstreambuf.hh"
+#include "ofdstreambuf.ih"
 
 OFdStreambuf::OFdStreambuf(int fd, size_t n)
 :

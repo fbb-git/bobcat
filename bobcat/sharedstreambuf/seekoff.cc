@@ -1,4 +1,4 @@
-#include "sharedstreambuf.hh"
+#include "sharedstreambuf.ih"
 
 ios::pos_type SharedStreambuf::seekoff(
         ios::off_type   offset, 

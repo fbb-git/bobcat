@@ -1,4 +1,4 @@
-#include "signal.hh"
+#include "signal.ih"
 
 // This is required for the hurd-i386 arch, which apparently 
 // fails to implement the POSIX standard:

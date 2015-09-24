@@ -1,4 +1,4 @@
-#include "string.hh"
+#include "string.ih"
 
 // On entry, `begin' points at the beginning of the double quoted string,
 // on exit, the unescaped double quoted string (without the surrounding double

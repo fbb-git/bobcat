@@ -1,4 +1,4 @@
-#include "multistreambuf.hh"
+#include "multistreambuf.ih"
 
 int MultiStreambuf::sync()
 {

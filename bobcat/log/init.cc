@@ -1,4 +1,4 @@
-#include "log.hh"
+#include "log.ih"
 
 void Log::init()
 {

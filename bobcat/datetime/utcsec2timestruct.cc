@@ -1,4 +1,4 @@
-#include "datetime.hh"
+#include "datetime.ih"
 
 void DateTime::utcSec2timeStruct(TimeStruct *ts, time_t time)
 {

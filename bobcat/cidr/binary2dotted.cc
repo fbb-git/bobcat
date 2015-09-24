@@ -1,4 +1,4 @@
-#include "cidr.hh"
+#include "cidr.ih"
 
 string Cidr::binary2dotted(size_t binary)
 {

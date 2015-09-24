@@ -1,4 +1,4 @@
-#include "signal.hh"
+#include "signal.ih"
 
 void Signal::add(size_t signum, SignalHandler &object)
 {

@@ -1,4 +1,4 @@
-#include "tablesupport.hh"
+#include "tablesupport.ih"
 #include <iostream>
 
 size_t TableSupport::width(size_t idx) const

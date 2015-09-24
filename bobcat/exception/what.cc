@@ -1,4 +1,4 @@
-#include "exception.hh"
+#include "exception.ih"
 
 char const *Exception::what() const noexcept(true)
 {

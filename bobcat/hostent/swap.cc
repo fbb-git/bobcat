@@ -1,4 +1,4 @@
-#include "hostent.hh"
+#include "hostent.ih"
 
 void Hostent::swap(Hostent &other)
 {

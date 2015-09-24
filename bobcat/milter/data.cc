@@ -1,4 +1,4 @@
-#include "milter.hh"
+#include "milter.ih"
 
 string Milter::s_name;
 Milter *Milter::s_mp;
