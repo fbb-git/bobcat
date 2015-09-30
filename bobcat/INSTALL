@@ -1,19 +1,17 @@
 To Install the bobcat library by hand instead of using the binary distribution
 perform the following steps:
 
-    0. The previously used scripts below make/ are obsolete and were removed
-        from this and future distributions. Icmake should be used instead, for
-        which a top-level script (build) and support scripts in the ./icmake/
-        directory are available. Icmake is available on a great many
-        architectures. See the file INSTALL (and INSTALL.im) for further
-        details.
+    0. To install bobcat icmake should be used, for which a top-level script
+        (build) and support scripts in the ./icmake/ directory are
+        available. Icmake is available on many architectures. 
 
-    1. Inspect the values of the variables in the file INSTALL.im. Modify
-        these when necessary.
+    1. Inspect the values of the variables in the file INSTALL.im, in
+        particular the #defines below COMPONENTS TO INSTALL. Modify
+        these #defines when necessary.
 
-    2. Inspect the path to icmake in the `build' script. By default it is
-        /usr/bin/icmake, but some installations use /usr/local/bin/icmake
-        Adapt when necessary.
+    2. Inspect the path to icmake at the top of the `build' script. By default
+        it is /usr/bin/icmake, but some installations use
+        /usr/local/bin/icmake Adapt when necessary.
 
     3. Run 
             ./build libraries
@@ -29,7 +27,7 @@ perform the following steps:
         Several Bobcat classes depend on additional, non standard,
         libraries. They are libmilter, libssl, libX11, and libreadline. By
         just starting ./build libraries [strip] you are asked whether you want
-        those classes included in the Bobcat library. 
+        those classes included in the Bobcat library.
 
         If you know beforehand that you don't need those additional classes,
         then run
@@ -39,42 +37,53 @@ perform the following steps:
         (see also README.class-setup).
 
     4. Run (probably as root) 
-            ./build install
 
-        to install. Optionally add two additional argument as a base
-        directories below which respectively the run time (shared) library
-        documentation and the development files plus static library 
-        documentation will be installed.
+            ./build install 'what' 'base'
 
-        if the environment variable BOBCAT was
-        defined when issuing the `./build install ...' command then the file
-        indicated by the BOBCAT environment variable contains a log of all
-        installed files. In that case the ./build uninstall command (see next)
-        can be used to uninstall these files again.
+        to install. Here, 'what' specifies what you want to install.
+        Specify:
+                  x, to install all components,
+        or specify a combination of:
+                   d (documentation),
+                   h (header files),
+                   l (libraries),
+                   m (man-pages)
+        E.g., use 
+            ./build install hl 'base'
+        if you only want to install the header files and the library.
 
-        Following the installation nothing in this directory tree is required
-        for the proper functioning of the bobcat library, so consider removing
-        it.
+        When requesting non-existing elements (e.g., ./build install x was
+        requested, but the man-pages weren't constructed) then these
+        non-existing elements are silently ignored by the installation
+        process.
 
+        As ./build install's last argument 'base' can be specified: the base
+        directory below which the requested files are installed. This base
+        directory is prepended to the paths #defined in the INSTALL.im
+        file. If 'base' is not specified, then INSTALL.im's #defined paths are
+        used as-is.
 
-    5.  Uninstalling previously installed components of Bobcat (using
-        ./build install ...) is easy if the environment variable BOBCAT was
-        defined when issuing the `./build install ...' commands. In that case,
-        run the command
+        If the environment variable BOBCAT was defined when issuing the
+        `./build install ...' command then a log of all installed files is
+        written to the file indicated by the BOBCAT environment variable (see
+        also the next item).
 
-            ./build uninstall
-
-        This command only works if the environment variable BOBCAT has the
-        same value as used with the `./build install' commands, and the file
-        to which it refers still exists. In that case `./build install'
-        removes all installed files (unless they were modified) and removes
-        all empty directories created by the various `./build install ...'
-        commands. 
         Defining the BOBCAT environment variable as ~/.bobcat usually works
         well. 
 
-Make sure that the library is found by the loader. By default it is installed
-in /usr/lib, which is in the loader's standard search path
+    5.  Uninstalling previously installed components of Bobcat is easy if the
+        environment variable BOBCAT was defined before issuing the 
+        `./build install ...' command. In that case, run the command
+
+            ./build uninstall logfile
+
+        where 'logfile' is the file that was written by ./build install.
+        Modified files and non-empty directories are not removed, but the
+        logfile itself is removed following the uninstallation.
+
+
+Make sure that the bobcat library is found by the loader. By default it is
+installed in /usr/lib, which is in the loader's standard search path
 
 By default the headers are stored under /usr/include. Since this is part of
 the compiler's the standard include path the header files are included as,

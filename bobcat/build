@@ -6,19 +6,15 @@
 
 #define LIBRARY             "bobcat"
 
-list    g_log;
 list g_classes;         // list of classes/directories, listed in CLASSES
 
 int g_echo = ON;
 int g_nClasses;         // number of classes/subdirectories
-int g_installing;       // set to 1 by install.
 int g_all = 1;          // if 0: only compile the classes not requiring
                         // additional libaries. see icmake/special
-int g_lognr;            // unique-marker number counter for g_log entries
 
 string  
     g_logPath = getenv(LOGENV)[1],
-    g_logMark,          // unique-marker for g_log entries
     g_cwd,              // current WD, ends in /.
     g_file,             // used to store the name of a file from a list
     g_copt,             // compiler options
@@ -35,25 +31,17 @@ string
 #include "icmake/cuteoln"
 #include "icmake/backtick"
 #include "icmake/run"
-#include "icmake/mark"
 #include "icmake/md"
 #include "icmake/getenv"
 #include "icmake/clean"
 #include "icmake/addclasses""
 #include "icmake/special"
 
-#include "icmake/md5sum"
-#include "icmake/log"
-#include "icmake/loglink"
 #include "icmake/findall"
-#include "icmake/writelog"
 #include "icmake/loginstall"
 #include "icmake/logrecursive"
 #include "icmake/logzip"
 
-#include "icmake/readlog"
-#include "icmake/removedir"
-#include "icmake/remove"
 #include "icmake/uninstall"
 
 #include "icmake/man"
@@ -138,7 +126,7 @@ void main(int argc, list argv)
         install(argv[2], argv[3]);
 
     if (option == "uninstall")
-        uninstall();
+        uninstall(argv[2]);
 
     printf("Usage: build [-q] [-p] what\n"
         "Where\n"
@@ -159,14 +147,18 @@ void main(int argc, list argv)
         "                         optionally strip the libraries)\n"
         "   l                   - same as 'libraries all', but clearing the\n"
         "                         screen before starting the compilation\n"
-        "   install <rss dev>   - to install the software in the locations\n"
-        "                         defined in the INSTALL.im file,\n"
-        "                         optionally below <rss> (run-time package)\n"
-        "                         and <dev> (development package)\n"
-        "                         By default all is installed. To configure\n"
-        "                         update setLocations() in INSTALL.im\n"
-        "   uninstall           - remove installed files and empty "
-                                                            "directories\n"
+        "   install selection [base] - to install the software in the \n"
+        "                         locations defined in the INSTALL.im file,\n"
+        "                         optionally below base\n"
+        "                         selection can be\n"
+        "                               x, to install all components,\n"
+        "                         or a combination of:\n"
+        "                               d (documentation),\n"
+        "                               h (header files),\n"
+        "                               l (libraries),\n"
+        "                               m (man-pages)\n"
+        "   uninstall logfile   - remove files and empty directories listed\n"
+        "                         in the file 'logfile'\n"
         "   github              - prepare github's gh-pages update\n"
         "                         (internal use only)\n"
     );
