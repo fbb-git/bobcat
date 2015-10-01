@@ -12,8 +12,10 @@ do
         rm -f $field2
     elif [ $field1 == "dir" ] ; then
         rmdir --ignore-fail-on-non-empty -p $field2 || echo FAILED: $field2
-    elif [ $field1 != `md5sum $field2 | awk '{printf $1}'` ] ; then
-        echo $field2 changed, not removed
+    elif [ -e "$field2" ] ; then
+        if [ "$field1" != "`md5sum $field2 | awk '{printf $1}'`" ] ; then
+            echo $field2 changed, not removed
+        fi
     else
         rm -f $field2
     fi
