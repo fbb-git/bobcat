@@ -10,8 +10,6 @@
 # archive downloaded from https://www.icce.rug.nl/debian/bobcat
 # (bobcat_x.y.z..tar.gz)
 
-MD5TRUSTED := 19fa046a4af4ea955d59f08a7f6dd9e3
-
 export DEB_BUILD_HARDENING=1
 export LDFLAGS = $(shell dpkg-buildflags --get LDFLAGS)
 export CPPFLAGS = $(shell dpkg-buildflags --get CPPFLAGS)
@@ -44,7 +42,9 @@ install: build-arch
 	dh_testroot
 	dh_clean
 	dh_installdirs
-	./build install debian/libbobcat4 debian/libbobcat-dev
+	./build install x debian/libbobcat-dev
+	mkdir -p debian/libbobcat4/usr/lib
+	mv debian/libbobcat-dev/usr/lib/libbobcat.so.* debian/libbobcat4/usr/lib
 
 binary-indep:
 
@@ -67,33 +67,3 @@ binary-arch: build-arch install
 	dh_builddeb
 
 binary: binary-indep binary-arch
-
-DEBVERSION:=$(shell head -n 1 debian/changelog | sed -e 's/^[^(]*(\([^)]*\)).*/\1/')
-UPVERSION:=$(shell echo $(DEBVERSION) | sed -e 's/^.*://' -e 's/-[0-9.]*$$//' -e 's/.dfsg$$//')
-
-URL := https://www.icce.rug.nl/debian/bobcat
-UPNAME := bobcat
-
-DEFILE := $(UPNAME)_$(UPVERSION).orig.tar.gz
-UPFILE := $(UPNAME)_$(UPVERSION).tar.gz
-
-MD5CURRENT := `md5sum ../tarballs/$(DEFILE) | sed -e 's/ .*//'`
-
-get-orig-source:
-	@@[ -d ../tarballs/. ]||mkdir -p ../tarballs
-
-	-@if [ ! -f ../tarballs/$(DEFILE) ] ; then \
-	echo "Downloading $(URL)/$(UPFILE)\nSaving into ../tarballs/$(DEFILE)" ; \
-	wget --no-check-certificate --quiet -nv -T20 -t3 -O \
-	../tarballs/$(DEFILE) $(URL)/$(UPFILE) ; \
-	else \
-	echo "Upstream source tarball has already been downloaded" ; \
-	fi
-
-	-@if [ "$(MD5CURRENT)" != "$(MD5TRUSTED)" ] ; then \
-	echo "Expecting upstream filename md5sum $(MD5TRUSTED), but $(MD5CURRENT) found" ; \
-	echo "Upstream filename md5sum is NOT trusted! Possible upstream filename forge!" ; \
-	false ; \
-	else \
-	echo "Upstream filename md5sum is trusted" ; \
-	fi
