@@ -1,83 +1,110 @@
 
-void install(string rss, string dev)
+void install(string request, string dest)
 {
     string target;
+    int components = 0;
 
-    g_installing = 1;
+    string base;
+    base = "tmp/install/";
 
-#ifdef LIB
-    printf("\n  installing the libraries\n");
-    logInstall(g_tmpliba, "", dev + BASE LIB);
+    md(base);
+
+    if (request == "x")
+        components = 15;
+    else 
+    {
+        if (strfind(request, "d") != -1)
+            components |= 1;                
+        if (strfind(request, "h") != -1)
+            components |= 2;
+        if (strfind(request, "l") != -1)
+            components |= 4;                
+        if (strfind(request, "m") != -1)
+            components |= 8;
+    }
+
+    if (components & 1)
+    {
+        printf("\n  installing documentation\n");
+        logZip("", 
+                   "READLINE "
+                   "README "
+                   "README.X11 "
+                   "README.class-setup "
+                   "README.immovable "
+                   "README.milter "
+                   "README.optimization "
+                   "README.process-pipe "
+                   "README.fnwrap "
+                   "process-pipe.odp "
+                   "process-pipe.pdf "
+                   "TODO",
+                base + DOC "/");
+    
+        logRecursive("documentation/examples", base + DOC "/examples");
+    
+        logZip("scripts", "", base + DOC "/scripts");
+
+        logInstall("documentation/images", "*.jpg", base + DOC "/images");
+     
+        target = base + DOC + "/man";
+    
+        logInstall("tmp/manhtml", "", target);
+    
+        logInstall("documentation/man",  LIBRARY ".jpg", target);
+    
+        chdir(g_cwd + target);
+        run("ln -sf " LIBRARY ".7.html index.html");
+    
+        run("ln -sf iterator.3.html reverseiterator.3.html");
+    
+        chdir(g_cwd + target);
+        logZip("", "README", base + DOC);
+    }
+
+    if (components & 2)
+    {
+        printf("\n  installing the headers\n");
+        logInstall("tmp/" LIBRARY, "", base + HDR);
+    }
+
+
+    if (components & 4)
+    {
+        printf("\n  installing the libraries\n");
+        logInstall(g_tmpliba, "", base + LIB);
 
 #ifdef BUILD_SHARED
-    logInstall(g_tmplibso, "", rss + BASE LIB);
+        logInstall(g_tmplibso, "", base + LIB);
 #endif
+    }
 
-#endif
 
-#ifdef INC
-    printf("\n  installing the headers\n");
-    logInstall("tmp/" LIBRARY, "", dev + BASE INC);
-#endif
+    if (components & 8)
+    {
+        printf("\n  installing the manual pages\n");
+    
+        logZip("tmp/man/man3",  "", base + MAN "/man3");
+    
+        run("ln -sf iterator.3bobcat.gz reverseiterator.3bobcat.gz");
+    
+        logZip("tmp/man/man7",  "", base + MAN "/man7");
+    }
 
-#ifdef MAN
-    printf("\n  installing the manual pages\n");
+    chdir(g_cwd);
+    if (dest == "")
+        dest = "/";
+    else
+        md(dest);
 
-    logZip("tmp/man/man3",  "", dev + BASE MAN "/man3");
+    dest = cutEoln(backtick("realpath " + dest)[0]);
 
-    run("ln -sf iterator.3bobcat.gz reverseiterator.3bobcat.gz");
-    logLink("reverseiterator.3bobcat.gz");
+    if (g_logPath != "")
+        backtick("icmake/log " + dest + " " + g_logPath);
 
-    logZip("tmp/man/man7",  "", dev + BASE MAN "/man7");
-#endif
-
-#ifdef DOC
-    printf("\n  installing the html versions of the manual pages\n");
-
-    logInstall("documentation/images", "*.jpg", dev + BASE DOC "/images");
- 
-    target = dev + BASE DOC + "/man";
-
-    logInstall("tmp/manhtml", "", target);
-
-    logInstall("documentation/man",  LIBRARY ".jpg", target);
-
-    chdir(g_cwd + target);
-    run("ln -sf " LIBRARY ".7.html index.html");
-    logLink("index.html");
-
-    run("ln -sf iterator.3.html reverseiterator.3.html");
-    logLink("reverseiterator.3.html");
-
-    logZip("", "README", rss + BASE DOC);
-#endif
-
-#ifdef DOCDEV
-    printf("\n  installing remaining documentation\n");
-    logZip("", 
-               "READLINE "
-               "README "
-               "README.X11 "
-               "README.class-setup "
-               "README.immovable "
-               "README.milter "
-               "README.optimization "
-               "README.process-pipe "
-               "README.fnwrap "
-               "process-pipe.odp "
-               "process-pipe.pdf "
-               "TODO",
-            dev + BASE DOCDEV);
-
-    logRecursive("documentation/examples", dev + BASE DOCDEV "/examples");
-
-    logZip("scripts", "", dev + BASE DOCDEV "/scripts");
-#endif
+    run("tar cf - -Ctmp/install . | tar xf - -C" + dest);
 
     printf("\n  Installation completed\n");
-    writeLog();
+
+    exit(0);
 }
-
-
-
-

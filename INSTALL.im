@@ -16,9 +16,6 @@
 // with Karel's script. Instead, contact Karel directly.
 //===========================================================================
 
-    // Remove this #define to prevent the construction of the shared library 
-#define BUILD_SHARED
-
     // The name of the C++ compiler
 #define CXX         "g++"
 //#define CXX         "g++-5"
@@ -50,37 +47,36 @@
 #define CPOPTS  "-d"
 
 
-    // BASE=is the directory below which ALL bisonc++ files will be stored.
+// INTERNAL USE ONLY:
+#define BUILD_SHARED
+
+
+// COMPONENTS TO INSTALL
+// =====================
+
     // For an operational non-Debian installation, you probably must be
-    // `root', and BASE "/usr" or BASE "/usr/local" is suggested (see
-    // below). `BASE' itself is not used outside of this file, so feel free to
-    // define BIN, SKEL, MAN and DOC (below) in any which way you like.
-#define BASE "/usr"
+    // `root'.
 
-// All remaining directory locations are relative wrt BASE. 
-// With 'build install' you can dynamically specify locations before BASE.
-// By remove one or more of the following #defines you prevent the 
-// installation of those elements
+    // If necessary, adapt DOC, HDR, LIB and MAN (below) to your situation.
+    // The provided locations are used by Debian Linux.
 
-    // DOC is the directory in which all standard documentation will be stored
-    // in this directory the non-development related information is stored. It
-    // is not used if not defined (or defined empty)
-#define DOC     "/share/doc/libbobcat4"
+    // With 'build install' you can dynamically specify a location to prepend
+    // to the locations configured here, and select which components you want 
+    // to install
 
-    // DOCDEV is the directory in which all other documentation will be stored
-    // In this directory the development related information is stored
-#define DOCDEV  "/share/doc/libbobcat4-dev"
+// ONLY USE ABSOLUTE DIRECTORY NAMES:
 
-    // the directory in which the header files will be stored
-#define INC     "/include/bobcat"
+    // DOC is the directory in which development- related documentation is
+    //     stored (various README files, examples, html-man-pages)
+#define DOC     "/usr/share/doc/libbobcat4-dev"
 
-    // the directory in which the bobcat libraries will be stored
-#define LIB     "/lib"
+    // HDR is the directory in which the header files are stored
+#define HDR     "/usr/include/bobcat"
 
-    // MAN is the directory in which the manual pages will be stored
-    // They are stored below man3 and man7
-#define MAN     "/share/man"
+    // LIB is the directory in which the bobcat libraries will be stored
+#define LIB     "/usr/lib"
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 string SHAREDOPT;
@@ -101,3 +97,8 @@ void setLocations()
 >>>>>>> upstream/4.01.00
 =======
 >>>>>>> upstream/4.01.01
+=======
+    // MAN is the directory in which the manual pages are stored
+    // They are stored below MAN in subdirectories man3 and man7
+#define MAN     "/usr/share/man"
+>>>>>>> upstream/4.01.02
