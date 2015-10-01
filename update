@@ -3,6 +3,13 @@
 _project_=bobcat
 _product_=bobcat
 
+echo if any modified or untracked files are shown, handle these first:
+echo
+git st
+echo -n "Continue [y/n] ? "
+read yesno
+[ "$yesno" == "y" ] || exit 0
+
 echo -n "Need to (re)create ${_project_}'s wip files for gh-pages [y/n] ? "
 read yesno
 
@@ -16,9 +23,9 @@ if [ "$yesno" == "y" ] ; then
     ./build distclean
     cd ..    
     git co gh-pages
-fi
 
-cp -r ../wip/changelog.txt ../wip/manhtml .
+    cp -r ../wip/changelog.txt ../wip/manhtml .
+fi
 
 echo
 echo -n "Check index.yo: version and last 5 releases [y/n] ? "
