@@ -33,8 +33,12 @@ void logZip(string src, string names, string dest)
     for (idx = sizeof(files); idx--; )
     {
         file = files[idx];
-        run("gzip -n -9 < " + file + " > " + g_cwd + dest + file + ".gz");
+        run("gzip -n -9 < " + file + " > " + file + ".gz");
     }
+
+    run("tar cf - *.gz | (cd " + g_cwd + "; cd " + dest + "; tar xf -)");
+
+    run("rm *.gz");
 }
 
 
