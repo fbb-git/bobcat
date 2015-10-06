@@ -66,6 +66,8 @@ void _cpHeaders()
     for (idx = g_nClasses; idx--; )
         _iFiles(g_classes[idx]);
 }
+
+int g_gch = 1;
     
 void _precompileHeaders()
 {
@@ -73,6 +75,9 @@ void _precompileHeaders()
     string class;
     string classIH;
     string compiler;
+
+    if (!g_gch)
+        return;
 
     compiler = g_cxx + " " + g_copt + " -isystem " + g_cwd + "tmp";
 

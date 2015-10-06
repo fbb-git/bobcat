@@ -57,17 +57,25 @@ void main(int argc, list argv)
     string all;
     string strip;
     int keepPch = 0;
+    int idx;
 
-    if (argv[1] == "-q")
+    for (idx = sizeof(argv); idx--; )
     {
-        g_echo = OFF;
-        argv -= (list)"-q";
-    }
-
-    if (argv[1] == "-p")
-    {
-        keepPch = 1;
-        argv -= (list)"-p";
+        if (argv[idx] == "-q")
+        {
+            g_echo = OFF;
+            argv -= (list)"-q";
+        }
+        else if (argv[idx] == "-P")
+        {
+            g_gch = 0;
+            argv -= (list)"-P";
+        }
+        else if (argv[1] == "-p")
+        {
+            keepPch = 1;
+            argv -= (list)"-p";
+        }
     }
 
     echo(g_echo);
@@ -128,12 +136,13 @@ void main(int argc, list argv)
     if (option == "uninstall")
         uninstall(argv[2]);
 
-    printf("Usage: build [-q] [-p] what\n"
+    printf("Usage: build [-q -p -P] what\n"
         "Where\n"
         "   [-q]:   run quietly, do not show executed commands\n"
         "   [-p]:   used with build light, build libraries and build l\n"
         "           when specified, the precompiled headers are kept after\n"
         "           constructing the libraries\n"   
+        "   [-P]:   do not use precompiled headers\n"
         "`what' is one of:\n"
         "   clean               - clean up remnants of previous compilations\n"
         "   distclean           - same as clean\n"
