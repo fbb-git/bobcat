@@ -1,7 +1,5 @@
 #!/usr/bin/icmake -qt/tmp/bobcat
 
-#define LOGENV "BOBCAT"
-
 #include "INSTALL.im"
 
 #define LIBRARY             "bobcat"
@@ -14,7 +12,7 @@ int g_all = 1;          // if 0: only compile the classes not requiring
                         // additional libaries. see icmake/special
 
 string  
-    g_logPath = getenv(LOGENV)[1],
+    g_logPath,
     g_cwd,              // current WD, ends in /.
     g_file,             // used to store the name of a file from a list
     g_copt,             // compiler options
@@ -71,10 +69,16 @@ void main(int argc, list argv)
             g_gch = 0;
             argv -= (list)"-P";
         }
-        else if (argv[1] == "-p")
+        else if (argv[idx] == "-p")
         {
             keepPch = 1;
             argv -= (list)"-p";
+        }
+        else if (strfind(argv[idx], "LOG:") == 0)
+        {
+            g_logPath = argv[idx];
+            argv -= (list)g_logPath;
+            g_logPath = substr(g_logPath, 4, strlen(g_logPath));
         }
     }
 
