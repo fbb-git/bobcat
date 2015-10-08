@@ -1,4 +1,4 @@
-#include "mbuf.hh"
+#include "mbuf.ih"
 
 void Mbuf::showTag()
 {

@@ -1,4 +1,4 @@
-#include "sharedmutex.hh"
+#include "sharedmutex.ih"
 
 void SharedMutex::lock()
 {

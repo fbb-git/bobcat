@@ -1,4 +1,4 @@
-#include "readlinehistory.hh"
+#include "readlinehistory.ih"
 
 ostream &FBB::operator<<(ostream &out, ReadLineHistory const &history)
 {

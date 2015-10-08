@@ -1,4 +1,4 @@
-#include "sharedmemory.hh"
+#include "sharedmemory.ih"
 
 ostream &SharedMemory::insert(ostream &out) const
 {

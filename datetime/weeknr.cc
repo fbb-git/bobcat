@@ -1,4 +1,4 @@
-#include "datetime.hh"
+#include "datetime.ih"
 
 size_t DateTime::weekNr() const
 {

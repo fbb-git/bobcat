@@ -1,4 +1,4 @@
-#include "cmdfinderbase.hh"
+#include "cmdfinderbase.ih"
 
 void CmdFinderBase::useFirstCmd(std::string const &cmd)
 {

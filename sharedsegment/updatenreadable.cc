@@ -1,4 +1,4 @@
-#include "sharedsegment.hh"
+#include "sharedsegment.ih"
 
 void SharedSegment::updateNreadable(streamsize offset)
 {

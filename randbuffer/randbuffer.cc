@@ -1,4 +1,4 @@
-#include "randbuffer.hh"
+#include "randbuffer.ih"
 
 Randbuffer::Randbuffer(int min, int max, size_t seed)
 {

@@ -1,4 +1,4 @@
-#include "configfile.hh"
+#include "configfile.ih"
 
 bool ConfigFile__::nextLine(istream &inStream, string &dest)
 {

@@ -1,4 +1,4 @@
-#include "../primefactors/primefactors.hh"
+#include "../primefactors/primefactors.ih"
 
 bool PrimeFactors::iterator::isComposite(BigInt const &candidate)
 {

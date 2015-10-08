@@ -1,4 +1,4 @@
-#include "encryptbuf.hh"
+#include "encryptbuf.ih"
 
 void EncryptBuf::setKey(string key, size_t numberOfBytes)
 {

@@ -1,4 +1,4 @@
-#include "arg.hh"
+#include "arg.ih"
 
 int Arg__::setOptionType(string const &optString,
                          LongOption const &longOption)

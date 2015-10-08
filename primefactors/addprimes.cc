@@ -1,4 +1,4 @@
-#include "primefactors.hh"
+#include "primefactors.ih"
 
 void PrimeFactors::addPrimes()
 {

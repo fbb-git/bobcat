@@ -1,4 +1,4 @@
-#include "argconfig.hh"
+#include "argconfig.ih"
 
 ArgConfig__::ArgConfig__(LongOption__ const *begin, 
                          LongOption__ const *const end)

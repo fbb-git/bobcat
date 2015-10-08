@@ -1,4 +1,4 @@
-#include "symcryptstreambufbase.hh"
+#include "symcryptstreambufbase.ih"
 
 void SymCryptStreambufBase::checkOutBufSize(size_t inputSize)
 {

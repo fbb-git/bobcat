@@ -1,4 +1,4 @@
-#include "glob.hh"
+#include "glob.ih"
 
 char const *const *Glob::begin() const
 {

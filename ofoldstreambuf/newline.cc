@@ -1,4 +1,4 @@
-#include "ofoldstreambuf.hh"
+#include "ofoldstreambuf.ih"
 
 void OFoldStreambuf::newline()
 {

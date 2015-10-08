@@ -1,4 +1,4 @@
-#include "hmacbuf.hh"
+#include "hmacbuf.ih"
 
 string const &HMacBuf::hash() const
 {

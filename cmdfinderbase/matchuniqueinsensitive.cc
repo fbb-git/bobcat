@@ -1,4 +1,4 @@
-#include "cmdfinderbase.hh"
+#include "cmdfinderbase.ih"
 
 bool CmdFinderBase::matchUniqueInsensitive(std::string const &key) const
 {

@@ -1,4 +1,4 @@
-#include "glob.hh"
+#include "glob.ih"
 
 Glob::Glob(Type type, string const &pattern, int flags, Dots dots)
 try

@@ -1,3 +1,3 @@
-#include "readlinehistory.hh"
+#include "readlinehistory.ih"
 
 ReadLineHistory ReadLineHistory::s_readLineHistory;

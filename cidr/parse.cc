@@ -1,4 +1,4 @@
-#include "cidr.hh"
+#include "cidr.ih"
 
 Cidr::MaskPair Cidr::parse(string const &cidr)
 {

@@ -1,4 +1,4 @@
-#include "pipe.hh"
+#include "pipe.ih"
 
 void Pipe::readFrom(int const *fd, size_t n)
 {

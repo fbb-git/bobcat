@@ -1,4 +1,4 @@
-#include "digestbuf.hh"
+#include "digestbuf.ih"
 
 string const &DigestBuf::hash() const
 {

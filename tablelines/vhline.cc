@@ -1,4 +1,4 @@
-#include "tablelines.hh"
+#include "tablelines.ih"
 
 void TableLines::v_hline(size_t row) const
 {

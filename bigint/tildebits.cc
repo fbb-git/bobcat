@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 // toggles all bits and sign
 

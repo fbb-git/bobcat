@@ -1,4 +1,4 @@
-#include "stat.hh"
+#include "stat.ih"
 
 bool Stat::access(User const &user, size_t spec, bool useEffective) const
 {

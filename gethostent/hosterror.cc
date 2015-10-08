@@ -1,4 +1,4 @@
-#include "gethostent.hh"
+#include "gethostent.ih"
 
 void GetHostent::hosterror(char const *text) 
 {

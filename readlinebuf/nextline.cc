@@ -1,4 +1,4 @@
-#include "readlinebuf.hh"
+#include "readlinebuf.ih"
 
 char *ReadLineBuf::nextLine(char *buf)      // malloc allocated buf
 {

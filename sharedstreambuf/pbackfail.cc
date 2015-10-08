@@ -1,4 +1,4 @@
-#include "sharedstreambuf.hh"
+#include "sharedstreambuf.ih"
 
 int SharedStreambuf::pbackfail(int ch)
 {

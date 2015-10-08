@@ -1,4 +1,4 @@
-#include "base64streambufbase.hh"
+#include "base64streambufbase.ih"
 
 string const Base64StreambufBase::s_tabStr = 
                     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"

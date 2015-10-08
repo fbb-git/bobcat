@@ -1,4 +1,4 @@
-#include "readlinehistory.hh"
+#include "readlinehistory.ih"
 
 istream &FBB::operator>>(istream &in, ReadLineHistory &history)
 {

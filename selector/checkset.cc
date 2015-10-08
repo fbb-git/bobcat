@@ -1,4 +1,4 @@
-#include "selector.hh"
+#include "selector.ih"
 
 int Selector::checkSet(int *index, fd_set &set)
 {

@@ -1,4 +1,4 @@
-#include "sharedcondition.hh"
+#include "sharedcondition.ih"
 
 cv_status  SharedCondition::waiter(Condition *cond, int64_t count)
 {

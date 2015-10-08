@@ -1,4 +1,4 @@
-#include "onekey.hh"
+#include "onekey.ih"
 
 OneKey::~OneKey()
 {

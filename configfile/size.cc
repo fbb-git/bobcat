@@ -1,4 +1,4 @@
-#include "configfile.hh"
+#include "configfile.ih"
 
 size_t ConfigFile::size() const
 {

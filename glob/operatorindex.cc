@@ -1,4 +1,4 @@
-#include "glob.hh"
+#include "glob.ih"
 
 char const *Glob::operator[](size_t idx) const
 {

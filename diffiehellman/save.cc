@@ -1,4 +1,4 @@
-#include "diffiehellman.hh"
+#include "diffiehellman.ih"
 
 void DiffieHellman::save(string const &basename, SecretKey action) const
 {

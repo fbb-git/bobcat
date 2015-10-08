@@ -1,4 +1,4 @@
-#include "inetaddress.hh"
+#include "inetaddress.ih"
 
 void InetAddress::init(uint32_t addr, uint16_t port)
 {

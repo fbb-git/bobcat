@@ -1,4 +1,4 @@
-#include "glob.hh"
+#include "glob.ih"
 
 void Glob::swap(Glob &other)
 {

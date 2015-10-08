@@ -1,4 +1,4 @@
-#include "multistreambuf.hh"
+#include "multistreambuf.ih"
 
 std::streamsize MultiStreambuf::xsputn(char const *buffer, std::streamsize n)
 {

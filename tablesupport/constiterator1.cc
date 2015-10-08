@@ -1,4 +1,4 @@
-#include "tablesupport.hh"
+#include "tablesupport.ih"
 
 TableSupport::const_iterator::const_iterator(TableSupport const &support, 
                 size_t row, bool begin)

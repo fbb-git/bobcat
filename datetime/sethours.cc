@@ -1,4 +1,4 @@
-#include "datetime.hh"
+#include "datetime.ih"
 
 // since localtime() and mktime() return each other's inverses, use
 // localtime() to determine the new # seconds.

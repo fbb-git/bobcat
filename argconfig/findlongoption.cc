@@ -1,4 +1,4 @@
-#include "argconfig.hh"
+#include "argconfig.ih"
 
     // return ConfigFile's RE_iterator to the configfile's long option
 

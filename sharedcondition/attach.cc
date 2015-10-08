@@ -1,4 +1,4 @@
-#include "sharedcondition.hh"
+#include "sharedcondition.ih"
 
 SharedCondition SharedCondition::attach(SharedMemory &shmem,
                                             std::ios::off_type offset,

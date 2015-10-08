@@ -1,4 +1,4 @@
-#include "localserversocket.hh"
+#include "localserversocket.ih"
 
 LocalServerSocket::~LocalServerSocket()
 {

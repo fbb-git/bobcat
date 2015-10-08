@@ -1,4 +1,4 @@
-#include "configfile.hh"
+#include "configfile.ih"
 
 void ConfigFile__::open(string const &fname)
 {

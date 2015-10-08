@@ -1,4 +1,4 @@
-#include "user.hh"
+#include "user.ih"
 
 bool User::inGroup(size_t gid, bool useEffective) const
 {

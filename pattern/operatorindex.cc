@@ -1,4 +1,4 @@
-#include "pattern.hh"
+#include "pattern.ih"
 
 string  Pattern::operator[](size_t index) const
 {

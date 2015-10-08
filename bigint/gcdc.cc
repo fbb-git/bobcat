@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 BigInt BigInt::gcdc(BigInt const &rhs) const
 {

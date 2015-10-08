@@ -1,4 +1,4 @@
-#include "iostreambuf.hh"
+#include "iostreambuf.ih"
 
 IOStreambuf::pos_type IOStreambuf::seekpos(pos_type offset, 
                                            ios::openmode mode)

@@ -1,4 +1,4 @@
-#include "cidr.hh"
+#include "cidr.ih"
 
 bool Cidr::compare(MaskPair const &mp, string const &address)
 {

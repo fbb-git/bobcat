@@ -1,4 +1,4 @@
-#include "table.hh"
+#include "table.ih"
 
 Table &Table::flush()
 {

@@ -1,4 +1,4 @@
-#include "sharedpos.hh"
+#include "sharedpos.ih"
 
 ios::pos_type SharedPos::seek(ios::off_type offset, ios::seekdir way)
 {

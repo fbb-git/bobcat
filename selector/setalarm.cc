@@ -1,4 +1,4 @@
-#include "selector.hh"
+#include "selector.ih"
 
 void Selector::setAlarm(int sec, int usec)
 {

@@ -1,4 +1,4 @@
-#include "cgi.hh"
+#include "cgi.ih"
 
 void CGI::addParam(string const &param)
 try

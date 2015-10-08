@@ -1,4 +1,4 @@
-#include "configfile.hh"
+#include "configfile.ih"
 
 ConfigFile__::const_RE_iterator ConfigFile__::beginRE(string const &re)
 {

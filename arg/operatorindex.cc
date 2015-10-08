@@ -1,4 +1,4 @@
-#include "arg.hh"
+#include "arg.ih"
 
 char const *Arg::operator[](size_t idx) const
 {

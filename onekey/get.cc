@@ -1,4 +1,4 @@
-#include "onekey.hh"
+#include "onekey.ih"
 
 int OneKey::get() const
 {

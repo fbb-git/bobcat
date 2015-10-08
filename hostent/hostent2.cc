@@ -1,4 +1,4 @@
-#include "hostent.hh"
+#include "hostent.ih"
 
 Hostent::Hostent(Hostent &&tmp)
 {

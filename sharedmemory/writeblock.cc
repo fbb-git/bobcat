@@ -1,4 +1,4 @@
-#include "sharedmemory.hh"
+#include "sharedmemory.ih"
 
 int SharedMemory::writeBlock(char const *data, size_t len)
 {

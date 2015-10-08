@@ -1,4 +1,4 @@
-#include "log.hh"
+#include "log.ih"
 
 Log &Log::initialize(std::string const &filename, 
                     std::ios::openmode mode, char const *delim)

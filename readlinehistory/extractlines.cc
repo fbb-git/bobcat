@@ -1,4 +1,4 @@
-#include "readlinehistory.hh"
+#include "readlinehistory.ih"
 
 istream &ReadLineHistory::extractLines(istream &in)
 {

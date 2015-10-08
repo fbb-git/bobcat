@@ -1,4 +1,4 @@
-#include "log.hh"
+#include "log.ih"
 
 Log::Log(string const &filename, ios::openmode mode,
         char const *delim)

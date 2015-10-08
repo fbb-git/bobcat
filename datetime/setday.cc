@@ -1,4 +1,4 @@
-#include "datetime.hh"
+#include "datetime.ih"
 
 bool DateTime::setDay(int day)
 {

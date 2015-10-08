@@ -1,3 +1,3 @@
-#include "a2x.hh"
+#include "a2x.ih"
 
 bool A2x::s_lastFail = false;

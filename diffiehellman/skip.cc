@@ -1,4 +1,4 @@
-#include "diffiehellman.hh"
+#include "diffiehellman.ih"
 
 void DiffieHellman::skip(istream &in, size_t count)
 {

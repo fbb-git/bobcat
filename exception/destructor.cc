@@ -1,4 +1,4 @@
-#include "exception.hh"
+#include "exception.ih"
 
 Exception::~Exception() noexcept(true)
 {}

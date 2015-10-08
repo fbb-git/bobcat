@@ -1,4 +1,4 @@
-#include "redirector.hh"
+#include "redirector.ih"
 
 void Redirector::through(int alternateFd) const
 {

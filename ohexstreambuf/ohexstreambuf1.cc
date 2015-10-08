@@ -1,4 +1,4 @@
-#include "ohexstreambuf.hh"
+#include "ohexstreambuf.ih"
 
 OHexStreambuf::OHexStreambuf(std::ostream &out, size_t width)
 :

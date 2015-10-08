@@ -1,4 +1,4 @@
-#include "decryptbuf.hh"
+#include "decryptbuf.ih"
 
 void DecryptBuf::update()
 {

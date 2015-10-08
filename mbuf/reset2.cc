@@ -1,4 +1,4 @@
-#include "mbuf.hh"
+#include "mbuf.ih"
 
 void Mbuf::reset(streambuf *buf, size_t maxCount, string const &tag, 
                    bool throwing)

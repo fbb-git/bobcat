@@ -1,4 +1,4 @@
-#include "diffiehellman.hh"
+#include "diffiehellman.ih"
 
 bool DiffieHellman::read(istream &in, BIGNUM **dest)
 {

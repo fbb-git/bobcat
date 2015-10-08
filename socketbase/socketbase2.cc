@@ -1,4 +1,4 @@
-#include "socketbase.hh"
+#include "socketbase.ih"
 
 SocketBase::SocketBase(string const &host, uint16_t port)
 :

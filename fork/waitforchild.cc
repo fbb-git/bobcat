@@ -1,4 +1,4 @@
-#include "fork.hh"
+#include "fork.ih"
 
 int Fork::waitForChild()
 {

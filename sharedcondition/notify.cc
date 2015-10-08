@@ -1,4 +1,4 @@
-#include "sharedcondition.hh"
+#include "sharedcondition.ih"
 
 void SharedCondition::notify() noexcept
 {

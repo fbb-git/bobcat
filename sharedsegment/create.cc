@@ -1,4 +1,4 @@
-#include "sharedsegment.hh"
+#include "sharedsegment.ih"
 
 SharedSegment *SharedSegment::create(int *id, 
                                      size_t nBlocks, size_t segmentSize, 

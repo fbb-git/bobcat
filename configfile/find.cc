@@ -1,4 +1,4 @@
-#include "configfile.hh"
+#include "configfile.ih"
 
 vector<string>::const_iterator ConfigFile__::find(string const &target) const
 {

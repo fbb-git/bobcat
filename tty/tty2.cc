@@ -1,4 +1,4 @@
-#include "tty.hh"
+#include "tty.ih"
 
 Tty::Tty(EchoType type)
 :

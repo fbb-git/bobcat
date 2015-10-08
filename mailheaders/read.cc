@@ -1,4 +1,4 @@
-#include "mailheaders.hh"
+#include "mailheaders.ih"
 
 void MailHeaders::read()
 {

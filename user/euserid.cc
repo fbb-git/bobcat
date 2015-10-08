@@ -1,4 +1,4 @@
-#include "user.hh"
+#include "user.ih"
 
 size_t User::eUserid() const
 {

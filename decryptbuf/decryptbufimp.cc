@@ -1,4 +1,4 @@
-#include "decryptbuf.hh"
+#include "decryptbuf.ih"
 
 DecryptBufImp::DecryptBufImp(ostream &outStream, size_t bufsize)
 :

@@ -1,4 +1,4 @@
-#include "pattern.hh"
+#include "pattern.ih"
 
 //    Note: all state transitions MUST be clustered per state
 //          the last element of a state cluster is the default transition.

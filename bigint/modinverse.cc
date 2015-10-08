@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 void BigInt::mod_inverse(BigInt *ret, BigInt const &mod) const
 {

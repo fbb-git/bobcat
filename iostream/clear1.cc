@@ -1,4 +1,4 @@
-#include "iostream.hh"
+#include "iostream.ih"
 
 void IOStream::clear()
 {

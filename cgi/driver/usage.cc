@@ -1,6 +1,6 @@
 //                     usage.cc
 
-#include "main.hh"
+#include "main.ih"
 
 namespace
 {

@@ -1,4 +1,4 @@
-#include "datetime.hh"
+#include "datetime.ih"
 
 bool DateTime::setWeekday(Weekday weekday, Relative where)
 {

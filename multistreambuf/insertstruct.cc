@@ -1,4 +1,4 @@
-#include "multistreambuf.hh"
+#include "multistreambuf.ih"
 
 void MultiStreambuf::insertStruct(stream &os, Insert &insert)
 {

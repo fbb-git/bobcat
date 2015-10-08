@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 bool BigInt::addDigit(char ch, BigInt &ret, BigInt const &radix, 
                                             int (*pConv)(int))

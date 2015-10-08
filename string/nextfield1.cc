@@ -1,4 +1,4 @@
-#include "string.hh"
+#include "string.ih"
 
 String::Type String::nextField(string const &str, 
                     ConstIter *until, ConstIter from,

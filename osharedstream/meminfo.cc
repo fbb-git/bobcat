@@ -1,4 +1,4 @@
-#include "osharedstream.hh"
+#include "osharedstream.ih"
 
 void OSharedStream::memInfo(std::ostream &out, char const *end) const
 {

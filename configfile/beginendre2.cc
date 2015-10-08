@@ -1,4 +1,4 @@
-#include "configfile.hh"
+#include "configfile.ih"
 
 ConfigFile::RE_iteratorPair ConfigFile::beginEndRE()
 {

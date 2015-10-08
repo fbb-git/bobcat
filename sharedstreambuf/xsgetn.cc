@@ -1,4 +1,4 @@
-#include "sharedstreambuf.hh"
+#include "sharedstreambuf.ih"
 
 streamsize SharedStreambuf::xsgetn(char *data, streamsize len)
 {

@@ -1,4 +1,4 @@
-#include "inetaddress.hh"
+#include "inetaddress.ih"
 
 InetAddress::InetAddress(string const &host, uint16_t port)
 {

@@ -1,4 +1,4 @@
-#include "cidr.hh"
+#include "cidr.ih"
 
 bool Cidr::match(string const &line)
 {

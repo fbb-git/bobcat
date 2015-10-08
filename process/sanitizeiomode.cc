@@ -1,4 +1,4 @@
-#include "process.hh"
+#include "process.ih"
 
 Process::IOMode Process::sanitizeIOMode(IOMode mode)
 {

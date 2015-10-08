@@ -1,4 +1,4 @@
-#include "ofoldstreambuf.hh"
+#include "ofoldstreambuf.ih"
 
 OFoldStreambuf::BufIt OFoldStreambuf::findOFoldStreambuf(streambuf const *buf)
 {

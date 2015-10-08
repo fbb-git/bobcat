@@ -1,4 +1,4 @@
-#include "ohexstreambuf.hh"
+#include "ohexstreambuf.ih"
 
 int OHexStreambuf::pSync()
 {

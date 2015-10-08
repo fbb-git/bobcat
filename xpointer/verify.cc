@@ -1,4 +1,4 @@
-#include "xpointer.hh"
+#include "xpointer.ih"
 
 void Xpointer::verify() const
 {}

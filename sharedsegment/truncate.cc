@@ -1,4 +1,4 @@
-#include "sharedsegment.hh"
+#include "sharedsegment.ih"
 
 bool SharedSegment::truncate(streamsize offset)
 {

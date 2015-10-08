@@ -1,4 +1,4 @@
-#include "mailheaders.hh"
+#include "mailheaders.ih"
 
 MailHeaders::const_iterator MailHeaders::const_hdr_iterator::lookup
                                         (const_iterator const &begin) const

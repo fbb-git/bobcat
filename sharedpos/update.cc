@@ -1,4 +1,4 @@
-#include "sharedpos.hh"
+#include "sharedpos.ih"
 
 void SharedPos::update()
 {

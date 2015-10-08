@@ -1,4 +1,4 @@
-#include "sharedstreambuf.hh"
+#include "sharedstreambuf.ih"
 
 bool SharedStreambuf::mode(ios::openmode flag)
 {

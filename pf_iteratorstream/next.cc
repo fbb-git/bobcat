@@ -1,4 +1,4 @@
-#include "../primefactors/primefactors.hh"
+#include "../primefactors/primefactors.ih"
 
 void PrimeFactors::iteratorStream::next()
 {

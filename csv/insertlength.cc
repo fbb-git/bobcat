@@ -1,4 +1,4 @@
-#include "csv.hh"
+#include "csv.ih"
 
 ostream &CSV::insertLength(ostream &out) const
 {

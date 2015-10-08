@@ -1,4 +1,4 @@
-#include "logbuffer.hh"
+#include "logbuffer.ih"
 
 int LogBuffer::overflow(int c)
 {

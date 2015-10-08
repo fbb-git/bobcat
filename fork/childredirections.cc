@@ -1,4 +1,4 @@
-#include "fork.hh"
+#include "fork.ih"
 
 void Fork::childRedirections()    // do child redirections
 {}            

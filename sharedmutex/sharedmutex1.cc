@@ -1,4 +1,4 @@
-#include "sharedmutex.hh"
+#include "sharedmutex.ih"
 
 SharedMutex::SharedMutex()
 {

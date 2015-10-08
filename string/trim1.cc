@@ -1,4 +1,4 @@
-#include "string.hh"
+#include "string.ih"
 
 string String::trim(string const &str)
 {

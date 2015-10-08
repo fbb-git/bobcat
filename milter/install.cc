@@ -1,4 +1,4 @@
-#include "milter.hh"
+#include "milter.ih"
 
 Milter *Milter::install(SMFICTX *ctx)
 {

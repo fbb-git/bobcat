@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 BigInt::BigInt(string const &bigEndian, bool negative)
 :

@@ -1,4 +1,4 @@
-#include "bigint.hh"
+#include "bigint.ih"
 
 BigInt BigInt::pseudoRand(size_t size, Msb msb, Lsb lsb)
 {

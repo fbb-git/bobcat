@@ -1,4 +1,4 @@
-#include "mbuf.hh"
+#include "mbuf.ih"
 
 std::streamsize Mbuf::xsputn(char const *buf, std::streamsize n)
 {

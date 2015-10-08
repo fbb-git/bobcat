@@ -1,4 +1,4 @@
-#include "tablesupport.hh"
+#include "tablesupport.ih"
 
 TableSupport::HLine::HLine(size_t row, size_t begin, size_t end)
 :

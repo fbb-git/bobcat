@@ -1,4 +1,4 @@
-#include "process.hh"
+#include "process.ih"
 
 // See ../README.process-pipe for an explanation of the inner workings of
 // operator| 

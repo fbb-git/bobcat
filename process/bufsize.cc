@@ -1,4 +1,4 @@
-#include "process.hh"
+#include "process.ih"
 
 size_t Process::bufSize() const
 {
