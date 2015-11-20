@@ -3,7 +3,7 @@
 ostream &SharedMemory::insert(ostream &out) const
 {
     if (d_sharedSegment == 0)
-        return out << "No shared data avaiable";
+        return out << "No shared data available";
 
     out << "ID of shared memory segment: " << d_id << '\n';
     
