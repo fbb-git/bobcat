@@ -124,14 +124,14 @@ void special(int query, int all)
         askMilter(all);
     }
 
-    g_nClasses = sizeof(g_classes);
+    g_nClasses = listlen(g_classes);
 
     refresh = "VERSION" newer "release.yo";
 
     if (refresh)
         run("rm -f release.yo");
 
-    while (sizeof(line = fgets("VERSION", (int)element(1, line))))
+    while (listlen(line = fgets("VERSION", line)))
     {
         cut = strtok(element(0, line), "= \t\n");
 

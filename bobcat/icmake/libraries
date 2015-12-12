@@ -10,11 +10,11 @@ void buildHeader(string destination, string class, list iFiles)
 
     while (1)
     {
-        record = fgets(class, (int)record[1]);
+        record = fgets(class, record);
         if (!record)
             break;
 
-        line = record[0];
+        line = record[0] + "\n";
 
         if (strfind(line, "#include \"") != 0)
             fprintf(destination, line);
@@ -43,7 +43,7 @@ void _iFiles(string class)
         recreate = 1;
     else
     {
-        for (idx = sizeof(iFiles); idx--; )
+        for (idx = listlen(iFiles); idx--; )
         {
             if (iFiles[idx] newer destination)
             {
@@ -96,7 +96,7 @@ void _precompileHeaders()
 
 void static_library(string library)
 {
-    if (sizeof(makelist("*/oa/*.o")))
+    if (listlen(makelist("*/oa/*.o")))
     {
         printf("\n"
                "Creating static library ", library, "\n");
@@ -115,7 +115,7 @@ void _shared_library(string libso, string libsoshared,
 
     gxx = g_cxx + " " + g_copt;
     
-    if (sizeof(makelist("*/os/*.o")))
+    if (listlen(makelist("*/os/*.o")))
     {
         printf("\n"
                "Creating shared library ", libso, "\n");

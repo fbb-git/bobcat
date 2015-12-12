@@ -30,9 +30,10 @@ string
 #include "icmake/backtick"
 #include "icmake/run"
 #include "icmake/md"
+
 #include "icmake/getenv"
 #include "icmake/clean"
-#include "icmake/addclasses""
+#include "icmake/addclasses"
 #include "icmake/special"
 
 #include "icmake/findall"
@@ -57,7 +58,7 @@ void main(int argc, list argv)
     int keepPch = 0;
     int idx;
 
-    for (idx = sizeof(argv); idx--; )
+    for (idx = listlen(argv); idx--; )
     {
         if (argv[idx] == "-q")
         {
@@ -181,5 +182,4 @@ void main(int argc, list argv)
         "   github              - prepare github's gh-pages update\n"
         "                         (internal use only)\n"
     );
-    exit(0);
 }
