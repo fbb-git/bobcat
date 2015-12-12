@@ -1,7 +1,5 @@
 #!/usr/bin/icmake -qt/tmp/bobcat
 
-#define LOGENV "BOBCAT"
-
 #include "INSTALL.im"
 
 #define LIBRARY             "bobcat"
@@ -14,7 +12,7 @@ int g_all = 1;          // if 0: only compile the classes not requiring
                         // additional libaries. see icmake/special
 
 string  
-    g_logPath = getenv(LOGENV)[1],
+    g_logPath,
     g_cwd,              // current WD, ends in /.
     g_file,             // used to store the name of a file from a list
     g_copt,             // compiler options
@@ -32,9 +30,10 @@ string
 #include "icmake/backtick"
 #include "icmake/run"
 #include "icmake/md"
+
 #include "icmake/getenv"
 #include "icmake/clean"
-#include "icmake/addclasses""
+#include "icmake/addclasses"
 #include "icmake/special"
 
 #include "icmake/findall"
@@ -59,7 +58,7 @@ void main(int argc, list argv)
     int keepPch = 0;
     int idx;
 
-    for (idx = sizeof(argv); idx--; )
+    for (idx = listlen(argv); idx--; )
     {
         if (argv[idx] == "-q")
         {
@@ -71,10 +70,16 @@ void main(int argc, list argv)
             g_gch = 0;
             argv -= (list)"-P";
         }
-        else if (argv[1] == "-p")
+        else if (argv[idx] == "-p")
         {
             keepPch = 1;
             argv -= (list)"-p";
+        }
+        else if (strfind(argv[idx], "LOG:") == 0)
+        {
+            g_logPath = argv[idx];
+            argv -= (list)g_logPath;
+            g_logPath = substr(g_logPath, 4, strlen(g_logPath));
         }
     }
 
@@ -156,9 +161,15 @@ void main(int argc, list argv)
         "                         optionally strip the libraries)\n"
         "   l                   - same as 'libraries all', but clearing the\n"
         "                         screen before starting the compilation\n"
-        "   install selection [base] - to install the software in the \n"
-        "                         locations defined in the INSTALL.im file,\n"
-        "                         optionally below base\n"
+        "   install [LOG:path] selection [base] -\n"
+        "                         to install the software in the locations "
+                                                                "defined \n"
+        "                         in the INSTALL.im file, optionally below "
+                                                                "base.\n"
+        "                         LOG:path is optional: if specified `path' "
+                                                                "is the\n"
+        "                         logfile on which the installation log is "
+                                                                "written.\n"
         "                         selection can be\n"
         "                               x, to install all components,\n"
         "                         or a combination of:\n"
@@ -171,5 +182,4 @@ void main(int argc, list argv)
         "   github              - prepare github's gh-pages update\n"
         "                         (internal use only)\n"
     );
-    exit(0);
 }
