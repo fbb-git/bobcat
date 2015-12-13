@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::ISharedStream</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::ISharedStream</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::ISharedStream(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz std::istream on shared memory</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::ISharedStream(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz std::istream on shared memory</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::ISharedStream - std::istream operations on shared memory
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/isharedstream&gt;</strong><br>
+    <strong>#include &lt;bobcat/isharedstream&gt;</strong><br/>
     Linking option: <em>-lpthread -lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -60,13 +60,13 @@ This class offers the features of the <strong>std::istream</strong> class, opera
 shared memory.
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
 <h2>INHERITS FROM</h2>
-    <strong>FBB::ISharedStreambuf</strong> (private inheritance),<br>
-    <strong>std::istream</strong>,<br>
+    <strong>FBB::ISharedStreambuf</strong> (private inheritance),<br/>
+    <strong>std::istream</strong>,<br/>
     <strong>FBB::SharedEnum__</strong> (cf. <strong>sharedmemory(3bobcat)</strong> for a description of
         this last base class).
 <p>
@@ -81,14 +81,14 @@ The <strong>enum SizeUnit</strong> defines the following symbolic constants:
 <p>
 <h2>CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>ISharedStream()</strong>:<br>
+    <li> <strong>ISharedStream()</strong>:<br/>
        The default constructor defines a stub a <strong>ISharedStream</strong> object that
         cannot immediately be used to access shared memory. To use it, its
         member <em>open</em> must first be called.
 <p>
 <li> <strong>ISharedStream(size_t maxSize, SizeUnit sizeUnit, 
             std::ios::openmode openMode = std::ios::in,
-            size_t access = 0600)</strong>:<br>
+            size_t access = 0600)</strong>:<br/>
        This constructor creates an <em>std::istream</em> that interfaces to a
         shared memory segment having a capacity of at least <em>maxSize *
         sizeUnit</em> bytes. By default, the shared memory segment is opened for
@@ -102,7 +102,7 @@ The <strong>enum SizeUnit</strong> defines the following symbolic constants:
         octal digits. If construction succeeds the shared memory is ready for
         use. If construction fails, an <em>FBB::Exception</em> is thrown.
 <p>
-<li> <strong>ISharedStream(int id, std::ios::openmode openMode = std::ios::in)</strong>:<br> 
+<li> <strong>ISharedStream(int id, std::ios::openmode openMode = std::ios::in)</strong>:<br/> 
        This constructor creates an <em>std::istream</em> that connects to a shared
         memory segment having ID <em>id</em>. If construction succeeds the shared
         memory is ready for use. If construction fails (e.g., no shared memory
@@ -121,7 +121,7 @@ All members of <em>std::istream</em>, and the <em>enum</em> values <em>kB, MB</e
 <p>
 <ul>
     <li> <strong>FBB::SharedCondition attachSharedCondition(std::ios::off_type offset,
-                                        std::ios::seekdir origin)</strong>:<br>
+                                        std::ios::seekdir origin)</strong>:<br/>
        Returns an <strong>FBB::SharedCondition</strong>(3) object, interfacing to a shared
         condition variable located at offset <em>offset</em> (relative to
         <em>origin</em>) in the <em>SharedMemory</em> object to which the
@@ -131,16 +131,16 @@ All members of <em>std::istream</em>, and the <em>enum</em> values <em>kB, MB</e
 An <em>FBB::Exception</em> is thrown if the <em>FBB::SharedCondition</em> object
         could not be constructed.
 <p>
-<li> <strong>int id() const</strong>:<br>
+<li> <strong>int id() const</strong>:<br/>
        The ID of the shared memory segment is returned.
 <p>
-<li> <strong>void kill()</strong>:<br>
+<li> <strong>void kill()</strong>:<br/>
        Without locking the shared memory first,  all shared memory is returned
         to the operating system. The <strong>FBB::ISharedStream</strong> object is unusable
         after returning from <em>kill</em>. Other processes that were using the
         shared memory can continue to do so.
 <p>
-<li> <strong>void memInfo(std::ostream &amp;out, char const *end = "\n")</strong>:<br>
+<li> <strong>void memInfo(std::ostream &amp;out, char const *end = "\n")</strong>:<br/>
        Information about the <em>ISharedMemory</em> object is inserted into the
         provide <em>ostream</em> object. The IDs of the shared segments, their
         sizes, the maximum number of shared memory segments, the number of
@@ -150,7 +150,7 @@ An <em>FBB::Exception</em> is thrown if the <em>FBB::SharedCondition</em> object
 <p>
 <li> <strong>void open(size_t maxSize, SizeUnit sizeUnit,
             std::ios::openmode openMode = std::ios::in,
-            size_t access = 0600)</strong>:<br>
+            size_t access = 0600)</strong>:<br/>
        This member creates a shared memory segment having a capacity of at
         least <em>maxSize * sizeUnit</em> bytes, and connects the shared memory
         segment to the <strong>FBB::ISharedStream</strong>. A matching <em>close</em> member
@@ -165,7 +165,7 @@ An <em>FBB::Exception</em> is thrown if the <em>FBB::SharedCondition</em> object
         octal digits. If opening succeeds the shared memory is ready for
         use. If opening fails, an <em>FBB::Exception</em> is thrown.
 <p>
-<li> <strong>void open(int id, std::ios::openmode openMode = std::ios::in)</strong>:<br> 
+<li> <strong>void open(int id, std::ios::openmode openMode = std::ios::in)</strong>:<br/> 
        This member connects the <strong>FBB::ISharedStream</strong> object to a shared
         memory segment having ID <em>id</em>. A matching <em>close</em> member does
         not exist and is not required. If opening succeeds the shared
@@ -173,13 +173,13 @@ An <em>FBB::Exception</em> is thrown if the <em>FBB::SharedCondition</em> object
         segment having ID <em>id</em> exists), an <em>FBB::Exception</em> is
         thrown.
 <p>
-<li> <strong>void remove()</strong>:<br>
+<li> <strong>void remove()</strong>:<br/>
        The shared memory is first locked. Next, all shared memory is returned
         to the operating system. The <strong>FBB::ISharedStream</strong> object is unusable
         after returning from <em>remove</em>. Other processes that were using the
         shared memory can continue to do so.
 <p>
-<li> <strong>bool truncate(std::streamsize offset)</strong>:<br>
+<li> <strong>bool truncate(std::streamsize offset)</strong>:<br/>
        If <em>offset</em> is not exceeding the value returned by <em>seekg(0,
         std::ios::end)</em>, then this latter value is changed to <em>offset</em> and
         <em>true</em> is returned. Otherwise <em>false</em> is returned, and the value
@@ -224,12 +224,12 @@ called, e.g., using:
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Exception</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Exception</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Exception(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz Error handler</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Exception(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Error handler</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::Exception - std::exception objects acception stream insertions
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/exception&gt;</strong><br>
+    <strong>#include &lt;bobcat/exception&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -103,7 +103,7 @@ User,
 Xpointer</em>
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -121,9 +121,9 @@ described below. The enumeration has two values:
 <p>
 <h2>CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>Exception()</strong>:<br>
+    <li> <strong>Exception()</strong>:<br/>
     The default constructor
-    <li> <strong>Exception(int errnoValue)</strong>:<br> 
+    <li> <strong>Exception(int errnoValue)</strong>:<br/> 
     This constructor stores the provided <em>errnoValue</em> value in the global
 <em>::errno</em> variable, provided by the run-time support system.
     </ul>
@@ -133,13 +133,13 @@ described below. The enumeration has two values:
      All members of <strong>std::exception</strong> are
 available, as <strong>FBB::Exception</strong> inherits from this class.
     <ul>
-    <li> <strong>char const *what() const noexcept(true) override</strong>:<br> 
+    <li> <strong>char const *what() const noexcept(true) override</strong>:<br/> 
     Returns the text that was inserted into the <strong>FBB::Exception</strong> object.
     </ul>
 <p>
 <h2>OVERLOADED OPERATORS</h2>
     <ul>
-    <li> <strong>Exception &amp;&amp;operator&lt;&lt;(Exception &amp;&amp;in, Type const &amp;t)</strong>:<br>
+    <li> <strong>Exception &amp;&amp;operator&lt;&lt;(Exception &amp;&amp;in, Type const &amp;t)</strong>:<br/>
     A function template implementing the overloaded insertion operator. It
 can be used to insert values of any type that can also be inserted into an
 <em>ostringstream</em> object.
@@ -159,28 +159,28 @@ If opening fails an <em>FBB::Exception</em> exception is thrown containing a
 short message stating that the named stream could not be opened. 
 <p>
 <ul>
-    <li> <strong>static void open(StreamType &amp;stream, std::string const &amp;name)</strong>:<br>
+    <li> <strong>static void open(StreamType &amp;stream, std::string const &amp;name)</strong>:<br/>
         Opens the stream object, using its default <em>open</em> member.
 <p>
 <li> <strong>static void open(int errnoValue, 
-                         StreamType &amp;stream, std::string const &amp;name)</strong>:<br>
+                         StreamType &amp;stream, std::string const &amp;name)</strong>:<br/>
        Opens the stream object, using its default <em>open</em> member. If opening
         the stream fails, then the thrown <strong>FBB::Exception</strong> assigns
 <em>errnoValue</em> to <em>::errno</em>.
 <p>
 <li> <strong>static void open(StreamType &amp;stream, std::string const &amp;name,
-                                    std::ios::openmode mode)</strong>:<br>
+                                    std::ios::openmode mode)</strong>:<br/>
        Opens the stream object, using its <em>open</em> member, passing <em>mode</em> to
         <em>open</em>.
 <p>
 <li> <strong>static void open(int errnoValue, StreamType &amp;stream,
-                        std::string const &amp;name, std::ios::openmode mode)</strong>:<br>
+                        std::string const &amp;name, std::ios::openmode mode)</strong>:<br/>
        Opens the stream object, using its <em>open</em> member, passing <em>mode</em> to
         <em>open</em>. If opening the stream fails, then the thrown
         <strong>FBB::Exception</strong> assigns <em>errnoValue</em> to <em>::errno</em>.
 <p>
 <li> <strong>static size_t protection(std::string const &amp;path, size_t protect, 
-                          Protection type = EQUAL)</strong>:<br>
+                          Protection type = EQUAL)</strong>:<br/>
        Returns the protection bits (cf. <strong>open</strong>(2)) of <em>path</em>. The
         <em>protect</em> parameter is used to specify the requested protection
         bits. This value is usually specified as an octal value. If the
@@ -203,7 +203,7 @@ The following manipulator (which is <em>not</em> part of the
 <strong>FBB::Exception</strong>, class, but <em>is</em> defined in the <strong>FBB</strong> namespace) can be
 inserted into the <strong>FBB::Exception</strong> object:
     <ul>
-    <li> <strong>FBB::errnodescr</strong>:<br> 
+    <li> <strong>FBB::errnodescr</strong>:<br/> 
         The descriptive text associated with the current <em>errno</em> value is
 inserted into the <strong>FBB::Exception</strong> object (it can also be used to insert the
 descriptive text in a <em>std::ostream</em> object). No text is inserted if
@@ -232,12 +232,12 @@ modified when <em>errno</em> holds an invalid value).
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

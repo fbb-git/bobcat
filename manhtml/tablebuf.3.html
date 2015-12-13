@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Table</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Table</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,10 +41,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Table(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz Construct text tables</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Table(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Construct text tables</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
@@ -52,7 +52,7 @@
 information inserted into a std::ostream
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/tablebuf&gt;</strong><br>
+    <strong>#include &lt;bobcat/tablebuf&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -102,7 +102,7 @@ defined. Instead, with <em>Table</em> objects each new insertion defines another
 table element, and no wrapping <em>std::ostream</em> object is required.
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -120,27 +120,27 @@ inherited from <em>TableBase</em> are described in this man-page.
 <h2>ENUMERATIONS</h2>
     The following enumerations are defined in the class <strong>FBB::Tablebuf</strong>.
 <p>
-<strong>enum FillDirection</strong><br>
+<strong>enum FillDirection</strong><br/>
     This enumeration has two values:
     <ul>
-    <li> <strong>ROWWISE</strong>:<br>
+    <li> <strong>ROWWISE</strong>:<br/>
         When this value is specified at construction time, elements are added
 row-wise to the table. I.e., the second element inserted into the <strong>Table</strong>
 will be found in the second column of the first row.
-    <li> <strong>COLUMNWISE</strong>:<br>
+    <li> <strong>COLUMNWISE</strong>:<br/>
         When this value is specified at construction time, elements are added
 column-wise to the table. I.e., the second element will be found in the second
 row of the first column.
     </ul>
 <p>
-<strong>enum WidthType</strong><br>
+<strong>enum WidthType</strong><br/>
     This enumeration holds two values:
     <ul>
-    <li> <strong>COLUMNWIDTH</strong>:<br>
+    <li> <strong>COLUMNWIDTH</strong>:<br/>
         This value may be specified when the columns should be allowed
 variable widths. In this case each column will be as wide as its widest
 element. This is the default <strong>WidthType</strong> used by <strong>Table</strong> objects. 
-    <li> <strong>EQUALWIDTH</strong>:<br>
+    <li> <strong>EQUALWIDTH</strong>:<br/>
         This value may be specified when all the table's columns should have
 equal width (i.e., equal to the width of the widest table element), 
     </ul>
@@ -148,7 +148,7 @@ equal width (i.e., equal to the width of the widest table element),
 <h2>CONSTRUCTORS</h2>
     <ul>
     <li> <strong>Tablebuf(size_t nColumns, Table::FillDirection direction,
-            Table::WidthType widthType = Table::COLUMNWIDTH)</strong>:<br>
+            Table::WidthType widthType = Table::COLUMNWIDTH)</strong>:<br/>
         The table's number of columns, the fill directions and the column
 width-type must be provided.  The number of rows is implied by the combination
 of this parameter and the number of elements that is actually inserted into
@@ -158,7 +158,7 @@ the <em>widthType</em> parameter is used to specify the way the width of the
 table's columns is determined. Each column either defines its own width or all
 columns have equal widths.
     <li> <strong>TableBuf(TableSupport &amp;tableSupport, Table::FillDirection direction,
-            Table::WidthType widthType = Table::COLUMNWIDTH)</strong>:<br>
+            Table::WidthType widthType = Table::COLUMNWIDTH)</strong>:<br/>
         This constructor operates identically to the previous constructor, but
 expects an additional reference to a <strong>TableSupport</strong> object. A
 <strong>TableSupport</strong> object offers additional formatting features used by the
@@ -171,13 +171,13 @@ reference as the <strong>Table</strong> object must be able to manipulate its da
 <h2>OVERLOADED OPERATORS</h2>
 <p>
 <ul>
-    <li> <strong>std::ostream &amp;operator&lt;&lt;(std::ostream &amp;out, TableBuf &amp;tablebuf)</strong>:<br>
+    <li> <strong>std::ostream &amp;operator&lt;&lt;(std::ostream &amp;out, TableBuf &amp;tablebuf)</strong>:<br/>
         This operator inserts a <strong>TableBuf</strong> into a <em>std::ostream</em>
 object. Note that the <em>TableBuf</em> object inserted into <em>out</em> is a non-const
 object, as the table may have to be completed by adding empty elements for
 missing ones. The <em>out</em> stream should not be equal to the <em>std::ostream</em>
 object that is used to wrap in a <em>TableBuf</em> object. 
-    <li> <strong>TableBuf &amp;operator&lt;&lt;(TableBuf &amp;obj, Align const &amp;align)</strong>:<br>
+    <li> <strong>TableBuf &amp;operator&lt;&lt;(TableBuf &amp;obj, Align const &amp;align)</strong>:<br/>
         This operator is used to change the default alignment of either a
 column or an element. It is a wrapper around the member <em>setAlign()</em> (see
 below for its description). By default, all elements are right-aligned. See
@@ -190,13 +190,13 @@ cell-alignment.
 <p>
 <h2>MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong>void clear()</strong>:<br>
+    <li> <strong>void clear()</strong>:<br/>
         The contents of the table are erased. All existing elements are
 removed, and the table will be empty.
-    <li> <strong>size_t nRows()</strong>:<br>
+    <li> <strong>size_t nRows()</strong>:<br/>
         The currently available number of rows in the table is returned. Its
 value is only defined after calling <strong>def()</strong>.
-    <li> <strong>TableBuf &amp;setAlign(Align const &amp;align)</strong>:<br>
+    <li> <strong>TableBuf &amp;setAlign(Align const &amp;align)</strong>:<br/>
         The alignment type of either a column or an element of the <strong>TableBuf</strong>
 object is defined using <em>setAlign</em>. The standard alignments <em>std::left,
 std::right</em> and <em>std::internal</em> may be specified, but in addition the
@@ -215,7 +215,7 @@ tab &lt;&lt; Align(2, 3, FBB::center)
     requests centering of element [2][3]. It is the responsibility of the
 programmer to ensure that such elements exist. By default, all elements are
 right-aligned.
-    <li> <strong>TableBuf &amp;def()</strong>:<br>
+    <li> <strong>TableBuf &amp;def()</strong>:<br/>
         After inserting elements into a <em>TableBuf</em> object its number of
 elements may or may not be an integral multiple of the number of columns
 specified at construction time. To `complete' a <strong>TableBuf</strong> object to a
@@ -226,7 +226,7 @@ explicitly to force the insertion of another row in a table using <em>ROWWISE</e
 insertions. With <em>COLUMNWISE</em> insertions its working is complex, since new
 elements added to a <em>COLUMNWISE</em> filled table will reshuffle its elements
 over the table's columns.
-    <li> <strong>setFieldSeparator(char fs)</strong>:<br>
+    <li> <strong>setFieldSeparator(char fs)</strong>:<br/>
         The default field separator is the `backspace' (<em>\b</em>)
 character. After inserting a field separator the next table element will be
 defined. Inserting two field separators inserts an table empty element and
@@ -234,7 +234,7 @@ starts the definition of the next element. This field separator character can
 be redefined by this function.  Calling <em>setFieldSeparator</em> without argument
 disables the use of a field separator character, and only leaves the use of
 the <em>fs</em> manipulator to switch to the next field.
-    <li> <strong>setRowSeparator(char rs)</strong>:<br>
+    <li> <strong>setRowSeparator(char rs)</strong>:<br/>
         The default row separator is the newline character (<em>\n</em>).  After
 inserting a row separator the next element to enter into the table will be the
 leftmost element of the next row.  Inserting two row separators adds an empty
@@ -252,20 +252,20 @@ can, in accordance with Liskov's Substitution Principle, be used as a
 <em>std:streambuf</em>; but it also offers a facility for classes deriving from
 <strong>Tablebuf</strong>. This facility is listed here.
     <ul>
-    <li> <strong>int pSync()</strong>:<br>
+    <li> <strong>int pSync()</strong>:<br/>
         The contents of the <strong>Tablebuf</strong>'s internal buffer is flushed.
     </ul>
 <p>
 <h2>MANPULATORS</h2>
     <ul>
-    <li> <strong>Table &amp;def(Table &amp;table)</strong>:<br>
+    <li> <strong>Table &amp;def(Table &amp;table)</strong>:<br/>
         This manipulator can be inserted into a a <em>TableBuf</em>'s wrapping
 <em>ostream</em> to call the table's <strong>def()</strong> member.
-    <li> <strong>FBB::fs</strong>:<br>
+    <li> <strong>FBB::fs</strong>:<br/>
         This manipulator can be inserted into a <em>TableBuf</em>'s wrapping 
 <em>ostream</em> to switch to the next field of the table. It is an alternative to
 using the field separator character.
-    <li> <strong>FBB::rs</strong>:<br>
+    <li> <strong>FBB::rs</strong>:<br/>
         This manipulator can be inserted into a <em>TableBuf</em>'s wrapping 
 <em>ostream</em> to switch to the next row of the table. It is an alternative to
 using the row separator character.
@@ -309,7 +309,7 @@ int main()
 
 <p>
 <h2>FILES</h2>
-    <em>bobcat/tablebuf</em> - defines the class interface;<br>
+    <em>bobcat/tablebuf</em> - defines the class interface;<br/>
 <p>
 <h2>SEE ALSO</h2>
     <strong>bobcat</strong>(7), <strong>align</strong>(3bobcat), <strong>manipulator</strong>(3bobcat),
@@ -323,12 +323,12 @@ columns when new elements are added to the table subsequent to calling
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

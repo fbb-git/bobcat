@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::CmdFinder</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::CmdFinder</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::CmdFinder(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz Command-function associations</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::CmdFinder(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Command-function associations</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::CmdFinder - Determine (member) function associated with a command
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/cmdfinder&gt;</strong><br>
+    <strong>#include &lt;bobcat/cmdfinder&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -103,7 +103,7 @@ are available to classes derived from <strong>CmdFinder</strong>, but which are 
 defined in the class <strong>CmdFinderBase</strong>.
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -115,20 +115,20 @@ man-page, are defined in the namespace <strong>FBB</strong>.
 contains the following values, which may be combined by the <strong>bit_or</strong>
 operator to specify the <strong>CmdFinder</strong> object's required mode of operation:
     <ul>
-    <li> <strong>USE_FIRST</strong>:<br> 
+    <li> <strong>USE_FIRST</strong>:<br/> 
         This value can be specified when the first word (any white-space
 separated series of characters) of a provided textual command should be used
 as the command to find. Both the command that is used and any trailing
 information that may be present can be obtained from the <strong>CmdFinder</strong>
 object. By default, the complete contents of the a provided command is used.
-    <li> <strong>UNIQUE</strong>:<br> 
+    <li> <strong>UNIQUE</strong>:<br/> 
         This value can be specified when any unique abbreviation of a command
 may be accepted. Assuming that the commands <em>help</em> and <em>version</em> are
 defined, then the following (non-exhaustive) series are all accepted as
 specifications of the <em>help</em> command if <strong>UNIQUE</strong> is specified: <em>h, he,
 el, p</em>. By default the command must match a command-key as found in the array
 of command-function associations exactly.
-    <li> <strong>INSENSITIVE</strong>:<br> 
+    <li> <strong>INSENSITIVE</strong>:<br/> 
         When this value is specified, commands may be specified disregarding
 letter-casing. E.g., when <strong>INSENSITIVE</strong> is specified, both <em>Help</em> and
 <em>HELP</em> are recognized as <em>help</em>. By default, letter casing is obeyed.
@@ -147,10 +147,10 @@ derived from <strong>CmdFinder</strong>).
     The following (<strong>protected</strong>) types are defined by the template class
 <strong>CmdFinder</strong>: 
     <ul>
-    <li> <strong>FunctionPtr</strong>:<br> 
+    <li> <strong>FunctionPtr</strong>:<br/> 
         This type represents a pointer to the functions whose addresses are
 stored in the array of command-function associations.
-    <li> <strong>Entry</strong>:<br> 
+    <li> <strong>Entry</strong>:<br/> 
         This type represents the type <strong>std::pair&lt;char const *,
 FunctionPtr&gt;</strong>. Its <em>first</em> field is the name of a command, its <em>second</em>
 field is the function address associated with the command name.
@@ -159,7 +159,7 @@ field is the function address associated with the command name.
 <h2>CONSTRUCTORS</h2>
     <ul>
     <li> <strong>CmdFinder&lt;FunctionPtr&gt;(Entry const *begin, Entry const *end,
-                      size_t mode = 0)</strong>:<br>
+                      size_t mode = 0)</strong>:<br/>
         This constructor is defined in the <strong>protected</strong> section of the
 <strong>CmdFinder</strong> class. Its parameters <em>begin</em> and <em>end</em> define the half-open
 range of <strong>Entry</strong> objects, defining the associations between commands and
@@ -169,7 +169,7 @@ the last element of the array. The parameter <em>mode</em> may be speified using
 any combination of values of the <strong>Mode</strong> enumeration, using the <strong>bit_or</strong>
 operator to combine multiple values. When a non-supported value is specified
 for <em>mode</em>, an <strong>FBB::Exception</strong> exception is thrown.
-    <li> <strong>Note</strong>:<br>
+    <li> <strong>Note</strong>:<br/>
     There is no default constructor.
     </ul>
     Copy and move constructors are available.
@@ -180,7 +180,7 @@ The copy and move assignment operators are available.
 <p>
 <h2>PUBLIC MEMBER FUNCTION</h2>
     <ul>
-    <li> <strong>setMode(size_t mode)</strong>:<br>
+    <li> <strong>setMode(size_t mode)</strong>:<br/>
         This member function (defined in the class <strong>CmdFinderBase</strong>) may be
 called to redefine the mode of the <strong>CmdFinder</strong> object. The <em>mode</em>
 parameter should be initialized subject to the same restrictions as mentioned
@@ -189,21 +189,21 @@ with the <strong>CmdFinder</strong>'s constructor.
 <p>
 <h2>PROTECTED MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong>std::string const &amp;beyond() const</strong>:<br>
+    <li> <strong>std::string const &amp;beyond() const</strong>:<br/>
         This member function returns the text that may have been entered
 beyond the command (if <strong>Mode</strong> value <strong>USE_FIRST</strong> was specified). It is
 empty if no text beyond the command was encountered. It is initially empty,
 and will be redefined at each call of <strong>findCmd()</strong> (see below).
-    <li> <strong>std::string const &amp;cmd() const</strong>:<br>
+    <li> <strong>std::string const &amp;cmd() const</strong>:<br/>
         This member returns the original (untransformed) command as
 encountered by the <strong>CmdFinder</strong> object.  It is initially empty, and will be
 redefined at each call of <strong>findCmd()</strong> (see below).  object.
-    <li> <strong>size_t count() const</strong>:<br>
+    <li> <strong>size_t count() const</strong>:<br/>
         This member function returns the number of commands matching the
 command that is passed to the function <strong>findCmd()</strong> (see below). Its return
 value is 0 when <strong>findCmd()</strong> hasn't been called yet and is updated at each
 new call of <strong>findCmd()</strong>.
-    <li> <strong>FunctionPtr findCmd(std::string const &amp;cmd)</strong>:<br>
+    <li> <strong>FunctionPtr findCmd(std::string const &amp;cmd)</strong>:<br/>
         Regarding the <strong>CmdFinder</strong> object's <strong>mode</strong> setting, this function
 returns the address of the function to call given the provided command. By
 default, if no match was found, the address of the function stored in the last
@@ -326,7 +326,7 @@ int main()
 
 <p>
 <h2>FILES</h2>
-    <em>bobcat/cmdfinder</em> - defines the class interface<br>
+    <em>bobcat/cmdfinder</em> - defines the class interface<br/>
     <em>bobcat/cmdfinderbase</em> - defines the base class of <strong>CmdFinder</strong>.
 <p>
 <h2>SEE ALSO</h2>
@@ -338,12 +338,12 @@ int main()
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

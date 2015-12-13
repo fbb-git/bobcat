@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Signal</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Signal</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Signal(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz signal handler</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Signal(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz signal handler</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::Signal - Signal Handler
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/signal&gt;</strong><br>
+    <strong>#include &lt;bobcat/signal&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -128,7 +128,7 @@ by <em>mutexes</em> (cf. the <strong>C++-11</strong> class <em>std::mutex</em> o
 <strong>pthread_mutex_lock</strong>(3posix)). 
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -150,7 +150,7 @@ protected constructors, nor does it offer overloaded operators.
 <p>
 <h2>STATIC MEMBER FUNCTION</h2>
     <ul>
-    <li> <strong>static Signal &amp;instance()</strong>:<br><br>
+    <li> <strong>static Signal &amp;instance()</strong>:<br/><br/>
         This static member can be used to access a reference to the program's
 single <em>Signal</em> object.
     </ul>
@@ -160,7 +160,7 @@ single <em>Signal</em> object.
 reference to the program's <em>Signal</em> object, returning a reference to the
 program's single <em>Signal</em> object:
     <ul>
-    <li> <strong>void add(size_t signum, SignalHandler &amp;object)</strong>:<br><br> 
+    <li> <strong>void add(size_t signum, SignalHandler &amp;object)</strong>:<br/><br/> 
        <em>SignalHandler object</em> is activated on arrival of signal
         <em>signum</em>. If multiple <em>SignalHandler</em> objects must be called then
         multiple <em>Signal::add</em> calls can be provided, and the various
@@ -171,19 +171,19 @@ program's single <em>Signal</em> object:
         <em>Signal::add</em> is called by, e.g., an object's constructor, then its
         destructor should call <em>Signal::remove</em> to prevent the object's
         signal handler from being called after its destruction.
-    <li> <strong>void remove(size_t signum, SignalHandler &amp;object)</strong>:<br><br> 
+    <li> <strong>void remove(size_t signum, SignalHandler &amp;object)</strong>:<br/><br/> 
        <em>SignalHandler object</em> for signal <em>signum</em> is removed from the
         <em>Signal</em> object. It is the responsibility of <em>object</em> to
         deregister itself from <em>Signal</em> just before <em>object</em> goes out of
         scope. Objects can only deregister themselves if they've previously
         registered themselves using <em>add</em>.
-    <li> <strong>void ignore(size_t signum)</strong>:<br><br>
+    <li> <strong>void ignore(size_t signum)</strong>:<br/><br/>
        Any previously installed <em>SignalHandler</em> object is no longer
         activated on arrival of signal <em>signum</em>. In addition, if possible,
         signal <em>signum</em> is completely ignored (some signals cannot be
         caught, blocked, of ignored, like <em>SIGKILL</em> and <em>SIGSTOP</em>
         (cf. <strong>signal</strong>(7))).
-    <li> <strong>void reset(size_t signum)</strong>:<br><br>
+    <li> <strong>void reset(size_t signum)</strong>:<br/><br/>
        Any previously installed <em>SignalHandler</em> object is no longer
         activated on arrival of signal <em>signum</em>. In addition, the default
         action the program takes on arrival of signal <em>signum</em> is
@@ -269,7 +269,7 @@ int main()
     <em>bobcat/signal</em> - defines the class interface
 <p>
 <h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>pthread_mutex_lock</strong>(3posix), <strong>signal</strong>(7),<br>
+    <strong>bobcat</strong>(7), <strong>pthread_mutex_lock</strong>(3posix), <strong>signal</strong>(7),<br/>
     and the <strong>C++-11</strong> class <em>std::mutex</em>.
 <p>
 <h2>BUGS</h2>
@@ -278,12 +278,12 @@ int main()
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Hostent</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Hostent</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Hostent(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz struct hostent wrapper</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Hostent(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz struct hostent wrapper</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::Hostent - Wrapper around a <strong>struct hostent</strong>
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/hostent&gt;</strong><br>
+    <strong>#include &lt;bobcat/hostent&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -76,7 +76,7 @@ requiring <em>h_length</em> bytes, the last address being equal to 0. The
 <strong>@CLASS</strong> objects offer a <strong>C++</strong>-like interface to this struct.
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -85,7 +85,7 @@ man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
 <h2>CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>Hostent(hostent const *hostentPtr)</strong>:<br> 
+    <li> <strong>Hostent(hostent const *hostentPtr)</strong>:<br/> 
         This constructor initializes an <strong>@CLASS</strong> object from an existing
 <strong>hostent</strong> struct. Functions like <strong>gethostbyname</strong>(3) and
 <strong>gethostbyaddress</strong>(3) return pointers to <strong>hostent</strong> structs.
@@ -96,41 +96,41 @@ The default, copy and move constructors are available.
 <h2>MEMBER FUNCTIONS</h2>
 <p>
 <ul>
-    <li> <strong>size_t addressLength() const</strong>:<br>
+    <li> <strong>size_t addressLength() const</strong>:<br/>
         This member returns the length of the binary addresses in bytes.
-    <li> <strong>size_t addressType() const</strong>:<br>
+    <li> <strong>size_t addressType() const</strong>:<br/>
         This member returns the type of the address. Currently this is always
 <strong>AF_INET</strong>.
-    <li> <strong>char const *alias(size_t index) const</strong>:<br>
+    <li> <strong>char const *alias(size_t index) const</strong>:<br/>
         This member returns alias `<em>index</em>' of the host. The first alias has
 <em>index 0</em>. If alias `<em>index</em>' does not exist, 0 is returned.
-    <li> <strong>char const * const *beginAlias() const</strong>:<br>
+    <li> <strong>char const * const *beginAlias() const</strong>:<br/>
         This member returns an iterator to the first alias. The hostname
 itself is not included in the list of aliases.
-    <li> <strong>char const *binaryAddress(size_t index) const</strong>:<br>
+    <li> <strong>char const *binaryAddress(size_t index) const</strong>:<br/>
         This member returns the binary address `<em>index</em>' of the host.  The
 first address has <em>index 0</em>. If address `<em>index</em>' does not exist, 0 is
 returned. The pointer to the binary address points to a series of
 <strong>addressLength()</strong> bytes. Note that the returned address is in <em>network
 byte order</em>. It can be converted to host byte order by the functions described
 in <strong>byteorder</strong>(3).
-    <li> <strong>std::string dottedDecimalAddress(size_t index) const</strong>:<br>
+    <li> <strong>std::string dottedDecimalAddress(size_t index) const</strong>:<br/>
         This member returns address `<em>index</em>' as a dotted decimal address in
 a string. The first address has <em>index 0</em>. If address `<em>index</em>' does not
 exist, an empty string is returned.
-    <li> <strong>char const * const *endAlias() const</strong>:<br>
+    <li> <strong>char const * const *endAlias() const</strong>:<br/>
         This member returns an iterator pointing beyond the last alias.
-    <li> <strong>char const *hostname() const</strong>:<br>
+    <li> <strong>char const *hostname() const</strong>:<br/>
         This member returns the standard (first) name of the host.
-    <li> <strong>size_t nAddresses() const</strong>:<br>
+    <li> <strong>size_t nAddresses() const</strong>:<br/>
         This member returns the number of addresses that are available. When
 requesting a particular address, the requested index should be less than
 the value returned by this member.
-    <li> <strong>size_t nAliases() const</strong>:<br>
+    <li> <strong>size_t nAliases() const</strong>:<br/>
         This member returns the number of aliases that are available. When
 requesting a particular alias, the requested index should be less than the
 value returned by this member.
-    <li> <strong>void swap(Hostent &amp;other)</strong>:<br>
+    <li> <strong>void swap(Hostent &amp;other)</strong>:<br/>
         The current <em>Hostent</em> object's contents are swapped with the other
     object's contents.
     </ul>
@@ -181,12 +181,12 @@ assignment operators are available.
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

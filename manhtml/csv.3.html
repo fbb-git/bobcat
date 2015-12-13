@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::CSV</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::CSV</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::CSV(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz CSV convertor</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::CSV(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz CSV convertor</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::CSV - Convertor for comma separated values
+<h2>NAME</h2>FBB::CSV - Converter for comma separated values
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/csv&gt;</strong><br>
+    <strong>#include &lt;bobcat/csv&gt;</strong><br/>
 <p>
 Linking option: <em>-lbobcat</em> 
 <p>
@@ -64,7 +64,7 @@ long,</em> etc., to floating point types (<em>float, double, long double</em>), 
 can be accessed as <em>std::string</em> values.
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -107,7 +107,7 @@ to iterate over the sequence of comma-separated values.
 <h2>CONSTRUCTORS</h2>
     <ul>
     <li> <strong>CSV(std::string const &amp;specification, Mode mode = LINE, InsertType =
-            LENGTH)</strong>:<br>
+            LENGTH)</strong>:<br/>
         The specification in <em>specification</em> defines the subsequent fields
         of the comma-separated value. Specifications are 
         <blockquote>
@@ -144,11 +144,11 @@ When inserting a <strong>CSV</strong> object into a <em>std::ostream</em> object
 <p>
 <h2>OVERLOADED OPERATORS</h2>
     <ul>
-    <li> <strong>std::string const &amp;operator[](size_t index) const</strong>:<br>
+    <li> <strong>std::string const &amp;operator[](size_t index) const</strong>:<br/>
        The contents of the indicated field is returned as a
         <em>std::string</em>.
 <p>
-<li> <strong>std::istream &amp;operator&gt;&gt;(std::istream &amp;out, CSV const &amp;csv)</strong>:<br>
+<li> <strong>std::istream &amp;operator&gt;&gt;(std::istream &amp;out, CSV const &amp;csv)</strong>:<br/>
        The data fields stored within <em>csv</em> are inserted into <em>out</em> as a
         series of comma-separated values. The fields are inserted according to
         the latest <em>InsertType</em> specification:
@@ -167,7 +167,7 @@ When inserting a <strong>CSV</strong> object into a <em>std::ostream</em> object
         last field (including its terminating comma, if applicable) is ignored
         (including the <em>'\n'</em> line terminator).
 <p>
-<li> <strong>std::ostream &amp;operator&lt;&lt;(std::ostream &amp;out, CSV const &amp;csv)</strong>:<br>
+<li> <strong>std::ostream &amp;operator&lt;&lt;(std::ostream &amp;out, CSV const &amp;csv)</strong>:<br/>
        The data fields stored within <em>csv</em> are inserted into <em>out</em> as a
         series of comma-separated values. The fields are inserted according to
         the latest <em>InsertType</em> specification:
@@ -188,37 +188,37 @@ The copy and move assignment operators are available.
 <p>
 <h2>MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong>CSV &amp;append(char spec, std::string const &amp;value = "")</strong>:<br>
+    <li> <strong>CSV &amp;append(char spec, std::string const &amp;value = "")</strong>:<br/>
        A field <em>spec</em>, with textual representation <em>value</em> is added to the
         object's current set of fiels. A specification <em>'X'</em> or
         <em>'-'</em> is added to the object's set of specifications, but does not
         add <em>value</em> to the currently stored set of values.
 <p>
-<li> <strong>std::vector&lt;bool&gt; const &amp;available() const</strong>:<br>
+<li> <strong>std::vector&lt;bool&gt; const &amp;available() const</strong>:<br/>
        A vector of <em>bool</em> values indicating which of the matching data
         fields are valid (i.e., could be converted to its specification as
         defined at construction time or by <em>setSpec</em>) is returned.
 <p>
-<li> <strong>CSV::const_iterator&lt;Type&gt; begin&lt;Type == std::string&gt;() const</strong>:<br>
+<li> <strong>CSV::const_iterator&lt;Type&gt; begin&lt;Type == std::string&gt;() const</strong>:<br/>
        This is a template member returning a <em>CSV::const_iterator</em> to the
         object's first field. When dereferencing a <em>const_iterator</em> the
         value it refers to is converted to the indicated <em>Type</em>. If the
         conversion fails, the <em>Type</em>'s default value is returned.
 <p>
-<li> <strong>size_t count() const</strong>:<br>
+<li> <strong>size_t count() const</strong>:<br/>
        The number of fields that could actually be converted to their
         indicated types is returned. E.g., an empty field or a supposedly 
         numeric field whose contents cannot be converted to the indicated
         numeric value won't be counted here.
 <p>
-<li> <strong>std::vector&lt;std::string&gt; const &amp;data() const</strong>:<br>
+<li> <strong>std::vector&lt;std::string&gt; const &amp;data() const</strong>:<br/>
        The vector of fields stored inside the <strong>CSV</strong> object is returned.
 <p>
-<li> <strong>CSV::const_iterator&lt;Type&gt; end&lt;Type == std::string&gt;() const</strong>:<br>
+<li> <strong>CSV::const_iterator&lt;Type&gt; end&lt;Type == std::string&gt;() const</strong>:<br/>
        This is a template member returning a <em>CSV::const_iterator</em> pointing
         just beyond the <strong>CSV</strong> object's last field.
 <p>
-<li> <strong>Type field&lt;Type = std::string&gt;(size_t idx) const</strong>:<br>
+<li> <strong>Type field&lt;Type = std::string&gt;(size_t idx) const</strong>:<br/>
        This is a template member returning the contents of field <em>idx</em> as a
         value of type <em>Type</em>.  When <em>Type</em> equals <em>std::string</em> a
         <em>std::string const &amp;</em> is returned. For <em>Type</em> all integral and
@@ -226,7 +226,7 @@ The copy and move assignment operators are available.
         <em>idx</em> cannot be converted to <em>Type</em> a <strong>std::exception</strong> is
         thrown. 
 <p>
-<li> <strong>Type get&lt;Type = std::string&gt;(size_t idx)</strong>:<br>
+<li> <strong>Type get&lt;Type = std::string&gt;(size_t idx)</strong>:<br/>
        This is a template member returning the contents of field <em>idx</em> as a
         value of type <em>Type</em>.  When <em>Type</em> equals <em>std::string</em> a
         <em>std::string const &amp;</em> is returned. For <em>Type</em> all integral and
@@ -234,45 +234,45 @@ The copy and move assignment operators are available.
         <em>idx</em> cannot be converted to <em>Type</em>, the <em>Type</em>'s default value
         is returned.
 <p>
-<li> <strong>InsertType insertType() const</strong>:<br>
+<li> <strong>InsertType insertType() const</strong>:<br/>
        The object's current <em>InsertType</em> is returned.
 <p>
-<li> <strong>size_t length() const</strong>:<br>
+<li> <strong>size_t length() const</strong>:<br/>
        The number of specifications (defined at construction time or by the
         <em>setSpec</em> member) is returned. This count includes the number of
         <em>X</em> and <em>-</em> specifications.
 <p>
-<li> <strong>CSV::Mode mode() const</strong>:<br>
+<li> <strong>CSV::Mode mode() const</strong>:<br/>
        The object's current <em>Mode</em> value is returned.
 <p>
-<li> <strong>std::string const &amp;spec() const</strong>:<br>
+<li> <strong>std::string const &amp;spec() const</strong>:<br/>
        The object's current field-type specifications are returned.
 <p>
-<li> <strong>CSV::const_reverse_iterator&lt;Type&gt; rbegin&lt;Type == std::string&gt;() const</strong>:<br>
+<li> <strong>CSV::const_reverse_iterator&lt;Type&gt; rbegin&lt;Type == std::string&gt;() const</strong>:<br/>
        This is a template member returning a <em>CSV::const_reverse_iterator</em>
         to the object's last field. When dereferencing a
         <em>const_reverse_iterator</em> the value it refers to is converted to the
         indicated <em>Type</em>. If the conversion fails, the <em>Type</em>'s default
         value is returned.
 <p>
-<li> <strong>CSV::const_iterator&lt;Type&gt; rend&lt;Type == std::string&gt;() const</strong>:<br>
+<li> <strong>CSV::const_iterator&lt;Type&gt; rend&lt;Type == std::string&gt;() const</strong>:<br/>
        This is a template member returning a <em>CSV::const_reverse_iterator</em>
         pointing just before the <strong>CSV</strong> object's first field.
 <p>
-<li> <strong>void setInsertType(InsertType insertType)</strong>:<br>
+<li> <strong>void setInsertType(InsertType insertType)</strong>:<br/>
        The objects <em>InsertType</em> is changed to <em>insertType</em>. This has no
         immediate effect, but is only interpreted with the insertion operator.
 <p>
-<li> <strong>void setMode(Mode mode)</strong>:<br>
+<li> <strong>void setMode(Mode mode)</strong>:<br/>
        The object's current <em>Mode</em> value is changed to <em>mode</em>. This has no
         immediate effect, but is only interpreted with the insertion and
         extraction operators.
 <p>
-<li> <strong>void setSpec(std::string const &amp;spec)</strong>:<br>
+<li> <strong>void setSpec(std::string const &amp;spec)</strong>:<br/>
        The information stored inside the <strong>CSV</strong> object is erased, and a new
         field-specification is defined from <em>spec</em>.
 <p>
-<li> <strong>size_t size() const</strong>:<br>
+<li> <strong>size_t size() const</strong>:<br/>
        The number of fields is returned (the returned value equals the value
         returned by <em>length</em> not counting the <em>X</em> and <em>-</em> fields).
     </ul>
@@ -350,12 +350,12 @@ int main()
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

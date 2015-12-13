@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Semaphore</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Semaphore</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Semaphore(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz Dijkstra's Semaphore</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Semaphore(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Dijkstra's Semaphore</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::Semaphore - Implements the Semaphore type designed by Dijkstra
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/semaphore&gt;</strong><br>
+    <strong>#include &lt;bobcat/semaphore&gt;</strong><br/>
 <p>
 Linking option: <em>-lpthread -lbobcat</em> 
 <p>
@@ -76,7 +76,7 @@ unavailable/available) are called binary semaphores. Both types are supported
 by Bobcat's implementation.
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -85,7 +85,7 @@ man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
 <h2>CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>Semaphore(size_t nAvailable)</strong>:<br>
+    <li> <strong>Semaphore(size_t nAvailable)</strong>:<br/>
         The constructor defines the semaphore's initial state. With a counting
 semaphore <em>nAvailable</em> defines, e.g., the number of available locations in a
 storage area. Locking/unlocking, supporting facilities to notify other waiting
@@ -98,25 +98,25 @@ semaphore's <em>notify</em> members.
 <p>
 <h2>MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong>void notify()</strong>:<br>
+    <li> <strong>void notify()</strong>:<br/>
        The internally maintained <em>available</em> value is incremented and one
         waiting thread (cf. the <em>wait</em> members below) is notified,
         reactivating that thread.
-    <li> <strong>void notify_all()</strong>:<br>
+    <li> <strong>void notify_all()</strong>:<br/>
        The internally maintained <em>available</em> value is incremented and all
         waiting threads (cf. the <em>wait</em> members below) are notified. Only
         one waiting thread will be able to obtain the semaphore's lock and to
         reduce <em>available</em>, and that particular thread is thereupon
         reactivated. 
-    <li> <strong>void set(size_t available)</strong>:<br>
+    <li> <strong>void set(size_t available)</strong>:<br/>
        This member blocks until it has obtained the lock of the <em>std::mutex</em>
         which is maintained internally by the <em>Semaphore</em> object. Next the
         <em>Semaphore's available</em> value receives the value of the member's
         argumnt, and the lock is released.
-    <li> <strong>size_t size() const</strong>:<br>
+    <li> <strong>size_t size() const</strong>:<br/>
        Without trying to lock the <em>Semaphore</em> object's <em>mutex</em> the current
         value of the <em>Semaphore's available</em> value is returned.
-    <li> <strong>void wait()</strong>:<br>
+    <li> <strong>void wait()</strong>:<br/>
        This member blocks for as long as the internally stored value
         (<em>available</em>) equals zero. When returning from <em>wait</em> the current
         thread holds the lock of the <em>std::mutex</em> which is maintained
@@ -126,7 +126,7 @@ semaphore's <em>notify</em> members.
         waiting, while the remaining threads will continue to wait for another
         notification.
     <li> <strong>std::cv_status wait_for(std::chrono::duration&lt;Rep, Period&gt; const
-                                                                &amp;relTime)</strong>:<br>
+                                                                &amp;relTime)</strong>:<br/>
        This member blocks for as long as the internally stored value
         (<em>available</em>) equals zero and the amount of time specified by
         <em>relTime</em> hasn't passed. If the latter happens,
@@ -139,7 +139,7 @@ semaphore's <em>notify</em> members.
         waiting, while the remaining threads will continue to wait for another
         notification.
     <li> <strong>std::cv_status wait_until(std::chrono::time_point&lt;Clock, Duration&gt; 
-                                                            const &amp;absTime)</strong>:<br>
+                                                            const &amp;absTime)</strong>:<br/>
        This member blocks for as long as the internally stored value
         (<em>available</em>) equals zero and the time specified by <em>absTime</em>
         hasn't been reached. If the latter happens (or if <em>absTime</em> lies in
@@ -218,12 +218,12 @@ semaphore's <em>notify</em> members.
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

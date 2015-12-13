@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Mbuf</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Mbuf</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Mbuf(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz Message handler</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Mbuf(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Message handler</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::Mbuf - std::streambuf handling messages
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/mbuf&gt;</strong><br>
+    <strong>#include &lt;bobcat/mbuf&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -70,7 +70,7 @@ other kind of <em>ostream</em> objects is deprecated and may result in undefined
 behavior.
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All elements mentioned in this man-page, are defined in the namespace
 <strong>FBB</strong>.
 <p>
@@ -79,14 +79,14 @@ behavior.
 <p>
 <h2>CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>Mbuf()</strong>:<br>
+    <li> <strong>Mbuf()</strong>:<br/>
         The default constructor handles messages using the <em>std::streambuf</em>
 also used by <em>std::cout</em>. There is no limit to the number of messages that
 may be inserted. No message or line numbers are shown, no exception are thrown
 when inserting messages.
     <li> <strong>explicit Mbuf(std::streambuf *buf, 
                 size_t maxCount = std::numeric_limits&lt;size_t&gt;::max(), 
-                std::string const &amp;tag = "", bool throwing = false)</strong>:<br>
+                std::string const &amp;tag = "", bool throwing = false)</strong>:<br/>
         This constructor uses <em>buf</em> to handle messages. By default (using
 the default argument values) there is no limit to the number of messages that
 may be inserted. No message or line numbers are shown, no exception are thrown
@@ -99,7 +99,7 @@ exception holds the id (see below for the member <em>id</em>) of the <strong>FBB
 object from which the exception was thrown as well as the text <em>FBB::Mbuf</em>.
     <li> <strong>explicit Mbuf(std::string const &amp;name, size_t maxCount =
                 std::numeric_limits&lt;size_t&gt;::max(),  
-                std::string const &amp;tag = "", bool throwing = false)</strong>:<br>
+                std::string const &amp;tag = "", bool throwing = false)</strong>:<br/>
         This constructor creates a <em>std::ofstream</em> from the provided
 <em>name</em> parameter that receives the messages handled by the constructed
 <strong>FBB:Mbuf</strong> object. It throws an <em>FBB::Exception</em> exception if the stream
@@ -113,30 +113,30 @@ not available. Neither is the move constructor.
 <h2>MEMBER FUNCTIONS</h2>
 <p>
 <ul>
-    <li> <strong>size_t count() const</strong>:<br>
+    <li> <strong>size_t count() const</strong>:<br/>
         returns the number of inserted messages (if <em>setCount</em> has been
 called: the value set by the last <em>setCount</em> call plus the number of
 inserted messages since that call).
 <p>
-<li> <strong>bool lineExcess() const</strong>:<br>
+<li> <strong>bool lineExcess() const</strong>:<br/>
         returns <strong>true</strong> after attempting to insert an additional message
 after <em>maxCount()</em> number of messages have been inserted.
 <p>
-<li> <strong>std::string const &amp;lineTag() const</strong>:<br>
+<li> <strong>std::string const &amp;lineTag() const</strong>:<br/>
         returns the currently used line-tag (by default `<em>Line</em>').
 <p>
-<li> <strong>size_t maxCount() const</strong>:<br>
+<li> <strong>size_t maxCount() const</strong>:<br/>
         returns the maximum number of messages that can be inserted. If the
 returned value equals <em>std::numeric_limits&lt;size_t&gt;::max()</em> then there is no
 limit to the number of messages that can be inserted.
 <p>
-<li> <strong>void noLineNr()</strong>:<br>
+<li> <strong>void noLineNr()</strong>:<br/>
         calling this member will suppress the display of a line number if it
 is called after calling <em>setLineNr</em> (see below) but before a message is
 being (or has been) inserted.
 <p>
 <li> <strong>void reset(std::streambuf *buf, size_t maxCount, 
-                std::string const &amp;tag, bool throwing)</strong>:<br>
+                std::string const &amp;tag, bool throwing)</strong>:<br/>
         messages inserted into <strong>FBB::Mbuf</strong> objects are handled by
 <em>std::streambuf buf</em>.  By specifying <em>std::numeric_limits&lt;size_t&gt;::max()</em>
 for <em>maxCount</em> there is no limit to the number of messages that may be
@@ -146,52 +146,52 @@ message label (e.g., <em>Error</em> or the empty string for no message label). W
 after completing a message.
 <p>
 <li> <strong>void reset(std::string const &amp;name, size_t maxCount, 
-                std::string const &amp;tag, bool throwing)</strong>:<br>
+                std::string const &amp;tag, bool throwing)</strong>:<br/>
         messages inserted into <strong>FBB::Mbuf</strong> objects are handled by a
 <em>std::ofstream</em> created using the provided <em>name</em> parameter. It throws an
 <em>FBB::Exception</em> exception if the stream cannot be opened for writing. If a file
 by that name already exists it is rewritten.  The remaining parameters are
 identical to those of the previous <em>reset</em> members.
 <p>
-<li> <strong>void reset(FBB::Mbuf const &amp;mbuf)</strong>:<br>
+<li> <strong>void reset(FBB::Mbuf const &amp;mbuf)</strong>:<br/>
         the current object is reset using the parameters of the <em>mbuf</em>
 parameter. Following the reset all of the current object's parameters can
 independently be modified from those used by <em>mbuf</em>.
 <p>
-<li> <strong>void setCount(size_t count)</strong>:<br>
+<li> <strong>void setCount(size_t count)</strong>:<br/>
         assigns the value <em>count</em> to the object's message counter.
 <p>
-<li> <strong>void setLineNr(size_t lineNr)</strong>:<br>
+<li> <strong>void setLineNr(size_t lineNr)</strong>:<br/>
         specifies the value <em>lineNr</em> as the message's line number when the
 next line is displayed (see also <em>noLineNr</em>). This value is <em>not</em> changed
 by the <strong>FBB::Mbuf</strong> object. To display another line number the member will
 have to be called again (i.e., the line number is not displayed automatically
 again at every new line).
 <p>
-<li> <strong>void setLineTag(std::string const &amp;tag)</strong>:<br>
+<li> <strong>void setLineTag(std::string const &amp;tag)</strong>:<br/>
         specifies the tag prefixing line numbers. By default the line tag
 equals `<em>Line</em>'.
 <p>
-<li> <strong>void setMaxCount(size_t maxCount)</strong>:<br>
+<li> <strong>void setMaxCount(size_t maxCount)</strong>:<br/>
         defines <em>maxCount</em> as the maximum number of messages that can be
 inserted into the <strong>FBB::Mbuf</strong> object.
 <p>
-<li> <strong>void setTag(std::string const &amp;tag)</strong>:<br>
+<li> <strong>void setTag(std::string const &amp;tag)</strong>:<br/>
         specifies the tag prefixing messages. By default the tag is empty. If
 not empty the tag is enclosed by square brackets. E.g., specifying the tag
 `<em>Error</em>' will prefix messages with <em>[Error]</em>.
 <p>
-<li> <strong>std::string const &amp;tag() const</strong>:<br>
+<li> <strong>std::string const &amp;tag() const</strong>:<br/>
         returns the currently used message tag (by default an empty string).
 <p>
-<li> <strong>bool throws()</strong>:<br>
+<li> <strong>bool throws()</strong>:<br/>
         returns <em>true</em> when the <strong>FBB::Mbuf</strong> object will throw an
 <em>FBB::Exception</em> exception at the next completed message. The generated
 exception holds the id (see earlier for the member <em>id</em>) of the
 <strong>FBB::Mbuf</strong> object from which the exception was thrown as well as the
 text <em>FBB::Mbuf</em>.
 <p>
-<li> <strong>void throwing(bool ifTrue)</strong>:<br>
+<li> <strong>void throwing(bool ifTrue)</strong>:<br/>
         modifies the behavior of <strong>FBB::Mbuf</strong> objects at completed
 messages. After passing <em>true</em> <strong>FBB::Mbuf</strong> objects will throw an
 <em>FBB::Exception</em> exception at the next completed message, otherwise this
@@ -213,12 +213,12 @@ exception is not thrown.
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

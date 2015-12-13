@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::DateTime</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::DateTime</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::DateTime(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz Date and Time</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::DateTime(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Date and Time</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::DateTime - Performs Date and Time Computations
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/datetime&gt;</strong><br>
+    <strong>#include &lt;bobcat/datetime&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -146,7 +146,7 @@ time in seconds, which is the way computers should have configured their
 hardware clock. 
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -155,7 +155,7 @@ man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
 <h2>ENUMS defined in DateTime</h2>
 <p>
-<strong>DateTime::Month</strong><br>
+<strong>DateTime::Month</strong><br/>
     This enumeration has the following values which are ordered using the
 default <strong>C++</strong> <em>enum</em> values:
     <ul>
@@ -173,7 +173,7 @@ default <strong>C++</strong> <em>enum</em> values:
     <li> <strong>DECEMBER</strong>.
     </ul>
 <p>
-<strong>DateTime::Relative</strong><br>
+<strong>DateTime::Relative</strong><br/>
     This enumeration is used with the <em>setMonth()</em> member (see below).
     It has the following values:
     <ul>
@@ -183,7 +183,7 @@ default <strong>C++</strong> <em>enum</em> values:
     <li> <strong>NEXT</strong>
     </ul>
 <p>
-<strong>DateTime::TimeFields</strong><br>
+<strong>DateTime::TimeFields</strong><br/>
     This enumeration has the following values which can be <em>bit_or</em>-ed
     when calling the member <em>setFields()</em>:
     <ul>
@@ -195,14 +195,14 @@ default <strong>C++</strong> <em>enum</em> values:
     <li> <strong>YEAR</strong>
     </ul>
 <p>
-<strong>DateTime::TimeType</strong><br>
+<strong>DateTime::TimeType</strong><br/>
     This enumeration has the following values:
     <ul>
     <li> <strong>LOCALTIME</strong>: the time is broken down  as the local time,
     <li> <strong>UTC</strong>: the time is broken down as Universal Time Coordinated.
     </ul>
 <p>
-<strong>DateTime::TriVal</strong><br>
+<strong>DateTime::TriVal</strong><br/>
     This enumeration has the following values, returned by the <strong>dst()</strong>
     member (see below): 
     <ul>
@@ -212,7 +212,7 @@ default <strong>C++</strong> <em>enum</em> values:
     <li> <strong>YES</strong>, returned when Daylight Saving Time is active.
     </ul>
 <p>
-<strong>DateTime::Weekday</strong><br>
+<strong>DateTime::Weekday</strong><br/>
     This enumeration has the following values which are ordered using the
 default <strong>C++</strong> <em>enum</em> values:
 <p>
@@ -255,23 +255,23 @@ from the computer's current time zone setting.
 <h2>CONSTRUCTORS</h2>
 <p>
 <ul>
-    <li> <strong>DateTime(TimeType type = UTC)</strong>:<br>
+    <li> <strong>DateTime(TimeType type = UTC)</strong>:<br/>
         The default constructor, initializing the object to the current date
 and time.  The argument specifies the way the time is displayed by the
 <em>DateTime</em> object using either (by default) time in UTC or the computer's
 time zone shift is used to determine the current local time.
 <p>
-<li> <strong>DateTime(int tzShift)</strong>:<br>
+<li> <strong>DateTime(int tzShift)</strong>:<br/>
         This constructor initializes the object to a local time which is at
 UTC + tzShift (in minutes).
 <p>
-<li> <strong>DateTime(time_t time, TimeType type)</strong>:<br>
+<li> <strong>DateTime(time_t time, TimeType type)</strong>:<br/>
         Initializes a <em>DateTime</em> object with information stored in the
 provided <em>time_t</em> value (time in seconds since the beginning of the era). 
 The specified <em>time</em> is considered UTC or local time, depending on the
 <em>type</em> specification.
 <p>
-<li> <strong>DateTime(time_t time, int tzShift)</strong>:<br>
+<li> <strong>DateTime(time_t time, int tzShift)</strong>:<br/>
         Initializes a <em>DateTime</em> object with information stored in the
 provided <em>time_t</em> value (time is UTC time in seconds since the beginning of
 the era). The <em>DateTime</em> object defines its time as local time UTC + tzShift
@@ -282,7 +282,7 @@ The following constructors ignore the DST, day of the year, and day of the
 week fields of the <em>struct tm</em> passed to the constructors:
 <p>
 <ul>
-    <li> <strong>DateTime(struct tm const &amp;tm, TimeType type = UTC)</strong>:<br>
+    <li> <strong>DateTime(struct tm const &amp;tm, TimeType type = UTC)</strong>:<br/>
         Initializes a <em>DateTime</em> object with information stored in the
 provided <strong>struct tm</strong> value. It is assumed that the <em>tm</em> parameter points
 to a <em>struct tm</em> representing the broken down time in either UTC or local
@@ -311,7 +311,7 @@ set..() members, see below) to compute a point in time in the future or in the
 past. E.g., by specifying 30 for the hour-setting <strong>DateTime</strong> objects 
 a point in time in the next day will be used.
 <p>
-<li> <strong>DateTime(struct tm const &amp;tm, int timeShift)</strong>:<br>
+<li> <strong>DateTime(struct tm const &amp;tm, int timeShift)</strong>:<br/>
         Initializes a <em>DateTime</em> object with information stored in the
 provided <strong>struct tm</strong> value. It is assumed that the <em>tm</em> parameter points
 to a <em>struct tm</em> representing the broken down time fields in UTC. To this
@@ -324,12 +324,12 @@ described in section <strong>STANDARD TEXTUAL TIME REPRESENTATIONS</strong> (the
 week specification is ignored by the time conversion).
 <p>
 <ul>
-    <li> <strong>DateTime(std::string const &amp;timeStr, TimeType type = UTC)</strong>:<br>
+    <li> <strong>DateTime(std::string const &amp;timeStr, TimeType type = UTC)</strong>:<br/>
         Initializes a <em>DateTime</em> object with information stored in the
 provided <em>std::string</em> which is interpreted as time specified in UTC or as a
 local time in the current time zone, depending on the specified time type.
 <p>
-<li> <strong>DateTime(std::string const &amp;timeStr, int tzShift)</strong>:<br>
+<li> <strong>DateTime(std::string const &amp;timeStr, int tzShift)</strong>:<br/>
         Initializes a <em>DateTime</em> object with a local time computed by adding
 a locate timezone shift (<em>tzShift</em>) in minutes to  the UTC time
 specification found in <em>timeStr</em>.
@@ -345,13 +345,13 @@ namespace.
 <p>
 <ul>
     <li> <strong>std::ostream &amp;std::operator&lt;&lt;(std::ostream &amp;str, FBB::DateTime 
-        const &amp;dt)</strong>:<br>
+        const &amp;dt)</strong>:<br/>
         Inserts a standard textual representation (without the trailing
 newline), of the time represented in the <em>DateTime</em> object into the
 indicated <em>ostream</em>. The time will be displayed according to the latest
 <em>displayZoneShift</em> or <em>TimeType</em> specification (<em>LOCALTIME</em> or <em>UTC</em>).
 <p>
-<li> <strong>std::istream &amp;std::operator&gt;&gt;(std::istream &amp;str, FBB::DateTime &amp;dt)</strong>:<br>
+<li> <strong>std::istream &amp;std::operator&gt;&gt;(std::istream &amp;str, FBB::DateTime &amp;dt)</strong>:<br/>
         Extracts a textual date/time representation into the <em>DateTime</em>
 object using the <em>tzShift</em> value currently set for the <em>DateTime</em> object
 into which the time string is extracted.
@@ -375,37 +375,37 @@ corrected for any display zone shift that may have been defined for those
 objects.
 <p>
 <ul>
-    <li> <strong>DateTime const operator+(DateTime const &amp;left, time_t seconds)</strong>:<br>
+    <li> <strong>DateTime const operator+(DateTime const &amp;left, time_t seconds)</strong>:<br/>
        Returns a copy of <em>left</em> to which <em>seconds</em> have been added.
 <p>
 <li> <strong>DateTime const operator+(DateTime const &amp;left, 
-                                            struct tm const &amp;fields)</strong>:<br>
+                                            struct tm const &amp;fields)</strong>:<br/>
         Returns a copy of <em>left</em> displaying <em>left</em>'s time to which the
 <em>tm_sec, tm_min, tm_hour, tm_mday, tm_mon</em> and <em>tm_year</em> fields of
 <em>fields</em> have been added.
 <p>
-<li> <strong>DateTime operator+=(time_t seconds)</strong>:<br>
+<li> <strong>DateTime operator+=(time_t seconds)</strong>:<br/>
        Adds the number of seconds to the <em>DateTime</em> object.
 <p>
-<li> <strong>DateTime &amp;operator+=(struct tm const &amp;fields)</strong>:<br>
+<li> <strong>DateTime &amp;operator+=(struct tm const &amp;fields)</strong>:<br/>
         Adds the <em>tm_sec, tm_min, tm_hour, tm_mday, tm_mon</em> and <em>tm_year</em>
 fields of <em>fields</em>to the current object's display time.
 <p>
-<li> <strong>DateTime const operator-(DateTime const &amp;left, time_t seconds)</strong>:<br>
+<li> <strong>DateTime const operator-(DateTime const &amp;left, time_t seconds)</strong>:<br/>
        Returns a copy of <em>left</em> from which time <em>seconds</em> have been
 subtracted. 
 <p>
 <li> <strong>DateTime const operator-(DateTime const &amp;left, 
-                                struct tm const &amp;fields)</strong>:<br>
+                                struct tm const &amp;fields)</strong>:<br/>
         Returns a copy of <em>left</em> displaying <em>left</em>'s time from which the
 <em>tm_sec, tm_min, tm_hour, tm_mday, tm_mon</em> and <em>tm_year</em> fields of
 <em>fields</em> have been subtracted.
 <p>
-<li> <strong>DateTime operator-=(time_t seconds)</strong>:<br>
+<li> <strong>DateTime operator-=(time_t seconds)</strong>:<br/>
        Subtracts the number of seconds from the time stored in the
 <em>DateTime</em> object.
 <p>
-<li> <strong>DateTime &amp;operator-=(struct tm const &amp;fields)</strong>:<br>
+<li> <strong>DateTime &amp;operator-=(struct tm const &amp;fields)</strong>:<br/>
         Subtracts the <em>tm_sec, tm_min, tm_hour, tm_mday, tm_mon</em> and
 <em>tm_year</em> fields of <em>fields</em> from the current object's display time.
 E.g., the following
@@ -435,27 +435,27 @@ independent of any display zone shift that may have been defined for the
 objects.
 <p>
 <ul>
-    <li> <strong>bool operator==(DateTime const &amp;left, DateTime const &amp;right)</strong>:<br>
+    <li> <strong>bool operator==(DateTime const &amp;left, DateTime const &amp;right)</strong>:<br/>
        Returns <em>true</em> if the current <em>DateTime</em> object represents the same
 UTC time as the time represented by <em>left, DateTime const &amp;right</em>.
 <p>
-<li> <strong>bool operator!=(DateTime const &amp;left, DateTime const &amp;right)</strong>:<br>
+<li> <strong>bool operator!=(DateTime const &amp;left, DateTime const &amp;right)</strong>:<br/>
        Returns <em>true</em> if the current <em>DateTime</em> object represents a
 different UTC time as the time represented by <em>other</em>.
 <p>
-<li> <strong>bool operator&lt;(DateTime const &amp;left, DateTime const &amp;right)</strong>:<br>
+<li> <strong>bool operator&lt;(DateTime const &amp;left, DateTime const &amp;right)</strong>:<br/>
        Returns <em>true</em> if the current <em>DateTime</em> object represents an
 earlier UTC time than the UTC time represented by <em>other</em>.
 <p>
-<li> <strong>bool operator&lt;=(DateTime const &amp;left, DateTime const &amp;right)</strong>:<br>
+<li> <strong>bool operator&lt;=(DateTime const &amp;left, DateTime const &amp;right)</strong>:<br/>
        Returns <em>true</em> if the current <em>DateTime</em> object represents an
 earlier or equal UTC time than the UTC time represented by <em>other</em>.
 <p>
-<li> <strong>bool operator&gt;(DateTime const &amp;left, DateTime const &amp;right)</strong>:<br>
+<li> <strong>bool operator&gt;(DateTime const &amp;left, DateTime const &amp;right)</strong>:<br/>
        Returns <em>true</em> if the current <em>DateTime</em> object represents a
 later UTC time than the UTC time represented by <em>other</em>.
 <p>
-<li> <strong>bool operator&gt;=(DateTime const &amp;left, DateTime const &amp;right)</strong>:<br>
+<li> <strong>bool operator&gt;=(DateTime const &amp;left, DateTime const &amp;right)</strong>:<br/>
        Returns <em>true</em> if the current <em>DateTime</em> object represents an
 equal or later UTC time than the UTC time represented by <em>other</em>.
     </ul>
@@ -463,19 +463,19 @@ equal or later UTC time than the UTC time represented by <em>other</em>.
 Additional overloaded operators:
 <p>
 <ul>
-    <li> <strong>operator bool() const</strong>:<br>
+    <li> <strong>operator bool() const</strong>:<br/>
         Returns <strong>true</strong> if the time decomposition could be performed without
 error. <em>DateTime</em> object use <strong>localtime_r</strong>(3) or <strong>gmtime_r</strong>(3)
 functions to break down the <em>time_t</em> values into elements.  If the time
 could not be broken down, the <strong>error()</strong> member returns the error number
 (<em>errno</em>) associated with the error. When the time could not be determined
 from a textual string representing the time (cf. section <strong>CONSTRUCTORS</strong>)
-then <em>errno()</em> returns 0 and <em>operator bool()</em> returns <em>false</em>.<br>
+then <em>errno()</em> returns 0 and <em>operator bool()</em> returns <em>false</em>.<br/>
     Except for the member <em>error()</em> the members of the class <em>DateTime</em>
 will not return meaningfull values if <strong>operator bool()</strong> returns
 <em>false</em>. 
 <p>
-<li> <strong>DateTime &amp;operator=(DateTime const &amp;other)</strong>:<br>
+<li> <strong>DateTime &amp;operator=(DateTime const &amp;other)</strong>:<br/>
         The overloaded asignment operator is available.
     </ul>
 <p>
@@ -487,45 +487,45 @@ display zone shift value). All members returning numerical values use 0 as
 their smallest return value, except for the <strong>...Nr()</strong> members, which start
 at 1.
     <ul>
-    <li> <strong>int displayZoneShift() const</strong>:<br>
+    <li> <strong>int displayZoneShift() const</strong>:<br/>
         Returns the object's current display zone shift value in minutes.
 <p>
-<li> <strong>DayTime::TriVal dst() const</strong>:<br>
+<li> <strong>DayTime::TriVal dst() const</strong>:<br/>
         Returns an indication of an active Daylight Saving Time (DST) state
 for the (local) time represented in the <em>DateTime</em> object. When DST is
 active, the local time is one hour later as compared to the situation where
 DST is not active.
 <p>
-<li> <strong>size_t error() const</strong>:<br>
+<li> <strong>size_t error() const</strong>:<br/>
         Returns the <em>errno</em> value after the <em>DateTime</em> object. 
 construction.  It can be interpreted by, e.g., <strong>FBB::Exception</strong>.
 <p>
-<li> <strong>size_t hours() const</strong>:<br>
+<li> <strong>size_t hours() const</strong>:<br/>
         Returns the number of hours of the time stored in a <em>DateTime</em>
 object (0-23).
 <p>
-<li> <strong>DateTime localTime() const</strong>:<br>
+<li> <strong>DateTime localTime() const</strong>:<br/>
         Returns a copy of the <em>DateTime</em> object representing its local
 time. If the object does not define a local time or display zone shift the
 returned object merely copies the orginal object's UTC time.
 <p>
-<li> <strong>DateTime localTime(int displayZoneShift) const</strong>:<br>
+<li> <strong>DateTime localTime(int displayZoneShift) const</strong>:<br/>
         Returns a copy of the <em>DateTime</em> object representing its time using
 the display zone shift provided by the member's argument.
 <p>
-<li> <strong>size_t minutes() const</strong>:<br>
+<li> <strong>size_t minutes() const</strong>:<br/>
         Returns the number of minutes of the time stored in a <em>DateTime</em>
 object (0-59).
 <p>
-<li> <strong>Month month() const</strong>:<br>
+<li> <strong>Month month() const</strong>:<br/>
         Returns the <em>Month</em> value of the time stored in a <em>DateTime</em>
 object.
 <p>
-<li> <strong>size_t monthDayNr() const</strong>:<br>
+<li> <strong>size_t monthDayNr() const</strong>:<br/>
         Returns the number of the day in the month of the time stored in a
 <em>DateTime</em> object (1-31).
 <p>
-<li> <strong>string rfc2822() const</strong>:<br>
+<li> <strong>string rfc2822() const</strong>:<br/>
         Returns the date displayed according to the format specified in RFC
 2822. This format is used, e.g., by the <em>date -R</em> command
 (cf. <strong>date</strong>(1)). For example:
@@ -536,7 +536,7 @@ object.
 </pre>
 
 <p>
-<li> <strong>string rfc3339() const</strong>:<br>
+<li> <strong>string rfc3339() const</strong>:<br/>
         Returns the date displayed according to the format specified in RFC
 3339. This format is used, e.g., by the <em>date --rfc-3339=seconds</em> command
 (cf. <strong>date</strong>(1)). For example:
@@ -547,18 +547,18 @@ object.
 </pre>
 
 <p>
-<li> <strong>size_t seconds() const</strong>:<br>
+<li> <strong>size_t seconds() const</strong>:<br/>
         Returns the number of seconds of the time stored in a <em>DateTime</em>
 object (0-59, but 60 and 61 may occur due to possible leap seconds).
 <p>
-<li> <strong>bool setDay(int days)</strong>:<br>
+<li> <strong>bool setDay(int days)</strong>:<br/>
         Reassigns the number of days of the current month set in the
 <em>DateTime</em> object. Non positive values are allowed to compute time in an
 earlier month. The object date is revalidated so that its <em>days()</em>
 member returns a value fitting the object's month. If the assignment resulted
 in a new (valid) time <em>true</em> is returned. Otherwise <em>false</em> is returned.
 <p>
-<li> <strong>bool setFields(struct tm const &amp;timeStruct, int fields)</strong>:<br>
+<li> <strong>bool setFields(struct tm const &amp;timeStruct, int fields)</strong>:<br/>
         Reassigns the time represented by the <em>DateTime</em> object to the time
 in which the fields specified by a <em>bit_or</em> combination of <em>TimeField</em>
 values will be given the values specified in <em>timeStruct</em>. All other fields
@@ -569,14 +569,14 @@ and the day number will be 1. The <em>timeStruct</em> fields are expected as val
 in the time zone used by the <em>DateTime</em> object.  If the assignment resulted
 in a new (valid) time <em>true</em> is returned. Otherwise <em>false</em> is returned.
 <p>
-<li> <strong>bool setHours(int hours)</strong>:<br>
+<li> <strong>bool setHours(int hours)</strong>:<br/>
         Reassigns the number of hours set in the <em>DateTime</em> object.
 Negative values are allowed to compute time in a previous day. The object date
 is revalidated so that its <em>hours()</em> member returns a value between 0 and
 23. If the assignment resulted in a new (valid) time <em>true</em> is
 returned. Otherwise <em>false</em> is returned.
 <p>
-<li> <strong>bool setMinutes(int minutes)</strong>:<br>
+<li> <strong>bool setMinutes(int minutes)</strong>:<br/>
         Reassigns the number of minutes set in the <em>DateTime</em>
 object. Negative values are allowed to compute time in a previous hour. The
 object date is revalidated so that its <em>minutes()</em> member returns a value
@@ -584,7 +584,7 @@ between 0 and 59.  If the assignment resulted in a new (valid) time <em>true</em
 is returned. Otherwise <em>false</em> is returned.
 <p>
 <li> <strong>bool setMonth(DateTime::Month month, DateTime::Relative where =
-            THIS_YEAR)</strong>:<br> 
+            THIS_YEAR)</strong>:<br/> 
         Reassigns the month set in the <em>DateTime</em> object. The object date is
 revalidated so that its <em>month()</em> member returns a value between <em>JANUARY</em>
 and <em>DECEMBER</em>. By default the month will be set in the current
@@ -616,32 +616,32 @@ sets the date to June 21st, as intended.
 </pre>
 
 <p>
-<li> <strong>bool setMonth(int month)</strong>:<br> 
+<li> <strong>bool setMonth(int month)</strong>:<br/> 
         Reassigns the month set in the <em>DateTime</em> object. Negative values
 are allowed to compute time in a previous year. The object date is revalidated
 so that its <em>month()</em> member returns a value between <em>JANUARY</em> and
 <em>DECEMBER</em>.  If the assignment resulted in a new (valid) time <em>true</em> is
 returned. Otherwise <em>false</em> is returned.
 <p>
-<li> <strong>bool setSeconds(int seconds)</strong>:<br>
+<li> <strong>bool setSeconds(int seconds)</strong>:<br/>
         Reassigns the number of seconds set in the <em>DateTime</em>
 object. Negative values are allowed to compute time in a previous minute. The
 object date is revalidated so that its <em>seconds()</em> member returns a value
 between 0 and 59. If the assignment resulted in a new (valid) time <em>true</em> is
 returned. Otherwise <em>false</em> is returned.
 <p>
-<li> <strong>bool setTime(time_t time)</strong>:<br>
+<li> <strong>bool setTime(time_t time)</strong>:<br/>
         Reassigns the number of seconds set in the <em>DateTime</em> object. The
 object date is revalidated. Time value 0 represents Jan, 1, 1970, 0:00:00
 hours. If the assignment resulted in a new (valid) time <em>true</em> is
 returned. Otherwise <em>false</em> is returned.
 <p>
-<li> <strong>void setValid()</strong>:<br>
+<li> <strong>void setValid()</strong>:<br/>
         Resets the object's internal state to valid. This member can be used
 following a failed action that did not modify the (valid) time stored 
 by the object.
 <p>
-<li> <strong>bool setWeekday(Weekday day, Relative where = NEXT)</strong>:<br>
+<li> <strong>bool setWeekday(Weekday day, Relative where = NEXT)</strong>:<br/>
         Reassigns the number of seconds set in the <em>DateTime</em> object based
 on reassignment of the day in the week (at most 7 days from now, weeks
 starting at Sunday and ending at Saturday). By default the day will be in the
@@ -655,46 +655,46 @@ revalidated. Time value 0 represents Jan, 1, 1970, 0:00:00 hours. If the
 assignment resulted in a new (valid) time <em>true</em> is returned. Otherwise
 <em>false</em> is returned.
 <p>
-<li> <strong>bool setYear(size_t year)</strong>:<br>
+<li> <strong>bool setYear(size_t year)</strong>:<br/>
         Reassigns the year set in the <em>DateTime</em> object. The date is
 revalidated so that its <em>year()</em> member returns a value of at least 1970. If
 the assignment resulted in a new (valid) time <em>true</em> is returned. Otherwise
 <em>false</em> is returned.
 <p>
-<li> <strong>time_t time() const</strong>:<br>
+<li> <strong>time_t time() const</strong>:<br/>
         Returns the (UTC) <em>time_t</em> value (in seconds) stored in the
 <em>DateTime</em> object.
 <p>
-<li> <strong>struct tm const *timeStruct() const</strong>:<br>
+<li> <strong>struct tm const *timeStruct() const</strong>:<br/>
         Returns a pointer to the objects latest <em>struct tm</em> values,
         representing the time as displayed by, e.g., the insertion operator.
 <p>
-<li> <strong>DateTime to(DateTime::TimeType type) const</strong>:<br>
+<li> <strong>DateTime to(DateTime::TimeType type) const</strong>:<br/>
         Returns a copy of the <em>DateTime</em> object representing its time in
         <em>UTC</em> if <em>DateTime::UTC</em> was specified, and in local time if
         <em>DateTime::LOCALTIME</em> was specified.
 <p>
-<li> <strong>DateTime utc() const</strong>:<br>
+<li> <strong>DateTime utc() const</strong>:<br/>
         Returns a copy of the <em>DateTime</em> object representing its time in
         <em>UTC</em>.
 <p>
-<li> <strong>bool valid() const</strong>:<br>
+<li> <strong>bool valid() const</strong>:<br/>
         Returns <em>true</em> if no errors were detected during the object's
         construction (same semantics as <em>operator bool()</em>).
 <p>
-<li> <strong>Weekday weekday() const</strong>:<br>
+<li> <strong>Weekday weekday() const</strong>:<br/>
         Returns the <em>Weekday</em> value of the time stored in a
         <em>DateTime</em> object.
 <p>
-<li> <strong>size_t year() const</strong>:<br>
+<li> <strong>size_t year() const</strong>:<br/>
         Returns the year element of the time stored in a <em>DateTime</em>
         object.
 <p>
-<li> <strong>size_t yearDay() const</strong>:<br>
+<li> <strong>size_t yearDay() const</strong>:<br/>
         Returns the day within the year of the time stored in a
 <em>DateTime</em> object. January 1 is returned as 0.
 <p>
-<li> <strong>size_t yearDayNr() const</strong>:<br>
+<li> <strong>size_t yearDayNr() const</strong>:<br/>
         Returns the day within the year of the time stored in a
         <em>DateTime</em> object. January 1 is returned as 1.
 <p>
@@ -718,18 +718,18 @@ source archive.
 <p>
 <h2>BUGS</h2>
     The class <em>DateTime</em> assumes that <strong>time</strong>(2) returns the time in
-    UTC.<br>
+    UTC.<br/>
     English is used / expected when specifying named date components.
 <p>
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

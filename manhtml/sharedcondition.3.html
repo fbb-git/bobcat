@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::SharedCondition</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::SharedCondition</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::SharedCondition(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz Shared Memory Cond. Var.</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::SharedCondition(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Shared Memory Cond. Var.</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::SharedCondition - Shared Memory Condition Variable
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/sharedcondition&gt;</strong><br>
+    <strong>#include &lt;bobcat/sharedcondition&gt;</strong><br/>
     Linking option: <em>-lpthread, -lbobcat </em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -109,7 +109,7 @@ objects themselves are small objects, containing the necessary information to
 access the actual shared memory condition variable.
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -118,13 +118,13 @@ man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
 <h2>CONSTRUCTORS, DESTRUCTOR</h2>
     <ul>
-    <li> <strong>SharedCondition()</strong>:<br>
+    <li> <strong>SharedCondition()</strong>:<br/>
        The default constructor creates an empty stub which cannot yet be used
         (or an <em>FBB::Exception</em> is thrown). As the <strong>SharedCondition</strong> class
         supports assignment operators, empty stubs can easily be
         (re)configured at any time after their construction.
 <p>
-<li> <strong>~SharedCondition()</strong>:<br>
+<li> <strong>~SharedCondition()</strong>:<br/>
        The class's destructor releases (if applicable) its lock on the shared
         condition variables mutex lock. The destructor takes no action if its
         object is an empty stub.
@@ -145,13 +145,13 @@ is performed; and the original offset is restored. Consequently,
 <em>SharedMemory</em>'s current offset.
 <p>
 <ul>
-    <li> <strong>void lock() const</strong>:<br>
+    <li> <strong>void lock() const</strong>:<br/>
        When returning from this member, the current process has locked the
         <strong>SharedCondition</strong> object. Be careful not to call <em>lock</em> twice
         during the same thread of execution (cf. <strong>sharedmutex</strong>(3bobcat) for
         details).
 <p>
-<li> <strong>void notify() noexept</strong>:<br>
+<li> <strong>void notify() noexept</strong>:<br/>
        One of the threads waiting on the <strong>SharedCondition</strong> object wakes
         up. The thread calling <em>notify</em> should release its mutex lock
         shortly after calling <em>notify</em>, allowing the notified thread to
@@ -171,7 +171,7 @@ is performed; and the original offset is restored. Consequently,
         itself may be executed at different flow of control sections, the
         <em>unlock</em> member cannot be called from within <em>notify</em>.
 <p>
-<li> <strong>void notifyAll() noexept</strong>:<br>
+<li> <strong>void notifyAll() noexept</strong>:<br/>
        Different from the plain <em>notify</em> member, this member wakes up all of
         the threads waiting on the <strong>SharedCondition</strong> object. However, after
         the current thread has released its mutex lock only one of these
@@ -179,16 +179,16 @@ is performed; and the original offset is restored. Consequently,
         using <em>notifyAll</em> is identical to the pseudo code for using
         <em>notify</em> (i.e., calling <em>notifyAll</em>, of course).
 <p>
-<li> <strong>std::streamsize offset() const</strong>:<br>
+<li> <strong>std::streamsize offset() const</strong>:<br/>
        The location of the shared condition variable (within the
         <em>SharedMemory</em> object) is returned. The shared condition object ends
         at <em>offset() + SharedCondition::width()</em>, see below.
 <p>
-<li> <strong>void unlock() const</strong>:<br>
+<li> <strong>void unlock() const</strong>:<br/>
        The object's lock is released (nothing happens if called when the
         current object does not have the object's  lock).
 <p>
-<li> <strong>void wait()</strong>:<br>
+<li> <strong>void wait()</strong>:<br/>
        Before calling <em>wait</em> the current thread should have obtained a lock
         on the <strong>SharedCondition</strong> object. 
 <p>
@@ -208,7 +208,7 @@ When calling <em>wait</em> the running thread suspends its activities and
 </pre>
 
 <p>
-<li> <strong>void wait(Predicate pred)</strong>:<br>
+<li> <strong>void wait(Predicate pred)</strong>:<br/>
        This member was implemented as a member template. <em>Predicate</em> either
         is a predicate function or a predicate function object. The predicate
         function or the predicate function object's function call operators
@@ -225,7 +225,7 @@ The pseudo code for using <em>wait(pred)</em> is identical to the pseudo
         <em>wait</em>, of course).
 <p>
 <li> <strong>std::cv_status wait_for(std::chrono::duration&lt;Type, Unit&gt; 
-        const &amp;relTime)</strong>:<br>
+        const &amp;relTime)</strong>:<br/>
        This member was implemented as a member template. <em>Type</em> defines the
         type of the variable holding the amount of time (usually <em>int64_t</em>),
         specified in time unit <em>Unit</em>. Predefined <em>duration</em> types are
@@ -265,7 +265,7 @@ A prototypical piece of pseudo code illustrating how to use
         action can be selected.
 <p>
 <li> <strong>bool wait_for(std::chrono::duration&lt;Type, Unit&gt; 
-        const &amp;relTime, Predicate pred)</strong>:<br>
+        const &amp;relTime, Predicate pred)</strong>:<br/>
        This member was implemented as a member template. <em>Type</em> defines the
         type of the variable holding the amount of time (usually <em>int64_t</em>),
         specified in time unit <em>Unit</em>. <em>Predicate</em> either is a predicate
@@ -287,7 +287,7 @@ The pseudo code for using this member is identical to the pseudo code
         must also be passed to <em>wait_for</em>, of course).
 <p>
 <li> <strong>std::cv_status wait_until(std::chrono::time_point&lt;Clock, Duration&gt; 
-        const &amp;absTime)</strong>:<br>
+        const &amp;absTime)</strong>:<br/>
        This member has been implemented as a member template. <em>Clock</em>
         defines the clock-type to use (usually <em>std::chrono::system_clock</em>),
         <em>Duration</em> is the type name of a duration type (as used with
@@ -314,7 +314,7 @@ The pseudo code for using this member is identical to the pseudo code
         (albeit that absolute time must be specified).
 <p>
 <li> <strong>bool wait_until(std::chrono::time_point&lt;Clock, Duration&gt; 
-        const &amp;absTime, Predicate pred)</strong>:<br>
+        const &amp;absTime, Predicate pred)</strong>:<br/>
        This member was implemented as a member template. <em>Clock</em> and
         <em>Duration</em> define identical types as mentioned at the previous
         member.  <em>Predicate</em> either is a predicate function or a predicate
@@ -339,7 +339,7 @@ The pseudo code for using this member is identical to the pseudo code
 <ul>
     <li> <strong>SharedCondition &amp;attach(SharedMemory &amp;shmem,
                         std::ios::off_type offset = 0,
-                        std::ios::seekdir origin = std::ios::beg)</strong>:<br>
+                        std::ios::seekdir origin = std::ios::beg)</strong>:<br/>
        The <em>SharedCondition</em> object interfacing to the shared condition
         variable located at <em>offset</em> (relative to <em>origin</em>) in <em>shmem</em>
         is returned. 
@@ -347,7 +347,7 @@ The pseudo code for using this member is identical to the pseudo code
 An <em>FBB::Exception</em> is thrown if the requested offset is invalid
         (i.e., smaller than 0 or exceeding <em>shmem.maxOffset()</em>).
 <p>
-<li> <strong>FBB::SharedCondition create(SharedMemory &amp;shmem)</strong>:<br> 
+<li> <strong>FBB::SharedCondition create(SharedMemory &amp;shmem)</strong>:<br/> 
        A shared condition variable is initialized at the current offset of
         the <em>SharedMemory</em> object referred to by <em>shmem</em>, or at the first
         offset of the next physical shared data segment. 
@@ -358,7 +358,7 @@ A <strong>SharedCondition</strong> object interfacing to the initialized shared
 An <em>FBB::Exception</em> is thrown if there isn't enough memory available
         in the <em>SharedMemory</em> object to define a shared condition variable.
 <p>
-<li> <strong>size_t size() const</strong>:<br>
+<li> <strong>size_t size() const</strong>:<br/>
        Returns the size in bytes of the shared condition variables stored in
         <em>SharedMemory</em> objects.
     </ul>
@@ -500,12 +500,12 @@ catch (exception const &amp;exc)
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

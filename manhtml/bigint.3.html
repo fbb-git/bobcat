@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::BigInt</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::BigInt</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::BigInt(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz Big Integers</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::BigInt(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Big Integers</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::BigInt - Arithmetic on Integers of Unlimited Size
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/bigint&gt;</strong><br>
+    <strong>#include &lt;bobcat/bigint&gt;</strong><br/>
     Linking option: <em>-lbobcat -lcrypto</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -100,53 +100,53 @@ precision. A <em>Word</em> is an <em>unsigned long</em>, which is, depending on 
 architecture, usually 64 or 32 bits long. 
 <p>
 <h2>ENUMERATIONS</h2>
-    <strong>Msb</strong><br>
+    <strong>Msb</strong><br/>
     This (most significant bit) enumeration is used when generating a
         cryptographically strong random number. Its values are:
     <ul>
-    <li> <strong>MSB_UNKNOWN</strong>:<br>
+    <li> <strong>MSB_UNKNOWN</strong>:<br/>
        The most significant bit may be 0 or 1.
-    <li> <strong>MSB_IS_ONE</strong>:<br>
+    <li> <strong>MSB_IS_ONE</strong>:<br/>
         The most significant bit is guaranteed to be 1.
-    <li> <strong>TOP_TWO_BITS_ONE</strong>:<br>
+    <li> <strong>TOP_TWO_BITS_ONE</strong>:<br/>
         The two most significant bits are guaranteed to be 1, resulting in a
         product of two values each containing <em>nBits</em> having <em>2 * nBits</em>
         bits.
     </ul>
 <p>
-<strong>Lsb</strong><br>
+<strong>Lsb</strong><br/>
     This (least significant bit) enumeration is used when generating random
         numbers, ensuring that the resulting value is either odd or even.
     <ul>
-    <li> <strong>EVEN</strong>:<br>
+    <li> <strong>EVEN</strong>:<br/>
         The random value will be an even value;
-    <li> <strong>ODD</strong>:<br>
+    <li> <strong>ODD</strong>:<br/>
         The random value will be an odd value.
     </ul>
 <p>
 <h2>CONSTRUCTORS</h2>
 <p>
 <ul>
-    <li> <strong>BigInt()</strong>:<br>
+    <li> <strong>BigInt()</strong>:<br/>
         The default constructor initializes a <em>BigInt</em> value to 0.
-    <li> <strong>explicit BigInt(BIGNUM const &amp;value)</strong>:<br>
+    <li> <strong>explicit BigInt(BIGNUM const &amp;value)</strong>:<br/>
         This constructor initializes a <em>BigInt</em> from a <em>const BIGNUM</em>. 
-    <li> <strong>explicit BigInt(BIGNUM const *value)</strong>:<br>
+    <li> <strong>explicit BigInt(BIGNUM const *value)</strong>:<br/>
         This constructor initializes a <em>BigInt</em> from a pointer to a 
         <em>const BIGNUM</em>.
-    <li> <strong>BigInt(Type value)</strong>:<br>
+    <li> <strong>BigInt(Type value)</strong>:<br/>
         This constructor is defined as a member template. Any type that can be
 converted using a static cast to an <em>unsigned long</em> can be used as argument
 to this constructor. Promotion is allowed, so in many situations where
 <em>BigInt</em>s are expected a plain numerical value can be used as well.
-    <li> <strong>BigInt(char const *bigEndian, size_t length, bool negative = false)</strong>:<br>
+    <li> <strong>BigInt(char const *bigEndian, size_t length, bool negative = false)</strong>:<br/>
         This constructor initializes a <em>BigInt</em> from <em>length</em>
 big-endian encoded bytes stored in <em>bigEndian</em>. This constructor interprets
 the <em>char</em> values pointed at by <em>bigEndian</em> as unsigned values. Use this
 constructor to reconstruct a <em>BigInt</em> object from the data made available by
 the <em>bigEndian</em> member. If the number represents a negative value, then
 provide a third argument <em>true</em>.
-    <li> <strong>explicit BigInt(std::string const &amp;bigEndian, bool negative = false)</strong>:<br>
+    <li> <strong>explicit BigInt(std::string const &amp;bigEndian, bool negative = false)</strong>:<br/>
         This constructor initializes a <em>BigInt</em> from the bytes stored in
 <em>bigEndian</em>, which must be big-endian encoded. This constructor interprets
 the <em>char</em> values stored in <em>bigEndian</em> as unsigned values. If the number
@@ -159,23 +159,23 @@ available.
 <p>
 <h2>MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong>BigInt &amp;addMod(BigInt const &amp;rhs, BigInt const &amp;mod) </strong>:<br>
+    <li> <strong>BigInt &amp;addMod(BigInt const &amp;rhs, BigInt const &amp;mod) </strong>:<br/>
        <em>Rhs</em> is added (modulo <em>mod</em>) to the current object.
 <p>
-<li> <strong>BigInt addModc(BigInt const &amp;rhs, BigInt const &amp;mod) </strong>:<br>
+<li> <strong>BigInt addModc(BigInt const &amp;rhs, BigInt const &amp;mod) </strong>:<br/>
        The sum (modulo <em>mod</em>) of the current object and <em>rhs</em> is returned.
 <p>
-<li> <strong>BigInt::Word at(size_t index) const</strong>:<br>
+<li> <strong>BigInt::Word at(size_t index) const</strong>:<br/>
        Returns the <em>Word</em> at <em>index</em>. E.g., on a 32 bit architecture, if
         the <strong>BigInt</strong> value equals 2<sup>33</sup>, then <em>at(0)</em> returns 0, and
         <em>at(1)</em> returns 2. If <em>index</em> equals or exceeds the value returned
         by <em>nWords</em> an <em>FBB::Exception</em> is thrown.
 <p>
-<li> <strong>BIGNUM const &amp;bignum() const</strong>:<br>
+<li> <strong>BIGNUM const &amp;bignum() const</strong>:<br/>
        A reference to the <em>BIGNUM</em> value maintained by the current
         <em>BigInt</em> object is returned.
 <p>
-<li> <strong>char *bigEndian() const</strong>:<br> The value represented by the current object
+<li> <strong>char *bigEndian() const</strong>:<br/> The value represented by the current object
         is stored in a series of <em>char</em> typed values in big-endian order. If
         a value consists of 5 <em>char</em>s the eight most significant bits will
         be stored in the <em>char</em> having index value 0, the eight least
@@ -188,15 +188,15 @@ available.
         it again using <em>delete[]</em>. Note that the current object's <em>sign</em>
         cannot be inferred from the return value.
 <p>
-<li> <strong>BigInt &amp;clearBit(size_t index)</strong>:<br>
+<li> <strong>BigInt &amp;clearBit(size_t index)</strong>:<br/>
        The current object's bit at index position <em>index</em> is cleared.
 <p>
-<li> <strong>BigInt clearBit(size_t index) const</strong>:<br>
+<li> <strong>BigInt clearBit(size_t index) const</strong>:<br/>
        A copy of the current object having its bit at index position
         <em>index</em> cleared.
 <p>
 <li> <strong>long long diophantus(long long *factor1, long long *factor2, 
-                             long long value1, long long value2)</strong>:<br>
+                             long long value1, long long value2)</strong>:<br/>
        The integral solution of <em>factor1 * value1 + factor2 * value2 = gcd</em>
         is computed. The function returns the greatest common divisor
         (<em>gcd</em>) of <em>value1</em> and <em>value2</em>, and returns their
@@ -207,7 +207,7 @@ available.
         long&gt;::max()</em> the next member can be used.
 <p>
 <li> <strong>BigInt diophantus(BigInt *factor1, BigInt *factor2, 
-                            BigInt const &amp;value1, BigInt const &amp;value2)</strong>:<br>
+                            BigInt const &amp;value1, BigInt const &amp;value2)</strong>:<br/>
        The integral solution of <em>factor1 * value1 + factor2 * value2 = gcd</em>
         is computed. The function returns the greatest common divisor
         (<em>gcd</em>) of <em>value1</em> and <em>value2</em>, and returns their
@@ -216,33 +216,33 @@ available.
         by adding <em>k * value2</em> to <em>factor1</em> and subtracting <em>k * value1</em>
         from <em>factor2</em>.
 <p>
-<li> <strong>BigInt &amp;div(BigInt *remainder, BigInt const &amp;rhs)</strong>:<br>
+<li> <strong>BigInt &amp;div(BigInt *remainder, BigInt const &amp;rhs)</strong>:<br/>
        The current object is divided by <em>rhs</em>. The division's remainder
         is returned in <em>*remainder</em>.
 <p>
-<li> <strong>BigInt divc(BigInt *remainder, BigInt const &amp;rhs) const</strong>:<br>
+<li> <strong>BigInt divc(BigInt *remainder, BigInt const &amp;rhs) const</strong>:<br/>
        The quotient of the current object and <em>rhs</em> is returned. The
         division's remainder is returned in <em>*remainder</em>.
 <p>
-<li> <strong>int compare(BigInt const &amp;rsh) const</strong>:<br>
+<li> <strong>int compare(BigInt const &amp;rsh) const</strong>:<br/>
        Using signed values, if the current object is smaller than <em>rhs</em> -1
         is returned; if they are equal 0 is returned; if the current object is
         larger than <em>ths</em> 1 is returned (see also <em>uCompare</em>). 
 <p>
-<li> <strong>BigInt &amp;exp(BigInt const &amp;exponent)</strong>:<br>
+<li> <strong>BigInt &amp;exp(BigInt const &amp;exponent)</strong>:<br/>
        The current object is raised to the power <em>exponent</em>.
 <p>
-<li> <strong>BigInt expc(BigInt const &amp;exponent) const</strong>:<br>
+<li> <strong>BigInt expc(BigInt const &amp;exponent) const</strong>:<br/>
        The current object raised to the power <em>exponent</em> is returned.
 <p>
-<li> <strong>BigInt &amp;expMod(BigInt const &amp;exponent, BigInt const &amp;mod)</strong>:<br>
+<li> <strong>BigInt &amp;expMod(BigInt const &amp;exponent, BigInt const &amp;mod)</strong>:<br/>
        The current object is raised to the power <em>exponent</em> modulo <em>mod</em>.
 <p>
-<li> <strong>BigInt expModc(BigInt const &amp;exponent, BigInt const &amp;mod) const</strong>:<br>
+<li> <strong>BigInt expModc(BigInt const &amp;exponent, BigInt const &amp;mod) const</strong>:<br/>
        The current object raised to the power <em>exponent</em> modulo <em>mod</em> is
         returned.
 <p>
-<li> <strong>BigInt &amp;gcd(BigInt const &amp;rhs)</strong>:<br>
+<li> <strong>BigInt &amp;gcd(BigInt const &amp;rhs)</strong>:<br/>
        The greatest common divisor (gcd) of the current object and <em>rhs</em> is
         assigned to the current object. To compute the least common multiple
         (lcm) the following relationship can be used:
@@ -253,7 +253,7 @@ available.
 </pre>
 
 <p>
-<li> <strong>BigInt gcdc(BigInt const &amp;rhs) const</strong>:<br>
+<li> <strong>BigInt gcdc(BigInt const &amp;rhs) const</strong>:<br/>
        The greatest common divisor (gcd) of the current object and <em>rhs</em> is
         returned. To compute the least common multiple (lcm) the following
         relationship can be used: 
@@ -264,11 +264,11 @@ available.
 </pre>
 
 <p>
-<li> <strong>bool hasBit(size_t index)</strong>:<br>
+<li> <strong>bool hasBit(size_t index)</strong>:<br/>
         <em>True</em> is returned if the bit at index position <em>index</em> has been
         set, <em>false</em> otherwise.
 <p>
-<li> <strong>BigInt &amp;inverseMod(BigInt const &amp;mod)</strong>:<br>
+<li> <strong>BigInt &amp;inverseMod(BigInt const &amp;mod)</strong>:<br/>
        The inverse of the current object modulo <em>mod</em> is assigned to the
         current object. This is the value <em>ret</em> for which the following
         expression holds true:
@@ -279,137 +279,137 @@ available.
 </pre>
 
 <p>
-<li> <strong>BigInt inverseModc(BigInt const &amp;mod) const</strong>:<br>
+<li> <strong>BigInt inverseModc(BigInt const &amp;mod) const</strong>:<br/>
        This  inverse of the current object modulo <em>mod</em> is returned.
 <p>
-<li> <strong>bool isNegative() const</strong>:<br>
+<li> <strong>bool isNegative() const</strong>:<br/>
        Returns <em>true</em> if the current object contains a negative value.
 <p>
-<li> <strong>bool isOdd() const</strong>:<br>
+<li> <strong>bool isOdd() const</strong>:<br/>
        Returns <em>true</em> if the current object is an odd value.
 <p>
-<li> <strong>bool isOne() const</strong>:<br>
+<li> <strong>bool isOne() const</strong>:<br/>
        Returns <em>true</em> if the current object equals one (1).
 <p>
-<li> <strong>BigInt &amp;isqrt()</strong>:<br>
+<li> <strong>BigInt &amp;isqrt()</strong>:<br/>
        The current object's integer square root value is assigned to the
         current object. The integer square root of a value <em>x</em> is the
         biggest integral value whose square does not exceed <em>x</em>. E.g.,
         <em>isqrt(17) == 4</em>. An <em>Exception</em> exception is thrown if the current
         object's value is smaller than one.
 <p>
-<li> <strong>BigInt isqrtc() const</strong>:<br>
+<li> <strong>BigInt isqrtc() const</strong>:<br/>
         The integer square root of the current object is returned. An
         <em>Exception</em> exception is thrown if the current object's value is smaller
         than one.  
 <p>
-<li> <strong>bool isZero() const</strong>:<br>
+<li> <strong>bool isZero() const</strong>:<br/>
        Returns <em>true</em> if the current object equals zero (0).
 <p>
-<li> <strong>BigInt &amp;lshift()</strong>:<br> 
+<li> <strong>BigInt &amp;lshift()</strong>:<br/> 
        The current object's bits are shifted one bit to the left. The object's
         sign remains unaltered.
 <p>
-<li> <strong>BigInt lshiftc()</strong>:<br> 
+<li> <strong>BigInt lshiftc()</strong>:<br/> 
        The current object's bits shifted one bit to the left are returned. The
         object's sign will be equal to the current object's sign.
 <p>
-<li> <strong>BigInt &amp;lshift(size_t nBits)</strong>:<br> 
+<li> <strong>BigInt &amp;lshift(size_t nBits)</strong>:<br/> 
        The current object's bits are shifted <em>nBits</em> to the left. The
         object's sign remains unaltered.
 <p>
-<li> <strong>BigInt lshiftc(size_t nBits) const</strong>:<br> 
+<li> <strong>BigInt lshiftc(size_t nBits) const</strong>:<br/> 
        The current object's bits shifted <em>nBits</em> bit to the left are
         returned. The object's sign will be equal to the current object's
         sign.
 <p>
-<li> <strong>BigInt &amp;maskBits(size_t lowerNBits)</strong>:<br>
+<li> <strong>BigInt &amp;maskBits(size_t lowerNBits)</strong>:<br/>
         The  current object's <em>lowerNBits</em> lower bits are kept, its
         higher order bits are cleared. The object's sign is not affected.
 <p>
-<li> <strong>BigInt maskBitsc(size_t lowerNBits) const</strong>:<br>
+<li> <strong>BigInt maskBitsc(size_t lowerNBits) const</strong>:<br/>
        A copy of the current object is returned having all but its
         <em>lowerNBits</em> lower bits cleared. The sign of the returned object
         will be equal to the current object's sign.
 <p>
-<li> <strong>size_t maxWordIndex() const</strong>:<br>
+<li> <strong>size_t maxWordIndex() const</strong>:<br/>
        Returns the maximum <em>Word</em>-index that can be used with the <em>at</em>
         and <em>setWord</em> members for the current <strong>BigInt</strong> value.
 <p>
-<li> <strong>BigInt &amp;mulMod(BigInt const &amp;rhs, BigInt const &amp;mod)</strong>:<br> 
+<li> <strong>BigInt &amp;mulMod(BigInt const &amp;rhs, BigInt const &amp;mod)</strong>:<br/> 
        The current object is multiplied  (modulo <em>mod</em>) by <em>rhs</em>.
 <p>
-<li> <strong>BigInt mulModc(BigInt const &amp;rhs, BigInt const &amp;mod) const</strong>:<br> 
+<li> <strong>BigInt mulModc(BigInt const &amp;rhs, BigInt const &amp;mod) const</strong>:<br/> 
        The current object multiplied (modulo <em>mod</em>) by <em>rhs</em> is returned.
 <p>
-<li> <strong>BigInt &amp;negate()</strong>:<br> 
+<li> <strong>BigInt &amp;negate()</strong>:<br/> 
        The current object's value is negated (i.e., the value changes its
         sign).
 <p>
-<li> <strong>BigInt negatec() const</strong>:<br> 
+<li> <strong>BigInt negatec() const</strong>:<br/> 
        The  negated value of the current object is returned.
 <p>
-<li> <strong>BigInt &amp;rshift()</strong>:<br> 
+<li> <strong>BigInt &amp;rshift()</strong>:<br/> 
        The current object's bits are shifted one bit to the right. The object's
         sign remains unaltered.
 <p>
-<li> <strong>BigInt rshiftc()</strong>:<br> 
+<li> <strong>BigInt rshiftc()</strong>:<br/> 
        The current object's bits shifted one bit to the right are returned. The
         object's sign will be equal to the current object's sign.
 <p>
-<li> <strong>BigInt &amp;rshift(size_t nBits)</strong>:<br> 
+<li> <strong>BigInt &amp;rshift(size_t nBits)</strong>:<br/> 
        The current object's bits are shifted <em>nBits</em> to the right. The
         object's sign remains unaltered.
 <p>
-<li> <strong>BigInt rshiftc(size_t nBits) const</strong>:<br> 
+<li> <strong>BigInt rshiftc(size_t nBits) const</strong>:<br/> 
        The current object's bits shifted <em>nBits</em> bit to the right are
         returned. The object's sign will be equal to the current object's
         sign.
 <p>
-<li> <strong>BigInt &amp;setBit(size_t index)</strong>:<br>
+<li> <strong>BigInt &amp;setBit(size_t index)</strong>:<br/>
        The bit at index position <em>index</em> is set. 
 <p>
-<li> <strong>BigInt setBitc(size_t index) const</strong>:<br> 
+<li> <strong>BigInt setBitc(size_t index) const</strong>:<br/> 
        A copy of the current object is returned having its bit at index
         position <em>index</em> set.
 <p>
-<li> <strong>BigInt &amp;setBit(size_t index, bool value)</strong>:<br>
+<li> <strong>BigInt &amp;setBit(size_t index, bool value)</strong>:<br/>
        The bit at index position <em>index</em> is set to <em>value</em>.
 <p>
-<li> <strong>BigInt setBitc(size_t index, bool value) const</strong>:<br>
+<li> <strong>BigInt setBitc(size_t index, bool value) const</strong>:<br/>
        A copy of the current object is returned having its bit at index
         position <em>index</em> set to <em>value</em>.
 <p>
-<li> <strong>BigInt &amp;setNegative(bool negative)</strong>:<br>
+<li> <strong>BigInt &amp;setNegative(bool negative)</strong>:<br/>
        The current object's sign will be set to negative if the function's
         argument is <em>true</em>, it will be set to positive if the function's
         argument is <em>false</em>.
 <p>
-<li> <strong>BigInt setNegativec(bool negative) const</strong>:<br>
+<li> <strong>BigInt setNegativec(bool negative) const</strong>:<br/>
        A copy of the current object is return having a negative sign if the
         function's argument is <em>true</em> and a positive sign if the function's
         argument is <em>false</em>.
 <p>
-<li> <strong>void setWord(size_t index, BigInt::Word value)</strong>:<br>
+<li> <strong>void setWord(size_t index, BigInt::Word value)</strong>:<br/>
        Assigns <em>value</em> to the <em>Word</em> at <em>index</em>. E.g., on a 32 bit
         architecture, if the <strong>BigInt</strong> value equals 2<sup>33</sup>, then
         after <em>setWord(1, 1)</em> the value has become 2<sup>32</sup>. If <em>index</em>
         exceeds the value returned by <em>nWords</em> an <em>FBB::Exception</em> is
         thrown.
 <p>
-<li> <strong>size_t size() const</strong>:<br>
+<li> <strong>size_t size() const</strong>:<br/>
        The number of bytes required to store the current <em>BIGNUM</em> value is
         returned. 
 <p>
-<li> <strong>size_t sizeInBits() const</strong>:<br>
+<li> <strong>size_t sizeInBits() const</strong>:<br/>
        The number of bits required to represent the current <em>BIGNUM</em> value
         is returned. 
 <p>
-<li> <strong>size_t sizeInBytes() const</strong>:<br>
+<li> <strong>size_t sizeInBytes() const</strong>:<br/>
        The number of bytes required to store the current <em>BIGNUM</em> value is
         returned (returns the same value as the <em>size</em> memeber does).
 <p>
-<li> <strong>size_t constexpr sizeOfWord() const</strong>:<br>
+<li> <strong>size_t constexpr sizeOfWord() const</strong>:<br/>
        <strong>BigInt</strong> values are stored in units of `words', which are unsigned
         long values. These values may consist of, e.g., 32 or 64 bits. The
         number of bytes occupied by a `word' is returned: 4 for a 32 bit
@@ -417,29 +417,29 @@ available.
         specific architecture peculiarities. The value returned by this
         member, therefore, is architecture dependent.
 <p>
-<li> <strong>BigInt &amp;sqr()</strong>:<br>
+<li> <strong>BigInt &amp;sqr()</strong>:<br/>
       The current object's value is squared.
 <p>
-<li> <strong>BigInt sqrc() const</strong>:<br>
+<li> <strong>BigInt sqrc() const</strong>:<br/>
       The square of the current object is returned.
 <p>
-<li> <strong>BigInt &amp;sqrMod(BigInt const &amp;mod) const</strong>:<br>
+<li> <strong>BigInt &amp;sqrMod(BigInt const &amp;mod) const</strong>:<br/>
       The current object's value is squared modulo <em>mod</em>.
 <p>
-<li> <strong>BigInt sqrModc(BigInt const &amp;mod) const</strong>:<br>
+<li> <strong>BigInt sqrModc(BigInt const &amp;mod) const</strong>:<br/>
       The square (modulo <em>mod</em>) of the current object is returned.
 <p>
-<li> <strong>BigInt &amp;subMod(BigInt const &amp;rhs, BigInt const &amp;mod)</strong>:<br> 
+<li> <strong>BigInt &amp;subMod(BigInt const &amp;rhs, BigInt const &amp;mod)</strong>:<br/> 
        <em>Rhs</em> is subtracted modulo <em>mod</em> from the current object.
 <p>
-<li> <strong>BigInt subModc(BigInt const &amp;rhs, BigInt const &amp;mod) const</strong>:<br> 
+<li> <strong>BigInt subModc(BigInt const &amp;rhs, BigInt const &amp;mod) const</strong>:<br/> 
       The difference (modulo <em>mod</em>) of the current object and <em>rhs</em> is
         returned.
 <p>
-<li> <strong>void swap(BigInt &amp;other)</strong>:<br>
+<li> <strong>void swap(BigInt &amp;other)</strong>:<br/>
        The current object swaps its value with <em>other</em>.
 <p>
-<li> <strong>BigInt &amp;tildeBits()</strong>:<br>
+<li> <strong>BigInt &amp;tildeBits()</strong>:<br/>
        All the bits in
         the bytes of the current object and the sign of the current object
         are toggled.
@@ -454,24 +454,24 @@ available.
        <em>b</em> contains the value -250. Also see the discussion with
         <em>operator~()</em> below.
 <p>
-<li> <strong>BigInt tildeBitsc() const</strong>:<br>
+<li> <strong>BigInt tildeBitsc() const</strong>:<br/>
        A copy of the current object whose bits are toggled is returned.
 <p>
-<li> <strong>BigInt &amp;tildeInt()</strong>:<br>
+<li> <strong>BigInt &amp;tildeInt()</strong>:<br/>
        The `tilde' operation is performed on the current object using the
         standard <em>int</em> semantics. E.g., ~5 results in -6.  Also see the
         discussion with <em>operator~()</em> below.
 <p>
-<li> <strong>BigInt tildeIntc() const</strong>:<br>
+<li> <strong>BigInt tildeIntc() const</strong>:<br/>
        A copy of the current object is returned to which the `tilde' operation
         has been performed using the standard <em>int</em> semantics.
 <p>
-<li> <strong>unsigned long ulong() const</strong>:<br> 
+<li> <strong>unsigned long ulong() const</strong>:<br/> 
        The absolute value stored in the current object is returned as an
         unsigned long. If it cannot be represented by an unsigned long it
         returns <em>0xffffffffL</em>.
 <p>
-<li> <strong>int uCompare(BigInt const &amp;rsh) const</strong>:<br>
+<li> <strong>int uCompare(BigInt const &amp;rsh) const</strong>:<br/>
        Using absolute values, if the current object is smaller than <em>rhs</em> -1
         is returned; if they are equal 0 is returned; if the current object is
         larger than <em>ths</em> 1 is returned (see also <em>uCompare</em>).
@@ -490,20 +490,20 @@ Here are the available operators:
 <strong>Unary operators:</strong>
 <p>
 <ul>
-    <li> <strong>bool operator bool() const</strong>:<br>
+    <li> <strong>bool operator bool() const</strong>:<br/>
        Returns <em>true</em> if the <em>BigInt</em> value is unequal zero, otherwise
         <em>false</em> is returned.
 <p>
-<li> <strong>BigInt &amp;operator++()</strong>:<br>
-    <li> <strong>BigInt operator++(int)</strong>:<br>
-    <li> <strong>BigInt &amp;operator--()</strong>:<br>
-    <li> <strong>BigInt operator--(int)</strong>:<br>
-    <li> <strong>BigInt operator-()</strong>:<br>
-    <li> <strong>int operator[](size_t idx) const</strong>:<br>
+<li> <strong>BigInt &amp;operator++()</strong>:<br/>
+    <li> <strong>BigInt operator++(int)</strong>:<br/>
+    <li> <strong>BigInt &amp;operator--()</strong>:<br/>
+    <li> <strong>BigInt operator--(int)</strong>:<br/>
+    <li> <strong>BigInt operator-()</strong>:<br/>
+    <li> <strong>int operator[](size_t idx) const</strong>:<br/>
        With <em>BigInt</em> objects it returns the bit-value of the object's
         <em>idx</em>th bit as the value 0 or 1.
 <p>
-<li> <strong>BigInt::Bit operator[](size_t idx)</strong>:<br>
+<li> <strong>BigInt::Bit operator[](size_t idx)</strong>:<br/>
        With non-const <em>BigInt</em> objects it returns a reference to the
         bit-value of the object's <em>idx</em>th bit. When used as <em>lvalue</em>
         assigning a 0 or non-zero value to the operator's return value will
@@ -514,7 +514,7 @@ Here are the available operators:
         inseerted into a <em>std::ostream</em> the bit's value is displayed as 0 or
         1. 
 <p>
-<li> <strong>BigInt operator~()</strong>:<br>
+<li> <strong>BigInt operator~()</strong>:<br/>
        This operator is <em>not</em> implemented as it cannot be implemented so
         that it matches the actions of this operator when applied to <em>int</em>
         type values.
@@ -570,29 +570,29 @@ Since either implementation produces unexpected results
 <strong>Binary operators:</strong>
 <p>
 <ul>
-    <li> <strong>BigInt operator*(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br>
-    <li> <strong>BigInt operator/(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br>
+    <li> <strong>BigInt operator*(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br/>
+    <li> <strong>BigInt operator/(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br/>
        This operator returns the quotient of the <em>lhs</em> object divided by the
         <em>rhs</em> object. The remainder is lost (The member <em>div</em> performs the
         division and makes the remainder available as well).
-    <li> <strong>BigInt operator%(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br>
-    <li> <strong>BigInt operator+(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br>
-    <li> <strong>BigInt operator-(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br> 
-    <li> <strong>BigInt operator&lt;&lt;(BigInt const &amp;lhs, size_t nBits)</strong>:<br>
+    <li> <strong>BigInt operator%(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br/>
+    <li> <strong>BigInt operator+(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br/>
+    <li> <strong>BigInt operator-(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br/> 
+    <li> <strong>BigInt operator&lt;&lt;(BigInt const &amp;lhs, size_t nBits)</strong>:<br/>
         See also the <em>lshift</em> members. If <em>lhs</em> is positive, 
-    <li> <strong>BigInt operator&gt;&gt;=(BigInt const &amp;lhs, size_t nBits)</strong>:<br>
+    <li> <strong>BigInt operator&gt;&gt;=(BigInt const &amp;lhs, size_t nBits)</strong>:<br/>
        See also the <em>rshift</em> members.
-    <li> <strong>BigInt operator&amp;(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br> 
+    <li> <strong>BigInt operator&amp;(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br/> 
         This operator returns a <em>BigInt</em> value consisting of the
         <em>bit_and</em>-ed bits and sign flags of lhs and rhs
         operands. Consequently, if one operand is positive, the resulting
         value will be positive. 
-    <li> <strong>BigInt operator|(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br> 
+    <li> <strong>BigInt operator|(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br/> 
         This operator returns a <em>BigInt</em> value consisting of the
         <em>bit_or</em>-ed bits and sign flags of lhs and rhs
         operands. Consequently, if either operand is negative, the result will
         be negative. 
-    <li> <strong>BigInt operator^(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br> 
+    <li> <strong>BigInt operator^(BigInt const &amp;lhs, BigInt const &amp;rhs)</strong>:<br/> 
         This operator returns a <em>BigInt</em> value consisting of the
         <em>bit_xor</em>-ed bits and sign flags of lhs and rhs
         operands. Consequently, if exactly one operand is negative, the result
@@ -602,27 +602,27 @@ Since either implementation produces unexpected results
 <strong>(Arithmetic) assignment operator(s):</strong>
 <p>
 <ul>
-    <li> <strong>BigInt &amp;operator=(BigInt const &amp;rhs)</strong>:<br>
-    <li> <strong>BigInt &amp;operator*=(BigInt const &amp;rhs)</strong>:<br>
-    <li> <strong>BigInt &amp;operator/=(BigInt const &amp;rhs)</strong>:<br>
+    <li> <strong>BigInt &amp;operator=(BigInt const &amp;rhs)</strong>:<br/>
+    <li> <strong>BigInt &amp;operator*=(BigInt const &amp;rhs)</strong>:<br/>
+    <li> <strong>BigInt &amp;operator/=(BigInt const &amp;rhs)</strong>:<br/>
        This operator assigns the result of the (integer) division of the current
         <em>BigInt</em> object by <em>ths</em> to the current object. The remainder is
         lost. The member <em>div</em> divides and makes the remainder available as
         well.
-    <li> <strong>BigInt &amp;operator%=(BigInt const &amp;rhs)</strong>:<br>
-    <li> <strong>BigInt &amp;operator+=(BigInt const &amp;rhs)</strong>:<br>
-    <li> <strong>BigInt &amp;operator-=(BigInt const &amp;rhs)</strong>:<br>
-    <li> <strong>BigInt &amp;operator&lt;&lt;=(size_t nBits)</strong>:<br>
+    <li> <strong>BigInt &amp;operator%=(BigInt const &amp;rhs)</strong>:<br/>
+    <li> <strong>BigInt &amp;operator+=(BigInt const &amp;rhs)</strong>:<br/>
+    <li> <strong>BigInt &amp;operator-=(BigInt const &amp;rhs)</strong>:<br/>
+    <li> <strong>BigInt &amp;operator&lt;&lt;=(size_t nBits)</strong>:<br/>
         See also the <em>lshift</em> members.
-    <li> <strong>BigInt &amp;operator&gt;&gt;=(size_t nBits)</strong>:<br>
+    <li> <strong>BigInt &amp;operator&gt;&gt;=(size_t nBits)</strong>:<br/>
         See also the <em>rshift</em> members.
-    <li> <strong>BigInt &amp;operator&amp;=(BigInt const &amp;rhs)</strong>:<br> 
+    <li> <strong>BigInt &amp;operator&amp;=(BigInt const &amp;rhs)</strong>:<br/> 
         This operator <em>bit_and</em>s the bits and sign flags of the current
         object and the rhs operand.
-    <li> <strong>BigInt &amp;operator|=(BigInt const &amp;rhs)</strong>:<br> 
+    <li> <strong>BigInt &amp;operator|=(BigInt const &amp;rhs)</strong>:<br/> 
         This operator <em>bit_or</em>s the bits and sign flags of the current
         object and the rhs operand.
-    <li> <strong>BigInt &amp;operator^=(BigInt const &amp;rhs)</strong>:<br> 
+    <li> <strong>BigInt &amp;operator^=(BigInt const &amp;rhs)</strong>:<br/> 
         This operator <em>bit_xor</em>s the bits and sign flags of the current
         object and the rhs operand.
     </ul>
@@ -635,7 +635,7 @@ All members returning a <em>BigInt</em> computed from a set of arguments and
 not requiring an existing <em>BigInt</em> object are defined as static members.
 <p>
 <ul>
-    <li> <strong>BigInt fromText(std::string text, int mode = 0)</strong>:<br>
+    <li> <strong>BigInt fromText(std::string text, int mode = 0)</strong>:<br/>
        This member converts a textual representation of a number to a
         <em>BigInt</em> value. Conversion continues until the end of <em>text</em> or
         until a character outside of an expected range is encountered.  
@@ -657,7 +657,7 @@ If the text does not represent a valid numerical value (of the
         given extraction mode) then a <em>FBB::Exception</em> exception is thrown
         (<em>fromText: text does not represent a BigInt value</em>).
 <p>
-<li> <strong>BigInt rand(size_t size, Msb msb = MSB_IS_ONE, Lsb lsb = ODD)</strong>:<br>
+<li> <strong>BigInt rand(size_t size, Msb msb = MSB_IS_ONE, Lsb lsb = ODD)</strong>:<br/>
        This member returns a cryptographically strong pseudo-random number
         of <em>size</em> bits. The most significant bit(s) can be controlled by
         <em>msb</em> (by default <strong>MSB_IS_ONE</strong>), the least significant bit can be
@@ -673,13 +673,13 @@ OpenSSL makes sure that the PRNG state is unique for each thread. On
         <strong>RAND_add</strong>(3ssl), <strong>RAND_egd</strong>(3ssl), <strong>RAND_load_file</strong>(3ssl), or
         <strong>RAND_seed</strong>(3ssl).
 <p>
-<li> <strong>BigInt randRange(BigInt const &amp;max)</strong>:<br>
+<li> <strong>BigInt randRange(BigInt const &amp;max)</strong>:<br/>
        This member returns a cryptographically strong pseudo-random
         number in the range <em>0 &lt;= number &lt; max</em>. Before calling this
         member the random number generator must have been seeded (see also
         <strong>rand</strong>, described above).
 <p>
-<li> <strong>BigInt setBigEndian(std::string const &amp;bytes)</strong>:<br> 
+<li> <strong>BigInt setBigEndian(std::string const &amp;bytes)</strong>:<br/> 
        The <em>bytes.length()</em> bytes of <em>bytes</em> are used to compute a
         <em>BigInt</em> object which is returned by this function. The characters
         in <em>bytes</em> are interpreted as a series of bytes in big-endian
@@ -688,7 +688,7 @@ OpenSSL makes sure that the PRNG state is unique for each thread. On
 <p>
 <li> <strong>BigInt prime(size_t nBits, 
                             BigInt const *mod = 0, BigInt const *rem = 0,
-                            PrimeType primeType = ANY)</strong>:<br>
+                            PrimeType primeType = ANY)</strong>:<br/>
        This member returns a prime number of <em>bBits</em> bits. If both <em>mod</em>
         and <em>rem</em> are non-zero, the condition prime % mod == rem.
         (E.g., use <em>prime % mod == 1</em> in order to suit a given
@@ -697,7 +697,7 @@ OpenSSL makes sure that the PRNG state is unique for each thread. On
         / 2</em> will be a (so-called <em>safe</em>) prime.
 <p>
 <li> <strong>BigInt pseudoRand(size_t size, Msb msb = MSB_IS_ONE, Lsb lsb =
-            ODD)</strong>:<br> 
+            ODD)</strong>:<br/> 
        This member returns a potentially predictable pseudo-random number of
         <em>size</em> bits. The most significant bit(s) can be controlled by
         <em>msb</em> (by default <strong>MSB_IS_ONE</strong>), the least significant bit can be
@@ -705,7 +705,7 @@ OpenSSL makes sure that the PRNG state is unique for each thread. On
         non-cryptographic purposes and for certain purposes in cryptographic
         protocols, but usually not for key generation.
 <p>
-<li> <strong>BigInt pseudoRandRange(BigInt const &amp;max)</strong>:<br>
+<li> <strong>BigInt pseudoRandRange(BigInt const &amp;max)</strong>:<br/>
        This member returns a potentially predictable  pseudo-random
        number in the range <em>0 &lt;= number &lt; max</em>.
     </ul>
@@ -713,7 +713,7 @@ OpenSSL makes sure that the PRNG state is unique for each thread. On
 <h2>FREE FUNCTIONS IN THE FBB NAMESPACE</h2>
 <p>
 <ul>
-    <li> <strong>std::ostream &amp;operator&lt;&lt;(ostream &amp;out, BigInt const &amp;value)</strong>:<br>
+    <li> <strong>std::ostream &amp;operator&lt;&lt;(ostream &amp;out, BigInt const &amp;value)</strong>:<br/>
         Inserts <em>value</em> into the provided <em>ostream</em>. If the <em>hex</em>
 manipulator has been inserted into the stream before inserting the <em>BigInt</em>
 value the value will be displayed as a hexadecimal value (without a leading
@@ -722,7 +722,7 @@ represented as an octal value (starting with a 0). The value will be
 displayed as a decimal value if the <em>dec</em> manipulator is active. If the
 <em>BigInt</em> value is negative its value will be preceded by a minus
 character. 
-    <li> <strong>std::istream &amp;operator&gt;&gt;(istream &amp;in, BigInt &amp;value)</strong>:<br>
+    <li> <strong>std::istream &amp;operator&gt;&gt;(istream &amp;in, BigInt &amp;value)</strong>:<br/>
        Extracts <em>value</em> from the provided <em>istream</em>. Depending on the
         currently set extraction mode (<em>dec, oct,</em> or <em>hex</em>) the matching
         set of characters will be extracted from <em>in</em> and converted to a
@@ -775,12 +775,12 @@ indirectly required are no longer automatically linked to your program. With
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::DiffieHellman</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::DiffieHellman</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::DiffieHellman(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz Diffie Hellman key computations</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::DiffieHellman(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Diffie Hellman key computations</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::DiffieHellman - Diffie-Hellman PKI, computing shared keys
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/diffiehellman&gt;</strong><br>
+    <strong>#include &lt;bobcat/diffiehellman&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -115,7 +115,7 @@ reconstructed anymore.
 peer or initiator `in the clear', but encrypted using the long-lasting common
 secret. As the current implementation saves all public information on file,
 it's probably easiest to encrypt the file containing the public information.
-    <li> The recipients, having recieved the other party's encrypted public
+    <li> The recipients, having received the other party's encrypted public
 information, decrypt it using the long-lasting shared secret and compute the
 the shared key.
     <li> As the secret information is not kept, the shared key cannot be
@@ -125,7 +125,7 @@ exchanging encrypted public information.
     </ul>
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -145,7 +145,7 @@ should be saved on file;
 <h2>CONSTRUCTORS</h2>
     <ul>
     <li> <strong>DiffieHellman(size_t primeLength = 1024, size_t generator = 5,
-                      bool progress = false)</strong>:<br>
+                      bool progress = false)</strong>:<br/>
         This constructor computes a prime of the specified length, and
 initializes the public information with the indicated generator. If
 <em>progress</em> is <em>true</em>, the progress of the prime construction process is
@@ -159,13 +159,13 @@ provided generator is not a generator for the computed prime.
 This constructor should be called by the initiator to start the
 Diffie-Hellman shared key computation procedure.
 <p>
-<li> <strong>DiffieHellman(std::string const &amp;initiatorPublicFileName)</strong>:<br>
+<li> <strong>DiffieHellman(std::string const &amp;initiatorPublicFileName)</strong>:<br/>
     This constructor should be called by the peer, after having received the
 initiator's public info. It makes the initiator's public information available
 to the peer, after which the peer's public and private information can be
 computed. 
 <p>
-<li> <strong>DiffieHellman(std::stream &amp;initiatorPublicStream)</strong>:<br>
+<li> <strong>DiffieHellman(std::stream &amp;initiatorPublicStream)</strong>:<br/>
     This constructor acts like the previous constructor, expecting a
 <em>std::istream</em> rather than a file name. It should be called by the peer,
 after having received the initiator's public info. It makes the initiator's
@@ -173,13 +173,13 @@ public information available to the peer, after which the peer's public and
 private information can be computed.
 <p>
 <li> <strong>DiffieHellman(std::string const &amp;initiatorPublicFileName, std::string
-const &amp;initiatorPrivateFileName)</strong>:<br>
+const &amp;initiatorPrivateFileName)</strong>:<br/>
     Unless the initiator's <em>DiffieHellman</em> object is still available,
 this constructor should again be called by the initiator, to load the
 initiator's public and private data.
 <p>
 <li> <strong>DiffieHellman(std::stream &amp;initiatorPublicStream, std::stream
-&amp;initiatorPrivateStream)</strong>:<br> 
+&amp;initiatorPrivateStream)</strong>:<br/> 
     This constructor acts like the previous constructor, expecting 
 <em>std::istreams</em> rather than file names. It should be called by the
 initiator, to load the initiator's public and private info.
@@ -191,14 +191,14 @@ initiator, to load the initiator's public and private info.
 <p>
 <h2>MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong>std::string key() const</strong>:<br>
+    <li> <strong>std::string key() const</strong>:<br/>
     This member should be called by the peer. It returns the shared key. If
 the key cannot be computed, or if the key is not resistant to the small group
 attack (i.e., if the key equals 1, or is at least equal to the public prime
 value, or if <em>key<sup>(prime - 1) / 2</sup> mod prime != 1</em>), then an
 <em>FBB::Exception</em> is thrown.
 <p>
-<li> <strong>std::string key(std::string const &amp;peerPublicFileName) const</strong>:<br>
+<li> <strong>std::string key(std::string const &amp;peerPublicFileName) const</strong>:<br/>
     This member should be called by the initiator. It skips the data referring
 to the prime and generator found in <em>peerPublicFileName</em> and then reads the
 peer's <em>generator<sup>private</sup> mod prime</em> value.  If this value cannot be
@@ -206,30 +206,30 @@ read or if the key is not resistant to the small group attack (cf. the
 description of the previous <em>key</em> member) then an <em>FBB::Exception</em> is
 thrown. It returns the shared key.
 <p>
-<li> <strong>std::string key(std::istream const &amp;peerPublicStream) const</strong>:<br>
+<li> <strong>std::string key(std::istream const &amp;peerPublicStream) const</strong>:<br/>
     This member should be called by the initiator. It acts like the previous
 <em>key</em> member, reading the peer's <em>generator<sup>private</sup> mod prime</em> value
 from <em>peerPublicStream</em>. It returns the shared key.
 <p>
 <li> <strong>void save(std::string const &amp;basename, SecretKey action = 
-                                                    DONT_SAVE_SECRET_KEY)</strong>:<br>
+                                                    DONT_SAVE_SECRET_KEY)</strong>:<br/>
     This member should be called by the initiator. It saves the public
 information on the file <em>'basename'.pub</em>. The information is written in
 binary, big-endian format, using the following organization:
 <p>
-- the size of the prime in bytes;<br>
-    - the prime's bytes;<br>
-    - the size of the generator in bytes;<br>
-    - the generator's bytes;<br>
+- the size of the prime in bytes;<br/>
+    - the prime's bytes;<br/>
+    - the size of the generator in bytes;<br/>
+    - the generator's bytes;<br/>
     - the size of the public info (<em>generator<sup>private</sup> mod prime</em>) in
-        bytes;<br>
-    - the public info's bytes.<br>
+        bytes;<br/>
+    - the public info's bytes.<br/>
 <p>
 If <em>action</em> is specified as <em>SAVE_SECRET_KEY</em> then the private
 information is written in binary, big-endian format, using the following
 organization:
 <p>
-- the size of the private information in bytes;<br>
+- the size of the private information in bytes;<br/>
     - the private information bytes.
     </ul>
 <p>
@@ -309,12 +309,12 @@ catch (std::exception const &amp;exc)
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

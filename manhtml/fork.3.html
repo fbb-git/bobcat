@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Fork</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Fork</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Fork(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz Template Design Pattern around fork(2)</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Fork(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Template Design Pattern around fork(2)</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::Fork - Implements <strong>fork</strong>(2) using the Template Design Pattern
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/fork&gt;</strong><br>
+    <strong>#include &lt;bobcat/fork&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -67,30 +67,30 @@ Terminating child processes send <em>SIGCHLD</em> signals to their parents. The
 received by the parent process using a <strong>wait</strong>(2) or <strong>waitpid</strong>(2) system
 call: 
     <ul>
-    <li> <strong>int WIFEXITED(int status)</strong>:<br>
+    <li> <strong>int WIFEXITED(int status)</strong>:<br/>
         This macro returns a nonzero value if the child process terminated
      normally with `exit' or `_exit'.
-    <li> <strong>int WEXITSTATUS(int status)</strong>:<br>
+    <li> <strong>int WEXITSTATUS(int status)</strong>:<br/>
         If `WIFEXITED' is true of `<em>status</em>', this macro returns the
         low-order 8 bits of the exit status value from the child process.  
-    <li> <strong>int WIFSIGNALED(int status)</strong>:<br>
+    <li> <strong>int WIFSIGNALED(int status)</strong>:<br/>
         This macro returns a nonzero value if the child process terminated
      because it received a signal that was not handled.  
-    <li> <strong>int WTERMSIG(int status)</strong>:<br>
+    <li> <strong>int WTERMSIG(int status)</strong>:<br/>
         If `WIFSIGNALED' is true of `<em>status</em>', this macro returns the
         signal number of the signal that terminated the child process.
-    <li> <strong>int WCOREDUMP(int status)</strong>:<br>
+    <li> <strong>int WCOREDUMP(int status)</strong>:<br/>
         This macro returns a nonzero value if the child process terminated
         and produced a core dump.
-    <li> <strong>int WIFSTOPPED(int status)</strong>:<br>
+    <li> <strong>int WIFSTOPPED(int status)</strong>:<br/>
         This macro returns a nonzero value if the child process is stopped.
-    <li> <strong>int WSTOPSIG(int status)</strong>:<br>
+    <li> <strong>int WSTOPSIG(int status)</strong>:<br/>
         If `WIFSTOPPED' is true of `<em>status</em>', this macro returns the signal 
         number of the signal that caused the child process to stop.
     </ul>
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -99,21 +99,21 @@ man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
 <h2>CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>Fork()</strong>:<br>
+    <li> <strong>Fork()</strong>:<br/>
         This is the only available constructor. 
     </ul>
     Note that there is no copy constructor.
 <p>
 <h2>DESTRUCTOR</h2>
     <ul>
-    <li> <strong>virtual ~Fork()</strong>:<br>
+    <li> <strong>virtual ~Fork()</strong>:<br/>
         Derived classes may define their own destructor, which is called when
 the <em>Fork</em> destructor is activated.
     </ul>
 <p>
 <h2>MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong>void fork()</strong>:<br>
+    <li> <strong>void fork()</strong>:<br/>
         Performs the actual forking. It is implemented in such a way that the
 corresponding parent- and child- processes are activated from virtual members
 of <strong>Fork</strong>. If the forking operation fails, an <em>FBB::Exception</em> exception
@@ -122,7 +122,7 @@ is thrown.
 <p>
 <h2>PROTECTED MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong>virtual void childProcess() = 0</strong>:<br>
+    <li> <strong>virtual void childProcess() = 0</strong>:<br/>
         This member <em>must</em> be implemented by derived classes. It defines the
 actions that are performed by the child process, following the <strong>fork</strong>(2)
 system call. Just before <em>childProcess</em> is called, <em>childRedirections</em>
@@ -130,29 +130,29 @@ system call. Just before <em>childProcess</em> is called, <em>childRedirections<
 terminate the child process. A good way to do this is to throw an exeption
 which is caught by <em>main()</em>'s function try block. Terminating a process 
 using <strong>exit</strong>(2) is deprecated in <strong>C++</strong>.
-    <li> <strong>virtual void childRedirections()</strong>:<br>
+    <li> <strong>virtual void childRedirections()</strong>:<br/>
         This function <em>may</em> be redefined in derived classes to set up the
 redirections that are necessary to communicate with the parent process. See
 also the classes <strong>redirector</strong>(3bobcat), <strong>pipe</strong>(3bobcat),
 <strong>ipipe</strong>(3bobcat) and <strong>opipe</strong>(3bobcat). By default, <em>childRedirections</em>
 does nothing.
-    <li> <strong>virtual void parentProcess() = 0</strong>:<br>
+    <li> <strong>virtual void parentProcess() = 0</strong>:<br/>
         This member <em>must</em> be implemented by derived classes. It defines the
 actions that are performed by the parent process, following the <strong>fork</strong>(2)
 system call. Just before <em>parentProcess</em> is called,
 <em>parentRedirections</em> (see below) has been executed.
-    <li> <strong>virtual void parentRedirections()</strong>:<br>
+    <li> <strong>virtual void parentRedirections()</strong>:<br/>
         This function <em>may</em> be redefined in derived classes to set up the
 redirections that are necessary to communicate with, e.g., the parent. See,
 e.g., the classes <strong>redirector</strong>(3bobcat), <strong>pipe</strong>(3bobcat),
 <strong>ipipe</strong>(3bobcat) and <strong>opipe</strong>(3bobcat). By default,
 <em>parentRedirections</em> does nothing.
-    <li> <strong>pid_t pid() const</strong>:<br>
+    <li> <strong>pid_t pid() const</strong>:<br/>
         Returns the child's process id in the parent's code (i.e., in the
 <strong>parent-</strong>members below), and 0 in the child's code (i.e., in the
 <strong>child-</strong>members below). Note that the value of <em>pid</em> is <strong>undefined</strong>
 when called <em>before</em> the member <em>fork</em> has been called.
-    <li> <strong>void prepareDaemon() const</strong>:<br>
+    <li> <strong>void prepareDaemon() const</strong>:<br/>
         Prepares for a daemon childprocess. This function may (should) be
 called from <em>childProcess</em> to ensure that the child process changes its
 current working directory to the root (/) directory, thus freeing up mount
@@ -164,7 +164,7 @@ output actions from interfering with the daemon's actions. An
 <em>FBB::Exception</em> is thrown if changing directory to the root directory
 fails.
     <li> <strong>void prepareDaemon(std::string const &amp;out, std::string const &amp;err,
-        mode_t mode = 0600) const</strong>:<br>
+        mode_t mode = 0600) const</strong>:<br/>
         Prepares for a daemon childprocess like the previous member function,
 but allows redirection of the standard output (<em>out</em>) and standard error
 (<em>err</em>) streams to files. Specify empty strings to redirect these streams to
@@ -173,7 +173,7 @@ append-mode (and created if not yet existing), by default using mode 0600
 (read/write mode for the user only). An <em>FBB::Exception</em> is thrown if
 changing directory to the root directory or if using the specified <strong>s</strong>
 fails.
-    <li> <strong>int waitForChild()</strong>:<br> 
+    <li> <strong>int waitForChild()</strong>:<br/> 
         This member may be called by <em>parentProcess</em> to wait for the
 completion of the child-process. The return value (exit-code) of the child
 process is returned as a value between 0 and 255. If the child process
@@ -348,12 +348,12 @@ catch(int x)
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

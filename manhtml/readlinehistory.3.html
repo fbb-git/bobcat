@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::ReadLineHistory</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::ReadLineHistory</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::ReadLineHistory(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz Editing input lines</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::ReadLineHistory(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Editing input lines</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::ReadLineHistory - std::streambuf offering line-editing and history
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/readlinebuf&gt;</strong><br>
+    <strong>#include &lt;bobcat/readlinebuf&gt;</strong><br/>
     Linking option: -lreadline -lbobcat
 <p>
 <h2>DESCRIPTION</h2>
@@ -77,7 +77,7 @@ the history lines and --if defined-- the timestamps of the lines in the
 history can be obtained using iterators defined by <strong>ReadLineHistory</strong>.
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -126,13 +126,13 @@ available constructors.
 <h2>STATIC MEMBER FUNCTIONS</h2>
 <p>
 <ul>
-    <li> <strong>ReadLineHistory &amp;instance()</strong>:<br> 
+    <li> <strong>ReadLineHistory &amp;instance()</strong>:<br/> 
         A reference to the <strong>ReadLineHistory</strong> object is returned. If any
 history has been accumulated it can immediately be retrieved. Using this
 static member will not affect the way the <strong>ReadLineHistory</strong> object handles
 timestamps when saving or retrieving history lines. When initially constructed
 the <em>ReadLineHistory</em> object assumes that timestamps are not used.
-    <li> <strong>ReadLineHistory &amp;instance(bool useTimestamps)</strong>:<br> 
+    <li> <strong>ReadLineHistory &amp;instance(bool useTimestamps)</strong>:<br/> 
         A reference to the <strong>ReadLineHistory</strong> object is returned. If any
 history has been accumulated it can immediately be retrieved. The
 <em>useTimestamps</em> parameter defines the way history lines are read from or
@@ -147,23 +147,23 @@ results in unexpected behavior.
 <p>
 <h2>MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong>ReadLineHistory::const_iterator begin() const</strong>:<br>
+    <li> <strong>ReadLineHistory::const_iterator begin() const</strong>:<br/>
         An input iterator pointing to the first history line is returned.
-    <li> <strong>ReadLineHistory::const_iterator end() const</strong>:<br>
+    <li> <strong>ReadLineHistory::const_iterator end() const</strong>:<br/>
         An input iterator pointing beyond the last history line is returned.
-    <li> <strong>size_t maxSize() const</strong>:<br> 
+    <li> <strong>size_t maxSize() const</strong>:<br/> 
         The maximum number of lines that can be stored in the history is
         returned. After collecting a history of <em>maxSize</em> lines, the next
         line entered will cause the initial history line to be removed from
         the history, making room for the next line to be added at the end of
         the history.
-    <li> <strong>ReadLineHistory::const_reverse_iterator rbegin() const</strong>:<br>
+    <li> <strong>ReadLineHistory::const_reverse_iterator rbegin() const</strong>:<br/>
         An input iterator pointing to the last history line is
         returned. Incrementing this iterator will access the previous line in
         the history.
-    <li> <strong>ReadLineHistory::const_reverse_iterator rend() const</strong>:<br>
+    <li> <strong>ReadLineHistory::const_reverse_iterator rend() const</strong>:<br/>
         An input iterator pointing before the first history line is returned.
-    <li> <strong>ReadLineHistory &amp;setTimestamps(bool useTimestamps)</strong>:<br> 
+    <li> <strong>ReadLineHistory &amp;setTimestamps(bool useTimestamps)</strong>:<br/> 
        xThe current status of the timestamps usage is set according to the
         value of its parameter. When <em>true</em> inserting and extracting history
         will include the timestamps. No timestamps are inserted or extracted
@@ -176,9 +176,9 @@ results in unexpected behavior.
         
 </pre>
 
-    <li> <strong>size_t size() const</strong>:<br>
+    <li> <strong>size_t size() const</strong>:<br/>
         The number of lines currently stored in the history is returned.
-    <li> <strong>bool timestamps() const</strong>:<br>
+    <li> <strong>bool timestamps() const</strong>:<br/>
         The current status of the timestamps usage is returned. When returning
         <em>true</em> inserting and extracting history will include the
         timestamps. No timestamps are inserted or extracted when this member
@@ -187,14 +187,14 @@ results in unexpected behavior.
 <p>
 <h2>OVERLOADED OPERATORS</h2>
     <ul>
-    <li> <strong>std::istream &amp;FBB::operator&gt;&gt;(std::istream &amp;in, ReadLineHistory &amp;his)</strong>:<br>
+    <li> <strong>std::istream &amp;FBB::operator&gt;&gt;(std::istream &amp;in, ReadLineHistory &amp;his)</strong>:<br/>
         The history available at the <em>in</em> stream is extracted as the current
         history. The existing history is removed first. The <em>useTimestamp</em> 
         status determines whether timestams are extracted (if <em>true</em>) or not
         (if <em>false</em>). A mismatch between the actual contents of the stream
         and the <em>useTimestamp</em> status will result in unexpected behavior.
     <li> <strong>std::ostream &amp;FBB::operator&lt;&lt;(std::ostream &amp;out, 
-            ReadLineHistory &amp;his)</strong>:<br>
+            ReadLineHistory &amp;his)</strong>:<br/>
         The current history is inserted into <em>out</em> stream. The
         <em>useTimestamp</em> status determines whether timestams are inserted (if
         <em>true</em>) or not (if <em>false</em>).
@@ -282,12 +282,12 @@ int main(int argc, char **argv)
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

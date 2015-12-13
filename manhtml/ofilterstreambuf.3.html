@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::OFilterStreambuf</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::OFilterStreambuf</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::OFilterStreambuf(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz ostream filtering</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::OFilterStreambuf(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz ostream filtering</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::OFilterStreambuf - Base class for std::ostream filtering
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/ofilterstreambuf&gt;</strong><br>
+    <strong>#include &lt;bobcat/ofilterstreambuf&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -105,7 +105,7 @@ overriding implementation of <em>overflow()</em>, e.g., as follows:
 (cf. the EXAMPLE section below).
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -114,21 +114,21 @@ man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
 <h2>CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>OFilterStreambuf()</strong>:<br>
+    <li> <strong>OFilterStreambuf()</strong>:<br/>
         This constructor creates a <em>OFilterStreambuf</em> object without
 associating it with a destination (filtered) <em>ostream</em>.
 <p>
 <li> <strong>OFilterStreambuf(std::string const &amp;fname, 
-                                            openmode mode = std::ios::out)</strong>:<br>
+                                            openmode mode = std::ios::out)</strong>:<br/>
         This constructor creates a <em>OFilterStreambuf</em> object and opens a
 private <em>std::ofstream</em> object whose filename is provided and that should 
 receive the filtered information.
 <p>
-<li> <strong>OFilterStreambuf(char const *fname, openmode mode = std::ios::out)</strong>:<br>
+<li> <strong>OFilterStreambuf(char const *fname, openmode mode = std::ios::out)</strong>:<br/>
         Same as the previous constructor, expecting a <em>char const *</em>
 defining the name of the private <em>std::ofstream</em> object.
 <p>
-<li> <strong>OFilterStreambuf(std::ostream &amp;out)</strong>:<br>
+<li> <strong>OFilterStreambuf(std::ostream &amp;out)</strong>:<br/>
         This constructor creates a <em>OFilterStreambuf</em> object and will insert
 any filtered information into the provided  <em>ostream</em> object.
     </ul>
@@ -141,25 +141,25 @@ description of <em>close()</em> below).
 classes should provide their own implementation of <em>int underflow(int ch)</em>
 to implement any non-trivial filtering.
     <ul>
-    <li> <strong>void close()</strong>:<br>
+    <li> <strong>void close()</strong>:<br/>
         This member calls the <em>streambuf::sync()</em> member to flush any
 pending information to the destination (filtered) stream and then closes the
 destination stream. Note that the default <em>sync()</em> member performs no
 special actions but it can be overridden by derived classes to flush the
 destination stream just prior to its closing.
 <p>
-<li> <strong>void open(std::string const &amp;fname, openmode mode = std::ios::out)</strong>:<br>
+<li> <strong>void open(std::string const &amp;fname, openmode mode = std::ios::out)</strong>:<br/>
         This member closes the current destination (filtered) <em>std::ostream</em>
 object and associates the <em>OFilterStreambuf</em> object with a private
 <em>std::ofstream</em> object whose filename is provided and that should receive
 subsequently filtered information.
 <p>
-<li> <strong>void open(char const *fname, openmode mode = std::ios::out)</strong>:<br>
+<li> <strong>void open(char const *fname, openmode mode = std::ios::out)</strong>:<br/>
         Same as the previous member, but using a <em>char const *</em> to specify
 the name of the private <em>std::ofstream</em> object to receive the filtered
 information.
 <p>
-<li> <strong>void open(std::ostream &amp;out)</strong>:<br>
+<li> <strong>void open(std::ostream &amp;out)</strong>:<br/>
         This member closes the current destination (filtered) <em>std::ostream</em>
 object and associates the <em>OFilterStreambuf</em> object with the provided
 <em>ostream</em> object.
@@ -167,7 +167,7 @@ object and associates the <em>OFilterStreambuf</em> object with the provided
 <p>
 <h2>PROTECTED MEMBER FUNCTION</h2>
     <ul>
-    <li> <strong>std::ostream &amp;out() const</strong>:<br>
+    <li> <strong>std::ostream &amp;out() const</strong>:<br/>
         This member is available to derived classes to insert information into
 the destination (filtered) stream. 
     </ul>
@@ -222,12 +222,12 @@ the destination (filtered) stream.
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

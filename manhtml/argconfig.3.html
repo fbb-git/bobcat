@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::ArgConfig</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::ArgConfig</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::ArgConfig(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz Program Arguments</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::ArgConfig(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Program Arguments</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::ArgConfig - A singleton class processing program arguments
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/argconfig&gt;</strong><br>
+    <strong>#include &lt;bobcat/argconfig&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -88,12 +88,12 @@ verbose:
 
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
 <h2>INHERITS FROM</h2>
-    <strong>FBB::Arg</strong>,<br>
+    <strong>FBB::Arg</strong>,<br/>
     <strong>FBB::ConfigFile</strong>
 <p>
 <h2>CONSTRUCTORS</h2>
@@ -107,7 +107,7 @@ single <strong>ArgConfig</strong> object. See below.
         int argc, char **argv, [std::string const &amp;fname,]
             Comment cType = KeepComment, 
             SearchCasing sType = SearchCaseSensitive,
-            Indices iType = IgnoreIndices)</strong>:<br>
+            Indices iType = IgnoreIndices)</strong>:<br/>
         Initializes the <strong>FBB::ArgConfig</strong> singleton. Must be called only
 once.  Throws an <strong>FBB::Exception</strong> exception if called repeatedly or if called
 with <em>argv</em> not containing a defined option (which is shown by the
@@ -127,7 +127,7 @@ initializing <strong>ArgConfig</strong> to use the initialized object immediatel
              [std::string const &amp;fname,]
             Comment cType = KeepComment, 
             SearchCasing sType = SearchCaseSensitive,
-            Indices iType = IgnoreIndices)</strong>:<br>
+            Indices iType = IgnoreIndices)</strong>:<br/>
        Initializes the <strong>FBB::ArgConfig</strong> singleton. Accepts two iterators of
         an array of <strong>Arg::LongOption</strong> objects, holding long-options. Must be
         called only once. Throws an <strong>FBB::Exception</strong> exception if called
@@ -148,7 +148,7 @@ The argument
             has an optional argument (in that case, the option's value 
             will be empty, unless specified).
         </ul>
-    <li> <strong>FBB::ArgConfig &amp;instance()</strong>:<br> 
+    <li> <strong>FBB::ArgConfig &amp;instance()</strong>:<br/> 
        Returns the instance of the <strong>ArgConfig</strong> object, available after
         calling one of the <strong>ArgConfig::initialize</strong> members.  If called
         before initialization, an <em>FBB::Exception</em> exception is thrown.
@@ -161,15 +161,15 @@ reimplemented by this class all <em>option</em> members are discussed below. All
 other members inherit straight from the classes <em>Arg</em> and
 <em>ConfigFile</em>. Consult their man pages for details.
     <ul>
-    <li> <strong>size_t option(int option) const</strong>:<br>
+    <li> <strong>size_t option(int option) const</strong>:<br/>
        Returns the number of times `option' (or its long option synonym, if
         defined) was specified as command line option or as as a configuration
         file option.
-    <li> <strong>size_t option(std::string const &amp;options) const</strong>:<br>
+    <li> <strong>size_t option(std::string const &amp;options) const</strong>:<br/>
        Returns the total number of times any of the characters specified in
         the `options' string (or their long option synonyms) was specified as
         command line option or as as a configuration file option.
-    <li> <strong>size_t option(string *value, int option) const</strong>:<br>
+    <li> <strong>size_t option(string *value, int option) const</strong>:<br/>
        Returns the number of times the provided option (or its long option
         synonym) was present as either a command line option or as a
         configuration file option. If the return value is non-zero then the
@@ -178,7 +178,7 @@ other members inherit straight from the classes <em>Arg</em> and
         in <em>*value</em>, which is left untouched if `option' was not present. 0
         may be specified for <strong>value</strong> if the option does not have a value or
         if the value should not be stored.
-    <li> <strong>size_t option(size_t idx, string *value, int option) const</strong>:<br>
+    <li> <strong>size_t option(size_t idx, string *value, int option) const</strong>:<br/>
        This member acts identically to the <em>Arg::option</em> member having the
         identical prototype. It does not consider the configuration file but
         merely returns the number of times the provided option (or its long
@@ -188,7 +188,7 @@ other members inherit straight from the classes <em>Arg</em> and
         present or if <em>idx</em> is or exceeds the number of specifications of
         the provided option. 0 may be specified for <strong>value</strong> if the option
         does not have a value or if the value should not be stored.
-    <li> <strong>size_t option(size_t *idx, string *value, int option) const</strong>:<br>
+    <li> <strong>size_t option(size_t *idx, string *value, int option) const</strong>:<br/>
        This member acts identically to the <em>Arg::option</em> member having the
         identical prototype. It does not consider the configuration file but
         merely returns the number of times the provided option (or its long
@@ -199,7 +199,7 @@ other members inherit straight from the classes <em>Arg</em> and
         are left untouched if `option' was not present. 0 may be specified for
         <strong>value</strong> if the option does not have a value or if the value should
         not be stored.
-    <li> <strong>size_t option(string *value, char const *longOption) const</strong>:<br>
+    <li> <strong>size_t option(string *value, char const *longOption) const</strong>:<br/>
        Returns the number of times the specified long option (not having a
         single-character synonym) was present as either a command line option
         or in the configuration file. If found, then the value found at the
@@ -209,7 +209,7 @@ other members inherit straight from the classes <em>Arg</em> and
         was not present. 0 may be specified for <strong>value</strong> if the option does
         not have a value or if the value should not be stored.
     <li> <strong>size_t option(size_t idx, string *value, 
-                                        char const * longOption) const</strong>:<br>
+                                        char const * longOption) const</strong>:<br/>
        This member acts identically to the <em>Arg::option</em> member having the
         identical prototype. It does not consider the configuration file but
         merely returns the number of times the provided long option (not
@@ -220,7 +220,7 @@ other members inherit straight from the classes <em>Arg</em> and
         number of specifications of the provided long option. 0 may be
         specified for <strong>value</strong> if the long option does not have a value or if
         the value should not be stored.
-    <li> <strong>size_t option(size_t *idx, string *value, int longOption) const</strong>:<br>
+    <li> <strong>size_t option(size_t *idx, string *value, int longOption) const</strong>:<br/>
        This member acts identically to the <em>Arg::option</em> member having the
         identical prototype. It does not consider the configuration file but
         merely returns the number of times the provided long option (not
@@ -321,12 +321,12 @@ catch (Exception const &amp;err)
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

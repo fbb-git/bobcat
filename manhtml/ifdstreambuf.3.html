@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::IFdStreambuf</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::IFdStreambuf</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::IFdStreambuf(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz File Descriptor Input Stream Buffer</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::IFdStreambuf(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz File Descriptor Input Stream Buffer</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::IFdStreambuf - Input stream buffer initialized by a file descriptor
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/ifdstreambuf&gt;</strong><br>
+    <strong>#include &lt;bobcat/ifdstreambuf&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -63,7 +63,7 @@ but they can be used on operating systems that support the concept. Realize
 that using file descriptors introduces operating system dependencies.
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -82,7 +82,7 @@ the object must not be closed.
 <p>
 <h2>CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>Ifdstreambuf()</strong>:<br>
+    <li> <strong>Ifdstreambuf()</strong>:<br/>
         This constructor initializes the streambuf, without associating it to
 a file descriptor, and without using buffering. The member <strong>open()</strong> can be
 used subsequently to associate the object with a file descriptor and
@@ -90,7 +90,7 @@ optionally a buffer size. When the object is destroyed or if the mode-less
 overloaded version of the <strong>open</strong> member is called, the file descriptor will
 not be closed.
 <p>
-<li> <strong>Ifdstreambuf(Mode mode)</strong>:<br>
+<li> <strong>Ifdstreambuf(Mode mode)</strong>:<br/>
         This constructor initializes the streambuf, without associating it to
 a file descriptor, and without using buffering. The member <strong>open()</strong> can be
 used subsequently to associate the object with a file descriptor and
@@ -98,13 +98,13 @@ optionally a buffer size. When the object is destroyed or if the mode-less
 overloaded version of the <strong>open</strong> member is called, the <strong>Mode</strong> argument
 determines whether the file descriptor will be closed or will remain open.
 <p>
-<li> <strong>IFdStreambuf(int fd, size_t n = 1)</strong>:<br>
+<li> <strong>IFdStreambuf(int fd, size_t n = 1)</strong>:<br/>
         This constructor initializes the streambuf, associating it to file
 descriptor <em>fd</em>, and an optional unget buffer size (by default having size
 1).  When the object is destroyed or if the mode-less overloaded version of
 the <strong>open</strong> member is called, the file descriptor will not be closed.
 <p>
-<li> <strong>IFdStreambuf(int fd, Mode mode, size_t n = 1)</strong>:<br>
+<li> <strong>IFdStreambuf(int fd, Mode mode, size_t n = 1)</strong>:<br/>
         This constructor initializes the streambuf, associating it to file
 descriptor <em>fd</em>, and an optional unget buffer size (by default having size
 1).   When the object is destroyed or if the mode-less
@@ -119,21 +119,21 @@ available, as <strong>FBB::IFdStreambuf</strong> inherits from this class. Some 
 <strong>std::streambuf</strong>'s member are overridden by <strong>FBB::IFdStreambuf</strong>, see
 below. 
     <ul>
-    <li> <strong>void close()</strong>:<br>
+    <li> <strong>void close()</strong>:<br/>
         The file descriptor used by the <em>IFdStreambuf</em> is closed,
 irrespective of the <em>Mode</em> that was specified when the <em>IFdStreambuf</em>
 object was constructed. Following <em>close</em> the <em>IFdStreambuf</em> object can
 no longer be used until one of its <em>open</em> members has been called.
-    <li> <strong>int fd() const</strong>:<br>
+    <li> <strong>int fd() const</strong>:<br/>
         The file descriptor used by the <em>IFdStreambuf</em> object is returned.
         If the <em>OFdStreambuf</em> is not associated with a file descriptor -1 is
         returned. 
-    <li> <strong>void open(int xfd, size_t n = 1)</strong>:<br>
+    <li> <strong>void open(int xfd, size_t n = 1)</strong>:<br/>
         The streambuf is (re)initialized, using file descriptor <em>fd</em>, and an
 optional unget buffer size (by default having size 1). When called repeatedly,
 the <strong>Mode</strong> specification used whem the object was constructed determines
 whether the file descriptor will be closed or will remain open.
-    <li> <strong>void open(int xfd, Mode mode, size_t n = 1)</strong>:<br>
+    <li> <strong>void open(int xfd, Mode mode, size_t n = 1)</strong>:<br/>
         The streambuf is (re)initialized, using file descriptor <em>fd</em>, a file
 descriptor closing parameter and an optional unget buffer size (by default
 having size 1). Depending on the <strong>Mode</strong> argument the object's currently used
@@ -167,12 +167,12 @@ interfaces backward compatible.
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

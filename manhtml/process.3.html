@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Process</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Process</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Process(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz Running Child Processes</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Process(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Running Child Processes</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::Process - Runs external programs
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/process&gt;</strong><br>
+    <strong>#include &lt;bobcat/process&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -134,12 +134,12 @@ processes may be processed by separate threads (cf. this manual page's
 <strong>EXAMPLES</strong> section).
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
 <h2>INHERITS FROM</h2>
-    <strong>FBB::Fork</strong>(3bobcat) (private), <br>
+    <strong>FBB::Fork</strong>(3bobcat) (private), <br/>
     <strong>FBB:IOStream</strong>(3bobcat)
     <strong>FBB:ProcessEnums</strong>
 <p>
@@ -149,28 +149,28 @@ no separate <strong>ProcessEnums</strong> man-page.
 <p>
 <h2>ENUMERATIONS</h2>
 <p>
-<strong>enum ProcessType</strong>:<br>
+<strong>enum ProcessType</strong>:<br/>
 <p>
 The <strong>enum ProcessType</strong> defines how a child process is started or
 located. Its values are specified at constructor-time or through the
 <em>setProcessType</em> member. This enumeration defines the following symbolic
 constants:
         <ul>
-        <li> <strong>NO_PATH</strong>:<br>
+        <li> <strong>NO_PATH</strong>:<br/>
            The program specified as child process is started as specified,
             without searching the elements of the <em>PATH</em> environment
             variable.
-        <li> <strong>USE_PATH</strong>:<br>
+        <li> <strong>USE_PATH</strong>:<br/>
            The elements of the <em>PATH</em> environment variable are used when
             locating the program specified as child process.
-        <li> <strong>USE_SHELL</strong>:<br>
+        <li> <strong>USE_SHELL</strong>:<br/>
            The program specified as child process is called using <em>/bin/sh
             -c</em>. When (output) redirection is used with the specified command
             the <em>IGNORE_COUT IOMode</em> (and possibly also the <em>IGNORE_CERR
             IOMode</em>) should be specified.
         </ul>
 <p>
-<strong>enum IOMode</strong>:<br>
+<strong>enum IOMode</strong>:<br/>
 <p>
 Values of the <em>enum IOMode</em> are used to define which of the child
 process's standard streams can be accessed through the <em>Process</em> object. Its
@@ -179,22 +179,22 @@ symbolic constants may be combined using the <em>bit_or</em> operator. By defaul
 <p>
 The following symbolic constants are available:
         <ul>
-        <li> <strong>ALL</strong>:<br>
+        <li> <strong>ALL</strong>:<br/>
            Shortcut for <strong>CIN | COUT | CERR</strong>.
-        <li> <strong>CIN</strong>:<br>
+        <li> <strong>CIN</strong>:<br/>
            Information inserted into the <em>Process</em> object is forwarded to
             its child process.  If this is not required then <em>CIN</em> should
             not be specified.
-        <li> <strong>CERR</strong>:<br>
+        <li> <strong>CERR</strong>:<br/>
            Information written by the child process to its standard error
             stream is accessible through <em>Process's childErrStream</em> member.
             If this is not required then <em>CERR</em> should not be specified.
-        <li> <strong>COUT</strong>:<br>
+        <li> <strong>COUT</strong>:<br/>
            Information written by the child process to its standard output
             stream may be directly be extracted from the <em>Process</em> object,
             or from its <em>childOutStream</em> member.  If this is not required
             then <em>CERR</em> should not be specified.
-        <li> <strong>DIRECT</strong>:<br> 
+        <li> <strong>DIRECT</strong>:<br/> 
            When starting a child process (see below at the member <em>start</em>)
             the current process (i.e., the program defining the <em>Process</em>
             object) is replaced by the child process, inheriting the current
@@ -202,25 +202,25 @@ The following symbolic constants are available:
             specified in combination with any other <em>IOMode</em> (except for
             <em>STD</em>, see below) an <em>std::invalid_argument</em> exception is
             thrown.
-        <li> <strong>IGNORE_CERR</strong>:<br>
+        <li> <strong>IGNORE_CERR</strong>:<br/>
            Information written by the child process to its standard error
             stream is sent to <em>/dev/null</em>. An <em>std::invalid_argument</em>
             exception is thrown if this mode is specified in combination with
             <strong>DIRECT, CERR</strong> and/or <strong>MERGE_COUT_CERR</strong>.
-        <li> <strong>IGNORE_COUT</strong>:<br>
+        <li> <strong>IGNORE_COUT</strong>:<br/>
            Information written by the child process to its standard output
             stream is sent to <em>/dev/null</em>. An <em>std::invalid_argument</em>
             exception is thrown if this mode is specified in combination with
             <strong>COUT, DIRECT</strong> and/or <strong>MERGE_COUT_CERR</strong>.
-        <li> <strong>IGNORE_COUT_CERR</strong>:<br>
+        <li> <strong>IGNORE_COUT_CERR</strong>:<br/>
            Shortcut for <em>IGNORE_CERR | IGNORE_COUT</em>.
-        <li> <strong>MERGE_COUT_CERR</strong>:<br>
+        <li> <strong>MERGE_COUT_CERR</strong>:<br/>
            Information extracted from the <em>Process</em> object is written by the
             child process to its standard output and standard error streams.
             An <em>std::invalid_argument</em> exception is thrown if this mode is
             specified in combination with <strong>COUT, CERR, DIRECT, IGNORE_COUT</strong>
             or <em>IGNORE_CERR</em>.
-        <li> <strong>NONE</strong>:<br>
+        <li> <strong>NONE</strong>:<br/>
            The <em>Process</em> object does not extract information from or insert
             information into the standard streams of its child process. The
             child process reads the same standard input stream and writes the
@@ -229,19 +229,19 @@ The following symbolic constants are available:
             <em>IOMode</em> values it is silently ignored.  
         </ul>
 <p>
-<strong>enum ChildOutput</strong>:<br>
+<strong>enum ChildOutput</strong>:<br/>
        The <em>ChildOutput</em> enumeration defines values returned by the
 <em>available</em> member (see below) indicating to which standard stream the
 child process has written information.  This enumeration defines the following
 values:
         <ul>
-        <li> <strong>NOTHING_AVAILABLE</strong>:<br>
+        <li> <strong>NOTHING_AVAILABLE</strong>:<br/>
            The child process did not (yet) write any information to its
             standard streams;
-        <li> <strong>CHILD_COUT</strong>:<br>
+        <li> <strong>CHILD_COUT</strong>:<br/>
            The child process wrote information to its standard output
             stream which is waiting for extraction.
-        <li> <strong>CHILD_CERR</strong>:<br>
+        <li> <strong>CHILD_CERR</strong>:<br/>
            The child process wrote information to its standard error stream
             which is waiting for extraction.
         </ul>
@@ -294,19 +294,19 @@ After constructing a <em>Process</em> object its parameters can be changed
 using <em>set</em>-member functions, function call operators or <em>start</em> members. 
 <p>
 <ul>
-    <li> <strong>Process(std::string const &amp;cmd = "")</strong>:<br>
+    <li> <strong>Process(std::string const &amp;cmd = "")</strong>:<br/>
        This constructor is used to specify the (initial part of a) command to
 execute from a <em>Process</em> object. Default values are used for the
 process parameters (see section <strong>PROCESS PARAMETERS</strong>).
 <p>
-<li> <strong>Process(size_t mode, std::string const &amp;cmd = "")</strong>:<br>
+<li> <strong>Process(size_t mode, std::string const &amp;cmd = "")</strong>:<br/>
         This constructor requires the specification of the object's 
 <strong>IOMode</strong>, and it can be used to specify the (initial part of
 a) command to execute from a <em>Process</em> object. Default values
 are used for the remaining process parameters (see section <strong>PROCESS
 PARAMETERS</strong>). 
 <p>
-<li> <strong>Process(size_t mode, ProcessType type, std::string const &amp;cmd = "")</strong>:<br>
+<li> <strong>Process(size_t mode, ProcessType type, std::string const &amp;cmd = "")</strong>:<br/>
         This constructor requires the specification of the object's
 <strong>IOMode</strong> and <em>ProcessType</em>, and it can be used to specify the (initial
 part of a) command to execute from a <em>Process</em> object.  Default values are
@@ -314,7 +314,7 @@ used for the remaining process parameters (see section <strong>PROCESS
 PARAMETERS</strong>).
 <p>
 <li> <strong>Process(size_t mode, ProcessType type, size_t timeLimit, 
-std::string const &amp;cmd = "")</strong>:<br>
+std::string const &amp;cmd = "")</strong>:<br/>
         This constructor requires the specification of the object's
 <strong>IOMode</strong>, <em>ProcessType</em>, and child process time limit. The (initial part
 of a) command to execute from a <em>Process</em> object may optionally be
@@ -322,7 +322,7 @@ specified. The default process parameter is used for the sizes of the
 internally used stream buffers (see section <strong>PROCESS PARAMETERS</strong>).
 <p>
 <li> <strong>Process(IOMode mode, ProcessType type, size_t timeLimit, size_t
-        bufferSize, std::string const &amp;cmd = "")</strong>:<br>
+        bufferSize, std::string const &amp;cmd = "")</strong>:<br/>
         This constructor requires the specification of the object's
 <strong>IOMode</strong>, <em>ProcessType</em>, child process time limit, and size of the
 internally used stream buffers. The (initial part of a) command to execute
@@ -334,7 +334,7 @@ constructor's <em>mode</em> parameter does not accept a <em>size_t</em> argument
 <h2>OVERLOADED OPERATORS</h2>
 <p>
 <ul>
-    <li> <strong>Process &amp;operator&lt;&lt;(Type value)</strong>:<br>
+    <li> <strong>Process &amp;operator&lt;&lt;(Type value)</strong>:<br/>
         This operator inserts <em>value</em> into the child's standard
 input stream. I.e., the child process reads <em>value</em> from its standard
 input. A value of any type that can be inserted into an <em>ostream</em> can be
@@ -342,7 +342,7 @@ inserted into a <em>Process</em> object. Nothing happens if the member is used w
 the child process has terminated. The behavior of this operator is undefined
 unless <em>IOMode CIN</em> was specified.
 <p>
-<li> <strong>Process &amp;operator&gt;&gt;(Type value)</strong>:<br>
+<li> <strong>Process &amp;operator&gt;&gt;(Type value)</strong>:<br/>
         This operator extracts <em>value</em> from the child's standard output
 stream and optionally (if <em>IOMode MERGE_COUT_CERR</em> was specified) from the
 child's error stream. I.e., <em>value</em> may be extracted from <em>Process</em>
@@ -351,7 +351,7 @@ can be extracted from a <em>Process</em> object. Nothing happens if the member i
 used when the child process has terminated. The behavior of this operator is
 undefined unless <em>IOMode COUT</em> or <em>MERGE_COUT_CERR</em> was specified.
 <p>
-<li> <strong>Process &amp;operator+=(std::string const &amp;)</strong>:<br>
+<li> <strong>Process &amp;operator+=(std::string const &amp;)</strong>:<br/>
        This operator adds the provided <em>std::string</em> object to the currenly
 defined command specification of a <em>Process</em> object. The member
 <em>operator+=</em> does not add a separating blank space between the currently
@@ -359,14 +359,14 @@ stored command specification and the text to append.  It merely adds its
 right-hand side string to the command stored so far. It does not affect a
 currently running child process.
 <p>
-<li> <strong>int operator=(std::string const &amp;cmd)</strong>:<br>
+<li> <strong>int operator=(std::string const &amp;cmd)</strong>:<br/>
        The <em>operator=</em> member defines <em>cmd</em> as the  stored command in
 a <em>Process</em> object.  
 <p>
 Before starting the child process a possibly active child process is first
 stopped by calling <em>stop</em>. It returns <em>stop</em>'s return value.
 <p>
-<li> <strong>Process &amp;operator()(IOMode mode)</strong>:<br>
+<li> <strong>Process &amp;operator()(IOMode mode)</strong>:<br/>
         This operator changes the the <em>Process</em> object's <em>IOMode</em>
 parameter. A reference to the <em>Process</em> object is returned, allowing
 constructions like
@@ -378,22 +378,22 @@ constructions like
 
     to start a new child process with the specified <em>IOMode</em>. 
 <p>
-<li> <strong>Process &amp;operator()(IOMode mode, ProcessType type)</strong>:<br>
+<li> <strong>Process &amp;operator()(IOMode mode, ProcessType type)</strong>:<br/>
         This operator changes the <em>Process</em> object's <em>IOMode</em> and
 <em>ProcessType</em> process parameters.
 <p>
-<li> <strong>Process &amp;operator()(size_t mode, ProcessType type, size_t timeLimit)</strong>:<br>
+<li> <strong>Process &amp;operator()(size_t mode, ProcessType type, size_t timeLimit)</strong>:<br/>
         This operator changes the <em>Process</em> object's mentioned process
 parameters, silently converting the <em>size_t mode</em> to an <em>IOMode</em>
 value. The currently specified default size of the stream buffers is kept
 as-is.
 <p>
 <li> <strong>Process &amp;operator()(IOMode mode, ProcessType type, size_t timeLimit,
-        size_t bufferSize)</strong>:<br>
+        size_t bufferSize)</strong>:<br/>
         This operator changes all of the <em>Process</em> object's process
 parameters.
 <p>
-<li> <strong>Process &amp;operator|(Process &amp;lhs, Process &amp;rhs)</strong>:<br>
+<li> <strong>Process &amp;operator|(Process &amp;lhs, Process &amp;rhs)</strong>:<br/>
         This operator implements process <em>piping</em>: information sent b
 <em>lhs</em> to its standard output becomes the <em>rhs</em>'s standard input. The
 operator returns <em>rhs</em>. 
@@ -462,11 +462,11 @@ available.
 <h2>MEMBERS</h2>
 <p>
 <ul>
-    <li> <strong>bool active()</strong>:<br>
+    <li> <strong>bool active()</strong>:<br/>
         This member returns <em>true</em> if the child process is currently running
 and <em>false</em> if not.
 <p>
-<li> <strong>size_t available()</strong>:<br>
+<li> <strong>size_t available()</strong>:<br/>
         This member returns immediately. Its return value indicates whether
 any information can be obtained from the child process as value(s) from the
 <em>enum ChildOutput</em>. <em>NOTHING_AVAILABLE</em> is returned if no information is
@@ -485,7 +485,7 @@ pending information. E.g.,
 </pre>
 
 <p>
-<li> <strong>size_t bufSize() const</strong>:<br>
+<li> <strong>size_t bufSize() const</strong>:<br/>
         This member returns the default size of the stream buffers that are
 used for communication with child processes. If called while a child process
 is actually running, then the value returned by this member may differ from
@@ -493,16 +493,16 @@ the value that was actually used when starting the child process, as the
 default value may be altered by a function call operator just before starting
 the child process.
 <p>
-<li> <strong>std::istream &amp;cerr()</strong>:<br>
-        This member should be avoided. Use <em>childErrStream</em> instead.<br>
+<li> <strong>std::istream &amp;cerr()</strong>:<br/>
+        This member should be avoided. Use <em>childErrStream</em> instead.<br/>
 <p>
-<li> <strong>std::istream &amp;childErrStream()</strong>:<br>
+<li> <strong>std::istream &amp;childErrStream()</strong>:<br/>
         If <em>Process::CERR</em> was specified then this member interfaces
 to the child's standard error stream. By extracting the information from
 <em>childErrStream</em> the parent process retrieves the information sent by its
 child process to its standard error stream.
 <p>
-<li> <strong>std::istream &amp;childOutStream()</strong>:<br>
+<li> <strong>std::istream &amp;childOutStream()</strong>:<br/>
         If <em>Process::COUT</em> or
 <em>Process::MERGE_COUT_CERR</em> was specified then this member interfaces
 to the child's standard output stream. By extracting the information from
@@ -518,7 +518,7 @@ stream buffer in statements like
 </pre>
 
 <p>
-<li> <strong>void close()</strong>:<br>
+<li> <strong>void close()</strong>:<br/>
         This member closes the child's input stream. In situations where the
 child continuously reads information from its standard input stream this
 member can be used to inform the child process that input has terminated. This
@@ -526,7 +526,7 @@ member should only be used when <em>IOMode CIN</em> was specified for the curren
 running child process; otherwise its behavior is undefined. Alternatively, the
 <em>eoi</em> member or manipulator may be used.
 <p>
-<li> <strong>void eoi()</strong>:<br>
+<li> <strong>void eoi()</strong>:<br/>
         This member closes the child's input stream, and then calls
 <em>waitForChild</em> to wait for the child process to end. In situations where the
 child continuously reads information from its standard input stream this
@@ -535,27 +535,27 @@ member should only be used when <em>IOMode CIN</em> was specified for the curren
 running child process; otherwise its behavior is undefined. Alternatively, the
 <em>close</em> member or <em>eoi</em> manipulator may be used.
 <p>
-<li> <strong>std::istream &amp;errStream()</strong>:<br>
+<li> <strong>std::istream &amp;errStream()</strong>:<br/>
         This member may be used to extract information written by the child
 process to its standard error stream.  This member should only be used when
 <em>IOMode CERR</em> was specified for the currently running child process;
-otherwise its behavior is undefined.<br>
+otherwise its behavior is undefined.<br/>
 <p>
-<li> <strong>IOMode ioMode() const</strong>:<br>
+<li> <strong>IOMode ioMode() const</strong>:<br/>
         This member returns the default <em>IOMode</em>. If called while a child
 process is actually running, then the value returned by this member may differ
 from the value that was actually used when starting the child process, as the
 default value may be altered by a function call operator just before starting
 the child process.
 <p>
-<li> <strong>ProcessType processType() const</strong>:<br>
+<li> <strong>ProcessType processType() const</strong>:<br/>
         This member returns the default <em>ProcessType</em> of child proceses. If
 called while a child process is actually running, then the value returned by
 this member may differ from the value that was actually used when starting the
 child process, as the default value may be altered by a function call operator
 just before starting the child process.
 <p>
-<li> <strong>size_t timeLimit() const</strong>:<br>
+<li> <strong>size_t timeLimit() const</strong>:<br/>
         This member returns the default time limit (in seconds) of child
 processes. A return value of zero indicates that no time limit is enforced. If
 called while a child process is actually running, then the value returned by
@@ -563,13 +563,13 @@ this member may differ from the value that was actually used when starting the
 child process, as the default value may be altered by a function call operator
 just before starting the child process.
 <p>
-<li> <strong>void setBufSize(size_t bufSize)</strong>:<br>
+<li> <strong>void setBufSize(size_t bufSize)</strong>:<br/>
         This member changes the default stream buffer size that is used for
 communication with child processes. A zero byte buffer size is silently
 changed into one. The new default value will be used when starting the next
 child process.
 <p>
-<li> <strong>void setCommand(std::string const &amp;cmd)</strong>:<br>
+<li> <strong>void setCommand(std::string const &amp;cmd)</strong>:<br/>
        The <em>setCommand</em> member (re)defines the (initial part of a) child
 process command specification.
 <p>
@@ -578,21 +578,21 @@ may be used to append additional text to the command specification. Also, this
 member may be used when a child process is currently active: its use does not
 affect a currently running child process.
 <p>
-<li> <strong>void setIOMode(iomode mode)</strong>:<br>
+<li> <strong>void setIOMode(iomode mode)</strong>:<br/>
         This member changes the default <em>IOMode</em>. The new default value will
 be used when starting the next child process.
 <p>
-<li> <strong>void setProcessType(ProcessType type)</strong>:<br>
+<li> <strong>void setProcessType(ProcessType type)</strong>:<br/>
         This member changes the default <em>ProcessType</em>. The new default value
 will be used when starting the next child process.
 <p>
-<li> <strong>void setTimeLimit(size_t timeLimit)</strong>:<br>
+<li> <strong>void setTimeLimit(size_t timeLimit)</strong>:<br/>
         This member changes the default execution time limit (in seconds). No
 time limit will be imposed upon child processes if <em>timeLimit 0</em> is
 specified. The new default value will be used when starting the next child
 process.
 <p>
-<li> <strong>void start()</strong>:<br>
+<li> <strong>void start()</strong>:<br/>
         The currently specified command is started using the <em>Process</em>
 object's process parameters. 
 <p>
@@ -606,19 +606,19 @@ when it has run for its alloted time; when the <em>Process</em> object's <em>sta
 or <em>stop</em> members are called; when the object's assignment operator is used;
 or when the object goes out of scope.
 <p>
-<li> <strong>void start(IOMode mode)</strong>:<br>
+<li> <strong>void start(IOMode mode)</strong>:<br/>
        The currently specified command is started using the specified
 <em>IOMode</em>, but otherwise using the currently configured <em>Process</em> object's
 process parameters. The specified <em>IOMode</em> is only used for the child
 process that is started by this member.
 <p>
-<li> <strong>void start(IOMode mode, ProcessType type)</strong>:<br>
+<li> <strong>void start(IOMode mode, ProcessType type)</strong>:<br/>
        The currently specified command is started using the specified
 <em>IOMode</em> and <em>ProcessType</em>, but otherwise using the currently configured
 <em>Process</em> object's process parameters. The specified process parameter
 values are only used for the child process that is started by this member.
 <p>
-<li> <strong>void start(size_t mode, Program program, size_t timeLimit)</strong>:<br>
+<li> <strong>void start(size_t mode, Program program, size_t timeLimit)</strong>:<br/>
        The currently specified command is started using the specified
 <em>IOMode</em>, <em>ProcessType</em>, and time limit (silently converting the <em>size_t
 mode</em> to an <em>IOMode</em> value), and using the currently configured <em>Process</em>
@@ -626,44 +626,44 @@ object's stream buffer size parameter. The specified process parameter values
 are only used for the child process that is started by this member.
 <p>
 <li> <strong>void start(IOMode mode, Program program, size_t timeLimit, size_t
-        bufferSize)</strong>:<br> 
+        bufferSize)</strong>:<br/> 
        The currently specified command is started using the specified process
 parameters. The specified parameter values are only used for the child process
 that is started by this member.
 <p>
-<li> <strong>void showMode(char const *lab) const</strong>:<br>
+<li> <strong>void showMode(char const *lab) const</strong>:<br/>
         This member displays the label <em>lab</em>, followed by the current
 process ID, followed by the child process's process ID, followed by a textual
 representation of the currently active <em>IOMode</em>.
 <p>
-<li> <strong>std::string const &amp;str() const</strong>:<br>
+<li> <strong>std::string const &amp;str() const</strong>:<br/>
         This member returns the contents of the current child process command
 specification. It shows the command as it will be (or has been) executed by
 <em>start</em>, <em>system</em> or the assignment operator. 
 <p>
-<li> <strong>void system()</strong>:<br>
+<li> <strong>void system()</strong>:<br/>
         This member executes the currently stored command as a command to
 <strong>sh</strong>(1).  When using <em>system</em> redirections can be included in the command
 itself (this renders the redirected streams implied by the current <strong>IOMode</strong>)
 useless. The currently set process parameters are used when <strong>sh</strong>(1) is
 executed.
 <p>
-<li> <strong>void system(IOMode mode)</strong>:<br>
+<li> <strong>void system(IOMode mode)</strong>:<br/>
         This member executes the currently stored command as a command to
 <strong>sh</strong>(1) (cf. <em>system</em> above) using the specified <em>IOMode</em> rather than
 the current default <em>IOMode</em> setting.
 <p>
-<li> <strong>void system(IOMode mode, size_t timeLimit)</strong>:<br>
+<li> <strong>void system(IOMode mode, size_t timeLimit)</strong>:<br/>
         This member executes the currently stored command as a command to
 <strong>sh</strong>(1) (cf. <em>system</em> above) using the specified <em>IOMode</em> and time
 limit.
 <p>
-<li> <strong>void system(IOMode mode, size_t timeLimit, size_t bufSize)</strong>:<br>
+<li> <strong>void system(IOMode mode, size_t timeLimit, size_t bufSize)</strong>:<br/>
         This member executes the currently stored command as a command to
 <strong>sh</strong>(1) (cf. <em>system</em> above) using the specified <em>IOMode</em>, time
 limit, and stream buffer size values.
 <p>
-<li> <strong>int stop()</strong>:<br>
+<li> <strong>int stop()</strong>:<br/>
        This member terminates a currently active child process. The child
 process is twice sent a <em>SIG_TERM</em> signal, followed by a <em>SIG_KILL</em>
 signal. This member returns the exit-value of the child process that was
@@ -676,7 +676,7 @@ When the intention is to start another child process, then there's no need to
 call <em>stop</em> explicitly. Also, <em>stop</em> is called when the <em>Process</em> object
 goes out of scope.
 <p>
-<li> <strong>int waitForChild()</strong>:<br>
+<li> <strong>int waitForChild()</strong>:<br/>
         This member is inherited from the class <em>FBB::Fork</em>. It waits for a
 child process to end. It is called to prevent premature termination of a
 child process before calling <em>stop</em>. It is not always necessary to call
@@ -687,7 +687,7 @@ calling <em>waitForChild</em>.
 <p>
 <h2>MANIPULATOR</h2>
     <ul>
-    <li> <strong>FBB::eoi</strong>:<br>
+    <li> <strong>FBB::eoi</strong>:<br/>
         This manipulator may be inserted into a <em>Process</em> object for which
 <em>IOMode CIN</em> was specified. It closes the child's input stream, and then
 calls <em>waitForChild</em> to wait for the child process to end. In situations
@@ -807,12 +807,12 @@ objects. No recompilation of existing sources using <em>Process</em> is required
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

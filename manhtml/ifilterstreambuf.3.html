@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::IFilterStreambuf</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::IFilterStreambuf</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::IFilterStreambuf(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz Filtering Input Stream Buffer</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::IFilterStreambuf(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Filtering Input Stream Buffer</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::IFilterStreambuf - Filtering stream buffer initialized by a std::istream object
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/ifilterstreambuf&gt;</strong><br>
+    <strong>#include &lt;bobcat/ifilterstreambuf&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -74,7 +74,7 @@ classes that are derived from <strong>IFilterStreambuf</strong>, implementing it
 virtual <em>load</em> member (see below at <strong>PRIVATE VIRTUAL MEMBER FUNCTIONS</strong>).
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -90,7 +90,7 @@ Overloaded move and/or copy assignment operators are not available.
 <p>
 <h2>PROTECTED CONSTRUCTOR</h2>
     <ul>
-    <li> <strong>IFilterStreambuf(size_t bufSize = 1000)</strong>:<br>
+    <li> <strong>IFilterStreambuf(size_t bufSize = 1000)</strong>:<br/>
         This constructor initializes the streambuf, using a buffer of the
 indicated size. While the streambuf is being used, its buffer is gradually
 filled. Eventually, when it is full the oldest characters are removed from the
@@ -103,7 +103,7 @@ ensures that the size of the buffer will always be at least 100.
 <h2>PROTECTED MEMBER FUNCTION</h2>
 <p>
 <ul>
-    <li> <strong>void setBuffer()</strong>:<br>
+    <li> <strong>void setBuffer()</strong>:<br/>
         This member initializes the base class's buffer pointers (i.e.,
 <em>eback, gptr,</em> and <em>egptr</em>) with the initial range of characters retrieved
 by <em>filter</em> (see below). 
@@ -120,7 +120,7 @@ been performed. If it is not called by the derived class's constructor, then
 <h2>PRIVATE VIRTUAL MEMBER FUNCTIONS</h2>
 <p>
 <ul>
-    <li> <strong>virtual bool filter(char const **srcBegin, char const **srcEnd) = 0</strong>:<br>
+    <li> <strong>virtual bool filter(char const **srcBegin, char const **srcEnd) = 0</strong>:<br/>
         The <em>filter</em> member is declared as a pure virtual member: derived
 classes <em>must</em> override <em>filter</em> with their own implementation. 
 <p>
@@ -143,16 +143,16 @@ The <em>filter</em> member should return <em>false</em> if no (more) information
 available. It should return <em>true</em> if information is available, in which
 case <em>*srcBegin</em> and <em>*srcEnd</em> should be pointing to, respectively, the
 first character and beyond the last character made available by <em>filter</em>;
-    <li> <strong>int pbackfail() final override</strong>:<br>
+    <li> <strong>int pbackfail() final override</strong>:<br/>
         The <em>pbackfail</em> member is final; derived classes cannot override
 it. Currently it merely returns <em>EOF</em>. This may change in future
 implementations. 
-    <li> <strong>std::streamsize showmanyc() final override</strong>:<br>
+    <li> <strong>std::streamsize showmanyc() final override</strong>:<br/>
         The <em>showmanyc</em> member is final; derived classes cannot override
 it. It returns the current number of characters that are (still) waiting to
 be processed in the range of characters returned by the latest <em>filter</em>
 call. 
-    <li> <strong>int underflow() final override</strong>:<br>
+    <li> <strong>int underflow() final override</strong>:<br/>
         The <em>underflow</em> member is final; derived classes cannot override
 it. It calls <em>filter</em>, and refreshes at most
 half the size of its internal buffer with characters from the range of
@@ -254,12 +254,12 @@ int main()
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

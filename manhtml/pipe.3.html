@@ -8,10 +8,10 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Pipe</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Pipe</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
+<h2 id="date">2005-2015</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -24,8 +24,8 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1></h1>
+<hr/>
+<h1 id="title"></h1>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -41,17 +41,17 @@
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
-<hr>
-<h1>FBB::Pipe(3bobcat)</h1>
-<h2>libbobcat-dev_4.01.03-x.tar.gz System Level Communication Pipe</h2>
-<h2>2005-2015</h2>
+<hr/>
+<h1 id="title">FBB::Pipe(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz System Level Communication Pipe</h2>
+<h2 id="date">2005-2015</h2>
 
 
 <p>
 <h2>NAME</h2>FBB::Pipe - Defines a system level communication pipe
 <p>
 <h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/pipe&gt;</strong><br>
+    <strong>#include &lt;bobcat/pipe&gt;</strong><br/>
     Linking option: <em>-lbobcat</em> 
 <p>
 <h2>DESCRIPTION</h2>
@@ -79,7 +79,7 @@ could be derived from <strong>Pipe</strong>(3bobcat), whose destructor performs 
 required closing-operation.
 <p>
 <h2>NAMESPACE</h2>
-    <strong>FBB</strong><br>
+    <strong>FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
 man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
@@ -88,7 +88,7 @@ man-page, are defined in the namespace <strong>FBB</strong>.
 <p>
 <h2>CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>Pipe()</strong>:<br>
+    <li> <strong>Pipe()</strong>:<br/>
         The default <em>Pipe</em> constructor constructs a basic pipe, calling
 <strong>pipe</strong>(2). 
 <p>
@@ -97,7 +97,7 @@ constructor did not properly complete.  The thrown <strong>Exception</strong> ob
 <em>which()</em> member shows the system's <em>errno</em> value set by the failing
 <strong>pipe</strong>(2) function.
 <p>
-<li> <strong>Pipe(int const *fd)</strong>:<br>
+<li> <strong>Pipe(int const *fd)</strong>:<br/>
         This constructor expects two file descriptors, which already define a
 pipe, stored at <em>fd</em>. Following the construction of the <em>Pipe</em> object 
 the array at by <em>fd</em> is no longer used by the <em>Pipe</em> object.
@@ -107,10 +107,10 @@ the array at by <em>fd</em> is no longer used by the <em>Pipe</em> object.
 <h2>MEMBER FUNCTIONS</h2>
 <p>
 <ul>
-    <li> <strong>int readFd() const</strong>:<br>
+    <li> <strong>int readFd() const</strong>:<br/>
         Returns the pipe's file descriptor that is used for reading
 <p>
-<li> <strong>void readFrom(int filedescriptor)</strong>:<br>
+<li> <strong>void readFrom(int filedescriptor)</strong>:<br/>
         Sets up redirection from the internal <em>read</em> filedescriptor to the
 given filedescriptor: information written to the write-end of the pipe may be
 retrieved by extracting the information from the stream that is associated
@@ -118,24 +118,24 @@ with the indicated file descriptor. E.g., after the call
 <em>readFrom(STDIN_FILENO)</em> information  inserted into the
 write-end of the pipe can be retrieved from <em>cin</em>.
 <p>
-<li> <strong>void readFrom(int const *filedescriptors, size_t n)</strong>:<br>
+<li> <strong>void readFrom(int const *filedescriptors, size_t n)</strong>:<br/>
         Sets up redirection from the internal <em>read</em> filedescriptor to the
 given filedescriptors: information is read from the <em>Pipe</em> object when
 reading from any of the <strong>n</strong> provided filedescriptors (experimental).
 <p>
-<li> <strong>int readOnly()</strong>:<br>
+<li> <strong>int readOnly()</strong>:<br/>
         Closes the writing end of the pipe, returns the reading end's file
 descriptor. This member can be used, e.g., to construct an <em>IFdStream</em>
 object to extract the information that is inserted into the write-end of the
 pipe. 
 <p>
-<li> <strong>void verify() const</strong>:<br>
+<li> <strong>void verify() const</strong>:<br/>
         Obsoleted, can safely be removed from source files.
 <p>
-<li> <strong>int writeFd() const</strong>:<br>
+<li> <strong>int writeFd() const</strong>:<br/>
         Returns the pipe's file descriptor that is used for writing.
 <p>
-<li> <strong>void writtenBy(int filedescriptor)</strong>:<br>
+<li> <strong>void writtenBy(int filedescriptor)</strong>:<br/>
         Sets up redirection from the internal <em>write</em> filedescriptor to the
 given filedescriptor: information is  written to the <em>Pipe</em> object when
 writing to the provided filedescriptor. E.g., after the call
@@ -143,7 +143,7 @@ writing to the provided filedescriptor. E.g., after the call
 either <em>cout</em> or by a child process (cf. <strong>exec</strong>(3))) is inserted into the
 write-end of the pipe.
 <p>
-<li> <strong>void writtenBy(int const *filedescriptors, size_t n)</strong>:<br>
+<li> <strong>void writtenBy(int const *filedescriptors, size_t n)</strong>:<br/>
         Sets up redirection from the internal <em>write</em> filedescriptor to the
 given filedescriptors: information is inserted into the write-end of the
 <em>Pipe</em> object when writing to each of the <strong>n</strong> provided filedescriptors.
@@ -152,7 +152,7 @@ E.g., when passing an array of two <em>int</em> values, respectively equal to
 is thereafter sent to the standard output or error streams is inserted into
 the write-end of the pipe.
 <p>
-<li> <strong>int writeOnly()</strong>:<br>
+<li> <strong>int writeOnly()</strong>:<br/>
         Closes the reading end of the pipe, returns the writing end's file
 descriptor. 
     </ul>
@@ -161,18 +161,18 @@ descriptor.
     The <strong>RW</strong> protected enumeration has the following elements:
 <p>
 <ul>
-    <li> <strong>READ</strong>:<br>
+    <li> <strong>READ</strong>:<br/>
         The index in <strong>d_fd[]</strong> (see below) of the element holding the pipe's
 reading file descriptor;
 <p>
-<li> <strong>WRITE</strong>:<br>
+<li> <strong>WRITE</strong>:<br/>
         The index in <strong>d_fd[]</strong> (see below) of the element holding the pipe's
 writing file descriptor
     </ul>
 <p>
 <h2>PROTECTED DATA</h2>
     <ul>
-    <li> <strong>int d_fd[2]</strong>:<br> 
+    <li> <strong>int d_fd[2]</strong>:<br/> 
         The array holding the pipe's file descriptors. The <strong>READ</strong> element
 contains the pipe's reading file descriptor, the <strong>WRITE</strong> element
 contains the pipe's writing file descriptor,
@@ -248,12 +248,12 @@ closing-operation.
 
 <h2>DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.03-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.03-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.03-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
+    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
+    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
+    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.03-x_*.deb</em>: debian package holding the
+    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
