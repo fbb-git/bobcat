@@ -80,6 +80,19 @@ manpagesection(MEMBER FUNCTIONS)
         return. When multiple threads are waiting only one thread will stop
         waiting, while the remaining threads will continue to wait for another
         notification.
+    itb(bool wait(Fun fun, Params &&...args))
+       This is a member template, where tt(Fun) is a function (object)
+        receiving the argument passed to tt(wait), and returning a
+        tt(bool). This member blocks until it has obtained the tt(Semaphore's)
+        mutex lock, then, while its tt(available) value equals 0, waits until
+        being notified. Once it has reacquired the lock after being notified
+        tt(fun) is called, receiving tt(wait's) perfectly forwarded remaining
+        arguments. This member returns tt(false) if tt(fun) returns
+        tt(false). It returns tt(true) if tt(fun) returns tt(true) and
+        tt(available) was unequal zero following tt(fun) returning
+        tt(true). The function may therefore perform tasks outside of the
+        tt(Semaphore) local environment, which might even involve updating the
+        tt(Semaphore's) tt(available) value.
     itb(std::cv_status wait_for(std::chrono::duration<Rep, Period> const
                                                                 &relTime))
        This member blocks for as long as the internally stored value
