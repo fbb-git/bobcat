@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::TableSupport</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,70 +43,70 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::TableSupport(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Table Support Base class</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Table Support Base class</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::TableSupport - Defines protocols for Table-support classes
+<h2 >NAME</h2>FBB::TableSupport - Defines protocols for Table-support classes
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/tableSupport&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/tableSupport&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
+<h2 >DESCRIPTION</h2>
     This class is designed as a (non-pure) base class for objects handling
-some of the functionality of <em>FBB::Table</em> and <em>FBB::TableBuf</em> objects. By
+some of the functionality of <em >FBB::Table</em> and <em >FBB::TableBuf</em> objects. By
 overriding its virtual functions users have control over the way the actual
 layout of tables is defined. By default the virtual members of this class
 do not separate the columns of the table from each other
 <p>
-The Bobcat library offers the specialized class <em>TableLines</em> extending the
-basic facilities of <em>TableSupport</em> by allowing rows to be separated from
-each other by (partial) horizontal lines (see the <strong>tablelines</strong>(3bobcat)
+The Bobcat library offers the specialized class <em >TableLines</em> extending the
+basic facilities of <em >TableSupport</em> by allowing rows to be separated from
+each other by (partial) horizontal lines (see the <strong >tablelines</strong>(3bobcat)
 man-page for a description).
 <p>
 When more specialized handling is required a class should be derived from
-<strong>FBB::TableSupport</strong> overriding those members that violate the programmer's
+<strong >FBB::TableSupport</strong> overriding those members that violate the programmer's
 current intentions. An object of this derived class may be presented to a
-<em>FBB::Table</em> or <em>FBB::TableBuf</em> constructor, to activate the special
+<em >FBB::Table</em> or <em >FBB::TableBuf</em> constructor, to activate the special
 handling. 
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
+<h2 >INHERITS FROM</h2>
     -
 <p>
-<h2>ENUMERATION</h2>
+<h2 >ENUMERATION</h2>
 <p>
-The enum <em>ColumnType</em> defines the following values (see also the
-description of the <em>struct HLine</em>, below):
+The enum <em >ColumnType</em> defines the following values (see also the
+description of the <em >struct HLine</em>, below):
     <ul>
-    <li> <strong>SKIP</strong>:<br/>   a section of a row-separating line should remain empty. This
+    <li> <strong >SKIP</strong>:<br/>   a section of a row-separating line should remain empty. This
                 value is normally not used by applications;
-    <li> <strong>USE</strong>:<br/>    a section of a row-separating line should be used (e.g., by
+    <li> <strong >USE</strong>:<br/>    a section of a row-separating line should be used (e.g., by
                   writing a (horizontal) line);
-    <li> <strong>LEFT_FULL</strong>:<br/> a (horizontal) line should be written over the total width
+    <li> <strong >LEFT_FULL</strong>:<br/> a (horizontal) line should be written over the total width
                 of the separator to the left of a series of columns
-    <li> <strong>RIGHT_FULL</strong>:<br/> a (horizontal) line should be written over the total width
+    <li> <strong >RIGHT_FULL</strong>:<br/> a (horizontal) line should be written over the total width
                 of the separator to the right of a series of columns;
-    <li> <strong>LEFT_MID</strong>:<br/> a (horizontal) line should be written over the right-half
+    <li> <strong >LEFT_MID</strong>:<br/> a (horizontal) line should be written over the right-half
                 part of the width of the separator to the left of a series of
                 columns; the left-hand part remains blank;
-    <li> <strong>RIGHT_MID</strong>:<br/> a (horizontal) line should be written over the left-half
+    <li> <strong >RIGHT_MID</strong>:<br/> a (horizontal) line should be written over the left-half
                 part of the width of the separator to the right of a series of
                 columns; the right-hand part remains blank;
     </ul>
-    The value <em>SKIP</em> should always be used by itself; remaining values of
-the enum may be combined using the binary or (<em>|</em>) operator.
+    The value <em >SKIP</em> should always be used by itself; remaining values of
+the enum may be combined using the binary or (<em >|</em>) operator.
 <p>
-<h2>PUBLIC TYPE</h2>
+<h2 >PUBLIC TYPE</h2>
 <p>
 <ul>
-    <li> <strong>struct HLine</strong>:<br/>
+    <li> <strong >struct HLine</strong>:<br/>
         This struct has the following fields:
         <pre>
 
@@ -119,220 +119,220 @@ the enum may be combined using the binary or (<em>|</em>) operator.
 
     It offers two constructors:
         <ul>
-        <li> <strong>HLine(size_t row, size_t begin, size_t end)</strong>:<br/>
-        <li> <strong>HLine(ColumnType type, size_t row, size_t begin, size_t end)</strong>:<br/>
+        <li> <strong >HLine(size_t row, size_t begin, size_t end)</strong>:<br/>
+        <li> <strong >HLine(ColumnType type, size_t row, size_t begin, size_t end)</strong>:<br/>
         </ul>
-    Objects of type <strong>TableSupport::HLine</strong> may be inserted into a
-<strong>TableSupport</strong> object to indicate section(s) of a horizontal separator
+    Objects of type <strong >TableSupport::HLine</strong> may be inserted into a
+<strong >TableSupport</strong> object to indicate section(s) of a horizontal separator
 between table rows that should be displayed or skipped. E.g., to specify that
 a separator should be written in row 1 between columns 2 up to (not including)
 5, extending the separator to the left by half the width of the separator
 between columns 1 and 2 and to the right by the full width of the separator
-between columns 4 and 5 the following <em>HLine</em> object should be inserted into
-the <em>TableSupport ts</em> object:
+between columns 4 and 5 the following <em >HLine</em> object should be inserted into
+the <em >TableSupport ts</em> object:
         <pre>
 ts &lt;&lt; HLine(LEFT_MID | RIGHT_FULL, 1, 2, 5);
 </pre>
 
-    Multiple <em>HLine</em> objects may be inserted into a <em>TableSupport</em> object,
+    Multiple <em >HLine</em> objects may be inserted into a <em >TableSupport</em> object,
 their ordering is irrelevant. When colum ranges overlap then their
-<em>ColumType</em>s are merged. 
+<em >ColumType</em>s are merged. 
     </ul>
 <p>
-<h2>PROTECTED TYPES</h2>
+<h2 >PROTECTED TYPES</h2>
 <p>
 <ul>
-    <li> <strong>const_iterator</strong>:<br/>
+    <li> <strong >const_iterator</strong>:<br/>
         This type is defined in the class's protected
-section. <strong>TableSupport::const_iterator</strong> is an input-iterator returning
-pointers to <strong>struct Field</strong> (see below) objects for table columns and column
-separators (see below at the <em>begin</em> and <em>end</em> members)
-    <li> <strong>struct Field</strong>:<br/>
-        This type has two data members: <em>width</em> and <em>type</em>, representing,
-respectively, the width and <em>ColumnType</em> of a column or
+section. <strong >TableSupport::const_iterator</strong> is an input-iterator returning
+pointers to <strong >struct Field</strong> (see below) objects for table columns and column
+separators (see below at the <em >begin</em> and <em >end</em> members)
+    <li> <strong >struct Field</strong>:<br/>
+        This type has two data members: <em >width</em> and <em >type</em>, representing,
+respectively, the width and <em >ColumnType</em> of a column or
 separating column. Although column types can be combined when inserting them
-using <em>HLine</em> objects, <em>type</em> values of <em>Field</em> objects returned by
-<em>TableSupport</em> members only contain single values (like <em>SKIP</em> or
-<em>LEFT_MID</em>). 
+using <em >HLine</em> objects, <em >type</em> values of <em >Field</em> objects returned by
+<em >TableSupport</em> members only contain single values (like <em >SKIP</em> or
+<em >LEFT_MID</em>). 
     </ul>
 <p>
-<h2>CONSTRUCTORS</h2>
+<h2 >CONSTRUCTORS</h2>
 <p>
 The default, copy and move constructors are available.
 <p>
-<h2>OVERLOADED OPERATORS</h2>
+<h2 >OVERLOADED OPERATORS</h2>
 <p>
 <ul>
-    <li> <strong>TableSupport &amp;operator&lt;&lt;(TableSupport &amp;support, size_t width)</strong>:<br/>
-        This operator defines a column-separator of <em>width</em> space
-characters. The argument <em>width</em> may be zero, in which case no visible
+    <li> <strong >TableSupport &amp;operator&lt;&lt;(TableSupport &amp;support, size_t width)</strong>:<br/>
+        This operator defines a column-separator of <em >width</em> space
+characters. The argument <em >width</em> may be zero, in which case no visible
 separator is used. The first separator inserted refers to the separator to the
 left of the table's leftmost column. Subsequent separators separate subsequent
-columns. At most <em>nColumns + 1</em> separators can sensibly be inserted. 
+columns. At most <em >nColumns + 1</em> separators can sensibly be inserted. 
 Additional separators are ignored when a table is inserted into an
-<em>ostream</em>. 
-    <li> <strong>TableSupport &amp;operator&lt;&lt;(TableSupport &amp;support, 
+<em >ostream</em>. 
+    <li> <strong >TableSupport &amp;operator&lt;&lt;(TableSupport &amp;support, 
                                                 std::string const &amp;sep)</strong>:<br/>
         This operator defines a separator as a piece of text. The string may
 be empty, in which case no visible separator is inserted into the table. The
 first separator inserted refers to the separator to the left of the table's
 leftmost column. Subsequent separators separate subsequent columns. Textual
-and numeric separator may be intermixed. At most <em>nColumns + 1</em> separators
+and numeric separator may be intermixed. At most <em >nColumns + 1</em> separators
 can sensibly be inserted.  Additional separators are ignored when a table is
-inserted into an <em>ostream</em>.
-    <li> <strong>TableSupport &amp;operator&lt;&lt;(TableSupport &amp;support, HLine const &amp;hsep)</strong>:<br/>
+inserted into an <em >ostream</em>.
+    <li> <strong >TableSupport &amp;operator&lt;&lt;(TableSupport &amp;support, HLine const &amp;hsep)</strong>:<br/>
         This operator defines how a section of a horizontal separator of a
-specified row should be displayed (see the description of <em>ColumnType</em> in
-the <em>ENUMERATION</em> section).
+specified row should be displayed (see the description of <em >ColumnType</em> in
+the <em >ENUMERATION</em> section).
     </ul>
     The overloaded copy and move assignment operators are available.
 <p>
-<h2>PUBLIC MEMBER FUNCTIONS</h2>
+<h2 >PUBLIC MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong>void hline(size_t row) const</strong>:<br/>
-        When inserting a table into a <em>std::ostream</em> <em>Table</em> and
-<em>TableBuf</em> objects call this member just before the indicated row (offset)
-is inserted into a <em>std::ostream</em>. It calls <em>v_hline</em>, passing it <em>row</em>.
-    <li> <strong>void hline() const</strong>:<br/>
-        When inserting a table into a <em>std::ostream</em> <em>Table</em> and
-<em>TableBuf</em> objects call this member just after inserting the table's final
-row. It calls <em>v_hline</em> without arguments.
-    <li> <strong>void setParam(std::ostream &amp;ostr, size_t nRows, size_t nColumns,
+    <li> <strong >void hline(size_t row) const</strong>:<br/>
+        When inserting a table into a <em >std::ostream</em> <em >Table</em> and
+<em >TableBuf</em> objects call this member just before the indicated row (offset)
+is inserted into a <em >std::ostream</em>. It calls <em >v_hline</em>, passing it <em >row</em>.
+    <li> <strong >void hline() const</strong>:<br/>
+        When inserting a table into a <em >std::ostream</em> <em >Table</em> and
+<em >TableBuf</em> objects call this member just after inserting the table's final
+row. It calls <em >v_hline</em> without arguments.
+    <li> <strong >void setParam(std::ostream &amp;ostr, size_t nRows, size_t nColumns,
                         std::vector&lt;Align&gt; const &amp;align)</strong>:<br/>
-        This member provides the <strong>TableSupport</strong> object with values that are
-essential for its proper functioning.  It is called from the <em>Table</em> and
-<em>TableBuf</em>'s <em>def</em> member or manipulator.  A <em>TableSupport</em> object can
+        This member provides the <strong >TableSupport</strong> object with values that are
+essential for its proper functioning.  It is called from the <em >Table</em> and
+<em >TableBuf</em>'s <em >def</em> member or manipulator.  A <em >TableSupport</em> object can
 be used before that to specify widths and types of separators, though. This
-member's parameters are initialized by the <em>Table</em> and <em>TableBuf</em> class
+member's parameters are initialized by the <em >Table</em> and <em >TableBuf</em> class
 objects as follows:<br/>
-        <strong>ostr</strong> is a reference to the <strong>std::ostream</strong> into which the table
+        <strong >ostr</strong> is a reference to the <strong >std::ostream</strong> into which the table
             will be inserted; <br/>
-        <strong>nRows</strong> specifies  the number of rows used by the table;<br/>
-        <strong>nColumns</strong> specifies  the number of columns if the table;<br/>
-        <strong>align</strong> is a reference to a constant vector of (column) alignment
+        <strong >nRows</strong> specifies  the number of rows used by the table;<br/>
+        <strong >nColumns</strong> specifies  the number of columns if the table;<br/>
+        <strong >align</strong> is a reference to a constant vector of (column) alignment
 specifications.
-    <li> <strong>void vline(size_t col) const</strong>:<br/>
+    <li> <strong >void vline(size_t col) const</strong>:<br/>
         When inserting the data elements of the rows of a table into a
-<em>std::ostream</em> <em>Table</em> and <em>TableBuf</em> objects call this member just
-before inserting the data elements of column <em>col</em>.  Its intended task is to
+<em >std::ostream</em> <em >Table</em> and <em >TableBuf</em> objects call this member just
+before inserting the data elements of column <em >col</em>.  Its intended task is to
 write a column separator just before the data elements themselves. It calls
-<em>v_vline</em> passing it its <em>col</em> parameter.
-    <li> <strong>virtual void vline() const</strong>:<br/>
-        When inserting a table into a <em>std::ostream</em> <em>Table</em> and
-<em>TableBuf</em> objects call this member after inserting the data elements of the
-rows of the table. It is called at the end of each row. It calls <em>v_vline</em>
+<em >v_vline</em> passing it its <em >col</em> parameter.
+    <li> <strong >virtual void vline() const</strong>:<br/>
+        When inserting a table into a <em >std::ostream</em> <em >Table</em> and
+<em >TableBuf</em> objects call this member after inserting the data elements of the
+rows of the table. It is called at the end of each row. It calls <em >v_vline</em>
 without arguments.
-    <li> <strong>size_t width() const</strong>:<br/>
+    <li> <strong >size_t width() const</strong>:<br/>
         Returns the total width of the table.
     </ul>
 <p>
-<h2>PROTECTED MEMBER FUNCTIONS</h2>
+<h2 >PROTECTED MEMBER FUNCTIONS</h2>
 <p>
 The following members are available to classes derived from
-<strong>TableSupport</strong>. Except for <em>sep</em> and <em>sepWidth</em> their values are only
-defined after <em>setParam</em> has been called. This latter function is called
-from the <em>def</em> member or manipulator of <em>Table</em> or <em>TableBuf</em> objects. 
+<strong >TableSupport</strong>. Except for <em >sep</em> and <em >sepWidth</em> their values are only
+defined after <em >setParam</em> has been called. This latter function is called
+from the <em >def</em> member or manipulator of <em >Table</em> or <em >TableBuf</em> objects. 
 <p>
 <ul>
-    <li> <strong>std::vector&lt;Align&gt; const &amp;align() const</strong>:<br/>
-        A reference to a vector of <em>Align</em> objects, defining the alignments
+    <li> <strong >std::vector&lt;Align&gt; const &amp;align() const</strong>:<br/>
+        A reference to a vector of <em >Align</em> objects, defining the alignments
 and widths of the table's columns is returned.
-    <li> <strong>const_iterator begin(size_t row) const</strong>:<br/> 
+    <li> <strong >const_iterator begin(size_t row) const</strong>:<br/> 
         An iterator returning information about the first column element when
-displaying the horizontal separator preceding line <em>row</em> is returned.  To
-obtain the information about the separator beyond the last row <em>nRows()</em>
+displaying the horizontal separator preceding line <em >row</em> is returned.  To
+obtain the information about the separator beyond the last row <em >nRows()</em>
 should be used as its argument.  The `column elements' of the table are its
 separators and data columns.
 <p>
-Dereferencing the returned <em>const_iterator</em> provides access to a
-<em>Field</em> struct defining the type and width of a column
-element. Dereferencing the iterator returned by <em>begin</em> provides information
+Dereferencing the returned <em >const_iterator</em> provides access to a
+<em >Field</em> struct defining the type and width of a column
+element. Dereferencing the iterator returned by <em >begin</em> provides information
 about the leftmost column separator. By incrementing the iterator all
 subsequent column elements are visited. The iterator's value becomes undefined
-once it reaches the value returned by <em>end</em> (see below).
-    <li> <strong>size_t colWidth(size_t col) const</strong>:<br/>
+once it reaches the value returned by <em >end</em> (see below).
+    <li> <strong >size_t colWidth(size_t col) const</strong>:<br/>
         The width of the indicated column is returned.
-    <li> <strong>const_iterator end(size_t row) const</strong>:<br/> 
+    <li> <strong >const_iterator end(size_t row) const</strong>:<br/> 
         An iterator indicating the end of the iterator range starting at
-<em>begin(row)</em> is returned.
-    <li> <strong>size_t nColumns() const</strong>:<br/>
+<em >begin(row)</em> is returned.
+    <li> <strong >size_t nColumns() const</strong>:<br/>
         The number of columns of the table is returned.
-    <li> <strong>size_t nRows() const</strong>:<br/>
+    <li> <strong >size_t nRows() const</strong>:<br/>
         The number of rows of the table is returned.
-    <li> <strong>std::ostream &amp;out() const</strong>:<br/>
+    <li> <strong >std::ostream &amp;out() const</strong>:<br/>
         A reference to the stream into which the table is inserted is
 returned.
-    <li> <strong>std::vector&lt;std::string&gt; const &amp;sep()</strong>:<br/>
+    <li> <strong >std::vector&lt;std::string&gt; const &amp;sep()</strong>:<br/>
         A reference to the separators that are defined for the table's columns
-is returned. Element <em>col</em> refers to the separator to the left of the
-table column <em>col</em>, element <em>nColumns()</em> refers to the separator to the
+is returned. Element <em >col</em> refers to the separator to the left of the
+table column <em >col</em>, element <em >nColumns()</em> refers to the separator to the
 right of the rightmost table column.
-    <li> <strong>size_t sepWidth(size_t col) const</strong>:<br/>
-        The width of the indicated separator is returned. Element <em>col</em>
-refers to the separator to the left of the table column <em>col</em>, element
-<em>nColumns()</em> refers to the separator to the right of the rightmost table
+    <li> <strong >size_t sepWidth(size_t col) const</strong>:<br/>
+        The width of the indicated separator is returned. Element <em >col</em>
+refers to the separator to the left of the table column <em >col</em>, element
+<em >nColumns()</em> refers to the separator to the right of the rightmost table
 column.
     </ul>    
 <p>
-<h2>VIRTUAL MEMBER FUNCTIONS</h2>
+<h2 >VIRTUAL MEMBER FUNCTIONS</h2>
 <p>
 The following member functions can be overridden by derived classes to
 redefine the way horizontal and vertical separators are displayed.
     <ul>
-    <li> <strong>virtual void v_hline(size_t row) const</strong>:<br/>
-        This member is called from <em>hline(size_t row)</em>, receiving its <em>row</em>
-parameter. Its task is to write a horizonal separator for row <em>row</em>.  By
+    <li> <strong >virtual void v_hline(size_t row) const</strong>:<br/>
+        This member is called from <em >hline(size_t row)</em>, receiving its <em >row</em>
+parameter. Its task is to write a horizonal separator for row <em >row</em>.  By
 default nothing is inserted. It may do so by iterating over the range defined
-by the <em>begin</em> and <em>end</em> members, deciding what to do on the basis of the
-<em>Field</em> objects referred to by the iterators.
-    <li> <strong>virtual void v_hline() const</strong>:<br/>
-        This member is called from <em>hline()</em>.  Its intended task is to write
+by the <em >begin</em> and <em >end</em> members, deciding what to do on the basis of the
+<em >Field</em> objects referred to by the iterators.
+    <li> <strong >virtual void v_hline() const</strong>:<br/>
+        This member is called from <em >hline()</em>.  Its intended task is to write
 a (partial) horizontal line beyond the table's last line of data elements. By
-default it calls <em>hline(nRows)</em>.
-    <li> <strong>virtual void v_vline(size_t col) const</strong>:<br/>
-        This member is called from <em>vline(size_t col)</em>, receiving its
-<em>col</em> parameter. Its task is to write a separator  before data column
-<em>col</em>. By default it inserts <em>separator[col]</em> if if is available. If that
+default it calls <em >hline(nRows)</em>.
+    <li> <strong >virtual void v_vline(size_t col) const</strong>:<br/>
+        This member is called from <em >vline(size_t col)</em>, receiving its
+<em >col</em> parameter. Its task is to write a separator  before data column
+<em >col</em>. By default it inserts <em >separator[col]</em> if if is available. If that
 separator is not defined, no action is performed.
-    <li> <strong>virtual void v_vline() const</strong>:<br/>
-        This member is called from <em>vline()</em>.  Its intended task is to write
+    <li> <strong >virtual void v_vline() const</strong>:<br/>
+        This member is called from <em >vline()</em>.  Its intended task is to write
 a column separator, terminating a line of the table. By default it inserts a
-new-line (<em>\n</em>) character.
+new-line (<em >\n</em>) character.
     </ul>
 <p>
-<h2>EXAMPLE</h2>
-    See the example in the <strong>table</strong>(3bobcat) man-page.
+<h2 >EXAMPLE</h2>
+    See the example in the <strong >table</strong>(3bobcat) man-page.
 <p>
-<h2>FILES</h2>
-    <em>bobcat/tableSupport</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/tableSupport</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>align</strong>(3bobcat), <strong>table</strong>(3bobcat), 
-    <strong>tablebuf</strong>(3bobcat), <strong>tablelines</strong>(3bobcat)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >align</strong>(3bobcat), <strong >table</strong>(3bobcat), 
+    <strong >tablebuf</strong>(3bobcat), <strong >tablelines</strong>(3bobcat)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

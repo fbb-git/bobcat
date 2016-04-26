@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::SharedStreambuf</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,191 +43,191 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::SharedStreambuf(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Error handler</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Error handler</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::SharedStreambuf - streambuf interfacing to shared memory
+<h2 >NAME</h2>FBB::SharedStreambuf - streambuf interfacing to shared memory
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/sharedstreambuf&gt;</strong><br/>
-    Linking option: <em>-lpthread -lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/sharedstreambuf&gt;</strong><br/>
+    Linking option: <em >-lpthread -lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
-    This class implements a specialization of the <strong>std::streambuf</strong> class,
-allowing stream classes (<em>std::istream, std::ostream, FBB::ISharedStream,
-FBB::OSharedStream</em> and <em>FBB::SharedStream</em>) to perform I/O operations on
-shared memory. <strong>FBB::SharedStreambuf</strong> objects interface to a
-<em>FBB::SharedMemory</em> objects.
+<h2 >DESCRIPTION</h2>
+    This class implements a specialization of the <strong >std::streambuf</strong> class,
+allowing stream classes (<em >std::istream, std::ostream, FBB::ISharedStream,
+FBB::OSharedStream</em> and <em >FBB::SharedStream</em>) to perform I/O operations on
+shared memory. <strong >FBB::SharedStreambuf</strong> objects interface to a
+<em >FBB::SharedMemory</em> objects.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
-    <strong>std::streambuf, FBB::SharedEnum__</strong> (cf. <strong>sharedmemory(3bobcat)</strong> for
+<h2 >INHERITS FROM</h2>
+    <strong >std::streambuf, FBB::SharedEnum__</strong> (cf. <strong >sharedmemory(3bobcat)</strong> for
 a description of the latter class).
 <p>
-<h2>SIZEUNIT ENUMERATION</h2>
+<h2 >SIZEUNIT ENUMERATION</h2>
 <p>
-The <strong>enum SizeUnit</strong> defines the following symbolic constants:
+The <strong >enum SizeUnit</strong> defines the following symbolic constants:
         <ul>
-        <li> <strong>kB</strong>, representing 1024 (2**10) bytes of memory;
-        <li> <strong>MB</strong>, representing 1048576 (2**20) bytes of memory;
-        <li> <strong>GB</strong>, representing 1073741824 (2**30) bytes of memory
+        <li> <strong >kB</strong>, representing 1024 (2**10) bytes of memory;
+        <li> <strong >MB</strong>, representing 1048576 (2**20) bytes of memory;
+        <li> <strong >GB</strong>, representing 1073741824 (2**30) bytes of memory
         </ul>
 <p>
-<h2>CONSTRUCTORS</h2>
+<h2 >CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>SharedStreambuf()</strong>:<br/>
-       The default constructor defines a stub <strong>SharedStreambuf</strong> object that
+    <li> <strong >SharedStreambuf()</strong>:<br/>
+       The default constructor defines a stub <strong >SharedStreambuf</strong> object that
         cannot immediately be used to access shared memory. Before it can be
-        used by, shared stream classes like <em>FBB::SharedStream</em>, its member
-        <em>setMemory</em> must first have been called.
+        used by, shared stream classes like <em >FBB::SharedStream</em>, its member
+        <em >setMemory</em> must first have been called.
 <p>
-<li> <strong>SharedStreambuf(size_t maxSize, SizeUnit sizeUnit, 
+<li> <strong >SharedStreambuf(size_t maxSize, SizeUnit sizeUnit, 
             std::ios::openmode openMode = std::ios::in | std::ios::out,
             size_t access = 0600)</strong>:<br/>
        This constructor creates a shared memory segment having a capacity of
-        at least <em>maxSize * sizeUnit</em> bytes. 
+        at least <em >maxSize * sizeUnit</em> bytes. 
 <p>
 By default, the shared memory segment is opened for reading and
         writing. Different from the open modes used for file streams, creating
-        a shared memory stream with open modes <em>ios::in | ios::out</em> is
+        a shared memory stream with open modes <em >ios::in | ios::out</em> is
         OK. In this case the shared memory segment is created and once
         information has been written to the shared memory it can also be read
         again. 
 <p>
-The shared memory's access rights are defined by the <em>access</em>
+The shared memory's access rights are defined by the <em >access</em>
         parameter, interpreted as an octal value, using the well-known
-        (<strong>chmod</strong>(1)) way to define the access rights for owner, group and
+        (<strong >chmod</strong>(1)) way to define the access rights for owner, group and
         others.
 <p>
-If construction fails, an <em>FBB::Exception</em> is thrown.
+If construction fails, an <em >FBB::Exception</em> is thrown.
 <p>
-<li> <strong>SharedStreambuf(int id, std::ios::openmode openMode = std::ios::in |
+<li> <strong >SharedStreambuf(int id, std::ios::openmode openMode = std::ios::in |
         std::ios::out)</strong>:<br/> 
        This constructor connects to a shared memory segment having ID
-        <em>id</em>. 
+        <em >id</em>. 
 <p>
-Specifying the <em>ios::trunc</em> flag immediately clears the contents of
+Specifying the <em >ios::trunc</em> flag immediately clears the contents of
         the shared memory.
 <p>
-An <em>FBB::Exception</em> is thrown if construction fails (e.g., no shared
-        memory segment having ID <em>id</em> exists),
+An <em >FBB::Exception</em> is thrown if construction fails (e.g., no shared
+        memory segment having ID <em >id</em> exists),
     </ul>
     Copy and move constructors are not available.
 <p>
-<h2>OVERLOADED OPERATORS</h2>
+<h2 >OVERLOADED OPERATORS</h2>
 <p>
 Overloaded move and copy assignment operators are not available.
 <p>
-<h2>MEMBER FUNCTIONS</h2>
+<h2 >MEMBER FUNCTIONS</h2>
 <p>
-All members of <strong>std::streambuf</strong> and the <em>enum</em> values <em>kB, MB</em>, and
-<em>GB</em>, defined by <em>FBB::SharedEnum__</em> are available.
+All members of <strong >std::streambuf</strong> and the <em >enum</em> values <em >kB, MB</em>, and
+<em >GB</em>, defined by <em >FBB::SharedEnum__</em> are available.
 <p>
 <ul>
-    <li> <strong>void clear()</strong>:<br/>
+    <li> <strong >void clear()</strong>:<br/>
        The shared memory is first locked. Next, all shared data segment are
         returned to the operating system, after which the shared memory
-        segment is unlocked again. Returning from <em>clear</em> the shared memory
-        The <strong>FBB::SharedMemory</strong> object is effectively re-initialized, with
-        <em>offset</em> and <em>nReadable</em> returning 0.
+        segment is unlocked again. Returning from <em >clear</em> the shared memory
+        The <strong >FBB::SharedMemory</strong> object is effectively re-initialized, with
+        <em >offset</em> and <em >nReadable</em> returning 0.
 <p>
-<li> <strong>int id() const</strong>:<br/>
+<li> <strong >int id() const</strong>:<br/>
        The ID of the shared memory segment is returned.
 <p>
-<li> <strong>void kill()</strong>:<br/>
-       Without locking the shared memory the <strong>FBB::SharedStreambuf</strong>'s shared
-        memory is deleted. The <strong>FBB::SharedStreambuf</strong> object is
-        unusable after returning from <em>kill</em>. 
+<li> <strong >void kill()</strong>:<br/>
+       Without locking the shared memory the <strong >FBB::SharedStreambuf</strong>'s shared
+        memory is deleted. The <strong >FBB::SharedStreambuf</strong> object is
+        unusable after returning from <em >kill</em>. 
 <p>
-<li> <strong>void memInfo(std::ostream &amp;out)</strong>:<br/>
-       Information about the <em>SharedMemory</em> object is inserted into the
-        provide <em>ostream</em> object. The IDs of the shared segments, their
+<li> <strong >void memInfo(std::ostream &amp;out)</strong>:<br/>
+       Information about the <em >SharedMemory</em> object is inserted into the
+        provide <em >ostream</em> object. The IDs of the shared segments, their
         sizes, the maximum number of shared memory segments, the number of
         bytes that can be read from the shared memory, and its actual storage
         capacity, etc., are displayed. The inserted information is not
         terminated by a final newline character.
 <p>
-<li> <strong>void remove()</strong>:<br/>
-       The shared memory is locked, and the <strong>FBB::SharedStreambuf</strong>'s shared
-        memory is deleted. The <strong>FBB::SharedStreambuf</strong> object is unusable
-        after returning from <em>remove</em>. 
+<li> <strong >void remove()</strong>:<br/>
+       The shared memory is locked, and the <strong >FBB::SharedStreambuf</strong>'s shared
+        memory is deleted. The <strong >FBB::SharedStreambuf</strong> object is unusable
+        after returning from <em >remove</em>. 
 <p>
-<li> <strong>void setMemory(SharedMemory &amp;&amp;tmp)</strong>:<br/>
-       The anonymous temporary <em>SharedMemory</em> object that is passed to
-        <em>setMemory</em> defines the new shared memory segment to which the
-        <strong>FBB::SharedStreambuf</strong> object interfaces. It can also be called
-        to reuse a <strong>FBB::SharedStreambuf</strong> object again after calling
-        <em>kill</em> or <em>remove</em>.
+<li> <strong >void setMemory(SharedMemory &amp;&amp;tmp)</strong>:<br/>
+       The anonymous temporary <em >SharedMemory</em> object that is passed to
+        <em >setMemory</em> defines the new shared memory segment to which the
+        <strong >FBB::SharedStreambuf</strong> object interfaces. It can also be called
+        to reuse a <strong >FBB::SharedStreambuf</strong> object again after calling
+        <em >kill</em> or <em >remove</em>.
 <p>
-<li> <strong>FBB::SharedMemory &amp;sharedMemory()</strong>:<br/>
-       A reference to the <em>FBB::SharedMemory</em> object to which the
-        <strong>FBB::SharedStreambuf</strong> object interfaces is returned.
+<li> <strong >FBB::SharedMemory &amp;sharedMemory()</strong>:<br/>
+       A reference to the <em >FBB::SharedMemory</em> object to which the
+        <strong >FBB::SharedStreambuf</strong> object interfaces is returned.
     </ul>
 <p>
-<h2>PROTECTED MEMBER FUNCTIONS</h2>
+<h2 >PROTECTED MEMBER FUNCTIONS</h2>
 <p>
 <ul>
     <ul>
-    <li> <strong>FBB::SharedCondition attachSharedCondition(std::ios::off_type offset,
+    <li> <strong >FBB::SharedCondition attachSharedCondition(std::ios::off_type offset,
                                         std::ios::seekdir origin)</strong>:<br/>
-       Returns an <strong>FBB::SharedCondition</strong>(3) object, interfacing to a shared
-        condition variable located at offset <em>offset</em> (relative to
-        <em>origin</em>) in the <em>SharedMemory</em> object to which the
-        <strong>SharedStreamBuf</strong> object interfaces.
+       Returns an <strong >FBB::SharedCondition</strong>(3) object, interfacing to a shared
+        condition variable located at offset <em >offset</em> (relative to
+        <em >origin</em>) in the <em >SharedMemory</em> object to which the
+        <strong >SharedStreamBuf</strong> object interfaces.
 <p>
-An <em>FBB::Exception</em> is thrown if the <em>FBB::SharedCondition</em> object
+An <em >FBB::Exception</em> is thrown if the <em >FBB::SharedCondition</em> object
         could not be constructed.
 <p>
-<li> <strong>FBB::SharedCondition createSharedCondition()</strong>:<br/>
-       Returns an <strong>FBB::SharedCondition</strong>(3) object, interfacing to a newly
+<li> <strong >FBB::SharedCondition createSharedCondition()</strong>:<br/>
+       Returns an <strong >FBB::SharedCondition</strong>(3) object, interfacing to a newly
         created shared condition variable which is created at the current
-        offset of the <em>SharedMemory</em> object to which the <strong>SharedStream</strong>
+        offset of the <em >SharedMemory</em> object to which the <strong >SharedStream</strong>
         object interfaces (or at the first offset of the next physical shared
-        memory data block, cf. <strong>sharedcondition</strong>(3bobcat))</ul>.
+        memory data block, cf. <strong >sharedcondition</strong>(3bobcat))</ul>.
 <p>
-An <em>FBB::Exception</em> is thrown if the <em>FBB::SharedCondition</em> object
+An <em >FBB::Exception</em> is thrown if the <em >FBB::SharedCondition</em> object
         could not be constructed.
 <p>
-<li> <strong>void setOpenMode(std::ios::openmode flag)</strong>:<br/>
-       The streambuf's <em>openmode</em> is changed to the settings defined by
-        <em>flag</em>. This member is used by, e.g., <em>SharedStream::open</em>, to
-        adapt the <strong>FBB::SharedStreambuf</strong>'s <em>openmode</em> to the flags that
-        are passed to <em>open</em>.
+<li> <strong >void setOpenMode(std::ios::openmode flag)</strong>:<br/>
+       The streambuf's <em >openmode</em> is changed to the settings defined by
+        <em >flag</em>. This member is used by, e.g., <em >SharedStream::open</em>, to
+        adapt the <strong >FBB::SharedStreambuf</strong>'s <em >openmode</em> to the flags that
+        are passed to <em >open</em>.
 <p>
-<li> <strong>FBB::SharedMemory &amp;sharedMemory()</strong>:<br/>
-       Returns a reference to the <em>FBB::SharedMemory</em> object to which the
-        <strong>SharedStreambuf</strong> object interfaces.
+<li> <strong >FBB::SharedMemory &amp;sharedMemory()</strong>:<br/>
+       Returns a reference to the <em >FBB::SharedMemory</em> object to which the
+        <strong >SharedStreambuf</strong> object interfaces.
     </ul>
 <p>
-<h2>EXAMPLE</h2>
-    See the <strong>sharedstream</strong>(3bobcat) man page.
+<h2 >EXAMPLE</h2>
+    See the <strong >sharedstream</strong>(3bobcat) man page.
 <p>
-<h2>FILES</h2>
-    <em>bobcat/sharedstreambuf</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/sharedstreambuf</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7),  <strong>chmod</strong>(1),
-        <strong>isharedstream</strong>(3bobcat),
-        <strong>osharedstream</strong>(3bobcat),
-        <strong>sharedblock</strong>(3bobcat), 
-        <strong>sharedcondition</strong>(3bobcat), 
-        <strong>sharedmemory</strong>(3bobcat)
-        <strong>sharedmutex</strong>(3bobcat), 
-        <strong>sharedpos</strong>(3bobcat), 
-        <strong>sharedreadme</strong>(7bobcat), 
-        <strong>sharedsegment</strong>(3bobcat),
-        <strong>sharedstream</strong>(3bobcat)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7),  <strong >chmod</strong>(1),
+        <strong >isharedstream</strong>(3bobcat),
+        <strong >osharedstream</strong>(3bobcat),
+        <strong >sharedblock</strong>(3bobcat), 
+        <strong >sharedcondition</strong>(3bobcat), 
+        <strong >sharedmemory</strong>(3bobcat)
+        <strong >sharedmutex</strong>(3bobcat), 
+        <strong >sharedpos</strong>(3bobcat), 
+        <strong >sharedreadme</strong>(7bobcat), 
+        <strong >sharedsegment</strong>(3bobcat),
+        <strong >sharedstream</strong>(3bobcat)
 <p>
-<h2>BUGS</h2>
-    Note that by default exceptions thrown from within a <strong>std::stream</strong>
-object are caught by the stream object, setting its <em>ios::failbit</em> flag. To
-allow exceptions to leave a stream object, its <em>exceptions</em> member can be
+<h2 >BUGS</h2>
+    Note that by default exceptions thrown from within a <strong >std::stream</strong>
+object are caught by the stream object, setting its <em >ios::failbit</em> flag. To
+allow exceptions to leave a stream object, its <em >exceptions</em> member can be
 called, e.g., using:
         <pre>
 
@@ -237,25 +237,25 @@ called, e.g., using:
 
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

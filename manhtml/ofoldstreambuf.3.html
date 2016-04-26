@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::OFoldStreambuf</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,31 +43,31 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::OFoldStreambuf(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Fold long lines</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Fold long lines</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::OFoldStreambuf - Folds long lines written to ostream
+<h2 >NAME</h2>FBB::OFoldStreambuf - Folds long lines written to ostream
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/ofoldstreambuf&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/ofoldstreambuf&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
-    <strong>FBB::OFoldStreambuf</strong> is a specialization of <em>FBB::OFilterStreambuf</em>
-folding long lines written to an <em>std::ostream</em> object. The
-<em>OFoldStreambuf</em> writes the (folded) lines to a second <em>ostream</em> (the
-<em>destination stream</em> which is either used by or opened by the
-<em>OFoldStreambuf</em> object).
+<h2 >DESCRIPTION</h2>
+    <strong >FBB::OFoldStreambuf</strong> is a specialization of <em >FBB::OFilterStreambuf</em>
+folding long lines written to an <em >std::ostream</em> object. The
+<em >OFoldStreambuf</em> writes the (folded) lines to a second <em >ostream</em> (the
+<em >destination stream</em> which is either used by or opened by the
+<em >OFoldStreambuf</em> object).
 <p>
-Internally the <em>OFoldStreambuf</em> defines its actions using a little
+Internally the <em >OFoldStreambuf</em> defines its actions using a little
 finite state automation distinguishing three states (INDENT, WS and NON_WS)
-and three character categories (<em>\n</em>, other white space characters (space),
+and three character categories (<em >\n</em>, other white space characters (space),
 and non-space characters). The nine combinations resulting from these two sets
 are discussed below.
 <p>
-<em>OFoldStreambuf</em> objects will never fold lines in the middle of series
+<em >OFoldStreambuf</em> objects will never fold lines in the middle of series
 of non-blank characters (called a `word' below) but will always break a line
 at a white space character. The resulting lines will always appear to the
 right of a configurable left margin and to the left of a configurable right
@@ -79,149 +79,149 @@ The indentation used for the left margins is configurable to either blanks
 (the default) or tabs. When tabs are used the width of a tab character is
 configurable, using a default of 8 positions in the destination stream.
 <p>
-What follows is a description of the <em>Finite State Automaton</em> (FSA)
+What follows is a description of the <em >Finite State Automaton</em> (FSA)
 defining what happens when various character types appear at its three
 states. The phrase `... is written' means that the described information is
-written to the <em>ostream</em> used or opened by the <em>OFoldStreambuf</em>
-object. <em>OFoldStreambuf</em>'s initial state is <em>INDENT</em>:
+written to the <em >ostream</em> used or opened by the <em >OFoldStreambuf</em>
+object. <em >OFoldStreambuf</em>'s initial state is <em >INDENT</em>:
 <p>
 <table>
 
 
-<tr>
-<td> State</td><td> char.</td><td> description</td>
+<tr >
+<td > State</td><td > char.</td><td > description</td>
  
 </tr>
 
 <td colspan=3><hr/></td>
 
 
-<tr>
-<td> INDENT</td><td> \n</td><td> a new line character is written</td>
+<tr >
+<td > INDENT</td><td > \n</td><td > a new line character is written</td>
  
 </tr>
 
 
-<tr>
-<td> </td><td> space</td><td> the indentation is set;</td>
- 
-</tr>
-
-                
-<tr>
-<td> </td><td> </td><td> the space character is added to the indentation;</td>
+<tr >
+<td > </td><td > space</td><td > the indentation is set;</td>
  
 </tr>
 
                 
-<tr>
-<td> </td><td> </td><td> next state: WS</td>
- 
-</tr>
-
-
-<tr>
-<td> </td><td> non-ws</td><td> the character is added to the currently stored word;</td>
+<tr >
+<td > </td><td > </td><td > the space character is added to the indentation;</td>
  
 </tr>
 
                 
-<tr>
-<td> </td><td> </td><td> next state: NON_WS</td>
+<tr >
+<td > </td><td > </td><td > next state: WS</td>
+ 
+</tr>
+
+
+<tr >
+<td > </td><td > non-ws</td><td > the character is added to the currently stored word;</td>
+ 
+</tr>
+
+                
+<tr >
+<td > </td><td > </td><td > next state: NON_WS</td>
  
 </tr>
 
 <td colspan=3><hr/></td>
 
 
-<tr>
-<td> WS</td><td> \n</td><td> a new line character is written;</td>
+<tr >
+<td > WS</td><td > \n</td><td > a new line character is written;</td>
  
 </tr>
 
                 
-<tr>
-<td> </td><td> </td><td> stored white-space is erased;</td>
+<tr >
+<td > </td><td > </td><td > stored white-space is erased;</td>
  
 </tr>
 
                 
-<tr>
-<td> </td><td> </td><td> next state: INDENT</td>
+<tr >
+<td > </td><td > </td><td > next state: INDENT</td>
  
 </tr>
 
 
-<tr>
-<td> </td><td> space</td><td> white space character is added to the currently</td>
- 
-</tr>
-
-                
-<tr>
-<td> </td><td> </td><td> stored space characters;</td>
- 
-</tr>
-
-
-<tr>
-<td> </td><td> non-ws</td><td> the character is added to the currently stored word;</td>
+<tr >
+<td > </td><td > space</td><td > white space character is added to the currently</td>
  
 </tr>
 
                 
-<tr>
-<td> </td><td> </td><td> next state: NON_WS</td>
+<tr >
+<td > </td><td > </td><td > stored space characters;</td>
+ 
+</tr>
+
+
+<tr >
+<td > </td><td > non-ws</td><td > the character is added to the currently stored word;</td>
+ 
+</tr>
+
+                
+<tr >
+<td > </td><td > </td><td > next state: NON_WS</td>
  
 </tr>
 
 <td colspan=3><hr/></td>
 
 
-<tr>
-<td> NON_WS</td><td> \n</td><td> stored white space and word are written;</td>
+<tr >
+<td > NON_WS</td><td > \n</td><td > stored white space and word are written;</td>
  
 </tr>
 
                 
-<tr>
-<td> </td><td> </td><td> a new line is written;</td>
+<tr >
+<td > </td><td > </td><td > a new line is written;</td>
  
 </tr>
 
                 
-<tr>
-<td> </td><td> </td><td> next state: INDENT</td>
+<tr >
+<td > </td><td > </td><td > next state: INDENT</td>
  
 </tr>
 
 
-<tr>
-<td> </td><td> space</td><td> stored white space and word are written;</td>
- 
-</tr>
-
-                
-<tr>
-<td> </td><td> </td><td> white space character is added to the currently</td>
+<tr >
+<td > </td><td > space</td><td > stored white space and word are written;</td>
  
 </tr>
 
                 
-<tr>
-<td> </td><td> </td><td> stored space characters;</td>
+<tr >
+<td > </td><td > </td><td > white space character is added to the currently</td>
  
 </tr>
 
                 
-<tr>
-<td> </td><td> </td><td> next state: WS</td>
+<tr >
+<td > </td><td > </td><td > stored space characters;</td>
+ 
+</tr>
+
+                
+<tr >
+<td > </td><td > </td><td > next state: WS</td>
  
 </tr>
 
 
-<tr>
-<td> </td><td> non-ws</td><td> the character is added to the currently stored word;</td>
+<tr >
+<td > </td><td > non-ws</td><td > the character is added to the currently stored word;</td>
  
 </tr>
 
@@ -230,125 +230,125 @@ object. <em>OFoldStreambuf</em>'s initial state is <em>INDENT</em>:
 
 </table>
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
+<h2 >INHERITS FROM</h2>
     FBB::OFilterStreambuf
 <p>
-<h2>ENUMERATION</h2>
-    The enumeration <em>TabsOrBlanks</em> is used to select tabs or blanks when
+<h2 >ENUMERATION</h2>
+    The enumeration <em >TabsOrBlanks</em> is used to select tabs or blanks when
 writing the indentation. The default is blanks. When tabs are selected the
 display width of tabs characters can be configured as well (using the default
 of 8 positions for each tab-character). The enumeration has two values:
     <ul>
-    <li> <strong>BLANKS</strong>:<br/>
+    <li> <strong >BLANKS</strong>:<br/>
         The default, indicating that the left margin is specified and written
 as a number of blanks;
-    <li> <strong>TABS</strong>:<br/>
+    <li> <strong >TABS</strong>:<br/>
         Indicating that the left margin is specified and written as a number
 of tab-characters.
     </ul>
 <p>
-The enumeration <em>TrailingBlanks</em> is used to configure the
-<em>OFoldStreambuf</em> object with respect to any trailing blanks that may appear
+The enumeration <em >TrailingBlanks</em> is used to configure the
+<em >OFoldStreambuf</em> object with respect to any trailing blanks that may appear
 on the final line. These trailing blanks can appear on the final line it it is 
 not properly terminated with a newline character but instead ends in white
 space. By default these white space characters are ignored, but they may be
 kept as well. The enumeration has two values:
     <ul>
-    <li> <strong>IGNORE_TRAILING_BLANKS</strong>:<br/>
+    <li> <strong >IGNORE_TRAILING_BLANKS</strong>:<br/>
         This indicates that trailing blanks appearing at the final line if it
 is not terminated by a newline should not be written to the destination
-<em>std::ostream</em>. This is the default used by <em>OFoldStreambuf</em> objects.
-    <li> <strong>KEEP_TRAILING_BLANKS</strong>:<br/>
+<em >std::ostream</em>. This is the default used by <em >OFoldStreambuf</em> objects.
+    <li> <strong >KEEP_TRAILING_BLANKS</strong>:<br/>
         This indicates that trailing blanks at the final line if it is not
-terminated by a newline should be written to the destination <em>std::ostream</em>
+terminated by a newline should be written to the destination <em >std::ostream</em>
     </ul>
 <p>
-<h2>CONSTRUCTORS</h2>
+<h2 >CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>OFoldStreambuf(size_t leftIndent = 0, size_t rightMargin = 80,
+    <li> <strong >OFoldStreambuf(size_t leftIndent = 0, size_t rightMargin = 80,
                     TabsOrBlanks tob = BLANKS,
                     TrailingBlanks tb = IGNORE_TRAILING_BLANKS)</strong>:<br/>
-        This constructor initializes an <em>OFoldStreambuf</em> object but does not
+        This constructor initializes an <em >OFoldStreambuf</em> object but does not
 associate it with a destination stream. It can also be used as the default
 constructor. 
 <p>
-<li> <strong>OFoldStreambuf(char const *fname,
+<li> <strong >OFoldStreambuf(char const *fname,
                    size_t leftIndent = 0, size_t rightMargin = 80,
                     TabsOrBlanks tob = BLANKS,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS)</strong>:<br/>
-    This constructor initializes an <em>OFoldStreambuf</em> object and opens (using
-<em>std::ios::out</em>) the destination stream using the name specified as its
-<em>fname</em> argument. 
+    This constructor initializes an <em >OFoldStreambuf</em> object and opens (using
+<em >std::ios::out</em>) the destination stream using the name specified as its
+<em >fname</em> argument. 
 <p>
-<li> <strong>OFoldStreambuf(std::ostream &amp;stream,
+<li> <strong >OFoldStreambuf(std::ostream &amp;stream,
                    size_t leftIndent = 0, size_t rightMargin = 80,
                     TabsOrBlanks tob = BLANKS,
                    TrailingBlanks tb = IGNORE_TRAILING_BLANKS)</strong>:<br/>
-    This constructor initializes an <em>OFoldStreambuf</em> object and uses as its
-destination stream the <em>std::ostream stream</em>.
+    This constructor initializes an <em >OFoldStreambuf</em> object and uses as its
+destination stream the <em >std::ostream stream</em>.
     </ul>
 <p>
 The destructor writes any buffered information to the destination stream
 and will then flush the destination stream.
 <p>
-<h2>MEMBER FUNCTIONS</h2>
-     All members of <strong>FBB::OFilterStreambuf</strong>, in particular its <em>out()</em> and
-<em>open()</em> members are available, as <strong>FBB::OFoldStreambuf</strong> inherits from
+<h2 >MEMBER FUNCTIONS</h2>
+     All members of <strong >FBB::OFilterStreambuf</strong>, in particular its <em >out()</em> and
+<em >open()</em> members are available, as <strong >FBB::OFoldStreambuf</strong> inherits from
 this class.
     <ul>
-    <li> <strong>void setMargins(size_t leftMargin, size_t rightMargin)</strong>:<br/>
+    <li> <strong >void setMargins(size_t leftMargin, size_t rightMargin)</strong>:<br/>
         This member can be used to modify the left- and right folding
-margins. Note that the left margin may also be modified using the <em>FBB::lm</em>
-and <em>FBB::mlm</em> manipulators.
+margins. Note that the left margin may also be modified using the <em >FBB::lm</em>
+and <em >FBB::mlm</em> manipulators.
 <p>
-<li> <strong>void setTrailingBlanks(TrailingBlanks tb)</strong>:<br/>
+<li> <strong >void setTrailingBlanks(TrailingBlanks tb)</strong>:<br/>
         This member can be used to modify the currently used
-<em>TrailingBlanks</em> parameter.
+<em >TrailingBlanks</em> parameter.
 <p>
-<li> <strong>void useBlanks()</strong>:<br/>
+<li> <strong >void useBlanks()</strong>:<br/>
         This member can be used to select blanks  to be used when inserting
 left margins.
 <p>
-<li> <strong>void useTabs(size_t tabWidth = 8)</strong>:<br/>
+<li> <strong >void useTabs(size_t tabWidth = 8)</strong>:<br/>
         This member can be used to select tab-characters to be used when
 inserting left margins. The second parameter is used to specify the display
 width of a tab-character.
     </ul>
 <p>
-<h2>STATIC MEMBER FUNCTIONS</h2>
+<h2 >STATIC MEMBER FUNCTIONS</h2>
 <p>
 <ul>
-    <li> <strong>size_t leftMargin(std::ostreambuf const *buffer)</strong>:<br/>
+    <li> <strong >size_t leftMargin(std::ostreambuf const *buffer)</strong>:<br/>
         This member returns the current left margin setting of the
-<em>OFoldStreambuf</em> object passed to it as its argument. The member defines a
-<em>std::streambuf</em> parameter which is down cast to an <em>OFoldStreambuf</em> and
-an <em>FBB::Exception</em> exception is thrown if that cast fails.
-    <li> <strong>size_t rightMargin(std::ostreambuf const *buffer)</strong>:<br/>
+<em >OFoldStreambuf</em> object passed to it as its argument. The member defines a
+<em >std::streambuf</em> parameter which is down cast to an <em >OFoldStreambuf</em> and
+an <em >FBB::Exception</em> exception is thrown if that cast fails.
+    <li> <strong >size_t rightMargin(std::ostreambuf const *buffer)</strong>:<br/>
         This member returns the current right margin setting of the
-<em>OFoldStreambuf</em> object passed to it as its argument. The member's parameter
-is down cast in the same way as <em>leftMargin()</em>'s argument: an <em>FBB::Exception</em>
+<em >OFoldStreambuf</em> object passed to it as its argument. The member's parameter
+is down cast in the same way as <em >leftMargin()</em>'s argument: an <em >FBB::Exception</em>
 exception is thrown if that cast fails.
     </ul>
 <p>
-<h2>PROTECTED MEMBER FUNCTION</h2>
+<h2 >PROTECTED MEMBER FUNCTION</h2>
 <p>
 The member listed in this section implements the tasks of the comparably
 named virtual function in the class's private interface. This separates the
-redefinable interface from the user-interface. The class <strong>OFoldStreambuf</strong>
+redefinable interface from the user-interface. The class <strong >OFoldStreambuf</strong>
 can, in accordance with Liskov's Substitution Principle, be used as a
-<em>std:streambuf</em>; but it also offers a facility for classes deriving from
-<strong>OFoldStreambuf</strong>. This facility is listed here.
+<em >std:streambuf</em>; but it also offers a facility for classes deriving from
+<strong >OFoldStreambuf</strong>. This facility is listed here.
     <ul>
-    <li> <strong>int pSync()</strong>:<br/>
-        The contents of the <strong>OFoldStreambuf</strong>'s internal buffer is flushed.
+    <li> <strong >int pSync()</strong>:<br/>
+        The contents of the <strong >OFoldStreambuf</strong>'s internal buffer is flushed.
     </ul>
 <p>
-<h2>EXAMPLE</h2>
+<h2 >EXAMPLE</h2>
         <pre>
 
     #include &lt;iostream&gt;
@@ -376,36 +376,36 @@ can, in accordance with Liskov's Substitution Principle, be used as a
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/ofoldstreambuf</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/ofoldstreambuf</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7),  <strong>lm</strong>(3bobcat), <strong>mlm</strong>(3bobcat),
-    <strong>ofilterstreambuf</strong>(3bobcat), <strong>ofoldstream</strong>(3bobcat)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7),  <strong >lm</strong>(3bobcat), <strong >mlm</strong>(3bobcat),
+    <strong >ofilterstreambuf</strong>(3bobcat), <strong >ofoldstream</strong>(3bobcat)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

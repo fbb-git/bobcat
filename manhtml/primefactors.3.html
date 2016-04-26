@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::PrimeFactors</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,19 +43,19 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::PrimeFactors(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Prime Factorization</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Prime Factorization</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::PrimeFactors - Performs the prime-number factorization of
+<h2 >NAME</h2>FBB::PrimeFactors - Performs the prime-number factorization of
             (BigInt) values
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/primefactors&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/primefactors&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
+<h2 >DESCRIPTION</h2>
 <p>
 Integral values fall into two categories: prime numbers, whose only
 integral divisors are their own values and 1, and composite numbers, which
@@ -64,7 +64,7 @@ integral values can be factorized as the product of prime numbers. E.g., 6 can
 be factorized as 2 * 3; 8 can be factorized as 2 * 2 * 2. Finding these prime
 factors is called the prime number factorization, or `prime
 factorization'. When factorizing a value its prime factors may sometimes
-repeatedly be used as integral divisors: 8 is factorized as <em>pow(2, 3)</em>, and
+repeatedly be used as integral divisors: 8 is factorized as <em >pow(2, 3)</em>, and
 36 is factorized as
         <pre>
 
@@ -73,36 +73,36 @@ repeatedly be used as integral divisors: 8 is factorized as <em>pow(2, 3)</em>, 
 </pre>
 
 <p>
-The class <strong>FBB::PrimeFactors</strong> performs prime number factorizations of
-<em>FBB::BigInt</em> values. When factorizing a value prime numbers up to
-<em>sqrt(value)</em> must be available, as prime numbers up to <em>sqrt(value)</em> may
-be factors of <em>value</em>. Currently <em>PrimeFactors</em> uses the sieve of
+The class <strong >FBB::PrimeFactors</strong> performs prime number factorizations of
+<em >FBB::BigInt</em> values. When factorizing a value prime numbers up to
+<em >sqrt(value)</em> must be available, as prime numbers up to <em >sqrt(value)</em> may
+be factors of <em >value</em>. Currently <em >PrimeFactors</em> uses the sieve of
 Eratosthenes to find these prime numbers. To find the next prime number beyond
-<em>lastPrime</em>, the sieve of Eratosthenes must be used repeatedly for
-<em>lastPrime += 2</em> until <em>lastPrime</em> is prime. Once determined, prime
+<em >lastPrime</em>, the sieve of Eratosthenes must be used repeatedly for
+<em >lastPrime += 2</em> until <em >lastPrime</em> is prime. Once determined, prime
 numbers can of course be used directly to determine the next prime number or
 to factorize an integral value. To accellerate prime number factorization and
-Eratosthenes's sieve <strong>PrimeFactors</strong> saves all its computed prime numbers in
-either a <em>std::vector</em> or in a file. Once determined, these prime numbers
+Eratosthenes's sieve <strong >PrimeFactors</strong> saves all its computed prime numbers in
+either a <em >std::vector</em> or in a file. Once determined, these prime numbers
 may again be used when factorizing the next integral value.
 <p>
 After factorizing an integral value its prime number factors and
 associated powers are made available in a vector of
-(<em>PrimeFactors::PrimePower</em>) structs, containing the value's sorted prime
+(<em >PrimeFactors::PrimePower</em>) structs, containing the value's sorted prime
 factors and associated powers.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
+<h2 >INHERITS FROM</h2>
     -
 <p>
-<h2>TYPEDEFS AND ENUMS</h2>
+<h2 >TYPEDEFS AND ENUMS</h2>
 <p>
 <ul>
-    <li> <strong>struct PrimePower</strong>:<br/> contains two fields:
+    <li> <strong >struct PrimePower</strong>:<br/> contains two fields:
         <pre>
 
     struct PrimePower
@@ -113,81 +113,81 @@ man-page, are defined in the namespace <strong>FBB</strong>.
         
 </pre>
 
-        Here, <em>power</em> represents the number of times <em>prime</em> can be used
-as an integral divisor of the value that was factorized by <strong>PrimeFactors</strong>.
+        Here, <em >power</em> represents the number of times <em >prime</em> can be used
+as an integral divisor of the value that was factorized by <strong >PrimeFactors</strong>.
 <p>
-<li> <strong>Factors</strong>:<br/> is a synonym for <em>std::vector&lt;PrimePower</em>
+<li> <strong >Factors</strong>:<br/> is a synonym for <em >std::vector&lt;PrimePower</em>
     </ul>
 <p>
-<h2>CONSTRUCTORS</h2>
+<h2 >CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>PrimeFactors(BigIntVector &amp;primes)</strong>:<br/>
+    <li> <strong >PrimeFactors(BigIntVector &amp;primes)</strong>:<br/>
         Prime numbers that were determined while factorizing values are
-collected in the <em>BigIntVector</em> that is passed as argument to this
+collected in the <em >BigIntVector</em> that is passed as argument to this
 constructor. 
 <p>
-Initially the <em>BigIntVector</em> passed as argument may be empty or may
+Initially the <em >BigIntVector</em> passed as argument may be empty or may
 contain at least two primes (which must be, respectively, 2 and 3). The prime
-numbers in <em>primes</em> must be sorted. The constructor does not verify whether
-the prime numbers are actually sorted, but if the <em>BigIntVector</em> contains
-primes it <em>does</em> check whether the first two prime numbers are indeed 2 and
-3. An <em>FBB::Exception</em> is thrown if this condition is not met.
+numbers in <em >primes</em> must be sorted. The constructor does not verify whether
+the prime numbers are actually sorted, but if the <em >BigIntVector</em> contains
+primes it <em >does</em> check whether the first two prime numbers are indeed 2 and
+3. An <em >FBB::Exception</em> is thrown if this condition is not met.
 <p>
 While numbers are being factorized, new prime numbers may be added to
-<em>primes</em>, and <em>primes</em> can be reused by othher <em>PrimeFactors</em> objects.
+<em >primes</em>, and <em >primes</em> can be reused by othher <em >PrimeFactors</em> objects.
 <p>
-<li> <strong>PrimeFactors(std::string const &amp;name = "~/.primes", size_t blockSize =
+<li> <strong >PrimeFactors(std::string const &amp;name = "~/.primes", size_t blockSize =
 1000)</strong>:<br/>
         Prime numbers that are determined while factorizing values are
 collected on a stream whose name is passed as argument to this constructor. By
-default <em>~/.primes</em> is used. If <em>name</em> starts with `<em>~/</em>', then this
+default <em >~/.primes</em> is used. If <em >name</em> starts with `<em >~/</em>', then this
 string is replaced by the user's home directory. 
 <p>
-Primes are read from the named stream in blocks of at most <em>blockSize</em>,
-and new primes are flushed to this stream once <em>blockSize</em> new primes have
-been generated or when the <strong>PrimeFactors</strong> object (i.e., the last
-<strong>PrimeFactors</strong> object sharing the stream) ceases to exist.
+Primes are read from the named stream in blocks of at most <em >blockSize</em>,
+and new primes are flushed to this stream once <em >blockSize</em> new primes have
+been generated or when the <strong >PrimeFactors</strong> object (i.e., the last
+<strong >PrimeFactors</strong> object sharing the stream) ceases to exist.
 <p>
-If the stream does not yet exist it is created by <strong>PrimeFactors</strong>. The
+If the stream does not yet exist it is created by <strong >PrimeFactors</strong>. The
 stream may either be empty, or it must contain sorted and white-space
-delimited prime numbers (inserted as hexadecimal <em>BigInt</em> values). The first
+delimited prime numbers (inserted as hexadecimal <em >BigInt</em> values). The first
 two primes on this file must be, respectively, 2 and 3. The constructor does
 not verify whether the prime numbers are actually sorted, but if the stream
-contains primes it <em>does</em> check whether the first two prime numbers are
-indeed 2 and 3. An <em>FBB::Exception</em> is thrown if this condition is not met.
+contains primes it <em >does</em> check whether the first two prime numbers are
+indeed 2 and 3. An <em >FBB::Exception</em> is thrown if this condition is not met.
 <p>
 While numbers are being factorized, new prime numbers may be added to the
-stream, and the stream can be reused by other <em>PrimeFactors</em> objects.
+stream, and the stream can be reused by other <em >PrimeFactors</em> objects.
     </ul>
 <p>
-The default copy and move constructors are available. <strong>FBB::PrimeFactor</strong>
+The default copy and move constructors are available. <strong >FBB::PrimeFactor</strong>
 objects created using the copy constructor share the prime numbers storage
-device (the <em>BigIntVector</em> or the stream containing the primes) with their
+device (the <em >BigIntVector</em> or the stream containing the primes) with their
 source objects.
 <p>
-<h2>OVERLOADED OPERATORS</h2>
+<h2 >OVERLOADED OPERATORS</h2>
 <p>
 The default copy and move assignment operators are available. Left-hand
-side <strong>FBB::PrimeFactor</strong> objects receiving values from right-hand side
-<strong>FBB::PrimeFactor</strong> objects using the copy assignment operator share the
-prime numbers storage device (the <em>BigIntVector</em> or the stream containing
-the primes) with their right-hand side <strong>FBB::PrimeFactors</strong> arguments.
+side <strong >FBB::PrimeFactor</strong> objects receiving values from right-hand side
+<strong >FBB::PrimeFactor</strong> objects using the copy assignment operator share the
+prime numbers storage device (the <em >BigIntVector</em> or the stream containing
+the primes) with their right-hand side <strong >FBB::PrimeFactors</strong> arguments.
 <p>
-<h2>MEMBER FUNCTION</h2>
+<h2 >MEMBER FUNCTION</h2>
 <p>
 <ul>
-    <li> <strong>Factors const &amp;factorize(BigInt const &amp;value)</strong>:<br/>
-        The prime factors of <em>value</em> are determined and returned in the
-<em>PrimeFactors::Factors</em> vectors. While the prime factors of <em>value</em> are
-determined new prime numbers may be added to the <em>BigIntVector</em> or to the
-stream that is passed to the <strong>PrimeFactors</strong> object. The elements of
-<em>PrimeFactors::Factors</em> are sorted by their prime numbers. The first element
+    <li> <strong >Factors const &amp;factorize(BigInt const &amp;value)</strong>:<br/>
+        The prime factors of <em >value</em> are determined and returned in the
+<em >PrimeFactors::Factors</em> vectors. While the prime factors of <em >value</em> are
+determined new prime numbers may be added to the <em >BigIntVector</em> or to the
+stream that is passed to the <strong >PrimeFactors</strong> object. The elements of
+<em >PrimeFactors::Factors</em> are sorted by their prime numbers. The first element
 contains the value's smallest prime number factor.
     </ul>
 <p>
-<h2>EXAMPLE</h2>
+<h2 >EXAMPLE</h2>
 <p>
-<pre>
+<pre >
 #include &lt;iostream&gt;
 #include &lt;bobcat/primefactors&gt;
 
@@ -238,35 +238,35 @@ output:
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/primefactors</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/primefactors</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>bigint</strong>(3bobcat)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >bigint</strong>(3bobcat)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

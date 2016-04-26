@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::ClientSocket</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,27 +43,27 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::ClientSocket(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Client Socket</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Client Socket</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::ClientSocket - Client Socket connecting to a Server in the Internet
+<h2 >NAME</h2>FBB::ClientSocket - Client Socket connecting to a Server in the Internet
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/clientsocket&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/clientsocket&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
-    An <strong>FBB::ClientSocket</strong> may be constructed to connect to some server
-process in the internet. The socket made available by the <strong>FBB:ClientSocket</strong>
-may be used to initialize a <strong>std::istream</strong> and/or <strong>std::ostream</strong>. The
-<strong>std::istream</strong> is used to read information from the server process to which
-the <strong>FBB::ClientSocket</strong> connects, The <strong>std::ostream</strong> is used to send
-information to the server process to which the <strong>FBB::ClientSocket</strong> connects.
-Since a socket may be considered a <em>file descriptor</em> the available
-<strong>FBB::IFdStream</strong>, <strong>FBB::IFdStreamBuf</strong>, <strong>FBB::OFdStream</strong>, and
-<strong>FBB::OFdStreamBuf</strong> classes may be used profitably here. Note that having
+<h2 >DESCRIPTION</h2>
+    An <strong >FBB::ClientSocket</strong> may be constructed to connect to some server
+process in the internet. The socket made available by the <strong >FBB:ClientSocket</strong>
+may be used to initialize a <strong >std::istream</strong> and/or <strong >std::ostream</strong>. The
+<strong >std::istream</strong> is used to read information from the server process to which
+the <strong >FBB::ClientSocket</strong> connects, The <strong >std::ostream</strong> is used to send
+information to the server process to which the <strong >FBB::ClientSocket</strong> connects.
+Since a socket may be considered a <em >file descriptor</em> the available
+<strong >FBB::IFdStream</strong>, <strong >FBB::IFdStreamBuf</strong>, <strong >FBB::OFdStream</strong>, and
+<strong >FBB::OFdStreamBuf</strong> classes may be used profitably here. Note that having
 available a socket does not mean that this defines the communication
 protocol. It is (still) the responsibility of the programmer to comply with an
 existing protocol or to implement a tailor-made protocol. The latter situation
@@ -71,41 +71,41 @@ implies that the sequence of input- and output operations is defined by the
 programmer. 
 <p>
 A Unix Domain client socket can be defined using
-<em>FBB::LocalClientSocket</em>.
+<em >FBB::LocalClientSocket</em>.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
-    <strong>FBB::SocketBase</strong>
+<h2 >INHERITS FROM</h2>
+    <strong >FBB::SocketBase</strong>
 <p>
-<h2>CONSTRUCTOR</h2>
+<h2 >CONSTRUCTOR</h2>
     <ul>
-    <li> <strong>ClientSocket(std::string const &amp;host, uint16_t port)</strong>:<br/>
-        This constructor initializes an <strong>FBB::ClientSocket</strong> object,
+    <li> <strong >ClientSocket(std::string const &amp;host, uint16_t port)</strong>:<br/>
+        This constructor initializes an <strong >FBB::ClientSocket</strong> object,
 preparing it for a connection to the specified port at the given host.  An
-<strong>FBB::Exception</strong> is thrown if the socket could not be constructed. The
+<strong >FBB::Exception</strong> is thrown if the socket could not be constructed. The
 construction of the socket does not mean that a connection has actually been
-established. In order to connect to the server, the member <strong>connect()</strong> (see
+established. In order to connect to the server, the member <strong >connect()</strong> (see
 below) should be used.
     </ul>
     The copy constructor is not available.
 <p>
-<h2>MEMBER FUNCTIONS</h2>
-     All members of <strong>FBB::SocketBase</strong> (and thus of <strong>FBB::InetAddress</strong>) are
-available, as <strong>FBB::ClientSocket</strong> inherits from these classes.
+<h2 >MEMBER FUNCTIONS</h2>
+     All members of <strong >FBB::SocketBase</strong> (and thus of <strong >FBB::InetAddress</strong>) are
+available, as <strong >FBB::ClientSocket</strong> inherits from these classes.
     <ul>
-    <li> <strong>int connect()</strong>:<br/>
+    <li> <strong >int connect()</strong>:<br/>
         This member returns a socket that can be used to communicate with the
-server process. An <strong>FBB::Exception</strong> exception is thrown if the connection could
-not be established or if the <strong>SocketBase</strong> base class could not properly be
+server process. An <strong >FBB::Exception</strong> exception is thrown if the connection could
+not be established or if the <strong >SocketBase</strong> base class could not properly be
 constructed.
     </ul>
 <p>
-<h2>EXAMPLE</h2>
-    See also the <strong>serversocket</strong>(3bobcat) example.
+<h2 >EXAMPLE</h2>
+    See also the <strong >serversocket</strong>(3bobcat) example.
         <pre>
 
     #include &lt;iostream&gt;
@@ -167,38 +167,38 @@ constructed.
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/clientsocket</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/clientsocket</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>ifdstream</strong>(3bobcat), <strong>ifdstreambuf</strong>(3bobcat),
-<strong>inetaddress</strong>(3bobcat), <strong>localclientsocket</strong>(3bobcat),
-<strong>ofdstream</strong>(3bobcat), <strong>ofdstream</strong>(3bobcat), <strong>serversocket</strong>(3bobcat),
-<strong>socketbase</strong>(3bobcat)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >ifdstream</strong>(3bobcat), <strong >ifdstreambuf</strong>(3bobcat),
+<strong >inetaddress</strong>(3bobcat), <strong >localclientsocket</strong>(3bobcat),
+<strong >ofdstream</strong>(3bobcat), <strong >ofdstream</strong>(3bobcat), <strong >serversocket</strong>(3bobcat),
+<strong >socketbase</strong>(3bobcat)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

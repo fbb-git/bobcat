@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::DecryptBuf</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,54 +43,54 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::DecryptBuf(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Decrypt information</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Decrypt information</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::DecryptBuf - Decrypts information using various methods into a std::ostream 
+<h2 >NAME</h2>FBB::DecryptBuf - Decrypts information using various methods into a std::ostream 
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/decryptbuf&gt;</strong><br/>
-    Linking option: <em> -lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/decryptbuf&gt;</strong><br/>
+    Linking option: <em > -lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
-    <strong>FBB::DecryptBuf</strong> objects are <strong>std::streambuf</strong> objects that can be used
-to initialize <em>std::ostream</em> objects with.
+<h2 >DESCRIPTION</h2>
+    <strong >FBB::DecryptBuf</strong> objects are <strong >std::streambuf</strong> objects that can be used
+to initialize <em >std::ostream</em> objects with.
 <p>
-All information inserted into such a <em>std::ostream</em> is decrypted and
-written into a <em>std::ostream</em> that is given as argument to <em>DecryptBuf</em>'s
+All information inserted into such a <em >std::ostream</em> is decrypted and
+written into a <em >std::ostream</em> that is given as argument to <em >DecryptBuf</em>'s
 constructor.
 <p>
 All encryption methods defined by the OpenSSL library that can be selected
-by name may be used in combination with <em>DecryptBuf</em> objects. Most likely
-the information will have been encrypted using an <em>EncryptBuf</em> object,
+by name may be used in combination with <em >DecryptBuf</em> objects. Most likely
+the information will have been encrypted using an <em >EncryptBuf</em> object,
 selecting a particular encryption method. The encryption method used when
 encrypting information should also be specified when constructing a
-<em>DecryptBuf</em> object. Likewise, the constructor expects a <em>key</em> and
-<em>initialization vector</em>. The key and initialization vector that was passed
-to the <em>EncryptBuf</em> object must be passed to <em>DecryptBuf</em>'s constructor as
+<em >DecryptBuf</em> object. Likewise, the constructor expects a <em >key</em> and
+<em >initialization vector</em>. The key and initialization vector that was passed
+to the <em >EncryptBuf</em> object must be passed to <em >DecryptBuf</em>'s constructor as
 well. 
 <p>
     Block ciphers use one of the following four encryption modes:
     <ul>
-    <li> <strong>CBC (Cipher Block Chaining)</strong>:<br/> 
+    <li> <strong >CBC (Cipher Block Chaining)</strong>:<br/> 
         The first block is XOR-ed by the initialization vector and then
 encrypted using the specified method. Subsequent blocks are XOR-ed by the
 encrypted version of the preceding block. Due to the initialization vector
 dictionary attacks are infeasible, as long as the initialization vector is
 truly random.
-    <li> <strong>ECB (Electronic Code Book)</strong>:<br/> 
+    <li> <strong >ECB (Electronic Code Book)</strong>:<br/> 
         Each block is encrypted by itself, using the specified encryption
-method. Although an <em>initialization vector</em> may be specified, it is not
+method. Although an <em >initialization vector</em> may be specified, it is not
 used. This method is susceptible to dictionary attacks and should therefore be
 avoided, unless you know what you're doing.
-    <li> <strong>CFB (Cipher Feednack)</strong>:<br/>
+    <li> <strong >CFB (Cipher Feednack)</strong>:<br/>
         This method allows a block cipher to be used as a stream cipher. It
 uses an initialization vector, which should be unique and random for each new
 stream of data that is encrypted using the method. Encryption can only start
 after the first data block has been received.
-    <li> <strong>OFB (Output Feednack)</strong>:<br/>
+    <li> <strong >OFB (Output Feednack)</strong>:<br/>
         This is an alternative way to use a block cipher as a stream
 cipher. It is somewhat more susceptible to traditional data manipulation
 attacks, which can usually be thwarted when a message authentication code is
@@ -108,449 +108,449 @@ ciphers; other methods are block ciphers:
     <td colspan=5><hr/></td>
 
     
-<tr>
-<td> method</td><td> keysize</td><td> blocksize</td><td> mode</td><td> identifier</td>
+<tr >
+<td > method</td><td > keysize</td><td > blocksize</td><td > mode</td><td > identifier</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td> (bytes)</td><td> (bytes)</td> 
+<tr >
+<td > </td><td > (bytes)</td><td > (bytes)</td> 
 </tr>
 
 <td colspan=5><hr/></td>
 
     
-<tr>
-<td> AES</td><td> 16</td><td> 8</td><td> CBC</td><td> "aes-128-cbc"</td>
+<tr >
+<td > AES</td><td > 16</td><td > 8</td><td > CBC</td><td > "aes-128-cbc"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> EBC</td><td> "aes-128-ecb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > EBC</td><td > "aes-128-ecb"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> CFB</td><td> "aes-128-cfb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > CFB</td><td > "aes-128-cfb"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> OFB</td><td> "aes-128-ofb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > OFB</td><td > "aes-128-ofb"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td> 24</td><td> 24</td><td> CBC</td><td> "aes-192-cbc"</td>
+<tr >
+<td > </td><td > 24</td><td > 24</td><td > CBC</td><td > "aes-192-cbc"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> EBC</td><td> "aes-192-ecb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > EBC</td><td > "aes-192-ecb"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> CFB</td><td> "aes-192-cfb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > CFB</td><td > "aes-192-cfb"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> OFB</td><td> "aes-192-ofb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > OFB</td><td > "aes-192-ofb"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td> 32</td><td> 32</td><td> CBC</td><td> "aes-256-cbc"</td>
+<tr >
+<td > </td><td > 32</td><td > 32</td><td > CBC</td><td > "aes-256-cbc"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> EBC</td><td> "aes-256-ecb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > EBC</td><td > "aes-256-ecb"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> CFB</td><td> "aes-256-cfb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > CFB</td><td > "aes-256-cfb"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> OFB</td><td> "aes-256-ofb"</td>
- 
-</tr>
-
-<td colspan=5><hr/></td>
-
-    
-<tr>
-<td> BLOWFISH</td><td> 16</td><td> 8</td><td> CBC</td><td> "bf-cbc"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> EBC</td><td> "bf-ecb"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> CFB</td><td> "bf-cfb"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> OFB</td><td> "bf-ofb"</td>
- 
-</tr>
-
-    
-<tr>
-<td> max key length is 56 bytes, 16 generally used</td> 
-</tr>
-
-<td colspan=5><hr/></td>
-
-    
-<tr>
-<td> CAMELLIA</td><td> 16</td><td> 16</td><td> CBC</td><td> "camellia-128-cbc"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> EBC</td><td> "camellia-128-ecb"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> CFB</td><td> "camellia-128-cfb"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> OFB</td><td> "camellia-128-ofb"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td> 24</td><td> </td><td> CBC</td><td> "camellia-192-cbc"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> EBC</td><td> "camellia-192-ecb"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> CFB</td><td> "camellia-192-cfb"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> OFB</td><td> "camellia-192-ofb"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td> 32</td><td> </td><td> CBC</td><td> "camellia-256-cbc"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> EBC</td><td> "camellia-256-ecb"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> CFB</td><td> "camellia-256-cfb"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> OFB</td><td> "camellia-256-ofb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > OFB</td><td > "aes-256-ofb"</td>
  
 </tr>
 
 <td colspan=5><hr/></td>
 
     
-<tr>
-<td> CAST</td><td> 16</td><td> 8</td><td> CBC</td><td> "cast-cbc"</td>
+<tr >
+<td > BLOWFISH</td><td > 16</td><td > 8</td><td > CBC</td><td > "bf-cbc"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> EBC</td><td> "cast-ecb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > EBC</td><td > "bf-ecb"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> CFB</td><td> "cast-cfb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > CFB</td><td > "bf-cfb"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> OFB</td><td> "cast-ofb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > OFB</td><td > "bf-ofb"</td>
  
 </tr>
 
     
-<tr>
-
-            <td> min key length is 5 bytes, max is shown</td> 
+<tr >
+<td > max key length is 56 bytes, 16 generally used</td> 
 </tr>
 
 <td colspan=5><hr/></td>
 
     
-<tr>
-<td> DES</td><td> 8</td><td> 8</td><td> CBC</td><td> "des-cbc"</td>
+<tr >
+<td > CAMELLIA</td><td > 16</td><td > 16</td><td > CBC</td><td > "camellia-128-cbc"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> EBC</td><td> "des-ebc"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > EBC</td><td > "camellia-128-ecb"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> CFB</td><td> "des-cfb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > CFB</td><td > "camellia-128-cfb"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> OFB</td><td> "des-ofb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > OFB</td><td > "camellia-128-ofb"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td > 24</td><td > </td><td > CBC</td><td > "camellia-192-cbc"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td >   </td><td >   </td><td > EBC</td><td > "camellia-192-ecb"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td >   </td><td >   </td><td > CFB</td><td > "camellia-192-cfb"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td >   </td><td >   </td><td > OFB</td><td > "camellia-192-ofb"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td > 32</td><td > </td><td > CBC</td><td > "camellia-256-cbc"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td >   </td><td >   </td><td > EBC</td><td > "camellia-256-ecb"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td >   </td><td >   </td><td > CFB</td><td > "camellia-256-cfb"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td >   </td><td >   </td><td > OFB</td><td > "camellia-256-ofb"</td>
  
 </tr>
 
 <td colspan=5><hr/></td>
 
     
-<tr>
-<td> DESX</td><td> 8</td><td> 8</td><td> CBC</td><td> "desx-cbc"</td>
+<tr >
+<td > CAST</td><td > 16</td><td > 8</td><td > CBC</td><td > "cast-cbc"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td >   </td><td >   </td><td > EBC</td><td > "cast-ecb"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td >   </td><td >   </td><td > CFB</td><td > "cast-cfb"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td >   </td><td >   </td><td > OFB</td><td > "cast-ofb"</td>
+ 
+</tr>
+
+    
+<tr >
+
+            <td > min key length is 5 bytes, max is shown</td> 
+</tr>
+
+<td colspan=5><hr/></td>
+
+    
+<tr >
+<td > DES</td><td > 8</td><td > 8</td><td > CBC</td><td > "des-cbc"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td >   </td><td >   </td><td > EBC</td><td > "des-ebc"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td >   </td><td >   </td><td > CFB</td><td > "des-cfb"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td >   </td><td >   </td><td > OFB</td><td > "des-ofb"</td>
  
 </tr>
 
 <td colspan=5><hr/></td>
 
     
-<tr>
-<td> 3DES</td><td> 16</td><td> 8</td><td> CBC</td><td> "des-ede-cbc"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> EBC</td><td> "des-ede"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> CFB</td><td> "des-ede-cfb"</td>
- 
-</tr>
-
-    
-<tr>
-<td> </td><td>   </td><td>   </td><td> OFB</td><td> "des-ede-ofb"</td>
+<tr >
+<td > DESX</td><td > 8</td><td > 8</td><td > CBC</td><td > "desx-cbc"</td>
  
 </tr>
 
 <td colspan=5><hr/></td>
 
     
-<tr>
-<td> 3DES</td><td> 24</td><td> 8</td><td> CBC</td><td> "des-ede3-cbc"</td>
+<tr >
+<td > 3DES</td><td > 16</td><td > 8</td><td > CBC</td><td > "des-ede-cbc"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> EBC</td><td> "des-ede3"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > EBC</td><td > "des-ede"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> CFB</td><td> "des-ede3-cfb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > CFB</td><td > "des-ede-cfb"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> OFB</td><td> "des-ede3-ofb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > OFB</td><td > "des-ede-ofb"</td>
  
-</tr>
-
-    
-<tr>
-
-        <td> Key bytes 9-16 define the 2nd key, bytes 17-24</td> 
-</tr>
-
-    
-<tr>
-<td> define the 3rd key</td> 
 </tr>
 
 <td colspan=5><hr/></td>
 
     
-<tr>
-<td> RC2</td><td> 16</td><td> 8</td><td> CBC</td><td> "rc2-cbc"</td>
+<tr >
+<td > 3DES</td><td > 24</td><td > 8</td><td > CBC</td><td > "des-ede3-cbc"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> EBC</td><td> "rc2-ecb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > EBC</td><td > "des-ede3"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> CFB</td><td> "rc2-cfb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > CFB</td><td > "des-ede3-cfb"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> OFB</td><td> "rc2-ofb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > OFB</td><td > "des-ede3-ofb"</td>
  
 </tr>
 
     
-<tr>
-<td> Key length variable, max. 128 bytes, default length is shown</td> 
+<tr >
+
+        <td > Key bytes 9-16 define the 2nd key, bytes 17-24</td> 
+</tr>
+
+    
+<tr >
+<td > define the 3rd key</td> 
 </tr>
 
 <td colspan=5><hr/></td>
 
     
-<tr>
-<td> RC2-40</td><td> 5</td><td> 8</td><td> </td><td> "rc2-40-cbc"</td>
+<tr >
+<td > RC2</td><td > 16</td><td > 8</td><td > CBC</td><td > "rc2-cbc"</td>
  
 </tr>
 
     
-<tr>
-<td> obsolete: avoid</td> 
+<tr >
+<td > </td><td >   </td><td >   </td><td > EBC</td><td > "rc2-ecb"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td >   </td><td >   </td><td > CFB</td><td > "rc2-cfb"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > </td><td >   </td><td >   </td><td > OFB</td><td > "rc2-ofb"</td>
+ 
+</tr>
+
+    
+<tr >
+<td > Key length variable, max. 128 bytes, default length is shown</td> 
 </tr>
 
 <td colspan=5><hr/></td>
 
     
-<tr>
-<td> RC2-64</td><td> 8</td><td> 8</td><td> </td><td> "rc2-64-cbc"</td>
+<tr >
+<td > RC2-40</td><td > 5</td><td > 8</td><td > </td><td > "rc2-40-cbc"</td>
  
 </tr>
 
     
-<tr>
-<td> obsolete: avoid</td> 
+<tr >
+<td > obsolete: avoid</td> 
 </tr>
 
 <td colspan=5><hr/></td>
 
     
-<tr>
-<td> RC4</td><td> 16</td><td> N.A.</td><td> </td><td> "rc4"</td>
+<tr >
+<td > RC2-64</td><td > 8</td><td > 8</td><td > </td><td > "rc2-64-cbc"</td>
  
 </tr>
 
     
-<tr>
-<td> Key length is variable, max. 256 bytes. default length is shown</td> 
-</tr>
-
-    
-<tr>
-
-        <td> Encrypt again to decrypt. Don't use <em>DecryptBuf</em></td> 
-</tr>
- 
-<td colspan=5><hr/></td>
-
-    
-<tr>
-<td> RC4-40</td><td> 5</td><td> N.A.</td><td> </td><td> "rc4-40"</td>
- 
-</tr>
-
-    
-<tr>
-<td> obsolete: avoid</td> 
+<tr >
+<td > obsolete: avoid</td> 
 </tr>
 
 <td colspan=5><hr/></td>
 
     
-<tr>
-<td> RC5</td><td> 16</td><td> 8</td><td> CBC</td><td> "rc5-cbc"</td>
+<tr >
+<td > RC4</td><td > 16</td><td > N.A.</td><td > </td><td > "rc4"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> EBC</td><td> "rc5-ecb"</td>
+<tr >
+<td > Key length is variable, max. 256 bytes. default length is shown</td> 
+</tr>
+
+    
+<tr >
+
+        <td > Encrypt again to decrypt. Don't use <em >DecryptBuf</em></td> 
+</tr>
+ 
+<td colspan=5><hr/></td>
+
+    
+<tr >
+<td > RC4-40</td><td > 5</td><td > N.A.</td><td > </td><td > "rc4-40"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> CFB</td><td> "rc5-cfb"</td>
+<tr >
+<td > obsolete: avoid</td> 
+</tr>
+
+<td colspan=5><hr/></td>
+
+    
+<tr >
+<td > RC5</td><td > 16</td><td > 8</td><td > CBC</td><td > "rc5-cbc"</td>
  
 </tr>
 
     
-<tr>
-<td> </td><td>   </td><td>   </td><td> OFB</td><td> "rc5-ofb"</td>
+<tr >
+<td > </td><td >   </td><td >   </td><td > EBC</td><td > "rc5-ecb"</td>
  
 </tr>
 
     
-<tr>
-
-        <td> Key length variable, max. 256 bytes, rounds 8, 12 or 16,</td> 
+<tr >
+<td > </td><td >   </td><td >   </td><td > CFB</td><td > "rc5-cfb"</td>
+ 
 </tr>
 
     
-<tr>
+<tr >
+<td > </td><td >   </td><td >   </td><td > OFB</td><td > "rc5-ofb"</td>
+ 
+</tr>
 
-        <td> default # rounds is 12</td> 
+    
+<tr >
+
+        <td > Key length variable, max. 256 bytes, rounds 8, 12 or 16,</td> 
+</tr>
+
+    
+<tr >
+
+        <td > default # rounds is 12</td> 
 </tr>
 
 <td colspan=5><hr/></td>
@@ -562,100 +562,100 @@ The RC4 stream cipher is subject to a well-known attack
 (cf. <a href="http://www.wisdom.weizmann.ac.il/~itsik/RC4/Papers/Mantin1.zip">http://www.wisdom.weizmann.ac.il/~itsik/RC4/Papers/Mantin1.zip</a>)
 unless the initial 256 bytes produced by the cipher are discarded. 
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
-    <strong>std::streambuf</strong>
+<h2 >INHERITS FROM</h2>
+    <strong >std::streambuf</strong>
 <p>
-<h2>CONSTRUCTOR/DESTRUCTOR</h2>
+<h2 >CONSTRUCTOR/DESTRUCTOR</h2>
     <ul>
-    <li> <strong>DecryptBuf(std::ostream &amp;outStream, char const *type, 
+    <li> <strong >DecryptBuf(std::ostream &amp;outStream, char const *type, 
                             std::string const &amp;key, std::string const &amp;iv,
                             size_t bufsize = 1024)</strong>:<br/>
-        This constructor initializes the <em>DecryptBuf</em> object preparing it
-for the message decrypt algorithm specified with <em>type</em>. The decryption
+        This constructor initializes the <em >DecryptBuf</em> object preparing it
+for the message decrypt algorithm specified with <em >type</em>. The decryption
 algorithms that can be used are listed in the table found in the
-<strong>EncryptBuf</strong>(3bobcat) manual page. As an example: to use the AES method on
-192 bit keys and blocks in CBC mode specify <em>"aes-192-cbc"</em>. The <em>key</em>
-parameter refers to the key to be used, the <em>iv</em> parameter refers to the
-initialization vector to use. The <em>iv</em>'s length cannot be zero. When using 
+<strong >EncryptBuf</strong>(3bobcat) manual page. As an example: to use the AES method on
+192 bit keys and blocks in CBC mode specify <em >"aes-192-cbc"</em>. The <em >key</em>
+parameter refers to the key to be used, the <em >iv</em> parameter refers to the
+initialization vector to use. The <em >iv</em>'s length cannot be zero. When using 
 ECB modes no initialization vector is used. In those cases any non-empty
 initialization vector may be provided.
 <p>
-The constructor throws an <em>FBB::Exception</em> exception if an unknown
+The constructor throws an <em >FBB::Exception</em> exception if an unknown
 encryption method was specified.
 <p>
-The constructor's first parameter refers to the <em>std::ostream</em> to
+The constructor's first parameter refers to the <em >std::ostream</em> to
 receive the decrypted information.
 <p>
-The <em>bufsize</em> argument specifies the size in bytes of the internal
-buffer used by <em>DecryptBuf</em> to store incoming characters temporarily. The
+The <em >bufsize</em> argument specifies the size in bytes of the internal
+buffer used by <em >DecryptBuf</em> to store incoming characters temporarily. The
 provided default argument should be OK in all normal cases.
-    <li> <strong>~DecryptBuf()</strong>:<br/> 
-        The destructor calls the <em>done()</em> member (see below), prevending any
+    <li> <strong >~DecryptBuf()</strong>:<br/> 
+        The destructor calls the <em >done()</em> member (see below), prevending any
 exception that function might throw from leaving the destructor. In this case
 only a non thread-safe way to determine whether the decryption was
 successfully completed is available through the static member function
-<em>lastOK()</em> (see below).
+<em >lastOK()</em> (see below).
     </ul>
-    There is no copy constructor, nor move constructor (as <em>std::streambuf</em>
+    There is no copy constructor, nor move constructor (as <em >std::streambuf</em>
 doesn't support either).
 <p>
-<h2>MEMBER FUNCTIONS</h2>
+<h2 >MEMBER FUNCTIONS</h2>
 <p>
-All members of <strong>std::streambuf</strong> are available, as <strong>FBB::DecryptBuf</strong>
-inherits from this class. Some of the <strong>std::streambuf</strong>'s member are
-overridden or are hidden by <em>DecryptBuf</em>. In normal situations these
-inherited members will not be used by programs using <em>DecryptBuf</em> objects.
+All members of <strong >std::streambuf</strong> are available, as <strong >FBB::DecryptBuf</strong>
+inherits from this class. Some of the <strong >std::streambuf</strong>'s member are
+overridden or are hidden by <em >DecryptBuf</em>. In normal situations these
+inherited members will not be used by programs using <em >DecryptBuf</em> objects.
 <p>
 <ul>
-    <li> <strong>void done()</strong>:<br/>
+    <li> <strong >void done()</strong>:<br/>
         This member can be called to indicate that all information to be
-decrypted has been received. It throws an <em>FBB::Exception</em> exception if
-decryption fails (resulting from providing the <em>DecryptBuf</em> object with
+decrypted has been received. It throws an <em >FBB::Exception</em> exception if
+decryption fails (resulting from providing the <em >DecryptBuf</em> object with
 incorrect (usually improperly padded) input). If not explicitly called it is
-called by <em>DecryptBuf</em>'s destructor, preventing its exception from leaving
+called by <em >DecryptBuf</em>'s destructor, preventing its exception from leaving
 the destructor. 
-    <li> <strong>void setIv(std::string const &amp;iv)</strong>:<br/>
+    <li> <strong >void setIv(std::string const &amp;iv)</strong>:<br/>
         This member can be used to specify the initialization vector to use
 after construction time but before any data has been decrypted. When called
 after decryption has started or when specifying an empty intialization vector
-an <em>FBB::Exception</em> exception will be thrown.  When using ECB modes no
+an <em >FBB::Exception</em> exception will be thrown.  When using ECB modes no
 initialization vector is used. In those cases any non-empty initialization
 vector may be provided.
-    <li> <strong>bool setRounds(size_t nRounds)</strong>:<br/>
+    <li> <strong >bool setRounds(size_t nRounds)</strong>:<br/>
         This member can only be used with the RC5 decryption method to set the
 number of rounds of the algorithm to 8, 12 or 16. When the number of rounds
-were updated successfully the member returns <em>true</em>. It returns <em>false</em> in
+were updated successfully the member returns <em >true</em>. It returns <em >false</em> in
 other cases (e.g., called for other decryption methods than RC5 or the
 requested number of rounds differ from 8, 12 or 16).
     </ul>
 <p>
-<h2>STATIC MEMBER</h2>
+<h2 >STATIC MEMBER</h2>
     <ul>
-    <li> <strong>bool lastOK()</strong>:<br/>
+    <li> <strong >bool lastOK()</strong>:<br/>
         This member is a non thread-safe way to determine whether the
-decryption has succeeded when the  <em>DecryptBuf</em> object's <em>done</em> member has
+decryption has succeeded when the  <em >DecryptBuf</em> object's <em >done</em> member has
 not been called and the object has been destroyed. In that case the object's
-destructor will call <em>done</em> to complete the decryption. The member
-<em>lastOK</em> returns <em>true</em> if the <em>DecryptBuf</em> object  destroyed last
-could complete its decryption successfully and returns <em>false</em> otherwise. 
+destructor will call <em >done</em> to complete the decryption. The member
+<em >lastOK</em> returns <em >true</em> if the <em >DecryptBuf</em> object  destroyed last
+could complete its decryption successfully and returns <em >false</em> otherwise. 
     </ul>
 <p>
-<h2>PROTECTED MEMBER</h2>
+<h2 >PROTECTED MEMBER</h2>
     <ul>
-    <li> <strong>EVP_CIPHER_CTX *cipherCtx()</strong>:<br/>
-        Classes derived from <em>DecryptBuf</em> may use this member to gain direct
-access to the <em>EVP_CIPHER_CTX</em> pointer used by the <em>DecryptBuf</em>
+    <li> <strong >EVP_CIPHER_CTX *cipherCtx()</strong>:<br/>
+        Classes derived from <em >DecryptBuf</em> may use this member to gain direct
+access to the <em >EVP_CIPHER_CTX</em> pointer used by the <em >DecryptBuf</em>
 object. This pointer is a pointer to an opaque structure used by many OpenSSL
 functions to set or query parameters of an decryption method.
     </ul>
 <p>
-<h2>EXAMPLE</h2>
-    <pre>
+<h2 >EXAMPLE</h2>
+    <pre >
 #include &lt;iostream&gt;
 #include &lt;fstream&gt;
 #include &lt;bobcat/exception&gt;
@@ -695,35 +695,35 @@ catch(exception const &amp;err)
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/decryptbuf</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/decryptbuf</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>encryptbuf</strong>(3bobcat), <strong>std::streambuf</strong>
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >encryptbuf</strong>(3bobcat), <strong >std::streambuf</strong>
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None reported
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

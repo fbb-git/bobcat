@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::MultiStreambuf</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,173 +43,173 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::MultiStreambuf(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Writing multiple streams</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Writing multiple streams</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::MultiStreambuf - Selectively writes multiple streams
+<h2 >NAME</h2>FBB::MultiStreambuf - Selectively writes multiple streams
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/multistreambuf&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/multistreambuf&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
-    The <strong>FBB::MultiStreambuf</strong> class is a specialization of
-<em>std::streambuf</em>. It can be used to write selectively to multiple
-<em>std::ostreams</em>. Each <em>std::ostream</em> that is associated with a
-<strong>MultiStreambuf</strong> is given a mode-tag indicating whether the stream
+<h2 >DESCRIPTION</h2>
+    The <strong >FBB::MultiStreambuf</strong> class is a specialization of
+<em >std::streambuf</em>. It can be used to write selectively to multiple
+<em >std::ostreams</em>. Each <em >std::ostream</em> that is associated with a
+<strong >MultiStreambuf</strong> is given a mode-tag indicating whether the stream
 should always be used when information is inserted into the
-<strong>MultiStreambuf</strong>, just once, or not at all. Each of the stream's 
+<strong >MultiStreambuf</strong>, just once, or not at all. Each of the stream's 
 mode-tags may be set to any of the defined tag-values. 
 <p>
-When the address of a <strong>MultiStreambuf</strong> is used to initialize a
-<em>std::ostream</em> the constructed <em>std::ostream</em> becomes an
-output-multiplexer: by inserting information into the <em>std::ostream</em> object,
-all <em>std::ostream</em> objects added to its <strong>MultiStreambuf</strong> buffer which
+When the address of a <strong >MultiStreambuf</strong> is used to initialize a
+<em >std::ostream</em> the constructed <em >std::ostream</em> becomes an
+output-multiplexer: by inserting information into the <em >std::ostream</em> object,
+all <em >std::ostream</em> objects added to its <strong >MultiStreambuf</strong> buffer which
 have an active mode receive that information.
 <p>
-An <strong>MultiStreambuf</strong> object should be outlived by all active streams
+An <strong >MultiStreambuf</strong> object should be outlived by all active streams
 that are associated with it.
 <p>
-<strong>MultiStreambuf</strong> objects refer to <em>std::ostreams</em> which are passed to it,
-and not to their <em>std::streambufs</em>. So it is possible to change these
-<em>std::ostream's std::streambufs</em> without reinstalling the <em>std::ostreams</em>
+<strong >MultiStreambuf</strong> objects refer to <em >std::ostreams</em> which are passed to it,
+and not to their <em >std::streambufs</em>. So it is possible to change these
+<em >std::ostream's std::streambufs</em> without reinstalling the <em >std::ostreams</em>
 themselves. 
 <p>
-No assumptions should be made about the order in which the <em>std::ostream</em>
-objects that are associated with the <strong>MultiStreambuf</strong> objects are
+No assumptions should be made about the order in which the <em >std::ostream</em>
+objects that are associated with the <strong >MultiStreambuf</strong> objects are
 visited when information is inserted.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
-        <em>std::streambuf</em>
+<h2 >INHERITS FROM</h2>
+        <em >std::streambuf</em>
 <p>
-<h2>ENUMERATION</h2>
-    In the <strong>Mode</strong> enumeration the following values are defined:
+<h2 >ENUMERATION</h2>
+    In the <strong >Mode</strong> enumeration the following values are defined:
     <ul>
-    <li> <strong>OFF</strong>:<br/>
-        A <em>std::ostream</em> having this mode will not be used when information
-is inserted into a <strong>MultiStreambuf</strong>
-    <li> <strong>ON</strong>:<br/>
-        A <em>std::ostream</em> having this mode will be used when information
-is inserted into a <strong>MultiStreambuf</strong>
-    <li> <strong>ONCE</strong>:<br/>
-        A <em>std::ostream</em> having this mode will be used once, until the next
+    <li> <strong >OFF</strong>:<br/>
+        A <em >std::ostream</em> having this mode will not be used when information
+is inserted into a <strong >MultiStreambuf</strong>
+    <li> <strong >ON</strong>:<br/>
+        A <em >std::ostream</em> having this mode will be used when information
+is inserted into a <strong >MultiStreambuf</strong>
+    <li> <strong >ONCE</strong>:<br/>
+        A <em >std::ostream</em> having this mode will be used once, until the next
 flushing operation, when information is inserted into an
-<strong>MultiStreambuf</strong>
-    <li> <strong>RESET</strong>:<br/>
-        A <em>std::ostream</em> having this mode will not be used when information
-is inserted into a <strong>MultiStreambuf</strong>. At a flush operation all <strong>ONCE</strong>
-modes will be set to <strong>RESET</strong>
-    <li> <strong>ALL</strong>:<br/>
-        This mode is used in combination with the member <em>remove</em> to remove 
-all <em>std::ostream</em> elements matching a specified <em>std::ostream</em> argument.
+<strong >MultiStreambuf</strong>
+    <li> <strong >RESET</strong>:<br/>
+        A <em >std::ostream</em> having this mode will not be used when information
+is inserted into a <strong >MultiStreambuf</strong>. At a flush operation all <strong >ONCE</strong>
+modes will be set to <strong >RESET</strong>
+    <li> <strong >ALL</strong>:<br/>
+        This mode is used in combination with the member <em >remove</em> to remove 
+all <em >std::ostream</em> elements matching a specified <em >std::ostream</em> argument.
     </ul>
 <p>
-<h2>TYPES</h2>
-    The following subtypes are defined in the class <strong>FBB:MultiStreambuf</strong>:
+<h2 >TYPES</h2>
+    The following subtypes are defined in the class <strong >FBB:MultiStreambuf</strong>:
     <ul>
-    <li> <strong>iterator</strong>:<br/>
-        This is a synonym of <em>std::vector&lt;stream&gt;::iterator</em>
-    <li> <strong>const_iterator</strong>:<br/>
-        This is a synonym of <em>std::vector&lt;stream&gt;::const_iterator</em>
+    <li> <strong >iterator</strong>:<br/>
+        This is a synonym of <em >std::vector&lt;stream&gt;::iterator</em>
+    <li> <strong >const_iterator</strong>:<br/>
+        This is a synonym of <em >std::vector&lt;stream&gt;::const_iterator</em>
     </ul>
 <p>
-<h2>NESTED CLASS</h2>
-    The class <strong>MultiStreambuf::stream</strong> is defined as a nested class of
-<strong>MultiStreambuf</strong>. It offers the following constructor and public
+<h2 >NESTED CLASS</h2>
+    The class <strong >MultiStreambuf::stream</strong> is defined as a nested class of
+<strong >MultiStreambuf</strong>. It offers the following constructor and public
 members: 
     <ul>
-    <li> <strong>stream(std::ostream &amp;os, Mode mode = ON)</strong>:<br/>
-        The constructor stores a <em>std::ostream</em> object, and associates a
-<strong>Mode</strong> value with it.
-    <li> <strong>void setMode(Mode mode)</strong>:<br/>
-        This member is used to redefine the <strong>stream</strong>'s  <strong>Mode</strong> value.
-    <li> <strong>void mode() const</strong>:<br/>
-        This member returns the  <strong>stream</strong>'s  <strong>Mode</strong> value.
-    <li> <strong>operator std::ostream &amp;()</strong>:<br/>
-        This member returns the  <strong>stream</strong>'s  <em>std::ostream</em>.
+    <li> <strong >stream(std::ostream &amp;os, Mode mode = ON)</strong>:<br/>
+        The constructor stores a <em >std::ostream</em> object, and associates a
+<strong >Mode</strong> value with it.
+    <li> <strong >void setMode(Mode mode)</strong>:<br/>
+        This member is used to redefine the <strong >stream</strong>'s  <strong >Mode</strong> value.
+    <li> <strong >void mode() const</strong>:<br/>
+        This member returns the  <strong >stream</strong>'s  <strong >Mode</strong> value.
+    <li> <strong >operator std::ostream &amp;()</strong>:<br/>
+        This member returns the  <strong >stream</strong>'s  <em >std::ostream</em>.
     </ul>    
 <p>
-<h2>CONSTRUCTORS</h2>
+<h2 >CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>MultiStreambuf()</strong>:<br/>
-        The default constructor creates a <strong>MultiStreambuf</strong> object which
-contains no associated <em>std::ostream</em> objects.
-    <li> <strong>MultiStreambuf(std::ostream &amp;os, Mode mode = ON)</strong>:<br/>
-        This constructor creates a <strong>MultiStreambuf</strong> object which
-is immediately associated with the <em>std::ostream</em> specified as its first
+    <li> <strong >MultiStreambuf()</strong>:<br/>
+        The default constructor creates a <strong >MultiStreambuf</strong> object which
+contains no associated <em >std::ostream</em> objects.
+    <li> <strong >MultiStreambuf(std::ostream &amp;os, Mode mode = ON)</strong>:<br/>
+        This constructor creates a <strong >MultiStreambuf</strong> object which
+is immediately associated with the <em >std::ostream</em> specified as its first
 argument. 
-    <li> <strong>MultiStreambuf(std::vector&lt;MultiStreambuf::stream&gt; const &amp;osvector)</strong>:<br/>
-        This constructor creates a <strong>MultiStreambuf</strong> object which is
-immediately associated with all <em>std::ostream</em> objects that are stored in
-the <strong>MultiStreambuf::stream</strong> elements of the specified vector.
+    <li> <strong >MultiStreambuf(std::vector&lt;MultiStreambuf::stream&gt; const &amp;osvector)</strong>:<br/>
+        This constructor creates a <strong >MultiStreambuf</strong> object which is
+immediately associated with all <em >std::ostream</em> objects that are stored in
+the <strong >MultiStreambuf::stream</strong> elements of the specified vector.
     </ul>
     The copy constructor is available.
 <p>
-<h2>MEMBER FUNCTIONS</h2>
-     All members of <em>std::ostringstream</em> and <em>std::exception</em> are
-available, as <strong>MultiStreambuf</strong> inherits from these classes.
+<h2 >MEMBER FUNCTIONS</h2>
+     All members of <em >std::ostringstream</em> and <em >std::exception</em> are
+available, as <strong >MultiStreambuf</strong> inherits from these classes.
     <ul>
-    <li> <strong>iterator begin()</strong>:<br/>
-        This member returns an iterator to the first <strong>stream</strong> element that
-is stored in a <strong>MultiStreambuf</strong> object.
-    <li> <strong>const_iterator begin()</strong>:<br/>
-        This member returns an iterator to the first (unmodifiable) <strong>stream</strong>
-element that is stored in a <strong>MultiStreambuf</strong> object.
-    <li> <strong>iterator end()</strong>:<br/>
-        This member returns an iterator pointing beyond the last <strong>stream</strong>
-element that is stored in a <strong>MultiStreambuf</strong> object.
-    <li> <strong>const_iterator end()</strong>:<br/>
+    <li> <strong >iterator begin()</strong>:<br/>
+        This member returns an iterator to the first <strong >stream</strong> element that
+is stored in a <strong >MultiStreambuf</strong> object.
+    <li> <strong >const_iterator begin()</strong>:<br/>
+        This member returns an iterator to the first (unmodifiable) <strong >stream</strong>
+element that is stored in a <strong >MultiStreambuf</strong> object.
+    <li> <strong >iterator end()</strong>:<br/>
+        This member returns an iterator pointing beyond the last <strong >stream</strong>
+element that is stored in a <strong >MultiStreambuf</strong> object.
+    <li> <strong >const_iterator end()</strong>:<br/>
         This member returns an iterator pointing beyond the last
-(unmodifiable) <strong>stream</strong> element that is stored in a <strong>MultiStreambuf</strong>
+(unmodifiable) <strong >stream</strong> element that is stored in a <strong >MultiStreambuf</strong>
 object.
-    <li> <strong>void insert(std::ostream &amp;os, Mode mode = ON)</strong>:<br/>
-        This member adds the specified <em>std::ostream</em> using the specified
-<strong>Mode</strong> to the current set of <strong>stream</strong> objects. Note that if called
-multiple times for identical <em>std::ostreams</em> these objects are inserted
+    <li> <strong >void insert(std::ostream &amp;os, Mode mode = ON)</strong>:<br/>
+        This member adds the specified <em >std::ostream</em> using the specified
+<strong >Mode</strong> to the current set of <strong >stream</strong> objects. Note that if called
+multiple times for identical <em >std::ostreams</em> these objects are inserted
 multiple times as well.
-    <li> <strong>void insert(std::vector&lt;stream&gt; const &amp;os)</strong>:<br/>
-        This member adds all <strong>stream</strong> objects stored in the <strong>os</strong> vector to
-the current set of <strong>stream</strong> objects.
-    <li> <strong>bool remove(std::ostream &amp;os, Mode mode = ONCE)</strong>:<br/>
-        If <em>os</em> is stored in the <strong>MultiStreambuf</strong> it is removed, and
-<em>true</em> is returned. If mode <em>ALL</em> is specified all <em>os</em> objects that
-were stored in the <strong>MultiStreambuf</strong> object are removed (and <em>true</em> is
-returned). If the <em>os</em> object was not stored <em>false</em> is returned. To
-determine whether <em>os</em> has been stored in the <strong>MultiStreambuf</strong> object its
-address is compared to the addresses of the <em>std::ostream</em> objects that are
-stored inside the <strong>MultiStreambuf</strong> object: the object(s) having addresses
-<em>&amp;os</em> is (are) removed.
-    <li> <strong>void void setOnce()</strong>:<br/>
-        This member will reset all the <em>RESET</em> <strong>Mode</strong> values of the stored
-<strong>stream</strong> objects to <em>ONCE</em>.
-    <li> <strong>size_t size() const</strong>:<br/>
+    <li> <strong >void insert(std::vector&lt;stream&gt; const &amp;os)</strong>:<br/>
+        This member adds all <strong >stream</strong> objects stored in the <strong >os</strong> vector to
+the current set of <strong >stream</strong> objects.
+    <li> <strong >bool remove(std::ostream &amp;os, Mode mode = ONCE)</strong>:<br/>
+        If <em >os</em> is stored in the <strong >MultiStreambuf</strong> it is removed, and
+<em >true</em> is returned. If mode <em >ALL</em> is specified all <em >os</em> objects that
+were stored in the <strong >MultiStreambuf</strong> object are removed (and <em >true</em> is
+returned). If the <em >os</em> object was not stored <em >false</em> is returned. To
+determine whether <em >os</em> has been stored in the <strong >MultiStreambuf</strong> object its
+address is compared to the addresses of the <em >std::ostream</em> objects that are
+stored inside the <strong >MultiStreambuf</strong> object: the object(s) having addresses
+<em >&amp;os</em> is (are) removed.
+    <li> <strong >void void setOnce()</strong>:<br/>
+        This member will reset all the <em >RESET</em> <strong >Mode</strong> values of the stored
+<strong >stream</strong> objects to <em >ONCE</em>.
+    <li> <strong >size_t size() const</strong>:<br/>
         The number of streams currently serviced by the
-<strong>MultiStreambuf</strong> object is returned.
+<strong >MultiStreambuf</strong> object is returned.
     </ul>
 <p>
-<h2>PROTECTED MEMBER FUNCTION</h2>
+<h2 >PROTECTED MEMBER FUNCTION</h2>
 <p>
 The member listed in this section implements the tasks of the comparably
 named virtual function in the class's private interface. This separates the
-redefinable interface from the user-interface. The class <strong>MultiStreamBuf</strong>
+redefinable interface from the user-interface. The class <strong >MultiStreamBuf</strong>
 can, in accordance with Liskov's Substitution Principle, be used as a
-<em>std:streambuf</em>; but it also offers a facility for classes deriving from
-<strong>MultiStreamBuf</strong>. This facility is listed here.
+<em >std:streambuf</em>; but it also offers a facility for classes deriving from
+<strong >MultiStreamBuf</strong>. This facility is listed here.
     <ul>
-    <li> <strong>int pSync()</strong>:<br/>
-        The contents of the <strong>MultiStreamBuf</strong>'s internal buffer is written to
-each of the <em>std::ostream</em> objects to which the <strong>MultiStreamBuf</strong> object
+    <li> <strong >int pSync()</strong>:<br/>
+        The contents of the <strong >MultiStreamBuf</strong>'s internal buffer is written to
+each of the <em >std::ostream</em> objects to which the <strong >MultiStreamBuf</strong> object
 has access.
     </ul>
 <p>
-<h2>EXAMPLE</h2>
+<h2 >EXAMPLE</h2>
     <pre>
 
 #include &lt;iostream&gt;
@@ -240,35 +240,35 @@ int main()
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/multistreambuf</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/multistreambuf</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

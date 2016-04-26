@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">SharedREADME</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,180 +43,180 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">SharedREADME(7bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Bobcat Shared Memory README</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Bobcat Shared Memory README</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>SharedREADME - Description of Bobcat's shared memory classes
+<h2 >NAME</h2>SharedREADME - Description of Bobcat's shared memory classes
 <p>
-<h2>DESCRIPTION</h2>
+<h2 >DESCRIPTION</h2>
 <p>
 <ul>
-    <li> <strong>SharedLock</strong>(3bobcat) 
+    <li> <strong >SharedLock</strong>(3bobcat) 
 <p>
-The class <strong>SharedLock</strong>(3bobcat) is a wrapper around a
-<em>pthread_mutex</em>. <strong>SharedLock</strong> has member functions <em>lock</em> and
-<em>unlock</em>, with <em>lock</em> throwing an exception when it fails to obtain the
-lock (i.e., calling <em>pthread_mutex's lock</em> member fails, otherwise it waits
-until <em>pthread_mutex's lock</em> succeeds).
+The class <strong >SharedLock</strong>(3bobcat) is a wrapper around a
+<em >pthread_mutex</em>. <strong >SharedLock</strong> has member functions <em >lock</em> and
+<em >unlock</em>, with <em >lock</em> throwing an exception when it fails to obtain the
+lock (i.e., calling <em >pthread_mutex's lock</em> member fails, otherwise it waits
+until <em >pthread_mutex's lock</em> succeeds).
 <p>
-<strong>SharedLock</strong> is a convenience class for other shared memory
-classes. By itself <strong>SharedLock</strong> is unrelated to shared memory.
+<strong >SharedLock</strong> is a convenience class for other shared memory
+classes. By itself <strong >SharedLock</strong> is unrelated to shared memory.
 <p>
-<li> <strong>SharedBlock</strong>(3bobcat)
+<li> <strong >SharedBlock</strong>(3bobcat)
 <p>
-The class <strong>SharedBlock</strong>(3bobcat) defines a small object consisting of a
-<strong>SharedMutex</strong> and a (shared segment) id. If offers functionality to set and
-retrieve the id, and to lock and unlock the <strong>SharedMutex</strong>. <strong>SharedBlock</strong>
+The class <strong >SharedBlock</strong>(3bobcat) defines a small object consisting of a
+<strong >SharedMutex</strong> and a (shared segment) id. If offers functionality to set and
+retrieve the id, and to lock and unlock the <strong >SharedMutex</strong>. <strong >SharedBlock</strong>
 objects are used by 
-<strong>SharedSegment</strong>(3bobcat) objects to keep track of which segments actually
+<strong >SharedSegment</strong>(3bobcat) objects to keep track of which segments actually
 contain the shared memory data. It's a bookkeeping helper class.
 <p>
-<li> <strong>SharedSegment</strong>(3bobcat)
+<li> <strong >SharedSegment</strong>(3bobcat)
 <p>
-The class <strong>SharedSegment</strong> (cf. figure <em>images/sharedsegment1.jpg</em>)
+The class <strong >SharedSegment</strong> (cf. figure <em >images/sharedsegment1.jpg</em>)
 interfaces to actual shared memory. Its main member function is the static
-member <em>create</em>, returning a pointer to a newly allocated <em>SharedMemory</em>
+member <em >create</em>, returning a pointer to a newly allocated <em >SharedMemory</em>
 object.
 <p>
-The member <em>create</em> receives as its input parameters the number of blocks,
-the size of the segments allocated by <strong>SharedSegment</strong>, and the segment's
-access mode (as used by, e.g., <strong>chmod</strong>(1)). It returns a pointer to the
-allocated <em>SharedSegment</em>, and its ID (set using a pointer to an <em>int</em>,
+The member <em >create</em> receives as its input parameters the number of blocks,
+the size of the segments allocated by <strong >SharedSegment</strong>, and the segment's
+access mode (as used by, e.g., <strong >chmod</strong>(1)). It returns a pointer to the
+allocated <em >SharedSegment</em>, and its ID (set using a pointer to an <em >int</em>,
 passed as its first parameter). 
 <p>
-Although the <strong>SharedSegment</strong> class defines an array of a single
-<strong>SharedBlock</strong>(3bobcat) object, in fact it will contain <em>d_nBlocks</em>
-<strong>SharedBlock</strong> objects. The member <em>create</em> first allocates a block of raw
+Although the <strong >SharedSegment</strong> class defines an array of a single
+<strong >SharedBlock</strong>(3bobcat) object, in fact it will contain <em >d_nBlocks</em>
+<strong >SharedBlock</strong> objects. The member <em >create</em> first allocates a block of raw
 memory of the required total size. Next it initializes the first part of this
-raw, shared memory, using the <em>SharedSegment</em> constructor and placement
+raw, shared memory, using the <em >SharedSegment</em> constructor and placement
 new. Next, the remaining amount of raw shared memory is initialized with
-<em>d_nBlocks - 1</em> <strong>SharedBlock</strong> objects, again using placement new
-(cf. figure <em>images/sharedsegment2.jpg</em>).
-    <li> <strong>SharedPos</strong>(3bobcat)
+<em >d_nBlocks - 1</em> <strong >SharedBlock</strong> objects, again using placement new
+(cf. figure <em >images/sharedsegment2.jpg</em>).
+    <li> <strong >SharedPos</strong>(3bobcat)
 <p>
-The class <strong>SharedPos</strong>(3bobcat) monitors position information in the shared
-memory segments managed by <strong>SharedSegment</strong> objects. <strong>SharedPos</strong> only has a
-default constructor, but offers a <strong>reset</strong> member receiving at construction
-time a pointer to a <strong>SharedSegment</strong> object. 
+The class <strong >SharedPos</strong>(3bobcat) monitors position information in the shared
+memory segments managed by <strong >SharedSegment</strong> objects. <strong >SharedPos</strong> only has a
+default constructor, but offers a <strong >reset</strong> member receiving at construction
+time a pointer to a <strong >SharedSegment</strong> object. 
 <p>
-<li> <strong>SharedMemory</strong>(3bobcat)
+<li> <strong >SharedMemory</strong>(3bobcat)
 <p>
-The class <strong>SharedMemory</strong>(3bobcat) offers the standard interface to
-shared memory, defining members like <em>read, get, write</em> and <em>put</em>. It
-interfaces to a <em>SharedSegment</em> object, and uses a <em>SharedPos</em> object to
-keep track of the <em>SharedMemory's</em> offsets.
+The class <strong >SharedMemory</strong>(3bobcat) offers the standard interface to
+shared memory, defining members like <em >read, get, write</em> and <em >put</em>. It
+interfaces to a <em >SharedSegment</em> object, and uses a <em >SharedPos</em> object to
+keep track of the <em >SharedMemory's</em> offsets.
 <p>
-A <strong>SharedMemory</strong> object itself resides in a program's working memory, and not
-in the computer's shared memory area. At any time the <strong>SharedMemory</strong> object
+A <strong >SharedMemory</strong> object itself resides in a program's working memory, and not
+in the computer's shared memory area. At any time the <strong >SharedMemory</strong> object
 only loads at most one actual block of the shared memory block managed by
-<strong>SharedSegment</strong>. The current position in the shared memory managed by
-<strong>SharedSegment</strong> is monitored by the <strong>SharedMemory</strong>'s <em>SharedBlock d_pos</em>
+<strong >SharedSegment</strong>. The current position in the shared memory managed by
+<strong >SharedSegment</strong> is monitored by the <strong >SharedMemory</strong>'s <em >SharedBlock d_pos</em>
 member. 
 <p>
 Following read/write operations the offset is updated accordingly. There's
-only one offset, which is used by <em>[IO]?SharedStream</em> objects when
-requesting or updating offsets. a <strong>SharedMemory</strong> object offers safeguards
+only one offset, which is used by <em >[IO]?SharedStream</em> objects when
+requesting or updating offsets. a <strong >SharedMemory</strong> object offers safeguards
 against inappropriate use. E.g., if no memory has been allocated yet it may
-thow exceptions. Also, offsets can never exceed the <em>SharedMemory's</em> maximum
+thow exceptions. Also, offsets can never exceed the <em >SharedMemory's</em> maximum
 possible offset. 
 <p>
-<li> <strong>SharedMutex</strong>(3bobcat)
+<li> <strong >SharedMutex</strong>(3bobcat)
 <p>
-The class <strong>SharedMutex</strong> implements a non-recursive mutex that can be stored
-in shared memory. It merely offers <em>lock</em> and <em>unlock</em> members. Within one
-thread <em>lcok</em> should never be called repeatedly unless <em>unlock</em> is called
-first. The <em>unlock</em> member may safely repeatedly be called; once the mutex
+The class <strong >SharedMutex</strong> implements a non-recursive mutex that can be stored
+in shared memory. It merely offers <em >lock</em> and <em >unlock</em> members. Within one
+thread <em >lcok</em> should never be called repeatedly unless <em >unlock</em> is called
+first. The <em >unlock</em> member may safely repeatedly be called; once the mutex
 has been unlocked, repeated requests to unlock the mutex are simply
-ignored. When a <strong>SharedMutex</strong> is destroyed it calls <em>unlock</em>. Use
-<em>SharedMemory's install</em> member to define a <strong>SharedMutex</strong> object in shared
-memory, and use <em>ptr-&gt;~SharedMutex()</em> (with <em>SharedMutex *ptr</em> pointing at
-the <em>SharedMutex</em> object) to destroy it again.
+ignored. When a <strong >SharedMutex</strong> is destroyed it calls <em >unlock</em>. Use
+<em >SharedMemory's install</em> member to define a <strong >SharedMutex</strong> object in shared
+memory, and use <em >ptr-&gt;~SharedMutex()</em> (with <em >SharedMutex *ptr</em> pointing at
+the <em >SharedMutex</em> object) to destroy it again.
 <p>
-<li> <strong>SharedCondition</strong>(3bobcat)
+<li> <strong >SharedCondition</strong>(3bobcat)
 <p>
-The class <strong>SharedCondition</strong> implements a condition variable and an
+The class <strong >SharedCondition</strong> implements a condition variable and an
 associated mutex, both created in shared memory controlled by a
-<strong>SharedMemory</strong> object. It offers all the functionality of
-<em>std::condition_variable</em>. A <strong>SharedCondition</strong> object itself is defined in
-a thread's working memory, but interfaces to a <em>`Condition'</em> object
+<strong >SharedMemory</strong> object. It offers all the functionality of
+<em >std::condition_variable</em>. A <strong >SharedCondition</strong> object itself is defined in
+a thread's working memory, but interfaces to a <em >`Condition'</em> object
 containing a condition variable and a mutex which are installed in shared
-memory. The size of this <em>`Condition'</em> object is returned by the static
-member <em>SharedCondition::size</em>. <strong>SharedCondition</strong> members ensure that the
-thread has access to the <em>`Condition'</em> object, and that the shared memory's
-offset has not changed when returning from the <strong>SharedCondition's</strong> members.
+memory. The size of this <em >`Condition'</em> object is returned by the static
+member <em >SharedCondition::size</em>. <strong >SharedCondition</strong> members ensure that the
+thread has access to the <em >`Condition'</em> object, and that the shared memory's
+offset has not changed when returning from the <strong >SharedCondition's</strong> members.
 <p>
-<li> <strong>SharedStreambuf</strong>(3bobcat)
+<li> <strong >SharedStreambuf</strong>(3bobcat)
 <p>
-The class <strong>SharedStreambuf</strong> implements a <em>std::streambuf</em> specialization
-interfacing to a <em>SharedMemory</em> object. In addition to a default constructor
+The class <strong >SharedStreambuf</strong> implements a <em >std::streambuf</em> specialization
+interfacing to a <em >SharedMemory</em> object. In addition to a default constructor
 which is an empty stub the class offers constructors which immediately
-interface to a <em>SharedMemory</em> object, as well as a member to (re)associate
-a <strong>SharedStreambuf</strong> object with a <em>SharedMemory</em> object.
+interface to a <em >SharedMemory</em> object, as well as a member to (re)associate
+a <strong >SharedStreambuf</strong> object with a <em >SharedMemory</em> object.
 <p>
-<li> <strong>SharedStream, ISharedStream, OSharedStream</strong>(3bobcat)
+<li> <strong >SharedStream, ISharedStream, OSharedStream</strong>(3bobcat)
 <p>
 These stream classes offer stream-facilities operating on shared memory
-maintained by a <em>SharedMemory</em> object. The <strong>SharedStream</strong> class uses the
-<em>SharedMemory's seek</em> member for both <em>seekp</em> and <em>seekg</em>, and uses
-<em>SharedMemory's offset</em> member for both <em>tellp</em> and <em>tellg</em>. All shared
-stream objects, including <strong>ISharedStream</strong>, offer a member to initialize a
-<em>SharedCondition</em>
+maintained by a <em >SharedMemory</em> object. The <strong >SharedStream</strong> class uses the
+<em >SharedMemory's seek</em> member for both <em >seekp</em> and <em >seekg</em>, and uses
+<em >SharedMemory's offset</em> member for both <em >tellp</em> and <em >tellg</em>. All shared
+stream objects, including <strong >ISharedStream</strong>, offer a member to initialize a
+<em >SharedCondition</em>
 <p>
 </ul>
 <p>
 An overview of currently defined shared memory segments is shown by the
-command <em>ipcs -ma</em>. To remove a defined shared memory segment the command
-<em>ipcrm -m &lt;id&gt;</em> can be used, where <em>&lt;id&gt;</em> is the shared memory segment's
+command <em >ipcs -ma</em>. To remove a defined shared memory segment the command
+<em >ipcrm -m &lt;id&gt;</em> can be used, where <em >&lt;id&gt;</em> is the shared memory segment's
 ID. 
 <p>
-<h2>EXAMPLE</h2>
-    See the <strong>sharedstream</strong>(3bobcat) man page.
+<h2 >EXAMPLE</h2>
+    See the <strong >sharedstream</strong>(3bobcat) man page.
 <p>
-<h2>FILES</h2>
+<h2 >FILES</h2>
 <p>
 Images referred to in this man-page are located in the source distribution
-in <em>bobcat/documents/images</em>, or they can be found in the standard location
+in <em >bobcat/documents/images</em>, or they can be found in the standard location
 of documentation files in your distribution (e.g., they are located in
-<em>/usr/share/doc/libbobcat4/images</em>).
+<em >/usr/share/doc/libbobcat4/images</em>).
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>ipcs</strong>(1), <strong>ipcrm</strong>(1),
-        <strong>isharedstream</strong>(3bobcat),
-        <strong>osharedstream</strong>(3bobcat),
-        <strong>sharedblock</strong>(3bobcat), 
-        <strong>sharedcondition</strong>(3bobcat), 
-        <strong>sharedmemory</strong>(3bobcat),
-        <strong>sharedmutex</strong>(3bobcat),
-        <strong>sharedpos</strong>(3bobcat), 
-        <strong>sharedsegment</strong>(3bobcat), 
-        <strong>sharedstream</strong>(3bobcat), 
-        <strong>sharedstreambuf</strong>(3bobcat)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >ipcs</strong>(1), <strong >ipcrm</strong>(1),
+        <strong >isharedstream</strong>(3bobcat),
+        <strong >osharedstream</strong>(3bobcat),
+        <strong >sharedblock</strong>(3bobcat), 
+        <strong >sharedcondition</strong>(3bobcat), 
+        <strong >sharedmemory</strong>(3bobcat),
+        <strong >sharedmutex</strong>(3bobcat),
+        <strong >sharedpos</strong>(3bobcat), 
+        <strong >sharedsegment</strong>(3bobcat), 
+        <strong >sharedstream</strong>(3bobcat), 
+        <strong >sharedstreambuf</strong>(3bobcat)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

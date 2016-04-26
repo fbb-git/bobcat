@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::OHexStreambuf</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,95 +43,95 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::OHexStreambuf(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Write hex values</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Write hex values</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::OHexStreambuf - Writes characters written to an ostream as hex
+<h2 >NAME</h2>FBB::OHexStreambuf - Writes characters written to an ostream as hex
 values
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/ohexstreambuf&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/ohexstreambuf&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
+<h2 >DESCRIPTION</h2>
 <p>
-<strong>OHexStreambuf</strong> is a specialization of <em>FBB::OFilterStreambuf</em>
+<strong >OHexStreambuf</strong> is a specialization of <em >FBB::OFilterStreambuf</em>
 inserting all the characters it receives to a destination file as 2-character
 wide hexadecimal values. Optionally a maximum linelength can be specified.
 <p>
-Note that all information received by an <em>OHexStreambuf</em> object is inserted
+Note that all information received by an <em >OHexStreambuf</em> object is inserted
 as (a series of) hexadecimal values, not only plain characters. E.g., when
-inserting the value 123 the characters <em>'1', '2'</em> and <em>'3'</em> are
-successively inserted and so this will result in the string <em>313233</em> being
+inserting the value 123 the characters <em >'1', '2'</em> and <em >'3'</em> are
+successively inserted and so this will result in the string <em >313233</em> being
 inserted into the destination stream.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
+<h2 >INHERITS FROM</h2>
     FBB::OFilterStreambuf
 <p>
-<h2>CONSTRUCTOR</h2>
+<h2 >CONSTRUCTOR</h2>
     <ul>
-    <li> <strong>OFoldStreambuf(std::ostream &amp;stream, size_t width = 0)</strong>:<br/>
-    The hexadecimal characters produced by the <em>OFoldStreambuf</em> object will
-be inserted into <em>stream</em>. Optionally the maximum line width (in number of
-characters) may be specified using <em>width</em>. The (default) value 0 indicates
+    <li> <strong >OFoldStreambuf(std::ostream &amp;stream, size_t width = 0)</strong>:<br/>
+    The hexadecimal characters produced by the <em >OFoldStreambuf</em> object will
+be inserted into <em >stream</em>. Optionally the maximum line width (in number of
+characters) may be specified using <em >width</em>. The (default) value 0 indicates
 that no line breaks are requested.
     </ul>
 <p>
 The destructor writes any buffered information to the destination stream
 and will then flushes the destination stream.
 <p>
-<h2>MEMBER FUNCTIONS</h2>
-     All members of <strong>FBB::OFilterStreambuf</strong>, in particular its <em>out()</em> and
-<em>open()</em> members are available, as <strong>FBB::OHexStreambuf</strong> inherits from
+<h2 >MEMBER FUNCTIONS</h2>
+     All members of <strong >FBB::OFilterStreambuf</strong>, in particular its <em >out()</em> and
+<em >open()</em> members are available, as <strong >FBB::OHexStreambuf</strong> inherits from
 this class.
     <ul>
-    <li> <strong>size_t size() const</strong>:<br/>
+    <li> <strong >size_t size() const</strong>:<br/>
         This member returns the next column offset where the next
 hexadecimal character will appear. If a maximum line length is requested and
-<em>size()</em> does not return 0 then the last line inserted was not terminated by
-a <em>'\n'</em> character. See also the example below.
+<em >size()</em> does not return 0 then the last line inserted was not terminated by
+a <em >'\n'</em> character. See also the example below.
 <p>
 This member's return value is undefined if  no maximum line length was
 requested. 
     </ul>
 <p>
-<h2>PROTECTED MEMBER FUNCTION</h2>
+<h2 >PROTECTED MEMBER FUNCTION</h2>
 <p>
 The member listed in this section implements the tasks of the comparably
 named virtual function in the class's private interface. This separates the
-redefinable interface from the user-interface. The class <strong>OHexStreambuf</strong>
+redefinable interface from the user-interface. The class <strong >OHexStreambuf</strong>
 can, in accordance with Liskov's Substitution Principle, be used as a
-<em>std:streambuf</em>; but it also offers a facility for classes deriving from
-<strong>OHexStreambuf</strong>. This facility is listed here.
+<em >std:streambuf</em>; but it also offers a facility for classes deriving from
+<strong >OHexStreambuf</strong>. This facility is listed here.
     <ul>
-    <li> <strong>int pSync()</strong>:<br/>
-        The contents of the <strong>OHexStreambuf</strong>'s internal buffer is flushed.
+    <li> <strong >int pSync()</strong>:<br/>
+        The contents of the <strong >OHexStreambuf</strong>'s internal buffer is flushed.
     </ul>
 <p>
-<h2>STATIC MEMBER</h2>
+<h2 >STATIC MEMBER</h2>
     <ul>
-    <li> <strong>std::string text2bin(std::string const &amp;in)</strong>:<br/>
+    <li> <strong >std::string text2bin(std::string const &amp;in)</strong>:<br/>
         This static member can be used to convert a series of hexadecimal
-characters generated by a <em>OHexStreambuf</em> object back to their binary
-form. E.g, when called as <em>OHexStreambuf::text2bin("736d616c6c206976")</em> then
-the returned <em>std::string</em> will contain 8 characters, having respectively
+characters generated by a <em >OHexStreambuf</em> object back to their binary
+form. E.g, when called as <em >OHexStreambuf::text2bin("736d616c6c206976")</em> then
+the returned <em >std::string</em> will contain 8 characters, having respectively
 the binary values 0x73, 0x6d, 0x61, 0x6c, 0x6c, 0x20, 0x69, and 0x76.
 <p>
-This function does <em>not</em> verify whether its argument is properly
+This function does <em >not</em> verify whether its argument is properly
 formed. A properly formed argument consists of an even number of hexadecimal
 number characters ('0' until '9', 'a' until 'f' (or uppercase)). For
 improperly formed arguments the return value is undefined.
 <p>
 </ul>
 <p>
-<h2>EXAMPLE</h2>
+<h2 >EXAMPLE</h2>
         <pre>
 
     #include &lt;iostream&gt;
@@ -152,35 +152,35 @@ improperly formed arguments the return value is undefined.
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/ohexstreambuf</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/ohexstreambuf</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>ofilterstreambuf</strong>(3bobcat)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >ofilterstreambuf</strong>(3bobcat)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

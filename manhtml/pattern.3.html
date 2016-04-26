@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Pattern</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,47 +43,47 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Pattern(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Pattern matcher</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Pattern matcher</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::Pattern - Performs RE pattern matching
+<h2 >NAME</h2>FBB::Pattern - Performs RE pattern matching
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/pattern&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/pattern&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
-    <strong>Pattern</strong> objects may be used for Regular Expression (RE) pattern
-matching. The class is a wrapper around the <strong>regcomp</strong>(3) family of
+<h2 >DESCRIPTION</h2>
+    <strong >Pattern</strong> objects may be used for Regular Expression (RE) pattern
+matching. The class is a wrapper around the <strong >regcomp</strong>(3) family of
 functions. By default it uses `extended regular expressions', requiring you to
 escape multipliers and bounding-characters when they should be interpreted as
-ordinary characters (i.e., <em>*, +, ?, ^, $, |, (, ), [, ], {, }</em> should be
+ordinary characters (i.e., <em >*, +, ?, ^, $, |, (, ), [, ], {, }</em> should be
 escaped when used as literal characters).
 <p>
-The <strong>Pattern</strong> class supports the use of the following (Perl-like)
+The <strong >Pattern</strong> class supports the use of the following (Perl-like)
 special escape sequences: <br/>
         \b - indicating a word-boundary <br/>
-        \d - indicating a digit (<em>[[:digit:]]</em>) character <br/>
-        \s - indicating a white-space (<em>[:space:]</em>) character <br/>
-        \w - indicating a word (<em>[:alnum:]</em>) character
+        \d - indicating a digit (<em >[[:digit:]]</em>) character <br/>
+        \s - indicating a white-space (<em >[:space:]</em>) character <br/>
+        \w - indicating a word (<em >[:alnum:]</em>) character
 <p>
-The corresponding capitals (e.g., <strong>\W</strong>) define the complementary
+The corresponding capitals (e.g., <strong >\W</strong>) define the complementary
 character sets. The capitalized character set shorthands are not expanded
-inside explicit character-classes (i.e., <em>[ ... ]</em> constructions). So
-<em>[\W]</em> represents a set of two characters: <em>\</em> and <em>W</em>.
+inside explicit character-classes (i.e., <em >[ ... ]</em> constructions). So
+<em >[\W]</em> represents a set of two characters: <em >\</em> and <em >W</em>.
 <p>
-As the backslash (<em>\</em>) is treated as a special character it should be
-handled carefully. <strong>Pattern</strong> converts the escape sequences <em>\d \s \w</em> (and
-outside of explicit character classes the sequences <em>\D \S \W</em>) to their
+As the backslash (<em >\</em>) is treated as a special character it should be
+handled carefully. <strong >Pattern</strong> converts the escape sequences <em >\d \s \w</em> (and
+outside of explicit character classes the sequences <em >\D \S \W</em>) to their
 respective character classes. All other escape sequences are kept as is, and
 the resulting regular expression is offered to the pattern matching
-compilation function <strong>regcomp</strong>(3). This function will again interpret
+compilation function <strong >regcomp</strong>(3). This function will again interpret
 escape sequences. Consequently some care should be exercised when defining
 patterns containing escape sequences. Here are the rules:
     <ul>
-    <li> Special escape sequences (like <em>\d</em>) are converted to character
+    <li> Special escape sequences (like <em >\d</em>) are converted to character
 classes. E.g.,
         <pre>
 
@@ -95,7 +95,7 @@ classes. E.g.,
         
 </pre>
 
-    <li> Ordinary escape sequences (like <em>\x</em>) are kept as-is. E.g.,
+    <li> Ordinary escape sequences (like <em >\x</em>) are kept as-is. E.g.,
         <pre>
 
     ---------------------------------------------------------
@@ -119,44 +119,44 @@ classes. E.g.,
 
     </ul>
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
+<h2 >INHERITS FROM</h2>
     -
 <p>
-<h2>TYPEDEF</h2>
+<h2 >TYPEDEF</h2>
     <ul>
-    <li> <strong>Pattern::Position</strong>:<br/> 
+    <li> <strong >Pattern::Position</strong>:<br/> 
         A nested type representing the offsets of the first character and
 the offset beyond the last character of the matched text or indexed
-subexpression, defined as <em>std::pair&lt;std::string::size_type,
+subexpression, defined as <em >std::pair&lt;std::string::size_type,
 std::string::size_type&gt;</em>.
     </ul>
 <p>
-<h2>CONSTRUCTORS</h2>
+<h2 >CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>Pattern()</strong>:<br/>
+    <li> <strong >Pattern()</strong>:<br/>
         The default constructor defines no pattern, but is available as a
 placeholder for, e.g., containers requiring default constructors. A
-<strong>Pattern</strong> object thus constructed cannot be used to match patterns, but
-can be the <em>lvalue</em> in assignments where another <strong>Pattern</strong> object is
-the <em>rvalue</em>. However, it can receive a pattern using the member
-<strong>setPattern()</strong> (see below). An <strong>FBB::Exception</strong> object is thrown if the object
+<strong >Pattern</strong> object thus constructed cannot be used to match patterns, but
+can be the <em >lvalue</em> in assignments where another <strong >Pattern</strong> object is
+the <em >rvalue</em>. However, it can receive a pattern using the member
+<strong >setPattern()</strong> (see below). An <strong >FBB::Exception</strong> object is thrown if the object
 could not be constructed.
-    <li> <strong>Pattern(std::string const &amp;pattern, 
+    <li> <strong >Pattern(std::string const &amp;pattern, 
                             bool caseSensitive = true, 
                             size_t nSub = 10,
                         int options = REG_EXTENDED | REG_NEWLINE)</strong>:<br/>
-        This constructor compiles <em>pattern</em>, preparing the <strong>Pattern</strong>
+        This constructor compiles <em >pattern</em>, preparing the <strong >Pattern</strong>
 object for pattern matches. The second parameter determines whether case
 sensitive matching will be used (the default) or not. Subexpressions are
 defined by parentheses pairs. Each matching pair defines a subexpression,
 where the order-number of their opening parentheses determines the
 subexpression's index. By default at most 10 subexpressions are recognized.
-The <em>options</em> flags may be:
+The <em >options</em> flags may be:
 <p>
 REG_EXTENDED: <br/> 
                    Use POSIX Extended Regular Expression syntax when
@@ -185,26 +185,26 @@ Match-end-of-line operator ($)  matches  the  empty
                     whether eflags contains REG_NOTEOL.
     </ul>
 <p>
-<em>Pattern</em> offers  copy and move constructors.
+<em >Pattern</em> offers  copy and move constructors.
 <p>
-<h2>MEMBER FUNCTIONS</h2>
-     All members of <strong>std::ostringstream</strong> and <strong>  std::exception</strong> are
-available, as <strong>Pattern</strong> inherits from these classes.
+<h2 >MEMBER FUNCTIONS</h2>
+     All members of <strong >std::ostringstream</strong> and <strong >  std::exception</strong> are
+available, as <strong >Pattern</strong> inherits from these classes.
     <ul>
-    <li> <strong>std::string before() const</strong>:<br/>  
-        Following a successful match, <strong>before()</strong> returns the text before the
+    <li> <strong >std::string before() const</strong>:<br/>  
+        Following a successful match, <strong >before()</strong> returns the text before the
 matched text.
-    <li> <strong>std::string beyond() const</strong>:<br/>
-        Following a successful match, <strong>beyond()</strong> returns the text beyond the
+    <li> <strong >std::string beyond() const</strong>:<br/>
+        Following a successful match, <strong >beyond()</strong> returns the text beyond the
 matched text.
-    <li> <strong>size_t end() const</strong>:<br/>
+    <li> <strong >size_t end() const</strong>:<br/>
         Returns the number of matched elements (text and
-subexpressions). <strong>end()</strong> is the lowest index value for which <strong>position()</strong>
-returns two <em>std::string::npos</em> values (see the <strong>position()</strong> member
+subexpressions). <strong >end()</strong> is the lowest index value for which <strong >position()</strong>
+returns two <em >std::string::npos</em> values (see the <strong >position()</strong> member
 function, below).
-    <li> <strong>void match(std::string const &amp;text, int options = 0)</strong>:<br/>
+    <li> <strong >void match(std::string const &amp;text, int options = 0)</strong>:<br/>
        Match a string with a pattern.  If the text could not be matched, an
-<strong>Exception</strong> exception is thrown , using <strong>Pattern::match()</strong> as its prefix-text.
+<strong >Exception</strong> exception is thrown , using <strong >Pattern::match()</strong> as its prefix-text.
 <p>
 Options may be:
 <p>
@@ -218,55 +218,55 @@ REG_NOTBOL: <br/>
 REG_NOTEOL: <br/>
                     The  match-end-of-line  operator  always  fails  to
                     match  (but  see  the  compilation flag REG_NEWLINE)
-    <li> <strong>std::string matched() const</strong>:<br/>
+    <li> <strong >std::string matched() const</strong>:<br/>
         Following a successful match, this function returns the matched text.
-    <li> <strong>std::string const &amp;pattern() const</strong>:<br/>
+    <li> <strong >std::string const &amp;pattern() const</strong>:<br/>
         This member function returns the pattern that is offered to
-<strong>regcomp</strong>(3). It returns the contents of a <em>static</em> string that is
-overwritten at each construction of a <strong>Pattern</strong> object and at each call of
-the <em>setPattern()</em> member function.
-    <li> <strong>Pattern::Position position(size_t index) const</strong>:<br/> 
-        With <em>index == 0</em> the fully matched text is returned (identical to
-<em>matched()</em>). Other index values return the corresponding
-subexpressions. <strong>std::string::npos, std::string::npos</strong> is returned if index
-is at least <strong>end()</strong> (which may happen at index value 0).
-    <li> <strong>void setPattern(std::string const &amp;pattern, 
+<strong >regcomp</strong>(3). It returns the contents of a <em >static</em> string that is
+overwritten at each construction of a <strong >Pattern</strong> object and at each call of
+the <em >setPattern()</em> member function.
+    <li> <strong >Pattern::Position position(size_t index) const</strong>:<br/> 
+        With <em >index == 0</em> the fully matched text is returned (identical to
+<em >matched()</em>). Other index values return the corresponding
+subexpressions. <strong >std::string::npos, std::string::npos</strong> is returned if index
+is at least <strong >end()</strong> (which may happen at index value 0).
+    <li> <strong >void setPattern(std::string const &amp;pattern, 
                             bool caseSensitive = true, 
                             size_t nSub = 10,
                         int options = REG_EXTENDED | REG_NEWLINE)</strong>:<br/>
-        This member function installs a new  compiled <em>pattern</em> in its
-<strong>Pattern</strong> object. This member's parameters are identical to the second
+        This member function installs a new  compiled <em >pattern</em> in its
+<strong >Pattern</strong> object. This member's parameters are identical to the second
 constructor's parameters. Refer to that constructor for details about the
-parameters. Like the constructor, an <strong>FBB::Exception</strong> exception is thrown if the
+parameters. Like the constructor, an <strong >FBB::Exception</strong> exception is thrown if the
 new pattern could not be compiled.
-    <li> <strong>void swap(Pattern &amp;other)</strong>:<br/>
-        The contents of the current object and the <em>other</em> object are
+    <li> <strong >void swap(Pattern &amp;other)</strong>:<br/>
+        The contents of the current object and the <em >other</em> object are
 swapped. 
     </ul>
 <p>
-<h2>OVERLOADED OPERATORS</h2>
+<h2 >OVERLOADED OPERATORS</h2>
 <p>
 <ul>
-    <li> <strong>Pattern &amp;operator=(Pattern &amp;other)</strong>:<br/> 
+    <li> <strong >Pattern &amp;operator=(Pattern &amp;other)</strong>:<br/> 
         A standard overloaded assignment operator.
-    <li> <strong>std::string operator[](size_t index) const</strong>:<br/>
+    <li> <strong >std::string operator[](size_t index) const</strong>:<br/>
         Returns the matched text (for index 0) or the text of a
 subexpression. An empty string is returned for index values which are at least
-<strong>end()</strong>.
-    <li> <strong>Pattern &amp;operator&lt;&lt;(int matchOptions)</strong>:<br/>
+<strong >end()</strong>.
+    <li> <strong >Pattern &amp;operator&lt;&lt;(int matchOptions)</strong>:<br/>
         Defines match-options to be used with the following overloaded
 operator. 
-    <li> <strong>bool operator&lt;&lt;(std::string const &amp;text)</strong>:<br/>
-        Performs a <strong>match(text, matchOptions)</strong> call, catching any exception
-that might be thrown. If no <em>matchOptions</em> were set using the above
+    <li> <strong >bool operator&lt;&lt;(std::string const &amp;text)</strong>:<br/>
+        Performs a <strong >match(text, matchOptions)</strong> call, catching any exception
+that might be thrown. If no <em >matchOptions</em> were set using the above
 overloaded operator, none are used. The options set this way are not `sticky':
 when necessary, they have to be re-inserted before each new pattern
-matching. The function returns <strong>true</strong> if the matching was successful,
-<strong>false</strong> otherwise.
+matching. The function returns <strong >true</strong> if the matching was successful,
+<strong >false</strong> otherwise.
     </ul>
 <p>
-<h2>EXAMPLE</h2>
-    <pre>
+<h2 >EXAMPLE</h2>
+    <pre >
 /*
                               driver.cc
 */
@@ -393,42 +393,42 @@ int main(int argc, char **argv)
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/pattern</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/pattern</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>regcomp</strong>(3), <strong>regex</strong>(3), <strong>regex</strong>(7)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >regcomp</strong>(3), <strong >regex</strong>(3), <strong >regex</strong>(7)
 <p>
-<h2>BUGS</h2>
-    Using <em>Pattern</em> objects as static data members of classes (or as global
+<h2 >BUGS</h2>
+    Using <em >Pattern</em> objects as static data members of classes (or as global
 objects) is potentially dangerous. If the object files defining these static
 data members are stored in a dynamic library they may not be initialized
 properly or timely, and their eventual destruction may result in a
 segmentation fault. This is a well-known problem with static data, see, e.g.,
-<em>http://www.parashift.com/c++-faq-lite/ctors.html#faq-10.15</em>. In situations
-like this prefer the use of a (shared, unique) pointer to a <em>Pattern</em>,
+<em >http://www.parashift.com/c++-faq-lite/ctors.html#faq-10.15</em>. In situations
+like this prefer the use of a (shared, unique) pointer to a <em >Pattern</em>,
 initialzing the pointer when, e.g., first used.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

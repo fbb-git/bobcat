@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::String</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,126 +43,126 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::String(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Operations on std::string objects</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Operations on std::string objects</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::String - Several operations on <strong>std::string</strong> objects
+<h2 >NAME</h2>FBB::String - Several operations on <strong >std::string</strong> objects
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/string&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/string&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
+<h2 >DESCRIPTION</h2>
     This class offers facilities for often used transformations on
-<em>std::string</em> objects, but which are not supported by the <em>std::string</em>
-class itself. All members of <strong>FBB::String</strong> are static.
+<em >std::string</em> objects, but which are not supported by the <em >std::string</em>
+class itself. All members of <strong >FBB::String</strong> are static.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All members, operators and manipulators, mentioned in this man-page, are
-defined in the namespace <strong>FBB</strong>.
+defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
+<h2 >INHERITS FROM</h2>
     --
 <p>
-<h2>ENUMERATION</h2>
+<h2 >ENUMERATION</h2>
     <ul>
-    <li> <strong>Type</strong>:<br/>
+    <li> <strong >Type</strong>:<br/>
         This enumeration indicates the nature of the contents of an element in
-the array returned by the overloaded <em>split</em> members (see below).
+the array returned by the overloaded <em >split</em> members (see below).
 <p>
-<strong>DQUOTE</strong>, a subset of the characters in the matching <em>string</em>
+<strong >DQUOTE</strong>, a subset of the characters in the matching <em >string</em>
 element was delimited by double quotes in the in the string that was parsed by
-the <em>split</em> members.
+the <em >split</em> members.
 <p>
-<strong>DQUOTE_UNTERMINATED</strong>, the contents of the string that was
-parsed by the <em>split</em> members started at some point with a double quote, but
+<strong >DQUOTE_UNTERMINATED</strong>, the contents of the string that was
+parsed by the <em >split</em> members started at some point with a double quote, but
 the matching ending double quote was lacking.
 <p>
-<strong>ESCAPED_END</strong>,  the contents of the string that was
-parsed by the <em>split</em> members ended in a mere backslash.
+<strong >ESCAPED_END</strong>,  the contents of the string that was
+parsed by the <em >split</em> members ended in a mere backslash.
 <p>
-<strong>NORMAL</strong>, a normal string; 
+<strong >NORMAL</strong>, a normal string; 
 <p>
-<strong>SEPARATOR</strong>, a separator;
+<strong >SEPARATOR</strong>, a separator;
 <p>
-<strong>SQUOTE</strong>, a subset of the characters in the matching <em>string</em>
+<strong >SQUOTE</strong>, a subset of the characters in the matching <em >string</em>
 element was delimited by quotes in the in the string that was parsed by
-the <em>split</em> members.
+the <em >split</em> members.
 <p>
-<strong>SQUOTE_UNTERMINATED</strong>, the contents of the string that was
-parsed by the <em>split</em> members started at some point with a quote, but
+<strong >SQUOTE_UNTERMINATED</strong>, the contents of the string that was
+parsed by the <em >split</em> members started at some point with a quote, but
 the matching ending quote was lacking.
     </ul>
 <p>
-<h2>TYPEDEF</h2>
+<h2 >TYPEDEF</h2>
 <p>
-The <strong>typedef SplitPair</strong> represents <strong>std::pair&lt;std::string,
-String::Type&gt;</strong> and is used in the second variant of the <strong>split</strong> member (see
+The <strong >typedef SplitPair</strong> represents <strong >std::pair&lt;std::string,
+String::Type&gt;</strong> and is used in the second variant of the <strong >split</strong> member (see
 below).
 <p>
-<h2>HISTORY</h2>
-    Initially this class was derived from <strong>std::string</strong>. Deriving from
-<em>std::string</em>, however, is considerd bad design as <em>std::string</em> was
+<h2 >HISTORY</h2>
+    Initially this class was derived from <strong >std::string</strong>. Deriving from
+<em >std::string</em>, however, is considerd bad design as <em >std::string</em> was
 not designed as a base-class. 
 <p>
-<strong>FBB::String</strong> offers a series of <em>static</em> member functions
+<strong >FBB::String</strong> offers a series of <em >static</em> member functions
 providing the facilities originally implemented as non-static members.
 <p>
-<h2>STATIC MEMBER FUNCTIONS</h2>
+<h2 >STATIC MEMBER FUNCTIONS</h2>
     <ul>
 <p>
-<li> <strong>char const **argv(std::vector&lt;std::string&gt; const &amp;words)</strong>:<br/>
-        Returns a pointer to an allocated series of pointers to the <strong>C</strong>
-strings stored in the vector <em>words</em>. The caller is responsible for
-returning the array of pointers to the common pool, but should <em>not</em> delete
-the <strong>C</strong>-strings to which the pointers point. The last element of the
+<li> <strong >char const **argv(std::vector&lt;std::string&gt; const &amp;words)</strong>:<br/>
+        Returns a pointer to an allocated series of pointers to the <strong >C</strong>
+strings stored in the vector <em >words</em>. The caller is responsible for
+returning the array of pointers to the common pool, but should <em >not</em> delete
+the <strong >C</strong>-strings to which the pointers point. The last element of the
 returned array is guaranteed to be a 0-pointer. 
 <p>
-<li> <strong>int casecmp(std::string const &amp;lhs, std::string const &amp;rhs)</strong>:<br/>
-        Performs a case-insensitive comparison between the two <em>std::string</em>
-objects. A negative value is returned if <em>lhs</em> should be ordered before
-<em>rhs</em>; 0 is returned if the two strings have identical contents; a
-positive value is returned if the <em>lhs</em> object should be ordered beyond
-<em>rhs</em>.
+<li> <strong >int casecmp(std::string const &amp;lhs, std::string const &amp;rhs)</strong>:<br/>
+        Performs a case-insensitive comparison between the two <em >std::string</em>
+objects. A negative value is returned if <em >lhs</em> should be ordered before
+<em >rhs</em>; 0 is returned if the two strings have identical contents; a
+positive value is returned if the <em >lhs</em> object should be ordered beyond
+<em >rhs</em>.
 <p>
-<li> <strong>std::string escape(std::string const &amp;str, 
+<li> <strong >std::string escape(std::string const &amp;str, 
             char const *series = "'\"\\")</strong>:<br/>
-        Returns a copy of the <em>str</em> object in which all characters in
-<em>series</em> are prefixed by a backslash character.
+        Returns a copy of the <em >str</em> object in which all characters in
+<em >series</em> are prefixed by a backslash character.
 <p>
-<li> <strong>std::string lc(std::string const &amp;str) const</strong>:<br/>
-        Returns a copy of the <em>str</em> object in which all letters were
+<li> <strong >std::string lc(std::string const &amp;str) const</strong>:<br/>
+        Returns a copy of the <em >str</em> object in which all letters were
 transformed to lower case letters.
 <p>
-<li> <strong>std::string trim(std::string const &amp;str)</strong>:<br/>
-        Returns a copy of the <em>str</em> object from which the leading and
+<li> <strong >std::string trim(std::string const &amp;str)</strong>:<br/>
+        Returns a copy of the <em >str</em> object from which the leading and
 trailing blanks have been removed.
 <p>
-<li> <strong>std::vector&lt;std::string&gt; split(Type *type, std::string const
+<li> <strong >std::vector&lt;std::string&gt; split(Type *type, std::string const
                 &amp;str, char const *separators = " \t", bool addEmpty = false)</strong>:<br/>
-        Returns a vector containing the elements in <em>str</em> which are
+        Returns a vector containing the elements in <em >str</em> which are
 separated from each other by at least one of the characters found in
-<em>*separators</em>. The member's first parameter points to a <em>Type</em> variable,
-which will show <em>DQUOTE_UNTERMINATED, SQUOTE_UNTERMINATED,</em> or
-<em>ESCAPED_END</em> in cases where the contents of <em>str</em> are ill-formed, or
-<em>NORMAL</em> if <em>str</em>'s contents shows not syntactic errors (i.e., ill-formed
+<em >*separators</em>. The member's first parameter points to a <em >Type</em> variable,
+which will show <em >DQUOTE_UNTERMINATED, SQUOTE_UNTERMINATED,</em> or
+<em >ESCAPED_END</em> in cases where the contents of <em >str</em> are ill-formed, or
+<em >NORMAL</em> if <em >str</em>'s contents shows not syntactic errors (i.e., ill-formed
 strings or escape-sequences). If the corresponding argument equals 0 then no
-<em>Type</em> indication is provided.
+<em >Type</em> indication is provided.
 <p>
-If the parameter <em>addEmpty</em> is set to <em>true</em>, then individual separators
-encountered in <em>str</em> are stored as empty strings in <em>words</em> (e.g., if two
+If the parameter <em >addEmpty</em> is set to <em >true</em>, then individual separators
+encountered in <em >str</em> are stored as empty strings in <em >words</em> (e.g., if two
 elements are separated by three blank spaces, then the returned vector
 contains three empty strings between the two elements).
 <p>
-If an element in <em>str</em> contains a double quote (<em>"</em>), then all characters
+If an element in <em >str</em> contains a double quote (<em >"</em>), then all characters
 from the initial double quote through the matching double quote character are
 processed as follows: the surrounding double quotes are removed, and the
-remaining characters are <em>unescaped</em> using the <em>String::unescape</em>
+remaining characters are <em >unescaped</em> using the <em >String::unescape</em>
 member. The resulting unescaped string is added to the element currently under
-construction. E.g., if <em>str</em> contains
+construction. E.g., if <em >str</em> contains
         <pre>
 
     string="\"hello world\""
@@ -177,9 +177,9 @@ construction. E.g., if <em>str</em> contains
 </pre>
 
 <p>
-If an element in <em>str</em> contains a single quote (<em>'</em>), then all characters
+If an element in <em >str</em> contains a single quote (<em >'</em>), then all characters
 between the initial quote and the matching quote character are literally
-appended to the element currently under construction. E.g., if <em>str</em>
+appended to the element currently under construction. E.g., if <em >str</em>
 contains
         <pre>
 
@@ -195,11 +195,11 @@ contains
 </pre>
 
 <p>
-Backslash characters encountered in <em>str</em> outside of single or double quoted
-strings are unescaped (using <em>String::unescape</em>) and the resulting character
+Backslash characters encountered in <em >str</em> outside of single or double quoted
+strings are unescaped (using <em >String::unescape</em>) and the resulting character
 is appended to the element currently under construction. 
 <p>
-E.g., if <em>str</em>
+E.g., if <em >str</em>
 contains
         <pre>
 
@@ -215,56 +215,56 @@ contains
 </pre>
 
 <p>
-<li> <strong>std::vector&lt;SplitPair&gt; split(std::string const &amp;str,
+<li> <strong >std::vector&lt;SplitPair&gt; split(std::string const &amp;str,
                     char const *separators = " \t", bool addEmpty = false)</strong>:<br/>
-        Same functionality as the previous <em>split</em> member, but the <em>words</em>
+        Same functionality as the previous <em >split</em> member, but the <em >words</em>
 vector is filled with pairs, of which the first elements represent the
-recognized strings, and the second elements are values of the <em>String::Type</em>
-enumeration. If <strong>addEmpty</strong> is requested, then the <strong>string</strong> elements
-contain the actual contents of the separator, while the <strong>Type</strong> elements are
-set to <strong>SEPARATOR</strong>. If the returned vector is not empty then the <em>second</em>
-member of the last element may be <em>DQUOTE_UNTERMINATED,
-SQUOTE_UNTERMINATED,</em> or <em>ESCAPED_END</em> in cases where the contents of
-<em>str</em> are ill-formed.
+recognized strings, and the second elements are values of the <em >String::Type</em>
+enumeration. If <strong >addEmpty</strong> is requested, then the <strong >string</strong> elements
+contain the actual contents of the separator, while the <strong >Type</strong> elements are
+set to <strong >SEPARATOR</strong>. If the returned vector is not empty then the <em >second</em>
+member of the last element may be <em >DQUOTE_UNTERMINATED,
+SQUOTE_UNTERMINATED,</em> or <em >ESCAPED_END</em> in cases where the contents of
+<em >str</em> are ill-formed.
 <p>
-<li> <strong>size_t split(std::vector&lt;std::string&gt; *words,
+<li> <strong >size_t split(std::vector&lt;std::string&gt; *words,
                     std::string const &amp;str,
                     char const *separators = " \t", bool addEmpty = false)</strong>:<br/>
-        Fills <em>words</em> with all elements of the <em>str</em> object, separated by
-any of the characters in <em>separators</em>. If the parameter <em>addEmpty</em> is set
-to <em>true</em>, the individual separators are stored as empty strings in
-<em>words</em>. If a word starts with <em>"</em> or <em>'</em> all characters until a
-matching terminating <em>"</em> or <em>'</em> at the end of a word are considered as one
+        Fills <em >words</em> with all elements of the <em >str</em> object, separated by
+any of the characters in <em >separators</em>. If the parameter <em >addEmpty</em> is set
+to <em >true</em>, the individual separators are stored as empty strings in
+<em >words</em>. If a word starts with <em >"</em> or <em >'</em> all characters until a
+matching terminating <em >"</em> or <em >'</em> at the end of a word are considered as one
 word.  The surrounding quotes are not stored. The function returns the number
-of elements in the vector pointed to by <em>words</em>. This vector is initially
+of elements in the vector pointed to by <em >words</em>. This vector is initially
 cleared.
 <p>
-<li> <strong>size_t  split(std::vector&lt;SplitPair&gt; *words,
+<li> <strong >size_t  split(std::vector&lt;SplitPair&gt; *words,
                     std::string const &amp;str,
                     char const *separators = " \t", bool addEmpty = false)</strong>:<br/>
-        Same functionality as the former member, but the <em>words</em> vector is
+        Same functionality as the former member, but the <em >words</em> vector is
 filled with pairs, of which the first elements are the recognized strings, and
-the second elements values of the <em>String::Type</em> enumeration. If
-<strong>addEmpty</strong> is requested, then the <strong>string</strong> elements contain the actual
-contents of the separator, while the <strong>Type</strong> elements are set to
-<strong>SEPARATOR</strong>.
+the second elements values of the <em >String::Type</em> enumeration. If
+<strong >addEmpty</strong> is requested, then the <strong >string</strong> elements contain the actual
+contents of the separator, while the <strong >Type</strong> elements are set to
+<strong >SEPARATOR</strong>.
 <p>
-<li> <strong>std::string unescape(std::string const &amp;str)</strong>:<br/>
-        Returns a copy of the <em>str</em> object in which the escaped (i.e.,
+<li> <strong >std::string unescape(std::string const &amp;str)</strong>:<br/>
+        Returns a copy of the <em >str</em> object in which the escaped (i.e.,
 prefixed by a backslash) characters have been interpreted. All standard escape
-characters (<em>\a</em>, <em>\b</em>, <em>\f</em>, <em>\n</em>, <em>\r</em>, <em>\t</em>, <em>\v</em>) are
-recognized. If an escape character is followed by <em>x</em> the next two
+characters (<em >\a</em>, <em >\b</em>, <em >\f</em>, <em >\n</em>, <em >\r</em>, <em >\t</em>, <em >\v</em>) are
+recognized. If an escape character is followed by <em >x</em> the next two
 characters are interpreted as a hexadecimal number. If an escape character is
 followed by an octal digit, then the next three characters following the
 backslash are interpreted as an octal number. In all other cases, the
 backslash is removed and the character following the backslash is kept.
 <p>
-<li> <strong>std::string uc(std::string const &amp;str)</strong>:<br/>
-        Returns a copy of the <em>str</em> object in which all letters were
+<li> <strong >std::string uc(std::string const &amp;str)</strong>:<br/>
+        Returns a copy of the <em >str</em> object in which all letters were
 capitalized. 
     </ul>
 <p>
-<h2>EXAMPLE</h2>
+<h2 >EXAMPLE</h2>
     <pre>
 
 #include &lt;iostream&gt;
@@ -321,35 +321,35 @@ int main(int argc, char **argv)
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/string</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/string</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::IBase64Streambuf</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,82 +43,82 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::IBase64Streambuf(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Base64 converting Stream Buffer</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Base64 converting Stream Buffer</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::IBase64Streambuf - Input Filtering stream buffer doing base64 conversion
+<h2 >NAME</h2>FBB::IBase64Streambuf - Input Filtering stream buffer doing base64 conversion
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/ibase64streambuf&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/ibase64streambuf&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
-    The information made available by <strong>IBase64Streambuf</strong> objects has been
+<h2 >DESCRIPTION</h2>
+    The information made available by <strong >IBase64Streambuf</strong> objects has been
 subject to base64 encoding or decoding. The information to be converted is
-made available to <strong>IBase64Streambuf</strong> object via <em>std::istream</em> objects.
+made available to <strong >IBase64Streambuf</strong> object via <em >std::istream</em> objects.
 <p>
-The <em>class IBase64Streambuf</em> is a class template, using a
-<em>FBB::CryptType</em> template non-type parameter. Objects of the class
-<em>FBB::IBase64Streambuf&lt;FBB::ENCRYPT&gt;</em> base64 encode the information they
-receive, objects of the class <em>FBB::IBase64Streambuf&lt;FBB::DECRYPT&gt;</em> base64
-decode the information they receive. See also section <strong>ENUMERATION</strong> below.
+The <em >class IBase64Streambuf</em> is a class template, using a
+<em >FBB::CryptType</em> template non-type parameter. Objects of the class
+<em >FBB::IBase64Streambuf&lt;FBB::ENCRYPT&gt;</em> base64 encode the information they
+receive, objects of the class <em >FBB::IBase64Streambuf&lt;FBB::DECRYPT&gt;</em> base64
+decode the information they receive. See also section <strong >ENUMERATION</strong> below.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
-    <strong>FBB::IFilterStreambuf</strong>
+<h2 >INHERITS FROM</h2>
+    <strong >FBB::IFilterStreambuf</strong>
 <p>
-<h2>MEMBER FUNCTIONS</h2>
-     All members of <strong>FBB::IFilterStreambuf</strong> are available, as
-<strong>IBase64Streambuf</strong> inherits from this class.
+<h2 >MEMBER FUNCTIONS</h2>
+     All members of <strong >FBB::IFilterStreambuf</strong> are available, as
+<strong >IBase64Streambuf</strong> inherits from this class.
 <p>
 Overloaded move and/or copy assignment operators are not available.
 <p>
-<h2>ENUMERATION</h2>
+<h2 >ENUMERATION</h2>
 <p>
-<strong>IBase64Streambuf</strong> objects either base64 encode or decode
-information. <strong>IBase64Streambuf</strong> objects of the class
-<strong>FBB::IBase64Streambuf&lt;FBB::ENCRYPT&gt;</strong> base64 encode the data they receive,
-<strong>IBase64Streambuf</strong> objects of the class
-<strong>FBB::IBase64Streambuf&lt;FBB::DECRYPT&gt;</strong> base64 decode the data they receive.
+<strong >IBase64Streambuf</strong> objects either base64 encode or decode
+information. <strong >IBase64Streambuf</strong> objects of the class
+<strong >FBB::IBase64Streambuf&lt;FBB::ENCRYPT&gt;</strong> base64 encode the data they receive,
+<strong >IBase64Streambuf</strong> objects of the class
+<strong >FBB::IBase64Streambuf&lt;FBB::DECRYPT&gt;</strong> base64 decode the data they receive.
 <p>
-The values <em>ENCRYPT</em> and <em>DECRYPT</em> are defined in the <em>enum CryptType</em>,
-which is defined in the <em>FBB</em> namespace.
+The values <em >ENCRYPT</em> and <em >DECRYPT</em> are defined in the <em >enum CryptType</em>,
+which is defined in the <em >FBB</em> namespace.
 <p>
-<h2>CONSTRUCTOR</h2>
+<h2 >CONSTRUCTOR</h2>
     <ul>
-    <li> <strong>IBase64Streambuf&lt;CryptType&gt;(std::istream &amp;in, size_t bufSize = 1000)</strong>:<br/>
+    <li> <strong >IBase64Streambuf&lt;CryptType&gt;(std::istream &amp;in, size_t bufSize = 1000)</strong>:<br/>
         This constructor initializes the streambuf.
 <p>
-- <em>IBase64Streambuf&lt;ENCRYPT&gt;</em> objects perform base64 encoding;<br/>
-    - <em>IBase64Streambuf&lt;DECRYPT&gt;</em> objects perform base64 decoding;<br/>
-    - <em>IBase64Streambuf&lt;CryptType&gt;</em> objects obtain the bytes to encode or
-decode from <em>std::istream &amp;in</em>;<br/>
-    - The <em>IFilterStreambuf</em> base class is initialized with a buffer of
-size <em>bufSize</em>, using a lower bound of 100.
+- <em >IBase64Streambuf&lt;ENCRYPT&gt;</em> objects perform base64 encoding;<br/>
+    - <em >IBase64Streambuf&lt;DECRYPT&gt;</em> objects perform base64 decoding;<br/>
+    - <em >IBase64Streambuf&lt;CryptType&gt;</em> objects obtain the bytes to encode or
+decode from <em >std::istream &amp;in</em>;<br/>
+    - The <em >IFilterStreambuf</em> base class is initialized with a buffer of
+size <em >bufSize</em>, using a lower bound of 100.
     </ul>
     Copy- and move constructors are not available.
 <p>
-<h2>EXAMPLE</h2>
+<h2 >EXAMPLE</h2>
 <p>
-The example shows the construction of <em>IBase64Streambuf&lt;ENCRYPT&gt;</em>
-objects <em>encode</em> which are used to initialize a <em>std::istream</em> object. The
-information read from this <em>istream</em> is base64 encoded. 
+The example shows the construction of <em >IBase64Streambuf&lt;ENCRYPT&gt;</em>
+objects <em >encode</em> which are used to initialize a <em >std::istream</em> object. The
+information read from this <em >istream</em> is base64 encoded. 
 <p>
-<em>IBase64Streambuf&lt;DECRYPT&gt;</em> objects (<em>decode</em> reads base64 encoded
-information from <em>std::istream</em> objects and decodes it again). 
+<em >IBase64Streambuf&lt;DECRYPT&gt;</em> objects (<em >decode</em> reads base64 encoded
+information from <em >std::istream</em> objects and decodes it again). 
 <p>
-The <em>std::istream din</em> object is initialized with the
-<em>IBase64Streambuf&lt;DECRYPT&gt;</em> object, and its contents is sent to
-<em>std::cout</em>. The information that is presented at <em>std::cin</em> and that
-appears at <em>std::cout</em> should be identical.
+The <em >std::istream din</em> object is initialized with the
+<em >IBase64Streambuf&lt;DECRYPT&gt;</em> object, and its contents is sent to
+<em >std::cout</em>. The information that is presented at <em >std::cin</em> and that
+appears at <em >std::cout</em> should be identical.
 <p>
-<pre>
+<pre >
 #include &lt;iostream&gt;
 #include &lt;istream&gt;
 
@@ -168,37 +168,37 @@ int main(int argc, char **argv)
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/ibase64streambuf</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/ibase64streambuf</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>isymcryptstreambuf</strong>(3bobcat),
-<strong>ibase64stream</strong>(3bobcat), <strong>ifilterstreambuf</strong>(3bobcat),
-<strong>ofilterstreambuf</strong>(3bobcat), <strong>std::streambuf</strong>.
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >isymcryptstreambuf</strong>(3bobcat),
+<strong >ibase64stream</strong>(3bobcat), <strong >ifilterstreambuf</strong>(3bobcat),
+<strong >ofilterstreambuf</strong>(3bobcat), <strong >std::streambuf</strong>.
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

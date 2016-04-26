@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Log</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,183 +43,183 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Log(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Log messages</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Log messages</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::Log - <em>std::ostream</em> handling log messages
+<h2 >NAME</h2>FBB::Log - <em >std::ostream</em> handling log messages
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/log&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/log&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
+<h2 >DESCRIPTION</h2>
 <p>
-The class <strong>FBB::Log</strong> is an <em>std::ostream</em> initialized with a
-<em>FBB::LogBuffer</em>. It is used to send log-messages to the (r)syslog
-stream. Refer to the <strong>logbuffer</strong>(3bobcat) man-page for details about this
+The class <strong >FBB::Log</strong> is an <em >std::ostream</em> initialized with a
+<em >FBB::LogBuffer</em>. It is used to send log-messages to the (r)syslog
+stream. Refer to the <strong >logbuffer</strong>(3bobcat) man-page for details about this
 process.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
-    <em>std::ostream</em>
+<h2 >INHERITS FROM</h2>
+    <em >std::ostream</em>
 <p>
-<h2>ENUMERATIONS</h2>
+<h2 >ENUMERATIONS</h2>
 <p>
-The enumeration <em>TimeStamps</em> is defined in the namespace <em>FBB</em>,
-primarily for initializing <em>FBB::LogBuffer</em> objects. It is used with
-<strong>FBB::Log</strong> members as well. It has the following values:
+The enumeration <em >TimeStamps</em> is defined in the namespace <em >FBB</em>,
+primarily for initializing <em >FBB::LogBuffer</em> objects. It is used with
+<strong >FBB::Log</strong> members as well. It has the following values:
     <ul>
-    <li> <strong>NOTIMESTAMPS</strong>:<br/>
+    <li> <strong >NOTIMESTAMPS</strong>:<br/>
         Log-messages will not have timestamps prepended to them.
-    <li> <strong>TIMESTAMPS</strong>:<br/>
+    <li> <strong >TIMESTAMPS</strong>:<br/>
         Log-messages will have timestamps prepended to them.
-    <li> <strong>UTCTIMESTAMPS</strong>:<br/>
+    <li> <strong >UTCTIMESTAMPS</strong>:<br/>
         Log-messages will have timestamps showing the UTC time prepended to
         them.
     </ul>
 <p>
-The enumeration <em>LogManipulator</em> is used to handle special or
+The enumeration <em >LogManipulator</em> is used to handle special or
 exceptional situations through manipulators. It is defined in the namespace
-<em>FBB</em> and has the following two values:
+<em >FBB</em> and has the following two values:
     <ul>
-    <li> <strong>FATAL</strong>:<br/>
-        This value may be inserted into an <strong>FBB::Log</strong> object to throw an
-<em>FBB::Exception</em> exception (see <em>operator&lt;&lt;</em> below);
-    <li> <strong>nl</strong>:<br/>
-        This value may be inserted into an <strong>FBB::Log</strong> object to terminate
-the current line. It will <em>not</em> cause the next line to begin with a
-time stamp (if applicable) and the current <em>message level</em> cannot be
-modified using a <strong>level</strong>(3bobcat) manipulator. It is used to allow a single 
+    <li> <strong >FATAL</strong>:<br/>
+        This value may be inserted into an <strong >FBB::Log</strong> object to throw an
+<em >FBB::Exception</em> exception (see <em >operator&lt;&lt;</em> below);
+    <li> <strong >nl</strong>:<br/>
+        This value may be inserted into an <strong >FBB::Log</strong> object to terminate
+the current line. It will <em >not</em> cause the next line to begin with a
+time stamp (if applicable) and the current <em >message level</em> cannot be
+modified using a <strong >level</strong>(3bobcat) manipulator. It is used to allow a single 
 log message to occupy multiple textual lines.
-    <li> <strong>endl</strong>:<br/>
-        This is the standard <em>ostream</em> manipulator. When inserted into an
-<strong>FBB::Log</strong> object the current buffer is flushed. Note that flushing does not
-happen immediately when a newline (<em>\n</em>) is inserted into the log
-stream. Alternatively, <em>std::flush</em> may be inserted into the <strong>FBB::Log</strong>
+    <li> <strong >endl</strong>:<br/>
+        This is the standard <em >ostream</em> manipulator. When inserted into an
+<strong >FBB::Log</strong> object the current buffer is flushed. Note that flushing does not
+happen immediately when a newline (<em >\n</em>) is inserted into the log
+stream. Alternatively, <em >std::flush</em> may be inserted into the <strong >FBB::Log</strong>
 object to flush its buffer.
     </ul>
 <p>
-<h2>CONSTRUCTORS</h2>
+<h2 >CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>Log()</strong>:<br/>
-        The default constructor creates a <strong>FBB::Log</strong> object which isn't yet
-associated with a stream to log messages on. The member <em>open</em> (see below)
+    <li> <strong >Log()</strong>:<br/>
+        The default constructor creates a <strong >FBB::Log</strong> object which isn't yet
+associated with a stream to log messages on. The member <em >open</em> (see below)
 may be used to define such a stream.  By default, all messages will have a
 time stamp prepended to them (see the description of the member
-<em>setTimestamp</em> below), and a blank space is inserted as delimiter 
+<em >setTimestamp</em> below), and a blank space is inserted as delimiter 
 immediately
-beyond the time stamp. The member <em>open</em> can be used to modify the default delimiter.
-    <li> <strong>Log(std::ostream &amp;out, char const *delim = " ")</strong>:<br/>
-        This constructor creates a <strong>FBB::Log</strong> object logging its messages
-to the provided <em>std::ostream</em> object. By default, all messages will have a
+beyond the time stamp. The member <em >open</em> can be used to modify the default delimiter.
+    <li> <strong >Log(std::ostream &amp;out, char const *delim = " ")</strong>:<br/>
+        This constructor creates a <strong >FBB::Log</strong> object logging its messages
+to the provided <em >std::ostream</em> object. By default, all messages will have a
 time stamp prepended to them (see the description of the member
-<em>setTimestamp</em> below).  The parameter <em>delim</em> is inserted immediately
+<em >setTimestamp</em> below).  The parameter <em >delim</em> is inserted immediately
 beyond the time stamp. If a delimiter is inappropriate, an empty string or a
 0-pointer may be specified.
-    <li> <strong>FBB::Log(std::string const &amp;filename,
+    <li> <strong >FBB::Log(std::string const &amp;filename,
             std::ios::openmode mode = std::ios::out | std::ios::app, 
             char const *delim = " ")</strong>:<br/>
-        This constructor creates a <strong>FBB::Log</strong> object logging its messages to
-the named file. If <em>filename == "&amp;1"</em> the logmessages will be written to the
-standard output stream. If <em>filename == "&amp;2"</em> the logmessages will be
+        This constructor creates a <strong >FBB::Log</strong> object logging its messages to
+the named file. If <em >filename == "&amp;1"</em> the logmessages will be written to the
+standard output stream. If <em >filename == "&amp;2"</em> the logmessages will be
 written to the standard error stream.  By default the file is created if not
 existing, and all messages are appended to the stream.  By default, all
 messages will have a time stamp prepended to them (see the description of the
-member <em>setTimestamp</em> below).  The parameter <em>delim</em> is inserted
+member <em >setTimestamp</em> below).  The parameter <em >delim</em> is inserted
 immediately beyond the time stamp. If a delimiter is inappropriate, an empty
 string or a 0-pointer may be specified.
     </ul>
     The copy constructor is not available.
 <p>
-<h2>MEMBER FUNCTIONS</h2>
-     All members of <em>std::ostream</em> are available, as <strong>FBB::Log</strong> inherits
+<h2 >MEMBER FUNCTIONS</h2>
+     All members of <em >std::ostream</em> are available, as <strong >FBB::Log</strong> inherits
 from this class.
     <ul>
-    <li> <strong>size_t level()</strong>:<br/>
+    <li> <strong >size_t level()</strong>:<br/>
         This member returns the currently set log level (i.e., the value set
-at the latest <em>setLevel()</em> call). By default, the level is set to zero,
+at the latest <em >setLevel()</em> call). By default, the level is set to zero,
 meaning that all information is inserted into the log stream.
-    <li> <strong>std::ostream &amp;level(size_t useLevel)</strong>:<br/>
+    <li> <strong >std::ostream &amp;level(size_t useLevel)</strong>:<br/>
         This member defines a log-level. Messages will be inserted into
-the stream when <em>useLevel</em> is equal to or exceeds the level set by
-    <em>setLevel</em>. The maximum level which can be selected is
-<em>std::numeric_limits&lt;size_t&gt;::max()</em>. If not even such messages should be
-inserted into the <em>ostream</em>, then the stream should be deactivated, using
-<em>off()</em>, see below. The selected level remains active until
-redefined. Alternatively, the <em>FBB::level</em> manipulator may be inserted into
-an (empty) <strong>FBB::Log</strong> object (see <strong>level</strong>(3bobcat)).
-    <li> <strong>void off()</strong>:<br/>
+the stream when <em >useLevel</em> is equal to or exceeds the level set by
+    <em >setLevel</em>. The maximum level which can be selected is
+<em >std::numeric_limits&lt;size_t&gt;::max()</em>. If not even such messages should be
+inserted into the <em >ostream</em>, then the stream should be deactivated, using
+<em >off()</em>, see below. The selected level remains active until
+redefined. Alternatively, the <em >FBB::level</em> manipulator may be inserted into
+an (empty) <strong >FBB::Log</strong> object (see <strong >level</strong>(3bobcat)).
+    <li> <strong >void off()</strong>:<br/>
         Prevents any log messages from being generated. It may be cancelled by
-<em>setLevel</em> (see below).
-    <li> <strong>void open(std::string const &amp;filename,
+<em >setLevel</em> (see below).
+    <li> <strong >void open(std::string const &amp;filename,
             std::ios::openmode mode = std::ios::out | std::ios::app, 
             char const *delim = " ")</strong>:<br/>
-        This member (re)associates an <strong>FBB::Log</strong> object with the named
-file. If <em>filename == "&amp;1"</em> the logmessages will be written to the standard
-output stream. If <em>filename == "&amp;2"</em> the logmessages will be written to the
+        This member (re)associates an <strong >FBB::Log</strong> object with the named
+file. If <em >filename == "&amp;1"</em> the logmessages will be written to the standard
+output stream. If <em >filename == "&amp;2"</em> the logmessages will be written to the
 standard error stream.  By default the file is created if not existing, and
 all messages are appended to the stream.  By default, all messages will have a
 time stamp prepended to them (see the description of the member
-<em>setTimestamp</em> below).  The parameter <em>delim</em> is inserted immediately
+<em >setTimestamp</em> below).  The parameter <em >delim</em> is inserted immediately
 beyond the time stamp. If a delimiter is inappropriate, an empty string or a
 0-pointer may be specified.
-    <li> <strong>void setLevel(size_t newLevel)</strong>:<br/>
+    <li> <strong >void setLevel(size_t newLevel)</strong>:<br/>
         Redefines the internal message level. Messages having at least
-level <em>newLevel</em> will be written. If the member is used without explicit
+level <em >newLevel</em> will be written. If the member is used without explicit
 argument, logging is suspended.
-    <li> <strong>void setTimestamp(FBB::TimeStamps stamp, char const *delim = " ")</strong>:<br/>
+    <li> <strong >void setTimestamp(FBB::TimeStamps stamp, char const *delim = " ")</strong>:<br/>
         The member function (de)activates time stamp prepending. Use the value
-<em>FBB::TIMESTAMPS</em> to prepend time stamps, <em>FBB::NOTIMESTAMPS</em> suppresses
+<em >FBB::TIMESTAMPS</em> to prepend time stamps, <em >FBB::NOTIMESTAMPS</em> suppresses
 time stamps.  A timestamp consists of the month, the day number of the month
 and the (local) time of the current message, as usually appearing in messages
-in <em>/var/log</em> files. E.g., <em>Aug 5 13:52:23</em>. The parameter <em>delim</em> is
+in <em >/var/log</em> files. E.g., <em >Aug 5 13:52:23</em>. The parameter <em >delim</em> is
 inserted immediately beyond the time stamp. If a delimiter is inappropriate,
-an empty string or a 0-pointer may be specified. When <em>stamps ==
+an empty string or a 0-pointer may be specified. When <em >stamps ==
 FBB::NOTIMESTAMPS delim</em> is ignored.
     </ul>
 <p>
-<h2>STATIC MEMBERS</h2>
+<h2 >STATIC MEMBERS</h2>
     <ul>
-    <li> <strong>FBB::Log &amp;initialize(std::string const &amp;filename,
+    <li> <strong >FBB::Log &amp;initialize(std::string const &amp;filename,
             std::ios::openmode mode = std::ios::out | std::ios::app, 
             char const *delim = " ")</strong>:<br/>
 <p>
-Returns a reference to a static <strong>FBB::Log</strong> object. It may only be
-called once, or an <em>FBB::Exception</em> exception is thrown. It associates a
-static <strong>FBB::Log</strong> object with the named file. If <em>filename == "&amp;1"</em> the
-logmessages will be written to the standard output stream. If <em>filename ==
+Returns a reference to a static <strong >FBB::Log</strong> object. It may only be
+called once, or an <em >FBB::Exception</em> exception is thrown. It associates a
+static <strong >FBB::Log</strong> object with the named file. If <em >filename == "&amp;1"</em> the
+logmessages will be written to the standard output stream. If <em >filename ==
 "&amp;2"</em> the logmessages will be written to the standard error stream.  By
 default the file is created if not existing, and all messages are appended to
 the stream.  By default, all messages will have a time stamp prepended to them
-(see the description of the member <em>setTimestamp</em> below).  The parameter
-<em>delim</em> is inserted immediately beyond the time stamp. If a delimiter is
+(see the description of the member <em >setTimestamp</em> below).  The parameter
+<em >delim</em> is inserted immediately beyond the time stamp. If a delimiter is
 inappropriate, an empty string or a 0-pointer may be specified.
-    <li> <strong>FBB::Log &amp;instance()</strong>:<br/>
-        Returns a reference to a static <strong>FBB::Log</strong> object, available after
-calling <em>Log::initialize</em>. If called before <em>Log::initialize()</em>
-an <em>FBB::Exception</em> exception is thrown. 
+    <li> <strong >FBB::Log &amp;instance()</strong>:<br/>
+        Returns a reference to a static <strong >FBB::Log</strong> object, available after
+calling <em >Log::initialize</em>. If called before <em >Log::initialize()</em>
+an <em >FBB::Exception</em> exception is thrown. 
     </ul>
 <p>
-<h2>OVERLOADED OPERATOR</h2>
-    The following overloaded operator is defined outside of the <em>FBB</em>
-namespace. It may be used to insert an <em>FBB::LogManipulator</em> into an
-<strong>FBB::Log</strong> object. If the overloaded operator is used in combination with
+<h2 >OVERLOADED OPERATOR</h2>
+    The following overloaded operator is defined outside of the <em >FBB</em>
+namespace. It may be used to insert an <em >FBB::LogManipulator</em> into an
+<strong >FBB::Log</strong> object. If the overloaded operator is used in combination with
 another type of object it performs no actions.
     <ul>
-    <li> <strong>std::ostream &amp;::operator&lt;&lt;(std::ostream &amp;str, FBB::LogManipulator)</strong>:<br/> 
-        When inserting <em>FBB::FATAL</em> an <em>FBB::Exception</em> exception is thrown;
-when inserting <em>FBB::nl</em> the line is terminated, but next insertions will
+    <li> <strong >std::ostream &amp;::operator&lt;&lt;(std::ostream &amp;str, FBB::LogManipulator)</strong>:<br/> 
+        When inserting <em >FBB::FATAL</em> an <em >FBB::Exception</em> exception is thrown;
+when inserting <em >FBB::nl</em> the line is terminated, but next insertions will
 not start with a time stamp (if applicable). 
     </ul>
 <p>
-<h2>EXAMPLE</h2>
-    <pre>
+<h2 >EXAMPLE</h2>
+    <pre >
 #include &lt;iostream&gt;
 #include &lt;iomanip&gt;
 
@@ -247,36 +247,36 @@ int main()
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/log</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/log</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>exception</strong>(3bobcat), <strong>level</strong>(3bobcat),
-    <strong>logbuffer</strong>(3bobcat)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >exception</strong>(3bobcat), <strong >level</strong>(3bobcat),
+    <strong >logbuffer</strong>(3bobcat)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None reported
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

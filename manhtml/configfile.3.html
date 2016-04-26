@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::ConfigFile</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,36 +43,36 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::ConfigFile(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Configuration File Processing</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Configuration File Processing</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::ConfigFile - A class processing standard unix-like configuration files
+<h2 >NAME</h2>FBB::ConfigFile - A class processing standard unix-like configuration files
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/configfile&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/configfile&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
-    <strong>ConfigFile</strong> objects read standard <em>unix</em>-style configuration
+<h2 >DESCRIPTION</h2>
+    <strong >ConfigFile</strong> objects read standard <em >unix</em>-style configuration
 files.  Lines are stored with initial white-space (blanks and tabs) removed.
 If a line ends in \, then the next line (initial white-space removed) is
 appended to the current line.
 <p>
-If the <em>rmComment</em> flag is set to <em>true</em> blanks lines and 
-information on lines from the first <em>#</em> are removed. If the comment 
-character (<em>#</em>) is
-prefixed by a backslash (i.e., <em>\#</em>) it is not considered comment, but
-replaced by a single <em>#</em> character. Likewise, if the <em>rmComment</em> flag was
+If the <em >rmComment</em> flag is set to <em >true</em> blanks lines and 
+information on lines from the first <em >#</em> are removed. If the comment 
+character (<em >#</em>) is
+prefixed by a backslash (i.e., <em >\#</em>) it is not considered comment, but
+replaced by a single <em >#</em> character. Likewise, if the <em >rmComment</em> flag was
 set two consecutive backslash characters are replaced by a single backslash
 character, In the retrieved configuration information it
-appears as a single <em>#</em> character. If the configuration file should contain
-<em>\#</em> write <em>\\#</em>, this results in replacing <em>\#</em> by <em>#</em>, leaving
-<em>\#</em>.
+appears as a single <em >#</em> character. If the configuration file should contain
+<em >\#</em> write <em >\\#</em>, this results in replacing <em >\#</em> by <em >#</em>, leaving
+<em >\#</em>.
 <p>
 All non-empty lines of the configuration file (when comment is ignored comment
-is not considered to be line-content) are stored in the <strong>ConfigFile</strong> object.
+is not considered to be line-content) are stored in the <strong >ConfigFile</strong> object.
 When line indices should be stored the (0-based) line indices of lines are
 available as well.
 <p>
@@ -80,63 +80,63 @@ At construction time comment handling (keep comment / remove comment),
 case-sensitive searching (sensitive / insensitive) and index storage (store /
 don't store) can be specified.
 <p>
-It can't be modified using the <em>open</em> member, but overloaded assignment is
+It can't be modified using the <em >open</em> member, but overloaded assignment is
 supported and comment and letter case handling can be modified by set-members.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
+<h2 >INHERITS FROM</h2>
     -
 <p>
-<h2>ENUMERATIONS</h2>
-    The following enumerations are defined by the class <strong>ConfigFile</strong>:
+<h2 >ENUMERATIONS</h2>
+    The following enumerations are defined by the class <strong >ConfigFile</strong>:
     <ul>
-    <li> <strong>Comment</strong>:<br/>
+    <li> <strong >Comment</strong>:<br/>
         This enumeration has two values: <br/>
-        <strong>ConfigFile::KeepComment</strong> is used to indicate that comment on
+        <strong >ConfigFile::KeepComment</strong> is used to indicate that comment on
 lines must be kept; <br/>
-        <strong>ConfigFile::RemoveComment</strong> is used to indicate that comment on
+        <strong >ConfigFile::RemoveComment</strong> is used to indicate that comment on
 lines must be removed;
-    <li> <strong>SearchCasing</strong>:<br/>
+    <li> <strong >SearchCasing</strong>:<br/>
         This enumeration also has two values:<br/> 
-        <strong>ConfigFile::SearchCaseSensitive</strong> is used to do case sensitive
+        <strong >ConfigFile::SearchCaseSensitive</strong> is used to do case sensitive
 searches for targets;<br/>
-        <strong>ConfigFile::SearchCaseInsensitive</strong> is used to do case
+        <strong >ConfigFile::SearchCaseInsensitive</strong> is used to do case
 insensitive searches for targets.
-    <li> <strong>Indices</strong>:<br/>
+    <li> <strong >Indices</strong>:<br/>
         This enumeration also has two values:<br/> 
-        <strong>ConfigFile::IgnoreIndices</strong> when used, the line numbers of the
+        <strong >ConfigFile::IgnoreIndices</strong> when used, the line numbers of the
 original configuration file are not available;<br/>
-        <strong>ConfigFile::StoreIndices</strong> when used, the line numbers of the
+        <strong >ConfigFile::StoreIndices</strong> when used, the line numbers of the
 original configuration file are also available;<br/>
     </ul>
 <p>
-<h2>TYPES</h2>
-    The following types are defined by the class <em>ConfigFile</em>:
+<h2 >TYPES</h2>
+    The following types are defined by the class <em >ConfigFile</em>:
     <ul>
-    <li> <strong>const_iterator</strong>:<br/> 
-        a <em>const_iterator</em> is an iterator pointing to a
-line (<em>std::string</em>) of the configuration file;
-    <li> <strong>const_RE_iterator</strong>:<br/> a <em>const_RE_iterator</em> is an iterator pointing to
+    <li> <strong >const_iterator</strong>:<br/> 
+        a <em >const_iterator</em> is an iterator pointing to a
+line (<em >std::string</em>) of the configuration file;
+    <li> <strong >const_RE_iterator</strong>:<br/> a <em >const_RE_iterator</em> is an iterator pointing to
 lines matching a regular expression. It supports the following operations:
         <ul>
-        <li> <em>const_RE_iterator &amp;operator++()</em>: the prefix increment operator
+        <li> <em >const_RE_iterator &amp;operator++()</em>: the prefix increment operator
 increments the iterator to point to the next line in the configuration file
 matching the iterator's regular expression;
-        <li> <em>std::string const &amp;operator*()</em>: the dereferencing operator
+        <li> <em >std::string const &amp;operator*()</em>: the dereferencing operator
 returns the line of the configuration file the iterator refers to;
-        <li> <em>std::string const *operator-&gt;()</em>: the pointer operator returns the
+        <li> <em >std::string const *operator-&gt;()</em>: the pointer operator returns the
 address of the line of the configuration file the iterator refers to;
         </ul>
-    <em>const_RE_iterator</em>s can be compared for (in)equality and they can be
-copy-constructed; <em>const_RE_iterator</em> objects are returned by the
-<em>ConfigFile::beginRE</em>, <em>ConfigFile::endRE</em> and <em>ConfigFile::beginEndRE</em>
+    <em >const_RE_iterator</em>s can be compared for (in)equality and they can be
+copy-constructed; <em >const_RE_iterator</em> objects are returned by the
+<em >ConfigFile::beginRE</em>, <em >ConfigFile::endRE</em> and <em >ConfigFile::beginEndRE</em>
 members and cannot otherwise be constructed.
 <p>
-When two <em>const_RE_iterator</em> objects are subtracted the
+When two <em >const_RE_iterator</em> objects are subtracted the
 number of lines matching their regular expression is returned. E.g., (see
 below for a description of the functions used in the next example):
         <pre>
@@ -148,180 +148,180 @@ below for a description of the functions used in the next example):
         
 </pre>
 
-    The two <em>const_RE_iterator</em> objects should refer to the same regular
+    The two <em >const_RE_iterator</em> objects should refer to the same regular
 expression. The provided example illustrates how this is realized using
-<em>beginEndRE</em>.
+<em >beginEndRE</em>.
 <p>
-<em>FBB::Pattern</em> is used to perform the regular expression pattern
+<em >FBB::Pattern</em> is used to perform the regular expression pattern
 matching.
     </ul>
 <p>
-<h2>CONSTRUCTORS</h2>
+<h2 >CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>ConfigFile(Comment cType = KeepComment, SearchCasing sType =
+    <li> <strong >ConfigFile(Comment cType = KeepComment, SearchCasing sType =
             SearchCaseSensitive, Indices iType = IgnoreIndices)</strong>:<br/>
-        This constructor is used to create an empty <strong>ConfigFile</strong>
-object. It is not associated with an input stream: the <em>open</em> member can
+        This constructor is used to create an empty <strong >ConfigFile</strong>
+object. It is not associated with an input stream: the <em >open</em> member can
 be used for that. The parameters can be used to specify specific handling of
 comment, letter-casing and storage of line numbers in the original
 configuration file.
-    <li> <strong>ConfigFile(std::string const &amp;fname, Comment cType = KeepComment,
+    <li> <strong >ConfigFile(std::string const &amp;fname, Comment cType = KeepComment,
             SearchCasing sType = SearchCaseSensitive, 
             Indices iType = IgnoreIndices)</strong>:<br/>
-        This constructor is used to create a <strong>ConfigFile</strong> object, which
+        This constructor is used to create a <strong >ConfigFile</strong> object, which
 is filled with the information from a file whose name is provided as the
 constructor's first argument. The other parameters are used as described with
-the first constructor. It throws an <em>FBB::Exception</em> exception if the file
+the first constructor. It throws an <em >FBB::Exception</em> exception if the file
 could not be opened.
     </ul>
 <p>
 Copy and move constructors are available.
 <p>
-<h2>OVERLOADED OPERATORS</h2>
+<h2 >OVERLOADED OPERATORS</h2>
     <ul>
-    <li> <strong>std::string const &amp;operator[](size_t idx) const</strong>:<br/>
-        This member returns the (0-based) <em>idx</em>-th line of the configuration
+    <li> <strong >std::string const &amp;operator[](size_t idx) const</strong>:<br/>
+        This member returns the (0-based) <em >idx</em>-th line of the configuration
     file. 
     </ul><br/>
     The overloaded assignment and move assignment operators are available.
 <p>
-<h2>MEMBER FUNCTIONS</h2>
+<h2 >MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong>ConfigFile::const_iterator begin() const</strong>:<br/>
-        This member returns a <em>const_iterator</em> to the first line of the
+    <li> <strong >ConfigFile::const_iterator begin() const</strong>:<br/>
+        This member returns a <em >const_iterator</em> to the first line of the
 configuration file.
 <p>
-<li> <strong>ConfigFile::const_iterator end() const</strong>:<br/>
-        This member returns a <em>const_iterator</em> pointing beyond the last line
+<li> <strong >ConfigFile::const_iterator end() const</strong>:<br/>
+        This member returns a <em >const_iterator</em> pointing beyond the last line
 of the configuration file.
 <p>
-<li> <strong>std::pair&lt;ConfigFile::const_RE_iterator, ConfigFile::const_RE_iterator&gt;
+<li> <strong >std::pair&lt;ConfigFile::const_RE_iterator, ConfigFile::const_RE_iterator&gt;
          beginEndRE(std::string const &amp;target) const</strong>:<br/>
-        A pair of <em>const_RE_iterators</em> is returned. The <em>first</em>
-field of the pair is a <em>const</em> iterator to the first element (i.e.,
-line) of the <strong>ConfigFile</strong> object in which the regular expression <em>target</em>
+        A pair of <em >const_RE_iterators</em> is returned. The <em >first</em>
+field of the pair is a <em >const</em> iterator to the first element (i.e.,
+line) of the <strong >ConfigFile</strong> object in which the regular expression <em >target</em>
 is found. 
 <p>
-The <em>second</em> field is a <em>const</em> iterator marking the end of the
+The <em >second</em> field is a <em >const</em> iterator marking the end of the
 series of lines started at the the first line matching the regular expression
-specified by <em>target</em>.
+specified by <em >target</em>.
 <p>
-If the <em>RemoveComment</em> flag was specified, then comment-text is not
-searched.  The iterator returned in the pair's <em>first</em> field can be
-incremented until the iteratr returned in the pair's <em>second</em> field is
-reached; all iterators (unequal the iterator in <em>second</em>) point to lines
+If the <em >RemoveComment</em> flag was specified, then comment-text is not
+searched.  The iterator returned in the pair's <em >first</em> field can be
+incremented until the iteratr returned in the pair's <em >second</em> field is
+reached; all iterators (unequal the iterator in <em >second</em>) point to lines
 matching the specified regular expression.  
 <p>
 The iterator's increment operator searches the next line matching the
 specified regular expression.
 <p>
-Although the difference between two <em>const_RE_iterators</em> can be computed
+Although the difference between two <em >const_RE_iterators</em> can be computed
 it is a relatively expensive operation. The difference is obtained by
 performing repeated regular expression matchings rather than the mere
 algebraic subtraction of pointer values. If the difference cannot be computed
-<em>std::numeric_limits&lt;size_t&gt;::max()</em> is returned.
+<em >std::numeric_limits&lt;size_t&gt;::max()</em> is returned.
 <p>
-This member also interprets the <em>SearchCasing</em> flag.
+This member also interprets the <em >SearchCasing</em> flag.
 <p>
-<li> <strong>std::pair&lt;ConfigFile::const_RE_iterator, ConfigFile::const_RE_iterator&gt;
+<li> <strong >std::pair&lt;ConfigFile::const_RE_iterator, ConfigFile::const_RE_iterator&gt;
          beginEndRE() const</strong>:<br/>
-        A pair of <em>const_RE_iterators</em> is returned, both marking the end of
+        A pair of <em >const_RE_iterators</em> is returned, both marking the end of
 a regular expression search.
 <p>
-<li> <strong>ConfigFile::const_iterator find(std::string const &amp;target) const</strong>:<br/>
+<li> <strong >ConfigFile::const_iterator find(std::string const &amp;target) const</strong>:<br/>
         This member returns an iterator to the first element (i.e., line) of
-the <em>FBB::ConfigFile</em> object in which <em>target</em> is found. Note that
-<em>target</em> may appear anywhere within a line. If the <em>RemoveComment</em> flag
-was specified, then comment-text is not searched. Use the <em>end</em> member to
+the <em >FBB::ConfigFile</em> object in which <em >target</em> is found. Note that
+<em >target</em> may appear anywhere within a line. If the <em >RemoveComment</em> flag
+was specified, then comment-text is not searched. Use the <em >end</em> member to
 determine the end-iterator. It is not guaranteed that all lines between the
-returned iterator and <em>end</em> contain <em>target</em>.  This member also
-interprets the <em>SearchCasing</em> flag.
+returned iterator and <em >end</em> contain <em >target</em>.  This member also
+interprets the <em >SearchCasing</em> flag.
 <p>
-<li> <strong>std::string findKey(std::string const &amp;keyPattern, 
+<li> <strong >std::string findKey(std::string const &amp;keyPattern, 
                                                      size_t count = 1) const</strong>:<br/>
         This member can be used to retrieve information from lines having the
-general pattern `<em>keyPattern value</em>'. Initial and trailing white space on
-lines are ignored. <em>keyPattern</em> itself should not contain initial or
+general pattern `<em >keyPattern value</em>'. Initial and trailing white space on
+lines are ignored. <em >keyPattern</em> itself should not contain initial or
 trailing white space. At least one white space character must appear between
-<em>keyPattern</em> and <em>value</em>. If at least <em>count</em> lines were found matching
-<em>keyPattern value</em> then this member returns the first sequence of non white
-space characters following <em>keyPattern</em> after matching <em>count</em> lines
-matching <em>keyPattern value</em> (i.e., `<em>value</em>' is returned). If <em>value</em> is
-empty or if fewer than <em>count</em> lines match <em>keyPattern</em> an empty string is
-returned. An <em>FBB::Exception</em> exception is thrown if <em>count</em> equals 0.
+<em >keyPattern</em> and <em >value</em>. If at least <em >count</em> lines were found matching
+<em >keyPattern value</em> then this member returns the first sequence of non white
+space characters following <em >keyPattern</em> after matching <em >count</em> lines
+matching <em >keyPattern value</em> (i.e., `<em >value</em>' is returned). If <em >value</em> is
+empty or if fewer than <em >count</em> lines match <em >keyPattern</em> an empty string is
+returned. An <em >FBB::Exception</em> exception is thrown if <em >count</em> equals 0.
 <p>
-<li> <strong>std::string findKeyTail(std::string const &amp;keyPattern, 
+<li> <strong >std::string findKeyTail(std::string const &amp;keyPattern, 
                                                     size_t count = 1) const</strong>:<br/>
         This member can be used to retrieve information from lines having the
-general pattern `<em>keyPattern value</em>', merely followed by white
-space. Initial and trailing white space on lines are ignored. <em>keyPattern</em>
+general pattern `<em >keyPattern value</em>', merely followed by white
+space. Initial and trailing white space on lines are ignored. <em >keyPattern</em>
 itself should not contain initial or trailing white space. At least one white
-space character must appear between <em>keyPattern</em> and <em>value</em>.  If at least
-<em>count</em> lines were found matching <em>keyPattern value</em> then this member
-returns the information beyond <em>keyPattern</em> after matching <em>count</em> lines
-matching <em>keyPattern</em> (i.e., `<em>value</em>' is returned). This function differs
-from <em>findKey</em> in that all information trailing <em>keyPattern</em> is returned
-in <em>value</em>.  If <em>value</em> is empty or if fewer than <em>count</em> lines match
-<em>keyPattern</em> an empty string is returned. An <em>FBB::Exception</em> exception is
-thrown if <em>count</em> equals 0.
+space character must appear between <em >keyPattern</em> and <em >value</em>.  If at least
+<em >count</em> lines were found matching <em >keyPattern value</em> then this member
+returns the information beyond <em >keyPattern</em> after matching <em >count</em> lines
+matching <em >keyPattern</em> (i.e., `<em >value</em>' is returned). This function differs
+from <em >findKey</em> in that all information trailing <em >keyPattern</em> is returned
+in <em >value</em>.  If <em >value</em> is empty or if fewer than <em >count</em> lines match
+<em >keyPattern</em> an empty string is returned. An <em >FBB::Exception</em> exception is
+thrown if <em >count</em> equals 0.
 <p>
-<li> <strong>ConfigFile::const_iterator findRE(std::string const &amp;target) const</strong>:<br/>
+<li> <strong >ConfigFile::const_iterator findRE(std::string const &amp;target) const</strong>:<br/>
         This member returns an iterator to the first line of the
-<strong>ConfigFile</strong> object matching the regular expression <em>target</em>. After
-calling this function <em>beginEndRE</em> returns an iterator pair whose <em>first</em>
-field is an iterator to the same line and whose <em>second</em> field is the
-end-iterator for lines matching <em>target</em>. If the <em>RemoveComment</em> flag was
-specified, then comment-text is not searched.  The inherited <em>end</em> member
+<strong >ConfigFile</strong> object matching the regular expression <em >target</em>. After
+calling this function <em >beginEndRE</em> returns an iterator pair whose <em >first</em>
+field is an iterator to the same line and whose <em >second</em> field is the
+end-iterator for lines matching <em >target</em>. If the <em >RemoveComment</em> flag was
+specified, then comment-text is not searched.  The inherited <em >end</em> member
 can be used to determine the end-iterator. It is not guaranteed that all lines
-between the returned iterator and <em>end</em> also contain <em>target</em>. If
-that is required, the members <em>beginRE</em> and <em>endRE</em> can be used.  This
-member also interprets the <em>SearchCasing</em> flag.
+between the returned iterator and <em >end</em> also contain <em >target</em>. If
+that is required, the members <em >beginRE</em> and <em >endRE</em> can be used.  This
+member also interprets the <em >SearchCasing</em> flag.
 <p>
-<li> <strong>size_t index(size_t idx)</strong>:<br/>
-        This function should only be used when the parameter <em>StoreIndices</em>
+<li> <strong >size_t index(size_t idx)</strong>:<br/>
+        This function should only be used when the parameter <em >StoreIndices</em>
 was specified at construction time. In that case it returns the original
 0-based line index in the configuration file associated with the
-<em>idx</em><sup>th</sup> (0-based) index in the current <em>Configuration</em> object.
+<em >idx</em><sup >th</sup> (0-based) index in the current <em >Configuration</em> object.
 <p>
-<li> <strong>size_t index(const_iterator const &amp;iter)</strong>:<br/>
-        This function should only be used when the parameter <em>StoreIndices</em>
+<li> <strong >size_t index(const_iterator const &amp;iter)</strong>:<br/>
+        This function should only be used when the parameter <em >StoreIndices</em>
 was specified at construction time. In that case it returns the original
 0-based line index in the configuration file associated with the configuration
-line in the current <em>Configuration</em> object pointed to by <em>iter</em>. This may
+line in the current <em >Configuration</em> object pointed to by <em >iter</em>. This may
 also be an (incremented version of the) iterator returned by the member
-<em>findRE</em> or <em>beginRE</em>, as long as the iterator's value is within the half
-open range <em>beginRE</em> to <em>endRE</em>.
+<em >findRE</em> or <em >beginRE</em>, as long as the iterator's value is within the half
+open range <em >beginRE</em> to <em >endRE</em>.
 <p>
-<li> <strong>void open(std::string const &amp;fname)</strong>:<br/>
-        This member reads the configuration file having name <em>fname</em>.
-It redefines the current contents of the <strong>ConfigFile</strong> object,
+<li> <strong >void open(std::string const &amp;fname)</strong>:<br/>
+        This member reads the configuration file having name <em >fname</em>.
+It redefines the current contents of the <strong >ConfigFile</strong> object,
 destroying any information previously stored in it. The configuation file is
 read according to the latest setting of the comment-flag. It throws an
-<em>FBB::Exception</em> exception if the file cannot be opened.
+<em >FBB::Exception</em> exception if the file cannot be opened.
 <p>
 This member clears previously available information and reinitializes the
 object with information read from the new file.
 <p>
-<li> <strong>void setCommentHandling(Comment type)</strong>:<br/>
+<li> <strong >void setCommentHandling(Comment type)</strong>:<br/>
         This member can be used to change the comment-handling type originally
 set by the constructor, or set by earlier calls of this function. When called
-it won't affect the current contents of the <strong>ConfigFile</strong> object, but
-new calls of its <em>open</em> member reads the configuation file according
+it won't affect the current contents of the <strong >ConfigFile</strong> object, but
+new calls of its <em >open</em> member reads the configuation file according
 to the last setting of the comment flag.
 <p>
-<li> <strong>void setSearchCasing(SearchCasing type)</strong>:<br/>
+<li> <strong >void setSearchCasing(SearchCasing type)</strong>:<br/>
         This member can be used to change the handling of the letter-casing
 originally set by the constructor, or set by earlier calls of this
 function. When called it won't affect the current contents of the
-<strong>ConfigFile</strong> object, but new calls of its <em>open</em> member reads the
+<strong >ConfigFile</strong> object, but new calls of its <em >open</em> member reads the
 configuation file according to the last setting of the letter-casing flag.
 <p>
-<li> <strong>size_t size() const</strong>:<br/>
+<li> <strong >size_t size() const</strong>:<br/>
         This member returns the number of lines in the configuration file.
     </ul>
 <p>
-<h2>EXAMPLE</h2>
-    Assume the configuration file is called <em>config.rc</em> and contains the
+<h2 >EXAMPLE</h2>
+    Assume the configuration file is called <em >config.rc</em> and contains the
 following lines: 
 <p>
 
@@ -346,7 +346,7 @@ and there may, of course, be more lines in this file
 </pre>
 
 <p>
-The following program may be compiled and run as <em>a.out config.rc</em>:
+The following program may be compiled and run as <em >a.out config.rc</em>:
     <pre>
 
 #include &lt;iostream&gt;
@@ -384,36 +384,36 @@ line: what about this one? it's extending over multiple lines
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/configfile</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/configfile</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>argconfig</strong>(3bobcat), <strong>bobcat</strong>(7), <strong>exception</strong>(3bobcat), 
-    <strong>pattern</strong>(3bobcat)
+<h2 >SEE ALSO</h2>
+    <strong >argconfig</strong>(3bobcat), <strong >bobcat</strong>(7), <strong >exception</strong>(3bobcat), 
+    <strong >pattern</strong>(3bobcat)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

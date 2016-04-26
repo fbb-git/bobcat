@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::binary_search</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,80 +43,80 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::binary_search(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Binary search function</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Binary search function</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::binary_search - Extensions to the STL binary_search function
+<h2 >NAME</h2>FBB::binary_search - Extensions to the STL binary_search function
 template 
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/binarysearch&gt;</strong><br/>
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/binarysearch&gt;</strong><br/>
 <p>
-<h2>DESCRIPTION</h2>
+<h2 >DESCRIPTION</h2>
 <p>
-The <strong>FBB::binary_search</strong> function templates extend the STL <em>binary_search</em>
+The <strong >FBB::binary_search</strong> function templates extend the STL <em >binary_search</em>
 function template returning an iterator to the element found, instead of a
-<strong>bool</strong> value informing the caller whether or not the searched for element is
+<strong >bool</strong> value informing the caller whether or not the searched for element is
 present in a provided iterator range.
 <p>
-The <strong>bool</strong> value returned by the STL <em>binary_search</em> function template is
+The <strong >bool</strong> value returned by the STL <em >binary_search</em> function template is
 often not the kind of information the caller of the function is interested
-in. Rather, the caller will often want to use <em>binary_search</em> in the way
-<em>find_if</em> is used: returning an iterator to the found element or returning
-the end-iterator if the element was not found. Whereas <em>find_if</em> does not
+in. Rather, the caller will often want to use <em >binary_search</em> in the way
+<em >find_if</em> is used: returning an iterator to the found element or returning
+the end-iterator if the element was not found. Whereas <em >find_if</em> does not
 require the elements in the iterator range to be sorted, and thus will use a
-linear search <em>binary_search</em> may use the sorted nature of the elements to
-its advantage, using a binary search algorithm requiring <em>2 log N</em>
-iterations to locate the searched for element rather than (on average) <em>N/2</em>
-iterations. The <em>FBB::binary_search</em> algorithm uses this binary searching
-process while at the same time allowing its use like <em>find_if</em>.  
+linear search <em >binary_search</em> may use the sorted nature of the elements to
+its advantage, using a binary search algorithm requiring <em >2 log N</em>
+iterations to locate the searched for element rather than (on average) <em >N/2</em>
+iterations. The <em >FBB::binary_search</em> algorithm uses this binary searching
+process while at the same time allowing its use like <em >find_if</em>.  
 <p>
-Since the <em>FBB::binary_search</em> function templates use the same number and
-types of parameters as the <em>stl::binary_search</em> function templates the
-explicit use of the <em>FBB</em> namespace will often be required in situations
+Since the <em >FBB::binary_search</em> function templates use the same number and
+types of parameters as the <em >stl::binary_search</em> function templates the
+explicit use of the <em >FBB</em> namespace will often be required in situations
 where both function templates are made available to the compiler.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
+<h2 >INHERITS FROM</h2>
     -
 <p>
-<h2>OVERLOADED FUNCTIONS</h2>
+<h2 >OVERLOADED FUNCTIONS</h2>
     In the following description several template type parameters are
 used. They are:
     <ul>
-    <li> <strong>Iterator</strong> represents an iterator type; 
-    <li> <strong>Type</strong> represents a value of the type to which <em>Iterator</em>
+    <li> <strong >Iterator</strong> represents an iterator type; 
+    <li> <strong >Type</strong> represents a value of the type to which <em >Iterator</em>
 points. 
-    <li> <strong>Comparator</strong> represents a comparator function or class type object
-which was used to sort the elements to which the <em>Iterator</em> range refer;
+    <li> <strong >Comparator</strong> represents a comparator function or class type object
+which was used to sort the elements to which the <em >Iterator</em> range refer;
     </ul>
     <ul>
-    <li> <strong>Iterator binary_search(Iterator begin, Iterator end, Type const
+    <li> <strong >Iterator binary_search(Iterator begin, Iterator end, Type const
         &amp;value)</strong>:<br/> 
-       Using a binary search algorithm <em>value</em> is searched for in the range
+       Using a binary search algorithm <em >value</em> is searched for in the range
 of elements referred to by the provided iterator range. If the value is found
-an iterator pointing to this value is returned, otherwise <em>end</em> is
+an iterator pointing to this value is returned, otherwise <em >end</em> is
 returned. The elements in the range must have been sorted by the
-<em>Type::operator&lt;()</em> function. 
-    <li> <strong>Iterator binary_search(Iterator begin, Iterator end, Type const
+<em >Type::operator&lt;()</em> function. 
+    <li> <strong >Iterator binary_search(Iterator begin, Iterator end, Type const
         &amp;value, Comparator comparator)</strong>:<br/> 
-       Using a binary search algorithm <em>value</em> is searched for in the range
+       Using a binary search algorithm <em >value</em> is searched for in the range
 of elements referred to by the provided iterator range. If the value is found
-an iterator pointing to this value is returned, otherwise <em>end</em> is
+an iterator pointing to this value is returned, otherwise <em >end</em> is
 returned. The elements and the provided value are compared using
-<em>comparator(*iterator, value)</em> calls, where <em>*iterator</em> refers to an
+<em >comparator(*iterator, value)</em> calls, where <em >*iterator</em> refers to an
 object in the provided iterator range. The elements in the range must have
-been sorted by the <em>Comparator</em> function or function object.
+been sorted by the <em >Comparator</em> function or function object.
     </ul>
 <p>
-<h2>EXAMPLES</h2>
-        <pre>
+<h2 >EXAMPLES</h2>
+        <pre >
 #include &lt;iostream&gt;
 #include &lt;string&gt;
 #include "../binarysearch"
@@ -182,35 +182,35 @@ int main()
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/binarysearch</em> - defines the template functions
+<h2 >FILES</h2>
+    <em >bobcat/binarysearch</em> - defines the template functions
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

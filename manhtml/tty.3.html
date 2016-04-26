@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Tty</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,89 +43,89 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Tty(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Controls echoing of characters</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Controls echoing of characters</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::Tty - Controls echoing of characters entered at the terminal
+<h2 >NAME</h2>FBB::Tty - Controls echoing of characters entered at the terminal
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/tty&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/tty&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
-    <strong>Tty</strong>(3bobcat) objects can be used to control the echoing of characters
-entered at the terminal (usually at <em>/dev/tty</em>). Directly reading from
-<em>/dev/tty</em> allows programs to read information (e.g., passwords or pass
+<h2 >DESCRIPTION</h2>
+    <strong >Tty</strong>(3bobcat) objects can be used to control the echoing of characters
+entered at the terminal (usually at <em >/dev/tty</em>). Directly reading from
+<em >/dev/tty</em> allows programs to read information (e.g., passwords or pass
 phrases) even if the standard input stream is redirected to a file. Unless
-redirected, <em>std::cin</em> is connected to <em>/dev/tty</em>.
+redirected, <em >std::cin</em> is connected to <em >/dev/tty</em>.
 <p>
-<strong>Tty</strong>(3bobcat) objects may be used as stand-alone objects or (usually
-anonymous) <strong>Tty</strong>(3bobcat) objects may be inserted into or extracted from
+<strong >Tty</strong>(3bobcat) objects may be used as stand-alone objects or (usually
+anonymous) <strong >Tty</strong>(3bobcat) objects may be inserted into or extracted from
 streams. When inserting or extracting objects the involved streams are not
-affected; only the echoing of characters entered at <em>/dev/tty</em> is
+affected; only the echoing of characters entered at <em >/dev/tty</em> is
 manipulated.
 <p>
-<strong>Tty</strong>(3bobcat)'s destructor does not reset the echo-state of
-<em>/dev/tty</em> to its original value. If that is required a <strong>Tty</strong>(3bobcat)
-object must be created first, calling its <strong>echo(Tty::RESET)</strong> member at the
+<strong >Tty</strong>(3bobcat)'s destructor does not reset the echo-state of
+<em >/dev/tty</em> to its original value. If that is required a <strong >Tty</strong>(3bobcat)
+object must be created first, calling its <strong >echo(Tty::RESET)</strong> member at the
 appropriate time. 
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
+<h2 >INHERITS FROM</h2>
     -
 <p>
-<h2>ENUM</h2>
+<h2 >ENUM</h2>
 <p>
-The <em>enum EchoType</em> requests the type of echo-handling:
+The <em >enum EchoType</em> requests the type of echo-handling:
     <ul>
-    <li> <strong>RESET</strong> is used to reset <em>/dev/tty</em>'s state to the actual state
-        when a <strong>Tty</strong>(3bobcat) object was constructed
-    <li> <strong>ON</strong> is used to activate echoing of characters entered at 
-        <em>/dev/tty</em>.
-    <li> <strong>OFF</strong> is used to suppress echoing of characters entered at 
-        <em>/dev/tty</em>.
+    <li> <strong >RESET</strong> is used to reset <em >/dev/tty</em>'s state to the actual state
+        when a <strong >Tty</strong>(3bobcat) object was constructed
+    <li> <strong >ON</strong> is used to activate echoing of characters entered at 
+        <em >/dev/tty</em>.
+    <li> <strong >OFF</strong> is used to suppress echoing of characters entered at 
+        <em >/dev/tty</em>.
     </ul>
 <p>
-<h2>CONSTRUCTORS</h2>
+<h2 >CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>Tty()</strong>:<br/>
-       The current state of <em>/dev/tty</em> is saved.
+    <li> <strong >Tty()</strong>:<br/>
+       The current state of <em >/dev/tty</em> is saved.
 <p>
-<li> <strong>Tty(EchoType type)</strong>:<br/>
-       The current state of <em>/dev/tty</em> is saved, and the object's member
-        <em>echo(type)</em> is called.
+<li> <strong >Tty(EchoType type)</strong>:<br/>
+       The current state of <em >/dev/tty</em> is saved, and the object's member
+        <em >echo(type)</em> is called.
     </ul>
     Default copy and move constructors are available.
 <p>
-<h2>OVERLOADED OPERATORS</h2>
+<h2 >OVERLOADED OPERATORS</h2>
     <ul>
-    <li> <strong>std::istream &amp;operator&gt;&gt;(std::istream &amp;in, Tty const &amp;tty)</strong>:<br/>
-       The extraction operator does not affect <em>in</em>, but <em>/dev/tty</em>'s
-        state is set according to the way the <em>tty</em> object was constructed.
+    <li> <strong >std::istream &amp;operator&gt;&gt;(std::istream &amp;in, Tty const &amp;tty)</strong>:<br/>
+       The extraction operator does not affect <em >in</em>, but <em >/dev/tty</em>'s
+        state is set according to the way the <em >tty</em> object was constructed.
 <p>
-<li> <strong>std::ostream &amp;operator&lt;&lt;(std::ostream &amp;out, Tty const &amp;tty)</strong>:<br/>
-       The insertion operator does not affect <em>out</em>, but <em>/dev/tty</em>'s
-        state is set according to the way the <em>tty</em> object was constructed.
+<li> <strong >std::ostream &amp;operator&lt;&lt;(std::ostream &amp;out, Tty const &amp;tty)</strong>:<br/>
+       The insertion operator does not affect <em >out</em>, but <em >/dev/tty</em>'s
+        state is set according to the way the <em >tty</em> object was constructed.
     </ul>
     Default copy and move assignment operators are available.
 <p>
-<h2>MEMBER FUNCTION</h2>
+<h2 >MEMBER FUNCTION</h2>
 <p>
 <ul>
-    <li> <strong>echo(EchoType type)</strong>:<br/>
-       <em>/Dev/tty</em>'s state is set according to the <em>EchoType</em> value that is
+    <li> <strong >echo(EchoType type)</strong>:<br/>
+       <em >/Dev/tty</em>'s state is set according to the <em >EchoType</em> value that is
         passed to this member.
     </ul>
 <p>
-<h2>EXAMPLE</h2>
+<h2 >EXAMPLE</h2>
 <p>
-<pre>
+<pre >
 #include &lt;iostream&gt;
 #include &lt;string&gt;
 
@@ -152,35 +152,35 @@ int main()
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/tty</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/tty</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>onekey</strong>(3bobcat)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >onekey</strong>(3bobcat)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

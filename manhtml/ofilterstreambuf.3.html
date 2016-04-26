@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::OFilterStreambuf</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,54 +43,54 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::OFilterStreambuf(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz ostream filtering</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz ostream filtering</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::OFilterStreambuf - Base class for std::ostream filtering
+<h2 >NAME</h2>FBB::OFilterStreambuf - Base class for std::ostream filtering
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/ofilterstreambuf&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/ofilterstreambuf&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
+<h2 >DESCRIPTION</h2>
 <p>
-The <strong>FBB::OFilterStreambuf</strong> class is a specialization of the
-<em>std::streambuf</em> class and can be used as a base class for classes
-implementing <em>ostream</em>-filtering. 
+The <strong >FBB::OFilterStreambuf</strong> class is a specialization of the
+<em >std::streambuf</em> class and can be used as a base class for classes
+implementing <em >ostream</em>-filtering. 
 <p>
 Ostream filtering is defined here as the process by which inserted characters
 are subject to processing before they are passed on to another (filtered)
-<em>ostream</em> object (or they may be rejected). The filtering may also result in
-inserting additional information into the filtered <em>ostream</em>.
+<em >ostream</em> object (or they may be rejected). The filtering may also result in
+inserting additional information into the filtered <em >ostream</em>.
 <p>
-<em>Chaining</em> of filters is also possible: the filtered <em>ostream</em> may itself
-use an <em>OFilterStreambuf</em> to filter its received information before passing
-it on to yet another <em>ostream</em>. 
+<em >Chaining</em> of filters is also possible: the filtered <em >ostream</em> may itself
+use an <em >OFilterStreambuf</em> to filter its received information before passing
+it on to yet another <em >ostream</em>. 
 <p>
-As <em>OFilterStreambuf</em> inherits from <em>std::streambuf</em> an
-<em>OFilterStreambuf</em> object can be used to provide an <em>ostream</em> object
-with a <em>std::streambuf</em>. Information inserted into such a stream travels the
+As <em >OFilterStreambuf</em> inherits from <em >std::streambuf</em> an
+<em >OFilterStreambuf</em> object can be used to provide an <em >ostream</em> object
+with a <em >std::streambuf</em>. Information inserted into such a stream travels the
 following route:
     <ul>
     <li> The information is converted to characters using the standard
-conversion facilities implemented by <em>std::ostream</em> objects. E.g., when
-inserting the value <em>123</em> this value is converted to 
-the characters <em>'1', '2'</em> and <em>'3'</em>, respectively.
+conversion facilities implemented by <em >std::ostream</em> objects. E.g., when
+inserting the value <em >123</em> this value is converted to 
+the characters <em >'1', '2'</em> and <em >'3'</em>, respectively.
     <li> Each of the characters is then offered (in turn) to the
-<em>std::streambuf</em> that is associated with the <em>ostream</em> object. In
-particular, the <em>std::streambuf</em>'s <em>overflow()</em> member is called. 
-    <li> <em>OFstreamBuf</em>'s default <em>overflow()</em> function ignores characters,
-but specializations can override <em>overflow()</em> to process the received
-characters <em>ad lib</em>. 
-    <li> A overriding <em>overflow()</em> function has access to the member
-<em>OFstreambuf::out()</em> which is a reference to the <em>std::ostream</em> receiving
+<em >std::streambuf</em> that is associated with the <em >ostream</em> object. In
+particular, the <em >std::streambuf</em>'s <em >overflow()</em> member is called. 
+    <li> <em >OFstreamBuf</em>'s default <em >overflow()</em> function ignores characters,
+but specializations can override <em >overflow()</em> to process the received
+characters <em >ad lib</em>. 
+    <li> A overriding <em >overflow()</em> function has access to the member
+<em >OFstreambuf::out()</em> which is a reference to the <em >std::ostream</em> receiving
 the filtered information.
     </ul>
     To implement a simple copy-filter (i.e., all characters are accepted
-as-is) a class must be derived from <em>OFilterStreambuf</em> providing an
-overriding implementation of <em>overflow()</em>, e.g., as follows:
+as-is) a class must be derived from <em >OFilterStreambuf</em> providing an
+overriding implementation of <em >overflow()</em>, e.g., as follows:
         <pre>
 
     int DerivedClass::overflow(int ch)
@@ -100,79 +100,79 @@ overriding implementation of <em>overflow()</em>, e.g., as follows:
         
 </pre>
 
-    Next this <em>std::streambuf</em> specialization can be associated with an
-<em>ostream</em> into which information to be `copy filtered' can be inserted
+    Next this <em >std::streambuf</em> specialization can be associated with an
+<em >ostream</em> into which information to be `copy filtered' can be inserted
 (cf. the EXAMPLE section below).
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
+<h2 >INHERITS FROM</h2>
     std::streambuf
 <p>
-<h2>CONSTRUCTORS</h2>
+<h2 >CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>OFilterStreambuf()</strong>:<br/>
-        This constructor creates a <em>OFilterStreambuf</em> object without
-associating it with a destination (filtered) <em>ostream</em>.
+    <li> <strong >OFilterStreambuf()</strong>:<br/>
+        This constructor creates a <em >OFilterStreambuf</em> object without
+associating it with a destination (filtered) <em >ostream</em>.
 <p>
-<li> <strong>OFilterStreambuf(std::string const &amp;fname, 
+<li> <strong >OFilterStreambuf(std::string const &amp;fname, 
                                             openmode mode = std::ios::out)</strong>:<br/>
-        This constructor creates a <em>OFilterStreambuf</em> object and opens a
-private <em>std::ofstream</em> object whose filename is provided and that should 
+        This constructor creates a <em >OFilterStreambuf</em> object and opens a
+private <em >std::ofstream</em> object whose filename is provided and that should 
 receive the filtered information.
 <p>
-<li> <strong>OFilterStreambuf(char const *fname, openmode mode = std::ios::out)</strong>:<br/>
-        Same as the previous constructor, expecting a <em>char const *</em>
-defining the name of the private <em>std::ofstream</em> object.
+<li> <strong >OFilterStreambuf(char const *fname, openmode mode = std::ios::out)</strong>:<br/>
+        Same as the previous constructor, expecting a <em >char const *</em>
+defining the name of the private <em >std::ofstream</em> object.
 <p>
-<li> <strong>OFilterStreambuf(std::ostream &amp;out)</strong>:<br/>
-        This constructor creates a <em>OFilterStreambuf</em> object and will insert
-any filtered information into the provided  <em>ostream</em> object.
+<li> <strong >OFilterStreambuf(std::ostream &amp;out)</strong>:<br/>
+        This constructor creates a <em >OFilterStreambuf</em> object and will insert
+any filtered information into the provided  <em >ostream</em> object.
     </ul>
     The class's destructor closes the destination (filtered) stream (cf. the
-description of <em>close()</em> below).
+description of <em >close()</em> below).
 <p>
-<h2>MEMBER FUNCTIONS</h2>
-     All members of <strong>std::ostreambuf</strong> are available, as
-<strong>FBB::OFilterStreambuf</strong> inherits from that class. In particular, derived
-classes should provide their own implementation of <em>int underflow(int ch)</em>
+<h2 >MEMBER FUNCTIONS</h2>
+     All members of <strong >std::ostreambuf</strong> are available, as
+<strong >FBB::OFilterStreambuf</strong> inherits from that class. In particular, derived
+classes should provide their own implementation of <em >int underflow(int ch)</em>
 to implement any non-trivial filtering.
     <ul>
-    <li> <strong>void close()</strong>:<br/>
-        This member calls the <em>streambuf::sync()</em> member to flush any
+    <li> <strong >void close()</strong>:<br/>
+        This member calls the <em >streambuf::sync()</em> member to flush any
 pending information to the destination (filtered) stream and then closes the
-destination stream. Note that the default <em>sync()</em> member performs no
+destination stream. Note that the default <em >sync()</em> member performs no
 special actions but it can be overridden by derived classes to flush the
 destination stream just prior to its closing.
 <p>
-<li> <strong>void open(std::string const &amp;fname, openmode mode = std::ios::out)</strong>:<br/>
-        This member closes the current destination (filtered) <em>std::ostream</em>
-object and associates the <em>OFilterStreambuf</em> object with a private
-<em>std::ofstream</em> object whose filename is provided and that should receive
+<li> <strong >void open(std::string const &amp;fname, openmode mode = std::ios::out)</strong>:<br/>
+        This member closes the current destination (filtered) <em >std::ostream</em>
+object and associates the <em >OFilterStreambuf</em> object with a private
+<em >std::ofstream</em> object whose filename is provided and that should receive
 subsequently filtered information.
 <p>
-<li> <strong>void open(char const *fname, openmode mode = std::ios::out)</strong>:<br/>
-        Same as the previous member, but using a <em>char const *</em> to specify
-the name of the private <em>std::ofstream</em> object to receive the filtered
+<li> <strong >void open(char const *fname, openmode mode = std::ios::out)</strong>:<br/>
+        Same as the previous member, but using a <em >char const *</em> to specify
+the name of the private <em >std::ofstream</em> object to receive the filtered
 information.
 <p>
-<li> <strong>void open(std::ostream &amp;out)</strong>:<br/>
-        This member closes the current destination (filtered) <em>std::ostream</em>
-object and associates the <em>OFilterStreambuf</em> object with the provided
-<em>ostream</em> object.
+<li> <strong >void open(std::ostream &amp;out)</strong>:<br/>
+        This member closes the current destination (filtered) <em >std::ostream</em>
+object and associates the <em >OFilterStreambuf</em> object with the provided
+<em >ostream</em> object.
     </ul>
 <p>
-<h2>PROTECTED MEMBER FUNCTION</h2>
+<h2 >PROTECTED MEMBER FUNCTION</h2>
     <ul>
-    <li> <strong>std::ostream &amp;out() const</strong>:<br/>
+    <li> <strong >std::ostream &amp;out() const</strong>:<br/>
         This member is available to derived classes to insert information into
 the destination (filtered) stream. 
     </ul>
 <p>
-<h2>EXAMPLE</h2>
+<h2 >EXAMPLE</h2>
         <pre>
 
     #include &lt;iostream&gt;
@@ -210,35 +210,35 @@ the destination (filtered) stream.
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/ofilterstreambuf</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/ofilterstreambuf</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>ifilterstreambuf</strong>(3bobcat)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >ifilterstreambuf</strong>(3bobcat)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

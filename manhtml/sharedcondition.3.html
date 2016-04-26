@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::SharedCondition</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,18 +43,18 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::SharedCondition(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Shared Memory Cond. Var.</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Shared Memory Cond. Var.</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::SharedCondition - Shared Memory Condition Variable
+<h2 >NAME</h2>FBB::SharedCondition - Shared Memory Condition Variable
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/sharedcondition&gt;</strong><br/>
-    Linking option: <em>-lpthread, -lbobcat </em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/sharedcondition&gt;</strong><br/>
+    Linking option: <em >-lpthread, -lbobcat </em> 
 <p>
-<h2>DESCRIPTION</h2>
+<h2 >DESCRIPTION</h2>
 <p>
 Condition variables are used to synchronize threads based on the values of
 data. Condition variables allow threads to wait until a certain condition has
@@ -63,12 +63,12 @@ don't continuously have to poll the state of a variable (requiring the threads
 to gain access to the variable before they can inspect its value). Using
 condition variables waiting threads simply wait until they are notified.
 <p>
-<strong>SharedCondition</strong> objects can be used in combination with shared
-memory. <strong>SharedCondition</strong> objects interface to objects (called <em>Condition</em>
+<strong >SharedCondition</strong> objects can be used in combination with shared
+memory. <strong >SharedCondition</strong> objects interface to objects (called <em >Condition</em>
 objects in this man-page) which are defined in shared memory and contain a
-<em>SharedMutex</em> and a shared condition object. These <em>Condition</em> objects may
+<em >SharedMutex</em> and a shared condition object. These <em >Condition</em> objects may
 be accessed by threads running in different processes. These different
-processes might run a single <em>main</em> thread, or they themselves can be
+processes might run a single <em >main</em> thread, or they themselves can be
 multi-threaded.
 <p>
 Condition variables are used in situations like these:
@@ -98,65 +98,65 @@ reasons. Therefore the first thread must verify that the condition has been
 met after resuming its actions.
 <p>
 As condition variables are always used in combination with a mutex,
-<strong>SharedMutex</strong> encapsulates the mutex-handling. The software using
-<strong>SharedCondition</strong> objects doesn't have to handle the mutex itself.
+<strong >SharedMutex</strong> encapsulates the mutex-handling. The software using
+<strong >SharedCondition</strong> objects doesn't have to handle the mutex itself.
 <p>
-<strong>SharedCondition</strong> objects are used to synchronize actions by different
+<strong >SharedCondition</strong> objects are used to synchronize actions by different
 processes, using shared memory as their vehicle of
 synchronization/communication. The actual condition variable that is used by a
-<strong>SharedCondition</strong> object is defined in shared memory.  <strong>SharedCondition</strong>
+<strong >SharedCondition</strong> object is defined in shared memory.  <strong >SharedCondition</strong>
 objects themselves are small objects, containing the necessary information to
 access the actual shared memory condition variable.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
-    <strong>SharedMutex</strong>(3bobcat)
+<h2 >INHERITS FROM</h2>
+    <strong >SharedMutex</strong>(3bobcat)
 <p>
-<h2>CONSTRUCTORS, DESTRUCTOR</h2>
+<h2 >CONSTRUCTORS, DESTRUCTOR</h2>
     <ul>
-    <li> <strong>SharedCondition()</strong>:<br/>
+    <li> <strong >SharedCondition()</strong>:<br/>
        The default constructor creates an empty stub which cannot yet be used
-        (or an <em>FBB::Exception</em> is thrown). As the <strong>SharedCondition</strong> class
+        (or an <em >FBB::Exception</em> is thrown). As the <strong >SharedCondition</strong> class
         supports assignment operators, empty stubs can easily be
         (re)configured at any time after their construction.
 <p>
-<li> <strong>~SharedCondition()</strong>:<br/>
+<li> <strong >~SharedCondition()</strong>:<br/>
        The class's destructor releases (if applicable) its lock on the shared
         condition variables mutex lock. The destructor takes no action if its
         object is an empty stub.
     </ul>
        (Default) copy and move constructors are available. 
 <p>
-<h2>OVERLOADED OPERATORS</h2>
+<h2 >OVERLOADED OPERATORS</h2>
 <p>
 The (default) overloaded move and copy assignment operators are available.
 <p>
-<h2>MEMBER FUNCTIONS</h2>
+<h2 >MEMBER FUNCTIONS</h2>
 <p>
-Returning from <strong>SharedCondition</strong> member functions the offset of the
-<em>SharedMemory</em> object in which the condition variable has been defined has
+Returning from <strong >SharedCondition</strong> member functions the offset of the
+<em >SharedMemory</em> object in which the condition variable has been defined has
 not changed. Internally, the current offset is saved; the requested function
 is performed; and the original offset is restored. Consequently,
-<strong>SharedCondition</strong> member functions can be used disregarding the
-<em>SharedMemory</em>'s current offset.
+<strong >SharedCondition</strong> member functions can be used disregarding the
+<em >SharedMemory</em>'s current offset.
 <p>
 <ul>
-    <li> <strong>void lock() const</strong>:<br/>
+    <li> <strong >void lock() const</strong>:<br/>
        When returning from this member, the current process has locked the
-        <strong>SharedCondition</strong> object. Be careful not to call <em>lock</em> twice
-        during the same thread of execution (cf. <strong>sharedmutex</strong>(3bobcat) for
+        <strong >SharedCondition</strong> object. Be careful not to call <em >lock</em> twice
+        during the same thread of execution (cf. <strong >sharedmutex</strong>(3bobcat) for
         details).
 <p>
-<li> <strong>void notify() noexept</strong>:<br/>
-       One of the threads waiting on the <strong>SharedCondition</strong> object wakes
-        up. The thread calling <em>notify</em> should release its mutex lock
-        shortly after calling <em>notify</em>, allowing the notified thread to
+<li> <strong >void notify() noexept</strong>:<br/>
+       One of the threads waiting on the <strong >SharedCondition</strong> object wakes
+        up. The thread calling <em >notify</em> should release its mutex lock
+        shortly after calling <em >notify</em>, allowing the notified thread to
         obtain the lock. A prototypical piece of pseudo code illustrating
-        the use of <em>notify</em> looks like this:
+        the use of <em >notify</em> looks like this:
        <pre>
 
     sharedCondition.lock();     // lock the mutex
@@ -167,36 +167,36 @@ is performed; and the original offset is restored. Consequently,
        
 </pre>
 
-       As the <em>sharedCondition.lock ... sharedCondition.unlock</em> sequence
+       As the <em >sharedCondition.lock ... sharedCondition.unlock</em> sequence
         itself may be executed at different flow of control sections, the
-        <em>unlock</em> member cannot be called from within <em>notify</em>.
+        <em >unlock</em> member cannot be called from within <em >notify</em>.
 <p>
-<li> <strong>void notifyAll() noexept</strong>:<br/>
-       Different from the plain <em>notify</em> member, this member wakes up all of
-        the threads waiting on the <strong>SharedCondition</strong> object. However, after
+<li> <strong >void notifyAll() noexept</strong>:<br/>
+       Different from the plain <em >notify</em> member, this member wakes up all of
+        the threads waiting on the <strong >SharedCondition</strong> object. However, after
         the current thread has released its mutex lock only one of these
         signaled threads will actually obtain the lock. The pseudo code for
-        using <em>notifyAll</em> is identical to the pseudo code for using
-        <em>notify</em> (i.e., calling <em>notifyAll</em>, of course).
+        using <em >notifyAll</em> is identical to the pseudo code for using
+        <em >notify</em> (i.e., calling <em >notifyAll</em>, of course).
 <p>
-<li> <strong>std::streamsize offset() const</strong>:<br/>
+<li> <strong >std::streamsize offset() const</strong>:<br/>
        The location of the shared condition variable (within the
-        <em>SharedMemory</em> object) is returned. The shared condition object ends
-        at <em>offset() + SharedCondition::width()</em>, see below.
+        <em >SharedMemory</em> object) is returned. The shared condition object ends
+        at <em >offset() + SharedCondition::width()</em>, see below.
 <p>
-<li> <strong>void unlock() const</strong>:<br/>
+<li> <strong >void unlock() const</strong>:<br/>
        The object's lock is released (nothing happens if called when the
         current object does not have the object's  lock).
 <p>
-<li> <strong>void wait()</strong>:<br/>
-       Before calling <em>wait</em> the current thread should have obtained a lock
-        on the <strong>SharedCondition</strong> object. 
+<li> <strong >void wait()</strong>:<br/>
+       Before calling <em >wait</em> the current thread should have obtained a lock
+        on the <strong >SharedCondition</strong> object. 
 <p>
-When calling <em>wait</em> the running thread suspends its activities and
+When calling <em >wait</em> the running thread suspends its activities and
         waits until being notified. Once notified, it reacquires the lock and
         continues. Shortly after this the process should again release its
-        lock on the <strong>SharedCondition</strong> object.  lock. A prototypical piece of
-        pseudo code illustrating how to use <em>wait</em> looks like this:
+        lock on the <strong >SharedCondition</strong> object.  lock. A prototypical piece of
+        pseudo code illustrating how to use <em >wait</em> looks like this:
        <pre>
 
     sharedCondition.lock();         // lock the mutex
@@ -208,42 +208,42 @@ When calling <em>wait</em> the running thread suspends its activities and
 </pre>
 
 <p>
-<li> <strong>void wait(Predicate pred)</strong>:<br/>
-       This member was implemented as a member template. <em>Predicate</em> either
+<li> <strong >void wait(Predicate pred)</strong>:<br/>
+       This member was implemented as a member template. <em >Predicate</em> either
         is a predicate function or a predicate function object. The predicate
         function or the predicate function object's function call operators
-        may not require arguments. As long as <em>pred</em> is returning false,
-        <em>wait()</em> (no arguments) is called. The function returns once
-        <em>pred</em> has returned <em>true</em>.
+        may not require arguments. As long as <em >pred</em> is returning false,
+        <em >wait()</em> (no arguments) is called. The function returns once
+        <em >pred</em> has returned <em >true</em>.
 <p>
 The running thread should have obtained a lock on the
-        <strong>SharedCondition</strong> condition variable prior to calling this member,
+        <strong >SharedCondition</strong> condition variable prior to calling this member,
         and should release the lock after this member has returned.
 <p>
-The pseudo code for using <em>wait(pred)</em> is identical to the pseudo
-        code for using <em>wait</em> (albeit that <em>pred</em> has to be passed to
-        <em>wait</em>, of course).
+The pseudo code for using <em >wait(pred)</em> is identical to the pseudo
+        code for using <em >wait</em> (albeit that <em >pred</em> has to be passed to
+        <em >wait</em>, of course).
 <p>
-<li> <strong>std::cv_status wait_for(std::chrono::duration&lt;Type, Unit&gt; 
+<li> <strong >std::cv_status wait_for(std::chrono::duration&lt;Type, Unit&gt; 
         const &amp;relTime)</strong>:<br/>
-       This member was implemented as a member template. <em>Type</em> defines the
-        type of the variable holding the amount of time (usually <em>int64_t</em>),
-        specified in time unit <em>Unit</em>. Predefined <em>duration</em> types are
-        available from the <em>std::chrono</em> namespace, like
-        <em>std::chrono::seconds(4)</em>, representing 4 seconds, or
-        <em>std::chrono::milliseconds(30)</em>, representing 30 milliseconds.
+       This member was implemented as a member template. <em >Type</em> defines the
+        type of the variable holding the amount of time (usually <em >int64_t</em>),
+        specified in time unit <em >Unit</em>. Predefined <em >duration</em> types are
+        available from the <em >std::chrono</em> namespace, like
+        <em >std::chrono::seconds(4)</em>, representing 4 seconds, or
+        <em >std::chrono::milliseconds(30)</em>, representing 30 milliseconds.
 <p>
-The running thread should have obtained a lock on <strong>SharedCondition</strong>
+The running thread should have obtained a lock on <strong >SharedCondition</strong>
         prior to calling this member, and should release the lock after this
         member has returned.
 <p>
-This member acts like <em>wait</em>, returning
-        <em>std::cv_status::no_timeout</em> if a notification was received before
-        <em>relTime</em> has passed. Otherwise <em>std::cv_status::timeout</em> is
+This member acts like <em >wait</em>, returning
+        <em >std::cv_status::no_timeout</em> if a notification was received before
+        <em >relTime</em> has passed. Otherwise <em >std::cv_status::timeout</em> is
         returned.
 <p>
 A prototypical piece of pseudo code illustrating how to use
-        <em>wait_for</em> looks like this:
+        <em >wait_for</em> looks like this:
        <pre>
 
     sharedCondition.lock();         // lock the mutex
@@ -259,39 +259,39 @@ A prototypical piece of pseudo code illustrating how to use
        
 </pre>
 
-       When returning from <em>wait_for</em> the current thread has obtained the
+       When returning from <em >wait_for</em> the current thread has obtained the
         shared condition's lock, but maybe due to a timeout: this can be
-        verified by inspecting <em>wait_for's</em> return value, and an appropriate
+        verified by inspecting <em >wait_for's</em> return value, and an appropriate
         action can be selected.
 <p>
-<li> <strong>bool wait_for(std::chrono::duration&lt;Type, Unit&gt; 
+<li> <strong >bool wait_for(std::chrono::duration&lt;Type, Unit&gt; 
         const &amp;relTime, Predicate pred)</strong>:<br/>
-       This member was implemented as a member template. <em>Type</em> defines the
-        type of the variable holding the amount of time (usually <em>int64_t</em>),
-        specified in time unit <em>Unit</em>. <em>Predicate</em> either is a predicate
+       This member was implemented as a member template. <em >Type</em> defines the
+        type of the variable holding the amount of time (usually <em >int64_t</em>),
+        specified in time unit <em >Unit</em>. <em >Predicate</em> either is a predicate
         function or a predicate function object.  The predicate function or
         the predicate function object's function call operators may not
         require arguments. 
 <p>
-The running thread should have obtained a lock on <strong>SharedCondition</strong>
+The running thread should have obtained a lock on <strong >SharedCondition</strong>
         prior to calling this member, and should release the lock after this
         member has returned.
 <p>
-As long as <em>pred</em> returns false, <em>wait_for(relTime)</em> is called. If
-        the latter function returns <em>std::cv_status::timeout</em>, then
-        <em>pred</em> is called, and its return value is returned. Otherwise
-        <em>true</em> is returned.
+As long as <em >pred</em> returns false, <em >wait_for(relTime)</em> is called. If
+        the latter function returns <em >std::cv_status::timeout</em>, then
+        <em >pred</em> is called, and its return value is returned. Otherwise
+        <em >true</em> is returned.
 <p>
 The pseudo code for using this member is identical to the pseudo code
-        for using the abovementioned <em>wait_for</em> member (albeit that <em>pred</em>
-        must also be passed to <em>wait_for</em>, of course).
+        for using the abovementioned <em >wait_for</em> member (albeit that <em >pred</em>
+        must also be passed to <em >wait_for</em>, of course).
 <p>
-<li> <strong>std::cv_status wait_until(std::chrono::time_point&lt;Clock, Duration&gt; 
+<li> <strong >std::cv_status wait_until(std::chrono::time_point&lt;Clock, Duration&gt; 
         const &amp;absTime)</strong>:<br/>
-       This member has been implemented as a member template. <em>Clock</em>
-        defines the clock-type to use (usually <em>std::chrono::system_clock</em>),
-        <em>Duration</em> is the type name of a duration type (as used with
-        <em>wait_for</em>). E.g., to specify 5 seconds after the current time this
+       This member has been implemented as a member template. <em >Clock</em>
+        defines the clock-type to use (usually <em >std::chrono::system_clock</em>),
+        <em >Duration</em> is the type name of a duration type (as used with
+        <em >wait_for</em>). E.g., to specify 5 seconds after the current time this
         member could be called like this:
        <pre>
 
@@ -300,72 +300,72 @@ The pseudo code for using this member is identical to the pseudo code
 </pre>
 
 <p>
-The running thread should have obtained a lock on <strong>SharedCondition</strong>
+The running thread should have obtained a lock on <strong >SharedCondition</strong>
         prior to calling this member, and should release the lock after this
         member has returned.
 <p>
-This member acts like <em>wait_for(relative-time)</em>, returning
-        <em>std::cv_status::no_timeout</em> if a notification was received before
-        <em>absTime</em> has passed. Otherwise <em>std::cv_status::timeout</em> is
+This member acts like <em >wait_for(relative-time)</em>, returning
+        <em >std::cv_status::no_timeout</em> if a notification was received before
+        <em >absTime</em> has passed. Otherwise <em >std::cv_status::timeout</em> is
         returned.
 <p>
 The pseudo code for using this member is identical to the pseudo code
-        for using the abovementioned <em>wait_for(relative-time)</em> member
+        for using the abovementioned <em >wait_for(relative-time)</em> member
         (albeit that absolute time must be specified).
 <p>
-<li> <strong>bool wait_until(std::chrono::time_point&lt;Clock, Duration&gt; 
+<li> <strong >bool wait_until(std::chrono::time_point&lt;Clock, Duration&gt; 
         const &amp;absTime, Predicate pred)</strong>:<br/>
-       This member was implemented as a member template. <em>Clock</em> and
-        <em>Duration</em> define identical types as mentioned at the previous
-        member.  <em>Predicate</em> either is a predicate function or a predicate
+       This member was implemented as a member template. <em >Clock</em> and
+        <em >Duration</em> define identical types as mentioned at the previous
+        member.  <em >Predicate</em> either is a predicate function or a predicate
         function object (not expecting arguments).
 <p>
-The running thread should have obtained a lock on <strong>SharedCondition</strong>
+The running thread should have obtained a lock on <strong >SharedCondition</strong>
         prior to calling this member, and should release the lock after this
         member has returned.
 <p>
-As long as <em>pred</em> returns false, <em>wait_until(absTime)</em>
-        is called. If the latter function returns <em>std::cv_status::timeout</em>,
-        then <em>pred</em> is called, and its return value is returned. Otherwise
-        <em>true</em> is returned.
+As long as <em >pred</em> returns false, <em >wait_until(absTime)</em>
+        is called. If the latter function returns <em >std::cv_status::timeout</em>,
+        then <em >pred</em> is called, and its return value is returned. Otherwise
+        <em >true</em> is returned.
 <p>
 The pseudo code for using this member is identical to the pseudo code
-        for using the abovementioned <em>wait_until</em> member (albeit that
-        <em>pred</em> must also be passed to <em>wait_until</em>, of course).
+        for using the abovementioned <em >wait_until</em> member (albeit that
+        <em >pred</em> must also be passed to <em >wait_until</em>, of course).
     </ul>
 <p>
-<h2>STATIC MEMBER FUNCTIONS</h2>
+<h2 >STATIC MEMBER FUNCTIONS</h2>
 <p>
 <ul>
-    <li> <strong>SharedCondition &amp;attach(SharedMemory &amp;shmem,
+    <li> <strong >SharedCondition &amp;attach(SharedMemory &amp;shmem,
                         std::ios::off_type offset = 0,
                         std::ios::seekdir origin = std::ios::beg)</strong>:<br/>
-       The <em>SharedCondition</em> object interfacing to the shared condition
-        variable located at <em>offset</em> (relative to <em>origin</em>) in <em>shmem</em>
+       The <em >SharedCondition</em> object interfacing to the shared condition
+        variable located at <em >offset</em> (relative to <em >origin</em>) in <em >shmem</em>
         is returned. 
 <p>
-An <em>FBB::Exception</em> is thrown if the requested offset is invalid
-        (i.e., smaller than 0 or exceeding <em>shmem.maxOffset()</em>).
+An <em >FBB::Exception</em> is thrown if the requested offset is invalid
+        (i.e., smaller than 0 or exceeding <em >shmem.maxOffset()</em>).
 <p>
-<li> <strong>FBB::SharedCondition create(SharedMemory &amp;shmem)</strong>:<br/> 
+<li> <strong >FBB::SharedCondition create(SharedMemory &amp;shmem)</strong>:<br/> 
        A shared condition variable is initialized at the current offset of
-        the <em>SharedMemory</em> object referred to by <em>shmem</em>, or at the first
+        the <em >SharedMemory</em> object referred to by <em >shmem</em>, or at the first
         offset of the next physical shared data segment. 
 <p>
-A <strong>SharedCondition</strong> object interfacing to the initialized shared
+A <strong >SharedCondition</strong> object interfacing to the initialized shared
         condition variable is returned.
 <p>
-An <em>FBB::Exception</em> is thrown if there isn't enough memory available
-        in the <em>SharedMemory</em> object to define a shared condition variable.
+An <em >FBB::Exception</em> is thrown if there isn't enough memory available
+        in the <em >SharedMemory</em> object to define a shared condition variable.
 <p>
-<li> <strong>size_t size() const</strong>:<br/>
+<li> <strong >size_t size() const</strong>:<br/>
        Returns the size in bytes of the shared condition variables stored in
-        <em>SharedMemory</em> objects.
+        <em >SharedMemory</em> objects.
     </ul>
 <p>
-<h2>EXAMPLE</h2>
+<h2 >EXAMPLE</h2>
 <p>
-<pre>
+<pre >
 #include &lt;iostream&gt;
 
 #include &lt;bobcat/sharedcondition&gt;
@@ -479,44 +479,44 @@ catch (exception const &amp;exc)
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/sharedcondition</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/sharedcondition</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7)
-        <strong>isharedstream</strong>(3bobcat),
-        <strong>osharedstream</strong>(3bobcat),
-        <strong>sharedblock</strong>(3bobcat), 
-        <strong>sharedmemory</strong>(3bobcat),
-        <strong>sharedpos</strong>(3bobcat), 
-        <strong>sharedreadme</strong>(7bobcat), 
-        <strong>sharedsegment</strong>(3bobcat), 
-        <strong>sharedstream</strong>(3bobcat), 
-        <strong>sharedstreambuf</strong>(3bobcat)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7)
+        <strong >isharedstream</strong>(3bobcat),
+        <strong >osharedstream</strong>(3bobcat),
+        <strong >sharedblock</strong>(3bobcat), 
+        <strong >sharedmemory</strong>(3bobcat),
+        <strong >sharedpos</strong>(3bobcat), 
+        <strong >sharedreadme</strong>(7bobcat), 
+        <strong >sharedsegment</strong>(3bobcat), 
+        <strong >sharedstream</strong>(3bobcat), 
+        <strong >sharedstreambuf</strong>(3bobcat)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

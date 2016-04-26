@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Digestbuf</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,82 +43,82 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Digestbuf(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Compute Message Digests</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Compute Message Digests</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::Digestbuf - Computes Message Digests from information inserted into a
+<h2 >NAME</h2>FBB::Digestbuf - Computes Message Digests from information inserted into a
 std::ostream 
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/digestbuf&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/digestbuf&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
-    <strong>FBB::Digestbuf</strong> objects are <strong>std::streambuf</strong> objects that can be used
-to initialize <em>std::ostream</em> objects with.
+<h2 >DESCRIPTION</h2>
+    <strong >FBB::Digestbuf</strong> objects are <strong >std::streambuf</strong> objects that can be used
+to initialize <em >std::ostream</em> objects with.
 <p>
-All information inserted into such a <em>std::ostream</em> is used to compute a
+All information inserted into such a <em >std::ostream</em> is used to compute a
 message digest from. 
 <p>
 All the message digests defined by the OpenSSL library that can be
-selected by name may be used in combination with <em>DigestBuf</em> objects.
+selected by name may be used in combination with <em >DigestBuf</em> objects.
 <p>
 The following message digest algorithms are currently supported: mull,
 md2, md5, sha, sha1, sha224, sha256, sha384, sha512, dss, dss1, ecdsa, mdc2,
 ripemd160. These very names are the ones to use to select the particular
 digest algorithms for the class's constructor, below. It is quite possible that
 future releases of the openssl library will support additional message digest
-algorithms. The header file <em>openssl/evp.h</em> lists all available digest
-algorithms (in that file look for <em>EVP_MD *EVP_</em>: a message digest algorithm
-immediately follows the 2nd underscore. E.g., <em>const EVP_MD *EVP_md4(void)</em>
+algorithms. The header file <em >openssl/evp.h</em> lists all available digest
+algorithms (in that file look for <em >EVP_MD *EVP_</em>: a message digest algorithm
+immediately follows the 2nd underscore. E.g., <em >const EVP_MD *EVP_md4(void)</em>
 which refers to the md4 message digest algorithm).
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
-    <strong>std::streambuf</strong>
+<h2 >INHERITS FROM</h2>
+    <strong >std::streambuf</strong>
 <p>
-<h2>CONSTRUCTORS</h2>
+<h2 >CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>Digestbuf(char const *type, size_t bufsize = 1024)</strong>:<br/>
+    <li> <strong >Digestbuf(char const *type, size_t bufsize = 1024)</strong>:<br/>
         This constructor initializes the streambuf, setting it up for the
-message digest algorithm specified with <em>type</em>. The message digest
-algorithms specified in the <strong>DESCRIPTION</strong> section may be used here. E.g., to
-use the sha256 algorithm specify <em>"sha256"</em>. 
+message digest algorithm specified with <em >type</em>. The message digest
+algorithms specified in the <strong >DESCRIPTION</strong> section may be used here. E.g., to
+use the sha256 algorithm specify <em >"sha256"</em>. 
 <p>
-The <em>bufsize</em> argument specifies the internal buffer used by
-<em>Digestbuf</em> to store incoming characters temporarily. The provided default
+The <em >bufsize</em> argument specifies the internal buffer used by
+<em >Digestbuf</em> to store incoming characters temporarily. The provided default
 argument should be OK in all normal cases. 
     </ul>
     There is no copy constructor.
 <p>
-<h2>OVERLOADED OPERATOR</h2>
+<h2 >OVERLOADED OPERATOR</h2>
 <p>
 <ul>
-    <li> <strong>std::ostream &amp;operator&lt;&lt;(std::ostream &amp;out, 
+    <li> <strong >std::ostream &amp;operator&lt;&lt;(std::ostream &amp;out, 
                                  DigestBuf const &amp;digestbuf)</strong>:<br/>
         The insertion operator is a free function defined in the namespace
-<em>FBB</em>. It inserts a hash value as a series of hexadecimally displayed values
-into the provided <em>ostream</em>. See the example below for an illustration.
+<em >FBB</em>. It inserts a hash value as a series of hexadecimally displayed values
+into the provided <em >ostream</em>. See the example below for an illustration.
     </ul>
     The overloaded assignment operator is not available.
 <p>
-<h2>MEMBER FUNCTIONS</h2>
+<h2 >MEMBER FUNCTIONS</h2>
 <p>
-All members of <strong>std::streambuf</strong> are available, as <strong>FBB::Digestbuf</strong>
-inherits from this class. Some of the <strong>std::streambuf</strong>'s member are
-overridden or are hidden by <em>Digestbuf</em>. In normal situations these
-inherited members will not be used by programs using <em>DigestBuf</em> objects.
+All members of <strong >std::streambuf</strong> are available, as <strong >FBB::Digestbuf</strong>
+inherits from this class. Some of the <strong >std::streambuf</strong>'s member are
+overridden or are hidden by <em >Digestbuf</em>. In normal situations these
+inherited members will not be used by programs using <em >DigestBuf</em> objects.
 <p>
 <ul>
-    <li> <strong>void close()</strong>:<br/>
+    <li> <strong >void close()</strong>:<br/>
         This member finishes the computation of the  message digest
-computation. It is needed as the <em>DigestBuf</em> object has no external means
+computation. It is needed as the <em >DigestBuf</em> object has no external means
 for deciding whether all information to compute the digest for has yet been
 received or not. The general approach to follow when computing a message
 digest is therefore:
@@ -132,22 +132,22 @@ digest is therefore:
         
 </pre>
 
-    <li> <strong>std::string const &amp;hash() const</strong>:<br/>
-        This member returns the hash value computed by the <em>DigestBuf</em>
-object. Its value is only defined after having called <em>close()</em>. The hash
-value is returned in a <em>std::string</em> object. This string's <em>length()</em>
+    <li> <strong >std::string const &amp;hash() const</strong>:<br/>
+        This member returns the hash value computed by the <em >DigestBuf</em>
+object. Its value is only defined after having called <em >close()</em>. The hash
+value is returned in a <em >std::string</em> object. This string's <em >length()</em>
 member contains the number of characters used by the hash value, and its
-<em>data()</em> member refers to the hash value's characters. Note that a hash
-value's character value may be 0 (not to be confused with <em>'0'</em>).
-    <li> <strong>void open()</strong>:<br/>
+<em >data()</em> member refers to the hash value's characters. Note that a hash
+value's character value may be 0 (not to be confused with <em >'0'</em>).
+    <li> <strong >void open()</strong>:<br/>
         This member reinitializes the message digest computation. One a
-message digest has been computed for, say a stream <em>streamA</em> this member can
-be called after which the digest for a stream <em>streamB</em> can be computed
-using the same <em>DigestBuf</em> object.
+message digest has been computed for, say a stream <em >streamA</em> this member can
+be called after which the digest for a stream <em >streamB</em> can be computed
+using the same <em >DigestBuf</em> object.
     </ul>
 <p>
-<h2>EXAMPLE</h2>
-    <pre>
+<h2 >EXAMPLE</h2>
+    <pre >
 #include &lt;iostream&gt;
 #include &lt;ostream&gt;
 #include &lt;bobcat/exception&gt;
@@ -181,35 +181,35 @@ catch(exception const &amp;err)
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/digestbuf</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/digestbuf</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>hmacbuf</strong>(3bobcat), <strong>std::streambuf</strong>
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >hmacbuf</strong>(3bobcat), <strong >std::streambuf</strong>
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None reported
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

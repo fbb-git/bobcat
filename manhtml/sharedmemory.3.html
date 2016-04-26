@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::SharedMemory</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,41 +43,41 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::SharedMemory(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Shared Memory Memory</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Shared Memory Memory</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::SharedMemory - Shared Memory memory structure
+<h2 >NAME</h2>FBB::SharedMemory - Shared Memory memory structure
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/sharedmemory&gt;</strong><br/>
-    Linking option: <em>-lbobcat </em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/sharedmemory&gt;</strong><br/>
+    Linking option: <em >-lbobcat </em> 
 <p>
-<h2>DESCRIPTION</h2>
+<h2 >DESCRIPTION</h2>
 <p>
-The class <strong>FBB::SharedMemory</strong> implements a usable interface to a shared
-memory segment made available by <em>FBB::SharedSegment</em> and monitored by
-<em>FBB::SharedPos</em>. It is the main building block for
-<em>FBB::SharedStreambuf</em>, defining the `device' to which
-<em>FBB::SharedStreambuf</em> interfaces. All shared memory related I/O should be
-performed by <strong>FBB::SharedMemory</strong> objects, which are true objects, not
+The class <strong >FBB::SharedMemory</strong> implements a usable interface to a shared
+memory segment made available by <em >FBB::SharedSegment</em> and monitored by
+<em >FBB::SharedPos</em>. It is the main building block for
+<em >FBB::SharedStreambuf</em>, defining the `device' to which
+<em >FBB::SharedStreambuf</em> interfaces. All shared memory related I/O should be
+performed by <strong >FBB::SharedMemory</strong> objects, which are true objects, not
 themselves residing in shared memory. 
 <p>
-An <strong>FBB::SharedMemory</strong> object defines, connects to and manages access to
+An <strong >FBB::SharedMemory</strong> object defines, connects to and manages access to
 shared memory, encapsulating all raw shared memory operations. In addition to
-the class <strong>FBB::SharedMemory</strong> the header file <em>bobcat/sharedmemory</em> also
-defines a <strong>struct SharedEnum__</strong> defining <strong>enum SizeUnit</strong> within the
-namespace <em>FBB</em>.
+the class <strong >FBB::SharedMemory</strong> the header file <em >bobcat/sharedmemory</em> also
+defines a <strong >struct SharedEnum__</strong> defining <strong >enum SizeUnit</strong> within the
+namespace <em >FBB</em>.
 <p>
 The requested amount of shared memory is always a lower bound to the maximum
 amount of shared memory that eventually may become available. When defining a
-<strong>SharedMemory</strong> object not all of its potentially available shared memory is
-immediately allocated. Shared memory will be allocated by the <strong>SharedMemory</strong>
+<strong >SharedMemory</strong> object not all of its potentially available shared memory is
+immediately allocated. Shared memory will be allocated by the <strong >SharedMemory</strong>
 object once needed (up to a calculated maximum).
 <p>
 As a fictitious example: assume 100 kB of memory is requested. The
-<strong>SharedMemory</strong> object then maintains a table of, e.g., 10 entries, each
+<strong >SharedMemory</strong> object then maintains a table of, e.g., 10 entries, each
 entry controlling access to a shared memory block of 10 kB. These 10 kB blocks
 aren't immediately allocated, but become available once the program reads from
 or writes to addresses located in these data blocks. Newly allocated data
@@ -88,140 +88,140 @@ ID is stored at a retrievable location. This allows other processes to access
 the shared segment. The shared segment ID is also required to delete a shared
 memory segment. If the shared segment ID is lost, the memory occupied by the
 shared memory segment remains inaccessible (although they can be retrieved and
-removed by additional means, like <strong>ipcs</strong>(1) and <strong>ipcrm</strong>(1)). The member
-<em>id</em> returns the ID of the shared memory currently monitored by an
-<strong>FBB::SharedMemory</strong> object.
+removed by additional means, like <strong >ipcs</strong>(1) and <strong >ipcrm</strong>(1)). The member
+<em >id</em> returns the ID of the shared memory currently monitored by an
+<strong >FBB::SharedMemory</strong> object.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
-    <strong>FBB::SharedEnum__</strong>
+<h2 >INHERITS FROM</h2>
+    <strong >FBB::SharedEnum__</strong>
 <p>
-The <strong>struct SharedEnum__</strong> is a wrapper struct around <strong>enum SizeUnit</strong>,
-which is available through inheritance in several <strong>FBB::Shared*</strong> classes,
-and offers symbolic constants defining standard memory sizes. The <strong>enum
+The <strong >struct SharedEnum__</strong> is a wrapper struct around <strong >enum SizeUnit</strong>,
+which is available through inheritance in several <strong >FBB::Shared*</strong> classes,
+and offers symbolic constants defining standard memory sizes. The <strong >enum
 SizeUnit</strong> defines the following symbolic constants:
         <ul>
-        <li> <strong>kB</strong>, representing 1024 (2**10) bytes of memory;
-        <li> <strong>MB</strong>, representing 1048576 (2**20) bytes of memory;
-        <li> <strong>GB</strong>, representing 1073741824 (2**30) bytes of memory
+        <li> <strong >kB</strong>, representing 1024 (2**10) bytes of memory;
+        <li> <strong >MB</strong>, representing 1048576 (2**20) bytes of memory;
+        <li> <strong >GB</strong>, representing 1073741824 (2**30) bytes of memory
         </ul>
 <p>
-<h2>CONSTRUCTORS, DESTRUCTOR</h2>
+<h2 >CONSTRUCTORS, DESTRUCTOR</h2>
 <p>
 <ul>
-    <li> <strong>SharedMemory()</strong>:<br/>
+    <li> <strong >SharedMemory()</strong>:<br/>
        The default constructor defines an empty stub, which cannot immediately
-        be used.  As the <strong>SharedMemory</strong> class supports move assignment,
+        be used.  As the <strong >SharedMemory</strong> class supports move assignment,
         empty stubs can easily be (re)configured at any time after their
         construction.
 <p>
-<li> <strong>SharedMemory(size_t maxSize, SizeUnit sizeUnit, size_t access = 0600)</strong>:<br/>
+<li> <strong >SharedMemory(size_t maxSize, SizeUnit sizeUnit, size_t access = 0600)</strong>:<br/>
        This constructor creates a shared memory segment having a capacity of
-        at least <em>maxSize * sizeUnit</em> bytes. The shared memory's access
-        rights are defined by the <em>access</em> parameter, using the well-known
-        (<strong>chmod</strong>(1)) octal values to define access rights for the owner, the
+        at least <em >maxSize * sizeUnit</em> bytes. The shared memory's access
+        rights are defined by the <em >access</em> parameter, using the well-known
+        (<strong >chmod</strong>(1)) octal values to define access rights for the owner, the
         group and others. If construction succeeds the shared memory is ready
-        for use. If construction fails, an <em>FBB::Exception</em> is thrown.
+        for use. If construction fails, an <em >FBB::Exception</em> is thrown.
 <p>
-<li> <strong>SharedMemory(int id)</strong>:<br/>
+<li> <strong >SharedMemory(int id)</strong>:<br/>
        This constructor connects to a shared memory segment having ID
-        <em>id</em>. If construction succeeds the shared memory is ready for
+        <em >id</em>. If construction succeeds the shared memory is ready for
         use. If construction fails (e.g., no shared memory segment having ID
-        <em>id</em> exists), an <em>FBB::Exception</em> is thrown.
+        <em >id</em> exists), an <em >FBB::Exception</em> is thrown.
 <p>
-<li> <strong>~SharedMemory()</strong>:<br/>
+<li> <strong >~SharedMemory()</strong>:<br/>
        The destructor detaches any attached shared memory segments from
-        the <strong>FBB::SharedMemory</strong> object. If the shared memory segment is
-        currently locked by the <strong>FBB::SharedMemory</strong> object, the lock is
+        the <strong >FBB::SharedMemory</strong> object. If the shared memory segment is
+        currently locked by the <strong >FBB::SharedMemory</strong> object, the lock is
         removed.
     </ul>
 <p>
 copy and move constructors are not available.
 <p>
-<h2>OVERLOADED OPERATORS</h2>
+<h2 >OVERLOADED OPERATORS</h2>
     <ul>
-    <li> <strong>std::ostream &amp;operator&lt;&lt;(std::ostream &amp;out, 
+    <li> <strong >std::ostream &amp;operator&lt;&lt;(std::ostream &amp;out, 
                                     SharedMemory const &amp;sharedMemory)</strong>:<br/>
        The overloaded insertion operator inserts information about the
-        <em>SharedMemory</em> object into the provide <em>ostream</em> object. The IDs
+        <em >SharedMemory</em> object into the provide <em >ostream</em> object. The IDs
         of the shared segments, their sizes, the maximum number of shared
         memory segments, the number of bytes that can be read from the shared
         memory, and its actual storage capacity, etc., are displayed.
 <p>
-<li> <strong>SharedMemory &amp;operator=(SharedMemory &amp;&amp;rhs)</strong>:<br/>
+<li> <strong >SharedMemory &amp;operator=(SharedMemory &amp;&amp;rhs)</strong>:<br/>
        The overloaded move assignment operator is available. It is used to
-        (re)define the shared memory segment an <strong>FBB::SharedMemory</strong> object
+        (re)define the shared memory segment an <strong >FBB::SharedMemory</strong> object
         is interfacing with.
     </ul>
 <p>
 The overloaded copy assignement operator is not available.
 <p>
-<h2>MEMBER FUNCTIONS</h2>
+<h2 >MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong>size_t blockOffset() const</strong>:<br/>
-       The offset within the shared segment data block matching <em>offset</em>'s
-        return value is returned. 0 is returned if the <strong>SharedMemory</strong>
+    <li> <strong >size_t blockOffset() const</strong>:<br/>
+       The offset within the shared segment data block matching <em >offset</em>'s
+        return value is returned. 0 is returned if the <strong >SharedMemory</strong>
         object has not yet been connected to a shared memory block.
 <p>
-<li> <strong>void clear()</strong>:<br/>
+<li> <strong >void clear()</strong>:<br/>
        First, the shared memory is locked. Next, all shared data segment are
         deleted, and the shared memory's own data are reset to indicate it is
         completely empty. Following this the shared memory segment is unlocked
-        again. Returning from <em>clear</em> the shared memory The
-        <strong>FBB::SharedMemory</strong> object is effectively re-initialized, with
-        <em>offset</em> and <em>nReadable</em> returning 0.
+        again. Returning from <em >clear</em> the shared memory The
+        <strong >FBB::SharedMemory</strong> object is effectively re-initialized, with
+        <em >offset</em> and <em >nReadable</em> returning 0.
 <p>
-An <em>FBB::Exception</em> is thrown if the <strong>SharedMemory</strong> object has not
+An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> object has not
         yet been connected to a shared memory block.
 <p>
-<li> <strong>size_t dataSegmentSize() const</strong>:<br/>
+<li> <strong >size_t dataSegmentSize() const</strong>:<br/>
        Returns the size (in bytes) of shared memory data block. 0 is returned
-        if the <strong>SharedMemory</strong> object has not yet been connected to a shared
+        if the <strong >SharedMemory</strong> object has not yet been connected to a shared
         memory block.
 <p>
-<li> <strong>int get()</strong>:<br/>
-       First the <strong>FBB::SharedMemory</strong> object calls <em>lock</em> to lock the
-        shared memory segment. Next the character at <em>offset</em> is retrieved
-        and <em>offset</em> is incremented. Then <em>unlock</em> is called, and the
-        retrieved character is returned. If <em>offset</em> is at least equal to
-        <em>nReadable, EOF</em> is immediately returned.
+<li> <strong >int get()</strong>:<br/>
+       First the <strong >FBB::SharedMemory</strong> object calls <em >lock</em> to lock the
+        shared memory segment. Next the character at <em >offset</em> is retrieved
+        and <em >offset</em> is incremented. Then <em >unlock</em> is called, and the
+        retrieved character is returned. If <em >offset</em> is at least equal to
+        <em >nReadable, EOF</em> is immediately returned.
 <p>
-An <em>FBB::Exception</em> is thrown if the <strong>SharedMemory</strong> object has not
+An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> object has not
         yet been connected to a shared memory block.
 <p>
-<li> <strong>int id() const</strong>:<br/>
-       The ID of the shared memory segment is returned. Following <em>kill</em>
-        <em>id</em> returns -1, indicating that the shared segment cannot be used
-        anymore (note that <em>operator=</em> can be used to re-initialize the
-        <strong>FBB::SharedMemory</strong> object).
+<li> <strong >int id() const</strong>:<br/>
+       The ID of the shared memory segment is returned. Following <em >kill</em>
+        <em >id</em> returns -1, indicating that the shared segment cannot be used
+        anymore (note that <em >operator=</em> can be used to re-initialize the
+        <strong >FBB::SharedMemory</strong> object).
 <p>
-<li> <strong>SharedType *install(std::streamsize *offset, 
+<li> <strong >SharedType *install(std::streamsize *offset, 
                            Params &amp;&amp;...params)</strong>:<br/>
-       This member was implemented as a member template, using <em>typename
-        SharedType</em> and <em>typename ...Params</em>, allowing perfect forwarding of
-        arguments to <em>SharedType</em>'s constructor.
+       This member was implemented as a member template, using <em >typename
+        SharedType</em> and <em >typename ...Params</em>, allowing perfect forwarding of
+        arguments to <em >SharedType</em>'s constructor.
 <p>
-This member installs a <em>SharedType</em> object at <strong>SharedMemory's</strong> at
-        <strong>SharedMemory</strong>'s first available offset: either at the current
-        offset, or (if <em>SharedType's</em> size is too big to fit in the current
-        data block at offset) at the first byte of the next <em>SharedSegment</em>
+This member installs a <em >SharedType</em> object at <strong >SharedMemory's</strong> at
+        <strong >SharedMemory</strong>'s first available offset: either at the current
+        offset, or (if <em >SharedType's</em> size is too big to fit in the current
+        data block at offset) at the first byte of the next <em >SharedSegment</em>
         shared data block.
 <p>
-The actual offset where the <em>SharedType</em> object is installed is
-        returned in <em>*offset</em>, unless a <em>nullptr</em> is passed as
-        <em>install's</em> first argument.
+The actual offset where the <em >SharedType</em> object is installed is
+        returned in <em >*offset</em>, unless a <em >nullptr</em> is passed as
+        <em >install's</em> first argument.
 <p>
-A pointer to the installed <em>SharedType</em> is returned, with
-        <em>shmem.offset</em> pointing just beyond <em>SharedType's</em> last byte. 
+A pointer to the installed <em >SharedType</em> is returned, with
+        <em >shmem.offset</em> pointing just beyond <em >SharedType's</em> last byte. 
 <p>
-The <em>SharedType</em> object is installed using placement new. E.g., the
-        following example illustrates how a <strong>SharedMutex</strong>(3bobcat) object
+The <em >SharedType</em> object is installed using placement new. E.g., the
+        following example illustrates how a <strong >SharedMutex</strong>(3bobcat) object
         can be installed at the first possible 
-        location of <em>SharedMemory shmem</em>:
+        location of <em >SharedMemory shmem</em>:
             <pre>
 
     std::streamsize offset;
@@ -230,198 +230,198 @@ The <em>SharedType</em> object is installed using placement new. E.g., the
 </pre>
 
        If the installed object must be destroyed, its destructor must
-        explicitly be called. E.g., to destroy the <em>Mutex</em> pointed at by
-        <em>mutexPtr</em> use <em>mutexPtr-&gt;~SharedMutex()</em>.
+        explicitly be called. E.g., to destroy the <em >Mutex</em> pointed at by
+        <em >mutexPtr</em> use <em >mutexPtr-&gt;~SharedMutex()</em>.
 <p>
-An <em>FBB::Exception</em> is thrown if <em>shmem</em> could not install the
+An <em >FBB::Exception</em> is thrown if <em >shmem</em> could not install the
         object in its shared memory data blocks.
 <p>
-<li> <strong>void kill()</strong>:<br/>
+<li> <strong >void kill()</strong>:<br/>
        Without locking the shared memory all shared memory controlled by the
-        <strong>SharedMemory</strong> object is deleted. The <strong>SharedMemory</strong> object is
-        unusable after returning from <em>kill</em>, with its <em>id</em> member returns
-        -1. Nothing happens if this member is called when the <strong>SharedMemory</strong>
+        <strong >SharedMemory</strong> object is deleted. The <strong >SharedMemory</strong> object is
+        unusable after returning from <em >kill</em>, with its <em >id</em> member returns
+        -1. Nothing happens if this member is called when the <strong >SharedMemory</strong>
         object has not yet been connected to a shared memory block.
 <p>
-<li> <strong>std::streamsize maxOffset() const</strong>:<br/>
+<li> <strong >std::streamsize maxOffset() const</strong>:<br/>
        The maximum possible offset that can be used with the shared memory
-        segment is returned. The members <em>offset</em> and <em>nReadable</em> never
-        exceed the value returned by <em>maxOffset</em>. 0 is returned if the
-        <strong>SharedMemory</strong> object has not yet been connected to a shared memory
+        segment is returned. The members <em >offset</em> and <em >nReadable</em> never
+        exceed the value returned by <em >maxOffset</em>. 0 is returned if the
+        <strong >SharedMemory</strong> object has not yet been connected to a shared memory
         block.
 <p>
-<li> <strong>std::streamsize nReadable() const</strong>:<br/>
+<li> <strong >std::streamsize nReadable() const</strong>:<br/>
        The number of characters (bytes) that can be read from the beginning of
-        the shared memory is returned. 0 is returned if the <strong>SharedMemory</strong>
+        the shared memory is returned. 0 is returned if the <strong >SharedMemory</strong>
         object has not yet been connected to a shared memory block.
 <p>
-<li> <strong>std::streamsize offset() const</strong>:<br/>
+<li> <strong >std::streamsize offset() const</strong>:<br/>
        The offset within the shared memory segment (i.e., relative to the
-        segment's <em>ios::beg</em> position) is returned. 0 is returned if the
-        <strong>SharedMemory</strong> object has not yet been connected to a shared memory
+        segment's <em >ios::beg</em> position) is returned. 0 is returned if the
+        <strong >SharedMemory</strong> object has not yet been connected to a shared memory
         block.
 <p>
-<li> <strong>char *ptr()</strong>:<br/>
-        Returns 0 if <em>offset() == maxOffset()</em>. Otherwise it returns a
-        pointer to the character at index <em>offset</em> within the shared memory
+<li> <strong >char *ptr()</strong>:<br/>
+        Returns 0 if <em >offset() == maxOffset()</em>. Otherwise it returns a
+        pointer to the character at index <em >offset</em> within the shared memory
         segment.
 <p>
-An <em>FBB::Exception</em> is thrown if the <strong>SharedMemory</strong> object has not
+An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> object has not
         yet been connected to a shared memory block.
 <p>
-<li> <strong>int put(int ch)</strong>:<br/>
-       After locking the appropriate shared data segment, <em>ch</em> is written at
-        position <em>offset</em>, incrementing <em>offset</em> thereafter. If <em>ch ==
+<li> <strong >int put(int ch)</strong>:<br/>
+       After locking the appropriate shared data segment, <em >ch</em> is written at
+        position <em >offset</em>, incrementing <em >offset</em> thereafter. If <em >ch ==
         EOF, EOF</em> is immediately returned.
 <p>
-An <em>FBB::Exception</em> is thrown if the <strong>SharedMemory</strong> object has not
+An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> object has not
         yet been connected to a shared memory block.
 <p>
-<li> <strong>int read(Type *value)</strong>:<br/>
+<li> <strong >int read(Type *value)</strong>:<br/>
        This member was implemented as a member template. It calls
-        the next member, casting <em>Type *</em> to <em>char *</em>, and using
-        <em>sizeof(Type)</em> as its second argument.  The number of
+        the next member, casting <em >Type *</em> to <em >char *</em>, and using
+        <em >sizeof(Type)</em> as its second argument.  The number of
         bytes actually read is returned. This member returns -1 if
-        initially <em>offset</em> was at least equal to <em>nReadable</em>.
+        initially <em >offset</em> was at least equal to <em >nReadable</em>.
 <p>
-An <em>FBB::Exception</em> is thrown if the <strong>SharedMemory</strong> object has not
+An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> object has not
         yet been connected to a shared memory block.
 <p>
-<li> <strong>int read(char *data, std::streamsize len)</strong>:<br/>
-       While locking the appropriate shared data segment(s) at most <em>len</em>
-        bytes are read from the shared memory, starting at <em>offset</em>. The
-        bytes read from shared memory are stored at <em>data</em>.  The number of
+<li> <strong >int read(char *data, std::streamsize len)</strong>:<br/>
+       While locking the appropriate shared data segment(s) at most <em >len</em>
+        bytes are read from the shared memory, starting at <em >offset</em>. The
+        bytes read from shared memory are stored at <em >data</em>.  The number of
         bytes actually read is returned. This member returns -1 if
-        initially <em>offset</em> was at least equal to <em>nReadable</em>.
+        initially <em >offset</em> was at least equal to <em >nReadable</em>.
 <p>
-An <em>FBB::Exception</em> is thrown if the <strong>SharedMemory</strong> object has not
+An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> object has not
         yet been connected to a shared memory block.
 <p>
-<li> <strong>int read(std::ios::off_type offset, Type *value,
+<li> <strong >int read(std::ios::off_type offset, Type *value,
                   std::ios::seekdir origin = std::ios::beg)</strong>:<br/>
        This member was implemented as a member template. After changing the
-        <strong>SharedMemory</strong>'s offset to <em>offset</em> (relative to <em>origin</em>), it
-        calls the first <em>read</em> member, passing it <em>value</em>. The number of
+        <strong >SharedMemory</strong>'s offset to <em >offset</em> (relative to <em >origin</em>), it
+        calls the first <em >read</em> member, passing it <em >value</em>. The number of
         bytes actually read is returned. This member returns -1 if initially
-        <em>offset</em> was at least equal to <em>nReadable</em>.
+        <em >offset</em> was at least equal to <em >nReadable</em>.
 <p>
-An <em>FBB::Exception</em> is thrown if the <strong>SharedMemory</strong> object has not
+An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> object has not
         yet been connected to a shared memory block.
 <p>
-<li> <strong>void remove()</strong>:<br/>
+<li> <strong >void remove()</strong>:<br/>
        The shared memory is locked, after which all shared memory controlled
-        by the <strong>FBB::SharedMemory</strong> object is deleted. The
-        <strong>FBB::SharedMemory</strong> object is unusable after returning from
-        <em>remove</em>.
+        by the <strong >FBB::SharedMemory</strong> object is deleted. The
+        <strong >FBB::SharedMemory</strong> object is unusable after returning from
+        <em >remove</em>.
 <p>
-An <em>FBB::Exception</em> is thrown if the <strong>SharedMemory</strong> object has not
+An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> object has not
         yet been connected to a shared memory block.
 <p>
-<li> <strong>std::ios::pos_type seek(std::ios::off_type offset, 
+<li> <strong >std::ios::pos_type seek(std::ios::off_type offset, 
                             std::ios::seekdir origin = std::ios::beg)</strong>:<br/>
-       Moves the <em>offset</em> position relative to <em>way</em>. The value -1 is
-        returned when seeking before offset 0 or beyond <em>maxOffset</em>,
+       Moves the <em >offset</em> position relative to <em >way</em>. The value -1 is
+        returned when seeking before offset 0 or beyond <em >maxOffset</em>,
         otherwise the offset relative to the begin location of the shared
-        memory (i.e, <em>offset</em> for <em>origin == ios::beg</em>) is returned.  0 is
-        returned if the <strong>SharedMemory</strong> object has not yet been connected to
+        memory (i.e, <em >offset</em> for <em >origin == ios::beg</em>) is returned.  0 is
+        returned if the <strong >SharedMemory</strong> object has not yet been connected to
         a shared memory block.
 <p>
-<li> <strong>std::streamsize showmanyc() const</strong>:<br/>
+<li> <strong >std::streamsize showmanyc() const</strong>:<br/>
        The number of characters that can be read from the current shared
         segment data block is returned.  This member interrogates the number
         of readable characters in the shared memory segment. This number may
         change while this member is being executed. In order to receive a
         stable return value, calling functions should have obtained a lock on
         the shared memory segment before calling this member. 0 is returned if
-        the <strong>SharedMemory</strong> object has not yet been connected to a shared
+        the <strong >SharedMemory</strong> object has not yet been connected to a shared
         memory block.
 <p>
-<li> <strong>void swap(SharedMemory &amp;other)</strong>:<br/>
-       The current and other <strong>FBB::SharedMemory</strong> objects are swapped.
+<li> <strong >void swap(SharedMemory &amp;other)</strong>:<br/>
+       The current and other <strong >FBB::SharedMemory</strong> objects are swapped.
 <p>
-<li> <strong>bool truncate(std::streamsize offset)</strong>:<br/>
-       If <em>offset</em> is not exceeding the value returned by <em>nReadable</em>
-        <em>nReadable</em> is changed to <em>offset</em> and <em>true</em> is
-        returned. Otherwise <em>false</em> is returned, and the value returned by
-        <em>nReadable</em> is not changed. 
+<li> <strong >bool truncate(std::streamsize offset)</strong>:<br/>
+       If <em >offset</em> is not exceeding the value returned by <em >nReadable</em>
+        <em >nReadable</em> is changed to <em >offset</em> and <em >true</em> is
+        returned. Otherwise <em >false</em> is returned, and the value returned by
+        <em >nReadable</em> is not changed. 
 <p>
-An <em>FBB::Exception</em> is thrown if the <strong>SharedMemory</strong> object has not
+An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> object has not
         yet been connected to a shared memory block.
 <p>
-<li> <strong>int write(Type const *value)</strong>:<br/>
+<li> <strong >int write(Type const *value)</strong>:<br/>
        This member was implemented as a member template. It calls the next
-        member, casting <em>Type const *</em> to <em>char const *</em>, and using
-        <em>sizeof(Type)</em> as its second argument.  The number of bytes actually
-        written is returned. This member returns -1 if initially <em>offset</em>
-        was at least equal to <em>maxOffset</em>.
+        member, casting <em >Type const *</em> to <em >char const *</em>, and using
+        <em >sizeof(Type)</em> as its second argument.  The number of bytes actually
+        written is returned. This member returns -1 if initially <em >offset</em>
+        was at least equal to <em >maxOffset</em>.
 <p>
-An <em>FBB::Exception</em> is thrown if the <strong>SharedMemory</strong> object has not
+An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> object has not
         yet been connected to a shared memory block.
 <p>
-<li> <strong>int write(char const *data, std::streamsize len)</strong>:<br/>
-       The <strong>FBB::SharedMemory</strong> object calls <em>lock</em> to lock the shared
-        memory, and writes at most <em>len</em> bytes into the shared memory,
-        starting at <em>offset</em>. Next, <em>unlock</em> is called. The number of
+<li> <strong >int write(char const *data, std::streamsize len)</strong>:<br/>
+       The <strong >FBB::SharedMemory</strong> object calls <em >lock</em> to lock the shared
+        memory, and writes at most <em >len</em> bytes into the shared memory,
+        starting at <em >offset</em>. Next, <em >unlock</em> is called. The number of
         bytes actually written is returned. The member function returns -1 if
-        initially <em>offset</em> is equal to <em>maxOffset</em>.
+        initially <em >offset</em> is equal to <em >maxOffset</em>.
 <p>
-An <em>FBB::Exception</em> is thrown if the <strong>SharedMemory</strong> object has not
+An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> object has not
         yet been connected to a shared memory block.
 <p>
-<li> <strong>int write(std::ios::off_type offset, Type const *value,
+<li> <strong >int write(std::ios::off_type offset, Type const *value,
                   std::ios::seekdir origin = std::ios::beg)</strong>:<br/>
        This member was implemented as a member template. After changing the
-        <strong>SharedMemory</strong>'s offset to <em>offset</em> (relative to <em>origin</em>), it
-        calls the first <em>write</em> member, passing it <em>value</em>. The number of
+        <strong >SharedMemory</strong>'s offset to <em >offset</em> (relative to <em >origin</em>), it
+        calls the first <em >write</em> member, passing it <em >value</em>. The number of
         bytes actually written is returned. This member returns -1 if
-        initially <em>offset</em> was at least equal to <em>maxOffset</em>.
+        initially <em >offset</em> was at least equal to <em >maxOffset</em>.
 <p>
-An <em>FBB::Exception</em> is thrown if the <strong>SharedMemory</strong> object has not
+An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> object has not
         yet been connected to a shared memory block.
     </ul>
 <p>
-<h2>EXAMPLE</h2>
-    See the <strong>sharedstream</strong>(3bobcat) man page.
+<h2 >EXAMPLE</h2>
+    See the <strong >sharedstream</strong>(3bobcat) man page.
 <p>
-<h2>FILES</h2>
-    <em>bobcat/sharedmemory</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/sharedmemory</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>chmod</strong>(1), <strong>ipcs</strong>(1), <strong>ipcrm</strong>(1),
-        <strong>isharedstream</strong>(3bobcat),
-        <strong>osharedstream</strong>(3bobcat),
-        <strong>sharedblock</strong>(3bobcat), 
-        <strong>sharedcondition</strong>(3bobcat), 
-        <strong>sharedmutex</strong>(3bobcat), 
-        <strong>sharedpos</strong>(3bobcat), 
-        <strong>sharedreadme</strong>(7bobcat),
-        <strong>sharedsegment</strong>(3bobcat),
-        <strong>sharedstream</strong>(3bobcat), 
-        <strong>sharedstreambuf</strong>(3bobcat)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >chmod</strong>(1), <strong >ipcs</strong>(1), <strong >ipcrm</strong>(1),
+        <strong >isharedstream</strong>(3bobcat),
+        <strong >osharedstream</strong>(3bobcat),
+        <strong >sharedblock</strong>(3bobcat), 
+        <strong >sharedcondition</strong>(3bobcat), 
+        <strong >sharedmutex</strong>(3bobcat), 
+        <strong >sharedpos</strong>(3bobcat), 
+        <strong >sharedreadme</strong>(7bobcat),
+        <strong >sharedsegment</strong>(3bobcat),
+        <strong >sharedstream</strong>(3bobcat), 
+        <strong >sharedstreambuf</strong>(3bobcat)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Glob</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,119 +43,119 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Glob(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Files matching a pattern</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Files matching a pattern</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::Glob - Wrapper around <strong>glob</strong>(3) to find files matching a pattern
+<h2 >NAME</h2>FBB::Glob - Wrapper around <strong >glob</strong>(3) to find files matching a pattern
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/glob&gt;</strong><br/>
-    Linking option: <em>-lbobcat</em> 
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/glob&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
 <p>
-<h2>DESCRIPTION</h2>
-    The <strong>FBB::Glob</strong> class is a wrapper around the <strong>C</strong> function
-<strong>glob</strong>(3). It returns a list of files matching a certain pattern provided to
-<strong>FBB::Glob</strong>'s constructors or members.
+<h2 >DESCRIPTION</h2>
+    The <strong >FBB::Glob</strong> class is a wrapper around the <strong >C</strong> function
+<strong >glob</strong>(3). It returns a list of files matching a certain pattern provided to
+<strong >FBB::Glob</strong>'s constructors or members.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
+<h2 >INHERITS FROM</h2>
     -
 <p>
-<h2>ENUMERATIONS</h2>
+<h2 >ENUMERATIONS</h2>
 <p>
-<strong>Glob::Type</strong>: <br/> 
-        This enumeration, which is identical to the <strong>stat</strong>(3bobcat) <em>Type</em>
+<strong >Glob::Type</strong>: <br/> 
+        This enumeration, which is identical to the <strong >stat</strong>(3bobcat) <em >Type</em>
 enumeration, defines the following values:
             <ul>
-        <li> <strong>BLOCK_DEVICE</strong>: the object represents a block device
-        <li> <strong>CHARACTER_DEVICE</strong>: the object represents a character device
-        <li> <strong>DIRECTORY</strong>: the object represents a directory
-        <li> <strong>FIFO</strong>: the object represents a named pipe (a queue)
-        <li> <strong>REGULAR_FILE</strong>: the object represents a regular file
-        <li> <strong>SOCKET</strong>: the object represents a socket
-        <li> <strong>SYMBOLIC_LINK</strong>: the object represents a symbolic link
-        <li> <strong>ANY</strong>: any of the above types
+        <li> <strong >BLOCK_DEVICE</strong>: the object represents a block device
+        <li> <strong >CHARACTER_DEVICE</strong>: the object represents a character device
+        <li> <strong >DIRECTORY</strong>: the object represents a directory
+        <li> <strong >FIFO</strong>: the object represents a named pipe (a queue)
+        <li> <strong >REGULAR_FILE</strong>: the object represents a regular file
+        <li> <strong >SOCKET</strong>: the object represents a socket
+        <li> <strong >SYMBOLIC_LINK</strong>: the object represents a symbolic link
+        <li> <strong >ANY</strong>: any of the above types
         </ul>
 <p>
-<strong>Glob::Flags</strong>:
+<strong >Glob::Flags</strong>:
     <ul>
-    <li> <em>ERR</em>: Return on read errors;
-    <li> <em>MARK</em>: Append a slash to each name.
-    <li> <em>NOSORT</em>: Don't sort the names.
-    <li> <em>NOESCAPE</em>: Backslashes don't quote metacharacters.
-    <li> <em>PERIOD</em>: Leading <em>.</em>-characters can be matched by metachars (i.e.,
-            <em>*</em> and <em>?</em>).
+    <li> <em >ERR</em>: Return on read errors;
+    <li> <em >MARK</em>: Append a slash to each name.
+    <li> <em >NOSORT</em>: Don't sort the names.
+    <li> <em >NOESCAPE</em>: Backslashes don't quote metacharacters.
+    <li> <em >PERIOD</em>: Leading <em >.</em>-characters can be matched by metachars (i.e.,
+            <em >*</em> and <em >?</em>).
     </ul>
 <p>
-<strong>Glob::Dots</strong>:
+<strong >Glob::Dots</strong>:
     <ul>
-    <li> <em>FIRST</em>: Filenames starting with a dot will be listed first. Within
+    <li> <em >FIRST</em>: Filenames starting with a dot will be listed first. Within
     this set and in the leftover-set the relative ordering is maintained.
-    <li> <em>DEFAULT</em>: Return filenames as they appear in the globbing process.
+    <li> <em >DEFAULT</em>: Return filenames as they appear in the globbing process.
     </ul>
 <p>
-<h2>CONSTRUCTORS</h2>
+<h2 >CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>Glob(std::string const &amp;pattern = "*", int flags = PERIOD,
+    <li> <strong >Glob(std::string const &amp;pattern = "*", int flags = PERIOD,
              Dots dots = FIRST)</strong>:<br/> 
         This constructor (which can also be used as the default constructor)
-    determines all elements matching <em>pattern</em>. 
+    determines all elements matching <em >pattern</em>. 
 <p>
-An <em>Exception</em> exception is thrown if the constructor could not  properly
+An <em >Exception</em> exception is thrown if the constructor could not  properly
     complete it tasks.
 <p>
-Multiple flags may be specified, separated by the <em>bitor</em> operator. 
+Multiple flags may be specified, separated by the <em >bitor</em> operator. 
 <p>
-This constructor properly completes its task if only defined <strong>Flag</strong>
-values were specified and if the <strong>glob</strong>(3) function returned without
+This constructor properly completes its task if only defined <strong >Flag</strong>
+values were specified and if the <strong >glob</strong>(3) function returned without
 errors. 
 <p>
-<li> <strong>Glob(Type type, std::string const &amp;pattern = "*", int flags = PERIOD,
+<li> <strong >Glob(Type type, std::string const &amp;pattern = "*", int flags = PERIOD,
              Dots dots = FIRST)</strong>:<br/> 
         This constructor 
-    determines all elements of <em>pattern</em> matching <em>Type</em>. The
-    specified <em>type</em> value may consist of any <em>bitor</em>-ed combination of 
-    enum values defined by the <em>Type</em> enum. Remaining parameters and 
+    determines all elements of <em >pattern</em> matching <em >Type</em>. The
+    specified <em >type</em> value may consist of any <em >bitor</em>-ed combination of 
+    enum values defined by the <em >Type</em> enum. Remaining parameters and 
     </ul>
 <p>
-<em>Glob</em> offers copy and move constructors.
+<em >Glob</em> offers copy and move constructors.
 <p>
-<h2>OVERLOADED OPERATORS</h2>
+<h2 >OVERLOADED OPERATORS</h2>
     <ul>
-    <li> <strong>Glob &amp;operator=(Glob const &amp;other)</strong>:<br/>
+    <li> <strong >Glob &amp;operator=(Glob const &amp;other)</strong>:<br/>
         The assignment operator is available.
-    <li> <strong>Glob &amp;operator=(Glob &amp;&amp;tmp)</strong>:<br/>
+    <li> <strong >Glob &amp;operator=(Glob &amp;&amp;tmp)</strong>:<br/>
         The move-assignment operator is available.
-    <li> <strong>char const *operator[](size_t idx) const</strong>:<br/>
-        The element at index position <em>idx</em> is returns as a <strong>C</strong> string. It
-    returns an empty string if <em>idx</em> is or exceeds <strong>size()</strong>.
+    <li> <strong >char const *operator[](size_t idx) const</strong>:<br/>
+        The element at index position <em >idx</em> is returns as a <strong >C</strong> string. It
+    returns an empty string if <em >idx</em> is or exceeds <strong >size()</strong>.
     </ul>
 <p>
-<h2>MEMBER FUNCTIONS</h2>
+<h2 >MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong>void verify() const</strong>:<br/>
+    <li> <strong >void verify() const</strong>:<br/>
         Empty function, kept for backward compatibility.
-    <li> <strong>size_t size() const</strong>:<br/>
+    <li> <strong >size_t size() const</strong>:<br/>
         Returns the number of elements that were detected.
-    <li> <strong>char const *const *begin() const</strong>:<br/>
+    <li> <strong >char const *const *begin() const</strong>:<br/>
         Returns a pointer to the first element that was detected. This pointer
     can be used in generic algorithms as an output-iterator supporting pointer
     arithmetic. 
-    <li> <strong>char const *const *end() const</strong>:<br/>
+    <li> <strong >char const *const *end() const</strong>:<br/>
        Returns a pointer beyond the last element that was detected. This
     pointer can be used in generic algorithms as an output-iterator supporting
     pointer arithmetic.
-    <li> <strong>void swap(Glob &amp;other)</strong>:<br/>
+    <li> <strong >void swap(Glob &amp;other)</strong>:<br/>
         Swaps the contents of the other object with the current object.
     </ul>
 <p>
-<h2>EXAMPLES</h2>
+<h2 >EXAMPLES</h2>
         <pre>
 
     int main(int argc, char **argv)
@@ -186,35 +186,35 @@ errors.
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/glob</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/glob</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>stat</strong>(3bobcat), <strong>glob</strong>(3)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >stat</strong>(3bobcat), <strong >glob</strong>(3)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     No Reported Bugs.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

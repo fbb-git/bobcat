@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::PtrIter</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,61 +43,61 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::PtrIter(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Error handler</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Error handler</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::PtrIter - Iterator returning pointer when dereferenced 
+<h2 >NAME</h2>FBB::PtrIter - Iterator returning pointer when dereferenced 
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/ptriter&gt;</strong><br/>
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/ptriter&gt;</strong><br/>
 <p>
-<h2>DESCRIPTION</h2>
+<h2 >DESCRIPTION</h2>
 <p>
-The <em>PtrIter</em> class template implements an input iterator whose
-<em>operator*</em> returns the address of the element the iterator refers to.
-Consider a <em>std::unordered_map&lt;std::string, DataType&gt;</em>. Its <em>begin</em> member
-returns an iterator whose <em>operator*</em> returns a <em>std::pair&lt;std::string,
+The <em >PtrIter</em> class template implements an input iterator whose
+<em >operator*</em> returns the address of the element the iterator refers to.
+Consider a <em >std::unordered_map&lt;std::string, DataType&gt;</em>. Its <em >begin</em> member
+returns an iterator whose <em >operator*</em> returns a <em >std::pair&lt;std::string,
 DataType&gt; (const) &amp;</em>. This is usually what you want, but now assume we want to
 display the map's contents, sorted by its keys. Sorting can simply be
 performed by defining a support vector containing pointers to the elements in
 the map, and then sorting the strings the pointers point at.
 <p>
-<em>PtrIter</em> is a tool that can be used to construct such a support vector, as
-shown in the <strong>EXAMPLE</strong> section.
+<em >PtrIter</em> is a tool that can be used to construct such a support vector, as
+shown in the <strong >EXAMPLE</strong> section.
 <p>
-<em>PtrIter</em> is a class template requiring one template type parameter:
-<em>Iterator</em>, the iterator's type (e.g., <em>vector&lt;string&gt;::iterator</em>)
+<em >PtrIter</em> is a class template requiring one template type parameter:
+<em >Iterator</em>, the iterator's type (e.g., <em >vector&lt;string&gt;::iterator</em>)
 <p>
-<em>PtrIter</em>'s users don't have to specify <em>PtrIter</em>'s template type. The
-function template <em>ptrIter</em>, when provided with an iterator returns the
-matching <em>PtrIter</em> object.
+<em >PtrIter</em>'s users don't have to specify <em >PtrIter</em>'s template type. The
+function template <em >ptrIter</em>, when provided with an iterator returns the
+matching <em >PtrIter</em> object.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
-    <em>std::iterator&lt;std::input_iterator_tag, ...&gt;</em>
+<h2 >INHERITS FROM</h2>
+    <em >std::iterator&lt;std::input_iterator_tag, ...&gt;</em>
 <p>
-<h2>FREE FUNCTION</h2>
+<h2 >FREE FUNCTION</h2>
     <ul>
-    <li> <strong>PtrIter&lt;Iterator&gt; ptrIter(Iterator const &amp;iter)</strong>:<br/>
-        this function template returns a <em>PtrIter</em> object for the function's
-<em>Iterator</em> argument. This function template simplyfies the construction of a
-<em>PtrIter</em> as no template parameters need to be specified (see also the
-<strong>EXAMPLE</strong> section)
+    <li> <strong >PtrIter&lt;Iterator&gt; ptrIter(Iterator const &amp;iter)</strong>:<br/>
+        this function template returns a <em >PtrIter</em> object for the function's
+<em >Iterator</em> argument. This function template simplyfies the construction of a
+<em >PtrIter</em> as no template parameters need to be specified (see also the
+<strong >EXAMPLE</strong> section)
     </ul>
 <p>
-<h2>CONSTRUCTORS</h2>
+<h2 >CONSTRUCTORS</h2>
     <ul>
-    <li> <strong>PtrIter(Iterator const &amp;iter)</strong>:<br/>
-        The <em>iter</em> parameter must be initialized with an existing input
-iterator, offering <em>operator*, operator++, operator==</em> and <em>operator!=</em>.
-As <em>PtrIter</em> is a class template, its template type parameters must be
-specified when defining a <em>PtrIter</em> object. E.g.,
+    <li> <strong >PtrIter(Iterator const &amp;iter)</strong>:<br/>
+        The <em >iter</em> parameter must be initialized with an existing input
+iterator, offering <em >operator*, operator++, operator==</em> and <em >operator!=</em>.
+As <em >PtrIter</em> is a class template, its template type parameters must be
+specified when defining a <em >PtrIter</em> object. E.g.,
         <pre>
 
     PtrIter&lt;set&lt;string&gt;::iterator&gt; PtrIter(mySet.begin());
@@ -107,31 +107,31 @@ specified when defining a <em>PtrIter</em> object. E.g.,
         </ul>
     The copy and move constructors are available.
 <p>
-<h2>OVERLOADED OPERATORS</h2>
+<h2 >OVERLOADED OPERATORS</h2>
     <ul>
-    <li> <strong>PtrType operator*() const</strong>:<br/>
+    <li> <strong >PtrType operator*() const</strong>:<br/>
         the address of the entity the iterator refers to is returned;
-    <li> <strong>PtrIter &amp;operator++()</strong>:<br/>
+    <li> <strong >PtrIter &amp;operator++()</strong>:<br/>
         the iterator is (pre)incremented to the next position;
-    <li> <strong>bool operator==(PtrIter const &amp;other) const</strong>:<br/>
-        <em>true</em> is returned if the two iterators are equal;
-    <li> <strong>bool operator!=(PtrIter const &amp;other) const</strong>:<br/>
-        <em>true</em> is returned if the two iterators are unequal;
+    <li> <strong >bool operator==(PtrIter const &amp;other) const</strong>:<br/>
+        <em >true</em> is returned if the two iterators are equal;
+    <li> <strong >bool operator!=(PtrIter const &amp;other) const</strong>:<br/>
+        <em >true</em> is returned if the two iterators are unequal;
     </ul>
     The copy and move assignment operators are available.
 <p>
-<h2>DEFINED TYPE</h2>
-    <em>PtrIter</em> defines the following type:
+<h2 >DEFINED TYPE</h2>
+    <em >PtrIter</em> defines the following type:
     <ul>   
-    <li> <strong>typedef decltype(&amp;*Iterator()) PtrType</strong>:<br/>
+    <li> <strong >typedef decltype(&amp;*Iterator()) PtrType</strong>:<br/>
     </ul>
 <p>
-<h2>MEMBER FUNCTIONS</h2>
-     All members of <em>std::iterator&lt;std:::input_iterator_tag, ...&gt;</em> are
-available, as <strong>FBB::PtrIter</strong> inherits from this class.
+<h2 >MEMBER FUNCTIONS</h2>
+     All members of <em >std::iterator&lt;std:::input_iterator_tag, ...&gt;</em> are
+available, as <strong >FBB::PtrIter</strong> inherits from this class.
 <p>
-<h2>EXAMPLE</h2>
-    <pre>
+<h2 >EXAMPLE</h2>
+    <pre >
 #include &lt;algorithm&gt;
 #include &lt;unordered_map&gt;
 #include &lt;vector&gt;
@@ -180,35 +180,35 @@ int main()
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/ptriter</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/ptriter</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

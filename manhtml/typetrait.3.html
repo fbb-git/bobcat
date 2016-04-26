@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::TypeTrait</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,73 +43,73 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::TypeTrait(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Error handler</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Error handler</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::TypeTrait - shortdesc
+<h2 >NAME</h2>FBB::TypeTrait - shortdesc
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/typetrait&gt;</strong><br/>
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/typetrait&gt;</strong><br/>
 <p>
-<h2>DESCRIPTION</h2>
+<h2 >DESCRIPTION</h2>
 <p>
-<strong>FBB::TypeTrait</strong> is a traits class. It does not define any member
+<strong >FBB::TypeTrait</strong> is a traits class. It does not define any member
 functions or data members, but merely types. It can be used to determine the
 basic type and other characteristics of (const) plain, (const) pointer or
 (const) reference types. It was designed after Alexandrescu's (2001)
-<em>TypeTraits</em> template class.
+<em >TypeTraits</em> template class.
 <p>
-The <strong>FBB::LpromotesR</strong> class template is used to determine, compile-time,
+The <strong >FBB::LpromotesR</strong> class template is used to determine, compile-time,
 whether its second (right-hand side) template type can be promoted to its
 first (left-hand side) template type.
 <p>
-The <strong>FBB::Use</strong> class template expects two typenames <em>LHS</em> and <em>RHS</em>
-and defines <em>typename Use&lt;LHS, RHS&gt;::type</em> as <em>LHS</em> if <em>RHS</em> can be
-promoted to <em>LHS</em> or it defines <em>typename Use&lt;LHS, RHS&gt;::type</em> as <em>RHS</em>.
+The <strong >FBB::Use</strong> class template expects two typenames <em >LHS</em> and <em >RHS</em>
+and defines <em >typename Use&lt;LHS, RHS&gt;::type</em> as <em >LHS</em> if <em >RHS</em> can be
+promoted to <em >LHS</em> or it defines <em >typename Use&lt;LHS, RHS&gt;::type</em> as <em >RHS</em>.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
+<h2 >INHERITS FROM</h2>
     -
 <p>
-<h2>TypeTrait&lt;TYPE&gt;</h2>
+<h2 >TypeTrait&lt;TYPE&gt;</h2>
 <p>
-<strong>TYPE</strong> is the template type parameter whose characteristics must be
+<strong >TYPE</strong> is the template type parameter whose characteristics must be
 determined. 
 <p>
-<em>TypeTrait&lt;TYPE&gt;</em> defines the type <em>Plain</em>: the plain type (the type
+<em >TypeTrait&lt;TYPE&gt;</em> defines the type <em >Plain</em>: the plain type (the type
 without const, pointer, reference type indication) of any const or non-const
 plain, pointer, lvalue- or rvalue-reference type.
 <p>
-<em>TypeTrait&lt;TYPE&gt;</em> defines the following <em>bool</em> values:    
+<em >TypeTrait&lt;TYPE&gt;</em> defines the following <em >bool</em> values:    
     <ul>
-    <li> <em>isClass</em>: <em>true</em> if the template type argument represents a
-        class (struct) type, <em>false</em> otherwise.
-    <li> <em>isConst</em>: <em>true</em> if the template type argument represents a
-        const type, <em>false</em> otherwise.
-    <li> <em>isPointer</em>: <em>true</em> if the template type argument represents a
-        pointer type, <em>false</em> otherwise.
-    <li> <em>isR_Ref</em>: <em>true</em> if the template type argument represents a
-        rvalue reference type, <em>false</em> otherwise.
-    <li> <em>isRef</em>: <em>true</em> if the template type argument represents an
-        lvalue reference type, <em>false</em> otherwise.
+    <li> <em >isClass</em>: <em >true</em> if the template type argument represents a
+        class (struct) type, <em >false</em> otherwise.
+    <li> <em >isConst</em>: <em >true</em> if the template type argument represents a
+        const type, <em >false</em> otherwise.
+    <li> <em >isPointer</em>: <em >true</em> if the template type argument represents a
+        pointer type, <em >false</em> otherwise.
+    <li> <em >isR_Ref</em>: <em >true</em> if the template type argument represents a
+        rvalue reference type, <em >false</em> otherwise.
+    <li> <em >isRef</em>: <em >true</em> if the template type argument represents an
+        lvalue reference type, <em >false</em> otherwise.
     </ul>
 <p>
-<h2>LpromotesR&lt;LeftType, RightType&gt;</h2>
+<h2 >LpromotesR&lt;LeftType, RightType&gt;</h2>
 <p>
-<em>LpromotesR&lt;LeftType, RightType&gt;</em> defines the enum constant <em>yes</em> as 1
-if an <em>RightType</em> argument can be promoted to <em>LeftType</em> value or object.
-The enum value <em>yes</em> is defined as 0 if no such constructor is available or if
-such a constructor is defined using the <em>explicit</em> keyword.
+<em >LpromotesR&lt;LeftType, RightType&gt;</em> defines the enum constant <em >yes</em> as 1
+if an <em >RightType</em> argument can be promoted to <em >LeftType</em> value or object.
+The enum value <em >yes</em> is defined as 0 if no such constructor is available or if
+such a constructor is defined using the <em >explicit</em> keyword.
 <p>
-<h2>EXAMPLES</h2>
+<h2 >EXAMPLES</h2>
 <p>
-Here is an example using <em>LpromotesR</em>:
+Here is an example using <em >LpromotesR</em>:
         <pre>
 
     int main()
@@ -125,36 +125,36 @@ Here is an example using <em>LpromotesR</em>:
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/typetrait</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/typetrait</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7)<br/>
-    Alexandrescu A. (2001) <strong>Modern C++ Design</strong>, Addison-Wesley, Boston.
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7)<br/>
+    Alexandrescu A. (2001) <strong >Modern C++ Design</strong>, Addison-Wesley, Boston.
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>

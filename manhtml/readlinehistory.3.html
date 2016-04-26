@@ -10,8 +10,8 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::ReadLineHistory</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
@@ -43,165 +43,165 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::ReadLineHistory(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.01.04-x.tar.gz Editing input lines</h2>
-<h2 id="date">2005-2015</h2>
+<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Editing input lines</h2>
+<h2 id="date">2005-2016</h2>
 
 
 <p>
-<h2>NAME</h2>FBB::ReadLineHistory - std::streambuf offering line-editing and history
+<h2 >NAME</h2>FBB::ReadLineHistory - std::streambuf offering line-editing and history
 <p>
-<h2>SYNOPSIS</h2>
-    <strong>#include &lt;bobcat/readlinebuf&gt;</strong><br/>
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/readlinebuf&gt;</strong><br/>
     Linking option: -lreadline -lbobcat
 <p>
-<h2>DESCRIPTION</h2>
-    <strong>FBB::ReadLineHistory</strong> objects offer access to the history maintained by
-<strong>FBB::ReadLineBuf</strong> and <strong>ReadLineStream</strong> objects.
+<h2 >DESCRIPTION</h2>
+    <strong >FBB::ReadLineHistory</strong> objects offer access to the history maintained by
+<strong >FBB::ReadLineBuf</strong> and <strong >ReadLineStream</strong> objects.
 <p>
 The latter two classes use Gnu's readline library to allow editing of
 input lines. The accumulated history of these objects can be accessed 
-from the <strong>ReadLineHistory</strong> object.
+from the <strong >ReadLineHistory</strong> object.
 <p>
 Since Gnu's readline library maintains global data there can only be one
-history. The <strong>ReadLineHistory</strong> class is therefore, like <strong>ReadLineBuf</strong> a
+history. The <strong >ReadLineHistory</strong> class is therefore, like <strong >ReadLineBuf</strong> a
 singleton.  (Gnu's readline library does, however, offer functions allowing
 programs to use multiple histories. So it would in principle be possible to
-design a non-singleton <em>ReadLineHistory</em> class. Since programs normally only
+design a non-singleton <em >ReadLineHistory</em> class. Since programs normally only
 interact with a single terminal, there is probably little use for
-non-singleton <strong>ReadLineHistory</strong> class).
+non-singleton <strong >ReadLineHistory</strong> class).
 <p>
-The <strong>ReadLineHistory</strong> class encapsulates history access. It offers limited
+The <strong >ReadLineHistory</strong> class encapsulates history access. It offers limited
 facilities: either forward or backward iterations over the history are offered
 as well as reading and writing the history from/to streams. The contents of
 the history lines and --if defined-- the timestamps of the lines in the
-history can be obtained using iterators defined by <strong>ReadLineHistory</strong>.
+history can be obtained using iterators defined by <strong >ReadLineHistory</strong>.
 <p>
-<h2>NAMESPACE</h2>
-    <strong>FBB</strong><br/>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
     All constructors, members, operators and manipulators, mentioned in this
-man-page, are defined in the namespace <strong>FBB</strong>.
+man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
-<h2>INHERITS FROM</h2>
+<h2 >INHERITS FROM</h2>
     -
 <p>
-<h2>NESTED TYPES</h2>
+<h2 >NESTED TYPES</h2>
 <p>
-The class <strong>ReadLineHistory</strong> defines the following nested types:
+The class <strong >ReadLineHistory</strong> defines the following nested types:
 <p>
-<strong>HistoryElement</strong>
+<strong >HistoryElement</strong>
 <p>
-The iterators made available by the <strong>ReadLineHistory</strong> object provide access
-to a <strong>HistoryElement</strong> object. These objects can be copied and assigned to
-each other, but user programs cannot otherwise construct <strong>HistoryElement</strong>
+The iterators made available by the <strong >ReadLineHistory</strong> object provide access
+to a <strong >HistoryElement</strong> object. These objects can be copied and assigned to
+each other, but user programs cannot otherwise construct <strong >HistoryElement</strong>
 objects.
 <p>
-The class <strong>HistoryElement</strong> has but two members:
+The class <strong >HistoryElement</strong> has but two members:
     <ul>
-    <li> <em>char const *line() const</em> returns the contents of the 
-history line to which a <strong>ReadLineHistory</strong> iterator refers;
-    <li> <em>char const *timestamp() const</em> returns the timestamp (if defined) of
-the history line to which a <strong>ReadLineHistory</strong> iterator refers;
+    <li> <em >char const *line() const</em> returns the contents of the 
+history line to which a <strong >ReadLineHistory</strong> iterator refers;
+    <li> <em >char const *timestamp() const</em> returns the timestamp (if defined) of
+the history line to which a <strong >ReadLineHistory</strong> iterator refers;
     </ul>
 <p>
-<strong>const_iterator</strong> and <strong>const_reverse_iterator</strong>
+<strong >const_iterator</strong> and <strong >const_reverse_iterator</strong>
 <p>
-The iterators returned by members of the class <strong>ReadLineHistory</strong> are input
-iterators, pointing to <strong>HistoryElement</strong> objects. As they are input
+The iterators returned by members of the class <strong >ReadLineHistory</strong> are input
+iterators, pointing to <strong >HistoryElement</strong> objects. As they are input
 iterators modification of the history elements to which they refer is not
 allowed. 
 <p>
-The class <strong>const_iterator</strong> allows iterations from the first to the last
-history element, the class <strong>const_reverse_iterator</strong> allows iterations from
+The class <strong >const_iterator</strong> allows iterations from the first to the last
+history element, the class <strong >const_reverse_iterator</strong> allows iterations from
 the last back to the first history element.
 <p>
 The iterators can be incremented, compared for (in)equality and offer
-<em>operator*</em> and <em>operator-&gt;</em> members, offering access to, respectively,
-<strong>HistoryElement</strong> objects and their addresses.
+<em >operator*</em> and <em >operator-&gt;</em> members, offering access to, respectively,
+<strong >HistoryElement</strong> objects and their addresses.
 <p>
-<h2>CONSTRUCTORS</h2>
+<h2 >CONSTRUCTORS</h2>
 <p>
-As the class <strong>ReadLineBuf</strong> is a singleton class, there are no publicly
+As the class <strong >ReadLineBuf</strong> is a singleton class, there are no publicly
 available constructors.
 <p>
-<h2>STATIC MEMBER FUNCTIONS</h2>
+<h2 >STATIC MEMBER FUNCTIONS</h2>
 <p>
 <ul>
-    <li> <strong>ReadLineHistory &amp;instance()</strong>:<br/> 
-        A reference to the <strong>ReadLineHistory</strong> object is returned. If any
+    <li> <strong >ReadLineHistory &amp;instance()</strong>:<br/> 
+        A reference to the <strong >ReadLineHistory</strong> object is returned. If any
 history has been accumulated it can immediately be retrieved. Using this
-static member will not affect the way the <strong>ReadLineHistory</strong> object handles
+static member will not affect the way the <strong >ReadLineHistory</strong> object handles
 timestamps when saving or retrieving history lines. When initially constructed
-the <em>ReadLineHistory</em> object assumes that timestamps are not used.
-    <li> <strong>ReadLineHistory &amp;instance(bool useTimestamps)</strong>:<br/> 
-        A reference to the <strong>ReadLineHistory</strong> object is returned. If any
+the <em >ReadLineHistory</em> object assumes that timestamps are not used.
+    <li> <strong >ReadLineHistory &amp;instance(bool useTimestamps)</strong>:<br/> 
+        A reference to the <strong >ReadLineHistory</strong> object is returned. If any
 history has been accumulated it can immediately be retrieved. The
-<em>useTimestamps</em> parameter defines the way history lines are read from or
-written to a stream. When specifying <em>true</em> the history inserted into a
+<em >useTimestamps</em> parameter defines the way history lines are read from or
+written to a stream. When specifying <em >true</em> the history inserted into a
 stream will include timestamps (which may be empty if no timestamps were
 recorded). Likewise, when extracting the history timestamps are extracted too
-(which may also be empty). When specifying <em>false</em> no timestamps are read
+(which may also be empty). When specifying <em >false</em> no timestamps are read
 or written. A mismatch between the actual contents of the stream from which
-the history is extracted and the <em>useTimestamps</em> parameter will 
+the history is extracted and the <em >useTimestamps</em> parameter will 
 results in unexpected behavior.
     </ul>
 <p>
-<h2>MEMBER FUNCTIONS</h2>
+<h2 >MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong>ReadLineHistory::const_iterator begin() const</strong>:<br/>
+    <li> <strong >ReadLineHistory::const_iterator begin() const</strong>:<br/>
         An input iterator pointing to the first history line is returned.
-    <li> <strong>ReadLineHistory::const_iterator end() const</strong>:<br/>
+    <li> <strong >ReadLineHistory::const_iterator end() const</strong>:<br/>
         An input iterator pointing beyond the last history line is returned.
-    <li> <strong>size_t maxSize() const</strong>:<br/> 
+    <li> <strong >size_t maxSize() const</strong>:<br/> 
         The maximum number of lines that can be stored in the history is
-        returned. After collecting a history of <em>maxSize</em> lines, the next
+        returned. After collecting a history of <em >maxSize</em> lines, the next
         line entered will cause the initial history line to be removed from
         the history, making room for the next line to be added at the end of
         the history.
-    <li> <strong>ReadLineHistory::const_reverse_iterator rbegin() const</strong>:<br/>
+    <li> <strong >ReadLineHistory::const_reverse_iterator rbegin() const</strong>:<br/>
         An input iterator pointing to the last history line is
         returned. Incrementing this iterator will access the previous line in
         the history.
-    <li> <strong>ReadLineHistory::const_reverse_iterator rend() const</strong>:<br/>
+    <li> <strong >ReadLineHistory::const_reverse_iterator rend() const</strong>:<br/>
         An input iterator pointing before the first history line is returned.
-    <li> <strong>ReadLineHistory &amp;setTimestamps(bool useTimestamps)</strong>:<br/> 
+    <li> <strong >ReadLineHistory &amp;setTimestamps(bool useTimestamps)</strong>:<br/> 
        xThe current status of the timestamps usage is set according to the
-        value of its parameter. When <em>true</em> inserting and extracting history
+        value of its parameter. When <em >true</em> inserting and extracting history
         will include the timestamps. No timestamps are inserted or extracted
-        when <em>false</em>. It returns a reference to the updated 
-        <strong>ReadLineHistory</strong> object, allowing constructions like (assuming
-        the availability of <em>ReadLineHistory &amp;history</em>):
+        when <em >false</em>. It returns a reference to the updated 
+        <strong >ReadLineHistory</strong> object, allowing constructions like (assuming
+        the availability of <em >ReadLineHistory &amp;history</em>):
         <pre>
 
     cout &lt;&lt; history.setTimestamps(true);
         
 </pre>
 
-    <li> <strong>size_t size() const</strong>:<br/>
+    <li> <strong >size_t size() const</strong>:<br/>
         The number of lines currently stored in the history is returned.
-    <li> <strong>bool timestamps() const</strong>:<br/>
+    <li> <strong >bool timestamps() const</strong>:<br/>
         The current status of the timestamps usage is returned. When returning
-        <em>true</em> inserting and extracting history will include the
+        <em >true</em> inserting and extracting history will include the
         timestamps. No timestamps are inserted or extracted when this member
-        returns <em>false</em>
+        returns <em >false</em>
     </ul>
 <p>
-<h2>OVERLOADED OPERATORS</h2>
+<h2 >OVERLOADED OPERATORS</h2>
     <ul>
-    <li> <strong>std::istream &amp;FBB::operator&gt;&gt;(std::istream &amp;in, ReadLineHistory &amp;his)</strong>:<br/>
-        The history available at the <em>in</em> stream is extracted as the current
-        history. The existing history is removed first. The <em>useTimestamp</em> 
-        status determines whether timestams are extracted (if <em>true</em>) or not
-        (if <em>false</em>). A mismatch between the actual contents of the stream
-        and the <em>useTimestamp</em> status will result in unexpected behavior.
-    <li> <strong>std::ostream &amp;FBB::operator&lt;&lt;(std::ostream &amp;out, 
+    <li> <strong >std::istream &amp;FBB::operator&gt;&gt;(std::istream &amp;in, ReadLineHistory &amp;his)</strong>:<br/>
+        The history available at the <em >in</em> stream is extracted as the current
+        history. The existing history is removed first. The <em >useTimestamp</em> 
+        status determines whether timestams are extracted (if <em >true</em>) or not
+        (if <em >false</em>). A mismatch between the actual contents of the stream
+        and the <em >useTimestamp</em> status will result in unexpected behavior.
+    <li> <strong >std::ostream &amp;FBB::operator&lt;&lt;(std::ostream &amp;out, 
             ReadLineHistory &amp;his)</strong>:<br/>
-        The current history is inserted into <em>out</em> stream. The
-        <em>useTimestamp</em> status determines whether timestams are inserted (if
-        <em>true</em>) or not (if <em>false</em>).
+        The current history is inserted into <em >out</em> stream. The
+        <em >useTimestamp</em> status determines whether timestams are inserted (if
+        <em >true</em>) or not (if <em >false</em>).
     </ul>
 <p>
-<h2>EXAMPLE</h2>
-    <pre>
+<h2 >EXAMPLE</h2>
+    <pre >
 #include &lt;iostream&gt;
 #include &lt;algorithm&gt;
 #include &lt;fstream&gt;
@@ -269,36 +269,36 @@ int main(int argc, char **argv)
 </pre>
 
 <p>
-<h2>FILES</h2>
-    <em>bobcat/readlinehistory</em> - defines the class interface
+<h2 >FILES</h2>
+    <em >bobcat/readlinehistory</em> - defines the class interface
 <p>
-<h2>SEE ALSO</h2>
-    <strong>bobcat</strong>(7), <strong>readline</strong>(3), <strong>readlinebuf</strong>(3), 
-    <strong>readlinestream</strong>(3)
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >readline</strong>(3), <strong >readlinebuf</strong>(3), 
+    <strong >readlinestream</strong>(3)
 <p>
-<h2>BUGS</h2>
+<h2 >BUGS</h2>
     None Reported.
 <p>
 
-<h2>DISTRIBUTION FILES</h2>
+<h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em>bobcat_4.01.04-x.dsc</em>: detached signature;
-    <li> <em>bobcat_4.01.04-x.tar.gz</em>: source archive;
-    <li> <em>bobcat_4.01.04-x_i386.changes</em>: change log;
-    <li> <em>libbobcat1_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em>libbobcat1-dev_4.01.04-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
-    <li> <em>http://sourceforge.net/projects/bobcat</em>: public archive location;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
 <p>
-<h2>BOBCAT</h2>
+<h2 >BOBCAT</h2>
     Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
 <p>
-<h2>COPYRIGHT</h2>
+<h2 >COPYRIGHT</h2>
     This is free software, distributed under the terms of the 
     GNU General Public License (GPL).
 <p>
-<h2>AUTHOR</h2>
-    Frank B. Brokken (<strong>f.b.brokken@rug.nl</strong>).
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
 <p>
