@@ -1,0 +1,139 @@
+--- a/documentation/man/configfile.yo
++++ b/documentation/man/configfile.yo
+@@ -246,7 +246,7 @@
+     itb(void open(std::string const &fname))
+         This member reads the configuration file having name tt(fname).
+ It redefines the current contents of the bf(ConfigFile) object,
+-destroying any information previously stored in it. The configuation file is
++destroying any information previously stored in it. The configuration file is
+ read according to the latest setting of the comment-flag. It throws an
+ tt(FBB::Exception) exception if the file cannot be opened.
+ 
+@@ -257,7 +257,7 @@
+         This member can be used to change the comment-handling type originally
+ set by the constructor, or set by earlier calls of this function. When called
+ it won't affect the current contents of the bf(ConfigFile) object, but
+-new calls of its tt(open) member reads the configuation file according
++new calls of its tt(open) member reads the configuration file according
+ to the last setting of the comment flag.
+ 
+     itb(void setSearchCasing(SearchCasing type))
+@@ -265,7 +265,7 @@
+ originally set by the constructor, or set by earlier calls of this
+ function. When called it won't affect the current contents of the
+ bf(ConfigFile) object, but new calls of its tt(open) member reads the
+-configuation file according to the last setting of the letter-casing flag.
++configuration file according to the last setting of the letter-casing flag.
+ 
+     itb(size_t size() const)
+         This member returns the number of lines in the configuration file.
+--- a/documentation/man/datetime.yo
++++ b/documentation/man/datetime.yo
+@@ -411,7 +411,7 @@
+     itb(DateTime localTime() const)
+         Returns a copy of the tt(DateTime) object representing its local
+ time. If the object does not define a local time or display zone shift the
+-returned object merely copies the orginal object's UTC time.
++returned object merely copies the original object's UTC time.
+ 
+     itb(DateTime localTime(int displayZoneShift) const)
+         Returns a copy of the tt(DateTime) object representing its time using
+--- a/documentation/man/decryptbuf.yo
++++ b/documentation/man/decryptbuf.yo
+@@ -92,7 +92,7 @@
+     itb(void setIv(std::string const &iv))
+         This member can be used to specify the initialization vector to use
+ after construction time but before any data has been decrypted. When called
+-after decryption has started or when specifying an empty intialization vector
++after decryption has started or when specifying an empty initialization vector
+ an tt(FBB::Exception) exception will be thrown.  When using ECB modes no
+ initialization vector is used. In those cases any non-empty initialization
+ vector may be provided.
+--- a/documentation/man/encryptbuf.yo
++++ b/documentation/man/encryptbuf.yo
+@@ -31,7 +31,7 @@
+ not tt('0') characters). 
+ 
+ Most modes use an em(initialization vector). Unless provided at construction
+-time or explicitly set thereafter an initialization vector containg randomly
++time or explicitly set thereafter an initialization vector containing randomly
+ selected values will be used. The initialization vector that is actually used
+ can be obtained from the tt(EncryptBuf) object. This is important, as the
+ matching decrypting object needs to know the initialization vector that was
+--- a/documentation/man/fork.yo
++++ b/documentation/man/fork.yo
+@@ -81,7 +81,7 @@
+ actions that are performed by the child process, following the bf(fork)(2)
+ system call. Just before tt(childProcess) is called, tt(childRedirections)
+ (see below) has been executed. The tt(childProcess()) function should
+-terminate the child process. A good way to do this is to throw an exeption
++terminate the child process. A good way to do this is to throw an exception
+ which is caught by tt(main())'s function try block. Terminating a process 
+ using bf(exit)(2) is deprecated in bf(C++).
+     itb(virtual void childRedirections())
+--- a/documentation/man/fswap.yo
++++ b/documentation/man/fswap.yo
+@@ -27,7 +27,7 @@
+ tt(operator=) function to swap objects. Newer implementations might use
+ move-operations to increase the speed of the swaping operation, but in both
+ cases some form of the assignment operator must be available. Swapping,
+-however, might be possible when assignemnt isn't. Classes having reference
++however, might be possible when assignment isn't. Classes having reference
+ data members usually don't offer assignment operators but swapping might be a
+ well-defined operation.
+ 
+--- a/documentation/man/hash.yo
++++ b/documentation/man/hash.yo
+@@ -11,7 +11,7 @@
+ 
+ manpagedescription()
+     The bf(FBB:Hash) group of template classes offer hashing-based
+-mapping. Various variants are availabe, all based on the facilities offered by
++mapping. Various variants are available, all based on the facilities offered by
+ the bf(unordered_map).
+ 
+     The hash-map offered in the bf(unordered_map) container has a fairly
+--- a/documentation/man/irandstream.yo
++++ b/documentation/man/irandstream.yo
+@@ -41,7 +41,7 @@
+ 
+     itb(IRandStream(int min, int max, int seed))
+     This bf(FBB::IRandStream()) constructor initializes the random
+-generator. The seed is used to initialze the random number generator. To start
++generator. The seed is used to initialize the random number generator. To start
+ the random generator at some unpredictable point, tt(time(0)) could be used.
+ Random values between tt(min) and tt(max) (inclusive) are returned.
+     )
+--- a/documentation/man/mailheaders.yo
++++ b/documentation/man/mailheaders.yo
+@@ -87,7 +87,7 @@
+ tt(rendh) (see below)
+     )
+     Objects of these two iterator types point to header lines. Their
+-derefenced type is tt(std::string).
++dereferenced type is tt(std::string).
+ 
+ manpagesection(CONSTRUCTORS)
+     itemization(
+--- a/documentation/man/randbuffer.yo
++++ b/documentation/man/randbuffer.yo
+@@ -25,7 +25,7 @@
+     itemization(
+     itb(Randbuffer(int min, int max, size_t seed = 1))
+     This bf(Randbuffer()) constructor initializes the random generator. The
+-seed is used to initialze the random number generator.Random values between
++seed is used to initialize the random number generator.Random values between
+ tt(min) and tt(max) (inclusive) are returned.
+     )
+ 
+--- a/documentation/man/sharedpos.yo
++++ b/documentation/man/sharedpos.yo
+@@ -58,7 +58,7 @@
+ manpagesection(MEMBER FUNCTIONS)
+ 
+     Note: the behavior of member functions returning values which refer to
+-information of an tt(FBB::SharedSegment) is undefined untill the member
++information of an tt(FBB::SharedSegment) is undefined until the member
+ tt(reset) has been called.
+ 
+     itemization(
