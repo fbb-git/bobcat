@@ -9,7 +9,7 @@ using namespace std;
 using namespace FBB;
 
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
     Syslogbuf sbuf(argv[0]);        // via a separate Syslogbuf
 

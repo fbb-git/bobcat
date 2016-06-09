@@ -14,7 +14,7 @@
 using namespace std;
 using namespace FBB;
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
     MailHeaders mh(cin, MailHeaders::DONT_READ);
 
@@ -52,8 +52,3 @@ int main(int argc, char **argv, char **envp)
 
     copy(mh.beginh(), mh.endh(),  ostream_iterator<string>(cout, "\n"));
 }
-
-
-
-
-

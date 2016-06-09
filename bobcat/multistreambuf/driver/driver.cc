@@ -10,7 +10,7 @@
 using namespace std;
 using namespace FBB;
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
     MultiStreambuf  msb(cout);
     ostream         os(&msb);
@@ -24,6 +24,4 @@ int main(int argc, char **argv, char **envp)
     msb.setOnce();
     os << "This is on cout and out" << endl;
     os << "This is on cout only" << endl;
-
-    return 0;
 }

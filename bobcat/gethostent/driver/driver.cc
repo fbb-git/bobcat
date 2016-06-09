@@ -13,12 +13,12 @@ using namespace std;
 using namespace FBB;
 
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
     if (argc == 1)
     {
         cerr << "Provide a host name or host address to solve\n";
-        return 1;
+        return 0;
     }
 
     try

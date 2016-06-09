@@ -8,7 +8,7 @@
 using namespace std;
 using namespace FBB;
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 try
 {
     Pipe p;                         // construct a pipe
