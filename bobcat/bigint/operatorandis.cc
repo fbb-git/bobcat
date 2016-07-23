@@ -15,13 +15,13 @@ BigInt &BigInt::operator&=(BigInt const &rhs)
 
     if (sizeInBytes() < rhs.sizeInBytes())
     {
-        bSmall = &d_bn;
-        bLarge = &rhs.d_bn;
+        bSmall = d_bn;
+        bLarge = rhs.d_bn;
     }
     else
     {
-        bLarge = &d_bn;
-        bSmall = &rhs.d_bn;
+        bLarge = d_bn;
+        bSmall = rhs.d_bn;
     }
     
     BN_bn2bin(bSmall, small);    
@@ -32,7 +32,7 @@ BigInt &BigInt::operator&=(BigInt const &rhs)
     for (size_t idx = 0; idx != nMin; ++idx)        // AND bytes 0 to nMin
         small[idx] &= largePtr[idx];
 
-    BN_bin2bn(small, nMin, &d_bn);
+    BN_bin2bn(small, nMin, d_bn);
 
     return *this;
 }

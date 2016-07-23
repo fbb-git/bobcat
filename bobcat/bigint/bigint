@@ -6,6 +6,15 @@
 
 #include <openssl/bn.h>
 
+#if  OPENSSL_VERSION_NUMBER < 0x10100000L
+inline BIGNUM *BN_new()
+{
+    BIGNUM *ret = new BIGNUM;
+    BN_init(ret);
+    return ret;
+}
+#endif
+
 namespace FBB
 {
 
@@ -13,8 +22,13 @@ class BigInt
 {
     friend std::ostream &operator<<(std::ostream &out, BigInt const &bn);
 
-    BIGNUM d_bn;
- 
+    BIGNUM *d_bn;
+
+    enum
+    {
+        WordMask = (1 << BN_BYTES) - 1
+    };
+
     public:
         typedef BN_ULONG Word;
 
@@ -263,13 +277,14 @@ class BigInt
 
 template<typename Type>
 BigInt::BigInt(Type value)
+:
+    d_bn(BN_new())
 {
     bool negative = value < 0;
     if (negative)
         value = -value;
 
-    BN_init(&d_bn);
-    BN_set_word(&d_bn, static_cast<unsigned long>(value));
+    BN_set_word(d_bn, static_cast<unsigned long>(value));
 
     if (negative)
         negate();
