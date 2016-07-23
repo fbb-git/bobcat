@@ -9,19 +9,12 @@
 #include <bobcat/fswap>
 
 #if  OPENSSL_VERSION_NUMBER < 0x10100000L
-
-inline BN_free(BIGNUM *bn)
-{
-    delete bn;
-}
-
 inline BIGNUM *BN_generate_prime_ex(BIGNUM *ret, int num, int safe, 
             BIGNUM *add, BIGNUM *rem, 
             void (*callbackNotUsed)(int, int, void *))
 {
     return BN_generate_prime(ret, num, safe, add, rem, callbackNotUsed, 0);
 }
-
 #endif
 
 namespace FBB

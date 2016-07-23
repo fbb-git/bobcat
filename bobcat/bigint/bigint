@@ -6,15 +6,6 @@
 
 #include <openssl/bn.h>
 
-#if  OPENSSL_VERSION_NUMBER < 0x10100000L
-inline BIGNUM *BN_new()
-{
-    BIGNUM *ret = new BIGNUM;
-    BN_init(ret);
-    return ret;
-}
-#endif
-
 namespace FBB
 {
 
