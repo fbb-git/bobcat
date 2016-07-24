@@ -6,7 +6,7 @@ void EncryptBuf::update()
 
     int outLen;
 
-    EVP_EncryptUpdate(&d_pimpl->ctx, 
+    EVP_EncryptUpdate(d_pimpl->ctx, 
             reinterpret_cast<unsigned char *>(d_pimpl->out), 
             &outLen, 
             reinterpret_cast<unsigned char const *>(d_pimpl->buffer), 

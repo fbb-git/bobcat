@@ -14,7 +14,7 @@ namespace FBB
 
 struct EncryptBufImp
 {
-    EVP_CIPHER_CTX      ctx;
+    EVP_CIPHER_CTX     *ctx;
     EVP_CIPHER const   *md;
     bool                active;
     size_t              bufsize;
@@ -25,13 +25,11 @@ struct EncryptBufImp
 
     EncryptBufImp(std::ostream &outStream, std::string const &iv, 
                   size_t bufsize);
-    ~EncryptBufImp();                       // destructor.i
+    ~EncryptBufImp();                       // destructor.f
 
     static void setChar(char &ch, IRandStream &irs);
 
 };
-
-#include "destructor.f"
 
 } // FBB
 
