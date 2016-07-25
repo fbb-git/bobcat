@@ -25,11 +25,9 @@ EncryptBuf::EncryptBuf(ostream &outStream, char const *type,
         key.resize(EVP_MAX_KEY_LENGTH);
         iv.resize(EVP_MAX_IV_LENGTH);
 
-        EVP_CIPHER_CTX_init(d_pimpl->ctx);
-
         if 
         (
-            !EVP_EncryptInit_ex(d_pimpl->ctx, d_pimpl->md, 0,
+            not EVP_EncryptInit_ex(d_pimpl->ctx, d_pimpl->md, 0,
                 0, // no key yet, is entered next
                 reinterpret_cast<unsigned char const *>(iv.data()))
         )

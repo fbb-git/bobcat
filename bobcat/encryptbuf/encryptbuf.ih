@@ -9,6 +9,23 @@
 #include <bobcat/exception>
 #include <bobcat/irandstream>
 
+#if  OPENSSL_VERSION_NUMBER < 0x10100000L
+
+EVP_CIPHER_CTX *EVP_CIPHER_CTX_new(void)
+{
+    EVP_CIPHER_CTX *ret = new EVP_CIPHER_CTX;
+    EVP_CIPHER_CTX_init(ret);
+    return ret;
+}
+
+void EVP_CIPHER_CTX_free(EVP_CIPHER_CTX *ctx)
+{
+    EVP_CIPHER_CTX_cleanup(ctx);
+    delete ctx;
+}
+    
+#endif
+
 namespace FBB
 {
 
@@ -25,7 +42,7 @@ struct EncryptBufImp
 
     EncryptBufImp(std::ostream &outStream, std::string const &iv, 
                   size_t bufsize);
-    ~EncryptBufImp();                       // destructor.f
+    ~EncryptBufImp();
 
     static void setChar(char &ch, IRandStream &irs);
 
