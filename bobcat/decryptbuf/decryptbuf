@@ -1,6 +1,8 @@
 #ifndef INCLUDED_DECRYPTBUF_
 #define INCLUDED_DECRYPTBUF_
 
+// https://wiki.openssl.org/index.php/EVP_Symmetric_Encryption_and_Decryption
+
 #include <iosfwd>
 #include <streambuf>
 #include <openssl/ossl_typ.h>
@@ -33,7 +35,6 @@ class DecryptBuf: public std::streambuf
     private:
         void update();
         void open();
-        void installKey(std::string const &key, size_t length);
         virtual int overflow(int c);
 };
 

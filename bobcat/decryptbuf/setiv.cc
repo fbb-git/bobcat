@@ -13,7 +13,7 @@ void DecryptBuf::setIv(string iv)
 
     if 
     (
-        !EVP_EncryptInit_ex(&d_pimpl->ctx, 0, 0, 0,
+        !EVP_EncryptInit_ex(d_pimpl->ctx, 0, 0, 0,
             reinterpret_cast<unsigned char const *>(iv.data()))
     )
         throw Exception(1) << "Couldn't set IV";

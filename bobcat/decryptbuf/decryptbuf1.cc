@@ -25,21 +25,17 @@ DecryptBuf::DecryptBuf(ostream &outStream, char const *type,
         key.resize(EVP_MAX_KEY_LENGTH);
         iv.resize(EVP_MAX_IV_LENGTH);
 
-        EVP_CIPHER_CTX_init(&d_pimpl->ctx);
-    
         if
         (
-            !EVP_DecryptInit_ex(&d_pimpl->ctx, d_pimpl->md, 0,
-                0, // no key yet, is entered next
+            not EVP_DecryptInit_ex(d_pimpl->ctx, d_pimpl->md , 0,
+                (unsigned char const *)key.data(), 
                 reinterpret_cast<unsigned char const *>(iv.data()))
         )
             throw Exception(1) << "DecryptBuf: initialization failed";
-    
-        installKey(key, keyLength);
 
         d_pimpl->buffer = new char[bufsize];
         d_pimpl->out = new char[
-            bufsize + EVP_CIPHER_CTX_block_size(&d_pimpl->ctx)];
+            bufsize + EVP_CIPHER_CTX_block_size(d_pimpl->ctx)];
 
         open();
     }
