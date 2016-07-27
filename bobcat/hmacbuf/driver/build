@@ -9,9 +9,14 @@
 
 tput clear
 
-LIBS=" -lbobcat"
+LIBS=" -lbobcat -lcrypto"
 GPP="g++ --std=c++14"
 
-CMD="$GPP -o driver -Wall *.cc ${LIBS} -s"
+#   Using the standard bobcat library
+#CMD="$GPP -o driver -Wall *.cc ${LIBS} -s"
+
+#   Using the library in ../tmp/
+CMD="$GPP -o driver -Wall *.cc -L../tmp -lhmacbuf ${LIBS} -s"
+
 echo ${CMD}
 ${CMD}
