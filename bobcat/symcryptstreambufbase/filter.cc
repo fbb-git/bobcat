@@ -16,7 +16,7 @@ bool SymCryptStreambufBase::filter(char const **srcBegin, char const **srcEnd)
     int outBufSize;
 
     (*d_evpUpdate)(
-            &d_ctx, 
+            d_ctx, 
             reinterpret_cast<unsigned char *>(d_outBuf.get()), &outBufSize, 
             reinterpret_cast<unsigned char *>(d_inBuf.get()), inBufRead
         );
@@ -25,7 +25,7 @@ bool SymCryptStreambufBase::filter(char const **srcBegin, char const **srcEnd)
     {                                       // encryption
         checkOutBufSize(d_blockSize);
         (*d_evpFinal_ex)(
-            &d_ctx, 
+            d_ctx, 
             reinterpret_cast<unsigned char *>(d_outBuf.get()), &outBufSize
         );
         d_allDone = true;
