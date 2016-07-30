@@ -9,12 +9,27 @@
 
 #include "../ohexstreambuf/ohexstreambuf"
 
+#if  OPENSSL_VERSION_NUMBER < 0x10100000L
+    inline EVP_MD_CTX *EVP_MD_CTX_new()
+    {
+        EVP_MD_CTX *ret = new EVP_MD_CTX;
+        EVP_MD_CTX_init(ret);
+        return ret;
+    }
+    
+    inline void HHMAC_CTX_free(HMAC_CTX *ctx)
+    {
+        EVP_MD_CTX_cleanup(ctx);
+        delete ctx;
+    }
+#endif
+
 namespace FBB
 {
     
 struct DigestBufImp
 {
-    EVP_MD_CTX    ctx;
+    EVP_MD_CTX   *ctx;
     EVP_MD const *md;
     std::string   digest;
     char         *buffer;
