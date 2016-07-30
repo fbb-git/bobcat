@@ -1,19 +1,19 @@
 #ifndef INCLUDED_BOBCAT_DIFFIEHELLMAN_
 #define INCLUDED_BOBCAT_DIFFIEHELLMAN_
 
-#include <memory>
 #include <iosfwd>
 
 #include <bobcat/bigint>
 #include <openssl/dh.h>
+
 
 namespace FBB
 {
 
 class DiffieHellman
 {
-    std::shared_ptr<DH> d_dh;
-    std::shared_ptr<BIGNUM> d_otherPubKey;  // public key of the other party
+    DH *d_dh;
+    BIGNUM *d_otherPubKey;      // public key of the other party
 
     static char const *s_header;
 
@@ -31,9 +31,9 @@ class DiffieHellman
                   DH_NOT_SUITABLE_GENERATOR | DH_UNABLE_TO_CHECK_GENERATOR)
         };
 
-            // The initiator calls this constructor, which computes the common
+            // The initiator calls this constructor to compute the common
             // DH parameters
-        DiffieHellman(size_t primeLength = 1024, size_t generator = 5,
+        DiffieHellman(size_t primeLength = 1024, size_t generator = 5, // 1
                       bool progress = false);
 
             // The initiator saves the public info on basename.pub
@@ -45,6 +45,7 @@ class DiffieHellman
             // The initiator sends basename.pub to the peer, who reads
             // basename.pub using this constructor:
         DiffieHellman(std::string const &initiatorPublicFileName);
+
             // Alternatively, use this constructor expecting an istream:
         DiffieHellman(std::istream &initiatorPublicStream);
 
@@ -59,7 +60,7 @@ class DiffieHellman
             //  - The initiator's public key;
             //  - His/her own secret key.
             // The key is obtained by calling
-        std::string key() const;
+        std::string key() const;                      // 1
 
             // The initiator has two options: - After calling save and
             // transmitting the public data to the peer the DiffieHellman
@@ -70,7 +71,7 @@ class DiffieHellman
             // initiator calls either of these overloaded versions of key to
             // obtain the symmetric key:
         std::string key(std::string const &peerPublicFileName);
-        std::string key(std::istream &peerPublicStream);
+        std::string key(std::istream &peerPublicStream);      // 3
 
             // Otherwise the initiator creates another DiffieHellman object, 
             // using the 4th or 5th constructor, and then calls either of the
@@ -79,26 +80,27 @@ class DiffieHellman
         DiffieHellman(std::string const &initiatorPublicFileName,
                       std::string const &initiatorPrivateFileName);
             // Alternatively, use this constructor expecting istreams:
-        DiffieHellman(std::istream &initiatorPublicStream,
+        DiffieHellman(std::istream &initiatorPublicStream,      // 5
                       std::istream &initiatorPrivateStream);
 
+        ~DiffieHellman();
 
     private:
-        void checkDHparameters();
+        void checkDHparameters(size_t generator);
+
         bool load(std::istream &publicData);
+
         void write(std::ostream &out, BIGNUM const *bn, char *buffer, 
                                                     uint32_t nBytes) const;
 
         bool read(std::istream &in, BIGNUM **dest);
 
         static void skip(std::istream &in, size_t count);
-        static void callback(int, int, void *);
+        static int callback(int, int, BN_GENCB *);
 
-//        std::string publicKey() const;
-//        std::string sharedKey(BigInt const &peersPublicKey
-//    private:
-//
-//        DH *newDH();
+        std::string publicKey() const;
+        std::string sharedKey(BigInt const &peersPublicKey);
 };
+
 } // FBB        
 #endif
