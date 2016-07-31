@@ -90,6 +90,10 @@ manpagesection(CONSTRUCTORS)
     itb(explicit BigInt(BIGNUM const *value))
         This constructor initializes a tt(BigInt) from a pointer to a 
         tt(const BIGNUM).
+    itb(explicit BigInt(BIGNUM *value)) This constructor initializes a
+        tt(BigInt) from a pointer to a tt(BIGNUM) (the tt(BIGNUM) value
+        pointed to by tt(value) is em(not) mondified by the constructor. 
+        This constructor is a mere wrapper around the previous constructor).
     itb(BigInt(Type value))
         This constructor is defined as a member template. Any type that can be
 converted using a static cast to an tt(unsigned long) can be used as argument
