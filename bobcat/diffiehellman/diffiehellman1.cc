@@ -12,7 +12,8 @@ DiffieHellman::DiffieHellman(size_t primeLength, size_t generator,
 
     BN_GENCB *cb = BN_GENCB_new();
     BN_GENCB_set(cb, callback, 0);
-    
+
+                                    // Generate prime (p), using generator    
     if (not DH_generate_parameters_ex(d_dh, primeLength, generator, 
                 progress ? cb : 0))
         throw Exception{} << s_header << "generating parameters failed";
@@ -22,7 +23,7 @@ DiffieHellman::DiffieHellman(size_t primeLength, size_t generator,
     if (progress)
         cout << endl;
 
-    checkDHparameters(generator);
+    checkDHparameters();            // verify the validity of p and generator
 }
 
 

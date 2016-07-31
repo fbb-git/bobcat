@@ -3,7 +3,7 @@
     // check the DH parameters. If all's well return, otherwise
     // write messages or throw an exception
     // 
-void DiffieHellman::checkDHparameters(size_t generator)
+void DiffieHellman::checkDHparameters()
 {
     int result;
 
@@ -15,6 +15,12 @@ void DiffieHellman::checkDHparameters(size_t generator)
 
     if (result & (DH_CHECK_P_NOT_PRIME | DH_CHECK_P_NOT_SAFE_PRIME))
         throw Exception{} << s_header << "invalid prime generated"; 
+
+    BIGNUM const *notUsed;
+    BIGNUM const *g;
+    DH_get0_pqg(d_dh, &d_prime, &notUsed, &g);
+
+    BigInt generator(g);
 
     if (result & DH_NOT_SUITABLE_GENERATOR)
         wmsg << s_header << generator << " is not a generator for the "

@@ -6,6 +6,7 @@
 #include <bobcat/bigint>
 #include <openssl/dh.h>
 
+// For openssl1.1.0 see, e.g. DH_get0_pqg
 
 namespace FBB
 {
@@ -14,6 +15,10 @@ class DiffieHellman
 {
     DH *d_dh;
     BIGNUM *d_otherPubKey;      // public key of the other party
+
+    mutable BIGNUM const *d_prime;  // assigned by DH_get0_key: no need
+    mutable BIGNUM const *d_pubKey; // to free the info pointed to by d_prime
+    mutable BIGNUM const *d_privKey;
 
     static char const *s_header;
 
@@ -36,9 +41,10 @@ class DiffieHellman
         DiffieHellman(size_t primeLength = 1024, size_t generator = 5, // 1
                       bool progress = false);
 
-            // The initiator saves the public info on basename.pub
-            // and, by providing 'SAVE_SECRET_KEY, the secret info on
-            // basename.sec 
+            // The initiator saves the public info (prime (p), generator (g) 
+            // and the initiator's public key (g^k % p) on basename.pub
+            // and, by providing 'SAVE_SECRET_KEY, the initiator's secret key 
+            // (k) on basename.sec 
         void save(std::string const &basename, SecretKey action = 
                                                 DONT_SAVE_SECRET_KEY) const;
 
@@ -55,11 +61,11 @@ class DiffieHellman
             // to the initiator. 
 
             // The peer can already now determine the symmetric encryption
-            // key, since he/she has 
-            //  - The DH prime and generator;
-            //  - The initiator's public key;
+            // key (the shared key), since he/she has 
+            //  - The DH prime and generator (received from the initiator)
+            //  - The initiator's public key (received from the initiator)
             //  - His/her own secret key.
-            // The key is obtained by calling
+            // The shared key is returned in a string by calling
         std::string key() const;                      // 1
 
             // The initiator has two options: - After calling save and
@@ -86,9 +92,11 @@ class DiffieHellman
         ~DiffieHellman();
 
     private:
-        void checkDHparameters(size_t generator);
+        void checkDHparameters();
 
-        bool load(std::istream &publicData);
+        bool load(std::istream &publicData, BIGNUM **pub_key);  // *pub_key is
+                                            // allocated inside this function
+                        
 
         void write(std::ostream &out, BIGNUM const *bn, char *buffer, 
                                                     uint32_t nBytes) const;

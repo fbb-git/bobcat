@@ -2,6 +2,9 @@
 
 bool DiffieHellman::read(istream &in, BIGNUM **dest)
 {
+    if (not *dest)                      // No BIGNUM available (allocation
+        return false;                   // failed) 
+
     uint32_t length;
 
     in.read(reinterpret_cast<char *>(&length), sizeof(uint32_t));
