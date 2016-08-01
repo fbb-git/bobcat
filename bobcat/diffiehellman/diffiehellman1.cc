@@ -25,13 +25,3 @@ DiffieHellman::DiffieHellman(size_t primeLength, size_t generator,
 
     checkDHparameters();            // verify the validity of p and generator
 }
-
-
-
-
-
-
-
-
-
-

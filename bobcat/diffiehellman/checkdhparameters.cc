@@ -6,19 +6,22 @@
 void DiffieHellman::checkDHparameters()
 {
     int result;
+    int ret;
 
-    if (DH_check(d_dh, &result) == 0)     // 0: check fails, 1: check OK
-        result = CHECK_FAILS;
+    ret = DH_check(d_dh, &result);      // 0: check fails, 1: check OK
 
-    if (result == 0)
+    BIGNUM const *g;
+    BIGNUM const *prime;
+    DH_get0_pqg(d_dh, &prime, 0, &g);
+
+    d_prime = BigInt{*prime};
+
+    if (ret == 1)
         return;
 
     if (result & (DH_CHECK_P_NOT_PRIME | DH_CHECK_P_NOT_SAFE_PRIME))
         throw Exception{} << s_header << "invalid prime generated"; 
 
-    BIGNUM const *notUsed;
-    BIGNUM const *g;
-    DH_get0_pqg(d_dh, &d_prime, &notUsed, &g);
 
     BigInt generator(g);
 
@@ -30,6 +33,8 @@ void DiffieHellman::checkDHparameters()
         wmsg << s_header << "cannot check the validity of generator " << 
             generator << endl;
 
-    else if (result & CHECK_FAILS)
+    else 
         throw Exception{} << s_header << "parameter check fails"; 
 }
+
+

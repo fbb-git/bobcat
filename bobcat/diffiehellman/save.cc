@@ -8,14 +8,15 @@ void DiffieHellman::save(string const &basename, SecretKey action) const
                                 "public/private keys";
 
     BIGNUM const *g;
-
-    DH_get0_pqg(d_dh, &d_prime, 0, &g);
+    DH_get0_pqg(d_dh, 0, 0, &g);
     DH_get0_key(d_dh, &d_pubKey, &d_privKey);
         
     int nBytes[] = 
             {
-                BN_num_bytes(d_prime),  BN_num_bytes(g),
-                BN_num_bytes(d_pubKey), BN_num_bytes(d_privKey)
+                static_cast<int>(d_prime.sizeInBytes()),         
+                BN_num_bytes(g),
+                BN_num_bytes(d_pubKey), 
+                BN_num_bytes(d_privKey)
             };
 
     unique_ptr<char[]> dest(new char[*max_element(nBytes, nBytes + 4)]);
@@ -23,7 +24,7 @@ void DiffieHellman::save(string const &basename, SecretKey action) const
     ofstream out;
     Exception::open(out, basename + ".pub");
     
-    write(out, d_prime,  dest.get(),   nBytes[0]);
+    write(out, &d_prime.bignum(),  dest.get(),   nBytes[0]);
     write(out, g,        dest.get(),   nBytes[1]);
     write(out, d_pubKey, dest.get(),   nBytes[2]);
 

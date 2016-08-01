@@ -15,10 +15,10 @@ class DiffieHellman
 {
     DH *d_dh;
     BIGNUM *d_otherPubKey;      // public key of the other party
+    BigInt d_prime;
 
-    mutable BIGNUM const *d_prime;  // assigned by DH_get0_key: no need
-    mutable BIGNUM const *d_pubKey; // to free the info pointed to by d_prime
-    mutable BIGNUM const *d_privKey;
+    mutable BIGNUM const *d_pubKey; // assigned by DH_get0_key: no need
+    mutable BIGNUM const *d_privKey;// to use BN_free
 
     static char const *s_header;
 
@@ -27,13 +27,6 @@ class DiffieHellman
         {
             DONT_SAVE_SECRET_KEY,
             SAVE_SECRET_KEY
-        };
-
-        enum
-        {
-            CHECK_FAILS = 
-                ~(DH_CHECK_P_NOT_PRIME | DH_CHECK_P_NOT_SAFE_PRIME | 
-                  DH_NOT_SUITABLE_GENERATOR | DH_UNABLE_TO_CHECK_GENERATOR)
         };
 
             // The initiator calls this constructor to compute the common
@@ -83,10 +76,10 @@ class DiffieHellman
             // using the 4th or 5th constructor, and then calls either of the
             // last two key members to obtain the symmetric key.
 
-        DiffieHellman(std::string const &initiatorPublicFileName,   // 4
+        DiffieHellman(std::string const &initiatorPublicFileName,
                       std::string const &initiatorPrivateFileName);
             // Alternatively, use this constructor expecting istreams:
-        DiffieHellman(std::istream &initiatorPublicStream,          // 5
+        DiffieHellman(std::istream &initiatorPublicStream,      // 5
                       std::istream &initiatorPrivateStream);
 
         ~DiffieHellman();

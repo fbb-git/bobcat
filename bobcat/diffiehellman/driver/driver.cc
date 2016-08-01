@@ -25,16 +25,16 @@ try
         ofstream outkey("peerkey");
         outkey.write(key.data(), key.length());
     }
-//
-//    if (argc == 3)
-//    {
-//        DiffieHellman dh("init.pub", "init.sec");
-//
-//        string key = dh.key("peer.pub");
-//        cout << "Key length: " << key.length() << '\n';
-//        ofstream outkey("initkey");
-//        outkey.write(key.data(), key.length());
-//    }
+
+    if (argc == 3)
+    {
+        DiffieHellman dh("init.pub", "init.sec");
+
+        string key = dh.key("peer.pub");
+        cout << "Key length: " << key.length() << '\n';
+        ofstream outkey("initkey");
+        outkey.write(key.data(), key.length());
+    }
 
 }
 catch (std::exception const &exc)
