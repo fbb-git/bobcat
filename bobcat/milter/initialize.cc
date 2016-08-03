@@ -4,17 +4,17 @@ void Milter::initialize(string const &name, Milter &milter,
                         callback_set callbacks, flag_set flags)
 {
     if (s_mp)
-        throw Exception(1) << 
+        throw Exception{1} << 
                 "Milter::initialize(): can't define multiple Milters";
 
     if (flags & ~ALL_FLAGS)
-        throw Exception(1) <<  "Milter::initialize(): invalid flag(s): " << 
+        throw Exception{1} <<  "Milter::initialize(): invalid flag(s): " << 
                                 hex << (flags & ~ALL_FLAGS)<< dec;
     if (!callbacks)
-        throw Exception(1) << "Milter::initialize(): no callbacks requested";
+        throw Exception{1} << "Milter::initialize(): no callbacks requested";
 
     if (callbacks & ~ALL_CALLBACKS)
-        throw Exception(1) << 
+        throw Exception{1} << 
                 "Milter::initialize(): illegal callback(s) requested: " << 
                 hex << (callbacks & ~ALL_CALLBACKS) << dec;
 
@@ -86,7 +86,7 @@ void Milter::initialize(string const &name, Milter &milter,
     }    
 
     if (smfi_register(descr) == MI_FAILURE)
-        throw Exception() << "Milter::initialize(): defining Milter " << 
+        throw Exception{} << "Milter::initialize(): defining Milter " << 
                                                     s_name << " failed";
 }
 

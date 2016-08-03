@@ -15,7 +15,7 @@ DecryptBuf::DecryptBuf(ostream &outStream, char const *type,
             if (type == 0)
                 type = "** unspecified cipher type **";
     
-            throw Exception(1) << "DecryptBuf `" << type << "' not available";
+            throw Exception{1} << "DecryptBuf `" << type << "' not available";
         }
 
         size_t keyLength = key.length();
@@ -31,7 +31,7 @@ DecryptBuf::DecryptBuf(ostream &outStream, char const *type,
                 (unsigned char const *)key.data(), 
                 reinterpret_cast<unsigned char const *>(iv.data()))
         )
-            throw Exception(1) << "DecryptBuf: initialization failed";
+            throw Exception{1} << "DecryptBuf: initialization failed";
 
         d_pimpl->buffer = new char[bufsize];
         d_pimpl->out = new char[

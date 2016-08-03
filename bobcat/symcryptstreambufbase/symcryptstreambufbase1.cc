@@ -32,7 +32,7 @@ SymCryptStreambufBase::SymCryptStreambufBase(
         cipherType = EVP_get_cipherbyname(type);
 
     if (cipherType == 0)
-        throw Exception() << "FBB::ISymCryptStreambuf: cipher " <<
+        throw Exception{} << "FBB::ISymCryptStreambuf: cipher " <<
             (type ? type : "0") << " not available";
 
     string key(keyParam);

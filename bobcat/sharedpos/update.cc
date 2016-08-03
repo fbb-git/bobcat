@@ -17,6 +17,6 @@ void SharedPos::update()
     d_blockOffset = d_offset % segSize;
 
     if (beyondMax)
-        throw Exception() << "Offset (" << offset << 
+        throw Exception{} << "Offset (" << offset << 
                             ") exceeds maxOffset (" << d_maxOffset << ')';
 }

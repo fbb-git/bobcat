@@ -17,7 +17,7 @@ void CSV::setSpec(string const &spec)
 
         ch = toupper(ch);
         if (string("SIDX-").find(ch) == string::npos)
-            throw Exception() << "CSV: specification `" << spec << 
+            throw Exception{} << "CSV: specification `" << spec << 
                                                         "' not supported";
         size_t repeat;
         if (not (in >> repeat))

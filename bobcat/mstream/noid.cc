@@ -13,7 +13,7 @@ std::ostream &noid(std::ostream &os)
             throw Exception();
 
         if (mp->lineExcess())
-            throw Exception() << "Exceeding max. # of " << mp->maxCount() << 
+            throw Exception{} << "Exceeding max. # of " << mp->maxCount() << 
                                                                 " messages";
     }
     return os;

@@ -7,5 +7,5 @@ void CGI::report() const
 
     cout << "FBB::CGI: " << d_status << endl;
 
-    throw Exception(1) << "FBB::CGI: Error(s) in uploaded form data";
+    throw Exception{1} << "FBB::CGI: Error(s) in uploaded form data";
 }

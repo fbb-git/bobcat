@@ -6,5 +6,5 @@ void SharedSegment::rawDetach(void *sharedPtr, bool requireOK)
         return;
 
     if (requireOK)
-        throw Exception() << "Failed to detach shared segment";
+        throw Exception{} << "Failed to detach shared segment";
 }

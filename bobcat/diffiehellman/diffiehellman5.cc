@@ -9,7 +9,7 @@ DiffieHellman::DiffieHellman(istream &publicStream, istream &privateStream)
     if (not (priv && read(privateStream, &priv)))
     {
         BN_free(priv);
-        throw Exception() << s_header << "could not load private key";
+        throw Exception{} << s_header << "could not load private key";
     }
 
     DH_set0_key(d_dh, d_otherPubKey, priv); // DH_set0_key owns 

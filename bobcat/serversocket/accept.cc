@@ -15,7 +15,7 @@ SocketBase ServerSocket::accept()
             );
         
     if (sock < 0)
-        throw Exception() << "ServerSocket::accept(): " << errnodescr;
+        throw Exception{} << "ServerSocket::accept(): " << errnodescr;
 
 
     class MakeSocketBase: public SocketBase

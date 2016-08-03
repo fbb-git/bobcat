@@ -14,7 +14,7 @@ HMacBuf::HMacBuf(std::string const &key, char const *type, size_t bufsize)
             if (type == 0)
                 type = "** unspecified hmac-digest type **";
     
-            throw Exception(1) << "HMacBuf `" << type << "' not available";
+            throw Exception{1} << "HMacBuf `" << type << "' not available";
         }
         d_pimpl->buffer = new char[bufsize];
         open();

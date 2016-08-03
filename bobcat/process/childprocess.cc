@@ -22,7 +22,7 @@ void Process::childProcess()
     (*(d_processType == USE_PATH ? execvp : execv))
         (ec.argv[0], const_cast<char * const *>(ec.argv));
 
-    throw Exception() << "Process: cannot execv[p] " << d_command;
+    throw Exception{} << "Process: cannot execv[p] " << d_command;
 
 }
 

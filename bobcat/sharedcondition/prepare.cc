@@ -3,7 +3,7 @@
 SharedCondition::Data SharedCondition::prepare()
 {
     if (d_shmem == 0)
-        throw Exception() << "SharedCondition object not initialized";
+        throw Exception{} << "SharedCondition object not initialized";
 
     Data data {d_shmem->offset()};
     d_shmem->seek(d_offset);
