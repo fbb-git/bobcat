@@ -17,5 +17,5 @@ void Signal::remove(size_t signum, SignalHandler &object)
 
     d_signals[signum].erase(iter);
 
-    signal(signum, handler); 
+    signal(signum, handler);        // handler is a private static function
 }

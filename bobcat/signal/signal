@@ -2,7 +2,7 @@
 #define INCLUDED_SIGNAL_
 
 #include <vector>
-#include <signal.h>
+#include <csignal>
 
 namespace FBB
 {
@@ -45,7 +45,8 @@ class Signal
         Signal();
 
         static void verify(size_t signum, char const *member);
-        static void handler(int signum);
+        static void handler(int signum);                // called by remove
+        void signal(int signum, sighandler_t handler);  // calls sigaction
 };
 
 }
