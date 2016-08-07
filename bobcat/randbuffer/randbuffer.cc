@@ -1,6 +1,6 @@
 #include "randbuffer.ih"
 
-Randbuffer::Randbuffer(int min, int max, size_t seed)
+Randbuffer::Randbuffer(int min, int max, long seed)
 {
     if (min <= max)
     {
@@ -15,6 +15,6 @@ Randbuffer::Randbuffer(int min, int max, size_t seed)
 
     d_max++;
 
-    srandom(seed);
+    srandom(static_cast<unsigned int>(seed));
     setg(0, 0, 0);
 }
