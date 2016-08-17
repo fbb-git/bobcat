@@ -22,7 +22,7 @@ using namespace std;
 using namespace FBB;
 
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
     string line;
     PerlSetFSA fsa;
@@ -35,6 +35,4 @@ int main(int argc, char **argv, char **envp)
 
         fsa.convert(line);
     }
-
-    return 0;
 }

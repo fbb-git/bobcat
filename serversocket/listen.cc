@@ -7,12 +7,12 @@ void ServerSocket::listen(size_t backlog, bool blocking)
     verify();               // verify the SocketBase construction
 
     if (d_msg)
-        throw Exception(1) << d_msg;
+        throw Exception{1} << d_msg;
         
     int sock = socket();
 
     if (::listen(sock, backlog) < 0)
-        throw Exception() << name << ": " << errnodescr;
+        throw Exception{} << name << ": " << errnodescr;
 
     if (blocking)
         return;
@@ -27,6 +27,6 @@ void ServerSocket::listen(size_t backlog, bool blocking)
         ) 
         == -1
     )
-        throw Exception() << name << ": " << errnodescr;
+        throw Exception{} << name << ": " << errnodescr;
 }
 

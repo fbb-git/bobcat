@@ -7,12 +7,34 @@
 #include <bobcat/exception>
 #include "../ohexstreambuf/ohexstreambuf"
 
+#if  OPENSSL_VERSION_NUMBER < 0x10100000L
+
+inline HMAC_CTX *HMAC_CTX_new()
+{
+    return new HMAC_CTX;
+}
+    
+inline int HMAC_CTX_reset(HMAC_CTX *ctx)
+{
+    HMAC_CTX_init(ctx);
+    return 1;
+}
+
+inline void HMAC_CTX_free(HMAC_CTX *ctx)
+{
+    HMAC_CTX_cleanup(ctx);
+    delete ctx;
+}
+   
+#endif
+
+
 namespace FBB
 {
 
 struct HMacBufImp
 {
-    HMAC_CTX      ctx;
+    HMAC_CTX     *ctx;
     EVP_MD const *md;
     std::string   digest;
     char         *buffer;
@@ -20,7 +42,7 @@ struct HMacBufImp
     std::string   key;
 
     HMacBufImp(std::string const &key, size_t bufsize);
-    ~HMacBufImp();                                      // destructor.i
+    ~HMacBufImp();                                      // destructor.f
 };
 
 #include "destructor.f"

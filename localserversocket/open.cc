@@ -7,7 +7,7 @@ void LocalServerSocket::open(string const &name, Socket action)
     d_name = name;
 
     if (bind(socket(), sockaddrPtr(), size()) < 0)
-        throw Exception() << "LocalServerSocket::open(" << name << "): " <<
+        throw Exception{} << "LocalServerSocket::open(" << name << "): " <<
                                                             errnodescr;
 }
             

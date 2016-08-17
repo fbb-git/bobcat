@@ -3,6 +3,7 @@
 EncryptBufImp::EncryptBufImp(ostream &outStream, string const &ivv, 
                              size_t bufsize)
 :
+    ctx(EVP_CIPHER_CTX_new()),
     active(false),
     bufsize(bufsize),
     buffer(0),

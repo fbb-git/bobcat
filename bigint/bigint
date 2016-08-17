@@ -13,8 +13,13 @@ class BigInt
 {
     friend std::ostream &operator<<(std::ostream &out, BigInt const &bn);
 
-    BIGNUM d_bn;
- 
+    BIGNUM *d_bn;
+
+    enum
+    {
+        WordMask = (1 << BN_BYTES) - 1
+    };
+
     public:
         typedef BN_ULONG Word;
 
@@ -45,6 +50,8 @@ class BigInt
                                                 
         explicit BigInt(BIGNUM const &bignum);  // 2 
         explicit BigInt(BIGNUM const *bignum);  // 4
+        explicit BigInt(BIGNUM *bignum);        // .f   (avoids selection of
+                                                //       the template)
 
         BigInt(char const *bigEndian, size_t length, bool negative = false);
                                                             // 5
@@ -263,13 +270,14 @@ class BigInt
 
 template<typename Type>
 BigInt::BigInt(Type value)
+:
+    d_bn(BN_new())
 {
     bool negative = value < 0;
     if (negative)
         value = -value;
 
-    BN_init(&d_bn);
-    BN_set_word(&d_bn, static_cast<unsigned long>(value));
+    BN_set_word(d_bn, static_cast<unsigned long>(value));
 
     if (negative)
         negate();

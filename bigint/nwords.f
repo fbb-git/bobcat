@@ -1,4 +1,4 @@
 inline size_t BigInt::nWords() const
 {
-    return d_bn.top;
+    return (size() + BN_BYTES - 1) / BN_BYTES;
 }

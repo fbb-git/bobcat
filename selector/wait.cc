@@ -16,7 +16,7 @@ int Selector::wait()
                    t.tv_sec == -1 && t.tv_usec == -1 ? 0 : &t);
 
     if (d_ret < 0)
-        throw Exception() << "Selector::wait()";
+        throw Exception{} << "Selector::wait()";
     
     return d_ret;
 }

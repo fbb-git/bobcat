@@ -5,6 +5,7 @@
 #include <sstream>
 #include <algorithm>
 #include <string>
+#include <memory>
 
 #include <arpa/inet.h>
 
@@ -13,3 +14,67 @@
 
 using namespace std;
 using namespace FBB;
+
+#if  OPENSSL_VERSION_NUMBER < 0x10100000L
+
+inline BN_GENCB *BN_GENCB_new()
+{
+    return new BN_GENCB;;
+}
+
+inline void BN_GENCB_free(BN_GENCB *cb)
+{
+    delete cb;
+}
+
+inline void DH_set0_key(DH *dh, void *, BIGNUM *privateKey)
+{
+    BN_free(dh->priv_key);
+    dh->priv_key = privateKey;
+}
+
+inline void DH_get0_key(const DH *dh,
+                        const BIGNUM **pub_key, const BIGNUM **priv_key)
+{
+    *pub_key = dh->pub_key;
+    *priv_key = dh->priv_key;
+}
+
+inline void DH_get0_pqg(const DH *dh, 
+                const BIGNUM **p, const BIGNUM **q, const BIGNUM **g)
+{
+    *p = dh->p;
+    *q = dh->q;
+    *g = dh->g;
+}
+
+namespace FBB
+{
+    inline void dh_reassign(BIGNUM **dest, BIGNUM *src)
+    {
+        if (src)
+        {
+            if (*dest)
+                BN_free(*dest);
+            *dest = src;
+        }
+    }
+}
+
+inline int DH_set0_pqg(DH *dh, BIGNUM *p, BIGNUM *q, BIGNUM *g)
+{
+    FBB::dh_reassign(&dh->p, p);
+    FBB::dh_reassign(&dh->q, q);
+    FBB::dh_reassign(&dh->g, g);
+    return 1;
+}
+
+#endif
+
+
+
+
+
+
+
+

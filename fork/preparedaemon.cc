@@ -3,7 +3,7 @@
 void Fork::prepareDaemon() const
 {
     if (chdir("/") < 0)     // free up mount points
-        throw Exception() << "Fork::prepareDaemon: chdir(\"/\") failed\n";
+        throw Exception{} << "Fork::prepareDaemon: chdir(\"/\") failed\n";
 
     setsid();               // create new session/process group
 

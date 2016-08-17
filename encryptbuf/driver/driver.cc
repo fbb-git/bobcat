@@ -25,7 +25,6 @@ try
 
     EncryptBuf encryptbuf(cout, argv[1], key, iv);
     ostream out(&encryptbuf);
-
     cerr << "Block length: " << encryptbuf.blockLength() << '\n' <<
             "Key length: " << encryptbuf.keyLength() << '\n' <<
             "Max Key length: " << EVP_MAX_KEY_LENGTH << '\n' <<

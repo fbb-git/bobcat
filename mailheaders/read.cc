@@ -5,14 +5,14 @@ void MailHeaders::read()
     static char funName[] = "MailHeaders::read()";
 
     if (size())
-        throw Exception() << funName << "Mail headers already read";
+        throw Exception{} << funName << "Mail headers already read";
 
     while (true)
     {
         string line;
 
         if (!getline(d_in, line))               // no more header lines
-            throw Exception() << funName <<     // is an error condition
+            throw Exception{} << funName <<     // is an error condition
                 "Headers incomplete after line " << d_lines.size();
 
         if (line.find_first_not_of(" \t") == string::npos)  // blank line
@@ -27,7 +27,7 @@ void MailHeaders::read()
         else 
         {
             if (not d_lines.size())             // no header yet: error
-                throw Exception() << funName << "Invalid begin of headers";
+                throw Exception{} << funName << "Invalid begin of headers";
             (d_lines.back() += "\n") += line;   // add line continuation
         }
     }

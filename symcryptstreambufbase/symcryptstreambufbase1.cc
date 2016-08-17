@@ -17,6 +17,7 @@ SymCryptStreambufBase::SymCryptStreambufBase(
 )
 :
     IFilterStreambuf(filterBufSize),
+    d_ctx(EVP_CIPHER_CTX_new()),
     d_inBufSize(bufSize < 100 ? 100 : bufSize),
     d_in(in),
     d_evpUpdate(evpUpdate),
@@ -31,7 +32,7 @@ SymCryptStreambufBase::SymCryptStreambufBase(
         cipherType = EVP_get_cipherbyname(type);
 
     if (cipherType == 0)
-        throw Exception() << "FBB::ISymCryptStreambuf: cipher " <<
+        throw Exception{} << "FBB::ISymCryptStreambuf: cipher " <<
             (type ? type : "0") << " not available";
 
     string key(keyParam);
@@ -40,13 +41,11 @@ SymCryptStreambufBase::SymCryptStreambufBase(
     string iv(ivParam);
     iv.resize(EVP_MAX_IV_LENGTH);
 
-    EVP_CIPHER_CTX_init(&d_ctx);
-
-    (*evpInit_ex)(&d_ctx, cipherType, engine, 
+    (*evpInit_ex)(d_ctx, cipherType, engine, 
                 reinterpret_cast<unsigned char const *>(key.data()),
                 reinterpret_cast<unsigned char const *>(iv.data()));
 
-    d_blockSize = EVP_CIPHER_CTX_block_size(&d_ctx);
+    d_blockSize = EVP_CIPHER_CTX_block_size(d_ctx);
 }
 
 

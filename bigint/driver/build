@@ -8,12 +8,17 @@ GPP="g++ --std=c++14"
 # WHEN LINKING TO A STATIC LIBRARY DON'T FORGET TO LINK AGAINST 
 # crypto (-lcrypto)
 
-# CMD="$GPP -o driver -Wall -I../ driver.cc -L../tmp ${LIBS} -lbigint  -s"
+# link against ../tmp/libbigint.a
+CMD="$GPP -o driver -Wall -I../ driver.cc -L../tmp -lbigint ${LIBS} -s"
+
 # CMD="$GPP -o driver -Wall -I../../tmp driver.cc -L../../tmp/lib ${LIBS} -s"
 # CMD="$GPP -o driver -Wall -I../ driver.cc -L../tmp ${LIBS} -s"
-CMD="$GPP -o driver -Wall -I../ driver.cc ../*.o ${LIBS} -s"
 
-CMD="$GPP -o driver -Wall *.cc ${LIBS} -s"
+# link against object files in ..
+# CMD="$GPP -o driver -Wall -I../ driver.cc ../*.o ${LIBS} -s"
+
+# link against the standard bobcat library
+# CMD="$GPP -o driver -Wall *.cc ${LIBS} -s"
 
 echo $CMD
 $CMD || exit 1

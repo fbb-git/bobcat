@@ -22,7 +22,6 @@ try
     ifstream in(argv[3]);
 
     out << in.rdbuf();
-    // decryptbuf.done();       // optionally
 }
 catch(exception const &err)
 {

@@ -90,6 +90,10 @@ manpagesection(CONSTRUCTORS)
     itb(explicit BigInt(BIGNUM const *value))
         This constructor initializes a tt(BigInt) from a pointer to a 
         tt(const BIGNUM).
+    itb(explicit BigInt(BIGNUM *value)) This constructor initializes a
+        tt(BigInt) from a pointer to a tt(BIGNUM) (the tt(BIGNUM) value
+        pointed to by tt(value) is em(not) mondified by the constructor. 
+        This constructor is a mere wrapper around the previous constructor).
     itb(BigInt(Type value))
         This constructor is defined as a member template. Any type that can be
 converted using a static cast to an tt(unsigned long) can be used as argument
@@ -297,6 +301,12 @@ manpagesection(MEMBER FUNCTIONS)
     itb(BigInt negatec() const) 
        The  negated value of the current object is returned.
         
+    itb(size_t nWords() const) 
+       The number of `words' required to store the bf(BigInt) value is
+        returned. Note that the returned value depends on the architecture's
+        number of bytes per word. For 32-bit architectures there are four
+        bytes per word, for 64-bit architectures eight bytes per word.
+
     itb(BigInt &rshift()) 
        The current object's bits are shifted one bit to the right. The object's
         sign remains unaltered.
@@ -346,12 +356,9 @@ manpagesection(MEMBER FUNCTIONS)
         thrown.
 
     itb(size_t size() const)
-       The number of bytes required to store the current tt(BIGNUM) value is
-        returned. 
+       The number of significant em(bits) required to store the current
+        tt(BIGNUM) value is returned. 
 
-    itb(size_t sizeInBits() const)
-       The number of bits required to represent the current tt(BIGNUM) value
-        is returned. 
 
     itb(size_t sizeInBytes() const)
        The number of bytes required to store the current tt(BIGNUM) value is

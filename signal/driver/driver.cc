@@ -33,7 +33,9 @@ void SignalDemo::run()
 {
     while (d_continue)
     {
-        cout << "Send a SIGINT or SIGTERM... to process " << d_pid << endl;
+        cout << "Send a SIGINT (2) or SIGTERM (15) ... to process " << 
+                    d_pid << endl;
+
         sleep(1);
     }
     cout << "Ending `run' after receiving signal " << d_signal << endl;

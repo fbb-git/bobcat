@@ -29,7 +29,7 @@ void CGI::setFileDestination(std::string const &path,
     }
 
     if (!destPath.isType(Stat::DIRECTORY))
-        throw Exception(1) << "FBB::CGI: can't create file destination "
+        throw Exception{1} << "FBB::CGI: can't create file destination "
                                                             "directory " <<
                        destPath.path();
 

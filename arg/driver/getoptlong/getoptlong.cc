@@ -7,7 +7,7 @@ using namespace std;
 using namespace FBB;
 
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
     int value;
 
@@ -53,6 +53,3 @@ int main(int argc, char **argv, char **envp)
         }
     }
 }
-
-
-

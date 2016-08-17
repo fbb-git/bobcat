@@ -1,6 +1,6 @@
 #include "bigint.ih"
 
 BigInt::BigInt()
-{
-    BN_init(&d_bn);
-}
+:
+    d_bn(BN_new())
+{}

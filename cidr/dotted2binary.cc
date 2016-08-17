@@ -10,7 +10,7 @@ size_t Cidr::dotted2binary(std::string const &dotted)
         size_t byte;
 
         if (!(in >> byte))
-            throw Exception(1) << "Cidr: " << "invalid address: `" << 
+            throw Exception{1} << "Cidr: " << "invalid address: `" << 
                                                             dotted << '\'';
         ret <<= 8;
         ret += byte;

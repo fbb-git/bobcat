@@ -16,7 +16,7 @@ Cidr::MaskPair Cidr::parse(string const &cidr)
     {
         ret.second = A2x(cidr.substr(pos + 1));
         if (A2x::lastFail())
-            throw Exception(1) << "Cidr: " << "invalid CIDR: `" << 
+            throw Exception{1} << "Cidr: " << "invalid CIDR: `" << 
                                     cidr << '\'';
         ret.first = ret.first >> (32 - ret.second) << (32 - ret.second);
     }
