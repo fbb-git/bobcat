@@ -11,17 +11,17 @@
 
 #if  OPENSSL_VERSION_NUMBER < 0x10100000L
 
-#ifndef INCLUDED_BOBCAT_OPENSSL
-#define INCLUDED_BOBCAT_OPENSSL
+#ifndef BOBCAT_EVP_CYPHER_CTX
+#define BOBCAT_EVP_CYPHER_CTX
 
-EVP_CIPHER_CTX *EVP_CIPHER_CTX_new(void)
+inline EVP_CIPHER_CTX *EVP_CIPHER_CTX_new(void)
 {
     EVP_CIPHER_CTX *ret = new EVP_CIPHER_CTX;
     EVP_CIPHER_CTX_init(ret);
     return ret;
 }
 
-void EVP_CIPHER_CTX_free(EVP_CIPHER_CTX *ctx)
+inline void EVP_CIPHER_CTX_free(EVP_CIPHER_CTX *ctx)
 {
     EVP_CIPHER_CTX_cleanup(ctx);
     delete ctx;
