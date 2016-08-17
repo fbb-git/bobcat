@@ -6,7 +6,7 @@ EncryptBuf::~EncryptBuf()
 
     int outLen;
 
-    EVP_EncryptFinal_ex(&d_pimpl->ctx, 
+    EVP_EncryptFinal_ex(d_pimpl->ctx, 
             reinterpret_cast<unsigned char *>(d_pimpl->out), &outLen);
     d_pimpl->outStream.write(d_pimpl->out, outLen);
 

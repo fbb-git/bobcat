@@ -1,14 +1,17 @@
 #include "bigint.ih"
 
+#include <iostream>
+
 ostream &BigInt::insertInto(ostream &out) const
 {
     int flags = out.flags();
-    char *cp = 
+
+    char *cp =                              // call function to use
         (
             flags & ios::hex ? BN_bn2hex :
             flags & ios::oct ? bn2oct    :
                                BN_bn2dec
-        )(&d_bn);
+        )(d_bn);
 
     bool isNegative = (*cp == '-');
     

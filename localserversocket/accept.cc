@@ -15,7 +15,7 @@ size_t LocalServerSocket::accept()
             );
         
     if (sock < 0)
-        throw Exception() << "LocalServerSocket::accept(): " << errnodescr;
+        throw Exception{} << "LocalServerSocket::accept(): " << errnodescr;
 
     return sock;
 }

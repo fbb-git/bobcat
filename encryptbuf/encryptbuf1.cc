@@ -15,7 +15,7 @@ EncryptBuf::EncryptBuf(ostream &outStream, char const *type,
             if (type == 0)
                 type = "** unspecified cipher type **";
     
-            throw Exception(1) << "EncryptBuf `" << type << "' not available";
+            throw Exception{1} << "EncryptBuf `" << type << "' not available";
         }
 
         size_t keyLength = key.length();
@@ -25,21 +25,19 @@ EncryptBuf::EncryptBuf(ostream &outStream, char const *type,
         key.resize(EVP_MAX_KEY_LENGTH);
         iv.resize(EVP_MAX_IV_LENGTH);
 
-        EVP_CIPHER_CTX_init(&d_pimpl->ctx);
-
         if 
         (
-            !EVP_EncryptInit_ex(&d_pimpl->ctx, d_pimpl->md, 0,
+            not EVP_EncryptInit_ex(d_pimpl->ctx, d_pimpl->md, 0,
                 0, // no key yet, is entered next
                 reinterpret_cast<unsigned char const *>(iv.data()))
         )
-            throw Exception(1) << "EncryptBuf: initialization failed";
+            throw Exception{1} << "EncryptBuf: initialization failed";
 
         installKey(key, keyLength);
     
         d_pimpl->buffer = new char[bufsize];
         d_pimpl->out = new char[
-                bufsize + EVP_CIPHER_CTX_block_size(&d_pimpl->ctx)]; 
+                bufsize + EVP_CIPHER_CTX_block_size(d_pimpl->ctx)]; 
         
         open();
     }

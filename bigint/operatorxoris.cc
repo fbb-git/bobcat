@@ -15,13 +15,13 @@ BigInt &BigInt::operator^=(BigInt const &rhs)
 
     if (sizeInBytes() < rhs.sizeInBytes())
     {
-        bSmall = &d_bn;
-        bLarge = &rhs.d_bn;
+        bSmall = d_bn;
+        bLarge = rhs.d_bn;
     }
     else
     {
-        bLarge = &d_bn;
-        bSmall = &rhs.d_bn;
+        bLarge = d_bn;
+        bSmall = rhs.d_bn;
     }
     
     BN_bn2bin(bSmall, small);    
@@ -32,7 +32,7 @@ BigInt &BigInt::operator^=(BigInt const &rhs)
     for (size_t idx = 0; idx != nMin; ++idx)        // XOR bytes 0 to nMin
         largePtr[idx] ^= small[idx];
 
-    BN_bin2bn(large, nMax, &d_bn);
+    BN_bin2bn(large, nMax, d_bn);
 
     return *this;
 }

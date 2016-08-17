@@ -22,7 +22,7 @@ OneKey::OneKey(Mode state)
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &tattr))
     {
         tcsetattr(STDIN_FILENO, TCSANOW, &d_saved);
-        throw Exception(1) << 
+        throw Exception{1} << 
             "OneKey::OneKey(): can't change the stdin state to direct input";
     }
 }

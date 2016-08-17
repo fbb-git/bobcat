@@ -10,7 +10,7 @@
 using namespace std;
 using namespace FBB;
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
     int x = A2x("12");
 
@@ -42,8 +42,6 @@ int main(int argc, char **argv, char **envp)
     char c = a2x;   // c now 'a'
 
     cout << c << endl;
-
-    return 0;
 }
 
 /*

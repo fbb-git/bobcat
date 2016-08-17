@@ -4,8 +4,9 @@ namespace {
     char info[] = {0, '.', '-', '+'};
 }
 
-void DiffieHellman::callback(int indicator, int, void *)
+int DiffieHellman::callback(int indicator, int, BN_GENCB *)
 {
     if (indicator)
         cout.put(info[indicator]).flush();
+    return 1;
 }

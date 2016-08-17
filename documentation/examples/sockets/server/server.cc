@@ -13,8 +13,7 @@
 using namespace std;
 using namespace FBB;
 
-
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 try
 {
     if (argc == 1)
@@ -53,8 +52,8 @@ try
     }  
 
 }
-catch(Errno const &error)
+catch(exception const &error)
 {
-    cerr << error.why() << endl;
+    cerr << error.what() << endl;
     return 1;
 }

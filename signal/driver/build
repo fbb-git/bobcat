@@ -1,3 +1,16 @@
 #!/bin/bash
 
-g++ --std=c++14 -Wall -O2 -odriver driver.cc ../*.cc -lbobcat
+LIBS=" -lbobcat"
+GPP="g++ --std=c++14 -O2 -odriver "
+
+# Using the std. bobcat library
+# ${GPP} driver.cc ${LIBS} -s
+
+# Using the sources in ../ and the std. bobcat library
+# ${GPP} driver.cc ../*.cc ${LIBS} -s
+
+# Using the library in ../tmp, the ../signal header and the std. bobcat 
+# library
+${GPP}  -I../ driver.cc -L../tmp -lsignal ${LIBS} -s
+
+

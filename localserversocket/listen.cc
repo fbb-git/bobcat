@@ -5,7 +5,7 @@ void LocalServerSocket::listen(size_t backlog, bool blocking)
     static char name[] = "LocalServerSocket::listen(): ";
 
     if (::listen(socket(), backlog) < 0)
-        throw Exception() << name << errnodescr;
+        throw Exception{} << name << errnodescr;
 
     if (blocking)
         return;
@@ -20,7 +20,7 @@ void LocalServerSocket::listen(size_t backlog, bool blocking)
         ) 
         == -1
     )
-        throw Exception() << name << errnodescr;
+        throw Exception{} << name << errnodescr;
 }
 
 

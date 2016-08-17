@@ -6,7 +6,7 @@ ArgConfig &ArgConfig::initialize(char const *optstring,
     Comment cType, SearchCasing sType, Indices iType)
 {
     if (s_argconfig)
-        throw Exception() << "ArgConfig::initialize(): already initialized";
+        throw Exception{} << "ArgConfig::initialize(): already initialized";
 
     s_argconfig = new ArgConfig(optstring, begin, end, 
                           argc, argv, cType, sType, iType);

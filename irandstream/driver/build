@@ -1,3 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
-g++ -o driver driver.cc -lbobcat
+GCC='g++ --std=c++14 -o driver'
+
+# Using the standard bobcat library
+# ${GCC} driver.cc -lbobcat
+
+#Using the randbuffer/tmp library, bobcat, and the local randbuffer/irandstream
+#header files
+${GCC} -I../../randbuffer:.. driver.cc -L../../randbuffer/tmp \
+	    -lrandbuffer -lbobcat -s

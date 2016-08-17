@@ -14,7 +14,5 @@ int main(int argc, char **argv)
         in >> random;
         cout << random << endl;
     }
-
-    return 0;
 }
 

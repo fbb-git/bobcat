@@ -1,4 +1,4 @@
 inline BIGNUM const &BigInt::bignum() const
 {
-    return d_bn;
+    return *d_bn;
 }

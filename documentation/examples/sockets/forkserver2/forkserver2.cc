@@ -39,7 +39,7 @@ void sigchld_handler(int signum)
 }
 
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 try
 {
     if (argc == 1)

@@ -111,14 +111,15 @@ manpagesection(OVERLOADED OPERATORS)
         is interfacing with.
     )
 
-    The overloaded copy assignement operator is not available.
+    The overloaded copy assignment operator is not available.
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
     itb(size_t blockOffset() const)
        The offset within the shared segment data block matching tt(offset)'s
         return value is returned. 0 is returned if the bf(SharedMemory)
-        object has not yet been connected to a shared memory block.
+        object has not yet been connected to a shared memory block (or if the
+        offset happens to be at the block's offset 0).
 
     itb(void clear())
        First, the shared memory is locked. Next, all shared data segment are
@@ -209,7 +210,8 @@ manpagesection(MEMBER FUNCTIONS)
        The offset within the shared memory segment (i.e., relative to the
         segment's tt(ios::beg) position) is returned. 0 is returned if the
         bf(SharedMemory) object has not yet been connected to a shared memory
-        block.
+        block (or if the offset happens to be at the shared memory's offset
+        0).
 
     itb(char *ptr())
         Returns 0 if tt(offset() == maxOffset()). Otherwise it returns a
@@ -274,7 +276,8 @@ manpagesection(MEMBER FUNCTIONS)
         otherwise the offset relative to the begin location of the shared
         memory (i.e, tt(offset) for tt(origin == ios::beg)) is returned.  0 is
         returned if the bf(SharedMemory) object has not yet been connected to
-        a shared memory block.
+        a shared memory block (or if the offset happens to be at the shared
+        memory's offset 0).
 
     itb(std::streamsize showmanyc() const)
        The number of characters that can be read from the current shared
@@ -284,7 +287,7 @@ manpagesection(MEMBER FUNCTIONS)
         stable return value, calling functions should have obtained a lock on
         the shared memory segment before calling this member. 0 is returned if
         the bf(SharedMemory) object has not yet been connected to a shared
-        memory block.
+        memory block (or if the no characters can currently be read).
 
     itb(void swap(SharedMemory &other))
        The current and other bf(FBB::SharedMemory) objects are swapped.

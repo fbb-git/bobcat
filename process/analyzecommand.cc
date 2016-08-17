@@ -7,7 +7,7 @@ Process::ExecContext Process::analyzeCommand()
     vector<string> elements(String::split(&type, d_command));
 
     if (type != String::NORMAL)
-        throw Exception() << "Process: " << d_command << ": ill-formed";
+        throw Exception{} << "Process: " << d_command << ": ill-formed";
 
     ExecContext ec = {0, new char const *[elements.size() + 1]};
 

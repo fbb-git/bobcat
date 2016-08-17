@@ -6,7 +6,7 @@ bool SocketBase::boolOption(int optname) const
     socklen_t   valueSize = sizeof(int);
 
     if (getsockopt(d_sock, SOL_SOCKET, optname, &value, &valueSize) < 0)
-        throw Exception() << "SocketBase::getOption(): " << errnodescr;
+        throw Exception{} << "SocketBase::getOption(): " << errnodescr;
 
     return value != 0;
 }

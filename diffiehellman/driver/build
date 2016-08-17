@@ -2,5 +2,18 @@
 
 # For development purposes:
 
-g++ --std=c++14 -O2 -Wall -o driver -isystem ../../tmp driver.cc \
-    -L ../../tmp/lib/ -lbobcat -lssl
+tput clear
+
+LIBS=" -lbobcat -lcrypto"
+GPP="g++ --std=c++14"
+
+#   Using the standard bobcat library
+#CMD="$GPP -o driver -Wall *.cc ${LIBS} -s"
+
+#   Using the library in ../tmp/
+CMD="$GPP -o driver -Wall *.cc -isystem ../../tmp \
+           -L../tmp -ldiffiehellman -L../../bigint/tmp -lbigint ${LIBS} -s"
+
+echo ${CMD}
+${CMD}
+

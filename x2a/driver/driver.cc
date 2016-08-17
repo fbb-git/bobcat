@@ -8,7 +8,7 @@
 using namespace std;
 using namespace FBB;
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
     string si(X2a(12));
     string sd(X2a(12.25));
@@ -31,7 +31,6 @@ int main(int argc, char **argv, char **envp)
     second = second;                // auto assignment test
 
     cout << "second: " << second << endl;
-    return 0;
 }
 
 /*

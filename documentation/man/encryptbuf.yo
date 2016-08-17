@@ -9,7 +9,7 @@ manpagename(FBB::EncryptBuf)
 
 manpagesynopsis()
     bf(#include <bobcat/encryptbuf>)nl()
-    Linking option: tt( -lbobcat) 
+    Linking option: tt( -lbobcat -lcrypto) 
 
 manpagedescription()
     bf(FBB::EncryptBuf) objects are bf(std::streambuf) objects that can be used
@@ -31,7 +31,7 @@ is extended by adding the required number of 0-bytes. (zero valued bytes,
 not tt('0') characters). 
 
 Most modes use an em(initialization vector). Unless provided at construction
-time or explicitly set thereafter an initialization vector containg randomly
+time or explicitly set thereafter an initialization vector containing randomly
 selected values will be used. The initialization vector that is actually used
 can be obtained from the tt(EncryptBuf) object. This is important, as the
 matching decrypting object needs to know the initialization vector that was

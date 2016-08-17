@@ -2,7 +2,8 @@
 
 void BigInt::nWordsCheck(size_t index) const
 {
-    if (index >= nWords())
-        throw Exception() << "BigInt: word index " << index << " exceeds " << 
-                                                                    nWords();
+    size_t count;
+    if (index >= (count = nWords()))
+        throw Exception{} << "BigInt: word index " << index << " exceeds " << 
+                                                                        count;
 }

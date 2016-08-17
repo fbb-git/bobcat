@@ -10,7 +10,7 @@ manpagename(FBB::DiffieHellman)(Diffie-Hellman PKI, computing shared keys)
 
 manpagesynopsis()
     bf(#include <bobcat/diffiehellman>)nl()
-    Linking option: tt(-lbobcat) 
+    Linking option: tt(-lbobcat -lcrypto) 
 
 manpagedescription()
 
@@ -18,7 +18,8 @@ The class bf(FBB::DiffieHellman) computes shared keys (shared secrets) using
 the Diffie-Hellman (1976) algorithm. The Diffie-Hellman algorithm uses public
 and private information. The public information consists of a em(prime) (e.g.,
 a prime number consisting of 1024 bits), a em(generator) (for which the value
-5 is commonly used), and the value tt(generator+sups(private) mod prime), where
+5 is commonly used), and (using tt(**) to represent the power operator on
+integral values) the value tt(generator ** private mod prime), where
 tt(private) is a randomly selected large number, which is the private
 information. 
 
@@ -30,7 +31,7 @@ constructor, while the generator is passed to this constructor as one of its
 arguments. For the generator the value 5 is often used.
 
 Next the initiator passes its public information, consisting of the prime, the
-generator, and the value tt(generator+sups(private) mod prime) to the other
+generator, and the value tt(generator ** private) mod prime) to the other
 party, which in this man-page is called the tt(peer). The public information
 is written in binairy, big-endian form to file using the member tt(save). The
 initiator may optionally save the private information to a separate file as
@@ -43,7 +44,7 @@ initiator's public information.
 
 Having obtained the prime and generator, the peer's public (and, optionally,
 private information) is saved by also calling tt(save). This results, among
-other things, in the value tt(generator+sups(private) mod prime), but now using
+other things, in the value tt(generator ** private mod prime), but now using
 the peer's private information. 
 
 At this point the peer is already able to compute the shared key. The key is
@@ -51,7 +52,7 @@ returned by calling the tt(key) member, which returns the shared key as a
 series of bytes stored in a tt(std::string). 
 
 Before the initiator can compute the shared key the peer's
-tt(generator+sups(private) mod prime) value must be available. The peer sends
+tt(generator ** private mod prime) value must be available. The peer sends
 the saved public data to the initiator. The initiator then passes the peer's
 public data either by file name or by tt(std::istream) to the tt(key) member,
 returning the shared key. 
@@ -69,7 +70,7 @@ symmetric encryption methods.
     it() Applying the abovementioned procedure, the private information is
 never saved on file. Consequently, the shared key, once computed, cannot be
 reconstructed anymore.
-    it() The value tt(generator+sups(private) mod prime) is not sent to either
+    it() The value tt(generator ** private mod prime) is not sent to either
 peer or initiator `in the clear', but encrypted using the long-lasting common
 secret. As the current implementation saves all public information on file,
 it's probably easiest to encrypt the file containing the public information.
@@ -150,20 +151,20 @@ manpagesection(MEMBER FUNCTIONS)
     This member should be called by the peer. It returns the shared key. If
 the key cannot be computed, or if the key is not resistant to the small group
 attack (i.e., if the key equals 1, or is at least equal to the public prime
-value, or if tt(key+sups((prime - 1) / 2) mod prime != 1)), then an
+value, or if tt(key ** ((prime - 1) / 2) mod prime != 1)), then an
 tt(FBB::Exception) is thrown.
 
     itb(std::string key(std::string const &peerPublicFileName) const)
     This member should be called by the initiator. It skips the data referring
 to the prime and generator found in tt(peerPublicFileName) and then reads the
-peer's tt(generator+sups(private) mod prime) value.  If this value cannot be
+peer's tt(generator ** private mod prime) value.  If this value cannot be
 read or if the key is not resistant to the small group attack (cf. the
 description of the previous tt(key) member) then an tt(FBB::Exception) is
 thrown. It returns the shared key.
 
     itb(std::string key(std::istream const &peerPublicStream) const)
     This member should be called by the initiator. It acts like the previous
-tt(key) member, reading the peer's tt(generator+sups(private) mod prime) value
+tt(key) member, reading the peer's tt(generator ** private mod prime) value
 from tt(peerPublicStream). It returns the shared key.
 
     itb(void save(std::string const &basename, SecretKey action = 
@@ -176,7 +177,7 @@ binary, big-endian format, using the following organization:
     - the prime's bytes;nl()
     - the size of the generator in bytes;nl()
     - the generator's bytes;nl()
-    - the size of the public info (tt(generator+sups(private) mod prime)) in
+    - the size of the public info (tt(generator ** private mod prime)) in
         bytes;nl()
     - the public info's bytes.nl()
 
