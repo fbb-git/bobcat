@@ -10,7 +10,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::EncryptBuf</h1>
-<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="author">libbobcat-dev_4.03.00-x.tar.gz</h2>
 <h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
@@ -43,7 +43,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::EncryptBuf(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Encrypt information</h2>
+<h2 id="author">libbobcat-dev_4.03.00-x.tar.gz Encrypt information</h2>
 <h2 id="date">2005-2016</h2>
 
 
@@ -52,7 +52,7 @@
 <p>
 <h2 >SYNOPSIS</h2>
     <strong >#include &lt;bobcat/encryptbuf&gt;</strong><br/>
-    Linking option: <em > -lbobcat</em> 
+    Linking option: <em > -lbobcat -lcrypto</em> 
 <p>
 <h2 >DESCRIPTION</h2>
     <strong >FBB::EncryptBuf</strong> objects are <strong >std::streambuf</strong> objects that can be used
@@ -74,7 +74,7 @@ is extended by adding the required number of 0-bytes. (zero valued bytes,
 not <em >'0'</em> characters). 
 <p>
 Most modes use an <em >initialization vector</em>. Unless provided at construction
-time or explicitly set thereafter an initialization vector containg randomly
+time or explicitly set thereafter an initialization vector containing randomly
 selected values will be used. The initialization vector that is actually used
 can be obtained from the <em >EncryptBuf</em> object. This is important, as the
 matching decrypting object needs to know the initialization vector that was
@@ -695,7 +695,6 @@ try
 
     EncryptBuf encryptbuf(cout, argv[1], key, iv);
     ostream out(&amp;encryptbuf);
-
     cerr &lt;&lt; "Block length: " &lt;&lt; encryptbuf.blockLength() &lt;&lt; '\n' &lt;&lt;
             "Key length: " &lt;&lt; encryptbuf.keyLength() &lt;&lt; '\n' &lt;&lt;
             "Max Key length: " &lt;&lt; EVP_MAX_KEY_LENGTH &lt;&lt; '\n' &lt;&lt;
@@ -775,12 +774,12 @@ showing the essential steps defining the <em >EncryptBuf</em> object:
 
 <h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
-    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
-    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
-    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.03.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.03.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.03.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.03.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.03.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

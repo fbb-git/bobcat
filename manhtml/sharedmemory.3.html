@@ -10,7 +10,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::SharedMemory</h1>
-<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="author">libbobcat-dev_4.03.00-x.tar.gz</h2>
 <h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
@@ -43,7 +43,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::SharedMemory(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Shared Memory Memory</h2>
+<h2 id="author">libbobcat-dev_4.03.00-x.tar.gz Shared Memory Memory</h2>
 <h2 id="date">2005-2016</h2>
 
 
@@ -158,14 +158,15 @@ copy and move constructors are not available.
         is interfacing with.
     </ul>
 <p>
-The overloaded copy assignement operator is not available.
+The overloaded copy assignment operator is not available.
 <p>
 <h2 >MEMBER FUNCTIONS</h2>
     <ul>
     <li> <strong >size_t blockOffset() const</strong>:<br/>
        The offset within the shared segment data block matching <em >offset</em>'s
         return value is returned. 0 is returned if the <strong >SharedMemory</strong>
-        object has not yet been connected to a shared memory block.
+        object has not yet been connected to a shared memory block (or if the
+        offset happens to be at the block's offset 0).
 <p>
 <li> <strong >void clear()</strong>:<br/>
        First, the shared memory is locked. Next, all shared data segment are
@@ -259,7 +260,8 @@ An <em >FBB::Exception</em> is thrown if <em >shmem</em> could not install the
        The offset within the shared memory segment (i.e., relative to the
         segment's <em >ios::beg</em> position) is returned. 0 is returned if the
         <strong >SharedMemory</strong> object has not yet been connected to a shared memory
-        block.
+        block (or if the offset happens to be at the shared memory's offset
+        0).
 <p>
 <li> <strong >char *ptr()</strong>:<br/>
         Returns 0 if <em >offset() == maxOffset()</em>. Otherwise it returns a
@@ -324,7 +326,8 @@ An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> obje
         otherwise the offset relative to the begin location of the shared
         memory (i.e, <em >offset</em> for <em >origin == ios::beg</em>) is returned.  0 is
         returned if the <strong >SharedMemory</strong> object has not yet been connected to
-        a shared memory block.
+        a shared memory block (or if the offset happens to be at the shared
+        memory's offset 0).
 <p>
 <li> <strong >std::streamsize showmanyc() const</strong>:<br/>
        The number of characters that can be read from the current shared
@@ -334,7 +337,7 @@ An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> obje
         stable return value, calling functions should have obtained a lock on
         the shared memory segment before calling this member. 0 is returned if
         the <strong >SharedMemory</strong> object has not yet been connected to a shared
-        memory block.
+        memory block (or if the no characters can currently be read).
 <p>
 <li> <strong >void swap(SharedMemory &amp;other)</strong>:<br/>
        The current and other <strong >FBB::SharedMemory</strong> objects are swapped.
@@ -405,12 +408,12 @@ An <em >FBB::Exception</em> is thrown if the <strong >SharedMemory</strong> obje
 
 <h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
-    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
-    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
-    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.03.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.03.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.03.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.03.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.03.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

@@ -10,7 +10,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::BigInt</h1>
-<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz</h2>
+<h2 id="author">libbobcat-dev_4.03.00-x.tar.gz</h2>
 <h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
@@ -43,7 +43,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::BigInt(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.02.00-x.tar.gz Big Integers</h2>
+<h2 id="author">libbobcat-dev_4.03.00-x.tar.gz Big Integers</h2>
 <h2 id="date">2005-2016</h2>
 
 
@@ -134,6 +134,10 @@ architecture, usually 64 or 32 bits long.
     <li> <strong >explicit BigInt(BIGNUM const *value)</strong>:<br/>
         This constructor initializes a <em >BigInt</em> from a pointer to a 
         <em >const BIGNUM</em>.
+    <li> <strong >explicit BigInt(BIGNUM *value)</strong>:<br/> This constructor initializes a
+        <em >BigInt</em> from a pointer to a <em >BIGNUM</em> (the <em >BIGNUM</em> value
+        pointed to by <em >value</em> is <em >not</em> mondified by the constructor. 
+        This constructor is a mere wrapper around the previous constructor).
     <li> <strong >BigInt(Type value)</strong>:<br/>
         This constructor is defined as a member template. Any type that can be
 converted using a static cast to an <em >unsigned long</em> can be used as argument
@@ -349,6 +353,12 @@ available.
 <li> <strong >BigInt negatec() const</strong>:<br/> 
        The  negated value of the current object is returned.
 <p>
+<li> <strong >size_t nWords() const</strong>:<br/> 
+       The number of `words' required to store the <strong >BigInt</strong> value is
+        returned. Note that the returned value depends on the architecture's
+        number of bytes per word. For 32-bit architectures there are four
+        bytes per word, for 64-bit architectures eight bytes per word.
+<p>
 <li> <strong >BigInt &amp;rshift()</strong>:<br/> 
        The current object's bits are shifted one bit to the right. The object's
         sign remains unaltered.
@@ -398,12 +408,8 @@ available.
         thrown.
 <p>
 <li> <strong >size_t size() const</strong>:<br/>
-       The number of bytes required to store the current <em >BIGNUM</em> value is
-        returned. 
-<p>
-<li> <strong >size_t sizeInBits() const</strong>:<br/>
-       The number of bits required to represent the current <em >BIGNUM</em> value
-        is returned. 
+       The number of significant <em >bits</em> required to store the current
+        <em >BIGNUM</em> value is returned. 
 <p>
 <li> <strong >size_t sizeInBytes() const</strong>:<br/>
        The number of bytes required to store the current <em >BIGNUM</em> value is
@@ -775,12 +781,12 @@ indirectly required are no longer automatically linked to your program. With
 
 <h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em >bobcat_4.02.00-x.dsc</em>: detached signature;
-    <li> <em >bobcat_4.02.00-x.tar.gz</em>: source archive;
-    <li> <em >bobcat_4.02.00-x_i386.changes</em>: change log;
-    <li> <em >libbobcat1_4.02.00-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.03.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.03.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.03.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.03.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em >libbobcat1-dev_4.02.00-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.03.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
