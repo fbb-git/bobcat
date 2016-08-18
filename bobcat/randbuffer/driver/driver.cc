@@ -15,11 +15,11 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    Randbuffer rb(A2x(argv[2]), A2x(argv[3]), A2x(argv[4]).to<size_t>());
+    Randbuffer rb(A2x{argv[2]}, A2x{argv[3]}, A2x{argv[4]}.to<size_t>());
 
     istream istr(&rb);
 
-    for (int idx = A2x(argv[1]); idx--; )
+    for (int idx = A2x{argv[1]}; idx--; )
     {
         int c;
         if (!(istr >> c))
@@ -38,6 +38,4 @@ int main(int argc, char **argv)
     istr.clear();
     istr >> count;
     cout << "and read: " << count << endl;
-    
-    return 0;
 }
