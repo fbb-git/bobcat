@@ -1,15 +1,23 @@
 #ifndef INCLUDED_BOBCAT_GETHOSTENT_
 #define INCLUDED_BOBCAT_GETHOSTENT_
 
-#include <string>
+#include <iosfwd>
 
 struct hostent;
+struct in_addr;
+struct sockaddr_in;
 
 namespace FBB
 {
 
 class GetHostent
 {
+    static struct sockaddr_in s_sa;
+    static in_addr s_address;
+    static char *s_addressPtr[];
+    static std::string s_name;
+    static struct hostent s_hp;
+
     public:
         static hostent const *gethostent(char const *errorprefix, 
                             std::string const &nameOrAddress);
@@ -17,7 +25,9 @@ class GetHostent
         static std::string addressToString(char const *errorprefix, 
                                            void const *ads);
     private:
-        static void hosterror(char const *prefix);  // throws Exception()
+        static void hostError(char const *prefix);  // throws Exception()
+        static void solveAddress(char const *prefix, std::string const &host);
+        static void solveName(char const *prefix, std::string const &host);
 };
 
 } // FBB
