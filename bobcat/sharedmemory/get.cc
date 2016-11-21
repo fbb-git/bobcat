@@ -13,7 +13,7 @@ int SharedMemory::get()
     else
     {
         lock(d_pos.blockIdx());
-            ret = *ptr();
+            ret = static_cast<unsigned char>(*ptr());
             ++d_pos;
         unlock(d_pos.blockIdx());
     }

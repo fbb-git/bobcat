@@ -1,6 +1,10 @@
   * Added missing 'inline' declarations to the definitions in 
     ibase64streabuf1.f and ibase64streabuf2.f
 
+  * Replaced return *gptr() by return static_cast<unsigned char>(*gptr())
+    in underflow members of (i)streambuf classes to prevent promotions of
+    characters 0xff to -1, which is EOF.
+
 bobcat (4.03.01)
 
   * Added missing DateTime::timeStruct (inline) implementation to DateTime
