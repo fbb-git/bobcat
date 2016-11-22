@@ -2,5 +2,5 @@
 
 Exception::Exception(int errnoValue)
 {
-    errno = errnoValue;
+    g_errno = errno = errnoValue;
 }
