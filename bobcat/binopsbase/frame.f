@@ -1,0 +1,5 @@
+#include "binopsbase.ih"
+
+BinopsBase::
+{
+}

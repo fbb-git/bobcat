@@ -1,0 +1,154 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(binopsbase)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+                    (Binary Operators)
+
+manpagename(binopsbase)(Class template offering class-type binary operators)
+
+manpagesynopsis()
+    bf(#include <bobcat/binopsbase>)nl()
+
+manpagedescription()
+    Classes can overload binary operators. A class named tt(Class) may
+overload these binary operators to suit its own needs, allowing, e.g., two
+tt(Class) type objects to be added after overloading tt(operator+). Operators
+for the binary operators *, /, %, +, -, <<, >>, &, |, and ^ (in this man-page
+they are generically indicated as the `tt(@)' operator) can be overloaded by
+providing various tt(operator@) members and functions.
+
+    If a class supports copy and/or move construction and if it offers a swap
+member, then binary operators can all be implemented identically, except for
+the specific details associated with specific binary operators. E.g., if a
+class contains two tt(int) data members addition of objects of that class
+could simply be defined as adding the corresponding tt(int) members, while
+subtraction could be defined as subtracting the corresponding tt(int)
+members. Assuming the existence of a member tt(void Class::add(Class const
+&rhs)) that defines the addition of a tt(Class rhs) object to the tt(*this)
+object, while merely providing the basic exception guarantee (i.e., no
+leakage), then the binary addition operators can be defined like this:
+        verb(
+Class operator+(Class &&lhs, Class const &rhs)
+{
+    lhs.add(rhs);
+    return std::move(lhs);
+}
+
+Class operator+(Class const &lhs, Class const &rhs)
+{
+    Class tmp(lhs);
+    tmp.add(rhs);
+    return tmp;
+}
+        )
+    Likewise, tt(operator+=) can be defined for lvalue or rvalue tt(Class)
+objects using reference modifiers.
+
+    As binary operators can all be implemented alike, given the specific
+members implementing the implied operations, these operators can very well be
+provided using templates. 
+
+By inheriting from the class template tt(BinopsBase) classes offering such
+specific functions can a particular tt(operator@=) then automatically also
+offers the matching binary operators after including
+tt(bobcat/binopsbase). Since the binary function templates are not
+instantiated until used their definitions can be processed by the compiler
+even if a class implements only a subset of the available binary assignment
+operators.
+
+To provide a class tt(Class) with binary operators (and binary compound
+operators) the class tt(Class) must implement a member tt(void swap(Class
+&other)), and it should implement (a subset of) the following members
+(preferably in the class's private section):
+    itemization(
+    itt(void mul(Class const &rhs))  - to provide operators tt(*) and tt(*=)
+    itt(void div(Class const &rhs))  - to provide operators tt(/) and tt(/=)
+    itt(void mod(Class const &rhs))  - to provide operators tt(%) and tt(%=)
+    itt(void add(Class const &rhs))  - to provide operators tt(+) and tt(+=)
+    itt(void sub(Class const &rhs))  - to provide operators tt(-) and tt(-=)
+    itt(void shl(Class const &rhs)) - to provide operators tt(<<) and tt(<<=)
+    itt(void shr(Class const &rhs)) - to provide operators tt(>>) and tt(>>=)
+    itt(void and_(Class const &rhs)) - to provide operators tt(&) and tt(&=)
+    itt(void or_(Class const &rhs))  - to provide operators tt(|) and tt(|=)
+    itt(void xor_(Class const &rhs)) - to provide operators tt(^) and tt(^=)
+    )
+    Note the trailing underscore for the members tt(and_, or_), and tt(xor_):
+the underscores are used to prevent conflicts with the tt(and, or,) and
+tt(xor) keywords.
+
+    Next, tt(Class) should publicly inherit from
+        verb(
+    FBB::BinopsBase<Class, int ...operators>
+        )
+    where tt(int ...operators) lists the specific set of binary operators that
+are requested. E.g., to provide tt(Class) with multiplication, division,
+modulo, and shit-operators its class interface should start as shown:
+        verb(
+    class Class: public FBB::BinopsBase<Class, '*', '/', '%', '<', '>'>
+        )
+    There is no specific ordering required when specifying tt(int
+...operators). Note that tt('<') and tt('>') in the tt(int ...operators) list
+specify, respectively, the shift-left and shift-right operators. All other
+operators are specified by their common operator, specified as character
+constants. 
+
+    If, as advised, the members implementing the required binary operations
+are declared in the class's private section then the class's interface should
+declare its base class as a friend. E.g.,
+        verb(
+    class Class: public FBB::BinopsBase<Class, '*', '/', '%', '<', '>'>
+    {
+        friend class FBB::BinopsBase<Class, '*', '/', '%', '<', '>'>;
+
+        public:
+            ...
+
+        private:
+            void mul(Class const &rhs);
+            void div(Class const &rhs);
+            void mod(Class const &rhs);
+            void shl(Class const &rhs);
+            void shr(Class const &rhs);
+    };
+        )
+    
+manpagesection(INHERITS FROM)
+
+    Several Internal-use-only Bobcat classes, completing the tt(BinopsBase)
+class template.
+
+manpagesection(OVERLOADED OPERATORS)
+
+    Assuming tt(BinopsBase) is a base class of the class tt(Class), then
+for each of the requested binary operators (e.g., tt(@)) the following
+operators are now available:
+
+    verb(
+    free operators:
+
+        Class operator@(Class const &lhs, Class const &rhs);
+        Class operator@(Class &&lhs, Class const &rhs);
+
+    members:
+
+        Class &operator@(Class const &rhs) &;
+        Class &&operator@(Class const &rhs) &&;
+    )
+
+manpagesection(EXAMPLE)
+    verbinclude(../../binopsbase/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/binopsbase) - defines the binary operator function templates
+
+manpageseealso()
+    bf(bobcat/binops)(3)
+    bf(bobcat)(7)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
+
+
+
