@@ -79,11 +79,18 @@ described below. The enumeration has two values:
 manpagesection(CONSTRUCTORS)
     itemization(
     itb(Exception())
-    The default constructor
+   The default constructor (assigns 0 to tt(FBB::g_errno), see the next
+    constructor). 
+
     itb(Exception(int errnoValue)) 
-    This constructor stores the provided tt(errnoValue) value in the global
-tt(::errno) variable, provided by the run-time support system.
+   This constructor stores the provided tt(errnoValue) value in a thread-local
+    variable tt(int FBB::g_errno). Before Bobcat 4.04.00 tt(errnoValue) was
+    only stored in the global tt(::errno) variable (it still is), but as this
+    variable is also used by many other functions, tt(errno's) value may have
+    changed by the time the exception is caught. The tt(thread_local int
+    FBB::g_errno) variable does not have that drawback.
     )
+
     Move and copy constructors are available.
 
 manpagesection(MEMBER FUNCTIONS)

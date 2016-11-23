@@ -30,12 +30,18 @@ enumeration, defines the following values:
 
     bf(Glob::Flags):
     itemization(
+    itt(NO_FLAG):   Equals 0, and can be used to avoid having to specify 0. It
+        has no further use.
     itt(ERR): Return on read errors;
     itt(MARK): Append a slash to each name.
     itt(NOSORT): Don't sort the names.
     itt(NOESCAPE): Backslashes don't quote metacharacters.
     itt(PERIOD): Leading tt(.)-characters can be matched by metachars (i.e.,
             tt(*) and tt(?)).
+    itt(NOMATCH): When specified the constructors won't throw exceptions when
+        no files matching their glob-patterns could be found. Instead they
+        will return normally, and tt(Glob's size()) member (see below) will
+        return 0.
     )
 
     bf(Glob::Dots):
@@ -49,27 +55,26 @@ manpagesection(CONSTRUCTORS)
     itemization(
     itb(Glob(std::string const &pattern = "*", int flags = PERIOD,
              Dots dots = FIRST)) 
-        This constructor (which can also be used as the default constructor)
-    determines all elements matching tt(pattern). 
-
-        An tt(Exception) exception is thrown if the constructor could not  properly
-    complete it tasks.
-
-    Multiple flags may be specified, separated by the tt(bitor) operator. 
-
-    This constructor properly completes its task if only defined bf(Flag)
-values were specified and if the bf(glob)(3) function returned without
-errors. 
+       This constructor (which can also be used as the default constructor)
+        determines all elements matching tt(pattern).
+    
+        An tt(Exception) exception is thrown if the constructor could not
+        properly complete it tasks.
+    
+        Multiple flags may be specified, separated by the tt(bitor) operator. 
+    
+        This constructor properly completes its task if only defined bf(Flag)
+        values were specified and if the bf(glob)(3) function returned without
+        errors.
 
     itb(Glob(Type type, std::string const &pattern = "*", int flags = PERIOD,
              Dots dots = FIRST)) 
-        This constructor 
-    determines all elements of tt(pattern) matching tt(Type). The
-    specified tt(type) value may consist of any tt(bitor)-ed combination of 
-    enum values defined by the tt(Type) enum. Remaining parameters and 
-    )
+       This constructor determines all elements of tt(pattern) matching
+        tt(Type). The specified tt(type) value may consist of any tt(bitor)-ed
+        combination of enum values defined by the tt(Type) enum. Remaining
+        parameters and )
 
-    tt(Glob) offers copy and move constructors.
+    tt(Glob) provides copy and move constructors.
 
 manpagesection(OVERLOADED OPERATORS)
     itemization(

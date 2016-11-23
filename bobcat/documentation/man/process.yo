@@ -465,20 +465,25 @@ member should only be used when tt(IOMode CIN) was specified for the currently
 running child process; otherwise its behavior is undefined. Alternatively, the
 tt(eoi) member or manipulator may be used.
 
-    itb(void eoi())
+    itb(int eoi())
         This member closes the child's input stream, and then calls
 tt(waitForChild) to wait for the child process to end. In situations where the
 child continuously reads information from its standard input stream this
 member can be used to inform the child process that input has terminated. This
 member should only be used when tt(IOMode CIN) was specified for the currently
 running child process; otherwise its behavior is undefined. Alternatively, the
-tt(close) member or tt(eoi) manipulator may be used.
+tt(close) member or tt(eoi) manipulator may be used. The exit-status of the
+called child process is returned.
 
     itb(std::istream &errStream())
         This member may be used to extract information written by the child
 process to its standard error stream.  This member should only be used when
 tt(IOMode CERR) was specified for the currently running child process;
 otherwise its behavior is undefined.nl()
+
+    itb(int exitStatus() const)
+        After calling tt(eoi) or inserting the tt(eoi) manipulator into the
+tt(Process) object this member returns the child process's exit status.
 
     itb(IOMode ioMode() const)
         This member returns the default tt(IOMode). If called while a child
@@ -544,6 +549,9 @@ ProcessType) or a tt(system) member should be used.
 when it has run for its alloted time; when the tt(Process) object's tt(start)
 or tt(stop) members are called; when the object's assignment operator is used;
 or when the object goes out of scope.
+
+    Alternatively, the member tt(waitForChild) (see below) may have to be
+called to end a running process.
 
     itb(void start(IOMode mode))
        The currently specified command is started using the specified

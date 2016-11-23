@@ -1,4 +1,4 @@
 namespace FBB
 {
-    int g_errno;
+    thread_local int g_errno;
 }

@@ -18,6 +18,8 @@ class Glob: public GS__
     public:
         enum Flags
         {
+            NO_FLAG = 0,    // to avoid having to use 0
+
             // These flags are equal to the ones used in <glob.h>
 
             ERR =       1 << 0, // Return on read errors.
@@ -25,6 +27,10 @@ class Glob: public GS__
             NOSORT =    1 << 2, // Don't sort the names.
             NOESCAPE =  1 << 6, // Backslashes don't quote metacharacters.
             PERIOD =    1 << 7, // Leading `.' can be matched by metachars.
+
+            NOMATCH =   1 << 8, // No matches are OK (size() returns 0)
+
+            mask = (1 << 9) - 1 // all of the above flags
         };
 
         enum Dots
