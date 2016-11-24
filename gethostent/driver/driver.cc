@@ -12,7 +12,6 @@
 using namespace std;
 using namespace FBB;
 
-
 int main(int argc, char **argv)
 {
     if (argc == 1)
@@ -24,19 +23,23 @@ int main(int argc, char **argv)
     try
     {
         Hostent he(GetHostent::gethostent(argv[1], argv[1]));
-        cout << "Hostname: " << he.hostname() << endl;
 
-        cout << "Aliases:\n";
-        copy(he.beginAlias(), he.endAlias(), ostream_iterator<char const
-                *>(cout, "\n"));
+        cout << "Hostname: " << he.hostname() << '\n';
 
-        cout << "Addresses:\n";
+        if (he.beginAlias() != he.endAlias())
+        {
+            cout << "Aliases:\n";
+            copy(he.beginAlias(), he.endAlias(), 
+                    ostream_iterator<char const *>(cout, "\n"));
+        }
+
+        cout << "Address(es):\n";
         for (size_t idx = 0; idx < he.nAddresses(); idx++)
-            cout << he.dottedDecimalAddress(idx) << endl;
+            cout << he.dottedDecimalAddress(idx) << '\n';
     }
     catch (exception const &err)
     {
-        cout << err.what() << endl;
+        cout << err.what() << '\n';
         return 1;
     }
 }

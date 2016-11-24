@@ -10,6 +10,8 @@ Arg__::Arg__(char const *optstring,
     setBasename(argv[0]);
 
     string opts(*optstring == ':' ? "" : ":");  // ensure initial char is ':'
+                                    // (returns : when a required argument is
+                                    // missing)
     opts += optstring;
 
     OptStructArray optStructs(end - begin + 1); // create array of n + 1 

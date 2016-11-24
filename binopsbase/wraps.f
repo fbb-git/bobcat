@@ -1,0 +1,10 @@
+        void mulWrap(Derived const &rhs);
+        void divWrap(Derived const &rhs);
+        void modWrap(Derived const &rhs);
+        void addWrap(Derived const &rhs);
+        void subWrap(Derived const &rhs);
+        void shlWrap(Derived const &rhs);
+        void shrWrap(Derived const &rhs);
+        void andWrap(Derived const &rhs);
+        void  orWrap(Derived const &rhs);
+        void xorWrap(Derived const &rhs);

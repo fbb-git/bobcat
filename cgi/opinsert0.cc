@@ -1,6 +1,8 @@
 #include "cgi.ih"
 
-std::ostream &FBB::operator<<(std::ostream &out, CGI const &cgi)
+namespace FBB
+{
+std::ostream &operator<<(std::ostream &out, CGI const &cgi)
 {
     for (int idx = 0; idx < 256; ++idx)
     {
@@ -12,6 +14,6 @@ std::ostream &FBB::operator<<(std::ostream &out, CGI const &cgi)
                 out << idx << endl;
         }
     }
-
     return out;
+}
 }

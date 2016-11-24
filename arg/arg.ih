@@ -15,7 +15,7 @@ namespace FBB
 
 class Arg__: public ArgTypes__
 {
-    friend class Arg;
+    friend Arg;
 
     typedef FBB::LongOption__ LongOption;
     typedef struct option                           OptStruct;
@@ -49,12 +49,15 @@ class Arg__: public ArgTypes__
     int                  d_getOpt;              // value returned by getopt()
     int                  d_beyondDashes;        // idx of 1st arg beyond --
 
+    mutable void (*d_usage)(std::string const &) = 0;
+
     static std::string    s_dirsep;
     static char           s_optChar[];          // used by the constructors
         
     public:
         int beyondDashes() const;               // .i
         std::string const &basename() const;    // .i
+        void help() const;
         size_t nArgs() const;                   // .i
 
             // total number of specified short (and combined long) options

@@ -10,7 +10,7 @@ Process &Process::operator<<(std::ostream &(*pf)(std::ostream &))
         else
         {        
             close();
-            waitForChild();
+            d_data->d_exitStatus = waitForChild();
         }
     }
 
