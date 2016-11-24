@@ -5,7 +5,7 @@ using namespace std;
 
 class Demo1: public FBB::BinopsBase<Demo1, '+', '-'>
 {
-    friend class FBB::BinopsBase<Demo1, '+', '-'>;
+    friend FBB::BinopsBase<Demo1, '+', '-'>;
 
     public:
         void swap(Demo1 &other)
@@ -26,7 +26,7 @@ class Demo1: public FBB::BinopsBase<Demo1, '+', '-'>
 
 class Demo2: public FBB::BinopsBase<Demo2, '+', '^'>
 {
-    friend class FBB::BinopsBase<Demo2, '+', '^'>;
+    friend FBB::BinopsBase<Demo2, '+', '^'>;
 
     public:
         void swap(Demo2 &other)

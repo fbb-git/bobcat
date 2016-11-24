@@ -24,7 +24,7 @@ class ReadLineHistory
     public:
         class HistoryElement
         {
-            friend class ReadLineHistory;
+            friend ReadLineHistory;
 
             char const *d_line;
             char const *d_timestamp;
@@ -42,8 +42,8 @@ class ReadLineHistory
                                 std::iterator<std::input_iterator_tag, 
                                               HistoryElement const>
         {
-            friend class ReadLineHistory;
-            friend class std::reverse_iterator<const_iterator>;
+            friend ReadLineHistory;
+            friend std::reverse_iterator<const_iterator>;
 
             size_t d_idx;
             mutable HistoryElement d_element;
