@@ -1,8 +1,6 @@
-/*
-                              client.cc
-*/
-
 #include <iostream>
+#include <exception>
+
 #include <bobcat/clientsocket>
 #include <bobcat/ofdstream>
 #include <bobcat/a2x>
@@ -43,12 +41,11 @@ try
         out << line.c_str() << endl;
         cout << "wrote line\n";
     }
-    return 0;
 }
-catch (Errno const &err)
+catch (exception const &err)
 {
-    cerr << err.why() << "\n" <<
+    cerr << err.what() << "\n" <<
             "Can't connect to " << argv[1] << ", port " <<
-            argv[2] << endl;
+            argv[2] << '\n';
     return 1;
 }

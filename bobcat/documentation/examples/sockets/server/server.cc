@@ -2,11 +2,13 @@
                               server.cc
 */
 
+#include <unistd.h>
+
 #include <iostream>
+#include <exception>
 
 #include <bobcat/a2x>
 #include <bobcat/serversocket>
-#include <bobcat/errno>
 #include <bobcat/ifdstream>
 
 

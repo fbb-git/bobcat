@@ -1,8 +1,6 @@
-/*
-                              client2.cc
-*/
-
 #include <iostream>
+#include <exception>
+
 #include <bobcat/clientsocket>
 #include <bobcat/ofdstream>
 #include <bobcat/ifdstream>
@@ -48,13 +46,11 @@ try
         getline(in, line);      // Wait for a reply from the server
         cout << "Answer: " << line << endl;
     }
- 
-    return 0;
 }
-catch (Errno const &err)
+catch (exception const &err)
 {
-    cerr << err.why() << "\n" <<
+    cerr << err.what() << "\n" <<
             "Can't connect to " << argv[1] << ", port " <<
-            argv[2] << endl;
+            argv[2] << '\n';
     return 1;
 }
