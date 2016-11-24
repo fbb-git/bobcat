@@ -1,6 +1,9 @@
 #include "readlinehistory.ih"
 
-ostream &FBB::operator<<(ostream &out, ReadLineHistory const &history)
+namespace FBB
+{
+
+std::ostream &operator<<(std::ostream &out, ReadLineHistory const &history)
 {
     for (auto &he: history)
         (
@@ -13,4 +16,5 @@ ostream &FBB::operator<<(ostream &out, ReadLineHistory const &history)
     return out;
 }
 
+}
 

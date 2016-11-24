@@ -9,7 +9,7 @@
 
 #include <bobcat/a2x>
 #include <bobcat/serversocket>
-#include <bobcat/errno>
+#include <bobcat/exception>
 
 #include "handler/handler.h"
 
@@ -73,8 +73,8 @@ try
     }  
 
 }
-catch(Errno const &error)
+catch(exception const &error)
 {
-    cerr << error.why() << endl;
+    cerr << error.what() << '\n';
     return 1;
 }

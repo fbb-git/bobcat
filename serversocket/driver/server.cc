@@ -6,6 +6,61 @@
 using namespace std;
 using namespace FBB;
 
+class IBuf: public FBB::IFilterStreambuf
+{
+    std::istream *d_in;
+    char d_key[sizeof(unsigned long)];
+    size_t d_idx = 0;
+
+    size_t const d_maxSize = 100;
+
+    IBuf(unsigned long addr, uint16_t port);
+
+    bool filter(char const **srcBegin, char const **srcEnd) override;
+
+    
+};
+
+IBuf::IBuf(std::istream &in, unsigned long addr, uint16_t port)
+:
+    d_in(in),
+    d_key(reinterpret_cast<char const *>(&addr), 
+          reinterpret_cast<char const *>(&addr + sizeof(long)), 
+{
+    char const *cp = reinterpret_cast<char const *>(&port);
+
+    for (auto &ch: d_key)
+    {
+        ch ^= 
+}
+
+bool IBuf::filter(char const **srcBegin, char const **srcEnd)
+{
+    d_buffer.clear();
+
+    while (d_buffer.size() != d_maxSize)
+    {
+        char ch;
+        if (not d_in.get(ch))
+            break;
+
+        ch ^= d_key[d_idx++];
+        d_idx %= sizeof(unsigned long);
+
+        d_buffer.push_back(ch);
+    }
+
+    if (d_buffer.empty())
+        return false;
+
+    *srcBegin = d_buffer.data();
+    *srcEnd = d_buffer.data() + d_buffer.size();
+
+    return true;
+}
+
+    
+    
 int main(int argc, char **argv)
 try
 {
@@ -36,18 +91,22 @@ try
 
     while (true)
     {
-        SocketBase fdb = server.accept();
+        SocketBase const fdb = server.accept();
         int fd = fdb.socket();
 
+        unsigned long addr = fdb.sockaddr_inPtr()->sin_addr.s_addr;
+
         cerr << "Client FD = " << fd << ", " << endl <<
-                "address = " << fdb.dottedDecimalAddress() << ", " << 
-                endl <<
+                "address = " << fdb.dottedDecimalAddress() << ", (" <<
+                addr << ")\n"
                 "communication through port " << fdb.port() << endl;
 
         IFdStream in(fd);           // stream to read from client
         OFdStream out(fd);          // stream to write to client
         string cmd;
         
+        out << (unsigned long)(fdb.port() ^ addr) << endl;
+
         while (getline(in, cmd))
         {
             cout << "Got: " << cmd << endl;

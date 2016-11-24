@@ -30,7 +30,7 @@ implementation never changes it could safely be defined tt(inline):
         verb(
 Class operator@(Class &&lhs, Class const &rhs)
 {
-    return std::move(lhs @= rhs);
+    return std::move(std::move(lhs) @= rhs);
 }
         )
     The traditional binary operator can be implemented using its standard
@@ -129,6 +129,7 @@ manpagefiles()
     em(bobcat/binops) - defines the binary operator function templates
 
 manpageseealso()
+    bf(bobcat/binopsbase)(3)
     bf(bobcat)(7)
 
 manpagebugs()

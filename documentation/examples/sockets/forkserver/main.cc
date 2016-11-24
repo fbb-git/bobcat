@@ -1,20 +1,4 @@
-/*
-                              forkserver.cc
-*/
-
-#include <iostream>
-#include <signal.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-
-#include <bobcat/a2x>
-#include <bobcat/serversocket>
-#include <bobcat/errno>
-
-#include "handler/handler.h"
-
-using namespace std;
-using namespace FBB;
+#include "main.ih"
 
 void sigchld_handler(int signum)
 {
@@ -73,8 +57,8 @@ try
     }  
 
 }
-catch(Errno const &error)
+catch(exception const &error)
 {
-    cerr << error.why() << endl;
+    cerr << error.what() << '\n';
     return 1;
 }

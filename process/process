@@ -149,9 +149,10 @@ struct Process: private Fork, public IOStream, public ProcessEnums
 
         int stop();                     // terminate a running childprocess
         void close();                           // closes input to the child
-        void eoi();                             // closes input and waits for
+        int eoi();                              // closes input and waits for
                                                 // the child to end
         using Fork::waitForChild;
+        int exitStatus() const;
                                 
         bool active();
 
@@ -208,7 +209,6 @@ struct Process: private Fork, public IOStream, public ProcessEnums
 
 #include "childoutstream.f"
 #include "eoi.f"
-#include "eoi2.f"
 #include "iomode.f"
 #include "opaddis.f"
 #include "opextract.f"

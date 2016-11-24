@@ -1,6 +1,9 @@
 #include "tablesupport.ih"
 
-TableSupport &FBB::operator<<(TableSupport &support, 
+namespace FBB
+{
+
+TableSupport &operator<<(TableSupport &support, 
                          TableSupport::HLine const &hline)
 {
     if (hline.d_begin >= hline.d_end)
@@ -29,3 +32,4 @@ TableSupport &FBB::operator<<(TableSupport &support,
     return support;
 }
 
+}

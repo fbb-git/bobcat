@@ -8,6 +8,7 @@ class CSV::const_iterator
     private IUO::CSViteratorData<Type>,
     public  std::iterator<std::bidirectional_iterator_tag, std::string>
 {
+    friend CSV;
     friend bool operator==<Type>(const_iterator<Type> const &lhs,
                                  const_iterator<Type> const &rhs);
 
@@ -26,7 +27,6 @@ class CSV::const_iterator
         Type const *operator->() const;
     
     private:
-        friend class CSV;
         const_iterator(CSV const *csv, size_t idx);
 
         friend class std::reverse_iterator<const_iterator<Type>>;

@@ -17,5 +17,5 @@ int Randbuffer::underflow()
     ostr.str().copy(cp, string::npos);
     setg(cp, cp, cp + n);
 
-    return *gptr();
+    return static_cast<unsigned char>(*gptr());
 }

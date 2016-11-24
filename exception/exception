@@ -4,10 +4,13 @@
 #include <string>
 #include <sstream>
 #include <exception>
+#include <thread>
 #include <iosfwd>
 
 namespace FBB
 {
+
+extern thread_local int g_errno;
 
 class Exception: public std::exception
 {
@@ -28,8 +31,8 @@ class Exception: public std::exception
             EQUAL
         };
 
-        Exception() = default;
-        explicit Exception(int errnoValue);              // exception1.cc
+        Exception();                                        // exception.f
+        explicit Exception(int errnoValue);                 // exception1.cc
 
         ~Exception() noexcept(true) override;
 
@@ -55,6 +58,7 @@ class Exception: public std::exception
         char const *what() const noexcept(true) override;
 };
 
+#include "exception.f"
 #include "open1.f"
 #include "open2.f"
 #include "open3.f"

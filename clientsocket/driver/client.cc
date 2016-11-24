@@ -21,13 +21,24 @@ try
     int fd = client.connect();
     string line;
 
+    unsigned long addr = 
+        const_cast<ClientSocket const &>(client).sockaddr_inPtr()->
+                                                            sin_addr.s_addr;
+
     cout << "Connecting to socket " << fd << endl <<
-            "address = " << client.dottedDecimalAddress() << ", " << 
-                                                             endl <<
+            "address = " << client.dottedDecimalAddress() << ", (" << 
+                                                                 addr << ")\n"
             "communication through port " << client.port() << endl;
 
     IFdStream in(fd);                 // stream to read from        
     OFdStream out(fd);                // stream to write to
+
+    unsigned long sPort;
+    in >> sPort;
+    in.ignore(100, '\n');             // get the port used by the server
+    sPort ^= addr;
+
+    cout << "Server uses port " << sPort << '\n';
 
     while (true)
     {

@@ -32,6 +32,7 @@ int IFilterStreambuf::underflow()
 
     setg(d_begin, d_next, d_end);       // reload the input buffer
 
-    return *gptr();                     // return the next available char
+                                        // return the next available char
+    return static_cast<unsigned char>(*gptr());
 }
 

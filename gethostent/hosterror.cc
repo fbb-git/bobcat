@@ -1,6 +1,6 @@
 #include "gethostent.ih"
 
-void GetHostent::hosterror(char const *text) 
+void GetHostent::hostError(char const *text) 
 {
     string msg = text;
 

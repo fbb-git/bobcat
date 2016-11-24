@@ -5,13 +5,17 @@ try
 :
     d_share(new GlobShare {glob_t {}, 1, type} )
 {
-    if (flags & ~(ERR | MARK | NOSORT | NOESCAPE | PERIOD))
+    if (flags & ~Flags::mask)
         throw Exception(flags) << "Glob: unknown Flag specified";
 
-    int err = glob(pattern.c_str(), flags, 0, &d_share->globStruct);
+    int err = glob(pattern.c_str(), flags & ~NOMATCH, 0, 
+                                                    &d_share->globStruct);
 
-    if (err)
-        throw Exception(err) << "Glob: glob() failed";
+    if (err != 0)
+    {
+        if (not (err == GLOB_NOMATCH and flags & NOMATCH))
+            throw Exception(err) << "Glob: glob() failed";
+    }
 
     accept(type);
 
