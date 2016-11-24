@@ -1,4 +1,20 @@
-#include "main.ih"
+/*
+                              forkserver2.cc
+*/
+
+#include <iostream>
+#include <signal.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
+#include <bobcat/a2x>
+#include <bobcat/serversocket>
+#include <bobcat/exception>
+
+#include "handler/handler.h"
+
+using namespace std;
+using namespace FBB;
 
 void sigchld_handler(int signum)
 {
