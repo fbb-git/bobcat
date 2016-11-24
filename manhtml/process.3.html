@@ -10,7 +10,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Process</h1>
-<h2 id="author">libbobcat-dev_4.03.00-x.tar.gz</h2>
+<h2 id="author">libbobcat-dev_4.04.00-x.tar.gz</h2>
 <h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
@@ -43,7 +43,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Process(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.03.00-x.tar.gz Running Child Processes</h2>
+<h2 id="author">libbobcat-dev_4.04.00-x.tar.gz Running Child Processes</h2>
 <h2 id="date">2005-2016</h2>
 
 
@@ -526,20 +526,25 @@ member should only be used when <em >IOMode CIN</em> was specified for the curre
 running child process; otherwise its behavior is undefined. Alternatively, the
 <em >eoi</em> member or manipulator may be used.
 <p>
-<li> <strong >void eoi()</strong>:<br/>
+<li> <strong >int eoi()</strong>:<br/>
         This member closes the child's input stream, and then calls
 <em >waitForChild</em> to wait for the child process to end. In situations where the
 child continuously reads information from its standard input stream this
 member can be used to inform the child process that input has terminated. This
 member should only be used when <em >IOMode CIN</em> was specified for the currently
 running child process; otherwise its behavior is undefined. Alternatively, the
-<em >close</em> member or <em >eoi</em> manipulator may be used.
+<em >close</em> member or <em >eoi</em> manipulator may be used. The exit-status of the
+called child process is returned.
 <p>
 <li> <strong >std::istream &amp;errStream()</strong>:<br/>
         This member may be used to extract information written by the child
 process to its standard error stream.  This member should only be used when
 <em >IOMode CERR</em> was specified for the currently running child process;
 otherwise its behavior is undefined.<br/>
+<p>
+<li> <strong >int exitStatus() const</strong>:<br/>
+        After calling <em >eoi</em> or inserting the <em >eoi</em> manipulator into the
+<em >Process</em> object this member returns the child process's exit status.
 <p>
 <li> <strong >IOMode ioMode() const</strong>:<br/>
         This member returns the default <em >IOMode</em>. If called while a child
@@ -605,6 +610,9 @@ If a child process does not terminate by itself, then it is terminated
 when it has run for its alloted time; when the <em >Process</em> object's <em >start</em>
 or <em >stop</em> members are called; when the object's assignment operator is used;
 or when the object goes out of scope.
+<p>
+Alternatively, the member <em >waitForChild</em> (see below) may have to be
+called to end a running process.
 <p>
 <li> <strong >void start(IOMode mode)</strong>:<br/>
        The currently specified command is started using the specified
@@ -776,12 +784,12 @@ objects. No recompilation of existing sources using <em >Process</em> is require
 
 <h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em >bobcat_4.03.00-x.dsc</em>: detached signature;
-    <li> <em >bobcat_4.03.00-x.tar.gz</em>: source archive;
-    <li> <em >bobcat_4.03.00-x_i386.changes</em>: change log;
-    <li> <em >libbobcat1_4.03.00-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.04.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.04.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.04.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.04.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em >libbobcat1-dev_4.03.00-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.04.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

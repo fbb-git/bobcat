@@ -10,7 +10,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Glob</h1>
-<h2 id="author">libbobcat-dev_4.03.00-x.tar.gz</h2>
+<h2 id="author">libbobcat-dev_4.04.00-x.tar.gz</h2>
 <h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
@@ -43,7 +43,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Glob(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.03.00-x.tar.gz Files matching a pattern</h2>
+<h2 id="author">libbobcat-dev_4.04.00-x.tar.gz Files matching a pattern</h2>
 <h2 id="date">2005-2016</h2>
 
 
@@ -85,12 +85,18 @@ enumeration, defines the following values:
 <p>
 <strong >Glob::Flags</strong>:
     <ul>
+    <li> <em >NO_FLAG</em>:   Equals 0, and can be used to avoid having to specify 0. It
+        has no further use.
     <li> <em >ERR</em>: Return on read errors;
     <li> <em >MARK</em>: Append a slash to each name.
     <li> <em >NOSORT</em>: Don't sort the names.
     <li> <em >NOESCAPE</em>: Backslashes don't quote metacharacters.
     <li> <em >PERIOD</em>: Leading <em >.</em>-characters can be matched by metachars (i.e.,
             <em >*</em> and <em >?</em>).
+    <li> <em >NOMATCH</em>: When specified the constructors won't throw exceptions when
+        no files matching their glob-patterns could be found. Instead they
+        will return normally, and <em >Glob's size()</em> member (see below) will
+        return 0.
     </ul>
 <p>
 <strong >Glob::Dots</strong>:
@@ -104,27 +110,26 @@ enumeration, defines the following values:
     <ul>
     <li> <strong >Glob(std::string const &amp;pattern = "*", int flags = PERIOD,
              Dots dots = FIRST)</strong>:<br/> 
-        This constructor (which can also be used as the default constructor)
-    determines all elements matching <em >pattern</em>. 
+       This constructor (which can also be used as the default constructor)
+        determines all elements matching <em >pattern</em>.
 <p>
-An <em >Exception</em> exception is thrown if the constructor could not  properly
-    complete it tasks.
+An <em >Exception</em> exception is thrown if the constructor could not
+        properly complete it tasks.
 <p>
 Multiple flags may be specified, separated by the <em >bitor</em> operator. 
 <p>
 This constructor properly completes its task if only defined <strong >Flag</strong>
-values were specified and if the <strong >glob</strong>(3) function returned without
-errors. 
+        values were specified and if the <strong >glob</strong>(3) function returned without
+        errors.
 <p>
 <li> <strong >Glob(Type type, std::string const &amp;pattern = "*", int flags = PERIOD,
              Dots dots = FIRST)</strong>:<br/> 
-        This constructor 
-    determines all elements of <em >pattern</em> matching <em >Type</em>. The
-    specified <em >type</em> value may consist of any <em >bitor</em>-ed combination of 
-    enum values defined by the <em >Type</em> enum. Remaining parameters and 
-    </ul>
+       This constructor determines all elements of <em >pattern</em> matching
+        <em >Type</em>. The specified <em >type</em> value may consist of any <em >bitor</em>-ed
+        combination of enum values defined by the <em >Type</em> enum. Remaining
+        parameters and </ul>
 <p>
-<em >Glob</em> offers copy and move constructors.
+<em >Glob</em> provides copy and move constructors.
 <p>
 <h2 >OVERLOADED OPERATORS</h2>
     <ul>
@@ -198,12 +203,12 @@ errors.
 
 <h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em >bobcat_4.03.00-x.dsc</em>: detached signature;
-    <li> <em >bobcat_4.03.00-x.tar.gz</em>: source archive;
-    <li> <em >bobcat_4.03.00-x_i386.changes</em>: change log;
-    <li> <em >libbobcat1_4.03.00-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.04.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.04.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.04.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.04.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em >libbobcat1-dev_4.03.00-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.04.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

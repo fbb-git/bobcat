@@ -10,7 +10,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Arg</h1>
-<h2 id="author">libbobcat-dev_4.03.00-x.tar.gz</h2>
+<h2 id="author">libbobcat-dev_4.04.00-x.tar.gz</h2>
 <h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
@@ -43,7 +43,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Arg(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.03.00-x.tar.gz Command Line Arguments</h2>
+<h2 id="author">libbobcat-dev_4.04.00-x.tar.gz Command Line Arguments</h2>
 <h2 id="date">2005-2016</h2>
 
 
@@ -153,6 +153,11 @@ immediately.
         <em >beyondDashes</em> member returns the index of the first argument beyond
         the <em >--</em> argument, which itself is removed from the remaining set of
         arguments.
+    <li> <strong >void help() const</strong>:<br/>
+       If the member <em >versionHelp</em> (see below) has been called then this
+        member calls the <em >usage</em> function that was passed to
+        <em >versionHelp</em>. If <em >versionHelp</em> has not been called (i.e., if no
+        <em >usage</em> function has been specified) then an exception is thrown.
     <li> <strong >size_t nArgs() const</strong>:<br/>
        Returns the number of arguments left after option-removal.  The
         program name <strong >argv[0]</strong> is NOT counted here.
@@ -290,10 +295,10 @@ namespace   // the anonymous namespace can be used here
 {
     Arg::LongOption longOptions[] = 
     {
-        Arg::LongOption("debug"),
-        Arg::LongOption("filenames", 'f'),
-        Arg::LongOption("help", 'h'),
-        Arg::LongOption("version", 'v'),
+        Arg::LongOption{"debug"},
+        Arg::LongOption{"filenames", 'f'},
+        Arg::LongOption{"help", 'h'},
+        Arg::LongOption{"version", 'v'},
     };
     auto longEnd = longOptions + sizeof(longOptions) / sizeof(longOptions[0]);
 }
@@ -331,12 +336,12 @@ catch(int x)
 
 <h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em >bobcat_4.03.00-x.dsc</em>: detached signature;
-    <li> <em >bobcat_4.03.00-x.tar.gz</em>: source archive;
-    <li> <em >bobcat_4.03.00-x_i386.changes</em>: change log;
-    <li> <em >libbobcat1_4.03.00-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.04.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.04.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.04.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.04.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em >libbobcat1-dev_4.03.00-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.04.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>

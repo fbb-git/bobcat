@@ -1,3 +1,37 @@
+bobcat (4.04.00)
+
+  * Added new class template 'BinopsBase' implementing binary operators. The
+    class Binops can also be used, but sometimes causes namespace problems
+    which do not occur when using BinopsBase.
+
+  * Added missing 'inline' declarations to the definitions in 
+    ibase64streabuf1.f and ibase64streabuf2.f.
+
+  * Replaced return *gptr() by return static_cast<unsigned char>(*gptr())
+    in underflow members of (i)streambuf classes to prevent promotions of
+    characters 0xff to -1, which is EOF.
+
+  * Added missing DateTime::timeStruct (inline) implementation to DateTime.
+
+  * Since the global errno variable is used by too much code, Exception{x}
+    constructors now also store x in a thread_local int FBB::g_errno variable.
+
+  * GetHostent was rebuilt using getaddrinfo and getnameinfo.
+
+  * Glob received two new flags: NO_FLAG and NOMATCH (refer to its man-page
+    for details). 
+
+  * Added member Arg::help() calling the usage function that was passed to
+    Arg::versionHelp (refer to its man-page for details).
+
+  * Added member int exitStatus() to Process returning the child process's
+    exit status after calling eoi() or inserting the eoi manipulator. The
+    eoi() member now also returns the child process's exit status.
+
+  * Removed 'class' from 'friend class' where possible
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Thu, 24 Nov 2016 16:59:06 +0100
+
 bobcat (4.03.00)
 
   * Prepared all classes depending on the OpenSSL libraries for OpenSSL1.1.0

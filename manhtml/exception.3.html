@@ -10,7 +10,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Exception</h1>
-<h2 id="author">libbobcat-dev_4.03.00-x.tar.gz</h2>
+<h2 id="author">libbobcat-dev_4.04.00-x.tar.gz</h2>
 <h2 id="date">2005-2016</h2>
 
 <!DOCTYPE html><html><head>
@@ -43,7 +43,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::Exception(3bobcat)</h1>
-<h2 id="author">libbobcat-dev_4.03.00-x.tar.gz Error handler</h2>
+<h2 id="author">libbobcat-dev_4.04.00-x.tar.gz Error handler</h2>
 <h2 id="date">2005-2016</h2>
 
 
@@ -122,12 +122,31 @@ described below. The enumeration has two values:
 <h2 >CONSTRUCTORS</h2>
     <ul>
     <li> <strong >Exception()</strong>:<br/>
-    The default constructor
-    <li> <strong >Exception(int errnoValue)</strong>:<br/> 
-    This constructor stores the provided <em >errnoValue</em> value in the global
-<em >::errno</em> variable, provided by the run-time support system.
+   The default constructor (assigns 0 to <em >FBB::g_errno</em>, see the next
+    constructor). 
+<p>
+<li> <strong >Exception(int errnoValue)</strong>:<br/> 
+   This constructor stores the provided <em >errnoValue</em> value in a thread-local
+    variable <em >int FBB::g_errno</em>. Before Bobcat 4.04.00 <em >errnoValue</em> was
+    only stored in the global <em >::errno</em> variable (it still is), but as this
+    variable is also used by many other functions, <em >errno's</em> value may have
+    changed by the time the exception is caught. The <em >thread_local int
+    FBB::g_errno</em> variable does not have that drawback.
+<p>
+When <em >g_errno</em> must be declared without including  <em >bobcat/exception</em>
+    then do
+        <pre>
+
+    namespace FBB
+    {
+        extern thread_local int g_errno;
+    }
+        
+</pre>
+
     </ul>
-    Move and copy constructors are available.
+<p>
+Move and copy constructors are available.
 <p>
 <h2 >MEMBER FUNCTIONS</h2>
      All members of <strong >std::exception</strong> are
@@ -232,12 +251,12 @@ modified when <em >errno</em> holds an invalid value).
 
 <h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em >bobcat_4.03.00-x.dsc</em>: detached signature;
-    <li> <em >bobcat_4.03.00-x.tar.gz</em>: source archive;
-    <li> <em >bobcat_4.03.00-x_i386.changes</em>: change log;
-    <li> <em >libbobcat1_4.03.00-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.04.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.04.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.04.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.04.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em >libbobcat1-dev_4.03.00-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.04.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
