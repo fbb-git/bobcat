@@ -1,6 +1,7 @@
 #ifndef INCLUDED_HANDLER_
 #define INCLUDED_HANDLER_
 
+#include <unistd.h>
 #include <bobcat/fork>
 
 class Handler: public FBB::Fork
@@ -13,10 +14,10 @@ class Handler: public FBB::Fork
         {}
 
     private:
-        virtual void childProcess();
-        virtual void parentProcess()
+        void childProcess() override;
+        void parentProcess() override
         {
-            close (d_descriptor);
+            close(d_descriptor);
         }
 };
 
