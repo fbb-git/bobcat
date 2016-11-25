@@ -31,7 +31,7 @@ manpagesection(INHERITS FROM)
 
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(IBase64Stream<CryptType>(std::istream &in, size_t bufSize = 100))
+    itb(IBase64Stream<CryptType>(std::istream &in, size_t bufSize = 1000))
         This constructor initializes a tt(std::istream) providing it with an
 tt(FBB::IBase64Streambuf) stream buffer. The tt(IBase64Streambuf)'s
 constructor receives all arguments that are passed to this constructor.
@@ -42,6 +42,12 @@ constructor receives all arguments that are passed to this constructor.
 decode from tt(std::istream &in);nl()
     - The internally used tt(IFilterStreambuf) is initialized with a buffer of
 size tt(bufSize), using a lower bound of 100.
+
+    The constructor uses a configurble buffer size for reading. Characters
+that were read into the buffer but are not part of the actual base64 encoded
+data are unavailable after completing the base64 decrypting. If information
+beyond the base64 input block should remain available, then specify a buffer
+size of 1.
     )
 
 manpagesection(INHERITED MEMBERS)
