@@ -1,0 +1,60 @@
+#ifndef INCLUDED_BOBCAT_INSERTERFORK_
+#define INCLUDED_BOBCAT_INSERTERFORK_
+
+#include <iosfwd>
+#include <ostream>
+
+#include <bobcat/pipe>
+#include <bobcat/ofdstreambuf>
+#include <bobcat/execfork>
+
+namespace FBB
+{
+
+class InserterFork: public ExecFork
+{
+    Pipe d_oChildInPipe;           // cin read by the CHILD
+    OFdStreambuf d_oChildInbuf;    // Parent inserts to child's cin
+    std::ostream d_oChildIn;            // Parent inserts to child's cin
+    
+    public:
+        InserterFork();
+        ~InserterFork() override;
+        int stop();
+        explicit operator bool() const;
+
+    private:
+        void childRedirections() override;
+        void parentRedirections() override;
+        void parentProcess() override;
+
+    template <typename Param>
+    friend InserterFork &operator<<(InserterFork &inserter, Param &&param);
+};
+
+inline InserterFork::InserterFork()
+:
+    d_oChildIn(0)
+{}
+
+inline InserterFork::operator bool() const
+{
+    return d_oChildIn.good();
+}
+
+
+template <typename Param>
+inline InserterFork &operator<<(InserterFork &inserter, Param &&param)
+{
+    inserter.d_oChildIn << std::forward<Param>(param);
+    return inserter;
+}        
+
+} // namespace FBB
+
+#endif
+
+
+
+
+

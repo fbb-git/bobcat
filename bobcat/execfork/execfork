@@ -1,0 +1,35 @@
+#ifndef INCLUDED_BOBCAT_EXECFORK_
+#define INCLUDED_BOBCAT_EXECFORK_
+
+#include <string>
+#include <vector>
+
+#include <bobcat/fork>
+
+namespace FBB
+{
+
+class ExecFork: public Fork
+{
+    std::string d_cmd;
+    int d_ret = -1;
+
+    public:
+        bool execute(std::string const &cmd);
+
+    private:
+        std::vector<std::string> splitSource() const;
+
+        void childRedirections() override;
+        void childProcess() override;
+        void parentProcess() override;
+};
+
+inline void ExecFork::parentProcess()
+{
+    d_ret = waitForChild();
+}
+
+} // namespace FBB
+
+#endif
