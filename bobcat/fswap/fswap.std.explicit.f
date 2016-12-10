@@ -6,7 +6,7 @@ class FSwap<ModeType<SwapMode::STDSWAP>, Type, FSwapMode<Member>, List...>:
 {
     static void swap(FSwapPOD<Type> &pod, FSwapMode<Member> &&member, 
                                           List ...memberSpecs);
-    #include "fswap.friends.decl.f"
+#include "fswap.friends.decl.f"
 };
 
 #include "fswap.std.explicit.imp.f"

@@ -8,7 +8,7 @@ class FSwap<ModeType<SwapMode::SWAPMEMBER>,
     static void swap(FSwapPOD<Type> &pod, FSwapMode<Member> &&member, 
                                           List ...memberSpecs);
 
-    #include "fswap.friends.decl.f"
+#include "fswap.friends.decl.f"
 };
 
 #include "fswap.member.explicit.imp.f"

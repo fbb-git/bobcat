@@ -62,12 +62,16 @@ manpagesection(ENUMERATION)
 
 The enumereation tt(SwapMode) is used to specify a specific swapping-method:
     itemization(
-    itt(STDSWAP) is selected by default, but it can also explicitly be
-specified. It indicates that selected members are swapped using tt(std::swap).
-    itt(SWAPMEMBER) can be
-specified to  indicates that selected members should be default be
-swapped using their own tt(swap) member function.
+    itt(SWAPMEMBER) is selected by default, but it can also explicitly be
+specified. It indicates that selected members are swapped using their own
+tt(swap) member function having prototpype tt(void Type::swap(Type &rhs)).
+    itt(STDSWAP) can be specified to indicates that selected members should be
+swapped using tt(std::swap).
     )
+    Specific members not supporting fast swapping can always be swapped using
+a specific swap-method. E.g., when tt(SWAPMEMBER) is selected, but a
+particular data member does not offer a tt(swap)-member, then tt(std::swap)
+can be specified for just that member.
 
 manpagesection(SWAP FUNCTIONS)
 
@@ -78,28 +82,28 @@ be used with classes having const data members, reference members, pointer
 members or standard value-typed data members;
 
     itb(fswap(Type &lhs, Type &rhs, member, ...))
-        This function is provided with a list of member names (of the
-class tt(Type)) of types that do not support fast swapping. Those members are
-swapped using tt(std::swap), while all other members are fast-swapped. When
-using a list of members, the selected members em(must) be listed in their
-declaration order or a tt(std::runtime_error) exception is generated when the
-function is used.
-
-    itb(fswap<SwapMode::STDSWAP>(Type &lhs, Type &rhs, member, ...))
-        This function acts identically to the previous function, but
-explicitly specifies its default swapping method. 
-
-    Each of the members specified in the list of members can either be
-specified as-is, in which case the specified swapping method is used, or
-tt(stdswap(member)) can be used, in which case tt(std::swap) is used for
-swapping tt(member), or tt(swapmember(member)) can be used, in which case the
-tt(member's swap) member function is used for swapping tt(member);
+        This function is provided with a list of member names (i.e., members
+of the class tt(Type)) that do not support fast swapping. Those members are
+swapped using their tt(swap) member, while all other members are
+fast-swapped. When using lists of members, the selected members em(must) be
+listed in their declaration order or a tt(std::runtime_error) exception is
+generated when the function is used.
 
     itb(fswap<SwapMode::SWAPMEMBER>(Type &lhs, Type &rhs, member, ...))
-        This function is also provided with a list of member names (of the
-class tt(Type)) of types that do not support fast swapping. Those members are
-swapped using tt(swap) members that must be available to the listed members'
-types. As with the previous function, members can be specified as-is, or
+        This function acts identically as the previous function, but
+explicitly specifies its default swapping method. 
+
+    Each of the members specified in the list of members can be specified by
+their names, in which case the specified swapping method is
+used. Alternatively tt(stdswap(member)) can be used, in which case
+tt(std::swap) is used for swapping tt(member); or tt(swapmember(member)) can
+be used, in which case that tt(member's swap) member function is used for
+swapping tt(member);
+
+    itb(fswap<SwapMode::STDSWAP>(Type &lhs, Type &rhs, member, ...))
+        This function is also provided with a list of member names that do not
+support fast swapping. Those members are swapped using tt(std::swap). As with
+the previous function, members can be specified by their names, or
 tt(stdswap(member)) or tt(swapmember(member)) can be used;
 
     itb(fswap[swapMode](&firstMember, Type &lhs, Type &rhs [, member, ...]))
@@ -107,8 +111,9 @@ tt(stdswap(member)) or tt(swapmember(member)) can be used;
 member (usually specified as tt(&d_first)) inside tt(Type's) own tt(swap)
 member). It is used when tt(Type) is derived from a base class that itself
 does not support fast swapping. This function may optionally be provided with
-a tt(SwapMode) template non-type argument, and may also be provided with a
-list of members (optionally using tt(stdswap) and tt(swapmember))
+a tt(SwapMode) template non-type argument (by default SWAPMEMBER) is used),
+and may also be provided with a list of members (optionally using tt(stdswap)
+and tt(swapmember)).
     )
 
 manpagesection(EXAMPLE)

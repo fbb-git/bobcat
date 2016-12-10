@@ -6,7 +6,7 @@ class FSwap<Enum, Type>: private FSwapBase
 {
     static void swap(FSwapPOD<Type> &pod);
 
-    #include "fswap.friends.decl.f"
+#include "fswap.friends.decl.f"
 };
 
 #include "fswap.end.imp.f"

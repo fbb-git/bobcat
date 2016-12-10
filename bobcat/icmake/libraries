@@ -1,28 +1,34 @@
-void buildHeader(string destination, string class, list iFiles)
+void catFile(string destination, string source)
 {
     list record;
     string line;
 
-    echo(OFF);
-
-    run("rm -f " + g_cwd + g_tmphdr + class);
-    printf("Header ", g_tmphdr, class, "\n");
-
     while (1)
     {
-        record = fgets(class, record);
-        if (!record)
+        record = fgets(source, record);     // get a line from source
+        if (!record)                        // all done: leave.
             break;
 
-        line = record[0] + "\n";
+        line = record[0] + "\n";            // get the line's contents
 
-        if (strfind(line, "#include \"") != 0)
-            fprintf(destination, line);
-        else
-            exec("cat " + strtok(line, "\"")[1] + " >> " + destination);
+        if 
+        (
+            strfind(line, "#include \"") == 0 && strfind(line, ".f\"") != -1
+        )  // saw #include
+            catFile(destination, strtok(line, "\"")[1]);    // then include .f
+        else                                    // or write the line
+            fprintf(destination, line);         // to the dest.
     }
+}
 
-    echo(g_echo);
+void buildHeader(string destination, string class, list iFiles)
+{
+    echo(OFF);
+    run("rm -f " + g_cwd + g_tmphdr + class);
+    echo(ON);
+    printf("Header ", g_tmphdr, class, "\n");   // show the name of the header
+                                                // to construct
+    catFile(destination, class);
 }
 
 void _iFiles(string class)

@@ -45,11 +45,11 @@ void Demo::swap(Demo &rhs)
 
                             // same, explicitly requesting the
                             // swap-mode
-//  fswap<SwapMode::STDSWAP>(*this, rhs, d_v3, d_v4); 
+//  fswap<SwapMode::SWAPMEMBER>(*this, rhs, d_v3, d_v4); 
 
                             // explicitly requesting another
                             // swap-mode
-//  fswap<SwapMode::SWAPMEMBER>(*this, rhs, d_v3, d_v4);
+//  fswap<SwapMode::STDSWAP>(*this, rhs, d_v3, d_v4);
 
                             // default, starting at a begin-member
                             // NOTE: the example does NOT swap d_v1
@@ -65,11 +65,11 @@ void Demo::swap(Demo &rhs)
 
                             // same, explicitly requesting the 
                             // swap method, swapping all 
-//  fswap<SwapMode::STDSWAP>(&d_v1, *this, rhs, d_v3, d_v4);
+//  fswap<SwapMode::SWAPMEMBER>(&d_v1, *this, rhs, d_v3, d_v4);
 
                             // explicitly requesting another
                             // swap-mode
-//  fswap<SwapMode::SWAPMEMBER>(&d_v1, *this, rhs, d_v3, d_v4);
+//  fswap<SwapMode::STDSWAP>(&d_v1, *this, rhs, d_v3, d_v4);
 
                             // use stdswap by default, but not
                             // for d_v4, for which .swap() is

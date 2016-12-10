@@ -80,6 +80,8 @@ class CGI
 
         CGI(CGI &&tmp);
 
+        void swap(CGI &other);
+
         CGI &operator=(CGI const &rhs) = default;
         CGI &operator=(CGI &&tmp);
 
@@ -115,9 +117,6 @@ class CGI
         static std::string unPercent(std::string const &text);
         static std::string dos2unix(std::string const &text);
         
-        CGI(CGI const &&tmp);                       // Deprecated
-        CGI &operator=(CGI const &&tmp);            // Deprecated
-
     private:
         void setQuery();
 

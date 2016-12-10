@@ -2,6 +2,6 @@
 
 void Pattern::swap(Pattern &other)
 {
-    fswap(*this, other);
+    fswap(*this, other, d_text);
 }
 

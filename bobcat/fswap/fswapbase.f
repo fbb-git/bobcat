@@ -1,6 +1,6 @@
 class FSwapBase
 {
-    #include "fswapfun.friends.f"
+#include "fswapfun.friends.f"
 
     protected:
         template <typename Type>                // swap using memcpy
@@ -23,5 +23,3 @@ class FSwapBase
 };
 
 #include "fswapbase.imp.f"
-
-

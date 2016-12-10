@@ -4,6 +4,6 @@
 
 Cidr &Cidr::operator=(Cidr &&tmp) 
 {
-    fswap(*this, tmp);
+    swap(tmp);
     return *this;
 }
