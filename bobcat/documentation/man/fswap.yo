@@ -48,10 +48,11 @@ member, then overloaded versions of tt(fswap) can be used to fast-swap objects
 of such classes. Also, classes may inherit from base classes that do not
 support fast-swapping, but that either offer their own swap members or can be
 swapped using tt(std::swap). For these cases overloaded versions of tt(fswap)
-are also available. The class tt(std::string) is an example of a class whose
-objects might not be swappable using a fast swap method. Therefore, in
-practice, classes defining tt(std::string) members should use one of the
-overloaded tt(fswap) functions for swapping their objects.
+are also available. The classes tt(std::string) and tt(std::unordered_map) are
+examples of classes whose objects might not be swappable using a fast swap
+method. Therefore, in practice, classes defining members of such classes
+should use one of the overloaded tt(fswap) functions for swapping their
+objects.
 
 includefile(include/namespace)
 

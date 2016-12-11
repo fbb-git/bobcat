@@ -1,0 +1,81 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::InserterFork)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+                    (Executing Child Processes)
+
+manpagename(FBB::InserterFork)(Runs external programs reading standard input)
+
+manpagesynopsis()
+    bf(#include <bobcat/inserterfork>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    The bf(FBB::InserterFork) class offers a basic interface for calling
+external programs from a bf(C++) program (so-called em(child-processes)). The
+standard output and standard error streams of the child processes are not
+handled by ttInserterFork) objects, and instead tt(/dev/null) is used for the
+child's standard output and standard error streams. The child's standard input
+is provided through the tt(InserterFork) object: information inserted into an
+tt(InserterFork) object is forwarded to the child process's standard input
+stream. Furthermore, the tt(PATH) environment variable is not used when
+calling child processes: child process programs must be specified using paths.
+
+tt(InserterFork) objects may repeatedly be used to execute the same or
+different child processes. Before starting the next child process, the current
+child process must have finished.
+
+Arguments passed to child processes may be surrounded by double or single
+quotes. Arguments surrounded by double quotes have their double quotes
+removed, while interpreting any escape-sequences that may have been used
+within. Arguments surrounded by single quotes have their single quotes
+removed, while accepting their contents as-is. In addition unquoted
+escape-sequences may be specified: those escape sequences are evaluated and
+replaced by their intended characters (e.g., tt(\100) is converted to tt(@)).
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::ExecFork)
+
+manpagesection(CONSTRUCTOR)
+
+    Only the default constructor is supported.
+
+manpagesection(OVERLOADED OPERATORS)
+
+    itemization(
+    itb(explicit operator bool() const)
+        This overloaded operator returns tt(true) when information can be
+inserted into the tt(InserterFork) object. Otherwise tt(false) is returned.
+
+manpagesection(MEMBERS)
+
+    itemization(
+    itb(bool execute(std::string const &cmd))
+        This member is inherited from the class tt(ExecFork). The argument
+specifies the command to execute: the command itself must be specified as a
+path (the tt(PATH) environment variable isn't used). Refer to the
+bf(execfork)(3bobcat) man-page for a more extensive description.
+
+    
+    )
+
+manpagesection(EXAMPLE)
+
+    verbinclude(../../execfork/driver/driver.cc)
+
+manpagefiles()
+    em(bobcat/execfork) - provides the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(execle)(3), bf(fork)(3bobcat), bf(process)(3bobcat)
+
+manpagebugs()
+    None reported.
+
+includefile(include/trailer)
+
+
+
+

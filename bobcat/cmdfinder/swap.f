@@ -1,5 +1,3 @@
-#include "cmdfinder.ih"
-
 template <typename FP>
 void CmdFinder<FP>::swap(CmdFinder<FP> &rhs)
 {
