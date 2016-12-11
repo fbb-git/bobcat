@@ -1,4 +1,4 @@
-#include "../inserterfork"
+#include <bobcat/inserterfork>
 
 #include <iostream>
 #include <fstream>
