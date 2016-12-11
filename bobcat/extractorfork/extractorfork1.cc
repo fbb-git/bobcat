@@ -2,7 +2,7 @@
 
 ExtractorFork::ExtractorFork(size_t bufSize)
 :
-    std::istream(this),
+    istream(this),
     d_bufSize(bufSize)
 {}
 

@@ -16,14 +16,19 @@ class ExecFork: public Fork
 
     public:
         bool execute(std::string const &cmd);
+        int ret() const;
 
     private:
         std::vector<std::string> splitSource() const;
 
-        void childRedirections() override;
         void childProcess() override;
         void parentProcess() override;
 };
+
+inline int ExecFork::ret() const
+{
+    return d_ret;
+}
 
 inline void ExecFork::parentProcess()
 {

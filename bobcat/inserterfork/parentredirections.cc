@@ -2,8 +2,5 @@
 
 void InserterFork::parentRedirections()
 {
-    int fd = d_oChildInPipe.writeOnly();
-
-    d_oChildInbuf.open(fd, FBB::OFdStreambuf::CLOSE_FD, 80);
-    d_oChildIn.rdbuf(&d_oChildInbuf);
+    open(d_oChildInPipe.writeOnly(), OFdStreambuf::CLOSE_FD, d_bufSize);
 }

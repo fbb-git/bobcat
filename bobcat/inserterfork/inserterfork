@@ -1,8 +1,8 @@
 #ifndef INCLUDED_BOBCAT_INSERTERFORK_
 #define INCLUDED_BOBCAT_INSERTERFORK_
 
-#include <iosfwd>
 #include <ostream>
+#include <thread>
 
 #include <bobcat/pipe>
 #include <bobcat/ofdstreambuf>
@@ -11,48 +11,47 @@
 namespace FBB
 {
 
-class InserterFork: public ExecFork
+class InserterFork: private ExecFork,
+                    private FBB::OFdStreambuf, public std::ostream
+
 {
+    size_t d_bufSize;
     Pipe d_oChildInPipe;           // cin read by the CHILD
-    OFdStreambuf d_oChildInbuf;    // Parent inserts to child's cin
-    std::ostream d_oChildIn;            // Parent inserts to child's cin
     
     public:
-        InserterFork();
-        ~InserterFork() override;
+        InserterFork(size_t bufSize = 100);
+
+        template <typename Fun>
+        bool execute(std::string const &cmd, Fun &&fun);
+
+        bool execute(std::string const &cmd);
+
         int stop();
-        explicit operator bool() const;
+        using ExecFork::ret;
 
     private:
         void childRedirections() override;
         void parentRedirections() override;
-        void parentProcess() override;
-
-    template <typename Param>
-    friend InserterFork &operator<<(InserterFork &inserter, Param &&param);
 };
 
-inline InserterFork::InserterFork()
-:
-    d_oChildIn(0)
-{}
-
-inline InserterFork::operator bool() const
+template <typename Fun>
+bool InserterFork::execute(std::string const &cmd, Fun &&fun)
 {
-    return d_oChildIn.good();
+    d_oChildInPipe = Pipe{};
+
+    std::thread thr{std::forward<Fun>(fun), std::ref(*this)};
+
+    bool ret = ExecFork::execute(cmd);
+
+    thr.join();
+    return ret;
 }
-
-
-template <typename Param>
-inline InserterFork &operator<<(InserterFork &inserter, Param &&param)
-{
-    inserter.d_oChildIn << std::forward<Param>(param);
-    return inserter;
-}        
 
 } // namespace FBB
 
 #endif
+
+
 
 
 

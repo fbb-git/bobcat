@@ -12,4 +12,12 @@ int main()
         cout << "driver.cc now copied to /tmp\n";
     else
         cout << "could not copy driver.cc to /tmp\n";
+
+    cout << "Again:\n";
+
+    if (ef.execute("/bin/cp driver.cc /tmp"))
+        cout << "driver.cc now copied to /tmp\n";
+    else
+        cout << "could not copy driver.cc to /tmp\n";
+
 }

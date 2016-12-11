@@ -12,13 +12,12 @@ manpagesynopsis()
 
 manpagedescription()
     The bf(FBB::InserterFork) class offers a basic interface for calling
-external programs from a bf(C++) program (so-called em(child-processes)). The
-standard output and standard error streams of the child processes are not
-handled by ttInserterFork) objects, and instead tt(/dev/null) is used for the
-child's standard output and standard error streams. The child's standard input
-is provided through the tt(InserterFork) object: information inserted into an
-tt(InserterFork) object is forwarded to the child process's standard input
-stream. Furthermore, the tt(PATH) environment variable is not used when
+external programs (so-called child processes) reading their standard input
+streams from a bf(C++) program. The standard output and standard error streams
+of the child processes are not handled by ttInserterFork) objects. The child's
+standard input is provided through the tt(InserterFork) object: information
+inserted into an tt(InserterFork) object is forwarded to the child process's
+standard input stream. The tt(PATH) environment variable is not used when
 calling child processes: child process programs must be specified using paths.
 
 tt(InserterFork) objects may repeatedly be used to execute the same or
@@ -33,43 +32,88 @@ removed, while accepting their contents as-is. In addition unquoted
 escape-sequences may be specified: those escape sequences are evaluated and
 replaced by their intended characters (e.g., tt(\100) is converted to tt(@)).
 
+When information of undetermined size or structure must be inserted into a
+child process then the child process cannot determine when to stop. This
+creates an interesting problem: the child process starts, and the parent
+process must wait until its child process has finished processing its
+input. But input can only be forwarded to the child's input stream after the
+child process has started. To solve this problem tt(InterterFork) offers an
+overloaded tt(execute) member, passing information to the child process via a
+separate thread.
+
 includefile(include/namespace)
 
 manpagesection(INHERITS FROM)
-    bf(FBB::ExecFork)
+    bf(FBB::ExecFork) (private),
+    bf(FBB::OFdStreambuf) (private),
+    bf(std::ostream).
 
 manpagesection(CONSTRUCTOR)
 
-    Only the default constructor is supported.
-
-manpagesection(OVERLOADED OPERATORS)
-
     itemization(
-    itb(explicit operator bool() const)
-        This overloaded operator returns tt(true) when information can be
-inserted into the tt(InserterFork) object. Otherwise tt(false) is returned.
+    itb(InserterFork(size_t bufSize = 100))
+        A tt(bufSize) argument may be specified: it defines the internal
+buffer size used by the tt(InserterFork's) streambuf.
+    )
 
 manpagesection(MEMBERS)
 
     itemization(
     itb(bool execute(std::string const &cmd))
-        This member is inherited from the class tt(ExecFork). The argument
-specifies the command to execute: the command itself must be specified as a
-path (the tt(PATH) environment variable isn't used). Refer to the
-bf(execfork)(3bobcat) man-page for a more extensive description.
+        This member can be used if the amount of information to forward to the
+child process is known beforehand. If the amount of information is
+undetermined, then then next  tt(execute) member should be used.
 
-    
+        The argument specifies the command to execute: the command itself must
+be specified as a path (the tt(PATH) environment variable isn't used). The
+member returns tt(true) if the child process's exit value equals 0. Otherwise
+tt(false) is returned. Once tt(execute) has returned it can be called again,
+either using the same or another command. The class tt(ExecFork) does not
+offer facilities to forcefully terminate the child process: the parent process
+is suspended until the child process has completed. Arguments passed to the
+program to be executed as child process may be specified using single or
+double quotes, as described in this man-page's DESCRIPTION section.
+
+    itb(bool execute(std::string const &cmd, Fun &&fun))
+        This member is defined as a member template. The tt(cmd) parameter
+specifies the command to execute, and is defined identically as the tt(cmd)
+parameter of the previous tt(execute) member. The parameter tt(fun) is a
+function (or function object). The function argument that is passed to
+tt(execute) is then perfectly forwarded to a separate thread, which provides
+the information to be inserted into the tt(InserterFork) object. The tt(fun)
+argument receives the current tt(InserterFork) object as a reference:
+        verb(
+std::thread thr{std::forward<Fun>(fun), std::ref(*this)};
+        )
+    Once the thread has started, it should insert information into the
+tt(InserterFork) object, after which it should call tt(InserterFork's stop)
+member.  The information is then processed by the tt(InserterFork) object, with
+tt(execute) returning tt(true) if the child process's exit value equals 0.
+
+    itb(int stop())
+        Once all information has been inserted into the tt(InserterFork)
+object tt(stop) should be called to inform the child process that all
+information has been received. The tt(stop) member returns the child's exit
+code. Sometimes  the input-protocol defined by the child process defines the
+end of the input stream (like a line containing tt(quit)). In such cases
+calling tt(stop) may not be necessary.
+
+    itb(int ret() const)
+        Once tt(execute) has returned this member provides the actual exit
+code of the child process. Its value equals -1 before the first tt(exectue)
+call.
     )
 
 manpagesection(EXAMPLE)
 
-    verbinclude(../../execfork/driver/driver.cc)
+    verbinclude(../../inserterfork/driver/driver.cc)
 
 manpagefiles()
-    em(bobcat/execfork) - provides the class interface
+    em(bobcat/inserterfork) - provides the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(execle)(3), bf(fork)(3bobcat), bf(process)(3bobcat)
+    bf(bobcat)(7), bf(execl)(3), bf(execfork)(3bobcat), 
+    bf(extractorfork)(3bobcat), bf(fork)(3bobcat), bf(process)(3bobcat)
 
 manpagebugs()
     None reported.

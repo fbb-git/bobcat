@@ -2,8 +2,8 @@
 
 int InserterFork::stop()
 {
-    d_oChildIn.flush();
-    d_oChildInbuf.close();
+    flush();
+    close();
 
     return waitForChild();
 }
