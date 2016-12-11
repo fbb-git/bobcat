@@ -1,7 +1,6 @@
 #ifndef INCLUDED_BOBCAT_EXTRACTORFORK_
 #define INCLUDED_BOBCAT_EXTRACTORFORK_
 
-#include <iosfwd>
 #include <istream>
 
 #include <bobcat/pipe>
@@ -11,43 +10,23 @@
 namespace FBB
 {
 
-class ExtractorFork: public ExecFork
-{
+class ExtractorFork: private ExecFork, 
+                     private FBB::IFdStreambuf, public std::istream
+                     
+{                    // the child process inserts into the pipe,
+    size_t d_bufSize;
     Pipe d_iChildOutPipe;           // cout written by the CHILD
-    IFdStreambuf d_iChildOutbuf;    // Child inserts,
-    std::istream d_iChildOut;       // Parent extracts child's cout
 
     public:
-        ExtractorFork();
+        ExtractorFork(size_t d_bufSize = 100);
         ~ExtractorFork() override;
-        using ExecFork::waitForChild;
-        explicit operator bool() const;
+        bool execute(std::string const &cmd);
+        using ExecFork::ret;
 
     private:
         void childRedirections() override;
         void parentRedirections() override;
-        void parentProcess() override;
-
-    template <typename Param>
-    friend ExtractorFork &operator>>(ExtractorFork &extractor, Param &&param);
 };
-
-inline ExtractorFork::ExtractorFork()
-:
-    d_iChildOut(0)
-{}
-
-inline ExtractorFork::operator bool() const
-{
-    return d_iChildOut.good();
-}
-
-template <typename Param>
-inline ExtractorFork &operator>>(ExtractorFork &extractor, Param &&param)
-{
-    extractor.d_iChildOut >> std::forward<Param>(param);
-    return extractor;
-}        
 
 } // namespace FBB
         

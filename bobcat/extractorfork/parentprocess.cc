@@ -1,4 +1,4 @@
-#include "extractorfork.ih"
-
-void ExtractorFork::parentProcess()
-{}
+//#include "extractorfork.ih"
+//
+//void ExtractorFork::parentProcess()
+//{}
