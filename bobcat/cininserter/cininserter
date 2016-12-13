@@ -1,0 +1,58 @@
+#ifndef INCLUDED_BOBCAT_CININSERTER_
+#define INCLUDED_BOBCAT_CININSERTER_
+
+#include <ostream>
+#include <thread>
+
+#include <bobcat/pipe>
+#include <bobcat/ofdstreambuf>
+#include <bobcat/exec>
+
+namespace FBB
+{
+
+class CinInserter: private Exec, private OFdStreambuf, public std::ostream
+
+{
+    size_t d_bufSize;
+    Pipe d_oChildInPipe;           // cin read by the CHILD
+    
+    public:
+        CinInserter(size_t bufSize = 100);
+
+        template <typename Fun>
+        bool execute(std::string const &cmd, Fun &&fun);
+
+        bool execute(std::string const &cmd);
+
+        int stop();
+        using Exec::ret;
+
+    private:
+        void childRedirections() override;
+        void parentRedirections() override;
+};
+
+template <typename Fun>
+bool CinInserter::execute(std::string const &cmd, Fun &&fun)
+{
+    d_oChildInPipe = Pipe{};
+
+    std::thread thr{std::forward<Fun>(fun), std::ref(*this)};
+
+    bool ret = Exec::execute(cmd);
+
+    thr.join();
+    return ret;
+}
+
+} // namespace FBB
+
+#endif
+
+
+
+
+
+
+
