@@ -7,13 +7,16 @@ namespace FBB
 {
 
 class CerrExtractor: public IUO::ExtractorBase
-                     
 {
+    void (*d_modeFun)();
+
     public:
         CerrExtractor(size_t bufSize = 100);
+        CerrExtractor(Mode mode, size_t bufSize = 100);
 
     private:
         void childRedirections() override;
+        static void close();
 };
 
 } // namespace FBB

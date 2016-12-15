@@ -15,8 +15,16 @@ class Exec: public Fork
     int d_ret = -1;
 
     public:
+        enum Mode
+        {
+            CLOSE_STD;
+        };
+
         bool execute(std::string const &cmd);
         int ret() const;
+
+    protected:
+        static void noClose();
 
     private:
         std::vector<std::string> splitSource() const;
@@ -24,6 +32,9 @@ class Exec: public Fork
         void childProcess() override;
         void parentProcess() override;
 };
+
+void Exec::noClose()    // static
+{}
 
 inline int Exec::ret() const
 {

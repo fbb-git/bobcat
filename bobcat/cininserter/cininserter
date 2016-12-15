@@ -12,13 +12,14 @@ namespace FBB
 {
 
 class CinInserter: private Exec, private OFdStreambuf, public std::ostream
-
 {
     size_t d_bufSize;
     Pipe d_oChildInPipe;           // cin read by the CHILD
+    void (*d_modeFun)();
     
     public:
         CinInserter(size_t bufSize = 100);
+        CinInserter(Mode mode, size_t bufSize = 100);
 
         template <typename Fun>
         bool execute(std::string const &cmd, Fun &&fun);
@@ -28,9 +29,14 @@ class CinInserter: private Exec, private OFdStreambuf, public std::ostream
         int stop();
         using Exec::ret;
 
+    protected:
+        Pipe &childInPipe();
+
     private:
         void childRedirections() override;
         void parentRedirections() override;
+
+        static void close();
 };
 
 template <typename Fun>
@@ -44,6 +50,11 @@ bool CinInserter::execute(std::string const &cmd, Fun &&fun)
 
     thr.join();
     return ret;
+}
+
+inline Pipe &CinInserter::childInPipe()
+{
+    return d_oChildInPipe;
 }
 
 } // namespace FBB
