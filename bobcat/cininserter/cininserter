@@ -11,7 +11,9 @@
 namespace FBB
 {
 
-class CinInserter: private Exec, private OFdStreambuf, public std::ostream
+class CinInserter: public IUO::CloseMode, 
+                    private Exec,
+                   private OFdStreambuf, public std::ostream
 {
     size_t d_bufSize;
     Pipe d_oChildInPipe;           // cin read by the CHILD
@@ -19,7 +21,7 @@ class CinInserter: private Exec, private OFdStreambuf, public std::ostream
     
     public:
         CinInserter(size_t bufSize = 100);
-        CinInserter(Mode mode, size_t bufSize = 100);
+        CinInserter(StdMode mode, size_t bufSize = 100);
 
         template <typename Fun>
         bool execute(std::string const &cmd, Fun &&fun);

@@ -5,7 +5,10 @@
 
 #include <bobcat/pipe>
 #include <bobcat/ifdstreambuf>
-#include <bobcat/exec>
+//#include <bobcat/exec>
+
+#include "../exec/exec"
+
 
 namespace FBB
 {
@@ -13,7 +16,7 @@ namespace FBB
 namespace IUO
 {
 
-class ExtractorBase: private Exec, 
+class ExtractorBase: public CloseMode, protected Exec, 
                      private IFdStreambuf, public std::istream
                      
 {                    // the child process inserts into the pipe,

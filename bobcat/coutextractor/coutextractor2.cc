@@ -1,6 +1,6 @@
 #include "coutextractor.ih"
 
-CoutExtractor::CoutExtractor(Mode mode, size_t bufSize)
+CoutExtractor::CoutExtractor(StdMode mode, size_t bufSize)
 :
     IUO::ExtractorBase(bufSize),
     d_modeFun(close)

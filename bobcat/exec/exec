@@ -9,17 +9,23 @@
 namespace FBB
 {
 
+namespace IUO
+{
+    struct CloseMode
+    {
+        enum StdMode
+        {
+            CLOSE_STD
+        };
+    };
+}
+
 class Exec: public Fork
 {
     std::string d_cmd;
     int d_ret = -1;
 
     public:
-        enum Mode
-        {
-            CLOSE_STD
-        };
-
         bool execute(std::string const &cmd);
         int ret() const;
 
