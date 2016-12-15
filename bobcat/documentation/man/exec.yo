@@ -21,10 +21,10 @@ tt(Exec) objects may repeatedly be used to execute the same or different
 child processes. Before starting the next child process, the current child
 process must have finished.
 
-Arguments passed to child processes may be surrounded by double
-or single quotes. Arguments surrounded by double quotes have their double
-quotes removed, while interpreting any escape-sequences that may have been
-used within. Arguments surrounded by single quotes have their single quotes
+Arguments passed to child processes may be surrounded by double or single
+quotes. Arguments surrounded by double quotes have their double quotes
+removed, while interpreting any escape-sequences that may have been used
+within. Arguments surrounded by single quotes have their single quotes
 removed, while accepting their contents as-is. In addition unquoted
 escape-sequences may be specified: those escape sequences are evaluated and
 replaced by their intended characters (e.g., tt(\100) is converted to tt(@)).
@@ -38,21 +38,19 @@ manpagesection(CONSTRUCTOR)
 
     Only the default constructor is supported.
 
-
 manpagesection(MEMBERS)
 
     itemization(
     itb(bool execute(std::string const &cmd))
         The argument specifies the command to execute: the command itself must
 be specified as a path (the tt(PATH) environment variable isn't used). The
-member returns tt(true) if the child process's exit value equals
-0. Otherwise tt(false) is returned. Once tt(execute) has returned it can be
-called again, either using the same or  another command. The class
-tt(Exec) does not offer facilities to forcefully terminate the child
-process: the parent process is suspended until the child process has
-completed. Arguments passed to the program to be executed as child process may
-be specified using single or double quotes, as described in this man-page's
-DESCRIPTION section.
+member returns tt(true) if the child process's exit value equals 0. Otherwise
+tt(false) is returned. Once tt(execute) has returned it can be called again,
+either using the same or another command. The class tt(Exec) does not offer
+facilities to forcefully terminate child processes: parent processes are
+suspended until the child processes have completed. Arguments passed to the
+program to be executed as child process may optionall be specified using
+single or double quotes, as described in this man-page's DESCRIPTION section.
 
     itb(int ret() const)
         Once tt(execute) has returned this member provides the actual exit
@@ -68,8 +66,9 @@ manpagefiles()
     em(bobcat/exec) - provides the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(execl)(3), bf(coutextractor)(3bobcat), 
-    bf(fork)(3bobcat), bf(cininserter)(3bobcat), bf(process)(3bobcat)
+    bf(bobcat)(7), bf(cerrextractor)(3bobcat), bf(cininserter)(3bobcat),
+    bf(coutextractor)(3bobcat), bf(execl)(3), bf(fork)(3bobcat),
+    bf(process)(3bobcat)
 
 manpagebugs()
     None reported.

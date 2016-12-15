@@ -68,11 +68,11 @@ undetermined, then then next  tt(execute) member should be used.
 be specified as a path (the tt(PATH) environment variable isn't used). The
 member returns tt(true) if the child process's exit value equals 0. Otherwise
 tt(false) is returned. Once tt(execute) has returned it can be called again,
-either using the same or another command. The class tt(Exec) does not
-offer facilities to forcefully terminate the child process: the parent process
-is suspended until the child process has completed. Arguments passed to the
-program to be executed as child process may be specified using single or
-double quotes, as described in this man-page's DESCRIPTION section.
+either using the same or another command. The class tt(CinInserter) does not
+offer facilities to forcefully terminate child processes: parent processes
+are suspended until the child processes have completed. Arguments passed to
+the program to be executed as child process may optionally be specified using
+single or double quotes, as described in this man-page's DESCRIPTION section.
 
     itb(bool execute(std::string const &cmd, Fun &&fun))
         This member is defined as a member template. The tt(cmd) parameter
@@ -112,8 +112,9 @@ manpagefiles()
     em(bobcat/cininserter) - provides the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(execl)(3), bf(exec)(3bobcat), 
-    bf(coutextractor)(3bobcat), bf(fork)(3bobcat), bf(process)(3bobcat)
+    bf(bobcat)(7), bf(cerrextractor)(3bobcat), bf(coutextractor)(3bobcat), 
+    bf(execl)(3), bf(exec)(3bobcat), 
+    bf(fork)(3bobcat), bf(process)(3bobcat)
 
 manpagebugs()
     None reported.
