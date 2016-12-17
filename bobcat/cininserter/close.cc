@@ -1,6 +1,6 @@
 #include "cininserter.ih"
 
-void CinInserter::close() // static
+void CinInserter::stdClose() // static
 {
     ::close(STDOUT_FILENO);  // close and reopen std file descriptors
     ::close(STDERR_FILENO);

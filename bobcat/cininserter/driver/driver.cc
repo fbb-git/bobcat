@@ -1,4 +1,5 @@
-#include <bobcat/cininserter>
+//#include <bobcat/cininserter>
+#include "../cininserter"
 
 #include <iostream>
 #include <fstream>
@@ -6,40 +7,25 @@
 using namespace std;
 using namespace FBB;
 
-void insert(CinInserter &inserter)
-{
-    ifstream in("driver.cc");
-    inserter << in.rdbuf();
-    inserter.stop();
-}
-    
 int main()
 {
     CinInserter inserter;
 
-    bool bret = inserter.execute("/bin/cat",    // copies to stdout
-        [](CinInserter &inserter)
-        {
-            insert(inserter);
-        }
-    );
+    inserter.execute("/bin/cat");
+    ifstream in("build");
+    inserter << in.rdbuf();
 
-    int ret = inserter.ret();
+    cout << "child returns: " << inserter.stop() << '\n';
 
-    cout << "Returning: " << bret << ' ' << ret << "\n"
-            "again:\n";
+    inserter.execute("/bin/cat");
+    in.seekg(0);                    // reset to the beginning
+    inserter << in.rdbuf();
 
-    bret = inserter.execute("/bin/cat",         
-        [](CinInserter &inserter)
-        {
-            insert(inserter);
-        }
-    );
+    // when immediately followed by another execute, 'stop' is optional
 
-    ret = inserter.ret();
+    inserter.execute("/bin/cat", "a simple text\n");
+    inserter.execute("/bin/cat", "a simple text\n");
+    bool bret = inserter.execute("/bin/cat", "a simple text\n");
 
-    cout << "Returning: " << bret << ' ' << ret << '\n';
+    cout << "direct string insertion: " << bret << '\n';
 }
-
-
-

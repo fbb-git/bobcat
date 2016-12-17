@@ -1,63 +1,51 @@
 #ifndef INCLUDED_BOBCAT_CININSERTER_
 #define INCLUDED_BOBCAT_CININSERTER_
 
+#include <iosfwd>
 #include <ostream>
 #include <thread>
+#include <future>
+#include <type_traits>
+#include <sstream>
 
 #include <bobcat/pipe>
 #include <bobcat/ofdstreambuf>
 #include <bobcat/exec>
 
+#include <iostream>
+using namespace std;
+
 namespace FBB
 {
 
-class CinInserter: public IUO::CloseMode, 
-                    private Exec,
+class CinInserter: public IUO::CloseMode, private Exec,
                    private OFdStreambuf, public std::ostream
 {
     size_t d_bufSize;
     Pipe d_oChildInPipe;           // cin read by the CHILD
     void (*d_modeFun)();
+    bool d_stopped = true;
     
     public:
         CinInserter(size_t bufSize = 100);
         CinInserter(StdMode mode, size_t bufSize = 100);
+        ~CinInserter() override;
 
-        template <typename Fun>
-        bool execute(std::string const &cmd, Fun &&fun);
-
-        bool execute(std::string const &cmd);
+        void execute(std::string const &cmd);
+        bool execute(std::string const &cmd, std::string const &txt);
 
         int stop();
-        using Exec::ret;
 
-    protected:
-        Pipe &childInPipe();
+        using Exec::ret;
 
     private:
         void childRedirections() override;
         void parentRedirections() override;
+        void parentProcess() override;
 
-        static void close();
+        static void stdClose();
 };
 
-template <typename Fun>
-bool CinInserter::execute(std::string const &cmd, Fun &&fun)
-{
-    d_oChildInPipe = Pipe{};
-
-    std::thread thr{std::forward<Fun>(fun), std::ref(*this)};
-
-    bool ret = Exec::execute(cmd);
-
-    thr.join();
-    return ret;
-}
-
-inline Pipe &CinInserter::childInPipe()
-{
-    return d_oChildInPipe;
-}
 
 } // namespace FBB
 
