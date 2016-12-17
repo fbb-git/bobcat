@@ -1,61 +1,38 @@
-#ifndef INCLUDED_FSWAP_
-#define INCLUDED_FSWAP_
+#ifndef INCLUDED_BOBCAT_FSWAP_
+#define INCLUDED_BOBCAT_FSWAP_
 
 #include <cstring>
-#include <cstdint>
+#include <algorithm>
+#include <stdexcept>
 
 namespace FBB
 {
 
-class FSwap
-{
-    template <typename Type>
-    friend void fswap(Type &lhs, Type &rhs);
+#include "swapmode.f"               // specific swap modes
 
-    template <typename Tp, size_t size>
-    struct Xch
-    {
-        static void fswap(Tp &lhs, Tp &rhs);            // 1.f
-    };
-    
-    template <typename Tp>
-    struct Xch<Tp, 1>
-    {
-        static void fswap(Tp &lhs, Tp &rhs);            // 2.f
-    };
+#include "fswapfun.decl.f"          // dclare fswap() functions with default
+                                    // arguments
 
-    template <typename Tp>
-    struct Xch<Tp, 2>
-    {
-        static void fswap(Tp &lhs, Tp &rhs);            // 3.f
-    };
+#include "fswappod.f"               // swap plain old data
 
-    template <typename Tp>
-    struct Xch<Tp, 4>
-    {
-        static void fswap(Tp &lhs, Tp &rhs);            // 4.f
-    };
+#include "fswaptype.f"              // how to swap using specific swapmodes
+                                    // (stdswap(member), swapmember(member))
 
-    template <typename Tp>
-    struct Xch<Tp, 8>
-    {
-        static void fswap(Tp &lhs, Tp &rhs);            // 5.f
-    };
-    
-    template <typename SwapType, typename Type>
-    static void tswap(Type &lhs, Type &rhs);                // .f
-};
+#include "fswapbase.f"              // utility functions for FSwap classes
 
-#include "tswap.f"
-#include "fswap1.f"
-#include "fswap2.f"
-#include "fswap3.f"
-#include "fswap4.f"
-#include "fswap5.f"
+#include "fswap.decl.f"             // class FSwap declaration
+#include "fswap.end.f"              // end-specialization (no SwapModes)
+#include "fswap.std.f"              // do std::swap for the head of the list
+#include "fswap.std.explicit.f"     // do std::swap by default, but explicit
+                                    // swap for the head of the list
+#include "fswap.member.f"           // do .swap() for the head of the list
+#include "fswap.member.explicit.f"  // do .swap() by default, but explicit
+                                    // swap for the head of the list
 
-    // Free function
-#include "fswap.f"              // fswap(Type &, Type &)
+#include "fswap1.f"                 // fswap's full implementation
+#include "fswap2.f"                 // the shortcut w/o 1st address
+#include "fswap3.f"                 // the direct memory swap
 
-} // FBB
+}   // namespace FBB
 
 #endif

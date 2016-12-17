@@ -1,0 +1,67 @@
+#ifndef INCLUDED_BOBCAT_CININSERTER_
+#define INCLUDED_BOBCAT_CININSERTER_
+
+#include <iosfwd>
+#include <ostream>
+#include <thread>
+#include <future>
+#include <type_traits>
+#include <sstream>
+
+#include <bobcat/pipe>
+#include <bobcat/ofdstreambuf>
+#include <bobcat/exec>
+
+#include <iostream>
+using namespace std;
+
+namespace FBB
+{
+
+class CinInserter: public IUO::CloseMode, private Exec,
+                   private OFdStreambuf, public std::ostream
+{
+    size_t d_bufSize;
+    Pipe d_oChildInPipe;           // cin read by the CHILD
+    void (*d_modeFun)();
+    bool d_stopped = true;
+    
+    public:
+        CinInserter(size_t bufSize = 100);
+        CinInserter(StdMode mode, size_t bufSize = 100);
+        ~CinInserter() override;
+
+        void execute(std::string const &cmd);
+        bool execute(std::string const &cmd, std::string const &txt);
+
+        int stop();
+
+        using Exec::ret;
+
+    protected:
+        Pipe &childInPipe();
+        
+    private:
+        void childRedirections() override;
+        void parentRedirections() override;
+        void parentProcess() override;
+
+        static void stdClose();
+};
+
+inline Pipe &CinInserter::childInPipe()
+{
+    return d_oChildInPipe;
+}
+
+
+} // namespace FBB
+
+#endif
+
+
+
+
+
+
+

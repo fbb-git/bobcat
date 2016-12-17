@@ -2,6 +2,6 @@
 
 Stat &Stat::operator=(Stat &&tmp)
 {
-    fswap(*this, tmp);
+    fswap(*this, tmp, d_name);
     return *this;
 }

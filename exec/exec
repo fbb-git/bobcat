@@ -1,0 +1,63 @@
+#ifndef INCLUDED_BOBCAT_EXEC_
+#define INCLUDED_BOBCAT_EXEC_
+
+#include <string>
+#include <vector>
+
+#include <bobcat/fork>
+
+namespace FBB
+{
+
+namespace IUO
+{
+    struct CloseMode
+    {
+        enum StdMode
+        {
+            CLOSE_STD
+        };
+    };
+}
+
+class Exec: public Fork
+{
+    std::string d_cmd;
+    int d_ret = -1;
+
+    public:
+        bool execute(std::string const &cmd);
+        int ret() const;
+
+    protected:
+        static void noClose();
+        int setRet(int retVal);
+
+    private:
+        std::vector<std::string> splitSource() const;
+
+        void childProcess() override;
+        void parentProcess() override;
+};
+
+inline void Exec::noClose()    // static
+{}
+
+inline int Exec::ret() const
+{
+    return d_ret;
+}
+
+inline int Exec::setRet(int retVal) 
+{
+    return d_ret = retVal;
+}
+
+inline void Exec::parentProcess()
+{
+    d_ret = waitForChild();
+}
+
+} // namespace FBB
+
+#endif

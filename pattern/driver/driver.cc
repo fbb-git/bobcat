@@ -4,10 +4,21 @@
 
 #include "driver.h"
 
-#include <bobcat/pattern>
+//#include <bobcat/pattern>
+#include "../pattern.ih"
 
 using namespace std;
 using namespace FBB;
+
+#include <algorithm>
+#include <cstring>
+
+void Pattern::swap(Pattern &other)
+{
+    fswap(*this, other);
+    fswap(d_text, other.d_text);
+    d_text.swap(other.d_text);
+}
 
 
 void showSubstr(string const &str)
@@ -21,32 +32,33 @@ void showSubstr(string const &str)
 
 int main(int argc, char **argv)
 {
-    {
-        Pattern one("one");
-        Pattern two(one);
-        Pattern three("a");
-        Pattern four;
-        three = two;
-    }
+//    {
+//        Pattern one("one");
+////        Pattern two(one);
+//        Pattern three("a");
+//        Pattern four;
+//        three = three;
+//    }
 
-    try 
-    {
-        Pattern pattern("aap|noot|mies");
 
-        {
-            Pattern extra(Pattern(pattern));
-        }
-    
-        if (pattern << "noot")
-            cout << "noot matches\n";
-        else
-            cout << ": noot doesn't match\n";
-    }
-    catch (exception const &e)
-    {
-        cout << e.what() << ": compilation failed" << endl;
-    }
-        
+//    try 
+//    {
+//        Pattern pattern("aap|noot|mies");
+//
+//        {
+//            Pattern extra(Pattern(pattern));
+//        }
+//    
+//        if (pattern << "noot")
+//            cout << "noot matches\n";
+//        else
+//            cout << ": noot doesn't match\n";
+//    }
+//    catch (exception const &e)
+//    {
+//        cout << e.what() << ": compilation failed" << endl;
+//    }
+//        
     string pat = "\\d+";
 
     while (true)

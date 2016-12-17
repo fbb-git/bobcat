@@ -1,3 +1,35 @@
+bobcat (4.05.00)
+
+  * Added classes Exec, CinInserter, CerrExtractor, CoutExtractor, and
+    StdExtractor, executing child processes. These classes are simplified
+    specializations of Process. Exec simply executes a child process, and
+    waits until its completion; CinInserter acts similarly, but insertions
+    into a CinInserter object are forwarded to the child process; extractions
+    from CerrExtractor read the information that is written to the child
+    process's standard error stream, extractions from CoutExtractor read
+    the information that is written to the child process's standard output
+    stream while extractions from StdExtractor read
+    the information that is written to the child process's standard output and
+    standard error streams.
+
+  * The fwap function was redesigned, to allow fast swapping for classes of
+    which some members (or their base class(es)) cannot be fast-swapped.
+    Thus far, this only involves classes having std::string members.
+
+  * All Bobcat classes using fswap have been updated where necessary. They
+    are: CGI, Cidr, CmdFinderBase, CmdFinder, Glob, Hostent, MailHeaders,
+    Pattern, SharedMemory, Stat, TableSupport, and User.
+
+  * A member `swap' was added to the classes CGI, Cidr, CmdFinder, and
+    CmdFinderBase.
+
+  * -lpthread was removed from INSTALL.im: it is already available for
+    required classes (see icmake/special), and causes problems on some
+    operating systems/distributions when it is additionally specified in
+    INSTALL.im. 
+
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Sat, 17 Dec 2016 11:17:00 +0100
+
 bobcat (4.04.00)
 
   * Added new class template 'BinopsBase' implementing binary operators. The
