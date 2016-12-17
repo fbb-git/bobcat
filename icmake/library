@@ -45,8 +45,8 @@ void c_compile(string dstDir, int prefix, string srcDir, list cfiles)
     printf("\n"
            "Compiling ", srcDir, "\n");
 
-    if (strfind(PTHREAD, srcDir) != -1)
-        pthread = " -pthread";
+    if (strfind(PTHREAD, srcDir) != -1)     // requiring classes defined in
+        pthread = " -pthread";              // INSTALL.im
 
     compdest = g_cxx + " " + g_copt + pthread +
                 " -c -o " + srcDir + "/" + dstDir + "/" + (string)prefix;

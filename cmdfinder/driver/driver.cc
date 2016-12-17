@@ -1,8 +1,7 @@
 #include <iostream>
 #include <string>
 
-//#include <bobcat/cmdfinder>
-#include "../cmdfinder"
+#include <bobcat/cmdfinder>
 
 using namespace std;
 using namespace FBB;

@@ -2,6 +2,6 @@
 
 CGI &CGI::operator=(CGI &&tmp)
 {
-    fswap(*this, tmp);
+    swap(tmp);
     return *this;
 }

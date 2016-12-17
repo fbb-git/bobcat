@@ -1,0 +1,46 @@
+#ifndef INCLUDED_BOBCAT_EXTRACTORFORK_
+#define INCLUDED_BOBCAT_EXTRACTORFORK_
+
+#include <istream>
+
+#include <bobcat/pipe>
+#include <bobcat/ifdstreambuf>
+#include <bobcat/exec>
+
+namespace FBB
+{
+
+namespace IUO
+{
+
+class ExtractorBase: public CloseMode, protected Exec, 
+                     private IFdStreambuf, public std::istream
+                     
+{                    // the child process inserts into the pipe,
+    size_t d_bufSize;
+    Pipe d_iChildOutPipe;           // cout written by the CHILD
+
+    public:
+        ExtractorBase(size_t bufSize = 100);
+
+        void execute(std::string const &cmd);
+        using FBB::Exec::ret;
+
+    protected:
+        Pipe &childOutPipe();
+
+    private:
+        void parentRedirections() override;
+};
+
+
+inline Pipe &ExtractorBase::childOutPipe()
+{
+    return d_iChildOutPipe;
+}
+
+} // namespace IUO
+
+} // namespace FBB
+        
+#endif

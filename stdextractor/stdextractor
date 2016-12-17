@@ -1,0 +1,24 @@
+#ifndef INCLUDED_BOBCAT_STDEXTRACTOR_
+#define INCLUDED_BOBCAT_STDEXTRACTOR_
+
+#include <bobcat/extractorbase>
+
+namespace FBB
+{
+
+class StdExtractor: public IUO::ExtractorBase
+{
+    void (*d_modeFun)();
+
+    public:
+        StdExtractor(size_t bufSize = 100);
+        StdExtractor(StdMode mode, size_t bufSize = 100);
+
+    private:
+        void childRedirections() override;
+        static void close();
+};
+
+} // namespace FBB
+        
+#endif

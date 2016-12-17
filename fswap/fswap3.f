@@ -1,5 +1,12 @@
-template <typename Tp>
-inline void FSwap::Xch<Tp, 2>::fswap(Tp &lhs, Tp &rhs)
+    // traditional fswap operation
+    //
+template <typename Type>
+void fswap(Type &lhs, Type &rhs)
 {
-    tswap<int16_t>(lhs, rhs);
+    char buffer[sizeof(Type)];
+
+    FSwapPOD<Type> pod{
+        PODfactory(buffer, FSwapBase::addr(lhs), lhs, rhs)};
+
+    FSwapBase::rawswap(pod, FSwapBase::addr(&rhs), sizeof(Type));
 }
