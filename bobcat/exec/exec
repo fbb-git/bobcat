@@ -31,6 +31,7 @@ class Exec: public Fork
 
     protected:
         static void noClose();
+        int setRet(int retVal);
 
     private:
         std::vector<std::string> splitSource() const;
@@ -39,12 +40,17 @@ class Exec: public Fork
         void parentProcess() override;
 };
 
-void Exec::noClose()    // static
+inline void Exec::noClose()    // static
 {}
 
 inline int Exec::ret() const
 {
     return d_ret;
+}
+
+inline int Exec::setRet(int retVal) 
+{
+    return d_ret = retVal;
 }
 
 inline void Exec::parentProcess()

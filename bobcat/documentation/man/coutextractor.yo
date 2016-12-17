@@ -59,16 +59,19 @@ manpagesection(CONSTRUCTOR)
 manpagesection(MEMBERS)
 
     itemization(
-    itb(bool execute(std::string const &cmd))
-        The argument specifies the command to execute: the command itself must
-be specified as a path (the tt(PATH) environment variable isn't used). The
-member returns tt(true) if the child process's exit value equals 0. Otherwise
-tt(false) is returned. Once tt(execute) has returned it can be called again,
-either using the same or another command. The class tt(CoutExtracto) does not
-offer facilities to forcefully terminate the child process: parent processes
-are suspended until the child processes have completed. Arguments passed to
-the program to be executed as child process may optionally be specified using
-single or double quotes, as described in this man-page's DESCRIPTION section.
+    itb(void execute(std::string const &cmd))
+       The argument specifies the command to execute: the command itself must
+        be specified as a path (the tt(PATH) environment variable isn't used).
+        This member immediately returns, after which information written by
+        the child process to its standard output stream may be extracted from
+        the tt(CoutExtractor) object.
+
+        Once tt(execute) has returned it can be called again, either using the
+        same or another command. 
+
+        Arguments passed to the program to be executed as child process may
+        optionally be specified using single or double quotes, as described in
+        this man-page's DESCRIPTION section.
 
     itb(int ret() const)
         Once tt(execute) has returned this member provides the actual exit
@@ -97,7 +100,7 @@ manpagefiles()
 manpageseealso() 
     bf(bobcat)(7), bf(cerrextractor)(3bobcat), bf(cininserter)(3bobcat),
     bf(execl)(3), bf(exec)(3bobcat), 
-    bf(fork)(3bobcat), bf(process)(3bobcat)
+    bf(fork)(3bobcat), bf(process)(3bobcat), bf(stdextractor)(3bobcat).
 
 manpagebugs()
     None reported.

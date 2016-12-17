@@ -1,12 +1,16 @@
 bobcat (4.05.00)
 
-  * Added classes ExecFork, InserterFork and ExtractorFork executing child
-    processes. These classes are simplified specializations of
-    Process. ExecFork simply executes a child process, and waits until its
-    completion; InserterFork acts similarly, but insertions into an
-    InserterFork object are forwarded to the child process; extractions from
-    ExtractorFork read the information that is written to the ExtractorFork's
-    child process's standard output stream.
+  * Added classes Exec, CinInserter, CerrExtractor, CoutExtractor, and
+    StdExtractor, executing child processes. These classes are simplified
+    specializations of Process. Exec simply executes a child process, and
+    waits until its completion; CinInserter acts similarly, but insertions
+    into a CinInserter object are forwarded to the child process; extractions
+    from CerrExtractor read the information that is written to the child
+    process's standard error stream, extractions from CoutExtractor read
+    the information that is written to the child process's standard output
+    stream while extractions from StdExtractor read
+    the information that is written to the child process's standard output and
+    standard error streams.
 
   * The fwap function was redesigned, to allow fast swapping for classes of
     which some members (or their base class(es)) cannot be fast-swapped.
@@ -24,7 +28,7 @@ bobcat (4.05.00)
     operating systems/distributions when it is additionally specified in
     INSTALL.im. 
 
- -- Frank B. Brokken <f.b.brokken@rug.nl>  Sun, 11 Dec 2016 15:54:47 +0100
+ -- Frank B. Brokken <f.b.brokken@rug.nl>  Sat, 17 Dec 2016 11:17:00 +0100
 
 bobcat (4.04.00)
 

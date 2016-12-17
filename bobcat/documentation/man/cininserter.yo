@@ -63,50 +63,49 @@ manpagesection(CONSTRUCTOR)
         internal buffer size used by the tt(CinInserter's) streambuf.
     )
 
+manpagesection(DESTRUCTOR)
+
+    The destructor ends the tt(CinInserter's) child process, if it is still
+    active. 
+
 manpagesection(MEMBERS)
 
     itemization(
-    itb(bool execute(std::string const &cmd))
-        This member can be used if the amount of information to forward to the
-child process is known beforehand. If the amount of information is
-undetermined, then then next  tt(execute) member should be used.
-
+    itb(void execute(std::string const &cmd))
         The argument specifies the command to execute: the command itself must
-be specified as a path (the tt(PATH) environment variable isn't used). The
-member returns tt(true) if the child process's exit value equals 0. Otherwise
-tt(false) is returned. Once tt(execute) has returned it can be called again,
-either using the same or another command. The class tt(CinInserter) does not
-offer facilities to forcefully terminate child processes: parent processes
-are suspended until the child processes have completed. Arguments passed to
-the program to be executed as child process may optionally be specified using
-single or double quotes, as described in this man-page's DESCRIPTION section.
+be specified as a path (the tt(PATH) environment variable isn't used). 
+This member immediately returns, after which
+information can be inserted into the tt(CinInserter) object which is then
+forwarded to the childprocess's standard input stream. 
 
-    itb(bool execute(std::string const &cmd, Fun &&fun))
-        This member is defined as a member template. The tt(cmd) parameter
-specifies the command to execute, and is defined identically as the tt(cmd)
-parameter of the previous tt(execute) member. The parameter tt(fun) is a
-function (or function object). The function argument that is passed to
-tt(execute) is then perfectly forwarded to a separate thread, which provides
-the information to be inserted into the tt(CinInserter) object. The tt(fun)
-argument receives the current tt(CinInserter) object as a reference:
-        verb(
-std::thread thr{std::forward<Fun>(fun), std::ref(*this)};
-        )
-    Once the thread has started, it should insert information into the
-tt(CinInserter) object, after which it should call tt(CinInserter's stop)
-member.  The information is then processed by the tt(CinInserter) object, with
-tt(execute) returning tt(true) if the child process's exit value equals 0.
+Once all information has been inserted, the child process's standard input
+stream must be closed. This is realized by either calling tt(stop) or by
+calling tt(execute) once again, or by ending the tt(CinInserter) object's
+lifetime.
+
+Arguments specified in the tt(cmd) string are passed to the child process, and
+may optionally be specified using single or double quotes, as described in
+this man-page's DESCRIPTION section.
+
+    itb(bool execute(std::string const &cmd, std::string const &text))
+        This member is used to forward a limited amount of information
+(contained in the tt(text) parameter) to the child process specified at
+tt(cmd) (defined identically as the tt(cmd) parameter of the previous
+tt(execute) member).
+
+This member returns tt(true) if the child process's exit value equals 0.
 
     itb(int stop())
-        Once all information has been inserted into the tt(CinInserter)
-object tt(stop) should be called to inform the child process that all
-information has been received. The tt(stop) member returns the child's exit
-code. Sometimes  the input-protocol defined by the child process defines the
-end of the input stream (like a line containing tt(quit)). In such cases
-calling tt(stop) may not be necessary.
+        This function can be called after all information has been inserted
+into the tt(CinInserter) object to close the child process's standard input
+stream. It is not required after calling tt(execute(cmd, text)), or when
+calling tt(execute) again, or when the tt(CinInseror) object's lifetime ends.
+
+    This member returns the exit code of the last executed child process,
+which may also be obtained from the next member:
 
     itb(int ret() const)
-        Once tt(execute) has returned this member provides the actual exit
+        Once a child process has finished this member provides the actual exit
 code of the child process. Its value equals -1 before the first tt(exectue)
 call.
     )
@@ -132,7 +131,8 @@ manpagefiles()
 manpageseealso()
     bf(bobcat)(7), bf(cerrextractor)(3bobcat), bf(coutextractor)(3bobcat), 
     bf(execl)(3), bf(exec)(3bobcat), 
-    bf(fork)(3bobcat), bf(process)(3bobcat)
+    bf(fork)(3bobcat), bf(pipe)(3bobcat), bf(process)(3bobcat), 
+    bf(stdextractor)(3bobcat).
 
 manpagebugs()
     None reported.

@@ -1,13 +1,13 @@
 #include <iostream>
 
-#include <bobcat/extractorfork>
+#include <bobcat/cerrextractor>
 
 using namespace std;
 using namespace FBB;
 
 int main()
 {
-    ExtractorFork extractor;
+    CerrExtractor extractor;
 
     extractor.execute("/bin/cat driver.cc");
 

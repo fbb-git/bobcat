@@ -1,6 +1,6 @@
 #include "cininserter.ih"
 
-CinInserter::CinInserter(size_t bufSize)
+CinInserter::CinInserter(StdMode mode, size_t bufSize)
 :
     ostream(this),
     d_bufSize(bufSize),

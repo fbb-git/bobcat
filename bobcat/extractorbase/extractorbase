@@ -5,10 +5,7 @@
 
 #include <bobcat/pipe>
 #include <bobcat/ifdstreambuf>
-//#include <bobcat/exec>
-
-#include "../exec/exec"
-
+#include <bobcat/exec>
 
 namespace FBB
 {
@@ -26,7 +23,7 @@ class ExtractorBase: public CloseMode, protected Exec,
     public:
         ExtractorBase(size_t bufSize = 100);
 
-        bool execute(std::string const &cmd);
+        void execute(std::string const &cmd);
         using FBB::Exec::ret;
 
     protected:

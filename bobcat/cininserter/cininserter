@@ -38,6 +38,9 @@ class CinInserter: public IUO::CloseMode, private Exec,
 
         using Exec::ret;
 
+    protected:
+        Pipe &childInPipe();
+        
     private:
         void childRedirections() override;
         void parentRedirections() override;
@@ -45,6 +48,11 @@ class CinInserter: public IUO::CloseMode, private Exec,
 
         static void stdClose();
 };
+
+inline Pipe &CinInserter::childInPipe()
+{
+    return d_oChildInPipe;
+}
 
 
 } // namespace FBB

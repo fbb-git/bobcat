@@ -3,11 +3,10 @@
 int CinInserter::stop()
 {
     if (d_stopped)
-        return -1;
+        return ret();
 
     flush();
     close();
 
-    return waitForChild();
-//    return setRet(waitForChild());
+    return setRet(waitForChild());
 }
