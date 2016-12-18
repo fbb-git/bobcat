@@ -1,0 +1,203 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::StdExtractor</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr/>
+<h1 id="title">FBB::StdExtractor</h1>
+<h2 id="author">libbobcat-dev_4.05.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr/>
+<h1 id="title"></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::StdExtractor(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr/>
+<h1 id="title">FBB::StdExtractor(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.05.00-x.tar.gz Executing Child Processes</h2>
+<h2 id="date">2005-2016</h2>
+
+
+<p>
+<h2 >NAME</h2>FBB::StdExtractor - Runs external programs writing standard error
+<p>
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/cerrextractor&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
+<p>
+<h2 >DESCRIPTION</h2>
+    The <strong >FBB::StdExtractor</strong> class offers a basic interface for calling
+external programs (so-called <em >child processes</em>) writing their standard
+output and error streams. The standard input stream of the child processes are
+by default not handled by ttStdExtractor) objects. The child's standard output
+and standard error streams are read through the <em >StdExtractor</em> object:
+information written by the child process to these streams is extracted or read
+from <em >StdExtractor</em> object. The <em >PATH</em> environment variable is not used
+when calling child processes: child process programs must be specified using
+paths.
+<p>
+<em >StdExtractor</em> objects may repeatedly be used to execute the same or
+different child processes. 
+<p>
+Arguments passed to child processes may be surrounded by double or single
+quotes. Arguments surrounded by double quotes have their double quotes
+removed, while interpreting any escape-sequences that may have been used
+within. Arguments surrounded by single quotes have their single quotes
+removed, while accepting their contents as-is. In addition unquoted
+escape-sequences may be specified: those escape sequences are evaluated and
+replaced by their intended characters (e.g., <em >\100</em> is converted to <em >@</em>).
+<p>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong >FBB</strong>.
+<p>
+<h2 >INHERITS FROM</h2>
+    <strong >FBB::Exec</strong> (private),
+    <strong >FBB::IFdStreambuf</strong> (private),
+    <strong >std::istream</strong>
+<p>
+<h2 >CONSTRUCTOR</h2>
+<p>
+<ul>
+    <li> <strong >StdExtractor(size_t bufSize = 100)</strong>:<br/>
+        A <em >bufSize</em> argument may be specified: it defines the internal
+        buffer size used by the <em >StdExtractor's</em> streambuf. By default the
+        stdandard input  stream is not handled.
+    <li> <strong >CoutExtractor(Mode mode, size_t bufSize = 100)</strong>:<br/>
+       The <em >mode</em> argument must be <em >StdExtractor::CLOSE_STD</em>. It indicates
+        that the standard input stream is redirected to <em >/dev/null</em>: the
+        child processes cannot read their standard input streams. A
+        <em >bufSize</em> argument may be specified: it defines the internal buffer
+        size used by the <em >CinInserter's</em> streambuf.
+    </ul>
+<p>
+<h2 >MEMBERS</h2>
+<p>
+<ul>
+    <li> <strong >void execute(std::string const &amp;cmd)</strong>:<br/>
+       The argument specifies the command to execute: the command itself must
+        be specified as a path (the <em >PATH</em> environment variable isn't
+        used). This member immediately returns, after which information
+        written by the child process to its standard output and standard error
+        streams may be extracted from the <em >StdExtractor</em> object.
+<p>
+Once <em >execute</em> has returned it can be called again, either using the
+        same or another command. 
+<p>
+Arguments passed to the program to be executed as child process may
+        optionally be specified using single or double quotes, as described in
+        this man-page's DESCRIPTION section.
+<p>
+<li> <strong >int ret() const</strong>:<br/>
+       Once <em >execute</em> has returned this member provides the actual exit code
+        of the child process. Its value equals -1 before the first <em >exectue</em>
+        call.
+    </ul>
+<p>
+<h2 >PROTECTED MEMBER</h2>
+<p>
+<ul>
+    <li> <strong >Pipe &amp;childOutPipe()</strong>:<br/>
+       If derived classes need to override the redirections-members then they
+        probabaly need access to the pipe written by the child process. This
+        member provides a reference to that pipe. By default the parent
+        process reads information from the pipe, while the child process
+        inserts its standard error output into the pipe.
+    </ul>
+<p>
+<h2 >EXAMPLE</h2>
+<p>
+<pre >
+#include &lt;iostream&gt;
+
+#include &lt;bobcat/cerrextractor&gt;
+
+using namespace std;
+using namespace FBB;
+
+int main()
+{
+    CerrExtractor extractor;
+
+    extractor.execute("/bin/cat driver.cc");
+
+    cout &lt;&lt; extractor.rdbuf();
+
+    cerr &lt;&lt; "Returning: " &lt;&lt; extractor.ret() &lt;&lt; "\n"
+            "again:\n";
+
+    extractor.execute("/bin/cat driver.cc");
+
+    cout &lt;&lt; extractor.rdbuf();
+
+    cerr &lt;&lt; "Returning: " &lt;&lt; extractor.ret() &lt;&lt; '\n';
+
+}
+</pre>
+
+<p>
+<h2 >FILES</h2>
+    <em >bobcat/cerrextractor</em> - provides the class interface
+<p>
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >cerrextractor</strong>(3bobcat), 
+    <strong >cininserter</strong>(3bobcat), <strong >coutextractor</strong>(3bobcat), 
+    <strong >execl</strong>(3), <strong >exec</strong>(3bobcat), 
+    <strong >fork</strong>(3bobcat), <strong >process</strong>(3bobcat).
+<p>
+<h2 >BUGS</h2>
+    None reported.
+<p>
+
+<h2 >DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em >bobcat_4.05.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.05.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.05.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.05.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em >libbobcat1-dev_4.05.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2 >BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2 >COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
+<p>

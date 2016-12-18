@@ -1,0 +1,298 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>binopsbase</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr/>
+<h1 id="title">binopsbase</h1>
+<h2 id="author">libbobcat-dev_4.05.00-x.tar.gz</h2>
+<h2 id="date">2005-2016</h2>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr/>
+<h1 id="title"></h1>
+
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>binopsbase(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr/>
+<h1 id="title">binopsbase(3bobcat)</h1>
+<h2 id="author">libbobcat-dev_4.05.00-x.tar.gz Binary Operators</h2>
+<h2 id="date">2005-2016</h2>
+
+
+<p>
+<h2 >NAME</h2>binopsbase - Class template offering class-type binary operators
+<p>
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/binopsbase&gt;</strong><br/>
+<p>
+<h2 >DESCRIPTION</h2>
+    Classes can overload binary operators. A class named <em >Class</em> may
+overload these binary operators to suit its own needs, allowing, e.g., two
+<em >Class</em> type objects to be added after overloading <em >operator+</em>. Operators
+for the binary operators *, /, %, +, -, &lt;&lt;, &gt;&gt;, &amp;, |, and ^ (in this man-page
+they are generically indicated as the `<em >@</em>' operator) can be overloaded by
+providing various <em >operator@</em> members and functions.
+<p>
+If a class supports copy and/or move construction and if it offers a swap
+member, then binary operators can all be implemented identically, except for
+the specific details associated with specific binary operators. E.g., if a
+class contains two <em >int</em> data members addition of objects of that class
+could simply be defined as adding the corresponding <em >int</em> members, while
+subtraction could be defined as subtracting the corresponding <em >int</em>
+members. Assuming the existence of a member <em >void Class::add(Class const
+&amp;rhs)</em> that defines the addition of a <em >Class rhs</em> object to the <em >*this</em>
+object, while merely providing the basic exception guarantee (i.e., no
+leakage), then the binary addition operators can be defined like this:
+        <pre>
+
+Class operator+(Class &amp;&amp;lhs, Class const &amp;rhs)
+{
+    lhs.add(rhs);
+    return std::move(lhs);
+}
+
+Class operator+(Class const &amp;lhs, Class const &amp;rhs)
+{
+    Class tmp(lhs);
+    tmp.add(rhs);
+    return tmp;
+}
+        
+</pre>
+
+    Likewise, <em >operator+=</em> can be defined for lvalue or rvalue <em >Class</em>
+objects using reference modifiers.
+<p>
+As binary operators can all be implemented alike, given the specific
+members implementing the implied operations, these operators can very well be
+provided using templates. 
+<p>
+By inheriting from the class template <em >BinopsBase</em> classes offering such
+specific functions can a particular <em >operator@=</em> then automatically also
+offers the matching binary operators after including
+<em >bobcat/binopsbase</em>. Since the binary function templates are not
+instantiated until used their definitions can be processed by the compiler
+even if a class implements only a subset of the available binary assignment
+operators.
+<p>
+To provide a class <em >Class</em> with binary operators (and binary compound
+operators) the class <em >Class</em> must implement a member <em >void swap(Class
+&amp;other)</em>, and it should implement (a subset of) the following members
+(preferably in the class's private section):
+    <ul>
+    <li> <em >void mul(Class const &amp;rhs)</em>  - to provide operators <em >*</em> and <em >*=</em>
+    <li> <em >void div(Class const &amp;rhs)</em>  - to provide operators <em >/</em> and <em >/=</em>
+    <li> <em >void mod(Class const &amp;rhs)</em>  - to provide operators <em >%</em> and <em >%=</em>
+    <li> <em >void add(Class const &amp;rhs)</em>  - to provide operators <em >+</em> and <em >+=</em>
+    <li> <em >void sub(Class const &amp;rhs)</em>  - to provide operators <em >-</em> and <em >-=</em>
+    <li> <em >void shl(Class const &amp;rhs)</em> - to provide operators <em >&lt;&lt;</em> and <em >&lt;&lt;=</em>
+    <li> <em >void shr(Class const &amp;rhs)</em> - to provide operators <em >&gt;&gt;</em> and <em >&gt;&gt;=</em>
+    <li> <em >void and_(Class const &amp;rhs)</em> - to provide operators <em >&amp;</em> and <em >&amp;=</em>
+    <li> <em >void or_(Class const &amp;rhs)</em>  - to provide operators <em >|</em> and <em >|=</em>
+    <li> <em >void xor_(Class const &amp;rhs)</em> - to provide operators <em >^</em> and <em >^=</em>
+    </ul>
+    Note the trailing underscore for the members <em >and_, or_</em>, and <em >xor_</em>:
+the underscores are used to prevent conflicts with the <em >and, or,</em> and
+<em >xor</em> keywords.
+<p>
+Next, <em >Class</em> should publicly inherit from
+        <pre>
+
+    FBB::BinopsBase&lt;Class, int ...operators&gt;
+        
+</pre>
+
+    where <em >int ...operators</em> lists the specific set of binary operators that
+are requested. E.g., to provide <em >Class</em> with multiplication, division,
+modulo, and shit-operators its class interface should start as shown:
+        <pre>
+
+    class Class: public FBB::BinopsBase&lt;Class, '*', '/', '%', '&lt;', '&gt;'&gt;
+        
+</pre>
+
+    There is no specific ordering required when specifying <em >int
+...operators</em>. Note that <em >'&lt;'</em> and <em >'&gt;'</em> in the <em >int ...operators</em> list
+specify, respectively, the shift-left and shift-right operators. All other
+operators are specified by their common operator, specified as character
+constants. 
+<p>
+If, as advised, the members implementing the required binary operations
+are declared in the class's private section then the class's interface should
+declare its base class as a friend. E.g.,
+        <pre>
+
+    class Class: public FBB::BinopsBase&lt;Class, '*', '/', '%', '&lt;', '&gt;'&gt;
+    {
+        friend FBB::BinopsBase&lt;Class, '*', '/', '%', '&lt;', '&gt;'&gt;;
+
+        public:
+            ...
+
+        private:
+            void mul(Class const &amp;rhs);
+            void div(Class const &amp;rhs);
+            void mod(Class const &amp;rhs);
+            void shl(Class const &amp;rhs);
+            void shr(Class const &amp;rhs);
+    };
+        
+</pre>
+
+<p>
+<h2 >INHERITS FROM</h2>
+<p>
+Several Internal-use-only Bobcat classes, completing the <em >BinopsBase</em>
+class template.
+<p>
+<h2 >OVERLOADED OPERATORS</h2>
+<p>
+Assuming <em >BinopsBase</em> is a base class of the class <em >Class</em>, then
+for each of the requested binary operators (e.g., <em >@</em>) the following
+operators are now available:
+<p>
+<pre>
+
+    free operators:
+
+        Class operator@(Class const &amp;lhs, Class const &amp;rhs);
+        Class operator@(Class &amp;&amp;lhs, Class const &amp;rhs);
+
+    members:
+
+        Class &amp;operator@(Class const &amp;rhs) &amp;;
+        Class &amp;&amp;operator@(Class const &amp;rhs) &amp;&amp;;
+    
+</pre>
+
+<p>
+<h2 >EXAMPLE</h2>
+    <pre >
+#include "../binopsbase"
+
+#include &lt;iostream&gt;
+using namespace std;
+
+class Demo1: public FBB::BinopsBase&lt;Demo1, '+', '-'&gt;
+{
+    friend FBB::BinopsBase&lt;Demo1, '+', '-'&gt;;
+
+    public:
+        void swap(Demo1 &amp;other)
+        {}
+
+    private:
+        void add(Demo1 const &amp;rhs)
+        {
+            cout &lt;&lt; "adding two Demo1 objects\n";
+        }
+
+        void sub(Demo1 const &amp;rhs)
+        {
+            cout &lt;&lt; "subtracting two Demo1 objects\n";
+        }
+};
+
+
+class Demo2: public FBB::BinopsBase&lt;Demo2, '+', '^'&gt;
+{
+    friend FBB::BinopsBase&lt;Demo2, '+', '^'&gt;;
+
+    public:
+        void swap(Demo2 &amp;other)
+        {}
+
+    private:
+        void add(Demo2 const &amp;rhs)
+        {
+            cout &lt;&lt; "adding two Demo2 objects\n";
+        }
+
+        void xor_(Demo2 const &amp;rhs)
+        {
+            cout &lt;&lt; "xor-ing two Demo2 objects\n";
+        }
+};
+
+int main()
+{
+    Demo1 d1a, d1b;
+    Demo1 d1c = d1a + d1b;
+    d1a += d1b;
+    d1c = Demo1{} + d1b;
+
+    Demo2 d2a, d2b;
+    Demo2 d2c = d2a + d2b;
+    d2a ^= d2b;
+    d2c = Demo2{} ^ d2b;
+
+}
+
+
+
+
+
+</pre>
+
+<p>
+<h2 >FILES</h2>
+    <em >bobcat/binopsbase</em> - defines the binary operator function templates
+<p>
+<h2 >SEE ALSO</h2>
+    <strong >bobcat/binops</strong>(3)
+    <strong >bobcat</strong>(7)
+<p>
+<h2 >BUGS</h2>
+    None Reported.
+<p>
+
+<h2 >DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em >bobcat_4.05.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.05.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.05.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.05.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em >libbobcat1-dev_4.05.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2 >BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2 >COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
+<p>
