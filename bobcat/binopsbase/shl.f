@@ -1,12 +1,12 @@
-template <class Binops, class Derived>
+template <class Derived>
 struct Shl
 {
     Derived &operator<<=(Derived const &rhs) &; 
     Derived &&operator<<=(Derived const &rhs) &&;
 };
 
-template <class Binops, class Derived>
-Derived &Shl<Binops, Derived>::operator<<=(Derived const &rhs) &
+template <class Derived>
+Derived &Shl<Derived>::operator<<=(Derived const &rhs) &
 {
     Derived tmp{static_cast<Derived &>(*this)};
     tmp.shlWrap(rhs);
@@ -14,8 +14,8 @@ Derived &Shl<Binops, Derived>::operator<<=(Derived const &rhs) &
     return static_cast<Derived &>(*this);
 }
 
-template <class Binops, class Derived>
-Derived &&Shl<Binops, Derived>::operator<<=(Derived const &rhs) &&
+template <class Derived>
+Derived &&Shl<Derived>::operator<<=(Derived const &rhs) &&
 {
     static_cast<Derived &>(*this).shlWrap(rhs);
     return std::move(static_cast<Derived &>(*this));
@@ -40,5 +40,5 @@ template <class Binops, class Derived, int ...ops>
 class BinopsBase0<Binops, Derived, '<', ops...>
 :
     public BinopsBase0<Binops, Derived, ops...>,
-    public Shl<Binops, Derived>
+    public Shl<Derived>
 {};
