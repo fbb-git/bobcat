@@ -1,12 +1,12 @@
-template <class Binops, class Derived>
+template <class Derived>
 struct Mod
 {
     Derived &operator%=(Derived const &rhs) &; 
     Derived &&operator%=(Derived const &rhs) &&;
 };
 
-template <class Binops, class Derived>
-Derived &Mod<Binops, Derived>::operator%=(Derived const &rhs) &
+template <class Derived>
+Derived &Mod<Derived>::operator%=(Derived const &rhs) &
 {
     Derived tmp{static_cast<Derived &>(*this)};
     tmp.modWrap(rhs);
@@ -14,8 +14,8 @@ Derived &Mod<Binops, Derived>::operator%=(Derived const &rhs) &
     return static_cast<Derived &>(*this);
 }
 
-template <class Binops, class Derived>
-Derived &&Mod<Binops, Derived>::operator%=(Derived const &rhs) &&
+template <class Derived>
+Derived &&Mod<Derived>::operator%=(Derived const &rhs) &&
 {
     static_cast<Derived &>(*this).modWrap(rhs);
     return std::move(static_cast<Derived &>(*this));
@@ -40,5 +40,5 @@ template <class Binops, class Derived, int ...ops>
 class BinopsBase0<Binops, Derived, '%', ops...>
 :
     public BinopsBase0<Binops, Derived, ops...>,
-    public Mod<Binops, Derived>
+    public Mod<Derived>
 {};
