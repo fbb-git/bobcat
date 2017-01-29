@@ -1,12 +1,12 @@
-template <class Binops, class Derived>
+template <class Derived>
 struct Mul
 {
     Derived &operator*=(Derived const &rhs) &; 
     Derived &&operator*=(Derived const &rhs) &&;
 };
 
-template <class Binops, class Derived>
-Derived &Mul<Binops, Derived>::operator*=(Derived const &rhs) &
+template <class Derived>
+Derived &Mul<Derived>::operator*=(Derived const &rhs) &
 {
     Derived tmp{static_cast<Derived &>(*this)};
     tmp.mulWrap(rhs);
@@ -14,8 +14,8 @@ Derived &Mul<Binops, Derived>::operator*=(Derived const &rhs) &
     return static_cast<Derived &>(*this);
 }
 
-template <class Binops, class Derived>
-Derived &&Mul<Binops, Derived>::operator*=(Derived const &rhs) &&
+template <class Derived>
+Derived &&Mul<Derived>::operator*=(Derived const &rhs) &&
 {
     static_cast<Derived &>(*this).mulWrap(rhs);
     return std::move(static_cast<Derived &>(*this));
@@ -40,6 +40,6 @@ template <class Binops, class Derived, int ...ops>
 class BinopsBase0<Binops, Derived, '*', ops...>
 :
     public BinopsBase0<Binops, Derived, ops...>,
-    public Mul<Binops, Derived>
+    public Mul<Derived>
 {};
 

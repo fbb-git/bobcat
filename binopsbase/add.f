@@ -1,12 +1,12 @@
-template <class Binops, class Derived>
+template <class Derived>
 struct Add
 {
     Derived &operator+=(Derived const &rhs) &; 
     Derived &&operator+=(Derived const &rhs) &&;
 };
 
-template <class Binops, class Derived>
-Derived &Add<Binops, Derived>::operator+=(Derived const &rhs) &
+template <class Derived>
+Derived &Add<Derived>::operator+=(Derived const &rhs) &
 {
     Derived tmp{static_cast<Derived &>(*this)};
     tmp.addWrap(rhs);
@@ -14,8 +14,8 @@ Derived &Add<Binops, Derived>::operator+=(Derived const &rhs) &
     return static_cast<Derived &>(*this);
 }
 
-template <class Binops, class Derived>
-Derived &&Add<Binops, Derived>::operator+=(Derived const &rhs) &&
+template <class Derived>
+Derived &&Add<Derived>::operator+=(Derived const &rhs) &&
 {
     static_cast<Derived &>(*this).addWrap(rhs);
     return std::move(static_cast<Derived &>(*this));
@@ -41,7 +41,7 @@ template <class Binops, class Derived, int ...ops>
 class BinopsBase0<Binops, Derived, '+', ops...>
 :
     public BinopsBase0<Binops, Derived, ops...>,
-    public Add<Binops, Derived>
+    public Add<Derived>
 {};
 
 
