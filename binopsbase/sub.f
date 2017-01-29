@@ -1,12 +1,12 @@
-template <class Binops, class Derived>
+template <class Derived>
 struct Sub
 {
     Derived &operator-=(Derived const &rhs) &; 
     Derived &&operator-=(Derived const &rhs) &&;
 };
 
-template <class Binops, class Derived>
-Derived &Sub<Binops, Derived>::operator-=(Derived const &rhs) &
+template <class Derived>
+Derived &Sub<Derived>::operator-=(Derived const &rhs) &
 {
     Derived tmp{static_cast<Derived &>(*this)};
     tmp.subWrap(rhs);
@@ -14,8 +14,8 @@ Derived &Sub<Binops, Derived>::operator-=(Derived const &rhs) &
     return static_cast<Derived &>(*this);
 }
 
-template <class Binops, class Derived>
-Derived &&Sub<Binops, Derived>::operator-=(Derived const &rhs) &&
+template <class Derived>
+Derived &&Sub<Derived>::operator-=(Derived const &rhs) &&
 {
     static_cast<Derived &>(*this).subWrap(rhs);
     return std::move(static_cast<Derived &>(*this));
@@ -40,7 +40,7 @@ template <class Binops, class Derived, int ...ops>
 class BinopsBase0<Binops, Derived, '-', ops...>
 :
     public BinopsBase0<Binops, Derived, ops...>,
-    public Sub<Binops, Derived>
+    public Sub<Derived>
 {};
 
 

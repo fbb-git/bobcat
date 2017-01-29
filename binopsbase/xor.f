@@ -1,12 +1,12 @@
-template <class Binops, class Derived>
+template <class Derived>
 struct Xor
 {
     Derived &operator^=(Derived const &rhs) &; 
     Derived &&operator^=(Derived const &rhs) &&;
 };
 
-template <class Binops, class Derived>
-Derived &Xor<Binops, Derived>::operator^=(Derived const &rhs) &
+template <class Derived>
+Derived &Xor<Derived>::operator^=(Derived const &rhs) &
 {
     Derived tmp{static_cast<Derived &>(*this)};
     tmp.xorWrap(rhs);
@@ -14,8 +14,8 @@ Derived &Xor<Binops, Derived>::operator^=(Derived const &rhs) &
     return static_cast<Derived &>(*this);
 }
 
-template <class Binops, class Derived>
-Derived &&Xor<Binops, Derived>::operator^=(Derived const &rhs) &&
+template <class Derived>
+Derived &&Xor<Derived>::operator^=(Derived const &rhs) &&
 {
     static_cast<Derived &>(*this).xorWrap(rhs);
     return std::move(static_cast<Derived &>(*this));
@@ -40,5 +40,5 @@ template <class Binops, class Derived, int ...ops>
 class BinopsBase0<Binops, Derived, '^', ops...>
 :
     public BinopsBase0<Binops, Derived, ops...>,
-    public Xor<Binops, Derived>
+    public Xor<Derived>
 {};
