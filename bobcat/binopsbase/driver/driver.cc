@@ -1,11 +1,12 @@
 #include "../binopsbase"
+//#include <bobcat/binopsbase>
 
 #include <iostream>
 using namespace std;
 
-class Demo1: public FBB::BinopsBase<Demo1, '+', '-'>
+class Demo1: public FBB::BinopsBase<Demo1, 'i', '+', '-'>
 {
-    friend FBB::BinopsBase<Demo1, '+', '-'>;
+    friend FBB::BinopsBase<Demo1, 'i', '+', '-'>;
 
     public:
         void swap(Demo1 &other)
@@ -20,6 +21,11 @@ class Demo1: public FBB::BinopsBase<Demo1, '+', '-'>
         void sub(Demo1 const &rhs)
         {
             cout << "subtracting two Demo1 objects\n";
+        }
+
+        void insert(ostream &out) const
+        {
+            out << "inserting a Demo1 object";
         }
 };
 
@@ -51,12 +57,14 @@ int main()
     d1a += d1b;
     d1c = Demo1{} + d1b;
 
+    cout << d1a << '\n';
+
     Demo2 d2a, d2b;
     Demo2 d2c = d2a + d2b;
     d2a ^= d2b;
     d2c = Demo2{} ^ d2b;
-
 }
+
 
 
 
