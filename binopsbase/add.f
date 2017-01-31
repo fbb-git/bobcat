@@ -37,10 +37,10 @@ Derived operator+(Derived &&lhs, Derived const &rhs)
 }
 
 
-template <class Binops, class Derived, int ...ops>
-class BinopsBase0<Binops, Derived, '+', ops...>
+template <class Derived, int ...ops>
+class BinopsBase0<Derived, '+', ops...>
 :
-    public BinopsBase0<Binops, Derived, ops...>,
+    public BinopsBase0<Derived, ops...>,
     public Add<Derived>
 {};
 

@@ -36,9 +36,9 @@ Derived operator|(Derived &&lhs, Derived const &rhs)
     return std::move(lhs);
 }
 
-template <class Binops, class Derived, int ...ops>
-class BinopsBase0<Binops, Derived, '|', ops...>
+template <class Derived, int ...ops>
+class BinopsBase0<Derived, '|', ops...>
 :
-    public BinopsBase0<Binops, Derived, ops...>,
+    public BinopsBase0<Derived, ops...>,
     public Or<Derived>
 {};
