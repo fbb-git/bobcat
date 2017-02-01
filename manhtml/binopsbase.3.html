@@ -10,7 +10,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">binopsbase(3bobcat)</h1>
-<h2 id="author">Binary Operators<br/>(libbobcat-dev_4.06.00-x.tar.gz)</h2>
+<h2 id="author">Binary Operators<br/>(libbobcat-dev_4.06.01-x.tar.gz)</h2>
 <h2 id="date">2005-2017</h2>
 
 
@@ -26,11 +26,14 @@ overload these binary operators to suit its own needs, allowing, e.g., two
 <em >Class</em> type objects to be added after overloading <em >operator+</em>. Operators
 for the binary operators *, /, %, +, -, &lt;&lt;, &gt;&gt;, &amp;, |, and ^ (in this man-page
 they are generically indicated as the `<em >@</em>' operator) can be overloaded by
-providing various <em >operator@</em> members and functions.
+providing various <em >operator@</em> members and functions. In addition, overloaded 
+<em >operator&lt;&lt;</em> and <em >operator&gt;&gt;</em> for stream insertion and extraction can
+easily be defined.
 <p>
 If a class supports copy and/or move construction and if it offers a swap
 member, then binary operators can all be implemented identically, except for
-the specific details associated with specific binary operators. E.g., if a
+the specific details associated with specific binary operators. A similar
+observation applies to the insertion and extraction operators. E.g., if a
 class contains two <em >int</em> data members addition of objects of that class
 could simply be defined as adding the corresponding <em >int</em> members, while
 subtraction could be defined as subtracting the corresponding <em >int</em>
@@ -63,31 +66,34 @@ members implementing the implied operations, these operators can very well be
 provided using templates. 
 <p>
 By inheriting from the class template <em >BinopsBase</em> classes offering such
-specific functions can a particular <em >operator@=</em> then automatically also
-offers the matching binary operators after including
-<em >bobcat/binopsbase</em>. Since the binary function templates are not
-instantiated until used their definitions can be processed by the compiler
-even if a class implements only a subset of the available binary assignment
+specific functions may then automatically add the corresponding compound
+assignment operators and the matching binary operators. Since the function
+templates are not instantiated until used their definitions can be processed
+by the compiler even if a class implements only a subset of the available
 operators.
 <p>
 To provide a class <em >Class</em> with binary operators (and binary compound
-operators) the class <em >Class</em> must implement a member <em >void swap(Class
-&amp;other)</em>, and it should implement (a subset of) the following members
-(preferably in the class's private section):
+operators) <em >Class</em> must implement a member <em >void swap(Class &amp;other)</em>, and
+it should implement (a subset of) the following members (preferably in the
+class's private section):
     <ul>
-    <li> <em >void mul(Class const &amp;rhs)</em>  - to provide operators <em >*</em> and <em >*=</em>
-    <li> <em >void div(Class const &amp;rhs)</em>  - to provide operators <em >/</em> and <em >/=</em>
-    <li> <em >void mod(Class const &amp;rhs)</em>  - to provide operators <em >%</em> and <em >%=</em>
-    <li> <em >void add(Class const &amp;rhs)</em>  - to provide operators <em >+</em> and <em >+=</em>
-    <li> <em >void sub(Class const &amp;rhs)</em>  - to provide operators <em >-</em> and <em >-=</em>
-    <li> <em >void shl(Class const &amp;rhs)</em> - to provide operators <em >&lt;&lt;</em> and <em >&lt;&lt;=</em>
-    <li> <em >void shr(Class const &amp;rhs)</em> - to provide operators <em >&gt;&gt;</em> and <em >&gt;&gt;=</em>
-    <li> <em >void and_(Class const &amp;rhs)</em> - to provide operators <em >&amp;</em> and <em >&amp;=</em>
-    <li> <em >void or_(Class const &amp;rhs)</em>  - to provide operators <em >|</em> and <em >|=</em>
-    <li> <em >void xor_(Class const &amp;rhs)</em> - to provide operators <em >^</em> and <em >^=</em>
+    <li> <em >void mul(Class const &amp;rhs)</em>  - called by operators <em >*</em> and <em >*=</em>
+    <li> <em >void div(Class const &amp;rhs)</em>  - called by operators <em >/</em> and <em >/=</em>
+    <li> <em >void mod(Class const &amp;rhs)</em>  - called by operators <em >%</em> and <em >%=</em>
+    <li> <em >void add(Class const &amp;rhs)</em>  - called by operators <em >+</em> and <em >+=</em>
+    <li> <em >void sub(Class const &amp;rhs)</em>  - called by operators <em >-</em> and <em >-=</em>
+    <li> <em >void shl(Class const &amp;rhs)</em> - called by operators <em >&lt;&lt;</em> and <em >&lt;&lt;=</em>
+    <li> <em >void shr(Class const &amp;rhs)</em> - called by operators <em >&gt;&gt;</em> and <em >&gt;&gt;=</em>
+    <li> <em >void and_(Class const &amp;rhs)</em> - called by operators <em >&amp;</em> and <em >&amp;=</em>
+    <li> <em >void or_(Class const &amp;rhs)</em>  - called by operators <em >|</em> and <em >|=</em>
+    <li> <em >void xor_(Class const &amp;rhs)</em> - called by operators <em >^</em> and <em >^=</em>
+    <li> <em >void extract(std::istream &amp;in) const</em> - called by 
+                        <em >operator&gt;&gt;(std::istream &amp;in, Class &amp;obj)</em>
+    <li> <em >void insert(std::ostream &amp;out) const</em> - called by 
+                        <em >operator&lt;&lt;(std::ostream &amp;out, Class const &amp;obj)</em>
     </ul>
     Note the trailing underscore for the members <em >and_, or_</em>, and <em >xor_</em>:
-the underscores are used to prevent conflicts with the <em >and, or,</em> and
+the underscores are there to prevent conflicts with the <em >and, or,</em> and
 <em >xor</em> keywords.
 <p>
 Next, <em >Class</em> should publicly inherit from
@@ -99,7 +105,7 @@ Next, <em >Class</em> should publicly inherit from
 
     where <em >int ...operators</em> lists the specific set of binary operators that
 are requested. E.g., to provide <em >Class</em> with multiplication, division,
-modulo, and shit-operators its class interface should start as shown:
+modulo, and shift-operators its class interface should start as shown:
         <pre>
 
     class Class: public FBB::BinopsBase&lt;Class, '*', '/', '%', '&lt;', '&gt;'&gt;
@@ -110,7 +116,8 @@ modulo, and shit-operators its class interface should start as shown:
 ...operators</em>. Note that <em >'&lt;'</em> and <em >'&gt;'</em> in the <em >int ...operators</em> list
 specify, respectively, the shift-left and shift-right operators. All other
 operators are specified by their common operator, specified as character
-constants. 
+constants. The insertion operator is specified by <em >'i'</em>, the extraction
+operator by <em >'e'</em>.
 <p>
 If, as advised, the members implementing the required binary operations
 are declared in the class's private section then the class's interface should
@@ -161,16 +168,32 @@ operators are now available:
 </pre>
 
 <p>
+The insertion operator is available when specifying <em >'i'</em>:
+    <pre>
+
+    std::ostream &amp;operator&lt;&lt;(std::ostream &amp;out, Class const &amp;obj);
+    
+</pre>
+
+    The extraction operator is available when specifying <em >'e'</em>:
+    <pre>
+
+    std::istream &amp;operator&gt;&gt;(std::istream &amp;in, Class &amp;obj);
+    
+</pre>
+
+<p>
 <h2 >EXAMPLE</h2>
     <pre >
 #include "../binopsbase"
+//#include &lt;bobcat/binopsbase&gt;
 
 #include &lt;iostream&gt;
 using namespace std;
 
-class Demo1: public FBB::BinopsBase&lt;Demo1, '+', '-'&gt;
+class Demo1: public FBB::BinopsBase&lt;Demo1, 'i', '+', '-'&gt;
 {
-    friend FBB::BinopsBase&lt;Demo1, '+', '-'&gt;;
+    friend FBB::BinopsBase&lt;Demo1, 'i', '+', '-'&gt;;
 
     public:
         void swap(Demo1 &amp;other)
@@ -185,6 +208,11 @@ class Demo1: public FBB::BinopsBase&lt;Demo1, '+', '-'&gt;
         void sub(Demo1 const &amp;rhs)
         {
             cout &lt;&lt; "subtracting two Demo1 objects\n";
+        }
+
+        void insert(ostream &amp;out) const
+        {
+            out &lt;&lt; "inserting a Demo1 object";
         }
 };
 
@@ -216,12 +244,14 @@ int main()
     d1a += d1b;
     d1c = Demo1{} + d1b;
 
+    cout &lt;&lt; d1a &lt;&lt; '\n';
+
     Demo2 d2a, d2b;
     Demo2 d2c = d2a + d2b;
     d2a ^= d2b;
     d2c = Demo2{} ^ d2b;
-
 }
+
 
 
 
@@ -243,12 +273,12 @@ int main()
 
 <h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em >bobcat_4.06.00-x.dsc</em>: detached signature;
-    <li> <em >bobcat_4.06.00-x.tar.gz</em>: source archive;
-    <li> <em >bobcat_4.06.00-x_i386.changes</em>: change log;
-    <li> <em >libbobcat1_4.06.00-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.06.01-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.06.01-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.06.01-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.06.01-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em >libbobcat1-dev_4.06.00-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.06.01-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
