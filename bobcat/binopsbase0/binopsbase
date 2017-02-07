@@ -1,0 +1,59 @@
+#ifndef INCLUDED_BOBCAT_BINOPSBASE_
+#define INCLUDED_BOBCAT_BINOPSBASE_
+
+#include <utility>
+#include <istream>
+#include <ostream>
+
+namespace FBB
+{
+    // The recursively defined BinopsBase0 class: receives so a static
+    // cast becomes available to reach the basic arithmetic classes
+
+    // The general declaration:
+    //
+template <class Derived, int ...ops>
+class BinopsBase0;
+
+    // The terminating definition:
+    //
+template <class Derived>
+class BinopsBase0<Derived>
+{};
+
+#include "mul.f"
+#include "div.f"
+#include "mod.f"
+#include "add.f"
+#include "sub.f"
+#include "shl.f"
+#include "shr.f"
+#include "and.f"
+#include "or.f"
+#include "xor.f"
+#include "insert.f"
+#include "extract.f"
+
+    // The class BinopsBase befriends all arithmetic classes, and implements
+    // wrappers for the arithmetic functions potentially defined in
+    // Derived.
+    // The arithmetic classes call BinopsBase' functions, which in turn call
+    // Derived's functions. This way Derived only needs to implement the
+    // necessary functions. Since the other functions aren't called, they
+    // arent't instantiated so there are no linker-errors
+    //
+template <class Derived, int ...ops>
+class BinopsBase: public BinopsBase0<Derived, ops...>
+{
+#include "friends.f"
+
+#include "wraps.f"
+};
+
+#include "inlines.f"
+
+} // FBB        
+#endif
+
+
+
