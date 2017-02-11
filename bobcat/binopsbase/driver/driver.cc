@@ -1,6 +1,5 @@
 #include <iostream>
-
-#include "../binopsbase"
+#include <bobcat/binopsbase>
 
 class Demo1: public FBB::BinopsBase<Demo1>
 {
@@ -16,6 +15,8 @@ class Demo1: public FBB::BinopsBase<Demo1>
             return std::move(*this);
         }
 
+//  Explicit definitions take precedence over functions templates
+//  instantiated from definitions in bobcat/binopsbase. 
 //        Demo1 &operator+=(Demo1 const &rhs) &
 //        {
 //            std::cout << "adding (self-defined) two Demo1 objects\n";
@@ -51,7 +52,6 @@ class Demo1: public FBB::BinopsBase<Demo1>
         }
 };
 
-
 class Demo2: public FBB::BinopsBase<Demo2>
 {
     public:
@@ -66,7 +66,7 @@ class Demo2: public FBB::BinopsBase<Demo2>
 
         Demo2 &operator+=(Demo2 const &rhs) &
         {
-            std::cout << "adding (self-defined) two Demo2 objects\n";
+            std::cout << "adding (self-defined) two Demo2 objects";
             return *this;
         }
 
@@ -96,13 +96,13 @@ int main()
 
     d1a <<= d1a;
     d1a <<= 5;
-//
-//    Demo2 d2a, d2b;
-//    Demo2 d2c = d2a + d2b;
-//    d2a ^= d2b;
-//    d2c = Demo2{} ^ d2b;
-//
-//    d2c = d2c | d2b;
+
+    Demo2 d2a, d2b;
+    Demo2 d2c = d2a + d2b;
+    d2a ^= d2b;
+    d2c = Demo2{} ^ d2b;
+
+    d2c = d2c | d2b;
 }
 
 
