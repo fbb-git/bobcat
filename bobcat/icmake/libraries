@@ -155,7 +155,7 @@ void _shared_library(string libso, string libsoshared,
     }
 }
 
-void libraries(int keepPch, string libname, int all, int strip)
+void libraries(int keepPch, string libname, int all, int strip, int select)
 {
     string libso;
     string libsoshared;
@@ -164,7 +164,8 @@ void libraries(int keepPch, string libname, int all, int strip)
     staticLib = g_tmpliba + "/lib" LIBRARY ".a";
 
     addClasses("CLASSES");
-    special(1, all);
+
+    special(1, all, select);
 
     md(g_tmpliba + " " + g_tmphdr + " " + g_tmplibso);
 
@@ -191,6 +192,9 @@ void libraries(int keepPch, string libname, int all, int strip)
 
     if (!keepPch)
         run("rm -rf */*.ih.gch");
+
+    if (all)
+        system("dependencies/store");
 
     exit(0);
 }

@@ -106,10 +106,27 @@ void main(int argc, list argv)
     {
         option = "libraries";
         g_all   = 0;
-        libraries(keepPch, "bobcat", 1, argv[2] == "strip");
+        libraries(keepPch, "bobcat", 1, argv[2] == "strip", 0);
     }
 
-        // 'all': all all libraries unconditionally
+    if (option == "select")
+    {
+        if (!exists("CLASSES.bak"))
+            exec("cp CLASSES CLASSES.bak");
+
+        string subset;
+        idx = 2;
+        if (argv[2] == "strip")
+            ++idx;
+
+        for (int elem = listlen(argv); elem-- != idx; )
+            (subset += argv[elem]) += ' ';
+        system("icmake/subset.sh " + subset + "> CLASSES");
+        libraries(keepPch, "bobcat", 0, idx == 3, 1);
+    }
+
+
+        // 'all': all libraries unconditionally
         // not 'all': ask for the inclusion of additional libraries
         // g_light: do not consider the additional libraries
     if (option == "libraries")
@@ -121,13 +138,13 @@ void main(int argc, list argv)
         else                    // not all: defines 'strip'
             strip = all;
 
-        libraries(keepPch, "bobcat", all == "all", strip == "strip");
+        libraries(keepPch, "bobcat", all == "all", strip == "strip", 0);
     }
 
     if (option == "l")
     {
         system(P_NOCHECK, "tput clear");
-        libraries(keepPch, "bobcat", 1, 0);
+        libraries(keepPch, "bobcat", 1, 0, 0);
     }
 
     if (option == "man")
@@ -162,6 +179,10 @@ void main(int argc, list argv)
         "                         optionally strip the libraries)\n"
         "   l                   - same as 'libraries all', but clearing the\n"
         "                         screen before starting the compilation\n"
+        "   select [strip] class ... - build libbobcat for the class(es)\n"
+        "                         listed at 'class ...'. The original "
+                                                                "CLASSES\n"
+        "                         file is saved as CLASSES.bak\n"
         "   install [LOG:path] selection [base] -\n"
         "                         to install the software in the locations "
                                                                 "defined \n"

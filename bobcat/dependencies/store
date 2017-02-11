@@ -1,0 +1,41 @@
+#!/bin/bash
+
+    # call this script from its parent directory: dependencies/store
+
+cd dependencies
+
+icmbuild				    # build the dependency checker
+
+cd ..
+
+usingClasses=dependencies/using.classes
+
+IFS='
+'
+
+rm -f $usingClasses
+
+for line in `cat CLASSES` `cat READLINE` `cat SSLCLASSES` milter xpointer
+do
+    field=`echo $line | cut -f1 -d' '`	    # first word on lines of CLASSES
+
+					    # skip empty and comment lines
+    [ "$field" == "#" -o "$field" == "" ] && continue;
+
+    echo $field >> $usingClasses	    # write the class-name
+
+					    # add indented names of all 
+					    # classes including the class-name
+					    # in non .cc and .f files 
+					    # so: header files
+    grep "/$field\b" `find -mindepth 2 -maxdepth 2 -type f -name '*[^cf]'` |
+        sed 's,./\([^/]\+\).*,    \1,g' >> $usingClasses
+    
+done
+
+dependencies/tmp/bin/binary < $usingClasses > dependencies/required.classes
+
+cd dependencies
+
+icmbuild clean
+

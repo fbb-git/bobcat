@@ -1,3 +1,48 @@
+void checkXpointer()
+{
+    if (listfind(g_classes, "xpointer") != -1)
+        g_sharedLibReq += " -lX11";
+}
+
+void checkMilter()
+{
+    if (listfind(g_classes, "milter") != -1)
+        g_sharedLibReq += " -lmilter -L/usr/lib/libmilter";
+}
+
+
+void checkReadLine()
+{
+    list class;
+    string elem;
+
+    while (listlen(class = fgets("READLINE", class)))
+    {
+        elem = strtok(class[0], " \t\n")[0];
+        if (elem != "#" && listfind(g_classes, elem) != -1)
+        {
+            g_sharedLibReq += " -lreadline";
+            return;
+        }
+    }
+}
+
+void checkSSL()
+{
+    list class;
+    string elem;
+
+    while (listlen(class = fgets("SSLCLASSES", class)))
+    {
+        elem = strtok(class[0], " \t\n")[0];
+        if (elem != "#" && listfind(g_classes, elem) != -1)
+        {
+            g_sharedLibReq += " -lssl -lcrypto -lpthread";
+            return;
+        }
+    }
+}
+
 
 void askMilter(int all)
 {
@@ -56,6 +101,7 @@ void askXpointer(int all)
     }
 }
 
+
 void askOpenSSL(int all)
 {
     if (!all)
@@ -110,13 +156,20 @@ void askReadLine(int all)
     }    
 }
 
-void special(int query, int all)
+void special(int query, int all, int select)
 {
     list cut;
     list line;
     int refresh;
 
-    if (g_all && query)
+    if (select)
+    {
+        checkXpointer();
+        checkMilter();
+        checkReadLine();
+        checkSSL();
+    }
+    else if (g_all && query)
     {
         askXpointer(all);
         askOpenSSL(all);
@@ -146,4 +199,5 @@ void special(int query, int all)
             fprintf("release.yo", "SUBST(_CurYrs_)(", element(1, cut), ")\n");
     }
 }
+
 
