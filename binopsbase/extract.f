@@ -1,16 +1,12 @@
-template <class Derived>
-struct Extract
-{};
-
-template <class Derived>
-std::istream &operator>>(std::istream &in, Derived &rhs)
+template <typename Derived>
+inline void BinopsBase<Derived>::eWrap(std::istream &in)
 {
-    return rhs.extractWrap(in);
+    der(*this).extract(in);
 }
 
-template <class Derived, int ...ops>
-class BinopsBase0<Derived, 'e', ops...>
-:
-    public BinopsBase0<Derived, ops...>,
-    public Extract<Derived>
-{};
+template <typename Derived>
+inline std::istream &operator>>(std::istream &in, BinopsBase<Derived> &rhs)
+{
+    rhs.eWrap(in);
+    return in;
+}

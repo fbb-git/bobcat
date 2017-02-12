@@ -16,7 +16,7 @@ void CGI::setMethod()
         if (meth == "POST")
         {
             if ((cp = (*this)["CONTENT_LENGTH"]))
-                d_contentLength = A2x(cp);
+                d_contentLength = stoull(cp);       // A2x(cp);
 
             if ((cp = (*this)["CONTENT_TYPE"]) != 0)
             {

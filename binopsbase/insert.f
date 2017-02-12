@@ -1,16 +1,12 @@
-template <class Derived>
-struct Insert
-{};
-
-template <class Derived>
-std::ostream &operator<<(std::ostream &out, Derived const &rhs)
+template <typename Derived>
+inline void BinopsBase<Derived>::iWrap(std::ostream &out) const
 {
-    return rhs.insertWrap(out);
+    der(*this).insert(out);
 }
 
-template <class Derived, int ...ops>
-class BinopsBase0<Derived, 'i', ops...>
-:
-    public BinopsBase0<Derived, ops...>,
-    public Insert<Derived>
-{};
+template <typename Derived>
+inline std::ostream &operator<<(std::ostream &out, BinopsBase<Derived> const &rhs)
+{
+    rhs.iWrap(out);
+    return out;
+}

@@ -1,0 +1,18 @@
+#include <iostream>
+#include <sstream>
+#include <map>
+#include <set>
+#include <string>
+
+using namespace std;
+
+typedef set<string>             StringSet;
+typedef pair<StringSet, bool>   ValuePair;  // bool: circular dependency
+typedef map<string, ValuePair>  Map;
+typedef Map::value_type         ValueType;
+
+void display(Map const &table);
+void fill(Map &table);
+void inspect(Map &table);
+bool inspectSet(ValueType  &value, Map &table);
+
