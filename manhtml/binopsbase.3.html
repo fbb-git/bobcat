@@ -10,231 +10,207 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">binopsbase(3bobcat)</h1>
-<h2 id="author">Binary Operators<br/>(libbobcat-dev_4.06.01-x.tar.gz)</h2>
+<h2 id="author">Binary Operators<br/>(libbobcat-dev_4.07.00-x.tar.gz)</h2>
 <h2 id="date">2005-2017</h2>
 
 
 <p>
-<h2 >NAME</h2>binopsbase - Class template offering class-type binary operators
+<h2 >NAME</h2>BinopsBase - Class template offering class-type binary operators
 <p>
 <h2 >SYNOPSIS</h2>
     <strong >#include &lt;bobcat/binopsbase&gt;</strong><br/>
 <p>
 <h2 >DESCRIPTION</h2>
-    Classes can overload binary operators. A class named <em >Class</em> may
-overload these binary operators to suit its own needs, allowing, e.g., two
-<em >Class</em> type objects to be added after overloading <em >operator+</em>. Operators
-for the binary operators *, /, %, +, -, &lt;&lt;, &gt;&gt;, &amp;, |, and ^ (in this man-page
-they are generically indicated as the `<em >@</em>' operator) can be overloaded by
-providing various <em >operator@</em> members and functions. In addition, overloaded 
-<em >operator&lt;&lt;</em> and <em >operator&gt;&gt;</em> for stream insertion and extraction can
-easily be defined.
+    Classes may overload binary operators. A class named <em >Derived</em> may
+overload binary operators to suit its own needs. It could, e.g., allow two
+<em >Derived</em> class objects to be added together, or it could define a
+shift-operation given a <em >size_t</em> right-hand side (rhs) argument.
 <p>
-If a class supports copy and/or move construction and if it offers a swap
-member, then binary operators can all be implemented identically, except for
-the specific details associated with specific binary operators. A similar
-observation applies to the insertion and extraction operators. E.g., if a
-class contains two <em >int</em> data members addition of objects of that class
-could simply be defined as adding the corresponding <em >int</em> members, while
-subtraction could be defined as subtracting the corresponding <em >int</em>
-members. Assuming the existence of a member <em >void Class::add(Class const
-&amp;rhs)</em> that defines the addition of a <em >Class rhs</em> object to the <em >*this</em>
-object, while merely providing the basic exception guarantee (i.e., no
-leakage), then the binary addition operators can be defined like this:
+The available binary operators are *, /, %, +, -, &lt;&lt;, &gt;&gt;, &amp;, |, and ^ (in this
+man-page they are generically indicated as the `<em >@</em>' operator). In addition,
+overloaded <em >operator&lt;&lt;</em> and <em >operator&gt;&gt;</em> for stream insertion and
+extraction are frequently defined.
+<p>
+If a class <em >Derived</em> supports copy and/or move construction and if it offers
+a swap member (<em >void Derived::swap(Derived &amp;rhs)</em>), and is publicly derived
+from <em >FBB::BinopsBase&lt;Derived&gt;</em> then once <em >Derived</em> defines a member
         <pre>
 
-Class operator+(Class &amp;&amp;lhs, Class const &amp;rhs)
-{
-    lhs.add(rhs);
-    return std::move(lhs);
-}
+    void Class::operator@=(Rhs const &amp;rhs) &amp;&amp;
+        
+</pre>
+ 
+    defining the compound <em >@</em>-operator for anonymous, temporary <em >Derived</em>
+objects and a <em >Rhs</em> type for its right-hand side operand the following
+operators are also available:
+        <pre>
 
-Class operator+(Class const &amp;lhs, Class const &amp;rhs)
-{
-    Class tmp(lhs);
-    tmp.add(rhs);
-    return tmp;
-}
+    Derived &amp;operator@=(Rhs const &amp;rhs) &amp;
+
+    Derived operator@(Derived &amp;&amp;lhs, Rhs const &amp;rhs);
+    Derived operator@(Derived const &amp;lhs, Rhs const &amp;rhs);
         
 </pre>
 
-    Likewise, <em >operator+=</em> can be defined for lvalue or rvalue <em >Class</em>
-objects using reference modifiers.
 <p>
-As binary operators can all be implemented alike, given the specific
-members implementing the implied operations, these operators can very well be
-provided using templates. 
-<p>
-By inheriting from the class template <em >BinopsBase</em> classes offering such
-specific functions may then automatically add the corresponding compound
-assignment operators and the matching binary operators. Since the function
-templates are not instantiated until used their definitions can be processed
-by the compiler even if a class implements only a subset of the available
-operators.
-<p>
-To provide a class <em >Class</em> with binary operators (and binary compound
-operators) <em >Class</em> must implement a member <em >void swap(Class &amp;other)</em>, and
-it should implement (a subset of) the following members (preferably in the
-class's private section):
-    <ul>
-    <li> <em >void mul(Class const &amp;rhs)</em>  - called by operators <em >*</em> and <em >*=</em>
-    <li> <em >void div(Class const &amp;rhs)</em>  - called by operators <em >/</em> and <em >/=</em>
-    <li> <em >void mod(Class const &amp;rhs)</em>  - called by operators <em >%</em> and <em >%=</em>
-    <li> <em >void add(Class const &amp;rhs)</em>  - called by operators <em >+</em> and <em >+=</em>
-    <li> <em >void sub(Class const &amp;rhs)</em>  - called by operators <em >-</em> and <em >-=</em>
-    <li> <em >void shl(Class const &amp;rhs)</em> - called by operators <em >&lt;&lt;</em> and <em >&lt;&lt;=</em>
-    <li> <em >void shr(Class const &amp;rhs)</em> - called by operators <em >&gt;&gt;</em> and <em >&gt;&gt;=</em>
-    <li> <em >void and_(Class const &amp;rhs)</em> - called by operators <em >&amp;</em> and <em >&amp;=</em>
-    <li> <em >void or_(Class const &amp;rhs)</em>  - called by operators <em >|</em> and <em >|=</em>
-    <li> <em >void xor_(Class const &amp;rhs)</em> - called by operators <em >^</em> and <em >^=</em>
-    <li> <em >void extract(std::istream &amp;in) const</em> - called by 
-                        <em >operator&gt;&gt;(std::istream &amp;in, Class &amp;obj)</em>
-    <li> <em >void insert(std::ostream &amp;out) const</em> - called by 
-                        <em >operator&lt;&lt;(std::ostream &amp;out, Class const &amp;obj)</em>
-    </ul>
-    Note the trailing underscore for the members <em >and_, or_</em>, and <em >xor_</em>:
-the underscores are there to prevent conflicts with the <em >and, or,</em> and
-<em >xor</em> keywords.
-<p>
-Next, <em >Class</em> should publicly inherit from
+A similar procedure applies to the insertion and extraction
+operators. Insertion and extraction operators become available once
+<em >BinopsBase&lt;Derived&gt;</em> is declared a friend class of <em >Derived</em>.  To make
+the insertion operator available a private member
         <pre>
 
-    FBB::BinopsBase&lt;Class, int ...operators&gt;
+    void Derived::insert(std::ostream &amp;out) const
         
 </pre>
 
-    where <em >int ...operators</em> lists the specific set of binary operators that
-are requested. E.g., to provide <em >Class</em> with multiplication, division,
-modulo, and shift-operators its class interface should start as shown:
+    must then also be defined, inserting the calling object into
+<em >out</em>. Analogously, to make the extraction operator available a private
+member
         <pre>
 
-    class Class: public FBB::BinopsBase&lt;Class, '*', '/', '%', '&lt;', '&gt;'&gt;
+    void Derived::extract(std::istream &amp;in)
         
 </pre>
-
-    There is no specific ordering required when specifying <em >int
-...operators</em>. Note that <em >'&lt;'</em> and <em >'&gt;'</em> in the <em >int ...operators</em> list
-specify, respectively, the shift-left and shift-right operators. All other
-operators are specified by their common operator, specified as character
-constants. The insertion operator is specified by <em >'i'</em>, the extraction
-operator by <em >'e'</em>.
-<p>
-If, as advised, the members implementing the required binary operations
-are declared in the class's private section then the class's interface should
-declare its base class as a friend. E.g.,
-        <pre>
-
-    class Class: public FBB::BinopsBase&lt;Class, '*', '/', '%', '&lt;', '&gt;'&gt;
-    {
-        friend FBB::BinopsBase&lt;Class, '*', '/', '%', '&lt;', '&gt;'&gt;;
-
-        public:
-            ...
-
-        private:
-            void mul(Class const &amp;rhs);
-            void div(Class const &amp;rhs);
-            void mod(Class const &amp;rhs);
-            void shl(Class const &amp;rhs);
-            void shr(Class const &amp;rhs);
-    };
-        
-</pre>
-
+ 
+    must be defined extrating the calling object from <em >in</em>.
 <p>
 <h2 >INHERITS FROM</h2>
 <p>
-Several Internal-use-only Bobcat classes, completing the <em >BinopsBase</em>
-class template.
+--
 <p>
 <h2 >OVERLOADED OPERATORS</h2>
 <p>
-Assuming <em >BinopsBase</em> is a base class of the class <em >Class</em>, then
-for each of the requested binary operators (e.g., <em >@</em>) the following
-operators are now available:
-<p>
-<pre>
+For each defined <em >Derived &amp;&amp;operator@=(Rhs const &amp;rhs) &amp;&amp;</em>, defined in
+the class <em >Derived</em> the following operators are automatically also available:
+        <pre>
 
-    free operators:
+    Derived operator@(Derived &amp;&amp;lhs, Rhs const &amp;rhs);
+    Derived operator@(Derived const &amp;lhs, Rhs const &amp;rhs);
+        
+</pre>
 
-        Class operator@(Class const &amp;lhs, Class const &amp;rhs);
-        Class operator@(Class &amp;&amp;lhs, Class const &amp;rhs);
+and
+        <pre>
 
-    members:
-
-        Class &amp;operator@(Class const &amp;rhs) &amp;;
-        Class &amp;&amp;operator@(Class const &amp;rhs) &amp;&amp;;
-    
+    Derived &amp;operator@=(Rhs const &amp;rhs) &amp;;
+        
 </pre>
 
 <p>
-The insertion operator is available when specifying <em >'i'</em>:
-    <pre>
+The insertion operator becomew available once
+        <pre>
 
-    std::ostream &amp;operator&lt;&lt;(std::ostream &amp;out, Class const &amp;obj);
-    
+    void Derived::insert(std::ostream &amp;out) const
+        
 </pre>
 
-    The extraction operator is available when specifying <em >'e'</em>:
-    <pre>
+    (inserting the calling object into <em >out</em>) has been defined. Analogously,
+the extraction operator becomes available after defining a private member
+        <pre>
 
-    std::istream &amp;operator&gt;&gt;(std::istream &amp;in, Class &amp;obj);
-    
+    void Derived::extract(std::istream &amp;in)
+        
+</pre>
+ 
+    (extracting the calling object from <em >in</em>).
+<p>
+<h2 >FRIEND DECLARATION</h2>
+<p>
+To make the insertion and/or extraction operators available the class
+<em >Derived</em> must also declare
+        <pre>
+
+    friend FBB::BinopsBase&lt;Derived&gt;;
+        
 </pre>
 
 <p>
 <h2 >EXAMPLE</h2>
     <pre >
-#include "../binopsbase"
-//#include &lt;bobcat/binopsbase&gt;
-
 #include &lt;iostream&gt;
-using namespace std;
+#include &lt;bobcat/binopsbase&gt;
 
-class Demo1: public FBB::BinopsBase&lt;Demo1, 'i', '+', '-'&gt;
+class Demo1: public FBB::BinopsBase&lt;Demo1&gt;
 {
-    friend FBB::BinopsBase&lt;Demo1, 'i', '+', '-'&gt;;
+    friend FBB::BinopsBase&lt;Demo1&gt;;            // for insert/extract
 
     public:
         void swap(Demo1 &amp;other)
         {}
 
-    private:
-        void add(Demo1 const &amp;rhs)
+        Demo1 &amp;&amp;operator+=(Demo1 const &amp;rhs) &amp;&amp;
         {
-            cout &lt;&lt; "adding two Demo1 objects\n";
+            std::cout &lt;&lt; "adding two Demo1 objects\n";
+            return std::move(*this);
         }
 
-        void sub(Demo1 const &amp;rhs)
+//  Explicit definitions take precedence over functions templates
+//  instantiated from definitions in bobcat/binopsbase. 
+//        Demo1 &amp;operator+=(Demo1 const &amp;rhs) &amp;
+//        {
+//            std::cout &lt;&lt; "adding (self-defined) two Demo1 objects\n";
+//            return *this;
+//        }
+
+        Demo1 &amp;&amp;operator-=(Demo1 const &amp;rhs) &amp;&amp;
         {
-            cout &lt;&lt; "subtracting two Demo1 objects\n";
+            std::cout &lt;&lt; "subtracting two Demo1 objects\n";
+            return std::move(*this);
         }
 
-        void insert(ostream &amp;out) const
+        Demo1 &amp;&amp;operator&lt;&lt;=(Demo1 const &amp;rhs) &amp;&amp;
         {
-            out &lt;&lt; "inserting a Demo1 object";
+            std::cout &lt;&lt; "shiftleft on two Demo1 objects\n";
+            return std::move(*this);
+        }
+
+        Demo1 &amp;&amp;operator&lt;&lt;=(size_t rhs) &amp;&amp;
+        {
+            std::cout &lt;&lt; "shiftleft Demo1 object size_t bits\n";
+            return std::move(*this);
+        }
+
+        void insert(std::ostream &amp;out) const        // requires friend
+        {
+            out &lt;&lt; "inerting a Demo1 object\n";
+        }
+
+        void extract(std::istream &amp;in)              // requires friend
+        {
+            std::cout &lt;&lt; "extracting a Demo1 object\n";
         }
 };
 
-
-class Demo2: public FBB::BinopsBase&lt;Demo2, '+', '^'&gt;
+class Demo2: public FBB::BinopsBase&lt;Demo2&gt;
 {
-    friend FBB::BinopsBase&lt;Demo2, '+', '^'&gt;;
-
     public:
         void swap(Demo2 &amp;other)
         {}
 
-    private:
-        void add(Demo2 const &amp;rhs)
+        Demo2 &amp;&amp;operator+=(Demo2 const &amp;rhs) &amp;&amp;
         {
-            cout &lt;&lt; "adding two Demo2 objects\n";
+            std::cout &lt;&lt; "adding two Demo2 objects\n";
+            return std::move(*this);
         }
 
-        void xor_(Demo2 const &amp;rhs)
+        Demo2 &amp;operator+=(Demo2 const &amp;rhs) &amp;
         {
-            cout &lt;&lt; "xor-ing two Demo2 objects\n";
+            std::cout &lt;&lt; "adding (self-defined) two Demo2 objects";
+            return *this;
         }
+
+        Demo2 &amp;&amp;operator^=(Demo2 const &amp;rhs) &amp;&amp;
+        {
+            std::cout &lt;&lt; "xor-ing two Demo2 objects\n";
+            return std::move(*this);
+        }
+
+        Demo2 &amp;&amp;operator|=(Demo2 const &amp;rhs) &amp;&amp;
+        {
+            std::cout &lt;&lt; "or-ing two Demo2 objects\n";
+            return std::move(*this);
+        }
+
 };
 
 int main()
@@ -244,12 +220,18 @@ int main()
     d1a += d1b;
     d1c = Demo1{} + d1b;
 
-    cout &lt;&lt; d1a &lt;&lt; '\n';
+    std::cout &lt;&lt; "Here we are " &lt;&lt; d1c &lt;&lt; '\n';
+    std::cin &gt;&gt; d1c;
+
+    d1a &lt;&lt;= d1a;
+    d1a &lt;&lt;= 5;
 
     Demo2 d2a, d2b;
     Demo2 d2c = d2a + d2b;
     d2a ^= d2b;
     d2c = Demo2{} ^ d2b;
+
+    d2c = d2c | d2b;
 }
 
 
@@ -264,7 +246,7 @@ int main()
     <em >bobcat/binopsbase</em> - defines the binary operator function templates
 <p>
 <h2 >SEE ALSO</h2>
-    <strong >bobcat/binops</strong>(3)
+    <strong >bobcat/binops</strong>(3),
     <strong >bobcat</strong>(7)
 <p>
 <h2 >BUGS</h2>
@@ -273,12 +255,12 @@ int main()
 
 <h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em >bobcat_4.06.01-x.dsc</em>: detached signature;
-    <li> <em >bobcat_4.06.01-x.tar.gz</em>: source archive;
-    <li> <em >bobcat_4.06.01-x_i386.changes</em>: change log;
-    <li> <em >libbobcat1_4.06.01-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.07.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.07.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.07.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.07.00-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em >libbobcat1-dev_4.06.01-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.07.00-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
