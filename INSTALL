@@ -13,10 +13,12 @@ perform the following steps:
         it is /usr/bin/icmake, but some installations use
         /usr/local/bin/icmake Adapt when necessary.
 
-    3. Run 
+    3. If you want to build the complete bobcat library, then execute
+
             ./build libraries
 
         to compile the bobcat libraries. 
+
         Optionally add the argument 'strip' if you want the libraries to be
         stripped. Unless you need the symbolic information in the compiled
         object modules, it is probably a good idea to provide this
@@ -35,6 +37,24 @@ perform the following steps:
             ./build light [strip]
 
         (see also README.class-setup).
+
+        If you only need a particular subset of classes, then run
+
+            ./build select [strip] class ...
+
+        where 'class ...' is replaced by the name(s) of the class(es) you want
+        to include in the bobcat library. The build script will automatically
+        also add the classes on which the specified set of classes
+        (recursively) depend.
+
+        The file dependencies/using.classes contains an overview of all bobcat
+        classes (non-indented single words on separate lines) followed by an
+        indented list of classes that use the last-mentioned non-indented
+        class name. Each line in the file dependencies/required.classes starts
+        with the name of a bobcat class, followed by all bobcat classes on
+        which that particular bobcat class depends. Do not modify the file
+        dependencies/required.classes as 'build select' depends on its
+        contents.
 
     4. Run (probably as root) 
 

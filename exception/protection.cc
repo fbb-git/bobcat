@@ -8,10 +8,14 @@ size_t Exception::protection(std::string const &name, size_t protect,
                              "may not exceed 0777 (requested: 0" << oct <<
                                 protect << dec << ')';
 
-    Stat stat(name);            // does the file exist?
+    struct stat statbuf;
     
-    if (not stat)               // no: create it with the requested procection
-    {                           //     bits
+                            // no: create it with the requested protection
+    if (stat(name.c_str(), &statbuf) != 0)                          // bits
+    {                           
+        if (errno != ENOENT)    // stat error, but not non-existing file
+            throw Exception{} << "Cannot obtain details about `" << name <<
+                                                                        '\'';
         int fd = ::open(name.c_str(), O_CREAT, protect);
 
         if (fd < 0)
@@ -22,7 +26,7 @@ size_t Exception::protection(std::string const &name, size_t protect,
         return protect;
     }
 
-    size_t mode = stat.mode();  // get the actual mode
+    size_t mode = statbuf.st_mode & 07777;  // get the actual mode
 
     if (type == EQUAL && mode != protect)
         throw Exception{} << "Protection of `" << name << "' (0" << oct <<

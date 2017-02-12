@@ -1,48 +1,21 @@
-template <class Derived>
-struct Add
-{
-    Derived &operator+=(Derived const &rhs) &; 
-    Derived &&operator+=(Derived const &rhs) &&;
-};
 
-template <class Derived>
-Derived &Add<Derived>::operator+=(Derived const &rhs) &
+template <class Derived, typename Rhs>
+Derived &operator+=(BinopsBase<Derived> &lhs, Rhs const &rhs) 
 {
-    Derived tmp{static_cast<Derived &>(*this)};
-    tmp.addWrap(rhs);
-    static_cast<Derived &>(*this).swap(tmp);
-    return static_cast<Derived &>(*this);
+    Derived tmp{ Derived{der(lhs)} += rhs };
+    tmp.swap(der(lhs));
+    return der(lhs);
 }
 
-template <class Derived>
-Derived &&Add<Derived>::operator+=(Derived const &rhs) &&
+template <class Derived, typename Rhs>
+Derived operator+(BinopsBase<Derived> &&lhs, Rhs const &rhs)
 {
-    static_cast<Derived &>(*this).addWrap(rhs);
-    return std::move(static_cast<Derived &>(*this));
+    return der(std::move(lhs)) += rhs;
 }
 
-template <class Derived>
-Derived operator+(Derived const &lhs, Derived const &rhs)
+template <class Derived, typename Rhs>
+Derived operator+(BinopsBase<Derived> const &lhs, Rhs const &rhs)
 {
-    Derived ret{lhs};
-    ret.addWrap(rhs);
-    return ret;
+    return Derived{der(lhs)} += rhs;
 }
-
-template <class Derived>
-Derived operator+(Derived &&lhs, Derived const &rhs)
-{
-    lhs.addWrap(rhs);
-    return std::move(lhs);
-}
-
-
-template <class Derived, int ...ops>
-class BinopsBase0<Derived, '+', ops...>
-:
-    public BinopsBase0<Derived, ops...>,
-    public Add<Derived>
-{};
-
-
 
