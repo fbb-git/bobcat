@@ -5,7 +5,7 @@ void display(Map const &table)
     for (auto const &keyValue: table)   // display class names and the classes
     {                                   // they depend on.
         cout << keyValue.first << ' ';
-        for (auto const &dep: keyValue.second)
+        for (auto const &dep: keyValue.second.first)
             cout << dep << ' ';
         cout << '\n';
     }

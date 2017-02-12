@@ -159,6 +159,12 @@ void main(int argc, list argv)
     if (option == "uninstall")
         uninstall(argv[2]);
 
+    if (option == "dep")
+    {
+        system("dependencies/store");
+        exit(0);
+    }
+
     printf("Usage: build [-q -p -P] what\n"
         "Where\n"
         "   [-q]:   run quietly, do not show executed commands\n"
@@ -201,7 +207,9 @@ void main(int argc, list argv)
         "                               m (man-pages)\n"
         "   uninstall logfile   - remove files and empty directories listed\n"
         "                         in the file 'logfile'\n"
+        "\n"
+        "internal use only:\n"
+        "   dep                 - refresh the class-dependencies overview\n"
         "   github              - prepare github's gh-pages update\n"
-        "                         (internal use only)\n"
     );
 }

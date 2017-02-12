@@ -22,7 +22,8 @@ void CGI::upload(string *line)
                                     // file
     for (size_t end = d_fileNr + s_nTries; d_fileNr < end; ++d_fileNr)
     {
-        destName = d_filePath + d_filePrefix + X2a(d_fileNr).str();
+        destName = d_filePath + d_filePrefix + to_string(d_fileNr);
+                                               // X2a(d_fileNr).str();
         if (!Stat(destName))        // path does not exist
             break;
     }

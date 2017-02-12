@@ -13,12 +13,12 @@ void fill(Map &table)
         if (not isblank(line[0]))   // add ^key to the table
         {
             in >> key;
-            table.insert(ValueType{key, StringSet{}});
+            table.insert(ValueType{ key, ValuePair{StringSet{}, false} });
         }
         else                        // add \s+value to the table, and 
         {                           // indicate that it depends on 'key'
             in >> value;            
-            table[value].insert(key);
+            table[value].first.insert(key);
         }
     }
 }

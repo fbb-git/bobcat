@@ -8,7 +8,7 @@ void inspect(Map &table)
     {
         modified = false;
         for (auto &value: table)  // visit all elements
-            modified |= inspectSet(value.second, table);
+            modified |= inspectSet(value, table);
     }
     while (modified);
 }

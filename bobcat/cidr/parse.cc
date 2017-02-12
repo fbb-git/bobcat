@@ -13,12 +13,14 @@ Cidr::MaskPair Cidr::parse(string const &cidr)
 
     size_t pos = cidr.find_first_of('/');
     if (pos != string::npos)
+    try
     {
-        ret.second = A2x(cidr.substr(pos + 1));
-        if (A2x::lastFail())
-            throw Exception{1} << "Cidr: " << "invalid CIDR: `" << 
-                                    cidr << '\'';
+        ret.second = stoul(cidr.substr(pos + 1));   // A2x(...)
         ret.first = ret.first >> (32 - ret.second) << (32 - ret.second);
+    }
+    catch (...)
+    {
+        throw Exception{1} << "Cidr: " << "invalid CIDR: `" << cidr << '\'';
     }
 
     return ret;   
