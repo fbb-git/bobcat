@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include <bobcat/iterator>
+#include <../iterator>
 
 using namespace std;
 using namespace FBB;

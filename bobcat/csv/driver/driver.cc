@@ -1,5 +1,5 @@
 #include <iostream>
-#include <bobcat/csv>
+#include <../csv>
 
 using namespace std;
 using namespace FBB;

@@ -2,7 +2,7 @@
 #include <ostream>
 #include <iostream>
 
-#include <bobcat/sharedstreambuf>
+#include <../sharedstreambuf>
 
 using namespace std;
 using namespace FBB;
