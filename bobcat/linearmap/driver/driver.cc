@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 
-#include <bobcat/linearmap>
+#include <../linearmap>
 
 using namespace std;
 using namespace FBB;
