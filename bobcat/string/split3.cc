@@ -1,20 +1,22 @@
 #include "string.ih"
 
-vector<String::SplitPair> String::split(string const &str,
-                                    string const &separators, bool addEmpty)
+vector<string> String::split(Type *type, string const &str, SplitType stype,
+                                    char const *sep)
 {
-    vector<SplitPair> ret;
+    vector<string> ret;
 
-                                // visit all chars of str
-    for (ConstIter begin = str.begin(), end = str.end(); begin != end; )
-    {
-        SplitPair next = split(begin, str.end(), separators);
+    SplitPairVector entries;
 
-        if (next.second == SEPARATOR && not addEmpty)
-            continue;
-    
-        ret.push_back(next);
-    }
+    auto data{ process(&entries, stype, str, sep) };
+
+    if (type != 0)
+        *type = data.entry.second == DQUOTE ||
+                data.entry.second == SQUOTE ||
+                data.entry.second == SEPARATOR  ? NORMAL : data.entry.second;
+
+    for (auto &entry: entries)
+        ret.push_back(move(entry.first));
 
     return ret;
 }
+

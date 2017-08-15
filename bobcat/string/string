@@ -1,10 +1,9 @@
 #ifndef INCLUDED_BOBCAT_STRING_
 #define INCLUDED_BOBCAT_STRING_
 
-#include <cstring>
+#include <strings.h>
 #include <string>
 #include <vector>
-#include <cctype>
 
 namespace FBB
 {
@@ -20,64 +19,173 @@ struct String
         NORMAL, // normal string-element in the original string
         DQUOTE, // string-element originally surrounded by " chars
         SQUOTE, // string-element originally surrounded by ' chars
+        END,    // end-of-string immediately encountered 
     };
-    typedef std::pair<std::string, Type> SplitPair;
 
-    static char const **argv(std::vector<std::string> const &lines);
+    enum SplitType
+    {
+        TOK,            // split acts like strtok (like addEmpty == false)
+        TOKSEP,         // same, but return separators (like addEmpty == true)
+        STR,            // split acts like strstr
+        STRSEP,         // same, but return separators
+    };
 
-    static int casecmp(std::string const &lhs, std::string const &rhs); // .f
-    static std::string lc(std::string const &str);
+    struct Unescape
+    {
+        std::string str;
+        size_t      length;
+    };
 
-    static std::vector<std::string>                             // 1
-        split(Type *type, std::string const &str, 
-                std::string const &separators = " \t", bool addEmpty = false);
-
-    static std::vector<SplitPair>                              // 3
-        split(std::string const &str, std::string const &separators = " \t", 
-              bool addEmpty = false);
-
-    static size_t split(std::vector<std::string> *words,        // 4
-                    std::string const &str, char const *separators = " \t",
-                    bool addEmpty = false);
-                                                                // 5
-    static size_t split(std::vector<SplitPair> *words, std::string const &str,
-                    char const *separators = " \t", bool addEmpty = false);
-
-    static std::string trim(std::string const &str);
-    static std::string uc(std::string const &str);
-    static std::string unescape(std::string const &str);
-    static std::string escape(std::string const &str, 
-                        char const *series = "'\"\\");
+    struct SplitPair: public std::pair<std::string, Type>
+    {
+        SplitPair();
+        SplitPair(char ch, Type type);
+    };
 
     private:
         typedef std::string::const_iterator ConstIter;
-        typedef std::pair<int, Type> IntType;
+        typedef std::vector<SplitPair> SplitPairVector;
 
-                            // used by split1..3.cc
-        static SplitPair split(ConstIter &begin, ConstIter const &end, // 6
-                                    std::string const &separators);
-        static SplitPair dquotedString(ConstIter &begin, 
-                                       ConstIter const &end);
-        static SplitPair quotedString(ConstIter &begin, ConstIter const &end);
-        static IntType escapedString(ConstIter &begin, ConstIter const &end);
+        static size_t const s_nSplitTypeSize = 
+                                static_cast<size_t>(STRSEP) + 1;
 
-        static Type nextField(std::string const &str,
-                        ConstIter *until, ConstIter from,
-                        std::string const &separators);
-        static ConstIter separator(std::string const &str,
-                                ConstIter from, 
-                                std::string const &separators);
-        static ConstIter quoted(std::string const &str,
-                                ConstIter from, int quote);
-        static Type word(std::string const &str,
-                            ConstIter *until, ConstIter from, 
-                            std::string const &separators);
+        enum class CharType
+        {
+            DQUOTE,
+            SQUOTE,
+            SEPARATOR,
+            ESCAPE,
+            CHAR,
+            EOS,
+            size
+        };
 
+        static size_t const s_nCharTypes = 
+                                    static_cast<size_t>(CharType::size);
+
+        enum State
+        {
+            START,
+            SQSTRING,
+            DQSTRING,
+        };
+        
+        struct FSAData
+        {
+            State state;
+            std::string separators;
+            SplitPair entry;
+            SplitPairVector *entries;
+            ConstIter begin;
+            ConstIter end;
+        };
+
+        static bool (*s_FSAtransition[][s_nCharTypes])(FSAData &);
+        static void (*s_tuneToSplitType[s_nSplitTypeSize])(
+                            SplitPairVector *entries);
+        static std::string (*s_join[])(SplitPairVector const &, char);
+
+    public:
+        static constexpr Type *const noType = 0;
+    
+        static char const **argv(std::vector<std::string> const &lines);
+    
+        static int casecmp(std::string const &lhs,                  // .f
+                           std::string const &rhs); 
+
+        static std::string escape(std::string const &str, 
+                            char const *series = "'\"\\");
+    
+        static std::string join(std::vector<std::string> const &words, // 1
+                                char sep);
+
+        static std::string join(SplitPairVector const &entries, char sep, // 2
+                                bool all = true);
+
+        static std::string lc(std::string const &str);
+
+
+        static SplitPairVector split(std::string const &str,        // 1
+                    SplitType stype, char const *separators = " \t");
+
+        static SplitPairVector split(std::string const &str,        // 1.f
+                    char const *separators = " \t", 
+                    bool addEmpty = false);
+    
+
+        static size_t split(SplitPairVector *entries,               // 2
+                    std::string const &str, SplitType stype,
+                    char const *separators = " \t");
+
+        static size_t split(SplitPairVector *entries,               // 2.f
+                    std::string const &str, char const *separators = " \t", 
+                    bool addEmpty = false);
+    
+
+        static std::vector<std::string> split(                      // 3
+                    Type *type, std::string const &str, SplitType stype, 
+                    char const *separators = " \t");
+    
+        static std::vector<std::string> split(                      // 3.f
+                    Type *type, std::string const &str, 
+                    char const *separators = " \t", 
+                    bool addEmpty = false);
+
+
+        static size_t split(std::vector<std::string> *words,        // 4
+                    std::string const &str, SplitType stype,
+                    char const *separators = " \t");
+
+        static size_t split(std::vector<std::string> *words,        // 4.f
+                    std::string const &str, char const *separators = " \t",
+                    bool addEmpty = false);
+                                                                    
+
+        static std::string trim(std::string const &str);
+        static std::string uc(std::string const &str);
+    
+        static std::string unescape(std::string const &str);        
+        static Unescape unescape(ConstIter begin,               // 2
+                                 ConstIter const &end);
+    
+        static std::string urlDecode(std::string const &str);
+        static std::string urlEncode(std::string const &str);
+    
+    private:
         static void tolower(char &chr);             // .f
         static void toupper(char &chr);             // .f
+
+        static FSAData process(SplitPairVector *entries, SplitType stype,
+                               std::string const &str, char const *sep);
+
+        static CharType peek(FSAData &data);
+        static bool dqIn(FSAData &data);
+        static bool sqIn(FSAData &data);
+        static bool sepIn(FSAData &data);
+        static bool escIn(FSAData &data);
+        static bool chIn(FSAData &data);
+        static bool eosIn(FSAData &data);
+        static bool qEnd(FSAData &data);
+        static bool eosSq(FSAData &data);
+        static bool eosDq(FSAData &data);
+
+        static void tok(SplitPairVector *entries);  // tuning members
+        static void toksep(SplitPairVector *entries);
+        static void str(SplitPairVector *entries);
+        static void strsep(SplitPairVector *entries);   // see data.cc
+
+        static std::string joinAll(SplitPairVector const &entries, char sep);
+        static std::string joinIgnoreSEPARATOR(SplitPairVector const &entries, 
+                                               char sep);
 };
 
 #include "casecmp.f"
+#include "splitpair1.f"
+#include "splitpair2.f"
+#include "split1.f"
+#include "split2.f"
+#include "split3.f"
+#include "split4.f"
 
 } // FBB
 
