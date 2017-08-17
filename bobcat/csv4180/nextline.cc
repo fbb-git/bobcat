@@ -2,7 +2,7 @@
 
 bool CSV4180::nextLine()
 {
-    //cerr << __FILE__ "\n";
+    cerr << __FILE__ "\n";
 
     if (not getline(*d_in, d_str))
         return false;

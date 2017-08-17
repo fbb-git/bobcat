@@ -6,12 +6,13 @@ try
                                                 // first element to inspect
     string::const_iterator indicator = d_specs.begin();
 
+    StrVector::iterator dest = d_last.begin();
+
         // dest: points at next el. in d_header to keep,
         // src, indicator: point at next element to inspect in resp. d_header
         //                 and d_spec
     for (
-        StrVector::iterator dest = d_last.begin(), src = dest, 
-                            end = d_last.end();
+        StrVector::iterator src = dest, end = d_last.end();
             src != end;
                 ++indicator, ++src
     )
@@ -32,14 +33,17 @@ try
             default:                    // accept all other (just 'S') as-is
             break;
         }
-        *dest++ = move(*src);           // accept this element
+
+        *dest++ = *src;                 // accept this element
     }
+
+    d_last.resize(dest - d_last.begin());   // remove superfluous entries
+
     return true;
 }
 catch (...)
 {
     d_in->setstate(ios::failbit);
-    d_state = ERROR;
     return false;
 }        
 

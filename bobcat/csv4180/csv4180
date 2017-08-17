@@ -22,8 +22,6 @@ class CSV4180
         CHARSTATE,
         DQ1,
         DQ2,
-        ERROR               // not used in the FSA table: state == ERROR
-                            // indicates a syntax error in the input data
     };
 
     enum CharType
@@ -37,8 +35,8 @@ class CSV4180
     };
 
     size_t d_nRequired;
-    bool (CSV4180::*d_verifyTypes)() = &CSV4180::bnop;  // data lines
-    void (CSV4180::*d_dropFields)()  = &CSV4180::nop;   // header fields
+    bool (CSV4180::*d_verifyTypes)() = &CSV4180::nop;   // data lines
+    bool (CSV4180::*d_dropFields)()  = &CSV4180::nop;   // header fields
 
     bool   d_setHeader = false;
     StrVector d_header;
@@ -59,14 +57,12 @@ class CSV4180
     static bool (CSV4180::*s_fsa[][nCharTypes])();
 
     public:
-        CSV4180(size_t nFields = 0);        // 1: determine nFields from the
+                                            // 1: determine nFields from the
                                             //  1st line or specify the 
                                             //  # required fields
+        explicit CSV4180(size_t nFields = 0, bool header = false);
 
-        explicit CSV4180(bool header, size_t nFields = 0);   // 2: first line
-                                            //  is the header (or not)
-
-                                            // 3: specs specify requirements
+                                            // 2: specs specify requirements
                                             //  of fields. X-fields must be
                                             //  present but are omitted from
                                             //  d_data lines and
@@ -99,9 +95,8 @@ class CSV4180
 
     private:
         void setSpecs(std::string const &specs);
-        void nop();
-        void dropFields();
-        bool bnop();
+        bool nop();
+        bool dropFields();
         bool verifyTypes();
 
         bool nextLine();

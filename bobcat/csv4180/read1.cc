@@ -11,8 +11,5 @@ istream &CSV4180::read1(istream &in)
     while ((this->*s_fsa[d_state][peek()])())
         ;
 
-    if (d_state == ERROR)
-        in.setstate(ios::failbit);
-
     return in;    
 }

@@ -2,7 +2,7 @@
 
 bool CSV4180::end()
 {
-    //cerr << __FILE__ "\n";
+    cerr << __FILE__ "\n";
 
     d_last.push_back(move(d_field));
 
@@ -11,7 +11,6 @@ bool CSV4180::end()
     else if (d_last.size() != d_nRequired)
     {
         d_in->setstate(ios::failbit);
-        d_state = ERROR;
         d_setHeader = false;
         return false;
     }
@@ -21,10 +20,11 @@ bool CSV4180::end()
         if ( (this->*d_verifyTypes)() )
             d_data.push_back(move(d_last));
     }
-    else if ( (this->*d_dropFields() )
+    else 
     {
         d_header = move(d_last);            // setting the header clears 
                                             //  d_last
+        (this->*d_dropFields)();
         d_setHeader = false;
     }
 

@@ -2,8 +2,8 @@
 
 bool CSV4180::err()
 {
-    //cerr << __FILE__ "\n";
+    cerr << __FILE__ "\n";
 
-    d_state = ERROR;
+    d_in->setstate(ios::failbit);
     return false;
 }
