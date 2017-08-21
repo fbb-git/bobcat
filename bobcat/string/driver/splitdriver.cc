@@ -47,16 +47,17 @@ int main(int argc, char **argv)
 //                    String::split(line, 
 //                            static_cast<String::SplitType>(type), ",") };
 
-//        vector<String::SplitPair> vect;
-//        if (type >= 10)
-//            String::split(&vect, line, ",", type == 11);
-//        else
-//            String::split(&vect, line, 
-//                          static_cast<String::SplitType>(type), ",");
+        vector<String::SplitPair> vect;
+        if (type >= 10)
+            String::split(&vect, line, ",", type == 11);
+        else
+            String::split(&vect, line, 
+                          static_cast<String::SplitType>(type), ",");
 
-//        for (auto const &element: vect)
-//            cout << '`' << element.first << "': " << 
-//                                typeName[element.second] << '\n';
+        
+        for (auto const &element: vect)
+            cout << '`' << element.first << "': " << 
+                                typeName[element.second] << '\n';
 
 //        String::Type strType;
 //        vector<string> vect{ 
@@ -69,15 +70,15 @@ int main(int argc, char **argv)
 //
 //        cout << "Final type: " << strType << '\n';
 
-        vector<string> vect;
-                if (type >= 10)
-                    String::split(&vect, line, ",", type == 11);
-                else
-                    String::split(&vect, line, 
-                            static_cast<String::SplitType>(type), ",");
-
-        for (auto const &element: vect)
-            cout << '`' << element << "'\n";
+//        vector<string> vect;
+//                if (type >= 10)
+//                    String::split(&vect, line, ",", type == 11);
+//                else
+//                    String::split(&vect, line, 
+//                            static_cast<String::SplitType>(type), ",");
+//
+//        for (auto const &element: vect)
+//            cout << '`' << element << "'\n";
    }
 }
 

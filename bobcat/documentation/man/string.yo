@@ -12,18 +12,22 @@ manpagesynopsis()
 
 manpagedescription()
     This class offers facilities for often used transformations on
-tt(std::string) objects, but which are not supported by the tt(std::string)
+tt(std::string) objects, which are not supported by the tt(std::string)
 class itself. All members of bf(FBB::String) are static.
 
-manpagesection(NAMESPACE)
-    bf(FBB)nl()
-    All members, operators and manipulators, mentioned in this man-page, are
-defined in the namespace bf(FBB).
+    Initially this class was derived from bf(std::string). Deriving from
+tt(std::string), however, is considerd bad design as tt(std::string) was
+not designed as a base-class. 
+
+    bf(FBB::String) offers a series of em(static) member functions
+providing the facilities originally implemented as non-static members.
+
+includefile(include/namespace)
 
 manpagesection(INHERITS FROM)
     --
 
-manpagesection(ENUMERATION)
+manpagesection(ENUMERATIONS)
     itemization(
     itb(Type)
         This enumeration indicates the nature of the contents of an element in
@@ -51,22 +55,45 @@ the tt(split) members.
             bf(SQUOTE_UNTERMINATED), the contents of the string that was
 parsed by the tt(split) members started at some point with a quote, but
 the matching ending quote was lacking.
-    )
+    itb(SplitType)
+       This enumeration is used to specify how tt(split) members should
+        split the information in the string objects that are passed to these
+        members: 
 
+       bf(TOK): the tt(split) member acts like the standard bf(C) function
+        bf(strtok)(3). The essence here is that no empty elements are
+        returned. E.g., a string containing tt("a,,") which is processed using
+        the tt(TOK) mode returns a tt(NORMAL) element containing tt("a").
+
+       bf(TOKSEP): the tt(split) member acts like the standard bf(C) function
+        bf(strtok)(3), also returning information about encountered
+        separators. Since tt(strtok) doesn't return empty elements, tt(TOKSEP)
+        uses empty elements to indicate the occurrence of separators. E.g., a
+        string containing tt("a,,") which is processed using the tt(TOKSEP)
+        mode returns a tt(NORMAL) element containing tt("a"), followed by two
+        empty tt(SEPARATOR) elements.
+
+       bf(STR): the tt(split) member acts like the standard bf(C) function
+        bf(strstr)(3). The essence here is that empty elements are also
+        returned. E.g., a string containing tt("a,,") which is processed using
+        the tt(STR) mode returns an element containing tt("a"), followed by
+        two empty tt(NORMAL) elements.
+
+       bf(STRSEP): the tt(split) member acts like the standard bf(C) function
+        bf(strstr)(3), also returning information about encountered
+        separators.  E.g., a string containing tt("a,,") which is processed
+        using the tt(STRSEP) mode returns a tt(NORMAL) element containing
+        tt("a"), followed by a tt(SEPARATOR) element containing tt(","),
+        followed by a tt(NORMAL) empty element, followed by a tt(SEPARATOR)
+        element containing tt(","), and finally followed by a tt(NORMAL) empty
+        element,
+    )
 
 manpagesection(TYPEDEF)
 
     The bf(typedef SplitPair) represents bf(std::pair<std::string,
-String::Type>) and is used in the second variant of the bf(split) member (see
+String::Type>) and is used by some overloaded bf(split) members (see
 below).
-
-manpagesection(HISTORY)
-    Initially this class was derived from bf(std::string). Deriving from
-tt(std::string), however, is considerd bad design as tt(std::string) was
-not designed as a base-class. 
-
-    bf(FBB::String) offers a series of em(static) member functions
-providing the facilities originally implemented as non-static members.
 
 manpagesection(STATIC MEMBER FUNCTIONS)
     itemization(
@@ -79,128 +106,113 @@ the bf(C)-strings to which the pointers point. The last element of the
 returned array is guaranteed to be a 0-pointer. 
 
     itb(int casecmp(std::string const &lhs, std::string const &rhs))
-        Performs a case-insensitive comparison between the two tt(std::string)
-objects. A negative value is returned if tt(lhs) should be ordered before
-tt(rhs); 0 is returned if the two strings have identical contents; a
-positive value is returned if the tt(lhs) object should be ordered beyond
-tt(rhs).
+        Performs a case-insensitive comparison of the contents of two
+tt(std::string) objects. A negative value is returned if tt(lhs) should be
+ordered before tt(rhs); 0 is returned if the two strings have identical
+contents; a positive value is returned if the tt(lhs) object should be ordered
+beyond tt(rhs).
 
     itb(std::string escape(std::string const &str, 
             char const *series = "'\"\\"))
-        Returns a copy of the tt(str) object in which all characters in
-tt(series) are prefixed by a backslash character.
+       Returns a copy of tt(str) in which all characters in tt(series) are
+        prefixed by a backslash character.
+
+    itb(std::string join(std::vector<std::string> const &words, char sep))
+       The elements of the tt(words) vector are returned as one string,
+        separated from each other by the tt(sep) character;
+
+    itb(std::string join(std::vector<SplitPair> const &entries, char sep, 
+                                                        bool all = true))
+       The tt(first) fields of the elements in tt(entries) are returned as one
+        string, separated from each other by the tt(sep) character. If the
+        parameter tt(all) is specified as tt(false) then elements whose
+        tt(second) fields are equal to tt(String::SEPARATOR) are ignored.
 
     itb(std::string lc(std::string const &str) const)
-        Returns a copy of the tt(str) object in which all letters were
-transformed to lower case letters.
+       Returns a copy of tt(str) in which all letters were transformed to
+        lower case letters.
+
+    itb(std::vector<String::SplitPair> split(std::string const &str, SplitType
+        mode, char const *sep = " \t"))
+       The string tt(str) is split into substrings, separated by any of the
+        characters in tt(sep). The substrings are returned in a vector of
+        tt(SplitPair) elements, using the specified tt(SplitType) mode
+        (cf. the description of the various tt(SplitPair) values and their
+        effects in the tt(ENUMERATIONS) section).
+
+    itb(std::vector<String::SplitPair> split(std::string const &str, char
+        const *separators = " \t", bool addEmpty = false))
+       This member acts like the previous one, using tt(addEmpty == false)
+        to select tt(mode TOK) and tt(addEmpty == true) to select tt(mode
+        TOKSEP).
+
+
+
+    itb(size_t split(std::vector<String::SplitPair> *entries, std::string
+        const &str, SplitType mode, char const *sep = " \t"))
+       Same functionality as the first tt(split) member, but this member
+        stores the tt(SplitPair) elements in the vector pointed at by the 
+        tt(entries) parameter, first clearing the vector. This member returns
+        the new value of tt(entries->size()).
+
+    itb(size_t split(std::vector<String::SplitPair> *entries, std::string
+        const &str, char const *sep = " \t", bool addEmpty = false))
+       This member acts like the previous one, using tt(addEmpty == false)
+        to select tt(mode TOK) and tt(addEmpty == true) to select tt(mode
+        TOKSEP).
+
+
+    itb(std::vector<std::string> split(Type *type, std::string const &str,
+        SplitType stype, char const *sep = " \t"))
+       Same functionality as the first tt(split) member, but this member
+        merely stores the tt(first) fields of the tt(SplitPair) elements in
+        the returned vector. The tt(String::Type) variable whose address is
+        passed to the tt(type) parameter is set to tt(NORMAL) if the final
+        entry was successfully determined; to tt(DQUOTE_UNTERMINATED) if a
+        final closing double quote could not be found; to
+        tt(SQUOTE_UNTERMINATED) if a final closing single quote could not be
+        found; and to tt(ESCAPE_END) if the final character in tt(str) is a
+        backslash character.
+
+    itb(std::vector<std::string> split(Type *type, std::string
+        const &str, char const *sep = " \t", bool addEmpty = false))
+       This member acts like the previous one, using tt(addEmpty == false)
+        to select tt(mode TOK) and tt(addEmpty == true) to select tt(mode
+        TOKSEP).
+
+
+    itb(size_t split(std::vector<std::string> *words, std::string const &str,
+        SplitType stype, char const *sep = " \t"))
+       Same functionality as the first tt(split) member, but this member
+        merely stores the tt(first) fields of the encountered tt(SplitPair)
+        elements in the vector pointed at by tt(words), first clearing the
+        vector. This member returns the new value of tt(words->size()).
+
+    itb(size_t split(std::vector<std::string> *words, std::string const &str,
+        char const *sep = " \t", bool addEmpty = false))
+       This member acts like the previous one, using tt(addEmpty == false)
+        to select tt(mode TOK) and tt(addEmpty == true) to select tt(mode
+        TOKSEP).
+    
+
 
     itb(std::string trim(std::string const &str))
-        Returns a copy of the tt(str) object from which the leading and
-trailing blanks have been removed.
+       Returns a copy of tt(str) from which leading and trailing blank
+        characters were removed.
 
-    itb(std::vector<std::string> split(Type *type, std::string const
-                &str, char const *separators = " \t", bool addEmpty = false))
-        Returns a vector containing the elements in tt(str) which are
-separated from each other by at least one of the characters found in
-tt(*separators). The member's first parameter points to a tt(Type) variable,
-which will show tt(DQUOTE_UNTERMINATED, SQUOTE_UNTERMINATED,) or
-tt(ESCAPED_END) in cases where the contents of tt(str) are ill-formed, or
-tt(NORMAL) if tt(str)'s contents shows not syntactic errors (i.e., ill-formed
-strings or escape-sequences). If the corresponding argument equals 0 then no
-tt(Type) indication is provided.
-
-If the parameter tt(addEmpty) is set to tt(true), then individual separators
-encountered in tt(str) are stored as empty strings in tt(words) (e.g., if two
-elements are separated by three blank spaces, then the returned vector
-contains three empty strings between the two elements).
-
-If an element in tt(str) contains a double quote (tt(")), then all characters
-from the initial double quote through the matching double quote character are
-processed as follows: the surrounding double quotes are removed, and the
-remaining characters are em(unescaped) using the tt(String::unescape)
-member. The resulting unescaped string is added to the element currently under
-construction. E.g., if tt(str) contains
-        verb(
-    string="\"hello world\""
-        ) 
-    then the element becomes 
-        verb(
-    string="hello world"
-        )
-
-If an element in tt(str) contains a single quote (tt(')), then all characters
-between the initial quote and the matching quote character are literally
-appended to the element currently under construction. E.g., if tt(str)
-contains
-        verb(
-    string='"hello\ world"'
-        ) 
-    then the element becomes 
-        verb(
-    string="hello\ world"
-        )
-
-Backslash characters encountered in tt(str) outside of single or double quoted
-strings are unescaped (using tt(String::unescape)) and the resulting character
-is appended to the element currently under construction. 
-
-E.g., if tt(str)
-contains
-        verb(
-    string=\"hello\ world\"
-        ) 
-    then the element becomes 
-        verb(
-    string="hello world"
-        )
-
-    itb(std::vector<SplitPair> split(std::string const &str,
-                    char const *separators = " \t", bool addEmpty = false))
-        Same functionality as the previous tt(split) member, but the tt(words)
-vector is filled with pairs, of which the first elements represent the
-recognized strings, and the second elements are values of the tt(String::Type)
-enumeration. If bf(addEmpty) is requested, then the bf(string) elements
-contain the actual contents of the separator, while the bf(Type) elements are
-set to bf(SEPARATOR). If the returned vector is not empty then the tt(second)
-member of the last element may be tt(DQUOTE_UNTERMINATED,
-SQUOTE_UNTERMINATED,) or tt(ESCAPED_END) in cases where the contents of
-tt(str) are ill-formed.
-
-    itb(size_t split(std::vector<std::string> *words,
-                    std::string const &str,
-                    char const *separators = " \t", bool addEmpty = false))
-        Fills tt(words) with all elements of the tt(str) object, separated by
-any of the characters in tt(separators). If the parameter tt(addEmpty) is set
-to tt(true), the individual separators are stored as empty strings in
-tt(words). If a word starts with tt(") or tt(') all characters until a
-matching terminating tt(") or tt(') at the end of a word are considered as one
-word.  The surrounding quotes are not stored. The function returns the number
-of elements in the vector pointed to by tt(words). This vector is initially
-cleared.
-
-    itb(size_t  split(std::vector<SplitPair> *words,
-                    std::string const &str,
-                    char const *separators = " \t", bool addEmpty = false))
-        Same functionality as the former member, but the tt(words) vector is
-filled with pairs, of which the first elements are the recognized strings, and
-the second elements values of the tt(String::Type) enumeration. If
-bf(addEmpty) is requested, then the bf(string) elements contain the actual
-contents of the separator, while the bf(Type) elements are set to
-bf(SEPARATOR).
+    itb(std::string uc(std::string const &str)) 
+       Returns a copy of tt(str) in which all letters were capitalized. 
 
     itb(std::string unescape(std::string const &str))
-        Returns a copy of the tt(str) object in which the escaped (i.e.,
-prefixed by a backslash) characters have been interpreted. All standard escape
-characters (tt(\a), tt(\b), tt(\f), tt(\n), tt(\r), tt(\t), tt(\v)) are
-recognized. If an escape character is followed by tt(x) the next two
-characters are interpreted as a hexadecimal number. If an escape character is
-followed by an octal digit, then the next three characters following the
-backslash are interpreted as an octal number. In all other cases, the
-backslash is removed and the character following the backslash is kept.
-
-    itb(std::string uc(std::string const &str))
-        Returns a copy of the tt(str) object in which all letters were
-capitalized. 
+       Returns a copy of tt(str) in which the escaped (i.e., prefixed by a
+        backslash) characters were interpreted. All standard escape characters
+        (tt(\a), tt(\b), tt(\f), tt(\n), tt(\r), tt(\t), tt(\v)) are
+        recognized. If an escape character is followed by tt(x) at most the
+        next two characters are interpreted as a hexadecimal number. If an
+        escape character is followed by an octal digit, then at most the next
+        three characters following the em(backslash) are interpreted as an
+        octal number. In all other cases, the backslash is removed and the
+        character following the backslash is kept.
     )
 
 manpagesection(EXAMPLE)
