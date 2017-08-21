@@ -2,7 +2,7 @@
 
 bool CSV4180::req()
 {
-    cerr << __FILE__ "\n";
+    //cerr << __FILE__ "\n";
 
     if (not nextLine())                 // continue at the next line
         return false;

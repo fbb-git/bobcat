@@ -2,7 +2,7 @@
 
 bool CSV4180::toCr()
 {
-    cerr << __FILE__ "\n";
+    //cerr << __FILE__ "\n";
 
     ++d_begin;
     d_state = CRSTATE;

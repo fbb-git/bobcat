@@ -2,7 +2,7 @@
 
 bool CSV4180::field()
 {
-    cerr << __FILE__ "\n";
+    //cerr << __FILE__ "\n";
 
     ++d_begin;                              // skip the comma
 
