@@ -1,5 +1,7 @@
 #include "string.ih"
 
+#include <iostream>
+
 namespace
 {
     char const escapeChars[] = "abfnrtv";
@@ -62,10 +64,14 @@ string String::unescape(string const &str)
     size_t prefix = 0;                    // prefix text before \-char
     size_t pos = 0;
 
+//cout << "string is `" <<str << '\n';
+
     while (true)
     {
         pos = str.find('\\', pos);
         ret += str.substr(prefix, pos - prefix);// append prefix
+
+//cout << "backslash at " << pos << '\n';
 
         if (pos == string::npos)            // done if no more \-chars
             return ret;

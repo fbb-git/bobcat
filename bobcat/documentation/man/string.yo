@@ -20,7 +20,15 @@ tt(std::string), however, is considerd bad design as tt(std::string) was
 not designed as a base-class. 
 
     bf(FBB::String) offers a series of em(static) member functions
-providing the facilities originally implemented as non-static members.
+providing the facilities originally implemented as non-static members. One of
+these members is the (overloaded) tt(split) member, splitting a string into
+elements separated by one or more configurable characters. These elements may
+contain or consist of double- or single-quoted (sub) strings and escape
+characters. Escape characters are converted to their implied byte-values
+(e.g., tt(\n) is converted to byte value 10) unless they are embedded in
+single-quoted (sub) strings. Quotes surrounding double- and single-quoted
+(sub) strings are removed from the elements returned by the tt(split)
+members. 
 
 includefile(include/namespace)
 
@@ -147,7 +155,6 @@ beyond tt(rhs).
         TOKSEP).
 
 
-
     itb(size_t split(std::vector<String::SplitPair> *entries, std::string
         const &str, SplitType mode, char const *sep = " \t"))
        Same functionality as the first tt(split) member, but this member
@@ -216,58 +223,8 @@ beyond tt(rhs).
     )
 
 manpagesection(EXAMPLE)
-    verb(
-#include <iostream>
-#include <vector>
 
-#include <bobcat/string>
-
-using namespace std;
-using namespace FBB;
-
-char const *type[] = 
-{
-    "DQUOTE_UNTERMINATED",
-    "SQUOTE_UNTERMINATED",
-    "ESCAPED_END",
-    "SEPARATOR",
-    "NORMAL",
-    "DQUOTE",
-    "SQUOTE",
-};
-
-int main(int argc, char **argv)
-{
-    cout << "Program's name in uppercase: " << String::uc(argv[0]) << endl;
-
-    if (argc == 1)
-        cout << "Provide any argument to suppress SEPARATOR fields\n";
-
-    while (true)
-    {
-        cout << "Enter a line, or empty line to stop:" << endl;
-
-        String line;
-        if (!getline(cin, line) || !line.length())
-            break;
-
-        vector<String::SplitPair> splitpair;
-        cout << "Split into " << line.split(&splitpair, " \t", argc == 1) << 
-                " fields\n"; 
-        for 
-        (
-            vector<String::SplitPair>::iterator it = splitpair.begin();
-                it != splitpair.end();
-                    ++it
-        )
-            cout << (it - splitpair.begin() + 1) << ": " <<
-                    type[it->second] << ": `" << it->first << 
-                    "', unescaped: `" << String(it->first).unescape() << 
-                    "'" << endl;
-    }
-    return 0;
-}
-    )
+    verbinclude(../../string/driver/driver.cc)
 
 manpagefiles()
     em(bobcat/string) - defines the class interface

@@ -1,0 +1,15 @@
+void man1(string manpage)
+{
+    string base;
+
+    base = get_base(manpage);
+
+    chdir("documentation/man");
+
+    printf("    Writing the ", manpage, " man page to `/tmp/", base + 
+                                                                ".man'\n");
+
+    run("yodl2man  --no-warnings -r 3 -o /tmp/" + base + ".man " + manpage);
+
+    exit(0);
+}
