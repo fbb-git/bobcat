@@ -1,6 +1,25 @@
 #!/bin/bash
 
-# For development purposes:
+rm -f driver
 
-g++ -O2 -Wall -o driver -I. driver.cc \
-    -L ../../qpstreambufbase/tmp -lqpsbb -lbobcat
+case $1 in
+    (loc)
+        echo "g++ -c driver.cc"
+        g++ -I. -c driver.cc || exit 1
+        g++ -o driver driver.o -L../tmp -lqsbb -lbobcat
+    ;;
+    (lib)
+        echo "g++ -c driver.cc"
+        g++ -o driver.o -c driver.cc -lbobcat
+    ;;
+    (*)
+    echo "
+Usage: 
+    build loc   - build the driver using the shared library created in
+                  ../../tmp/lib
+    build lib   - build the driver using the shared bobcat library installed
+                  in the standard location for shared libs
+"
+    exit 1
+    ;;
+esac
