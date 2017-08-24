@@ -220,6 +220,21 @@ beyond tt(rhs).
         three characters following the em(backslash) are interpreted as an
         octal number. In all other cases, the backslash is removed and the
         character following the backslash is kept.
+
+    itb(std::string urlDecode(std::string const &str))
+       URL specifications use tt(%xx) encoding to encode characters, except
+        for alpha-numeric characters and the characters tt(- _ .) and tt(~),
+        which are kept as-is. Other characters are encode by a tt(%)
+        character, followed by two hexadecimal characters representing those
+        characters' byte value. E.g., a blank space is encoded as tt(%20), a
+        plus character is encoded as tt(%2B). The member tt(urlDecode) returns
+        a tt(std::string) containing the decoded characters of the url-encoded
+        string that is passed as argument to this member.
+
+    itb(std::string urlEncode(std::string const &str))
+       See the above member tt(urlEncode): this member returns a
+        tt(std::string) containing the url-encoded characters of the
+        characters in the string that is passed as argument to this member.
     )
 
 manpagesection(EXAMPLE)

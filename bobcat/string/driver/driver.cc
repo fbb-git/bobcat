@@ -22,8 +22,14 @@ int main(int argc, char **argv)
 
     vector<String::SplitPair> splitpair;
     string text{ "one, two, 'thr\\x65\\145'" };
+    string encoded{ String::urlEncode(text) };
 
-    cout << "Splitting `" << text << "' into " << 
+    cout << "The string `" << text << "'\n"
+            "   as url-encoded string: `" << encoded << "'\n"
+            "   and the latter string url-decoded: " << 
+                                    String::urlDecode(encoded) << "\n"
+            "\n"               
+            "Splitting `" << text << "' into " << 
                     String::split(&splitpair, text, String::STRSEP, ", ") << 
                 " fields\n"; 
 

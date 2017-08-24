@@ -9,7 +9,7 @@ String::Unescape String::unescape(ConstIter begin, ConstIter const &end)
 
                                 // a standard escape char
     if (string{ "abfnrtv" }.find(*begin) != string::npos)
-        return Unescape{ string{ 1, *begin }, 2 };
+        return Unescape{ string(1, *begin), 2 };
 
     size_t nDigits;
     string str;
@@ -23,8 +23,9 @@ String::Unescape String::unescape(ConstIter begin, ConstIter const &end)
     }
 
     if (nDigits != 0)                      // got octal digit escape seq.
-        return Unescape{ string{ 1, 
-                        static_cast<char>(stoul(str, 0, 8)) }, nDigits + 1 };
+        return Unescape{ string(
+                            1, static_cast<char>(stoul(str, 0, 8)) 
+                         ), nDigits + 1 };
 
     if (*begin == 'x')                 // maybe hex escape seq. ?
     {
@@ -39,9 +40,10 @@ String::Unescape String::unescape(ConstIter begin, ConstIter const &end)
         return nDigits == 0 ?                      // no hex, only \x
                     Unescape{ "x", 2 }
                 :
-                    Unescape{ string{ 1, 
-                        static_cast<char>(stoul(str, 0, 16)) }, nDigits + 2 };
+                    Unescape{ string( 
+                                1, static_cast<char>(stoul(str, 0, 16)) 
+                              ), nDigits + 2 };
     }
 
-    return Unescape { string{ 1, *begin }, 2 };
+    return Unescape{ string(1, *begin), 2 };
 }

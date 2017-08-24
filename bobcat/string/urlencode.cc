@@ -28,5 +28,3 @@ string String::urlEncode(string const &text)
     return escaped.str();
 }
 
-
-
