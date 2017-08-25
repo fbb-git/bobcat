@@ -1,9 +1,11 @@
 #include "string.ih"
 
-size_t String::split(vector<string> *words, string const &str, 
-                     SplitType stype, char const *sep)
+size_t String::split(
+                        SplitPairVector *entries, std::string const &str,
+                        char const *sep, bool addEmpty)
 {
-    *words = split(noType, str, stype, sep);
-    return words->size();
+    return split(entries, str, addEmpty ? TOKSEP : TOK, sep);    
 }
+
+
 

@@ -1,4 +1,6 @@
-inline std::vector<std::string> String::split(
+#include "string.ih"
+
+std::vector<std::string> String::split(
                                     Type *type, std::string const &str,
                                     char const *sep, bool addEmpty)
 {

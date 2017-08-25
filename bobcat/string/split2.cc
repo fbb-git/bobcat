@@ -1,10 +1,8 @@
 #include "string.ih"
 
-size_t String::split(SplitPairVector *entries, string const &str, 
-                     SplitType stype, char const *sep)
+std::vector<String::SplitPair> String::split(
+                            std::string const &str,
+                            char const *sep, bool addEmpty)
 {
-    entries->clear();                 // clear the destination vector
-
-    return process(entries, stype, str, sep).entries->size();
+    return split(str, addEmpty ? TOKSEP : TOK, sep);
 }
-
