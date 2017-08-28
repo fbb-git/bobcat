@@ -1,0 +1,204 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::IQuotedPrintableStreambuf(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr/>
+<h1 id="title">FBB::IQuotedPrintableStreambuf(3bobcat)</h1>
+<h2 id="author">QuotedPrintable converting Stream Buffer<br/>(libbobcat-dev_4.08.00-x.tar.gz)</h2>
+<h2 id="date">2005-2017</h2>
+
+
+<p>
+<h2 >NAME</h2>FBB::IQuotedPrintableStreambuf - Input Filtering stream buffer doing quoted printable conversions
+<p>
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/iquotedprintablestreambuf&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
+<p>
+<h2 >DESCRIPTION</h2>
+<p>
+The information made available by <strong >IQuotedPrintableStreambuf</strong> objects is
+either quoted-printable encoded or decoded. The information to convert is read
+by <strong >IQuotedPrintableStreambuf</strong> objects via <em >std::istream</em> objects.
+<p>
+The class <strong >IQuotedPrintableStreambuf</strong> is a class template, using a
+<em >FBB::CryptType</em> template non-type parameter. Objects of the class
+<strong >FBB::IQuotedPrintableStreambuf&lt;FBB::ENCODE&gt;</strong> encode the information they
+receive, objects of the class <strong >FBB::IQuotedPrintableStreambuf&lt;FBB::DECODE&gt;</strong>
+decode the information they receive. See also section <strong >ENUMERATION</strong> below.
+<p>
+Quoted-printable encoding is sometimes used in e-mail attachments (See
+also <a href="https://en.wikipedia.org/wiki/Quoted-printable">https://en.wikipedia.org/wiki/Quoted-printable</a> and
+<a href="https://www.ietf.org/rfc/rfc2045.txt">https://www.ietf.org/rfc/rfc2045.txt</a> (section 6.7)). Its main
+characteristics are:
+    <ul>
+    <li> Lines are at most 76 characters long;
+    <li> Lines longer than 76 characters are split into sub-lines, using
+        <em >=\n</em> combinations to indicate `soft line breaks'. Lines not ending
+        in soft line breaks indicate true end of lines.
+    <li> All printable characters, except for the <em >=</em> character and (final)
+        blank characters just before the end of lines, are copied as-is, all
+        other characters are escaped by writing <em >=XX</em> sequences, with XX
+        being the ascii-character representation of the hexadecimal value of
+        the escaped character (e.g., the <em >=</em> character is encoded as
+        <em >=3D</em>, a final space before end-of-line is encoded as <em >=20</em>, a
+        final tab as <em >=09</em>). Only capital letters are used when escaping
+        characters.
+    </ul><br/>
+<p>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong >FBB</strong>.
+<p>
+<h2 >INHERITS FROM</h2>
+    <strong >FBB::IFilterStreambuf</strong>
+<p>
+<h2 >MEMBER FUNCTIONS</h2>
+     All members of <strong >FBB::IFilterStreambuf</strong> are available, as
+<strong >IQuotedPrintableStreambuf</strong> inherits from this class.
+<p>
+Overloaded move and/or copy assignment operators are not available.
+<p>
+<h2 >ENUMERATION</h2>
+<p>
+<strong >IQuotedPrintableStreambuf</strong> objects either encode or decode
+quoted-printable information. <strong >IQuotedPrintableStreambuf</strong> objects of the
+class <strong >FBB::IQuotedPrintableStreambuf&lt;FBB::ENCODE&gt;</strong> encode the data they
+receive, <strong >IQuotedPrintableStreambuf</strong> objects of the class
+<strong >FBB::IQuotedPrintableStreambuf&lt;FBB::DECODE&gt;</strong> decode the data they receive.
+<p>
+The values <em >ENCODE</em> and <em >DECODE</em> are defined in the <em >enum CryptType</em>,
+defined in the <em >FBB</em> namespace.
+<p>
+<h2 >CONSTRUCTOR</h2>
+    <ul>
+    <li> <strong >IQuotedPrintableStreambuf&lt;CryptType&gt;(std::istream &amp;in, size_t bufSize = 1000)</strong>:<br/>
+        This constructor initializes the streambuf.
+<p>
+- <em >IQuotedPrintableStreambuf&lt;ENCODE&gt;</em> objects perform quoted-printable
+        encoding;<br/>
+    - <em >IQuotedPrintableStreambuf&lt;DECODE&gt;</em> objects perform quoted-printable
+        decoding;<br/>
+    - <em >IQuotedPrintableStreambuf&lt;CryptType&gt;</em> objects obtain the bytes to encode or
+        decode from <em >std::istream &amp;in</em>;<br/>
+    - The <em >IFilterStreambuf</em> base class is initialized with a buffer of
+        size <em >bufSize</em>, using a lower bound of 100 characters.
+<p>
+The constructor uses a configurable buffer size for reading. Characters
+read into the buffer which are not part of the actual quoted-printable encoded
+data are unavailable after completing the quoted-printable decoding. If
+information beyond the quoted-printable input block should remain available,
+then a buffer size of 1 should be specified.
+    </ul>
+<p>
+Copy- and move constructors are not available.
+<p>
+<h2 >EXAMPLE</h2>
+<p>
+The example shows the construction of <em >IQuotedPrintableStreambuf&lt;ENCODE&gt;</em>
+objects <em >encode</em> which are used to initialize a <em >std::istream</em> object. The
+information read from this <em >istream</em> is quoted-printable encoded. 
+<p>
+<em >IQuotedPrintableStreambuf&lt;DECODE&gt;</em> objects read quoted-printable encoded
+information from <em >std::istream</em> objects, decoding the information.
+<p>
+The <em >std::istream din</em> object is initialized with the
+<em >IQuotedPrintableStreambuf&lt;DECODE&gt;</em> object, and its contents is sent to
+<em >std::cout</em>. The information that is presented at <em >std::cin</em> and that
+appears at <em >std::cout</em> should be identical.
+<p>
+<pre >
+#include &lt;iostream&gt;
+#include &lt;istream&gt;
+
+#include &lt;bobcat/iquotedprintablestreambuf&gt;
+
+using namespace std;
+using namespace FBB;
+
+int main(int argc, char **argv)
+{
+    if (argc == 1)
+    {
+        cout &lt;&lt; "Usage: " &lt;&lt; argv[0] &lt;&lt; " [edb] &lt; infile &gt; outfile\n"
+                    "to quoted printable -e-ncode, -d-ecode or -b-oth\n";
+        return 0;
+    }
+
+    switch (argv[1][0])
+    {
+        case 'e':
+        {
+            IQuotedPrintableStreambuf&lt;ENCODE&gt; encode(cin);
+            istream ein(&amp;encode);
+            cout &lt;&lt; ein.rdbuf();
+        }
+        break;
+
+        case 'd':
+        {
+            IQuotedPrintableStreambuf&lt;DECODE&gt; decode(cin);
+            istream din(&amp;decode);
+            cout &lt;&lt; din.rdbuf();
+        }
+        break;
+    
+        case 'b':
+        {
+            IQuotedPrintableStreambuf&lt;ENCODE&gt; encode(cin);
+            istream ein(&amp;encode);
+
+            IQuotedPrintableStreambuf&lt;DECODE&gt; decode(ein);
+            istream din(&amp;decode);
+            cout &lt;&lt; din.rdbuf();
+        }
+        break;
+    }
+}
+
+</pre>
+
+<p>
+<h2 >FILES</h2>
+    <em >bobcat/iquotedprintablestreambuf</em> - defines the class interface
+<p>
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >isymcryptstreambuf</strong>(3bobcat),
+<strong >iquotedprintablestream</strong>(3bobcat), <strong >ifilterstreambuf</strong>(3bobcat),
+<strong >ofilterstreambuf</strong>(3bobcat), <strong >std::streambuf</strong>.
+<p>
+<h2 >BUGS</h2>
+    None reported.
+<p>
+
+<h2 >DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em >bobcat_4.08.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.08.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.08.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.08.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em >libbobcat1-dev_4.08.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2 >BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2 >COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
+<p>
+</body>
+</html>

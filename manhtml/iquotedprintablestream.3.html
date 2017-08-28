@@ -1,0 +1,128 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::IQuotedPrintableStream(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr/>
+<h1 id="title">FBB::IQuotedPrintableStream(3bobcat)</h1>
+<h2 id="author">QuotedPrintable encoding/decoding std::istream<br/>(libbobcat-dev_4.08.00-x.tar.gz)</h2>
+<h2 id="date">2005-2017</h2>
+
+
+<p>
+<h2 >NAME</h2>FBB::IQuotedPrintableStream - Std::istream performing quoted-printable encoding and
+                    decoding
+<p>
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/iquotedprintablestream&gt;</strong><br/>
+    Linking option: <em >-lbobcat</em> 
+<p>
+<h2 >DESCRIPTION</h2>
+    <strong >FBB::IQuotedPrintableStream</strong> objects may be used to quoted-printable
+encode or decode information that is available on a separate <em >std::istream</em>.
+<p>
+The <em >class IQuotedPrintableStream</em> is a class template, using a
+<em >FBB::CodeType</em> template non-type parameter. Objects of the class
+<em >FBB::IQuotedPrintableStream&lt;FBB::ENCODE&gt;</em> encode the information they
+receive, objects of the class <em >FBB::IQuotedPrintableStream&lt;FBB::DECODE&gt;</em>
+decode the information they receive.
+<p>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong >FBB</strong>.
+<p>
+<h2 >INHERITS FROM</h2>
+    <strong >FBB::IQuotedPrintableStreambuf</strong> (private), <br/>
+    <strong >std::istream</strong> 
+<p>
+<h2 >CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong >IQuotedPrintableStream&lt;CodeType&gt;(std::istream &amp;in, size_t bufSize =
+            1000)</strong>:<br/>
+       This constructor initializes a <em >std::istream</em> providing it with an
+        <strong >FBB::IQuotedPrintableStreambuf</strong> stream buffer. The
+        <strong >IQuotedPrintableStreambuf</strong>'s constructor receives all arguments
+        that are passed to this constructor.
+<p>
+- <em >IQuotedPrintableStream&lt;ENCODE&gt;</em> objects perform quoted printable
+        encodi ng;<br/>
+    - <em >IQuotedPrintableStream&lt;DECODE&gt;</em> objects perform quoted printable
+        decoding;<br/> 
+    - <em >IQuotedPrintableStream&lt;CodeType&gt;</em> objects obtain the bytes to encode
+        or decode from <em >std::istream &amp;in</em>;<br/>
+    - The internally used <em >IFilterStreambuf</em> is initialized with a buffer of
+        size <em >bufSize</em>, using a lower bound of 100.
+<p>
+The constructor uses a configurable buffer size for reading. Characters
+        that were read into the buffer but are not part of the actual quoted
+        printable encoded data are unavailable after completing the quoted
+        printable decoding. If information beyond the quoted printable input
+        block should remain available, then specify a buffer size of 1.
+    </ul>
+<p>
+<h2 >INHERITED MEMBERS</h2>
+<p>
+Since the class uses public derivation from <strong >std::istream</strong>, all members
+of this class can be used.
+<p>
+<h2 >EXAMPLE</h2>
+    <pre >
+#include &lt;iostream&gt;
+#include &lt;bobcat/iquotedprintablestream&gt;
+
+using namespace std;
+using namespace FBB;
+
+int main()
+{
+    IQuotedPrintableStream&lt;ENCODE&gt; in(cin);
+
+    cout &lt;&lt; in.rdbuf();         // quoted printable encode the info on
+                                // cin.
+}
+</pre>
+
+<p>
+See also the example in the <strong >iquotedprintablestreambuf</strong>(3bobcat)
+        man-page. 
+<p>
+<h2 >FILES</h2>
+    <em >bobcat/iquoted printablestream</em> - defines the class interface
+<p>
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7), <strong >iquotedprintablestreambuf</strong>(3bobcat)
+<p>
+<h2 >BUGS</h2>
+    None Reported.
+<p>
+
+<h2 >DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em >bobcat_4.08.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.08.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.08.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.08.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em >libbobcat1-dev_4.08.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2 >BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2 >COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
+<p>
+</body>
+</html>

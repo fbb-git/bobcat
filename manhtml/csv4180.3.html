@@ -1,0 +1,290 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<title>FBB::CSV4180(3bobcat)</title>
+<style type="text/css">
+    figure {text-align: center;}
+    img {vertical-align: center;}
+</style>
+<link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
+</head>
+<body text="#27408B" bgcolor="#FFFAF0">
+<hr/>
+<h1 id="title">FBB::CSV4180(3bobcat)</h1>
+<h2 id="author">CSV4180 convertor<br/>(libbobcat-dev_4.08.00-x.tar.gz)</h2>
+<h2 id="date">2005-2017</h2>
+
+
+<p>
+<h2 >NAME</h2>FBB::CSV4180 - Converter for comma separated values
+<p>
+<h2 >SYNOPSIS</h2>
+    <strong >#include &lt;bobcat/csv&gt;</strong><br/>
+<p>
+Linking option: <em >-lbobcat</em> 
+<p>
+<h2 >DESCRIPTION</h2>
+<p>
+Objects of the class <strong >CSV4180</strong> can be used to convert series of comma
+separated values to the individual separated values (also called `fields'
+below). The class implements RFC 4180
+(cf. <a href="https://www.ietf.org/rfc/rfc4180.txt">https://www.ietf.org/rfc/rfc4180.txt</a>, section 2).
+<p>
+According to RFC 4180 lines contain comma separated values: comma separated
+values on one line are processed together, as a series of values. The final
+comma separated value on a line is not ended by a comma.
+<p>
+Comma separated values may be surrounded by double quotes. However, they
+<em >must</em> be surrounded by double quotes in these cases:
+    <ul>
+    <li> if the values contain commas;
+    <li> if the values contain double quotes (in which case the double quote
+        is `escaped' by doubling it, e.g., <em >"a "" double quote"</em>);
+    <li> if the values extend over multiple lines. E.g.,
+        <pre>
+
+"First line
+second line"
+    
+</pre>
+
+    </ul>
+<p>
+Comma separated values may be empty: the following line defines three
+empty comma separated values:
+        <pre>
+
+,,
+        
+</pre>
+
+    The first empty value starts at the beginning of the line, and continues
+up to the first comma; the second empty value starts beyond the first comma
+and continues up to the second comma; the third empty value starts beyond the
+second comma, and continues up to the end of the line. If the line ends in
+blank space characters then the third value isn't empty, but contains those
+blank space characters.
+<p>
+By default, values are interpreted as strings. The <strong >CSV4180</strong> class also
+offers facilities to ignore specific fields, or to ensure that they can be
+converted to integral or floating point values. The second constructor (below)
+expects a <em >std::string</em> argument defining how to interpret fields. Options
+are: 
+    <ul>
+    <li>:  the field must be convertible to an integral value;
+    <li>:  the field must be convertible to a floating point value;
+    <li>:  the field is a string: it is used as-is;
+    <li>:  the field is omitted from the final set of comma separated
+        values. I.e., if a line contains three comma separated values, and the
+        specification <em >"SXS"</em> is used then this results in two comma
+        separated values: the first and third value of three comma separated
+        values encountered on lines.
+    <li>:  sysnonym of <em >X</em>.
+    </ul><br/>
+    In addition, field specifications may contain blank spaces, which are
+ignored. 
+<p>
+When processing comma separated values the first line may be considered a
+<em >header</em> line. <em >X</em> specifications also apply to header lines, but
+otherwise they merely consist of <em >S</em>-type fields. In addition, when
+processing multiple input lines all non-header lines are made available in a
+vector of vectors of fields, whereas the header line itself can be accessed
+via a dedicated member (<em >header()</em>).
+<p>
+<h2 >NAMESPACE</h2>
+    <strong >FBB</strong><br/>
+    All constructors, members, operators and manipulators, mentioned in this
+man-page, are defined in the namespace <strong >FBB</strong>.
+<p>
+<h2 >INHERITS FROM</h2>
+    -
+<p>
+<h2 >CONSTRUCTORS</h2>
+    <ul>
+    <li> <strong >explicit CSV4180(size_t nFields = 0, bool header = false)</strong>:<br/>
+       The first parameter specifies the number of fields that must be
+        present on input lines. When using the default value the number of
+        fields encountered on the first line determines the number of fields
+        that must be present on subsequent lines. If the second parameter is
+        <em >true</em> then the first line is interpreted as the header line.
+<p>
+<li> <strong >explicit CSV4180(std::string const &amp;specs, bool header = false)</strong>:<br/>
+       The first parameter defines the number and types of the comma separated
+        values on input lines. Specifications can be
+        <blockquote >
+            <ul>
+            <li> <em >D</em>: the field must be convertible to a floating point value;
+            <li> <em >I</em>: the field must be convertible to an integral value;
+            <li> <em >S</em>: the field is left as-is, and can be retrieved as a
+                <em >std::string</em>. 
+            <li> <em >X</em> or <em >-</em>: the field is ignored and is not stored inside the
+                <strong >CSV4180</strong> object.
+            <li> blank space characters are ignored.
+            </ul>
+        </blockquote>
+       An exception is thrown when encountering other than the abovementioned
+        characters are encountered.
+<p>
+If <em >I</em> or <em >D</em> fields cannot be properly converted, or if a line
+        contains too few or too many comma separated values the input stream's
+        fail status is set.
+<p>
+If the second parameter is <em >true</em> then the first line is interpreted
+        as the header line.
+<p>
+</ul><br/>
+    The copy and move constructors are available.
+<p>
+<h2 >OVERLOADED OPERATORS</h2>
+    <ul>
+    <li> <strong >std::istream &amp;operator&gt;&gt;(std::istream &amp;in, CSV4180 &amp;csv)</strong>:<br/>
+       One line of text is extracted from <em >in</em> and processed by the <em >csv</em>
+        object. The <em >csv</em> object may or may not already contain converted
+        comma separated values. When empty, the first line is processed
+        according to the specifications provided to the <em >csv</em> object at
+        construction time. Otherwise, the comma separated values on extracted
+        lines must match the number and types of the fields, as specified by
+        the <em >csv</em> object. When input lines do not match these specifications
+        <em >in's</em> fail status is set.
+    </ul><br/>
+<p>
+The copy and move assignment operators are available.
+<p>
+<h2 >MEMBER FUNCTIONS</h2>
+    <ul>
+    <li> <strong >void clear()</strong>:<br/>
+       The internally  stored data (referred to by the <em >data, header,</em> and
+        <em >lastLine</em> members) are erased.
+<p>
+<li> <strong >std::vector&lt;std::vector&lt;std::string&gt;&gt; const &amp;data() const</strong>:<br/>
+       A reference to the vector of vectors of fields stored inside the
+        <strong >CSV4180</strong> object is returned. The vector returned by <em >data</em> does
+        not contain the header line. If a header line was requested it can be
+        retrieved from the <em >header()</em> member.
+<p>
+<li> <strong >std::vector&lt;std::string&gt; const &amp;header() const</strong>:<br/>
+       If the constructor's <em >header</em> parameter was specified as <em >true</em>
+        then this member returns the fields encountered on the first line that
+        was processed by the <em >read1</em> member. Otherwise, <em >header</em> returns
+        a reference to an empty vector.
+<p>
+<li> <strong >std::string const &amp;lastLine() const</strong>:<br/>
+       A reference to the last line that was successfully extracted from the
+        input stream by the <em >read1</em> member is returned. So once the lines
+        containing the comma separated values have been processed, the next
+        line on the input stream can be obtained from this member.
+<p>
+<li> <strong >size_t nValues() const</strong>:<br/>
+       After successfully calling <em >read1</em> for the first time this member
+        returns the required number of comma separated values that must be
+        encountered on subsequent input lines.
+<p>
+<li> <strong >size_t read(std::istream &amp;in, size_t nLines = 0)</strong>:<br/>
+       By default, all lines of <em >in</em> are read and are processed by the
+        <em >read1</em> member. By specifying a non-zero value for the <em >nLines</em>
+        parameter the specified number of lines is read from <em >in</em>. 
+        Reading stops once <em >in's</em> status is not <em >good</em>. When <em >nLines</em> is
+        specified as zero, then <em >in's</em> status flags are cleared. The number
+        of successfully processed lines is returned.
+<p>
+<li> <strong >std::istream &amp;read1(std::istream &amp;in)</strong>:<br/>
+       One line is read from <em >in</em> and is parsed for its comma separated
+        values. If parsing fails, <em >in's fail</em> status is set. After
+        successfully calling <em >read1</em> for the first time all subsequent lines
+        read by <em >read1</em> must have the same number of comma separated values
+        as encountered when calling <em >read1</em> for the first time. The parsed
+        fields are stored in a vector of <em >std::string</em> objects, and that
+        vector is added to the vector of vectors of strings that is returned
+        by the <em >data</em> member. 
+    </ul>
+<p>
+<h2 >EXAMPLE</h2>
+    <pre >
+/*
+                              driver.cc
+*/
+
+
+#include &lt;iostream&gt;
+
+#include &lt;bobcat/csv4180&gt;
+
+using namespace std;
+using namespace FBB;
+
+int main(int argc, char **argv)
+{
+//    if (argc == 1)
+//        cout &lt;&lt; "arg1: file containing csv lines\n";
+
+//    CSV4180 csv{ "SXS" };    
+//    CSV4180 csv{ "SXS", true };    
+    CSV4180 csv;    
+//    CSV4180 csv{3};    
+//    CSV4180 csv{3, true};    
+
+//    cout &lt;&lt; "? ";
+//    if (not csv.read1(cin))
+//    {
+//        cerr &lt;&lt; "Error in input line\n";
+//        return 0;
+//    }
+
+    size_t nLines = csv.read(cin);
+    cerr &lt;&lt; nLines &lt;&lt; " lines were read\n";
+    if (not csv.header().empty())
+    {
+        cerr &lt;&lt; "header: " &lt;&lt; '\n';
+        for (auto const &amp;field: csv.header())
+            cerr &lt;&lt; "   `" &lt;&lt; field &lt;&lt; "'\n";
+    }
+
+    cerr &lt;&lt; "# CSV values: " &lt;&lt; csv.nValues() &lt;&lt; '\n';
+    for (auto const &amp;line: csv.data())
+    {
+        cerr &lt;&lt; "Line:\n";
+        for (auto const &amp;entry: line)
+            cerr &lt;&lt; "   `" &lt;&lt; entry &lt;&lt; "'\n";
+    }
+}
+
+
+
+
+
+</pre>
+
+<p>
+<h2 >FILES</h2>
+    <em >bobcat/csv</em> - defines the class interface
+<p>
+<h2 >SEE ALSO</h2>
+    <strong >bobcat</strong>(7)
+<p>
+<h2 >BUGS</h2>
+    None Reported.
+<p>
+
+<h2 >DISTRIBUTION FILES</h2>
+    <ul>
+    <li> <em >bobcat_4.08.00-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.08.00-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.08.00-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.08.00-x_*.deb</em>: debian package holding the
+            libraries;
+    <li> <em >libbobcat1-dev_4.08.00-x_*.deb</em>: debian package holding the
+            libraries, headers and manual pages;
+    <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
+    </ul>
+<p>
+<h2 >BOBCAT</h2>
+    Bobcat is an acronym of `Brokken's Own Base Classes And Templates'.
+<p>
+<h2 >COPYRIGHT</h2>
+    This is free software, distributed under the terms of the 
+    GNU General Public License (GPL).
+<p>
+<h2 >AUTHOR</h2>
+    Frank B. Brokken (<strong >f.b.brokken@rug.nl</strong>).
+<p>
+</body>
+</html>
