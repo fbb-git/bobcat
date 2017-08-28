@@ -25,11 +25,7 @@ namespace
             *dest += src[pos];                  // add next char if not so
             return pos + 1;                     // next to handle
         }
-
-//        A2x a2x(src.substr(pos, nOct));
-//        size_t ch;
-//        a2x >> oct >> ch;                       // convert substr. to octal
-
+                                                // convert substr. to octal
         size_t ch = stoul(src.substr(pos, nOct), 0, 8);
 
         *dest += static_cast<char>(ch);         // append the octal value
@@ -50,11 +46,7 @@ namespace
             *dest += src[pos - 1];              // add next char if so
             return pos;                         // next char to handle
         }
-
-//        A2x a2x(src.substr(pos, nHex));
-//        size_t ch;
-//        a2x >> hex >> ch;                       // convert substr. to hex
-
+                                                // convert substr. to hex
         size_t ch = stoul(src.substr(pos, nHex), 0, 16);
 
         *dest += static_cast<char>(ch);         // append the hex value

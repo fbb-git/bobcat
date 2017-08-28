@@ -1,0 +1,124 @@
+#ifndef INCLUDED_BOBCAT_CSV4180_
+#define INCLUDED_BOBCAT_CSV4180_
+
+// See RFC 4180:  Common Format and MIME Type for CSV Files
+
+#include <string>
+#include <vector>
+#include <iosfwd>
+
+namespace FBB
+{
+
+class CSV4180
+{
+    typedef std::vector<std::string>    StrVector;
+    typedef std::vector<StrVector>      DataVector;
+
+    enum State
+    {
+        START,
+        CRSTATE,
+        CHARSTATE,
+        DQ1,
+        DQ2,
+    };
+
+    enum CharType
+    {
+        EOS,
+        CR,                 // carriage return (\r)
+        CHAR,
+        DQUOTE,
+        COMMA,
+        nCharTypes
+    };
+
+    size_t d_nRequired;
+    bool (CSV4180::*d_verifyTypes)() = &CSV4180::nop;   // data lines
+    bool (CSV4180::*d_dropFields)()  = &CSV4180::nop;   // header fields
+
+    bool   d_setHeader = false;
+    StrVector d_header;
+
+    State d_state;
+
+    std::string d_specs;
+    std::string d_str;
+    std::string::iterator d_begin;
+    std::string::iterator d_end;
+
+    std::string d_field;            // the current field (complete or isn)
+    StrVector   d_last;             // the fields of the last line
+    DataVector  d_data;             // StrVectors of all processed lines
+
+    std::istream *d_in;
+
+    static bool (CSV4180::*s_fsa[][nCharTypes])();
+
+    public:
+                                            // 1: determine nFields from the
+                                            //  1st line or specify the 
+                                            //  # required fields
+        explicit CSV4180(size_t nFields = 0, bool header = false);
+
+                                            // 2: specs specify requirements
+                                            //  of fields. X-fields must be
+                                            //  present but are omitted from
+                                            //  d_data lines and
+                                            //  d_header. Throws exception if
+                                            //  unsopported specification is
+                                            //  encountered. 
+        explicit CSV4180(std::string const &specs, bool header = false);
+
+        // Copy and move operations are implicitly available
+
+
+        std::istream &read1(std::istream &in);  // in.fail(): error in input 
+                                                // data 
+
+        size_t read(std::istream &in, size_t nLines = 0);    // read all csv 
+                                                // lines or specify the 
+                                                // # lines to read.
+
+        size_t nValues() const;                 // # CSVs (available after
+                                                // reading at least one line)
+
+        StrVector const &header() const;        // the header (or empty) 
+
+        std::string const &lastLine() const;    // the most recently read 
+                                                // line from the istream
+
+        DataVector const &data() const;         // all csv lines
+
+        void clear();                           // clear d_data
+
+    private:
+        void setSpecs(std::string const &specs);
+        bool nop();
+        bool dropFields();
+        bool verifyTypes();
+
+        bool nextLine();
+        CharType peek();
+
+        bool addCh();                               // s_fsa functions
+        bool addDq1();
+        bool end();
+        bool err();
+        bool field();
+        bool req();
+        bool toCr();
+        bool toDq1();
+        bool toDq2();
+};
+
+#include "opextract.f"
+#include "nvalues.f"
+#include "header.f"
+#include "data.f"
+#include "lastline.f"
+
+
+} // FBB        
+#endif

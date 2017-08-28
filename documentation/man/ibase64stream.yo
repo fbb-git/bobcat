@@ -17,10 +17,10 @@ manpagedescription()
 information that is available on a separate tt(std::istream).
 
      The tt(class IBase64Stream) is a class template, using a
-tt(FBB::CryptType) template non-type parameter. Objects of the class 
-tt(FBB::IBase64Stream<FBB::ENCODE>) base64 encode the information they receive,
-objects of the class tt(FBB::IBase64Stream<FBB::DECRYPT>) base64 decode the
-information they receive.
+tt(FBB::CryptType) template non-type parameter. Objects of the class
+tt(FBB::IBase64Stream<FBB::ENCRYPT>) base64 encode the information they
+receive, objects of the class tt(FBB::IBase64Stream<FBB::DECRYPT>) base64
+decode the information they receive.
 
 
 includefile(include/namespace)
@@ -43,7 +43,7 @@ decode from tt(std::istream &in);nl()
     - The internally used tt(IFilterStreambuf) is initialized with a buffer of
 size tt(bufSize), using a lower bound of 100.
 
-    The constructor uses a configurble buffer size for reading. Characters
+    The constructor uses a configurable buffer size for reading. Characters
 that were read into the buffer but are not part of the actual base64 encoded
 data are unavailable after completing the base64 decrypting. If information
 beyond the base64 input block should remain available, then specify a buffer

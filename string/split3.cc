@@ -1,20 +1,10 @@
 #include "string.ih"
 
-vector<String::SplitPair> String::split(string const &str,
-                                    string const &separators, bool addEmpty)
+size_t String::split(SplitPairVector *entries, string const &str, 
+                     SplitType stype, char const *sep)
 {
-    vector<SplitPair> ret;
+    entries->clear();                 // clear the destination vector
 
-                                // visit all chars of str
-    for (ConstIter begin = str.begin(), end = str.end(); begin != end; )
-    {
-        SplitPair next = split(begin, str.end(), separators);
-
-        if (next.second == SEPARATOR && not addEmpty)
-            continue;
-    
-        ret.push_back(next);
-    }
-
-    return ret;
+    return process(entries, stype, str, sep).entries->size();
 }
+

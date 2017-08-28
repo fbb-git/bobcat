@@ -1,0 +1,67 @@
+#ifndef INCLUDED_BOBCAT_QPSTREAMBUFBASE_
+#define INCLUDED_BOBCAT_QPSTREAMBUFBASE_
+
+//  See also https://en.wikipedia.org/wiki/Quoted-printable
+// And  https://www.ietf.org/rfc/rfc2045.txt    (section 6.7)
+// 
+// 
+
+#include <istream>
+#include <string>
+
+#include <bobcat/ifilterstreambuf>
+
+namespace FBB
+{
+
+namespace IUO   // the facilities defined here are not further documented:
+{               // the QPStreambufBase class defined below should be
+                // used by IQPStreambuf only.
+
+class QPStreambufBase: public FBB::IFilterStreambuf
+{
+    enum 
+    {
+        MAX_LENGTH = 76,
+        LAST_IDX = 75
+    };
+
+    std::istream &d_in;                         // stream to read
+    bool (QPStreambufBase::*d_action)();        // encoding or decoding
+    size_t d_bufSize;
+    std::string d_buffer;
+    bool d_allDone = false;
+
+    std::string d_pending;                      // used by encode
+    void (QPStreambufBase::*d_encode)();
+
+    static std::string const s_hexChars;
+    static void (QPStreambufBase::*s_encode[])();
+
+    public:
+        QPStreambufBase(std::istream &in, size_t bufSize);
+
+    protected:
+        void doEncode(bool binary = false);
+        void doDecode();
+
+    private:
+                                // 'filter' controls the conversion
+        bool filter(char const **srcBegin, char const **srcEnd) override;
+
+        bool encode(); // false means: end of input on d_in, but there 
+                        // may still be chars to process in d_buffer
+        bool decode();
+
+        void insert(int ch);
+        void escape(unsigned char ch);
+        void text();
+        void binary();
+        void flush();
+
+};
+
+}   // IUO
+}   // FBB        
+
+#endif

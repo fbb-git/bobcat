@@ -1,0 +1,79 @@
+includefile(include/header)
+
+COMMENT(manpage, section, releasedate, archive, short name)
+manpage(FBB::IQuotedPrintableStream)(3bobcat)(_CurYrs_)
+(libbobcat-dev__CurVers_-x.tar.gz)  
+                    (QuotedPrintable encoding/decoding std::istream)
+
+manpagename(FBB::IQuotedPrintableStream)
+                    (Std::istream performing quoted-printable encoding and
+                    decoding)
+
+manpagesynopsis()
+    bf(#include <bobcat/iquotedprintablestream>)nl()
+    Linking option: tt(-lbobcat) 
+
+manpagedescription()
+    bf(FBB::IQuotedPrintableStream) objects may be used to quoted-printable
+encode or decode information that is available on a separate tt(std::istream).
+
+     The tt(class IQuotedPrintableStream) is a class template, using a
+tt(FBB::CodeType) template non-type parameter. Objects of the class
+tt(FBB::IQuotedPrintableStream<FBB::ENCODE>) encode the information they
+receive, objects of the class tt(FBB::IQuotedPrintableStream<FBB::DECODE>)
+decode the information they receive.
+
+includefile(include/namespace)
+
+manpagesection(INHERITS FROM)
+    bf(FBB::IQuotedPrintableStreambuf) (private), nl()
+    bf(std::istream) 
+
+manpagesection(CONSTRUCTORS)
+    itemization(
+    itb(IQuotedPrintableStream<CodeType>(std::istream &in, size_t bufSize =
+            1000))
+       This constructor initializes a tt(std::istream) providing it with an
+        bf(FBB::IQuotedPrintableStreambuf) stream buffer. The
+        bf(IQuotedPrintableStreambuf)'s constructor receives all arguments
+        that are passed to this constructor.
+
+    - tt(IQuotedPrintableStream<ENCODE>) objects perform quoted printable
+        encodi ng;nl()
+    - tt(IQuotedPrintableStream<DECODE>) objects perform quoted printable
+        decoding;nl() 
+    - tt(IQuotedPrintableStream<CodeType>) objects obtain the bytes to encode
+        or decode from tt(std::istream &in);nl()
+    - The internally used tt(IFilterStreambuf) is initialized with a buffer of
+        size tt(bufSize), using a lower bound of 100.
+
+    The constructor uses a configurable buffer size for reading. Characters
+        that were read into the buffer but are not part of the actual quoted
+        printable encoded data are unavailable after completing the quoted
+        printable decoding. If information beyond the quoted printable input
+        block should remain available, then specify a buffer size of 1.
+    )
+
+manpagesection(INHERITED MEMBERS)
+
+    Since the class uses public derivation from bf(std::istream), all members
+of this class can be used.
+
+manpagesection(EXAMPLE)
+    verbinclude(../../iquotedprintablestream/driver/driver.cc)
+
+    See also the example in the bf(iquotedprintablestreambuf)(3bobcat)
+        man-page. 
+
+manpagefiles()
+    em(bobcat/iquoted printablestream) - defines the class interface
+
+manpageseealso()
+    bf(bobcat)(7), bf(iquotedprintablestreambuf)(3bobcat)
+
+manpagebugs()
+    None Reported.
+
+includefile(include/trailer)
+
+
