@@ -1,0 +1,21 @@
+#ifndef INCLUDED_BOBCAT_IQUOTEDPRINTABLESTREAM_
+#define INCLUDED_BOBCAT_IQUOTEDPRINTABLESTREAM_
+
+#include <istream>
+
+#include <bobcat/iquotedprintablestreambuf>
+
+namespace FBB
+{
+
+template <CryptType type>
+struct IQuotedPrintableStream: private IQuotedPrintableStreambuf<type>, 
+                               public std::istream
+{
+    IQuotedPrintableStream(std::istream &in, size_t bufSize = 1000);    // 1.f
+};
+
+#include "iquotedprintablestream1.f"
+
+} // FBB        
+#endif

@@ -1,0 +1,38 @@
+#ifndef INCLUDED_BOBCAT_IQUOTEDPRINTABLESTREAMBUF_
+#define INCLUDED_BOBCAT_IQUOTEDPRINTABLESTREAMBUF_
+
+#include <bobcat/qpstreambufbase>
+#include <bobcat/fbb>
+
+namespace FBB
+{
+
+    // generic class declaration
+template <CryptType>
+class IQuotedPrintableStreambuf;
+
+    // specialization when encoding (using available symbolic name ENCRYPT
+    //  from bobcat/fbb)
+template <>
+class IQuotedPrintableStreambuf<ENCRYPT>: public IUO::QPStreambufBase
+{
+    public:                                                     // 1.f
+        IQuotedPrintableStreambuf(std::istream &in, size_t bufSize = 1000);  
+};
+
+    // specialization when decoding (using available symbolic name DECRYPT
+    //  from bobcat/fbb)
+template <>
+class IQuotedPrintableStreambuf<DECRYPT>: public IUO::QPStreambufBase
+{
+    public:                                                     // 2.f
+        IQuotedPrintableStreambuf(std::istream &in, size_t bufSize = 1000);  
+};
+
+#include "iquotedprintablestreambuf1.f"
+#include "iquotedprintablestreambuf2.f"
+
+} // FBB        
+#endif
+
+

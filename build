@@ -45,6 +45,8 @@ string
 #include "icmake/uninstall"
 
 #include "icmake/man"
+#include "icmake/man1"
+
 #include "icmake/github"
 #include "icmake/library"
 #include "icmake/libraries"
@@ -150,6 +152,9 @@ void main(int argc, list argv)
     if (option == "man")
         man();
 
+    if (option == "man1")
+        man1(argv[2]);
+
     if (option == "github")
         github();
 
@@ -209,7 +214,9 @@ void main(int argc, list argv)
         "                         in the file 'logfile'\n"
         "\n"
         "internal use only:\n"
+        "   man1 .yo-file       - build one man-page file\n"
         "   dep                 - refresh the class-dependencies overview\n"
         "   github              - prepare github's gh-pages update\n"
     );
 }
+

@@ -84,8 +84,9 @@ The following classes and functions are available:
     bf(FBB::ConfigFile): Processing standard configuration files.nl() 
     Manpage(configfile)
 
-    bf(FBB::CSV): Objects of this class allow easy handling of comma-separated
-    values.nl()  
+    bf(FBB::CSV4180): Objects of this class allow for easy handling of
+    comma-separated values (implements RFC 4180, replaces the class bf(CSV),
+    which is now deprecated).nl()  
     Manpage(csv)
 
     bf(FBB::DateTime): Manipulations with date and time values.nl()
@@ -180,6 +181,15 @@ The following classes and functions are available:
 
     bf(FBB::ISharedStream): tt(std::istream) operations on shared memory.nl()
     Manpage(isharedstream)
+
+    bf(FBB::IQuotedPrintableStream): stream implementing quoted printable
+    encoding and decoding, using a tt(FBB::IQuotedPrintableStreambuf) stream
+    buffer.nl() 
+    Manpage(iquotedprintablestream)
+
+    bf(FBB::IQuotedPrintableStreambuf): tt(FBB::IFilterStreambuf)
+    specialization implementing quoted printable encoding and decoding.nl()
+    Manpage(iquotedprintablestreambuf)
 
     bf(FBB::IRandStream): stream to extract random numbers from. nl()
     Manpage(irandstream)
@@ -505,9 +515,15 @@ COMMENT(    it() bf(DEPRECATED CLASSES))
     unlimited integer precision arithmetic. nl()
     Manpage(bigint)
 
+    bf(FBB::CSV4180): Objects of this class allow easy handling of
+    comma-separated values (implements RFC 4180).nl()  
+    Manpage(csv)
+
+COMMENT(
     bf(FBB::CSV): Objects of this class allow easy handling of comma-separated
     values.nl()  
     Manpage(csv)
+END)
 
     bf(FBB::IBase64Stream): stream implementing base64 encoding and decoding,
     using a tt(FBB::Base64Streambuf) stream buffer.nl() 
@@ -516,6 +532,15 @@ COMMENT(    it() bf(DEPRECATED CLASSES))
     bf(FBB::IBase64Streambuf): tt(FBB::IFilterStreambuf) specialization
     implementing base64 encoding and decoding.nl()
     Manpage(ibase64streambuf)
+
+    bf(FBB::IQuotedPrintableStream): stream implementing quoted printable
+    encoding and decoding, using a tt(FBB::IQuotedPrintableStreambuf) stream
+    buffer.nl() 
+    Manpage(iquotedprintablestream)
+
+    bf(FBB::IQuotedPrintableStreambuf): tt(FBB::IFilterStreambuf)
+    specialization implementing quoted printable encoding and decoding.nl()
+    Manpage(iquotedprintablestreambuf)
 
     bf(FBB::X2a): x-to-Ascii conversions of any type supporting insertions
     into tt(o[string]stream) objects.nl()
@@ -962,12 +987,13 @@ COMMENT(    it() bf(DEPRECATED CLASSES))
     bf(FBB::Xpointer): sets and retrieves the X-windows pointer.nl()
     Manpage(xpointer)
 
-COMMENT(
     it() bf(DEPRECATED CLASSES)
         Deprecated classes should no longer be used. Their functionality is
         better provided by other classes. The deprecated classes are no
-        longer maintained.
-)
+        longer maintained.nl()
+
+        bf(FBB::CSV): Comma separated values are now handled by the class
+        bf(CSV4180), implementing RFC 4180.nl()
      )
 
 manpagesection(LINKING)
