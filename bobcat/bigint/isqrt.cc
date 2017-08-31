@@ -34,7 +34,7 @@ BigInt &BigInt::isqrt()
         if (*next >= *step)
             break;
 
-        fswap(step, next);
+        std::swap(step, next);
     }
 
     if (this != step)
