@@ -30,9 +30,11 @@ class CSV4180
         CR,                 // carriage return (\r)
         CHAR,
         DQUOTE,
-        COMMA,
+        FIELDSEP,
         nCharTypes
     };
+
+    int d_fieldSep;
 
     size_t d_nRequired;
     bool (CSV4180::*d_verifyTypes)() = &CSV4180::nop;   // data lines
@@ -60,7 +62,8 @@ class CSV4180
                                             // 1: determine nFields from the
                                             //  1st line or specify the 
                                             //  # required fields
-        explicit CSV4180(size_t nFields = 0, bool header = false);
+        explicit CSV4180(size_t nFields = 0, bool header = false, 
+                            char fieldSep = ',');
 
                                             // 2: specs specify requirements
                                             //  of fields. X-fields must be
@@ -69,7 +72,8 @@ class CSV4180
                                             //  d_header. Throws exception if
                                             //  unsopported specification is
                                             //  encountered. 
-        explicit CSV4180(std::string const &specs, bool header = false);
+        explicit CSV4180(std::string const &specs, bool header = false,
+                            char fieldSep = ',');
 
         // Copy and move operations are implicitly available
 

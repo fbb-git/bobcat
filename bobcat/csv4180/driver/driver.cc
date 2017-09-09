@@ -1,8 +1,3 @@
-/*
-                              driver.cc
-*/
-
-
 #include <iostream>
 
 #include <bobcat/csv4180>
@@ -17,7 +12,10 @@ int main(int argc, char **argv)
 
 //    CSV4180 csv{ "SXS" };    
 //    CSV4180 csv{ "SXS", true };    
-    CSV4180 csv;    
+
+    CSV4180 csv;                    // this processes 'input'
+//    CSV4180 csv{0, false, ';'};      // uncoment this to process 'semicols'
+
 //    CSV4180 csv{3};    
 //    CSV4180 csv{3, true};    
 
