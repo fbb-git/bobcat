@@ -69,19 +69,19 @@ Text copied from the rfc4180.txt file:
 
    file = [header CRLF] record (CRLF record)* [CRLF]
 
-   header = name (COMMA name)*
+   header = name (FIELDSEP name)*
 
-   record = field (COMMA field)*
+   record = field (FIELDSEP field)*
 
    name = field
 
    field = (escaped / non-escaped)
 
-   escaped = DQUOTE (TEXTDATA / COMMA / CR / LF / 2DQUOTE)* DQUOTE
+   escaped = DQUOTE (TEXTDATA / FIELDSEP / CR / LF / 2DQUOTE)* DQUOTE
 
    non-escaped = TEXTDATA*
 
-   COMMA = %x2C
+   FIELDSEP = %x2C
 
    CR = %x0D 
 
