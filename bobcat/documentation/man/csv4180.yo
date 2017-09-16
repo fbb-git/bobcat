@@ -142,9 +142,11 @@ manpagesection(OVERLOADED OPERATORS)
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
-    itb(void clear())
-       The internally  stored data (referred to by the tt(data, header,) and
-        tt(lastLine) members) are erased.
+    itb(void clear(size_t nFields = 0))
+       The internally stored data (referred to by the tt(data, header,) and
+        tt(lastLine) members) are erased. By default, the required number of
+        CSV fields is reset to 0, but can be set to a specific value by
+        specifying a value for its tt(nFields) parameter.
 
     itb(std::vector<std::vector<std::string>> const &data() const)
        A reference to the vector of vectors of fields stored inside the
@@ -192,7 +194,9 @@ manpagesection(MEMBER FUNCTIONS)
         returned. After calling tt(release) the internally stored vector of
         fields is empty.  The vector returned by tt(data) does not contain the
         header line. If a header line was requested it can be retrieved from
-        the tt(header()) member.
+        the tt(header()) member. Note that this member does not reset the
+        number of expected fields for subsequently processed CSV-lines. If
+        that's what you want, call tt(clear) after calling tt(release).
 
     )
 
