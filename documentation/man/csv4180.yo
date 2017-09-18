@@ -56,16 +56,17 @@ converted to integral or floating point values. The second constructor (below)
 expects a tt(std::string) argument defining how to interpret fields. Options
 are: 
     itemization(
-    it(I):  the field must be convertible to an integral value;
-    it(D):  the field must be convertible to a floating point value;
-    it(S):  the field is a string: it is used as-is;
-    it(X):  the field is omitted from the final set of comma separated
+    it() tt(I):  the field must be convertible to an integral value;
+    it() tt(D):  the field must be convertible to a floating point value;
+    it() tt(S):  the field is a string: it is used as-is;
+    it() tt(X):  the field is omitted from the final set of comma separated
         values. I.e., if a line contains three comma separated values, and the
         specification tt("SXS") is used then this results in two comma
         separated values: the first and third value of three comma separated
         values encountered on lines.
-    it(-):  sysnonym of tt(X).
-    )nl()
+    it() tt(-):  synonym of tt(X).
+    )
+
     In addition, field specifications may contain blank spaces, which are
 ignored. 
 
@@ -83,24 +84,31 @@ manpagesection(INHERITS FROM)
 
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(explicit CSV4180(size_t nFields = 0, bool header = false))
+    itb(explicit CSV4180(size_t nFields = 0, bool header = false, 
+                    char fieldSep = ','))
        The first parameter specifies the number of fields that must be
         present on input lines. When using the default value the number of
         fields encountered on the first line determines the number of fields
         that must be present on subsequent lines. If the second parameter is
-        tt(true) then the first line is interpreted as the header line.
+        tt(true) then the first line is interpreted as the header line. The
+        third parameter specifies the character separating the fields. By
+        default it's a comma, but sometimes (not part of the RFC) a semicolon
+        is used. By specifying tt(fieldSep) any character other than a comma
+        can be used as field separator.
 
-    itb(explicit CSV4180(std::string const &specs, bool header = false))
+    itb(explicit CSV4180(std::string const &specs, bool header = false,
+                    char fieldSep = ','))
        The first parameter defines the number and types of the comma separated
         values on input lines. Specifications can be
         quote(
             itemization(
-            itt(D): the field must be convertible to a floating point value;
-            itt(I): the field must be convertible to an integral value;
-            itt(S): the field is left as-is, and can be retrieved as a
+            it() tt(D): the field must be convertible to a floating point
+                value;
+            it() tt(I): the field must be convertible to an integral value;
+            it() tt(S): the field is left as-is, and can be retrieved as a
                 tt(std::string). 
-            itt(X) or tt(-): the field is ignored and is not stored inside the
-                bf(CSV4180) object.
+            it() tt(X) or tt(-): the field is ignored and is not stored inside
+                the bf(CSV4180) object.
             it() blank space characters are ignored.
             )
         )
@@ -111,8 +119,8 @@ manpagesection(CONSTRUCTORS)
         contains too few or too many comma separated values the input stream's
         fail status is set.
 
-       If the second parameter is tt(true) then the first line is interpreted
-        as the header line.
+       The last two parameters are interpreted as the last two parameters of
+        the previous constructor.
 
     )nl()
     The copy and move constructors are available.
@@ -134,9 +142,11 @@ manpagesection(OVERLOADED OPERATORS)
 
 manpagesection(MEMBER FUNCTIONS)
     itemization(
-    itb(void clear())
-       The internally  stored data (referred to by the tt(data, header,) and
-        tt(lastLine) members) are erased.
+    itb(void clear(size_t nFields = 0))
+       The internally stored data (referred to by the tt(data, header,) and
+        tt(lastLine) members) are erased. By default, the required number of
+        CSV fields is reset to 0, but can be set to a specific value by
+        specifying a value for its tt(nFields) parameter.
 
     itb(std::vector<std::vector<std::string>> const &data() const)
        A reference to the vector of vectors of fields stored inside the
@@ -178,10 +188,22 @@ manpagesection(MEMBER FUNCTIONS)
         fields are stored in a vector of tt(std::string) objects, and that
         vector is added to the vector of vectors of strings that is returned
         by the tt(data) member. 
+
+    itb(std::vector<std::vector<std::string>> release())
+       The vector of vectors of fields stored inside the bf(CSV4180) object is
+        returned. After calling tt(release) the internally stored vector of
+        fields is empty.  The vector returned by tt(data) does not contain the
+        header line. If a header line was requested it can be retrieved from
+        the tt(header()) member. Note that this member does not reset the
+        number of expected fields for subsequently processed CSV-lines. If
+        that's what you want, call tt(clear) after calling tt(release).
+
     )
 
 manpagesection(EXAMPLE)
-    verbinclude(../../csv4180/driver/driver.cc)
+    verbinsert(//man1 ../../csv4180/driver/driver.cc)
+    verbinsert(//man2 ../../csv4180/driver/driver.cc)
+    verbinsert(//man3 ../../csv4180/driver/driver.cc)
 
 manpagefiles()
     em(bobcat/csv) - defines the class interface
