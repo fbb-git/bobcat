@@ -10,7 +10,7 @@
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
 <h1 id="title">FBB::CSV4180(3bobcat)</h1>
-<h2 id="author">CSV4180 convertor<br/>(libbobcat-dev_4.08.01-x.tar.gz)</h2>
+<h2 id="author">CSV4180 convertor<br/>(libbobcat-dev_4.08.02-x.tar.gz)</h2>
 <h2 id="date">2005-2017</h2>
 
 
@@ -70,17 +70,18 @@ converted to integral or floating point values. The second constructor (below)
 expects a <em >std::string</em> argument defining how to interpret fields. Options
 are: 
     <ul>
-    <li>:  the field must be convertible to an integral value;
-    <li>:  the field must be convertible to a floating point value;
-    <li>:  the field is a string: it is used as-is;
-    <li>:  the field is omitted from the final set of comma separated
+    <li> <em >I</em>:  the field must be convertible to an integral value;
+    <li> <em >D</em>:  the field must be convertible to a floating point value;
+    <li> <em >S</em>:  the field is a string: it is used as-is;
+    <li> <em >X</em>:  the field is omitted from the final set of comma separated
         values. I.e., if a line contains three comma separated values, and the
         specification <em >"SXS"</em> is used then this results in two comma
         separated values: the first and third value of three comma separated
         values encountered on lines.
-    <li>:  sysnonym of <em >X</em>.
-    </ul><br/>
-    In addition, field specifications may contain blank spaces, which are
+    <li> <em >-</em>:  synonym of <em >X</em>.
+    </ul>
+<p>
+In addition, field specifications may contain blank spaces, which are
 ignored. 
 <p>
 When processing comma separated values the first line may be considered a
@@ -100,24 +101,31 @@ man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
 <h2 >CONSTRUCTORS</h2>
     <ul>
-    <li> <strong >explicit CSV4180(size_t nFields = 0, bool header = false)</strong>:<br/>
+    <li> <strong >explicit CSV4180(size_t nFields = 0, bool header = false, 
+                    char fieldSep = ',')</strong>:<br/>
        The first parameter specifies the number of fields that must be
         present on input lines. When using the default value the number of
         fields encountered on the first line determines the number of fields
         that must be present on subsequent lines. If the second parameter is
-        <em >true</em> then the first line is interpreted as the header line.
+        <em >true</em> then the first line is interpreted as the header line. The
+        third parameter specifies the character separating the fields. By
+        default it's a comma, but sometimes (not part of the RFC) a semicolon
+        is used. By specifying <em >fieldSep</em> any character other than a comma
+        can be used as field separator.
 <p>
-<li> <strong >explicit CSV4180(std::string const &amp;specs, bool header = false)</strong>:<br/>
+<li> <strong >explicit CSV4180(std::string const &amp;specs, bool header = false,
+                    char fieldSep = ',')</strong>:<br/>
        The first parameter defines the number and types of the comma separated
         values on input lines. Specifications can be
         <blockquote >
             <ul>
-            <li> <em >D</em>: the field must be convertible to a floating point value;
+            <li> <em >D</em>: the field must be convertible to a floating point
+                value;
             <li> <em >I</em>: the field must be convertible to an integral value;
             <li> <em >S</em>: the field is left as-is, and can be retrieved as a
                 <em >std::string</em>. 
-            <li> <em >X</em> or <em >-</em>: the field is ignored and is not stored inside the
-                <strong >CSV4180</strong> object.
+            <li> <em >X</em> or <em >-</em>: the field is ignored and is not stored inside
+                the <strong >CSV4180</strong> object.
             <li> blank space characters are ignored.
             </ul>
         </blockquote>
@@ -128,8 +136,8 @@ If <em >I</em> or <em >D</em> fields cannot be properly converted, or if a line
         contains too few or too many comma separated values the input stream's
         fail status is set.
 <p>
-If the second parameter is <em >true</em> then the first line is interpreted
-        as the header line.
+The last two parameters are interpreted as the last two parameters of
+        the previous constructor.
 <p>
 </ul><br/>
     The copy and move constructors are available.
@@ -151,9 +159,11 @@ The copy and move assignment operators are available.
 <p>
 <h2 >MEMBER FUNCTIONS</h2>
     <ul>
-    <li> <strong >void clear()</strong>:<br/>
-       The internally  stored data (referred to by the <em >data, header,</em> and
-        <em >lastLine</em> members) are erased.
+    <li> <strong >void clear(size_t nFields = 0)</strong>:<br/>
+       The internally stored data (referred to by the <em >data, header,</em> and
+        <em >lastLine</em> members) are erased. By default, the required number of
+        CSV fields is reset to 0, but can be set to a specific value by
+        specifying a value for its <em >nFields</em> parameter.
 <p>
 <li> <strong >std::vector&lt;std::vector&lt;std::string&gt;&gt; const &amp;data() const</strong>:<br/>
        A reference to the vector of vectors of fields stored inside the
@@ -195,15 +205,20 @@ The copy and move assignment operators are available.
         fields are stored in a vector of <em >std::string</em> objects, and that
         vector is added to the vector of vectors of strings that is returned
         by the <em >data</em> member. 
-    </ul>
+<p>
+<li> <strong >std::vector&lt;std::vector&lt;std::string&gt;&gt; release()</strong>:<br/>
+       The vector of vectors of fields stored inside the <strong >CSV4180</strong> object is
+        returned. After calling <em >release</em> the internally stored vector of
+        fields is empty.  The vector returned by <em >data</em> does not contain the
+        header line. If a header line was requested it can be retrieved from
+        the <em >header()</em> member. Note that this member does not reset the
+        number of expected fields for subsequently processed CSV-lines. If
+        that's what you want, call <em >clear</em> after calling <em >release</em>.
+<p>
+</ul>
 <p>
 <h2 >EXAMPLE</h2>
-    <pre >
-/*
-                              driver.cc
-*/
-
-
+    <pre>
 #include &lt;iostream&gt;
 
 #include &lt;bobcat/csv4180&gt;
@@ -213,23 +228,19 @@ using namespace FBB;
 
 int main(int argc, char **argv)
 {
-//    if (argc == 1)
-//        cout &lt;&lt; "arg1: file containing csv lines\n";
 
-//    CSV4180 csv{ "SXS" };    
-//    CSV4180 csv{ "SXS", true };    
-    CSV4180 csv;    
-//    CSV4180 csv{3};    
-//    CSV4180 csv{3, true};    
+</pre>
 
-//    cout &lt;&lt; "? ";
-//    if (not csv.read1(cin))
-//    {
-//        cerr &lt;&lt; "Error in input line\n";
-//        return 0;
-//    }
+<p>
+<pre>
+    CSV4180 csv;                    // this processes 'input'
 
+</pre>
+
+<p>
+<pre>
     size_t nLines = csv.read(cin);
+
     cerr &lt;&lt; nLines &lt;&lt; " lines were read\n";
     if (not csv.header().empty())
     {
@@ -247,10 +258,6 @@ int main(int argc, char **argv)
     }
 }
 
-
-
-
-
 </pre>
 
 <p>
@@ -266,12 +273,12 @@ int main(int argc, char **argv)
 
 <h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em >bobcat_4.08.01-x.dsc</em>: detached signature;
-    <li> <em >bobcat_4.08.01-x.tar.gz</em>: source archive;
-    <li> <em >bobcat_4.08.01-x_i386.changes</em>: change log;
-    <li> <em >libbobcat1_4.08.01-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.08.02-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.08.02-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.08.02-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.08.02-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em >libbobcat1-dev_4.08.01-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.08.02-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
