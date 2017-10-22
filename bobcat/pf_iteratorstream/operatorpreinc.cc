@@ -16,7 +16,7 @@ PrimeFactors::iterator &PrimeFactors::iteratorStream::operatorPreInc()
 
             d_mode = NEW_PRIMES;
             d_iterator = d_newPrimes.begin();
-        // FALLING THROUGH
+        [[fallthrough]]
         
         case NEW_PRIMES:
             if (d_iterator != d_newPrimes.cend())
@@ -24,7 +24,7 @@ PrimeFactors::iterator &PrimeFactors::iteratorStream::operatorPreInc()
 
             d_mode = SENTINEL;
             d_iterator = d_sentinel.begin();
-        // FALLING THROUGH
+        [[fallthrough]]
 
         case SENTINEL:
         break;

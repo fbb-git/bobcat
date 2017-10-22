@@ -8,17 +8,17 @@ void CGI::setMaxUploadSize(size_t maxUploadSize, int unit)
         case 'G':
         case 'g':
             newSize <<= 10;
-        // FALLING THROUGH    
+        [[fallthough]]
         
         case 'M':
         case 'm':
             newSize <<= 10;
-        // FALLING THROUGH    
+        [[fallthough]]
         
         case 'K':
         case 'k':
             newSize <<= 10;
-        // FALLING THROUGH    
+        [[fallthough]]
 
         default:        
             d_maxUploadSize = newSize;

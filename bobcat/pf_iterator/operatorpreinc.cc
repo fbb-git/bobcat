@@ -11,7 +11,7 @@ PrimeFactors::iterator &PrimeFactors::iterator::operatorPreInc()
                 break;
             d_mode = SENTINEL;
             d_iterator = d_sentinel.begin();
-        // FALLING THROUGH
+        [[fallthrough]]
 
         case SENTINEL:
         break;
