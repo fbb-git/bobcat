@@ -2,14 +2,15 @@
 
 tput clear
 
-GPP="g++ --std=c++14"
+GPP="g++ --std=c++17"
 
 # CMD="$GPP -o driver -Wall -I../ driver.cc -L../tmp -lerrno -lbobcat -s"
 # CMD="$GPP -o driver -Wall -I../../tmp driver.cc -L../../tmp/lib -lbobcat -s"
 # CMD="$GPP -o driver -Wall -I../ driver.cc -L../tmp -lerrno -s"
 # CMD="$GPP -o driver -Wall *.cc ../*.cc -s"
 
-CMD="$GPP -o driver -Wall *.cc -lbobcat -s"
+CMD="$GPP -o driver -Wall *.cc -lbobcat -s"	    # system bobcat library
+CMD="$GPP -o driver -Wall *.cc -L../tmp -lexception -s"	# local exception lib
 
 echo $CMD
 $CMD || exit 1

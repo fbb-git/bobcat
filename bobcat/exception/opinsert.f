@@ -1,5 +1,5 @@
 template <typename Type>
-inline Exception &&operator<<(Exception &&tmp, Type const &value)
+inline Exception operator<<(Exception &&tmp, Type const &value)
 {
     std::ostringstream out;
     out << value;

@@ -23,23 +23,23 @@ int main(int argc, char **argv)
         }
         catch(exception const &e)
         {
-            cerr << e.what() << '\n';
+            cerr << "first: " << e.what() << '\n';
             throw;                      // may be rethrown, which is standard
         }
     }
     catch(exception const &e)
     {
-        cout << "Exception caught: " << e.what() << '\n';
+        cout << "second: exception caught: " << e.what() << '\n';
     }
 
     try
     {                               // throw exception in which data of
                                     // various types were inserted
-        throw Exception(5) << "Exception with errno value set";
+        throw Exception(5) << "third: exception with errno value set";
     }
     catch(exception const &e)
     {
-        cerr << e.what() << '\n'
+        cerr << "fourth: " << e.what() << '\n'
              << "Exception == " << errno << '\n';
     }
 
@@ -52,7 +52,7 @@ int main(int argc, char **argv)
     }
     catch(exception const &e)
     {
-        cout << e.what() << '\n';
+        cout << "fifth: " << e.what() << '\n';
     }
 
     try
@@ -62,7 +62,7 @@ int main(int argc, char **argv)
     }
     catch(exception const &e)
     {
-        cout << e.what() << '\n';
+        cout << "sixth: " << e.what() << '\n';
     }
 
     try
@@ -71,8 +71,10 @@ int main(int argc, char **argv)
     }
     catch(exception const &e)
     {
-        cout << e.what() << '\n';
+        cout << "eighth: " << e.what() << '\n';
     }
+    
+    cout << "end of program\n";
 }
 
 
