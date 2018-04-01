@@ -1,10 +1,10 @@
 includefile(include/header)
 
 COMMENT(manpage, section, releasedate, archive, short name)
-manpage(FBB::Digestbuf)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
+manpage(FBB::DigestBuf)(3bobcat)(_CurYrs_)(libbobcat-dev__CurVers_-x.tar.gz)
                     (Compute Message Digests)
 
-manpagename(FBB::Digestbuf)
+manpagename(FBB::DigestBuf)
            (Computes Message Digests from information inserted into a
 std::ostream) 
 
@@ -13,7 +13,7 @@ manpagesynopsis()
     Linking option: tt(-lbobcat) 
 
 manpagedescription()
-    bf(FBB::Digestbuf) objects are bf(std::streambuf) objects that can be used
+    bf(FBB::DigestBuf) objects are bf(std::streambuf) objects that can be used
 to initialize tt(std::ostream) objects with.
 
     All information inserted into such a tt(std::ostream) is used to compute a
@@ -39,14 +39,14 @@ manpagesection(INHERITS FROM)
 
 manpagesection(CONSTRUCTORS)
     itemization(
-    itb(Digestbuf(char const *type, size_t bufsize = 1024))
+    itb(DigestBuf(char const *type, size_t bufsize = 1024))
         This constructor initializes the streambuf, setting it up for the
 message digest algorithm specified with tt(type). The message digest
 algorithms specified in the bf(DESCRIPTION) section may be used here. E.g., to
 use the sha256 algorithm specify tt("sha256"). 
 
     The tt(bufsize) argument specifies the internal buffer used by
-tt(Digestbuf) to store incoming characters temporarily. The provided default
+tt(DigestBuf) to store incoming characters temporarily. The provided default
 argument should be OK in all normal cases. 
     )
     There is no copy constructor.
@@ -64,9 +64,9 @@ into the provided tt(ostream). See the example below for an illustration.
 
 manpagesection(MEMBER FUNCTIONS)
 
-     All members of bf(std::streambuf) are available, as bf(FBB::Digestbuf)
+     All members of bf(std::streambuf) are available, as bf(FBB::DigestBuf)
 inherits from this class. Some of the bf(std::streambuf)'s member are
-overridden or are hidden by tt(Digestbuf). In normal situations these
+overridden or are hidden by tt(DigestBuf). In normal situations these
 inherited members will not be used by programs using tt(DigestBuf) objects.
 
     itemization(
