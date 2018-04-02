@@ -1,4 +1,4 @@
-ISymCryptStreambuf<ENCRYPT>::ISymCryptStreambuf(
+inline ISymCryptStreambuf<ENCRYPT>::ISymCryptStreambuf(
                     std::istream &in,       char const *type,
                     std::string const &key, std::string const &iv,
                     size_t bufSize,         size_t filterBufSize,
