@@ -1,8 +1,8 @@
 // LinearMap(Iterator begin, Iterator end)
 
-template <typename Key, typename Value, typename Alloc>
+template <typename Key, typename Value>
 template <typename Iterator>
-inline LinearMap<Key, Value, Alloc>::
+inline LinearMap<Key, Value>::
     LinearMap(Iterator begin, Iterator end)
 {
     insert(begin, end);

@@ -1,7 +1,7 @@
 // LinearMap(initializer_list<value_type> initial)
 
-template <typename Key, typename Value, typename Alloc>
-inline LinearMap<Key, Value, Alloc>::
+template <typename Key, typename Value>
+inline LinearMap<Key, Value>::
     LinearMap(std::initializer_list<value_type> initial)
 {
     for (auto &value: initial)

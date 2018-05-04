@@ -1,8 +1,8 @@
 //     pair<iterator, bool> insert(value_type const keyvalue);
 
-template <typename Key, typename Value, typename Alloc>
-std::pair<typename LinearMap<Key, Value, Alloc>::iterator, bool> 
-    LinearMap<Key, Value, Alloc>::insert(value_type const &keyValue)
+template <typename Key, typename Value>
+std::pair<typename LinearMap<Key, Value>::iterator, bool> 
+    LinearMap<Key, Value>::insert(value_type const &keyValue)
 {
     bool inserted;
 

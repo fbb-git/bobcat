@@ -9,21 +9,18 @@
 namespace FBB
 {
 
-template <
-    typename Key, typename Value, 
-    typename Alloc = std::allocator< std::pair<Key const, Value> >
->
-class LinearMap: private std::vector<std::pair<Key, Value>, Alloc>
+template <typename Key, typename Value>
+class LinearMap: private std::vector<std::pair<Key, Value>>
 {
-        typedef std::vector<std::pair<Key, Value>, Alloc>   Base;
-        typedef LinearMap<Key, Value, Alloc>                LinMap;
+        typedef std::vector<std::pair<Key, Value>>   Base;
+        typedef LinearMap<Key, Value>                LinMap;
         typedef std::pair<
-            typename LinearMap<Key, Value, Alloc>::const_iterator,
-            typename LinearMap<Key, Value, Alloc>::const_iterator
+            typename LinearMap<Key, Value>::const_iterator,
+            typename LinearMap<Key, Value>::const_iterator
         >                                                   ConstIterPair;
         typedef std::pair<
-            typename LinearMap<Key, Value, Alloc>::iterator,
-            typename LinearMap<Key, Value, Alloc>::iterator
+            typename LinearMap<Key, Value>::iterator,
+            typename LinearMap<Key, Value>::iterator
         >                                                   IterPair;
 
     public:

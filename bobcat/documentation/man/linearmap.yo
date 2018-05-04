@@ -28,15 +28,12 @@ bf(LinearMap).
 includefile(include/namespace)
 
 manpagesection(INHERITS (PRIVATELY) FROM)
-    tt(std::vector<Key, Value, Allocator>)
+    tt(std::vector<Key, Value>)
 
 manpagesection(TEMPLATE TYPES)
     The full template type definition of bf(LinearMap) is:
         verb(
-    template <
-        typename Key, typename Value, 
-        typename Alloc = std::allocator< std::pair<Key const, Value> >
-    >
+    template < typename Key, typename Value >
         )
     The tt(Key) type must offer tt(bool operator==). Furthermore, tt(Key) and
 tt(Value) types must support default and copy constructors and overloaded
@@ -220,7 +217,7 @@ bf(LinearMap) offers the following member functions:
     returns the number of elements in the bf(LinearMap).
 
     itb(void swap(LinearMap &other))
-    swaps two bf(LinearMap)s using identical tt(Key, Value) and tt(Alloc)
+    swaps two bf(LinearMap)s using identical tt(Key) and tt(Value)
      types.
 
     itb(iterator upper_bound(Key const &key))

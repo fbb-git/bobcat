@@ -1,7 +1,7 @@
 // bool erase(Key const &key)
 //
-template <typename Key, typename Value, typename Alloc>
-bool LinearMap<Key, Value, Alloc>::erase(Key const &key)
+template <typename Key, typename Value>
+bool LinearMap<Key, Value>::erase(Key const &key)
 {
     auto iter = find(key);
     if (iter == end())

@@ -1,7 +1,7 @@
 //Value &operator[])Key const &key)
 
-template <typename Key, typename Value, typename Alloc>
-        Value &LinearMap<Key, Value, Alloc>::operator[](Key const &key)
+template <typename Key, typename Value>
+        Value &LinearMap<Key, Value>::operator[](Key const &key)
 {
     auto iter = find(key);
     if (iter != end())
