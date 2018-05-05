@@ -11,6 +11,7 @@ int g_echo = ON;
 int g_nClasses;         // number of classes/subdirectories
 int g_all = 1;          // if 0: only compile the classes not requiring
                         // additional libaries. see icmake/special
+int g_test;             // run in testing mode
 
 string  
     g_logPath,
@@ -95,16 +96,18 @@ void main(int argc, list argv)
     g_tmphdr    = "tmp/" LIBRARY "/";
     g_tmpbin    = "tmp/bin";
 
-
     g_cxx =  setOpt(CXX, "CXX");
     g_copt = setOpt(CXXFLAGS, "CXXFLAGS");
 
     option = argv[1];
 
+    if (option == "test")
+        g_test = 1;
+
     if (option == "clean" || option == "distclean")
         clean();
 
-    if (option == "light")
+    if (option == "light" || g_test)
     {
         option = "libraries";
         g_all   = 0;
@@ -147,6 +150,12 @@ void main(int argc, list argv)
     {
         system(P_NOCHECK, "tput clear");
         libraries(keepPch, "bobcat", 1, 0, 0);
+    }
+
+    if (option == "mantest")
+    {
+        g_test = 1;
+        option = "man";
     }
 
     if (option == "man")
@@ -214,6 +223,10 @@ void main(int argc, list argv)
         "                         in the file 'logfile'\n"
         "\n"
         "internal use only:\n"
+        "   test                - build one class (align) for testing\n"
+        "                         purposes\n"
+        "   mantest             - build a small subset of man-pages for\n"
+        "                         testing purposes\n"
         "   man1 .yo-file       - build one man-page file\n"
         "   dep                 - refresh the class-dependencies overview\n"
         "   github              - prepare github's gh-pages update\n"

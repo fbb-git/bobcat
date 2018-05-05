@@ -11,8 +11,11 @@ void man()
 
     chdir("documentation/man");
 
-    yo = makelist("*.yo") - (list)LIBRARY ".yo" - (list)"reverseiter.yo" -
-                            (list)"sharedreadme.yo";
+    if (g_test)
+        yo = (list)"align.yo";
+    else
+        yo = makelist("*.yo") - (list)LIBRARY ".yo" - (list)"reverseiter.yo" -
+                                (list)"sharedreadme.yo";
 
     printf("    Building the man3 man-pages");
 

@@ -3,6 +3,12 @@ void addClasses(string filename)
     list class;
     string elem;
 
+    if (g_test)
+    {
+        g_classes += (list)"align";
+        return;
+    }
+
     while (listlen(class = fgets(filename, class)))
     {
         elem = strtok(class[0], " \t\n")[0];
