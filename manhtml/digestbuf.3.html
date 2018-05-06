@@ -1,21 +1,27 @@
 <!DOCTYPE html><html><head>
 <meta charset="UTF-8">
-<title>FBB::Digestbuf(3bobcat)</title>
+<title>FBB::DigestBuf(3bobcat)</title>
 <style type="text/css">
     figure {text-align: center;}
     img {vertical-align: center;}
+    .XXfc {margin-left:auto;margin-right:auto;}
+    .XXtc {text-align: center;}
+    .XXtl {text-align: left;}
+    .XXtr {text-align: right;}
+    .XXvt {vertical-align: top;}
+    .XXvb {vertical-align: bottom;}
 </style>
 <link rev="made" href="mailto:Frank B. Brokken: f.b.brokken@rug.nl">
 </head>
 <body text="#27408B" bgcolor="#FFFAF0">
 <hr/>
-<h1 id="title">FBB::Digestbuf(3bobcat)</h1>
-<h2 id="author">Compute Message Digests<br/>(libbobcat-dev_4.08.02-x.tar.gz)</h2>
-<h2 id="date">2005-2017</h2>
+<h1 id="title">FBB::DigestBuf(3bobcat)</h1>
+<h2 id="author">Compute Message Digests<br/>(libbobcat-dev_4.08.03-x.tar.gz)</h2>
+<h2 id="date">2005-2018</h2>
 
 
 <p>
-<h2 >NAME</h2>FBB::Digestbuf - Computes Message Digests from information inserted into a
+<h2 >NAME</h2>FBB::DigestBuf - Computes Message Digests from information inserted into a
 std::ostream 
 <p>
 <h2 >SYNOPSIS</h2>
@@ -23,7 +29,7 @@ std::ostream
     Linking option: <em >-lbobcat</em> 
 <p>
 <h2 >DESCRIPTION</h2>
-    <strong >FBB::Digestbuf</strong> objects are <strong >std::streambuf</strong> objects that can be used
+    <strong >FBB::DigestBuf</strong> objects are <strong >std::streambuf</strong> objects that can be used
 to initialize <em >std::ostream</em> objects with.
 <p>
 All information inserted into such a <em >std::ostream</em> is used to compute a
@@ -52,14 +58,14 @@ man-page, are defined in the namespace <strong >FBB</strong>.
 <p>
 <h2 >CONSTRUCTORS</h2>
     <ul>
-    <li> <strong >Digestbuf(char const *type, size_t bufsize = 1024)</strong>:<br/>
+    <li> <strong >DigestBuf(char const *type, size_t bufsize = 1024)</strong>:<br/>
         This constructor initializes the streambuf, setting it up for the
 message digest algorithm specified with <em >type</em>. The message digest
 algorithms specified in the <strong >DESCRIPTION</strong> section may be used here. E.g., to
 use the sha256 algorithm specify <em >"sha256"</em>. 
 <p>
 The <em >bufsize</em> argument specifies the internal buffer used by
-<em >Digestbuf</em> to store incoming characters temporarily. The provided default
+<em >DigestBuf</em> to store incoming characters temporarily. The provided default
 argument should be OK in all normal cases. 
     </ul>
     There is no copy constructor.
@@ -77,9 +83,9 @@ into the provided <em >ostream</em>. See the example below for an illustration.
 <p>
 <h2 >MEMBER FUNCTIONS</h2>
 <p>
-All members of <strong >std::streambuf</strong> are available, as <strong >FBB::Digestbuf</strong>
+All members of <strong >std::streambuf</strong> are available, as <strong >FBB::DigestBuf</strong>
 inherits from this class. Some of the <strong >std::streambuf</strong>'s member are
-overridden or are hidden by <em >Digestbuf</em>. In normal situations these
+overridden or are hidden by <em >DigestBuf</em>. In normal situations these
 inherited members will not be used by programs using <em >DigestBuf</em> objects.
 <p>
 <ul>
@@ -160,12 +166,12 @@ catch(exception const &amp;err)
 
 <h2 >DISTRIBUTION FILES</h2>
     <ul>
-    <li> <em >bobcat_4.08.02-x.dsc</em>: detached signature;
-    <li> <em >bobcat_4.08.02-x.tar.gz</em>: source archive;
-    <li> <em >bobcat_4.08.02-x_i386.changes</em>: change log;
-    <li> <em >libbobcat1_4.08.02-x_*.deb</em>: debian package holding the
+    <li> <em >bobcat_4.08.03-x.dsc</em>: detached signature;
+    <li> <em >bobcat_4.08.03-x.tar.gz</em>: source archive;
+    <li> <em >bobcat_4.08.03-x_i386.changes</em>: change log;
+    <li> <em >libbobcat1_4.08.03-x_*.deb</em>: debian package holding the
             libraries;
-    <li> <em >libbobcat1-dev_4.08.02-x_*.deb</em>: debian package holding the
+    <li> <em >libbobcat1-dev_4.08.03-x_*.deb</em>: debian package holding the
             libraries, headers and manual pages;
     <li> <em >http://sourceforge.net/projects/bobcat</em>: public archive location;
     </ul>
