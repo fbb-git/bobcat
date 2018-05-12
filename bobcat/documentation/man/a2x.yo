@@ -65,7 +65,7 @@ manpagesection(MEMBER FUNCTION)
     itb(Type to()) 
         This member returns any type tt(Type) supporting extractions from
 tt(i[string]streams). If the extraction fails, the tt(A2x) object's
-tt(good()) member will return tt(false), and the tt(Type)'s default value is
+tt(good()) member returns tt(false), and the tt(Type)'s default value is
 returned. This operator was implemented as a template member function. There
 is also a type conversion operator available (see below), but the member
 function variant may be preferred over the conversion operator in situations
@@ -78,14 +78,13 @@ manpagesection(OVERLOADED OPERATORS)
     itemization(
     itb(operator Type()) 
         Conversion to any type tt(Type) supporting
-extractions from tt(i[string]streams). If the extraction fails, the tt(A2x)
+extractions from tt(istreams). If the extraction fails, the tt(A2x)
 object's tt(good()) member will return tt(false), and the tt(Type)'s default
-value is returned. This operator was implemented as a template member
-function.
+value is returned. This operator was implemented as a member template.
     itb(istream &operator>>(istream &, Type &)) 
         Extraction to any type tt(Type) supporting extractions from
-tt(i[string]streams). If the extraction fails, the tt(A2x) object's
-tt(good()) member will return tt(false), and the tt(Type)'s default value is
+tt(istreams). If the extraction fails, the tt(A2x) object's
+tt(good()) member returns tt(false), and the tt(Type)'s default value is
 returned (this facility is implied by the fact that this class inherits from
 bf(istringstream), but it's probably useful to stress that the extraction
 operation is still available).
