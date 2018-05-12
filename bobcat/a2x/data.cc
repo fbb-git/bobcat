@@ -1,3 +1,3 @@
 #include "a2x.ih"
 
-bool A2x::s_lastFail = false;
+thread_local bool A2x::s_lastFail = false;

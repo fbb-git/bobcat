@@ -11,15 +11,12 @@ manpagesynopsis()
     Linking option: tt(-lbobcat) 
 
 manpagedescription()
-    bf(FBB::A2x) objects offer the bf(C++) equivalent of the standard bf(C)
-conversion functions bf(atoi)(3), bf(atol)(3), bf(atof)(3) etc.  tt(A2x)
-objects generalize these bf(C) functions to em(any) type that can be extracted
-from an bf(istream) object. Since bf(FBB::A2x) represents the object-variant
-of the bf(C) functions, and is therefore em(type-safe) and em(extensible),
-their use is greatly preferred over using the standard bf(C) functions.
-
-    Conversions to most standard numeric types is also available through
-functions like tt(std::stol, std::stod), etc.
+    bf(FBB::A2x) objects offer the bf(C++) equivalent of the standard bf(C++)
+string conversion functions like tt(stol, stoul, stod) etc. These standard
+bf(C++) string functions are extremely useful and should probably be preferred
+over using the members of tt(A2x) objects, but tt(A2x) offers additional
+benefits in that it generalizes these functions to em(any) type that can
+be extracted from a bf(istream) objects.
 
 manpagesection(NAMESPACE)
     bf(FBB)nl()
@@ -34,18 +31,20 @@ manpagesection(CONSTRUCTORS)
     itb(A2x())
         This constructor constructs an empty tt(A2x) object. No
 information can be converted from a  thus constructed tt(A2x) object.
+
     itb(A2x(char const *text)) 
         This constructor stores tt(text). If tt(text) represents a textual
 value of some type, the tt(A2x) object may be used to initialize or assign
 this value to a variable of that particular type. Extraction, however is also
 still possible.
+
     itb(A2x(std::string const &str)) 
         This constructor stores the text contained in tt(str). If this text
 represents a textual value of some type, the tt(A2x) object may be used to
 initialize or assign this value to a variable of that particular
 type. Extraction is also still possible.
     )
-        The copy constructor is available.
+    The copy and move constructors are available.
 
 manpagesection(STATIC MEMBER FUNCTION)
     itemization(
@@ -55,9 +54,8 @@ object's tt(fail()) member returned tt(true) and returns tt(false) otherwise).
 This member allows checks on the success of the extraction/conversion using
 anonymous tt(A2x) objects. The member also returns tt(true) when no
 conversions have as yet been performed.nl()
-    Note that this member is a thread-unsafe em(static) member: in a
-multithreaded program locks may be required to ensure that the proper
-conversion result is inspected.
+    Note that this member returns the value of a em(thread_local) static
+member: different threads cannot inspect other threads' tt(lastFail) status.
     )
 
 manpagesection(MEMBER FUNCTION)
@@ -127,8 +125,7 @@ manpagefiles()
     em(bobcat/a2x) - defines the class interface
 
 manpageseealso()
-    bf(bobcat)(7), bf(x2a)(3bobcat), bf(atoi)(3), bf(atol)(3), bf(atof)(3),
-    bf(strtod)(3), bf(strtol)(3), bf(strdoul)(3)
+    bf(bobcat)(7), bf(x2a)(3bobcat)
 
 manpagebugs()
     None Reported.

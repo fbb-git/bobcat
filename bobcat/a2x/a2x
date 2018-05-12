@@ -9,13 +9,14 @@ namespace FBB
 
 class A2x: public std::istringstream
 {
-    static bool s_lastFail;
+    static bool thread_local s_lastFail;
 
     public:
         A2x() = default;
         explicit A2x(char const *txt);          // 1.f initialize from text
         explicit A2x(std::string const &str);   // 2.f
         A2x(A2x const &other);                  // 3.f
+        A2x(A2x &&tmp);                         // 4.f
 
         template <typename Type>
         operator Type();                        // .f
@@ -23,7 +24,7 @@ class A2x: public std::istringstream
         template <typename Type>    
         Type to();                              // .f
 
-        A2x &operator=(char const *txt);        
+        A2x &operator=(char const *txt);        // 1.cc
 
         A2x &operator=(std::string const &str); // 1.f
         A2x &operator=(A2x const &other);       // 2.f
@@ -34,6 +35,7 @@ class A2x: public std::istringstream
 #include "a2x1.f"
 #include "a2x2.f"
 #include "a2x3.f"
+#include "a2x4.f"
 #include "to.f"
 #include "optype.f"
 #include "opis1.f"
